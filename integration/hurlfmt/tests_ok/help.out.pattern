@@ -1,0 +1,19 @@
+Format Hurl files
+
+Usage: hurlfmt [OPTIONS] [FILES]...
+
+Arguments:
+  [FILES]...  Sets the input file to use
+
+Options:
+      --check            Run in 'check' mode
+      --color            Colorize Output
+      --format <FORMAT>  Specify output format: hurl, json or html (DEPRECATED) [default: hurl]
+      --in-place         Modify file in place
+      --in <FORMAT>      Specify input format: hurl or curl [default: hurl]
+      --no-color         Do not colorize output
+  -o, --output <FILE>    Write to FILE instead of stdout
+      --out <FORMAT>     Specify output format: hurl, json or html [default: hurl]
+      --standalone       Standalone HTML
+  -h, --help             Print help
+  -V, --version          Print version
