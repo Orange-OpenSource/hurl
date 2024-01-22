@@ -58,6 +58,10 @@ jobs:
       if: always()
       run: bin/check/rust_version.py 7
 
+    - name: Generated
+      if: always()
+      run: bin/check/generated.sh
+
     - name: Coverage
       if: always()
       run: bin/check/coverage.sh
