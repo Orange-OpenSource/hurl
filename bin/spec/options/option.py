@@ -122,7 +122,7 @@ class Option:
                 elif key == "help":
                     help = v
                 elif key == "conflict":
-                    conflict = [a.strip() for a in v.split(",")]
+                    conflict = [a.strip() for a in v.split(" ")]
                 elif key == "multi":
                     if v == "append":
                         append = True

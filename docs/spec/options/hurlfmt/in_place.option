@@ -1,7 +1,7 @@
 name: in_place
 long: in-place
 help: Modify files in place
-conflict: output, color
+conflict: output color
 ---
 Modify file in place.
 

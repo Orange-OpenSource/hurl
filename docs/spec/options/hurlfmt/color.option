@@ -1,7 +1,7 @@
 name: color
 long: color
 help: Colorize Output
-conflict: no_color, in_place
+conflict: no_color in_place
 ---
 Colorize Output.
 
