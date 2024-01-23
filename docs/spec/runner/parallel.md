@@ -1,4 +1,4 @@
-# Supporting Parallel Execution of Hurl Files
+# Parallel Execution Design Document
 
 ## Run Execution Diagram
 
@@ -19,6 +19,10 @@ stateDiagram-v2
     B --> C
     C --> join
     join --> [*]
+```
+
+```shell
+$ hurl --test a.hurl b.hurl c.hurl
 ```
 
 ### Parallel Run
@@ -42,13 +46,25 @@ stateDiagram-v2
     join --> [*]
 ```
 
-## Tools
+```shell
+$ hurl --parallel --test a.hurl b.hurl c.hurl
+```
 
-### GNU parallel
+Reuse `--jobs` option from [GNU Parallel] to specify the number of threads.
 
-[GNU parallel](https://www.gnu.org/software/parallel/)
+```shell
+$ hurl --parallel --jobs 4 --test a.hurl b.hurl c.hurl
+```
 
-`parallel` buffers stdout/stderr and postpones the command until the command completes. So the command outputs as soon
+> `--jobs 0` will run as many jobs in parallel as possible.
+
+
+
+## State of the Art / Tools
+
+### GNU Parallel
+
+[GNU Parallel] buffers stdout/stderr and postpones the command until the command completes. So the command outputs as soon
 as it completes, not necessary in the same order:
 
 ```shell
@@ -150,14 +166,16 @@ a.hurl	Ab.hurl	Bc.hurl	Cd.hurl	D%
 
 The tag value is configurable.
 
-- `--color`: add colors, each job gets its own colour combination.
+- `keep-order/-k`: force GNU Parallel to print in the order of values, the commands are still run in parallel.
 
-![color option](parallel-color.png)
-
-
-
-
-
+```shell
+$ parallel sleep {}';' echo {} done ::: 5 4 3 2 1
+1 done
+2 done
+3 done
+4 done
+5 done
+```
 
 #### From Hurl issues/discussions:
 
@@ -172,10 +190,11 @@ $ echo "retval: $?"
 
 [wrk2](https://github.com/giltene/wrk2), a HTTP benchmarking tool based mostly on wrk.
 
-
 ## How to Test
 
 Flask `run` method [takes a `threaded` option] to handle concurrent requests using thread or not (`True` by default).  
+
+
 
 
 
@@ -196,8 +215,7 @@ Flask `run` method [takes a `threaded` option] to handle concurrent requests usi
 
 ## Console Output
 
-We need to defined what will be the output on stdout/stderr when running in parallel. We can take inspiration of 
-example of parallel execution from cargo issue [Console output should better reflect the build process](https://github.com/rust-lang/cargo/issues/8889)
+[Console output should better reflect the build process](https://github.com/rust-lang/cargo/issues/8889)
 
 ![buck build](https://user-images.githubusercontent.com/1940490/108307902-9dea2180-7163-11eb-9a4d-269d68d40d9f.gif)
 
@@ -221,3 +239,5 @@ to runs multiple files
 
 
 [takes a `threaded` option]: https://werkzeug.palletsprojects.com/en/3.0.x/serving/#werkzeug.serving.run_simple
+[GNU Parallel]: https://www.gnu.org/software/parallel/
+
