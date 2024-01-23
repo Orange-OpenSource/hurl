@@ -284,6 +284,29 @@ pub fn max_time() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn netrc() -> clap::Arg {
+    clap::Arg::new("netrc")
+        .long("netrc")
+        .short('n')
+        .help("Must read .netrc for username and password")
+        .action(clap::ArgAction::SetTrue)
+}
+
+pub fn netrc_file() -> clap::Arg {
+    clap::Arg::new("netrc_file")
+        .long("netrc-file")
+        .value_name("FILE")
+        .help("Specify FILE for .netrc")
+        .num_args(1)
+}
+
+pub fn netrc_optional() -> clap::Arg {
+    clap::Arg::new("netrc_optional")
+        .long("netrc-optional")
+        .help("Use either .netrc or the URL")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn no_color() -> clap::Arg {
     clap::Arg::new("no_color")
         .long("no-color")

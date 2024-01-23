@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-use std::ffi::CStr;
+use std::ffi::{CStr, CString};
 use std::ptr;
 use std::time::Duration;
 
 use curl::easy::Easy;
 use curl::Error;
-use curl_sys::{curl_certinfo, curl_off_t, curl_slist, CURLINFO};
+use curl_sys::{curl_certinfo, curl_off_t, curl_slist, CURLINFO, CURLOPT_NETRC_FILE};
 
 /// Some definitions not present in curl-sys
 const CURLINFO_OFF_T: CURLINFO = 0x600000;
@@ -170,6 +170,14 @@ pub fn starttransfer_time_t(easy: &mut Easy) -> Result<Duration, Error> {
 /// option isn't supported.
 pub fn total_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_TOTAL_TIME_T).map(microseconds_to_duration)
+}
+
+/// Read .netrc information from a file.
+pub fn netrc_file(easy: &mut Easy, filename: &str) -> Result<(), Error> {
+    let filename = CString::new(filename)?;
+    cvt(easy, unsafe {
+        curl_sys::curl_easy_setopt(easy.raw(), CURLOPT_NETRC_FILE, filename.as_ptr())
+    })
 }
 
 /// Converts an instance of libcurl linked list [`curl_slist`] to a vec of [`String`].

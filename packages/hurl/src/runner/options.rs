@@ -166,6 +166,18 @@ pub fn get_entry_options(
                         let value = eval_natural_option(value, variables)?;
                         runner_options.max_redirect = Some(value as usize)
                     }
+                    OptionKind::NetRc(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.netrc = value
+                    }
+                    OptionKind::NetRcFile(value) => {
+                        let filename = eval_template(value, variables)?;
+                        runner_options.netrc_file = Some(filename.to_string())
+                    }
+                    OptionKind::NetRcOptional(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.netrc_optional = value
+                    }
                     OptionKind::Output(output) => {
                         let filename = eval_template(output, variables)?;
                         let output = if filename == "-" {

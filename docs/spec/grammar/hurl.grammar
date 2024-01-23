@@ -133,6 +133,9 @@ option:
   | ipv4-option
   | ipv6-option
   | max-redirs-option
+  | netrc-option
+  | netrc-file-option
+  | netrc-optional-option
   | output-option
   | path-as-is-option
   | proxy-option
@@ -179,6 +182,12 @@ ipv4-option: "ipv4" ":" boolean-option lt
 ipv6-option: "ipv6" ":" boolean-option lt
 
 max-redirs-option: "max-redirs" ":" integer-option lt
+
+netrc-option: "netrc" ":" boolean-option lt
+
+netrc-file-option: "netrc-file" ":" value-string lt
+
+netrc-optional-option: "netrc-optional" ":" boolean-option lt
 
 output-option: "output" ":" value-string lt
 

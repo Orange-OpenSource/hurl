@@ -21,7 +21,7 @@ use std::str::FromStr;
 use base64::engine::general_purpose;
 use base64::Engine;
 use chrono::Utc;
-use curl::easy::{List, SslOpt};
+use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Version};
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
@@ -448,6 +448,18 @@ impl Client {
         }
         if let Some(unix_socket) = &options.unix_socket {
             self.handle.unix_socket(unix_socket)?;
+        }
+        if let Some(filename) = &options.netrc_file {
+            easy_ext::netrc_file(&mut self.handle, filename)?;
+            self.handle.netrc(if options.netrc_optional {
+                NetRc::Optional
+            } else {
+                NetRc::Required
+            })?;
+        } else if options.netrc_optional {
+            self.handle.netrc(NetRc::Optional)?;
+        } else if options.netrc {
+            self.handle.netrc(NetRc::Required)?;
         }
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;

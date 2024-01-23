@@ -42,6 +42,9 @@ pub struct RunnerOptionsBuilder {
     insecure: bool,
     ip_resolve: IpResolve,
     max_redirect: Option<usize>,
+    netrc: bool,
+    netrc_file: Option<String>,
+    netrc_optional: bool,
     no_proxy: Option<String>,
     output: Option<Output>,
     path_as_is: bool,
@@ -81,6 +84,9 @@ impl Default for RunnerOptionsBuilder {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_redirect: Some(50),
+            netrc: false,
+            netrc_file: None,
+            netrc_optional: false,
             no_proxy: None,
             output: None,
             path_as_is: false,
@@ -250,6 +256,24 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the netrc flag.
+    pub fn netrc(&mut self, netrc: bool) -> &mut Self {
+        self.netrc = netrc;
+        self
+    }
+
+    /// Sets the netrc file.
+    pub fn netrc_file(&mut self, netrc_file: Option<String>) -> &mut Self {
+        self.netrc_file = netrc_file;
+        self
+    }
+
+    /// Sets the optional netrc flag.
+    pub fn netrc_optional(&mut self, netrc_optional: bool) -> &mut Self {
+        self.netrc_optional = netrc_optional;
+        self
+    }
+
     /// Sets list of hosts which do not use a proxy.
     pub fn no_proxy(&mut self, no_proxy: Option<String>) -> &mut Self {
         self.no_proxy = no_proxy;
@@ -364,6 +388,9 @@ impl RunnerOptionsBuilder {
             insecure: self.insecure,
             ip_resolve: self.ip_resolve,
             max_redirect: self.max_redirect,
+            netrc: self.netrc,
+            netrc_file: self.netrc_file.clone(),
+            netrc_optional: self.netrc_optional,
             no_proxy: self.no_proxy.clone(),
             output: self.output.clone(),
             path_as_is: self.path_as_is,
@@ -404,6 +431,9 @@ pub struct RunnerOptions {
     pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,
+    pub(crate) netrc: bool,
+    pub(crate) netrc_file: Option<String>,
+    pub(crate) netrc_optional: bool,
     pub(crate) no_proxy: Option<String>,
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,

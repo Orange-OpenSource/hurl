@@ -1,0 +1,8 @@
+name: netrc_file
+long: netrc-file
+value: FILE
+help: Specify FILE for .netrc
+---
+Like [`--netrc`](#netrc), but provide the path to the netrc file.
+
+See also [`--netrc-optional`](#netrc-optional).

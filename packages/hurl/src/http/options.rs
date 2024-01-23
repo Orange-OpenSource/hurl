@@ -38,6 +38,9 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub ip_resolve: IpResolve,
     pub max_redirect: Option<usize>,
+    pub netrc: bool,
+    pub netrc_file: Option<String>,
+    pub netrc_optional: bool,
     pub no_proxy: Option<String>,
     pub path_as_is: bool,
     pub proxy: Option<String>,
@@ -75,6 +78,9 @@ impl Default for ClientOptions {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_redirect: Some(50),
+            netrc: false,
+            netrc_file: None,
+            netrc_optional: false,
             no_proxy: None,
             path_as_is: false,
             proxy: None,
@@ -154,6 +160,16 @@ impl ClientOptions {
             arguments.push("--max-redirs".to_string());
             arguments.push(max_redirect.to_string());
         }
+        if let Some(filename) = &self.netrc_file {
+            arguments.push("--netrc-file".to_string());
+            arguments.push(format!("'{filename}'"));
+        }
+        if self.netrc_optional {
+            arguments.push("--netrc-optional".to_string());
+        }
+        if self.netrc {
+            arguments.push("--netrc".to_string());
+        }
         if self.path_as_is {
             arguments.push("--path-as-is".to_string());
         }
@@ -209,6 +225,9 @@ mod tests {
                 insecure: true,
                 ip_resolve: IpResolve::IpV6,
                 max_redirect: Some(10),
+                netrc: false,
+                netrc_file: Some("/var/run/netrc".to_string()),
+                netrc_optional: true,
                 path_as_is: true,
                 proxy: Some("localhost:3128".to_string()),
                 no_proxy: None,
@@ -239,6 +258,9 @@ mod tests {
                 "--location",
                 "--max-redirs",
                 "10",
+                "--netrc-file",
+                "'/var/run/netrc'",
+                "--netrc-optional",
                 "--path-as-is",
                 "--proxy",
                 "'localhost:3128'",

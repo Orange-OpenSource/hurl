@@ -63,6 +63,9 @@ pub struct Options {
     pub ip_resolve: Option<IpResolve>,
     pub junit_file: Option<String>,
     pub max_redirect: Option<usize>,
+    pub netrc: bool,
+    pub netrc_file: Option<String>,
+    pub netrc_optional: bool,
     pub no_proxy: Option<String>,
     pub output: Option<Output>,
     pub output_type: OutputType,
@@ -199,6 +202,9 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::json())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
+        .arg(commands::netrc())
+        .arg(commands::netrc_file())
+        .arg(commands::netrc_optional())
         .arg(commands::no_color())
         .arg(commands::no_output())
         .arg(commands::noproxy())
@@ -266,6 +272,9 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let ip_resolve = matches::ip_resolve(arg_matches);
     let junit_file = matches::junit_file(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
+    let netrc = matches::netrc(arg_matches);
+    let netrc_file = matches::netrc_file(arg_matches)?;
+    let netrc_optional = matches::netrc_optional(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches);
     let path_as_is = matches::path_as_is(arg_matches);
@@ -313,6 +322,9 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         ip_resolve,
         junit_file,
         max_redirect,
+        netrc,
+        netrc_file,
+        netrc_optional,
         no_proxy,
         path_as_is,
         progress_bar,
@@ -380,6 +392,9 @@ impl Options {
             None => http::IpResolve::default(),
         };
         let max_redirect = self.max_redirect;
+        let netrc = self.netrc;
+        let netrc_file = self.netrc_file.clone();
+        let netrc_optional = self.netrc_optional;
         let no_proxy = self.no_proxy.clone();
         // FIXME:
         // When used globally (on the command line), `--output` writes the last successful request
@@ -453,6 +468,9 @@ impl Options {
             .insecure(insecure)
             .ip_resolve(ip_resolve)
             .max_redirect(max_redirect)
+            .netrc(netrc)
+            .netrc_file(netrc_file)
+            .netrc_optional(netrc_optional)
             .no_proxy(no_proxy)
             .output(output)
             .path_as_is(path_as_is)

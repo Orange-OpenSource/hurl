@@ -17,6 +17,9 @@ insecure: false
 ipv4: false
 ipv6: false
 max-redirs: 10
+netrc: false
+netrc-file: netrcfile
+netrc-optional: false
 output: output.txt
 path-as-is: false
 proxy: http://proxy.example
@@ -52,6 +55,9 @@ insecure: {{insecure}}
 ipv4: {{ipv4}}
 ipv6: {{ipv6}}
 max-redirs: {{max-redirs}}
+netrc: {{netrc}}
+#netrc-file: {{netrc-file}} NOT SUPPORTED YET
+netrc-optional: {{netrc-optional}}
 #output: {{output}}         NOT SUPPORTED YET
 path-as-is: {{path-as-is}}
 proxy: {{proxy}}

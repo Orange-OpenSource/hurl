@@ -56,6 +56,9 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "location" => option_follow_location(reader)?,
         "location-trusted" => option_follow_location_trusted(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
+        "netrc" => option_netrc(reader)?,
+        "netrc-file" => option_netrc_file(reader)?,
+        "netrc-optional" => option_netrc_optional(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
         "proxy" => option_proxy(reader)?,
@@ -170,6 +173,21 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
+}
+
+fn option_netrc(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean_option, reader)?;
+    Ok(OptionKind::NetRc(value))
+}
+
+fn option_netrc_file(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::NetRcFile(value))
+}
+
+fn option_netrc_optional(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean_option, reader)?;
+    Ok(OptionKind::NetRcOptional(value))
 }
 
 fn option_output(reader: &mut Reader) -> ParseResult<OptionKind> {

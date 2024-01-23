@@ -250,6 +250,28 @@ pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
     }
 }
 
+pub fn netrc(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "netrc")
+}
+
+pub fn netrc_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
+    match get::<String>(arg_matches, "netrc_file") {
+        None => Ok(None),
+        Some(filename) => {
+            if !Path::new(&filename).is_file() {
+                let message = format!("File {filename} does not exist");
+                Err(OptionsError::Error(message))
+            } else {
+                Ok(Some(filename))
+            }
+        }
+    }
+}
+
+pub fn netrc_optional(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "netrc_optional")
+}
+
 pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "noproxy")
 }

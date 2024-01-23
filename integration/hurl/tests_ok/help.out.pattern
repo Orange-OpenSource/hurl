@@ -69,6 +69,12 @@ Options:
           Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]
   -m, --max-time <SECONDS>
           Maximum time allowed for the transfer [default: 300]
+  -n, --netrc
+          Must read .netrc for username and password
+      --netrc-file <FILE>
+          Specify FILE for .netrc
+      --netrc-optional
+          Use either .netrc or the URL
       --no-color
           Do not colorize output
       --no-output
