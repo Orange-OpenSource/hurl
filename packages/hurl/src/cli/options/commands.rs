@@ -289,6 +289,8 @@ pub fn netrc() -> clap::Arg {
         .long("netrc")
         .short('n')
         .help("Must read .netrc for username and password")
+        .conflicts_with("netrc_file")
+        .conflicts_with("netrc_optional")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -297,6 +299,7 @@ pub fn netrc_file() -> clap::Arg {
         .long("netrc-file")
         .value_name("FILE")
         .help("Specify FILE for .netrc")
+        .conflicts_with("netrc")
         .num_args(1)
 }
 
@@ -304,6 +307,7 @@ pub fn netrc_optional() -> clap::Arg {
     clap::Arg::new("netrc_optional")
         .long("netrc-optional")
         .help("Use either .netrc or the URL")
+        .conflicts_with("netrc")
         .action(clap::ArgAction::SetTrue)
 }
 
