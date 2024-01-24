@@ -60,7 +60,7 @@ class Option:
         if self.help is not None:
             s += "\nhelp: " + self.help
         if self.conflict is not None:
-            s += "\nconflict: " + ", ".join(self.conflict)
+            s += "\nconflict: " + " ".join(self.conflict)
         if self.append:
             s += "\nmulti: append"
         if self.deprecated:
@@ -162,7 +162,7 @@ class Option:
     def parse_file(filename):
         import sys
 
-        sys.stderr.write("Parsing " + filename + "\n")
+        # sys.stderr.write("Parsing " + filename + "\n")
         s = open(filename).read()
         return Option.parse(s)
 

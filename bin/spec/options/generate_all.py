@@ -3,6 +3,9 @@ from typing import List
 import glob
 from option import Option
 import generate_source
+import generate_man
+import sys
+import re
 
 
 def get_option_files(dir) -> List[str]:
@@ -12,7 +15,8 @@ def get_option_files(dir) -> List[str]:
 def format_option_file(option_files: List[str]):
     for option_file in option_files:
         option = Option.parse_file(option_file)
-    open(option_file, "w").write(str(option) + "\n")
+        sys.stderr.write("Format " + option_file + "\n")
+        open(option_file, "w").write(str(option) + "\n")
 
 
 def generate_source_file(option_files: List[str], output_file: str):
@@ -21,7 +25,27 @@ def generate_source_file(option_files: List[str], output_file: str):
         key=lambda option: option.name,
     )
     src = generate_source.generate_source(options)
+    sys.stderr.write("Generate " + output_file + "\n")
     open(output_file, "w").write(src + "\n")
+
+
+def update_man(option_files: List[str], output_file):
+    sys.stderr.write("Update " + output_file + "\n")
+    options = sorted(
+        [Option.parse_file(option_file) for option_file in option_files],
+        key=lambda option: option.long,
+    )
+    current_man = open(output_file).read()
+    result = re.search(
+        r"## OPTIONS[^#]*(###.*)### -h, --help", current_man, re.MULTILINE | re.DOTALL
+    )
+    if result is None:
+        raise Exception("Options can not been found in current man " + output_file)
+
+    existing_options_str = result.group(1)
+    new_options_str = generate_man.generate_man(options)
+    new_man = current_man.replace(existing_options_str, new_options_str)
+    open(output_file, "w").write(new_man)
 
 
 def main():
@@ -37,6 +61,9 @@ def main():
     generate_source_file(
         option_files_hurlfmt, "packages/hurlfmt/src/cli/options/commands.rs"
     )
+
+    # Update Man
+    update_man(option_files_hurl, "docs/manual/hurl.md")
 
 
 if __name__ == "__main__":
