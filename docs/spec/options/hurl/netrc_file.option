@@ -1,8 +1,8 @@
 name: netrc_file
 long: netrc-file
 value: FILE
-conflict: netrc
 help: Specify FILE for .netrc
+conflict: netrc
 ---
 Like [`--netrc`](#netrc), but provide the path to the netrc file.
 

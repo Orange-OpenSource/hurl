@@ -297,6 +297,24 @@ Maximum time in seconds that you allow a request/response to take. This is the s
 
 See also [`--connect-timeout`](#connect-timeout).
 
+### -n, --netrc {#netrc}
+
+Scan the .netrc file in the user's home directory for the username and password.
+
+See also [`--netrc-file`](#netrc-file) and [`--netrc-optional`](#netrc-optional).
+
+### --netrc-file <FILE> {#netrc-file}
+
+Like [`--netrc`](#netrc), but provide the path to the netrc file.
+
+See also [`--netrc-optional`](#netrc-optional).
+
+### --netrc-optional {#netrc-optional}
+
+Similar to [`--netrc`](#netrc), but make the .netrc usage optional.
+
+See also [`--netrc-file`](#netrc-file).
+
 ### --no-color {#no-color}
 
 Do not colorize output.
