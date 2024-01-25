@@ -414,12 +414,12 @@ fn log_debug_important(message: &str) {
 
 fn log_debug_error<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, true);
-    get_lines(&message).iter().for_each(|l| log_debug(l));
+    split_lines(&message).iter().for_each(|l| log_debug(l));
 }
 
 fn log_debug_error_no_color<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, false);
-    get_lines(&message)
+    split_lines(&message)
         .iter()
         .for_each(|l| log_debug_no_color(l));
 }
@@ -549,118 +549,142 @@ fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
     )
 }
 
-/// Returns an `error` as a string, given `lines` of content and a `filename`.
+/// Returns the string representation of an `error`, given `lines` of content and a `filename`.
+///
+/// If `colored` is true, the string use ANSI escape codes to add color and improve the readability
+/// of the representation.
+///
+/// Example:
+///
+/// ```text
+/// Assert status code
+///  --> test.hurl:2:10
+///   |
+/// 2 | HTTP/1.0 200
+///   |          ^^^ actual value is <404>
+///   |
+/// ```
 pub(crate) fn error_string<E: Error>(
     filename: &str,
     content: &str,
     error: &E,
     colored: bool,
 ) -> String {
-    let lines = get_lines(content);
+    let mut text = String::new();
+    let lines = split_lines(content);
+    let error_line = error.source_info().start.line;
+    let error_column = error.source_info().start.column;
+    // The number of digits of the lines count.
     let line_number_size = max(lines.len().to_string().len(), 2);
-    let arrow = if colored {
-        "-->".blue().bold().to_string()
-    } else {
-        "-->".to_string()
-    };
-    let line_number = error.source_info().start.line;
-    let column_number = error.source_info().start.column;
-
-    let file_info = format!(
-        "{}{} {}:{}:{}",
-        " ".repeat(line_number_size).as_str(),
-        arrow,
-        filename,
-        line_number,
-        column_number,
-    );
-
-    let line = lines.get(line_number - 1).unwrap();
-    let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
     let separator = if colored {
         "|".blue().bold().to_string()
     } else {
         "|".to_string()
     };
+    let spaces = " ".repeat(line_number_size);
+    let prefix = format!("{spaces} {separator}");
 
-    // TODO: to clean/Refacto
-    // specific case for assert errors
-    let message = if column_number == 0 {
-        let prefix = format!("{} {}   ", " ".repeat(line_number_size).as_str(), separator);
-        let fix_me = error.fixme();
-        add_line_prefix(&fix_me, &prefix, colored)
+    // 1. First line is the description, ex. `Assert status code`.
+    let description = if colored {
+        error.description().bold().to_string()
     } else {
-        let line = lines.get(line_number - 1).unwrap();
-        let width = if error.source_info().end.column > column_number {
-            error.source_info().end.column - column_number
-        } else {
-            0
-        };
+        error.description()
+    };
+    text.push_str(&description);
+    text.push('\n');
 
+    // 2. Second line is the filename info, ex. ` --> test.hurl:2:10`
+    let arrow = if colored {
+        "-->".blue().bold().to_string()
+    } else {
+        "-->".to_string()
+    };
+    let file_line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
+    text.push_str(&file_line);
+    text.push('\n');
+
+    // 3. Appends line separator.
+    text.push_str(&prefix);
+    text.push('\n');
+
+    // 4. Then, we build error line (whitespace is uniformized)
+    // ex. ` 2 | HTTP/1.0 200`
+    let line_raw = lines.get(error_line - 1).unwrap();
+    let line = line_raw.replace('\t', "    ");
+    let width = line_number_size;
+    let mut line_number = format!("{error_line:>width$}");
+    if colored {
+        line_number = line_number.blue().bold().to_string();
+    }
+    text.push_str(&line_number);
+    text.push(' ');
+    text.push_str(&separator);
+    if !line.is_empty() {
+        text.push(' ');
+        text.push_str(&line);
+    };
+    text.push('\n');
+
+    // 5. Then, we append the error detailed message:
+    // ```
+    // |   actual:   byte array <ff>
+    // |   expected: byte array <00>
+    // ````
+
+    // Explicit asserts output is multi-line, with actual and expected value aligned, while
+    // other errors (implicit assert for instance) are one-line, with a column error marker "^^^..."
+    // on a second line.
+    // So, we have "marked" explicit asserts to suppress the display of the column error marker
+    // by setting their `source_info`'s column to 0 (see [`hurl::runner::predicate::eval_predicate::`]).
+    let message = if error_column == 0 {
+        let new_prefix = format!("{prefix}   "); // actual and expected are prefixed by 2 spaces
+        let fix_me = error.fixme();
+        add_line_prefix(&fix_me, &new_prefix, colored)
+    } else {
+        // We take tabs into account because we have normalize the display of the error line by replacing
+        // tabs with 4 spaces.
+        // TODO: add a unit test with tabs in source info.
         let mut tab_shift = 0;
-        for (i, c) in line.chars().enumerate() {
-            if i >= column_number - 1 {
+        for (i, c) in line_raw.chars().enumerate() {
+            if i >= error_column - 1 {
                 break;
             };
             if c == '\t' {
                 tab_shift += 1;
             }
         }
-        let mut underline = "^".repeat(if width > 1 { width } else { 1 });
-        if colored {
-            underline = underline.red().bold().to_string();
-        }
 
-        let mut fix_me = error.fixme();
+        // Error source info start and end can be on different lines, we insure a minimum width.
+        let width = if error.source_info().end.column > error_column {
+            error.source_info().end.column - error_column
+        } else {
+            1
+        };
+
+        let mut fix_me = "^".repeat(width);
+        fix_me.push(' ');
+        fix_me.push_str(&error.fixme());
         if colored {
             fix_me = fix_me.red().bold().to_string();
         }
         format!(
-            "{} {} {}{} {fixme}",
-            " ".repeat(line_number_size).as_str(),
-            separator,
-            " ".repeat(column_number - 1 + tab_shift * 3),
-            underline,
-            fixme = fix_me,
+            "{spaces} {separator} {}{fix_me}",
+            " ".repeat(error_column - 1 + tab_shift * 3)
         )
     };
+    text.push_str(&message);
+    text.push('\n');
 
-    let description = if colored {
-        error.description().bold().to_string()
-    } else {
-        error.description()
-    };
+    // 6. Appends final line separator.
+    text.push_str(&prefix);
 
-    let width = line_number_size;
-    let mut line_number = format!("{line_number:>width$}");
-    if colored {
-        line_number = line_number.blue().bold().to_string();
-    }
-    let line = if line.is_empty() {
-        line
-    } else {
-        format!(" {line}")
-    };
-
-    format!(
-        r#"{description}
-{file_info}
-{line_number_space} {separator}
-{line_number} {separator}{line}
-{message}
-{line_number_space} {separator}"#,
-        description = description,
-        file_info = file_info,
-        line_number = line_number,
-        line = line,
-        message = message,
-        line_number_space = " ".repeat(line_number_size),
-        separator = separator
-    )
+    text
 }
 
+/// Prefixes each line of the string `s` with a `prefix` and returns the new string.
+/// If `colored` is true, each line is colored with ANSI escape codes.
 fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
-    get_lines(s)
+    split_lines(s)
         .iter()
         .map(|line| {
             if colored {
@@ -669,11 +693,12 @@ fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
                 format!("{prefix}{line}")
             }
         })
-        .collect::<Vec<String>>()
+        .collect::<Vec<_>>()
         .join("\n")
 }
 
-fn get_lines(text: &str) -> Vec<&str> {
+/// Splits this `text` to a list of LF/CRLF separated lines.
+fn split_lines(text: &str) -> Vec<&str> {
     regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
 

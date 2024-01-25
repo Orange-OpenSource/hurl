@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::assert::eval_assert;
+use crate::runner::assert::eval_explicit_assert;
 use crate::runner::body::eval_body;
 use crate::runner::capture::eval_capture;
 use crate::runner::error::{Error, RunnerError};
@@ -69,6 +69,7 @@ pub fn eval_asserts(
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
 
+    // First, evaluates implicit asserts on response headers.
     for header in response.headers.iter() {
         match eval_template(&header.value, variables) {
             Err(e) => {
@@ -141,13 +142,15 @@ pub fn eval_asserts(
         }
     }
 
+    // Second, evaluates implicit asserts on response body.
     if let Some(body) = &response.body {
         let assert = eval_implicit_body_asserts(body, variables, http_response, context_dir);
         asserts.push(assert);
     }
 
+    // Then, checks all the explicit asserts.
     for assert in response.asserts().iter() {
-        let assert_result = eval_assert(assert, variables, http_response, context_dir);
+        let assert_result = eval_explicit_assert(assert, variables, http_response, context_dir);
         asserts.push(assert_result);
     }
     asserts

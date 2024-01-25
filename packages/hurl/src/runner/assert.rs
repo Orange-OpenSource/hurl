@@ -117,7 +117,9 @@ impl AssertResult {
     }
 }
 
-pub fn eval_assert(
+/// Evaluates an explicit `assert`, given a set of `variables`, a HTTP response and a context
+/// directory `context_dir`.
+pub fn eval_explicit_assert(
     assert: &Assert,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
@@ -228,7 +230,7 @@ pub mod tests {
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         assert_eq!(
-            eval_assert(
+            eval_explicit_assert(
                 &assert_count_user(),
                 &variables,
                 &xml_three_users_http_response(),

@@ -60,7 +60,7 @@ pub fn eval_predicate(
         context_dir,
     )?;
 
-    // Column error is set to 0 to disable the error display of "^----"
+    // Column error is set to 0 to disable the error display of "^^^"
     let source_info = SourceInfo::new(
         Pos::new(predicate.space0.source_info.start.line, 0),
         Pos::new(predicate.space0.source_info.start.line, 0),
