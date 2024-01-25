@@ -227,7 +227,7 @@ impl Logger {
         }
     }
 
-    pub fn debug_error(&self, content: &str, error: &dyn Error) {
+    pub fn debug_error<E: Error>(&self, content: &str, error: &E) {
         if self.verbosity.is_none() {
             return;
         }
@@ -298,7 +298,7 @@ impl Logger {
         }
     }
 
-    pub fn error_rich(&self, content: &str, error: &dyn Error) {
+    pub fn error_rich<E: Error>(&self, content: &str, error: &E) {
         if self.color {
             log_error_rich(&self.filename, content, error)
         } else {
@@ -412,12 +412,12 @@ fn log_debug_important(message: &str) {
     }
 }
 
-fn log_debug_error(filename: &str, content: &str, error: &dyn Error) {
+fn log_debug_error<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, true);
     get_lines(&message).iter().for_each(|l| log_debug(l));
 }
 
-fn log_debug_error_no_color(filename: &str, content: &str, error: &dyn Error) {
+fn log_debug_error_no_color<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, false);
     get_lines(&message)
         .iter()
@@ -472,12 +472,12 @@ fn log_error_no_color(message: &str) {
     eprintln!("error: {message}");
 }
 
-fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
+fn log_error_rich<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, true);
     eprintln!("{}: {}\n", "error".red().bold(), &message)
 }
 
-fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
+fn log_error_rich_no_color<E: Error>(filename: &str, content: &str, error: &E) {
     let message = error_string(filename, content, error, false);
     eprintln!("error: {}\n", &message)
 }
@@ -550,10 +550,10 @@ fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
 }
 
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
-pub(crate) fn error_string(
+pub(crate) fn error_string<E: Error>(
     filename: &str,
     content: &str,
-    error: &dyn Error,
+    error: &E,
     colored: bool,
 ) -> String {
     let lines = get_lines(content);
