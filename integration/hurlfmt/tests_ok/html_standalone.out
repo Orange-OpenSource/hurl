@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hurl File</title>
+        <style>
+pre {
+    padding: 0;
+    margin: 0;
+}
+
+code {
+    font-family: monospace;
+    font-size: 0.825rem;
+    line-height: 1.2rem;
+}
+
+.comment {
+    color: dimgray;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+
+.number, boolean {
+    color: blue;
+}
+
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.filter-type, .not, .predicate-type {
+    color: darkblue;
+}
+
+
+.string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+    color: darkgreen;
+}
+
+@media (prefers-color-scheme: dark) {
+
+    .comment {
+        color: dimgray;
+    }
+
+    .method {
+        color: orange;
+    }
+
+    .url {
+        color: cyan;
+    }
+
+    .version {
+        color: white;
+    }
+
+    .number, .boolean {
+        color: dodgerblue;
+    }
+
+    .section-header {
+        color: magenta;
+    }
+
+    .query-type {
+        color: cyan;
+    }
+
+    .filter-type, .not, .predicate-type {
+        color: orange;
+    }
+
+    .string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+        color: forestgreen;
+    }
+}
+
+        </style>
+    </head>
+    <body>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span></span></code></pre>
+    </body>
+</html>
