@@ -11,6 +11,8 @@ Connection: close
 error: Assert header value
   --> tests_failed/error_format_long.hurl:7:15
    |
+   | GET http://localhost:8000/error-format-long/html
+   | ...
  7 | Content-Type: text/html
    |               ^^^^^^^^^ actual value is <text/html; charset=utf-8>
    |
@@ -18,6 +20,8 @@ error: Assert header value
 error: Assert failure
   --> tests_failed/error_format_long.hurl:9:0
    |
+   | GET http://localhost:8000/error-format-long/html
+   | ...
  9 | xpath "string(//head/title)" == "Welcome!"
    |   actual:   string <Test>
    |   expected: string <Welcome!>
@@ -26,6 +30,8 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/error_format_long.hurl:11:0
    |
+   | GET http://localhost:8000/error-format-long/html
+   | ...
 11 | xpath "//title" count == 2
    |   actual:   int <1>
    |   expected: int <2>
@@ -44,6 +50,8 @@ Connection: close
 error: Assert failure
   --> tests_failed/error_format_long.hurl:18:0
    |
+   | GET http://localhost:8000/error-format-long/json
+   | ...
 18 | jsonpath "$.books" count == 12
    |   actual:   int <2>
    |   expected: int <12>
@@ -62,6 +70,8 @@ Connection: close
 error: Assert failure
   --> tests_failed/error_format_long.hurl:26:0
    |
+   | GET http://localhost:8000/error-format-long/rfc-7807
+   | ...
 26 | jsonpath "$.title" == "You have enough credit."
    |   actual:   string <You do not have enough credit.>
    |   expected: string <You have enough credit.>

@@ -4,6 +4,8 @@ tests_ok~test.2.hurl: Running [2/3]
 error: Assert body value
   --> tests_ok~test.2.hurl:8:1
    |
+   | GET http://localhost:8000/hello
+   | ...
  8 | `Goodbye World!`
    | ^^^^^^^^^^^^^^^^ actual value is <Hello World!>~
    |

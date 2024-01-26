@@ -37,8 +37,9 @@ impl Testcase {
         let mut failures = vec![];
         let mut errors = vec![];
 
-        for error in hurl_result.errors() {
-            let message = logger::error_string(filename, content, error, false);
+        for (error, entry_src_info) in hurl_result.errors() {
+            let message =
+                logger::error_string(filename, content, error, Some(entry_src_info), false);
             if error.assert {
                 failures.push(message);
             } else {
@@ -146,6 +147,7 @@ HTTP/1.0 200
             r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
   --> test.hurl:2:10
    |
+   | GET http://localhost:8000/not_found
  2 | HTTP/1.0 200
    |          ^^^ actual value is &lt;404>
    |</failure></testcase>"#

@@ -16,6 +16,7 @@
  *
  */
 use chrono::{DateTime, Utc};
+use hurl_core::ast::SourceInfo;
 use serde_json::Number;
 
 use crate::http::{
@@ -73,7 +74,7 @@ impl EntryResult {
         let asserts = self
             .asserts
             .iter()
-            .map(|a| a.to_json(filename, content))
+            .map(|a| a.to_json(filename, content, self.source_info))
             .collect();
         map.insert("asserts".to_string(), asserts);
         map.insert(
@@ -329,14 +330,20 @@ impl CaptureResult {
 }
 
 impl AssertResult {
-    fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
+    fn to_json(
+        &self,
+        filename: &str,
+        content: &str,
+        entry_src_info: SourceInfo,
+    ) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
         let success = self.error().is_none();
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.error() {
-            let message = logger::error_string(filename, content, &err, false);
+            let message =
+                logger::error_string(filename, content, &err, Some(entry_src_info), false);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(

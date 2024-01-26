@@ -38,7 +38,11 @@ impl Testcase {
     /// Creates an HTML testcase.
     pub fn from(hurl_result: &HurlResult, filename: &str) -> Testcase {
         let id = Uuid::new_v4();
-        let errors = hurl_result.errors().into_iter().cloned().collect();
+        let errors = hurl_result
+            .errors()
+            .into_iter()
+            .map(|(e, _)| e.clone())
+            .collect();
         Testcase {
             id: id.to_string(),
             filename: filename.to_string(),

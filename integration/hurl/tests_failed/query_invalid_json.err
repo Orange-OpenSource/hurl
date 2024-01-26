@@ -1,6 +1,8 @@
 error: Invalid JSON
   --> tests_failed/query_invalid_json.hurl:4:1
    |
+   | GET http://localhost:8000/error-query-invalid-json
+   | ...
  4 | jsonpath "$.errors" count == 2
    | ^^^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
    |

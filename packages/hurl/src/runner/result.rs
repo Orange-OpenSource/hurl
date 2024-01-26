@@ -32,19 +32,25 @@ pub struct HurlResult {
 }
 
 impl HurlResult {
-    /// Returns all the effective errors of this `HurlResult`.
+    /// Returns all the effective errors of this `HurlResult`, with the source information
+    /// of the entry where the error happens.
     ///
     /// The errors are only the "effective" ones: those that are due to retry are
     /// ignored.
-    pub fn errors(&self) -> Vec<&Error> {
+    pub fn errors(&self) -> Vec<(&Error, SourceInfo)> {
         let mut errors = vec![];
         let mut next_entries = self.entries.iter().skip(1);
         for entry in self.entries.iter() {
             match next_entries.next() {
-                None => errors.extend(&entry.errors),
+                None => {
+                    let new_errors = entry.errors.iter().map(|error| (error, entry.source_info));
+                    errors.extend(new_errors);
+                }
                 Some(next) => {
                     if next.entry_index != entry.entry_index {
-                        errors.extend(&entry.errors)
+                        let new_errors =
+                            entry.errors.iter().map(|error| (error, entry.source_info));
+                        errors.extend(new_errors)
                     }
                 }
             }

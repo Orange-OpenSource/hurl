@@ -83,7 +83,7 @@ pub fn run(
     let hurl_file = match hurl_file {
         Ok(h) => h,
         Err(e) => {
-            logger.error_rich(content, &e);
+            logger.error_parsing_rich(content, &e);
             return Err(e.description());
         }
     };
@@ -460,7 +460,7 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
         entry_result
             .errors
             .iter()
-            .for_each(|e| logger.debug_error(content, e));
+            .for_each(|e| logger.debug_error(content, e, entry_result.source_info));
         return;
     }
 
@@ -475,7 +475,7 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
     entry_result
         .errors
         .iter()
-        .for_each(|e| logger.error_rich(content, e));
+        .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));
 }
 
 /// Creates a new logger for this entry.

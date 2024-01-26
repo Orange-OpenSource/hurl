@@ -2,6 +2,7 @@ The option fail-at-end is deprecated. Use continue-on-error instead
 error: Assert status code
   --> tests_failed/fail_at_end.hurl:2:6
    |
+   | GET http://localhost:8000/fail-at-end
  2 | HTTP 400
    |      ^^^ actual value is <200>
    |
@@ -9,6 +10,7 @@ error: Assert status code
 error: Assert status code
   --> tests_failed/fail_at_end.hurl:8:6
    |
+   | GET http://localhost:8000/fail-at-end
  8 | HTTP 400
    |      ^^^ actual value is <200>
    |

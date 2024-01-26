@@ -1,6 +1,8 @@
 error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:7:0
    |
+   | GET http://localhost:8000/error-assert-query-cookie
+   | ...
  7 | cookie "cookie1[Secure]" == false      # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   none
    |   expected: bool <false>
@@ -9,6 +11,8 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:11:0
    |
+   | GET http://localhost:8000/error-assert-query-cookie
+   | ...
 11 | cookie "cookie2[Secure]" == true       # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   unit
    |   expected: bool <true>
@@ -18,6 +22,8 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:12:0
    |
+   | GET http://localhost:8000/error-assert-query-cookie
+   | ...
 12 | cookie "cookie2[Secure]" not == true   # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   unit
    |   expected: not bool <true>

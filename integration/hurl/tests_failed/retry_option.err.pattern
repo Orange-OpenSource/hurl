@@ -32,6 +32,8 @@
 * Assert status code
 *   --> tests_failed/retry_option.hurl:5:6
 *    |
+*    | GET http://localhost:8000/not-found
+*    | ...
 *  5 | HTTP 200
 *    |      ^^^ actual value is <404>
 *    |
@@ -71,6 +73,8 @@
 * Assert status code
 *   --> tests_failed/retry_option.hurl:5:6
 *    |
+*    | GET http://localhost:8000/not-found
+*    | ...
 *  5 | HTTP 200
 *    |      ^^^ actual value is <404>
 *    |
@@ -112,6 +116,8 @@
 error: Assert status code
   --> tests_failed/retry_option.hurl:5:6
    |
+   | GET http://localhost:8000/not-found
+   | ...
  5 | HTTP 200
    |      ^^^ actual value is <404>
    |

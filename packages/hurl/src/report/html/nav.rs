@@ -60,7 +60,8 @@ impl Testcase {
                 let line = e.source_info.start.line;
                 let column = e.source_info.start.column;
                 let filename = &self.filename;
-                let message = logger::error_string(filename, content, e, false);
+                let message =
+                    logger::error_string(filename, content, e, Some(e.source_info), false);
                 // We override the first part of the error string to add an anchor to
                 // the error context.
                 let old = format!("{filename}:{line}:{column}");

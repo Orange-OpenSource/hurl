@@ -208,7 +208,8 @@ mod tests {
                 <testcase id=\"-\" name=\"-\" time=\"0.230\">\
                     <failure>Assert status code\n  \
                     --> -:2:10\n   \
-                      |\n \
+                      |\n   \
+                      | GET http://localhost:8000/not_found\n \
                     2 | HTTP/1.0 200\n   \
                       |          ^^^ actual value is &lt;404>\n   \
                       |\

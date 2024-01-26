@@ -18,6 +18,7 @@
 use std::cmp::max;
 
 use colored::*;
+use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
 use crate::runner::{HurlResult, Value};
@@ -227,14 +228,14 @@ impl Logger {
         }
     }
 
-    pub fn debug_error<E: Error>(&self, content: &str, error: &E) {
+    pub fn debug_error<E: Error>(&self, content: &str, error: &E, entry_src_info: SourceInfo) {
         if self.verbosity.is_none() {
             return;
         }
         if self.color {
-            log_debug_error(&self.filename, content, error)
+            log_debug_error(&self.filename, content, error, entry_src_info)
         } else {
-            log_debug_error_no_color(&self.filename, content, error)
+            log_debug_error_no_color(&self.filename, content, error, entry_src_info)
         }
     }
 
@@ -298,11 +299,24 @@ impl Logger {
         }
     }
 
-    pub fn error_rich<E: Error>(&self, content: &str, error: &E) {
+    pub fn error_parsing_rich<E: Error>(&self, content: &str, error: &E) {
         if self.color {
-            log_error_rich(&self.filename, content, error)
+            log_error_rich(&self.filename, content, error, None)
         } else {
-            log_error_rich_no_color(&self.filename, content, error)
+            log_error_rich_no_color(&self.filename, content, error, None)
+        }
+    }
+
+    pub fn error_runtime_rich<E: Error>(
+        &self,
+        content: &str,
+        error: &E,
+        entry_src_info: SourceInfo,
+    ) {
+        if self.color {
+            log_error_rich(&self.filename, content, error, Some(entry_src_info))
+        } else {
+            log_error_rich_no_color(&self.filename, content, error, Some(entry_src_info))
         }
     }
 
@@ -412,13 +426,18 @@ fn log_debug_important(message: &str) {
     }
 }
 
-fn log_debug_error<E: Error>(filename: &str, content: &str, error: &E) {
-    let message = error_string(filename, content, error, true);
+fn log_debug_error<E: Error>(filename: &str, content: &str, error: &E, entry_src_info: SourceInfo) {
+    let message = error_string(filename, content, error, Some(entry_src_info), true);
     split_lines(&message).iter().for_each(|l| log_debug(l));
 }
 
-fn log_debug_error_no_color<E: Error>(filename: &str, content: &str, error: &E) {
-    let message = error_string(filename, content, error, false);
+fn log_debug_error_no_color<E: Error>(
+    filename: &str,
+    content: &str,
+    error: &E,
+    entry_src_info: SourceInfo,
+) {
+    let message = error_string(filename, content, error, Some(entry_src_info), false);
     split_lines(&message)
         .iter()
         .for_each(|l| log_debug_no_color(l));
@@ -472,13 +491,23 @@ fn log_error_no_color(message: &str) {
     eprintln!("error: {message}");
 }
 
-fn log_error_rich<E: Error>(filename: &str, content: &str, error: &E) {
-    let message = error_string(filename, content, error, true);
+fn log_error_rich<E: Error>(
+    filename: &str,
+    content: &str,
+    error: &E,
+    entry_src_info: Option<SourceInfo>,
+) {
+    let message = error_string(filename, content, error, entry_src_info, true);
     eprintln!("{}: {}\n", "error".red().bold(), &message)
 }
 
-fn log_error_rich_no_color<E: Error>(filename: &str, content: &str, error: &E) {
-    let message = error_string(filename, content, error, false);
+fn log_error_rich_no_color<E: Error>(
+    filename: &str,
+    content: &str,
+    error: &E,
+    entry_src_info: Option<SourceInfo>,
+) {
+    let message = error_string(filename, content, error, entry_src_info, false);
     eprintln!("error: {}\n", &message)
 }
 
@@ -551,6 +580,8 @@ fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
 
 /// Returns the string representation of an `error`, given `lines` of content and a `filename`.
 ///
+/// The source information where the error occurred can be retrieved in `error`; optionally,
+/// `entry_src_info` is the optional source information for the entry where the error happened.
 /// If `colored` is true, the string use ANSI escape codes to add color and improve the readability
 /// of the representation.
 ///
@@ -568,20 +599,23 @@ pub(crate) fn error_string<E: Error>(
     filename: &str,
     content: &str,
     error: &E,
+    entry_src_info: Option<SourceInfo>,
     colored: bool,
 ) -> String {
     let mut text = String::new();
     let lines = split_lines(content);
+    let entry_line = entry_src_info.map(|e| e.start.line);
     let error_line = error.source_info().start.line;
     let error_column = error.source_info().start.column;
     // The number of digits of the lines count.
-    let line_number_size = max(lines.len().to_string().len(), 2);
+    let loc_max_width = max(lines.len().to_string().len(), 2);
+    let separator = "|";
     let separator = if colored {
-        "|".blue().bold().to_string()
+        separator.blue().bold().to_string()
     } else {
-        "|".to_string()
+        separator.to_string()
     };
-    let spaces = " ".repeat(line_number_size);
+    let spaces = " ".repeat(loc_max_width);
     let prefix = format!("{spaces} {separator}");
 
     // 1. First line is the description, ex. `Assert status code`.
@@ -594,38 +628,53 @@ pub(crate) fn error_string<E: Error>(
     text.push('\n');
 
     // 2. Second line is the filename info, ex. ` --> test.hurl:2:10`
+    let arrow = "-->";
     let arrow = if colored {
-        "-->".blue().bold().to_string()
+        arrow.blue().bold().to_string()
     } else {
-        "-->".to_string()
+        arrow.to_string()
     };
-    let file_line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
-    text.push_str(&file_line);
+    let line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
+    text.push_str(&line);
     text.push('\n');
 
     // 3. Appends line separator.
     text.push_str(&prefix);
     text.push('\n');
 
-    // 4. Then, we build error line (whitespace is uniformized)
-    // ex. ` 2 | HTTP/1.0 200`
-    let line_raw = lines.get(error_line - 1).unwrap();
-    let line = line_raw.replace('\t', "    ");
-    let width = line_number_size;
-    let mut line_number = format!("{error_line:>width$}");
-    if colored {
-        line_number = line_number.blue().bold().to_string();
+    // 4. Appends the optional entry line.
+    if let Some(entry_line) = entry_line {
+        if entry_line != error_line {
+            let line = lines.get(entry_line - 1).unwrap();
+            let line = if colored {
+                line.bright_black().to_string()
+            } else {
+                line.to_string()
+            };
+            text.push_str(&prefix);
+            text.push(' ');
+            text.push_str(&line);
+            text.push('\n');
+        }
+        if error_line - entry_line > 1 {
+            text.push_str(&prefix);
+            let dots = " ...\n";
+            let dots = if colored {
+                dots.bright_black().to_string()
+            } else {
+                dots.to_string()
+            };
+            text.push_str(&dots);
+        }
     }
-    text.push_str(&line_number);
-    text.push(' ');
-    text.push_str(&separator);
-    if !line.is_empty() {
-        text.push(' ');
-        text.push_str(&line);
-    };
+
+    // 5. Then, we build error line (whitespace is uniformized)
+    // ex. ` 2 | HTTP/1.0 200`
+    let line = line_with_loc(&lines, error_line, &separator, colored);
+    text.push_str(&line);
     text.push('\n');
 
-    // 5. Then, we append the error detailed message:
+    // 6. Then, we append the error detailed message:
     // ```
     // |   actual:   byte array <ff>
     // |   expected: byte array <00>
@@ -645,6 +694,7 @@ pub(crate) fn error_string<E: Error>(
         // tabs with 4 spaces.
         // TODO: add a unit test with tabs in source info.
         let mut tab_shift = 0;
+        let line_raw = lines.get(error_line - 1).unwrap();
         for (i, c) in line_raw.chars().enumerate() {
             if i >= error_column - 1 {
                 break;
@@ -678,6 +728,27 @@ pub(crate) fn error_string<E: Error>(
     // 6. Appends final line separator.
     text.push_str(&prefix);
 
+    text
+}
+
+/// Returns the `line` count prefix.
+/// Example: `   45 `
+fn line_with_loc(lines: &[&str], loc: usize, separator: &str, colored: bool) -> String {
+    let mut text = String::new();
+    let loc_max_width = max(lines.len().to_string().len(), 2);
+    let line = lines.get(loc - 1).unwrap();
+    let line = line.replace('\t', "    ");
+    let mut line_number = format!("{loc:>loc_max_width$}");
+    if colored {
+        line_number = line_number.blue().bold().to_string();
+    }
+    text.push_str(&line_number);
+    text.push(' ');
+    text.push_str(separator);
+    if !line.is_empty() {
+        text.push(' ');
+        text.push_str(&line);
+    }
     text
 }
 
@@ -718,6 +789,26 @@ pub mod tests {
     }
 
     #[test]
+    fn test_error_timeout() {
+        let content = "GET http://unknown";
+        let filename = "test.hurl";
+        let inner =
+            runner::RunnerError::HttpConnection("(6) Could not resolve host: unknown".to_string());
+        let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
+        let error = runner::Error::new(error_source_info, inner, true);
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"HTTP connection
+  --> test.hurl:1:5
+   |
+ 1 | GET http://unknown
+   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
+   |"#
+        )
+    }
+
+    #[test]
     fn test_assert_error_status() {
         let content = r#"GET http://unknown
 HTTP/1.0 200
@@ -726,16 +817,15 @@ HTTP/1.0 200
         let inner = runner::RunnerError::AssertStatus {
             actual: "404".to_string(),
         };
-        let error = runner::Error::new(
-            SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
-            inner,
-            true,
-        );
+        let error_source_info = SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
+        let error = runner::Error::new(error_source_info, inner, true);
         assert_eq!(
-            error_string(filename, content, &error, false),
+            error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert status code
   --> test.hurl:2:10
    |
+   | GET http://unknown
  2 | HTTP/1.0 200
    |          ^^^ actual value is <404>
    |"#
@@ -750,16 +840,20 @@ HTTP/1.0 200
 xpath "strong(//head/title)" == "Hello"
 "#;
         let filename = "test.hurl";
+        let error_source_info = SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 22));
         let error = runner::Error::new(
-            SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29)),
+            error_source_info,
             runner::RunnerError::QueryInvalidXpathEval,
             true,
         );
         assert_eq!(
-            error_string(filename, content, &error, false),
+            error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Invalid XPath expression
   --> test.hurl:4:7
    |
+   | GET http://example.com
+   | ...
  4 | xpath "strong(//head/title)" == "Hello"
    |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
    |"#
@@ -774,8 +868,10 @@ HTTP/1.0 200
 jsonpath "$.count" >= 5
 "#;
         let filename = "test.hurl";
+        let error_source_info = SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14));
         let error = runner::Error {
-            source_info: SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0)),
+            source_info: error_source_info,
             inner: runner::RunnerError::AssertFailure {
                 actual: "int <2>".to_string(),
                 expected: "greater than int <5>".to_string(),
@@ -784,10 +880,12 @@ jsonpath "$.count" >= 5
             assert: true,
         };
         assert_eq!(
-            error_string(filename, content, &error, false),
+            error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert failure
   --> test.hurl:4:0
    |
+   | GET http://api
+   | ...
  4 | jsonpath "$.count" >= 5
    |   actual:   int <2>
    |   expected: greater than int <5>
@@ -807,17 +905,40 @@ HTTP/1.0 200
             actual: "<p>Hello</p>\n\n".to_string(),
             expected: "<p>Hello</p>\n".to_string(),
         };
-        let error =
-            runner::Error::new(SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1)), inner, true);
+        let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
+        let error = runner::Error::new(error_source_info, inner, true);
         assert_eq!(
-            error_string(filename, content, &error, false),
+            error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert body value
   --> test.hurl:3:4
    |
+   | GET http://localhost
+   | ...
  3 | ```<p>Hello</p>
    |    ^ actual value is <<p>Hello</p>
 
 >
+   |"#
+        )
+    }
+
+    #[test]
+    fn test_parsing_error() {
+        let content = "GET abc";
+        let filename = "test.hurl";
+        let error = hurl_core::parser::Error {
+            pos: Pos::new(1, 5),
+            recoverable: false,
+            inner: hurl_core::parser::ParseError::UrlInvalidStart,
+        };
+        assert_eq!(
+            error_string(filename, content, &error, None, false),
+            r#"Parsing URL
+  --> test.hurl:1:5
+   |
+ 1 | GET abc
+   |     ^ expecting http://, https:// or {{
    |"#
         )
     }
