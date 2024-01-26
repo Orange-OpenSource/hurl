@@ -20,5 +20,6 @@ grcov target/profile \
     --output-types html \
     --branch \
     --ignore-not-existing \
+    --excl-line "^ *\}$" \
     --output-path target/coverage
 
