@@ -11,6 +11,7 @@ jsonpath "$.multiline_string" == ```
 Hello
 Bob!
 ```
+jsonpath "$.multiline_string_oneline" == ```Hello Bob!```
 jsonpath "$.hex" == hex,010203;
 jsonpath "$.base64" == base64,bGluZTEKbGluZTINCmxpbmUzCg==;
 jsonpath "$.file" == file,data.bin;
