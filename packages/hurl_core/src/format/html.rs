@@ -840,7 +840,7 @@ impl HtmlFormatter {
         for line_terminator in line_terminators {
             self.fmt_span_open("line");
             if line_terminator.newline.value.is_empty() {
-                self.buffer.push_str("<br>");
+                self.buffer.push_str("<br />");
             }
             self.fmt_span_close();
             self.fmt_lt(line_terminator);
