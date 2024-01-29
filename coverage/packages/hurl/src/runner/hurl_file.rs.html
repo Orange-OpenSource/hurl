@@ -1413,7 +1413,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            logger.error_rich(content, &amp;e);</pre>
+                <pre class="has-background-success-light py-0 px-2">            logger.error_parsing_rich(content, &amp;e);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7445,7 +7445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .for_each(|e| logger.debug_error(content, e));</pre>
+                <pre class="has-background-success-light py-0 px-2">            .for_each(|e| logger.debug_error(content, e, entry_result.source_info));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7685,7 +7685,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .for_each(|e| logger.error_rich(content, e));</pre>
+                <pre class="has-background-success-light py-0 px-2">        .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8475,7 +8475,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-01-28 08:09</p>
+                <p class="heading">Date: 2024-01-29 08:08</p>
             </div>
         </footer>
     </body>
