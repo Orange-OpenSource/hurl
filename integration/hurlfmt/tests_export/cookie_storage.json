@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/cookie-storage/assert-that-cookie1-is-valueA"},"response":{"status":200}},{"request":{"method":"GET","url":"http://localhost:8000/cookie-storage/assert-that-cookie1-is-not-in-session"},"response":{"status":200}}]}

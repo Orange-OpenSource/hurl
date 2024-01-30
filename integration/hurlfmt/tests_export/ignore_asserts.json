@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/ignore_asserts"},"response":{"status":666,"asserts":[{"query":{"type":"body"},"predicate":{"type":"equal","value":"Whatever"}}]}}]}

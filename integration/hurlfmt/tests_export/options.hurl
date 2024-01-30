@@ -29,6 +29,7 @@ retry: -1
 retry: 4
 retry-interval: 1000
 skip: false
+unix-socket: build/unix_socket.sock
 variable: user=null
 variable: status=true
 variable: count=2
@@ -66,5 +67,6 @@ retry: {{retry}}
 retry-interval: {{retry-interval}}
 skip: {{skip}}
 #variable: {{variable}}     NOT SUPPORTED YET
+unix-socket: {{socket_file}}
 verbose: {{verbose}}
 very-verbose: {{very-verbose}}

@@ -1,6 +1,17 @@
 POST http://localhost:8000/json
 {
-   "message": "Hello"
+  "message": "Hello",
+  "count": 5,
+  "success": false,
+  "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
+  "warnings": [],
+  "duration": 1.5,
+  "tags": ["test"],
+  "nullable": null,
+  "profile-id": "123abc",
+  "empty": {},
+  "name": {{name}}
 }
 
 POST http://localhost:8000/xml

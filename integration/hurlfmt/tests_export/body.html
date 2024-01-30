@@ -1,6 +1,17 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span></span>
 <span class="json"><span class="line">{</span>
-<span class="line">   "message": "Hello"</span>
+<span class="line">  "message": "Hello",</span>
+<span class="line">  "count": 5,</span>
+<span class="line">  "success": false,</span>
+<span class="line">  "errors": [{"id":"error1"},{"id":"error2"}],</span>
+<span class="line">  "failures": [{"id":"failure1"}],</span>
+<span class="line">  "warnings": [],</span>
+<span class="line">  "duration": 1.5,</span>
+<span class="line">  "tags": ["test"],</span>
+<span class="line">  "nullable": null,</span>
+<span class="line">  "profile-id": "123abc",</span>
+<span class="line">  "empty": {},</span>
+<span class="line">  "name": {{name}}</span>
 <span class="line">}</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/xml</span></span>

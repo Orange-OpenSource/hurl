@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/aws-sigv4","form_params":[{"name":"test","value":"test"}],"options":[{"name":"aws-sigv4","value":"aws:amz:eu-central-1:hurltest"}]},"response":{"status":200}}]}

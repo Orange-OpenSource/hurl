@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"PUT","url":"http://localhost:8000/put"},"response":{"status":200,"asserts":[{"query":{"type":"body"},"predicate":{"type":"equal","value":""}}]}}]}

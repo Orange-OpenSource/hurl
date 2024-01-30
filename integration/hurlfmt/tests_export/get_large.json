@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/get_large"},"response":{"status":200,"headers":[{"name":"Content-Type","value":"application/octet-stream"},{"name":"Content-Length","value":"536870912"}],"asserts":[{"query":{"type":"duration"},"predicate":{"type":"less-or-equal","value":30000}}]}}]}

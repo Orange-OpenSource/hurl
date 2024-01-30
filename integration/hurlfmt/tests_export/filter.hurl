@@ -1,43 +1,23 @@
-GET http://localhost:8000/filter
+GET http://localhost:8000/dummy
 
 HTTP 200
 [Captures]
-url: jsonpath "$.url"
-text: jsonpath "$.text"
+count: jsonpath "$.books" count
 [Asserts]
-jsonpath "$.list" count == 3
-jsonpath "$.list" nth 1 == 2
-jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
-jsonpath "$.url" == "https://mozilla.org/?x=шеллы"
-jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
-jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"
-variable "url" urlEncode urlDecode == "{{url}}"
-jsonpath "$.text" == "a > b && a < c"
-jsonpath "$.text" htmlEscape == "a &gt; b &amp;&amp; a &lt; c"
-jsonpath "$.escaped_html[0]" htmlUnescape == "a > b && a < c"
-jsonpath "$.escaped_html[1]" htmlUnescape == "Foo © bar 𝌆 baz ☃ qux"
-jsonpath "$.escaped_html[2]" htmlUnescape == "A foo"
-variable "text" htmlEscape htmlUnescape == "{{text}}"
-jsonpath "$.id" toInt == 123
-jsonpath "$.score" toInt == 1
-jsonpath "$.ips" split ", " count == 3
-jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
-jsonpath "$.json" jsonpath "$.message" == "Hello"
-certificate "Expire-Date" daysAfterNow > 15
-certificate "Expire-Date" daysBeforeNow > 15
-{
-  "list": [1,2,3],
-  "message": "Hello Bob!",
-  "url": "https://mozilla.org/?x=шеллы",
-  "encoded_url": "https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B",
-  "text": "a > b && a < c",
-  "escaped_html": [
-    "a &gt; b &amp;&amp; a &lt; c",
-    "Foo &#xA9; bar &#x1D306; baz &#x2603; qux",
-    "&#65 foo"
-  ],
-  "id": "123",
-  "score": 1.6,
-  "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10",
-  "json": "{\"message\": \"Hello\"}"
-}
+jsonpath "$.books" count == 12                                                              # count
+certificate "Expire-Date" daysAfterNow > 15                                                 # daysAfterNow
+certificate "Start-Date" daysBeforeNow < 100                                                # daysBeforeNow
+bytes decode "iso-8859-1" == "café"                                                         # decode
+cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"        # format
+jsonpath "$.text" htmlEscape == "a &gt; b"                                                  # htmlEscape
+jsonpath "$.escaped_html[1]" htmlUnescape == "<p>Hello</p>"                                 # htmlUnescape
+variable "books" jsonpath "$[0].name" == "Dune"                                             # jsonpath
+jsonpath "$.books" nth 2 == "Children of Dune"                                              # nth
+body regex /Hello ([0-9]+)!/ == "Bob"                                                       # regex
+jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"                      # replace
+jsonpath "$.ips" split ", " count == 3                                                      # split
+header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000                    # toDate
+jsonpath "$.id" toInt == 123                                                                # toInt
+jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"                        # urlDecode
+jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B" # urlEncode
+bytes decode "iso-8859-1" xpath "string(//p)" == "Hello"                                    # xpath

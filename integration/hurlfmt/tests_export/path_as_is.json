@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/path-as-is/../resource"},"response":{"status":200}}]}
