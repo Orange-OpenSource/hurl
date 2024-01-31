@@ -218,12 +218,8 @@ jobs:
 
       - name: Update installation doc
         run: |
-          # TODO: create a dedicated check script
-          version_doc="docs/installation.md"
-          old_version=$(grep "apt install" "${version_doc}" | grep "hurl" | cut --delimiter '/' --field 2- | cut --delimiter '_' --field 2)
-          echo "old_version=${old_version}"
-          sed -i "s/${old_version}/${{ needs.set-context.outputs.release_version }}/g" "${version_doc}"
-          grep "${{ needs.set-context.outputs.release_version }}" "${version_doc}"
+          old_version=$(grep -E "^\\$ VERSION=" docs/installation.md | head -1 | cut --delimiter "=" --field 2)
+          sed -i "s/${old_version}/${{ needs.set-context.outputs.release_version }}/g" docs/installation.md
 
       - name: Update man
         run: |
