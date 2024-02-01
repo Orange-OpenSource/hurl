@@ -64,6 +64,7 @@ def main():
 
     # Update Man
     update_man(option_files_hurl, "docs/manual/hurl.md")
+    update_man(option_files_hurlfmt, "docs/manual/hurlfmt.md")
 
 
 if __name__ == "__main__":

@@ -103,7 +103,6 @@ Output full html file with css instead of html fragment (default).
 
 This can be used only with html output.
 
-
 ### -h, --help {#help}
 
 Usage help.
