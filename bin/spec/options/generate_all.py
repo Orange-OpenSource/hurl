@@ -4,6 +4,7 @@ import glob
 from option import Option
 import generate_source
 import generate_man
+import generate_completion
 import sys
 import re
 
@@ -48,6 +49,17 @@ def update_man(option_files: List[str], output_file):
     open(output_file, "w").write(new_man)
 
 
+def generate_completion_files(name: str, option_files: List[str]):
+    options = sorted(
+        [Option.parse_file(option_file) for option_file in option_files],
+        key=lambda option: option.name,
+    )
+    output_file = "completions/" + name + "-completion.bash"
+    src = generate_completion.generate_bash_completion(name, options)
+    sys.stderr.write("Generate " + output_file + "\n")
+    open(output_file, "w").write(src + "\n")
+
+
 def main():
     option_files_hurl = get_option_files("docs/spec/options/hurl")
     option_files_hurlfmt = get_option_files("docs/spec/options/hurlfmt")
@@ -65,6 +77,10 @@ def main():
     # Update Man
     update_man(option_files_hurl, "docs/manual/hurl.md")
     update_man(option_files_hurlfmt, "docs/manual/hurlfmt.md")
+
+    # Generate completion files
+    generate_completion_files("hurl", option_files_hurl)
+    generate_completion_files("hurlfmt", option_files_hurlfmt)
 
 
 if __name__ == "__main__":
