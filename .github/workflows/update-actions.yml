@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: master
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Actions update
         run: |
