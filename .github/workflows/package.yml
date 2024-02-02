@@ -477,7 +477,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -498,6 +498,52 @@ jobs:
       uses: actions/upload-artifact@v4.0.0
       with:
         name: release-macos-x64-artifacts
+        path: target/upload/*
+
+  package-macos-aarch64:
+    runs-on: macos-14
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_macos.sh
+    - name: Install python3 venv
+      run: |
+        bin/install_python3_venv.sh
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        which python3
+        python3 --version
+        pip --version
+    - name: Install Rust
+      run: bin/install_rust.sh
+    - name: Environment
+      run: bin/environment.sh
+    - name: Build
+      run: |
+        bin/release/release.sh
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Get version
+      run: |
+        VERSION=$(bin/release/get_version.sh)
+        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
+    - name: Create generic macos package
+      run: |
+        bin/release/man.sh
+        bin/release/create_tarball.sh
+    - name: Install package
+      run: |
+        bin/release/install_generic_macos_package.sh
+        echo "PATH=/tmp/hurl-generic-macos:$PATH" >> "${GITHUB_ENV}"
+    - name: Test integ
+      run: |
+        bin/test/test_prerequisites.sh
+        bin/test/test_integ.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4.0.0
+      with:
+        name: release-macos-aarch64-artifacts
         path: target/upload/*
 
   package-windows-x64:
