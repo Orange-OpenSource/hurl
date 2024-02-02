@@ -27,6 +27,7 @@ Used to publish a new release from master branch (normal process).
   - Publish the draft release
 - Change the release status from draft to public on github
 - Accept the PR from `release/x.y.0` to `master` with `/accept`
+- Run `extra-package.yml` workflow on `master` branch  filling in the `desired SNAPSHOT version` and selecting  wanted extra packages
 - Run `update-branch-version.yml` workflow on `master` branch, filling in the `desired SNAPSHOT version`, it will:
   - Create `bot/update-branch-version-master` branch
   - Checkout this new branch
