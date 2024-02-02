@@ -78,7 +78,7 @@ function github_connect(){
 
 function github_test_repo(){
     if [[ $# -ne 1 ]] ; then
-        print-eror "internal function ${FUNCNAME[0]}" "please provide one parameter, ${FUNCNAME[0]} \$github_project_path"
+        log_error "internal function ${FUNCNAME[0]}" "please provide one parameter, ${FUNCNAME[0]} \$github_project_path"
         return 1
     else
         project_path=$1
@@ -89,6 +89,29 @@ function github_test_repo(){
             return 0
         fi
     fi
+}
+
+function github_get_latest_release(){
+    if [[ $# -ne 1 ]] ; then
+        log_error "internal function ${FUNCNAME[0]}" "please provide one parameter, ${FUNCNAME[0]} \$github_project_path"
+        return 1
+    else
+        project_path=$1
+        if ! result=$(gh release list --repo "${project_path}" 2>&1) ; then
+            log_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
+            return 1
+        else
+            latest=$(echo "$result" | grep Lates | cut --field 3)
+            if [[ -z $latest ]] ; then
+                log_error "Latest version" "Action $project_path does not have any release tagged as latest, please check this repo"
+                exit 1
+            else
+                echo "$latest"
+                return 0
+            fi
+        fi
+    fi
+
 }
 
 function github_get_pr_number_list(){
