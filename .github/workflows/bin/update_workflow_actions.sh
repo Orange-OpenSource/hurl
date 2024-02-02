@@ -1,6 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC1091,SC2001
-set -Eeuo pipefail
+#set -Eeuo pipefail
 
 # functions
 
@@ -84,33 +83,25 @@ function get_uses_action_list(){
                             tr '@' ' '
 }
 
-function prerequisites(){
-    script_dir=$(dirname "$0")
-    source "${script_dir}/shared.functions.sh"
-    init_terminal_colors
-    declare color_red
-    declare color_green
-    declare color_reset
-}
-
 # main
-prerequisites
+script_dir=$(dirname "$0")
+source "${script_dir}/shared.functions.sh"
+init_terminal_colors
 consume_args "$@"
 
 echo -e "\n--------------------------------------------------------"
-echo "### Check actions"
+echo -e "### Check actions\n\n"
 while read -r action version; do
     update_files=$(grep --recursive --files-with-matches "$action@$version" "$script_dir"/../* | xargs realpath)
     latest=$(github_get_latest_release "$action")
     if [[ "$version" == "$latest" ]] ; then
         echo -e "\n- $action@$version ${color_green}newest${color_reset}"
-        echo "${update_files}" | sed "s/^/  - /g"
     else
         if [ "$dry" == "true" ] ; then
             echo -e "\n- $action@$version ${color_red}please update to max stable version ${latest}${color_reset}"
             echo "$update_files" | sed "s/^/  - /g"
         else
-            while read -r file ; do
+            while read file ; do
                 sed -i "s#$action@$version#$action@$latest#g" "$file" || true
                 if grep -E "$action@$version$|$action@$version " "$file" ; then
                     echo -e "\n- $action@$version ${color_red} fails to update to ${latest}${color_reset}"
