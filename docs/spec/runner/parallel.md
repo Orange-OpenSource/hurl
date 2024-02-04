@@ -190,6 +190,71 @@ $ echo "retval: $?"
 
 [wrk2](https://github.com/giltene/wrk2), a HTTP benchmarking tool based mostly on wrk.
 
+## --test Output
+
+Demo here => <https://jcamiel.github.io/parallel/>
+
+### Hurl 4.2.0 sync run
+
+```shell
+$ hurl --test *.hurl
+/tmp/foo/bar/baz/job-1.hurl: Running [1/10]
+/tmp/foo/bar/baz/job-1.hurl: Success (10 request(s) in 10096 ms)
+/tmp/foo/bar/job-2.hurl: Running [2/10]
+/tmp/foo/bar/job-2.hurl: Success (2 request(s) in 3019 ms)
+/tmp/foo/bar/zzzzzz/job-3.hurl: Running [3/10]
+ [========>               ] 2/3
+```
+
+### Hurl 4.2.0 parallel 5 jobs / option 2
+
+- Progress bar on the right
+- Idle jobs are displayed
+
+```shell
+$ hurl --test --parallel *.hurl
+/tmp/foo/bar/job-2.hurl: Success (2 request(s) in x ms)
+/tmp/foo/bar/job-6.hurl: Success (4 request(s) in x ms)
+/tmp/foo/bar/job-4.hurl: Success (7 request(s) in x ms)
+#1 /tmp/foo/bar/baz/job-1.hurl: Running [1/10] [============>           ] 6/10
+#2 /tmp/foo/bar/ee/job-7.hurl: Running [7/10] [>                       ] 1/1
+#3 /tmp/foo/bar/zzzzzz/job-3.hurl: Running [3/10] [================>       ] 3/3
+#4 /tmp/foo/bar/fff/job-8.hurl: Running [8/10] [>                       ] 1/5
+#5 /tmp/foo/bar/ddd/job-5.hurl: Running [5/10] [================>       ] 9/12
+```
+
+```shell
+/tmp/foo/bar/job-2.hurl: Success (2 request(s) in x ms)
+/tmp/foo/bar/job-4.hurl: Success (7 request(s) in x ms)
+/tmp/foo/bar/job-6.hurl: Success (4 request(s) in x ms)
+/tmp/foo/bar/zzzzzz/job-3.hurl: Success (3 request(s) in x ms)
+/tmp/foo/bar/ddd/job-5.hurl: Success (12 request(s) in x ms)
+/tmp/foo/bar/ee/job-7.hurl: Success (1 request(s) in x ms)
+/tmp/foo/bar/baz/job-1.hurl: Success (10 request(s) in x ms)
+#1 -: Idle
+#2 /tmp/foo/bar/fff/job-8.hurl: Running [8/10] [===================>    ] 5/5
+#3 /tmp/foo/bar/job-9.hurl: Running [9/10] [===================>    ] 9/10
+#4 -: Idle
+#5 /tmp/foo/bar/job-10.hurl: Running [10/10] [================>       ] 3/3
+```
+
+### Hurl 4.2.0 parallel 5 jobs / option 2
+
+- Progress bar on the left
+- Idle jobs are not displayed
+
+```shell
+/tmp/foo/bar/job-2.hurl: Success (2 request(s) in x ms)
+/tmp/foo/bar/job-6.hurl: Success (4 request(s) in x ms)
+/tmp/foo/bar/job-4.hurl: Success (7 request(s) in x ms)
+#1 [============>           ] 6/10 /tmp/foo/bar/baz/job-1.hurl: Running [1/10]
+#2 [>                       ] 1/1 /tmp/foo/bar/ee/job-7.hurl: Running [7/10]
+#3 [================>       ] 3/3 /tmp/foo/bar/zzzzzz/job-3.hurl: Running [3/10]
+#4 [>                       ] 1/5 /tmp/foo/bar/fff/job-8.hurl: Running [8/10]
+#5 [================>       ] 9/12 /tmp/foo/bar/ddd/job-5.hurl: Running [5/10]
+```
+
+
 ## How to Test
 
 Flask `run` method [takes a `threaded` option] to handle concurrent requests using thread or not (`True` by default).  
