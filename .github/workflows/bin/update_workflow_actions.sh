@@ -100,29 +100,29 @@ consume_args "$@"
 echo -e "\n--------------------------------------------------------"
 echo "### Check actions"
 while read -r action version; do
-    update_files=$(grep --recursive --files-with-matches "$action@$version" "$script_dir"/../* | xargs realpath)
+    update_files=$(grep --recursive --files-with-matches "$action@$version" "$script_dir"/../* | tr -d ' ' | sort -u | xargs realpath)
     latest=$(github_get_latest_release "$action")
     if [[ "$version" == "$latest" ]] ; then
         echo -e "\n- $action@$version ${color_green}newest${color_reset}"
-        echo "${update_files}" | sed "s/^/  - /g"
     else
         if [ "$dry" == "true" ] ; then
             echo -e "\n- $action@$version ${color_red}please update to max stable version ${latest}${color_reset}"
-            echo "$update_files" | sed "s/^/  - /g"
         else
+            echo -en "\n- $action@$version "
             while read -r file ; do
                 sed -i "s#$action@$version#$action@$latest#g" "$file" || true
                 if grep -E "$action@$version$|$action@$version " "$file" ; then
-                    echo -e "\n- $action@$version ${color_red} fails to update to ${latest}${color_reset}"
+                    echo "${color_red} fails to update to ${latest}${color_reset}"
                     echo "  - ${color_red} please check write permissions on $file" 
                     exit 1
-                else
-                    echo -e "\n- $action@$version ${color_green}updated to ${latest}${color_reset}"
-                    echo "$update_files" | sed "s/^/  - /g"
                 fi
             done < <(echo "$update_files")
+            echo "${color_green}updated to ${latest}${color_reset}"
         fi
-
+    while read -r file ; do
+        lines=$( (grep -En "$action@$version$|$action@$version |$action@$latest|$action@$latest " "$file" || true) | cut --delimiter ':' --field 1 | sed "s/^/L/g" | tr '\n' ',' | sed "s/,$//g")
+        echo "  - $file: $lines"
+    done < <(echo "$update_files")
     fi
 done < <(get_uses_action_list)
 
