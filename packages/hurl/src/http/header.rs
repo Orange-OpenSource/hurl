@@ -31,6 +31,12 @@ impl fmt::Display for Header {
 }
 
 impl Header {
+    pub const ACCEPT_ENCODING: &'static str = "Accept-Encoding";
+    pub const AUTHORIZATION: &'static str = "Authorization";
+    pub const CONTENT_TYPE: &'static str = "Content-Type";
+    pub const EXPECT: &'static str = "Expect";
+    pub const USER_AGENT: &'static str = "User-Agent";
+
     pub fn new(name: &str, value: &str) -> Self {
         Header {
             name: name.to_string(),

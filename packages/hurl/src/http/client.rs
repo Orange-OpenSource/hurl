@@ -522,15 +522,16 @@ impl Client {
             list.append(format!("{}: {}", header.name, header.value).as_str())?;
         }
 
-        if request.get_header_values("Content-Type").is_empty() {
-            if let Some(ref s) = request.content_type {
-                list.append(format!("Content-Type: {s}").as_str())?;
+        // If request has no Content-Type header, we set it if the content type has been set explicitly on this request.
+        if request.get_header_values(Header::CONTENT_TYPE).is_empty() {
+            if let Some(s) = &request.content_type {
+                list.append(&format!("{}: {s}", Header::CONTENT_TYPE))?;
             } else {
                 // We remove default Content-Type headers added by curl because we want
                 // to explicitly manage this header.
                 // For instance, with --data option, curl will send a 'Content-type: application/x-www-form-urlencoded'
                 // header.
-                list.append("Content-Type:")?;
+                list.append(&format!("{}:", Header::CONTENT_TYPE))?;
             }
         }
 
@@ -538,18 +539,18 @@ impl Client {
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
         // Therefore we only remove this header when not in aws_sigv4 mode.
-        if request.get_header_values("Expect").is_empty() && options.aws_sigv4.is_none() {
+        if request.get_header_values(Header::EXPECT).is_empty() && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
-            list.append("Expect:")?; // remove header Expect
+            list.append(&format!("{}:", Header::EXPECT))?;
         }
 
-        if request.get_header_values("User-Agent").is_empty() {
+        if request.get_header_values(Header::USER_AGENT).is_empty() {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
             };
-            list.append(format!("User-Agent: {user_agent}").as_str())?;
+            list.append(&format!("{}: {user_agent}", Header::USER_AGENT))?;
         }
 
         if let Some(ref user) = options.user {
@@ -564,13 +565,17 @@ impl Client {
             } else {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
-                if request.get_header_values("Authorization").is_empty() {
-                    list.append(format!("Authorization: Basic {authorization}").as_str())?;
+                if request.get_header_values(Header::AUTHORIZATION).is_empty() {
+                    list.append(&format!("{}: Basic {authorization}", Header::AUTHORIZATION))?;
                 }
             }
         }
-        if options.compressed && request.get_header_values("Accept-Encoding").is_empty() {
-            list.append("Accept-Encoding: gzip, deflate, br")?;
+        if options.compressed
+            && request
+                .get_header_values(Header::ACCEPT_ENCODING)
+                .is_empty()
+        {
+            list.append(&format!("{}: gzip, deflate, br", Header::ACCEPT_ENCODING))?;
         }
 
         self.handle.http_headers(list)?;

@@ -55,7 +55,7 @@ pub fn eval_request(
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
         let value = format!("Basic {authorization}");
-        let header = http::Header::new("Authorization", &value);
+        let header = http::Header::new(http::Header::AUTHORIZATION, &value);
         headers.push(header);
     }
 
