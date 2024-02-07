@@ -92,8 +92,7 @@ impl Client {
         }
     }
 
-    /// Executes an HTTP request `request_spec`, optionally follows redirection and returns a
-    /// list of pair of [`Request`], [`Response`].
+    /// Executes an HTTP request `request_spec`, optionally follows redirection and returns a list of [`Call`].
     pub fn execute_with_redirect(
         &mut self,
         request_spec: &RequestSpec,
@@ -149,7 +148,7 @@ impl Client {
     }
 
     /// Executes an HTTP request `request_spec`, without following redirection and returns a
-    /// pair of [`Request`], [`Response`].
+    /// pair of [`Call`].
     pub fn execute(
         &mut self,
         request_spec: &RequestSpec,
@@ -202,12 +201,12 @@ impl Client {
                     // because libcurl dont call `easy::InfoType::DataOut` if there is no data
                     // to send.
                     if !has_body_data && verbose {
-                        let debug_request = Request {
-                            url: url.to_string(),
-                            method: method.to_string(),
-                            headers: request_headers.clone(),
-                            body: Vec::new(),
-                        };
+                        let debug_request = Request::new(
+                            &method.to_string(),
+                            &url,
+                            request_headers.clone(),
+                            vec![],
+                        );
                         for header in &debug_request.headers {
                             logger.debug_header_out(&header.name, &header.value);
                         }
@@ -225,12 +224,12 @@ impl Client {
                     // As we can be called multiple times in this callback, we only log headers the
                     // first time we send data (marked when the request body is empty).
                     if verbose && request_body.is_empty() {
-                        let debug_request = Request {
-                            url: url.to_string(),
-                            method: method.to_string(),
-                            headers: request_headers.clone(),
-                            body: Vec::from(data),
-                        };
+                        let debug_request = Request::new(
+                            &method.to_string(),
+                            &url,
+                            request_headers.clone(),
+                            Vec::from(data),
+                        );
                         for header in &debug_request.headers {
                             logger.debug_header_out(&header.name, &header.value);
                         }
@@ -305,21 +304,16 @@ impl Client {
         let duration = (stop - start).to_std().unwrap();
         let timings = Timings::new(&mut self.handle, start, stop);
 
-        let request = Request {
-            url: url.clone(),
-            method: method.to_string(),
-            headers: request_headers,
-            body: request_body,
-        };
-        let response = Response {
+        let request = Request::new(&method.to_string(), &url, request_headers, request_body);
+        let response = Response::new(
             version,
             status,
             headers,
-            body: response_body,
+            response_body,
             duration,
-            url,
+            &url,
             certificate,
-        };
+        );
 
         if verbose {
             // FIXME: the cast to u64 seems not necessary.

@@ -21,7 +21,8 @@ use std::time::Duration;
 use crate::http::certificate::Certificate;
 use crate::http::{header, Header};
 
-/// Represents an HTTP response.
+/// Represents a runtime HTTP response.
+/// This is a real response, that has been executed by our HTTP client.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub version: HttpVersion,
@@ -49,6 +50,27 @@ impl Default for Response {
 }
 
 impl Response {
+    /// Creates a new HTTP response
+    pub fn new(
+        version: HttpVersion,
+        status: u32,
+        headers: Vec<Header>,
+        body: Vec<u8>,
+        duration: Duration,
+        url: &str,
+        certificate: Option<Certificate>,
+    ) -> Self {
+        Response {
+            version,
+            status,
+            headers,
+            body,
+            duration,
+            url: url.to_string(),
+            certificate,
+        }
+    }
+
     /// Returns all header values.
     pub fn get_header_values(&self, name: &str) -> Vec<String> {
         header::get_values(&self.headers, name)

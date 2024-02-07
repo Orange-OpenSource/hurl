@@ -22,6 +22,11 @@ use url::Url;
 use crate::http::core::*;
 use crate::http::{header, Header, HttpError};
 
+/// Represents a runtime HTTP request.
+/// This is a real request, that has been executed by our HTTP client.
+/// It's different from [`crate::http::RequestSpec`] which is the request asked to be executed by our user.
+/// For instance, in the request spec, headers implicitly added by curl are not present, while
+/// they will be present in the [`Request`] instances.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Request {
     pub url: String,
@@ -62,6 +67,16 @@ pub enum IpResolve {
 }
 
 impl Request {
+    /// Creates a new request.
+    pub fn new(method: &str, url: &str, headers: Vec<Header>, body: Vec<u8>) -> Self {
+        Request {
+            url: url.to_string(),
+            method: method.to_string(),
+            headers,
+            body,
+        }
+    }
+
     /// Extracts query string params from the url of the request.
     pub fn query_string_params(&self) -> Vec<Param> {
         let u = Url::parse(self.url.as_str()).expect("valid url");
@@ -140,34 +155,29 @@ mod tests {
     use crate::http::RequestCookie;
 
     fn hello_request() -> Request {
-        Request {
-            method: "GET".to_string(),
-            url: "http://localhost:8000/hello".to_string(),
-            headers: vec![
+        Request::new(
+            "GET",
+            "http://localhost:8000/hello",
+            vec![
                 Header::new("Host", "localhost:8000"),
                 Header::new("Accept", "*/*"),
                 Header::new("User-Agent", "hurl/1.0"),
             ],
-            body: vec![],
-        }
+            vec![],
+        )
     }
 
     fn query_string_request() -> Request {
-        Request {
-            method: "GET".to_string(),
-            url: "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".to_string(),
-            headers: vec![],
-            body: vec![],
-        }
+        Request::new("GET", "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3", vec![], vec![])
     }
 
     fn cookies_request() -> Request {
-        Request {
-            method: "GET".to_string(),
-            url: "http://localhost:8000/cookies".to_string(),
-            headers: vec![Header::new("Cookie", "cookie1=value1; cookie2=value2")],
-            body: vec![],
-        }
+        Request::new(
+            "GET",
+            "http://localhost:8000/cookies",
+            vec![Header::new("Cookie", "cookie1=value1; cookie2=value2")],
+            vec![],
+        )
     }
 
     #[test]
@@ -245,36 +255,26 @@ mod tests {
     #[test]
     fn test_base_url() {
         assert_eq!(
-            Request {
-                url: "http://localhost".to_string(),
-                method: String::new(),
-                headers: vec![],
-                body: vec![],
-            }
-            .base_url()
-            .unwrap(),
+            Request::new("", "http://localhost", vec![], vec![])
+                .base_url()
+                .unwrap(),
             "http://localhost".to_string()
         );
         assert_eq!(
-            Request {
-                url: "http://localhost:8000/redirect-relative".to_string(),
-                method: String::new(),
-                headers: vec![],
-                body: vec![],
-            }
+            Request::new(
+                "",
+                "http://localhost:8000/redirect-relative",
+                vec![],
+                vec![]
+            )
             .base_url()
             .unwrap(),
             "http://localhost:8000".to_string()
         );
         assert_eq!(
-            Request {
-                url: "https://localhost:8000".to_string(),
-                method: String::new(),
-                headers: vec![],
-                body: vec![],
-            }
-            .base_url()
-            .unwrap(),
+            Request::new("", "https://localhost:8000", vec![], vec![])
+                .base_url()
+                .unwrap(),
             "https://localhost:8000".to_string()
         );
     }

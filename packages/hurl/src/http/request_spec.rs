@@ -20,6 +20,8 @@ use core::fmt;
 use crate::http::core::*;
 use crate::http::{header, Header};
 
+/// Represents the HTTP request asked to be executed by our user (different from the runtime
+/// executed HTTP request [`crate::http::Request`].
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RequestSpec {
     pub method: Method,
