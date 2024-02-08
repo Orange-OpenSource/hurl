@@ -111,7 +111,22 @@ function github_get_latest_release(){
             fi
         fi
     fi
+}
 
+function github_get_release_changelog(){
+    if [[ $# -ne 2 ]] ; then
+        log_error "internal function ${FUNCNAME[0]}" "please provide one parameter, ${FUNCNAME[0]} \${project_path} \$tag"
+        return 1
+    else
+        project_path=$1
+        tag=$2
+        if ! result=$(gh release view --json body --repo "${project_path}" "${tag}" 2>&1) ; then
+            log_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
+            return 1
+        else
+            echo "${result}" | jq -rc .body
+        fi
+    fi
 }
 
 function github_get_pr_number_list(){
