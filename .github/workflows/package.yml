@@ -90,7 +90,7 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install generic linux package"
             bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux:$PATH"
+          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
           echo "::endgroup::"
           echo "::group::Install tests prerequisites"
             bin/test/test_prerequisites.sh
@@ -141,7 +141,7 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install generic linux package"
             bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux:$PATH"
+          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
           echo "::endgroup::"
           echo "::group::Install tests prerequisites"
             bin/test/test_prerequisites.sh
@@ -192,7 +192,7 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install generic linux package"
             bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux:$PATH"
+          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
           echo "::endgroup::"
           echo "::group::Install tests prerequisites"
             bin/test/test_prerequisites.sh
@@ -243,7 +243,7 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install generic linux package"
             bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux:$PATH"
+          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
           echo "::group::Install tests prerequisites"
           echo "::endgroup::"
             bin/test/test_prerequisites.sh
@@ -489,7 +489,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh
-        echo "PATH=/tmp/hurl-generic-macos:$PATH" >> "${GITHUB_ENV}"
+        echo "PATH=/tmp/hurl-generic-macos/bin:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -535,7 +535,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh
-        echo "PATH=/tmp/hurl-generic-macos:$PATH" >> "${GITHUB_ENV}"
+        echo "PATH=/tmp/hurl-generic-macos/bin:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
