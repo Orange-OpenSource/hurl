@@ -120,7 +120,7 @@ impl ToJson for Response {
     }
 }
 
-fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &Vec<Header>) {
+fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &[Header]) {
     if !headers.is_empty() {
         let headers = JValue::List(headers.iter().map(|h| h.to_json()).collect());
         attributes.push(("headers".to_string(), headers))
