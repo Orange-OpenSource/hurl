@@ -197,7 +197,7 @@
 * Implicit content-type=application/json
 *
 * Request can be run with the following curl command:
-* curl --header 'content-type: application/vnd.api+json' --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
+* curl --header 'content-type: application/vnd.api+json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
 *
 > POST /content-type-vnd-json HTTP/1.1
 > Host: localhost:8000

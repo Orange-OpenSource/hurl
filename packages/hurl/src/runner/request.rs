@@ -22,7 +22,7 @@ use base64::Engine;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::http::AUTHORIZATION;
+use crate::http::{HeaderVec, AUTHORIZATION};
 use crate::runner::body::eval_body;
 use crate::runner::error::Error;
 use crate::runner::multipart::eval_multipart_param;
@@ -40,7 +40,7 @@ pub fn eval_request(
     let url = eval_template(&request.url, variables)?;
 
     // Headers
-    let mut headers: Vec<http::Header> = vec![];
+    let mut headers = HeaderVec::new();
     for header in &request.headers {
         let name = eval_template(&header.key, variables)?;
         let value = eval_template(&header.value, variables)?;
@@ -98,7 +98,7 @@ pub fn eval_request(
         multipart.push(param);
     }
 
-    let content_type = if !form.is_empty() {
+    let implicit_content_type = if !form.is_empty() {
         Some("application/x-www-form-urlencoded".to_string())
     } else if !multipart.is_empty() {
         Some("multipart/form-data".to_string())
@@ -130,7 +130,7 @@ pub fn eval_request(
         multipart,
         cookies,
         body,
-        content_type,
+        implicit_content_type,
     })
 }
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::http::{Header, Method, Param, RequestCookie, RequestSpec, Response};
+use crate::http::{Header, HeaderVec, Method, Param, RequestCookie, RequestSpec, Response};
 
 /// Some Request Response to be used by tests
 
@@ -138,13 +138,14 @@ pub fn query_http_request() -> RequestSpec {
 }
 
 pub fn custom_http_request() -> RequestSpec {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("User-Agent", "iPhone"));
+    headers.push(Header::new("Foo", "Bar"));
+
     RequestSpec {
         method: Method("GET".to_string()),
         url: "http://localhost/custom".to_string(),
-        headers: vec![
-            Header::new("User-Agent", "iPhone"),
-            Header::new("Foo", "Bar"),
-        ],
+        headers,
         cookies: vec![
             RequestCookie {
                 name: String::from("theme"),

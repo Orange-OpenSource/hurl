@@ -135,10 +135,8 @@ impl Client {
             } else {
                 request_spec
                     .headers
-                    .iter()
-                    .filter(|header| header.name.to_lowercase() != "authorization")
-                    .cloned()
-                    .collect::<Vec<Header>>()
+                    .retain(|h| h.name.to_lowercase() != AUTHORIZATION.to_lowercase());
+                request_spec.headers
             };
             request_spec = RequestSpec {
                 method: redirect_method,
@@ -516,18 +514,19 @@ impl Client {
     /// Sets HTTP headers.
     fn set_headers(
         &mut self,
-        request: &RequestSpec,
+        request_spec: &RequestSpec,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
         let mut list = List::new();
 
-        for header in &request.headers {
-            list.append(format!("{}: {}", header.name, header.value).as_str())?;
+        for header in &request_spec.headers {
+            list.append(&format!("{}: {}", header.name, header.value))?;
         }
 
-        // If request has no Content-Type header, we set it if the content type has been set explicitly on this request.
-        if request.get_header_values(CONTENT_TYPE).is_empty() {
-            if let Some(s) = &request.content_type {
+        // If request has no Content-Type header, we set it if the content type has been set
+        // implicitly on this request.
+        if !request_spec.headers.contains_key(CONTENT_TYPE) {
+            if let Some(s) = &request_spec.implicit_content_type {
                 list.append(&format!("{}: {s}", CONTENT_TYPE))?;
             } else {
                 // We remove default Content-Type headers added by curl because we want
@@ -538,17 +537,17 @@ impl Client {
             }
         }
 
-        // Workaround for libcurl issue #11664: When hurl explicitly sets `Expect:` to remove the header,
+        // Workaround for libcurl issue #11664: When Hurl explicitly sets `Expect:` to remove the header,
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
         // Therefore we only remove this header when not in aws_sigv4 mode.
-        if request.get_header_values(EXPECT).is_empty() && options.aws_sigv4.is_none() {
+        if !request_spec.headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
             list.append(&format!("{}:", EXPECT))?;
         }
 
-        if request.get_header_values(USER_AGENT).is_empty() {
+        if !request_spec.headers.contains_key(USER_AGENT) {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
@@ -556,7 +555,7 @@ impl Client {
             list.append(&format!("{}: {user_agent}", USER_AGENT))?;
         }
 
-        if let Some(ref user) = options.user {
+        if let Some(user) = &options.user {
             if options.aws_sigv4.is_some() {
                 // curl's aws_sigv4 support needs to know the username and password for the
                 // request, as it uses those values to calculate the Authorization header for the
@@ -568,12 +567,12 @@ impl Client {
             } else {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
-                if request.get_header_values(AUTHORIZATION).is_empty() {
+                if !request_spec.headers.contains_key(AUTHORIZATION) {
                     list.append(&format!("{}: Basic {authorization}", AUTHORIZATION))?;
                 }
             }
         }
-        if options.compressed && request.get_header_values(ACCEPT_ENCODING).is_empty() {
+        if options.compressed && !request_spec.headers.contains_key(ACCEPT_ENCODING) {
             list.append(&format!("{}: gzip, deflate, br", ACCEPT_ENCODING))?;
         }
 

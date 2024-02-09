@@ -18,7 +18,7 @@
 use core::fmt;
 
 use crate::http::core::*;
-use crate::http::{header, Header};
+use crate::http::header::HeaderVec;
 
 /// Represents the HTTP request asked to be executed by our user (different from the runtime
 /// executed HTTP request [`crate::http::Request`].
@@ -26,13 +26,17 @@ use crate::http::{header, Header};
 pub struct RequestSpec {
     pub method: Method,
     pub url: String,
-    pub headers: Vec<Header>,
+    pub headers: HeaderVec,
     pub querystring: Vec<Param>,
     pub form: Vec<Param>,
     pub multipart: Vec<MultipartParam>,
     pub cookies: Vec<RequestCookie>,
     pub body: Body,
-    pub content_type: Option<String>,
+    /// This is the implicit content type of the request: this content type is implicitly set when
+    /// the request use a "typed" body: form, JSON, multipart, multiline string with hint. This
+    /// implicit content type can be different from the user provided one through the `headers`
+    /// field.
+    pub implicit_content_type: Option<String>,
 }
 
 impl Default for RequestSpec {
@@ -40,13 +44,13 @@ impl Default for RequestSpec {
         RequestSpec {
             method: Method("GET".to_string()),
             url: String::new(),
-            headers: vec![],
+            headers: HeaderVec::new(),
             querystring: vec![],
             form: vec![],
             multipart: vec![],
             cookies: vec![],
             body: Body::Binary(vec![]),
-            content_type: None,
+            implicit_content_type: None,
         }
     }
 }
@@ -82,13 +86,6 @@ impl Body {
             Body::Binary(bs) => bs.clone(),
             Body::File(bs, _) => bs.clone(),
         }
-    }
-}
-
-impl RequestSpec {
-    /// Returns all header values.
-    pub fn get_header_values(&self, name: &str) -> Vec<String> {
-        header::get_values(&self.headers, name)
     }
 }
 

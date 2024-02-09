@@ -22,7 +22,7 @@ pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub(crate) use self::core::{Cookie, Param, RequestCookie};
 pub(crate) use self::error::HttpError;
 pub use self::header::{
-    Header, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,
+    Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,
 };
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub use self::request::{IpResolve, Request, RequestedHttpVersion};

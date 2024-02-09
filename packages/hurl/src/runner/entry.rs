@@ -280,7 +280,7 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
             logger.debug(cookie.to_string().as_str());
         }
     }
-    if let Some(s) = &request.content_type {
+    if let Some(s) = &request.implicit_content_type {
         logger.debug("");
         logger.debug(format!("Implicit content-type={s}").as_str());
     }

@@ -92,6 +92,21 @@ impl HeaderVec {
             .collect()
     }
 
+    /// Returns true if there is at least one header with the specified `name`.
+    pub fn contains_key(&self, name: &str) -> bool {
+        self.headers
+            .iter()
+            .any(|h| h.name.to_lowercase() == name.to_lowercase())
+    }
+
+    /// Retains only the header specified by the predicate.
+    pub fn retain<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&Header) -> bool,
+    {
+        self.headers.retain(|h| f(h))
+    }
+
     /// Returns an iterator over all the headers.
     pub fn iter(&self) -> impl Iterator<Item = &Header> {
         self.headers.iter()
@@ -103,6 +118,11 @@ impl HeaderVec {
     /// different values.
     pub fn len(&self) -> usize {
         self.headers.len()
+    }
+
+    /// Returns true if there is no header.
+    pub fn is_empty(&self) -> bool {
+        self.headers.len() == 0
     }
 
     /// Push a new `header` into the headers list.
@@ -135,6 +155,7 @@ mod tests {
         headers.push(Header::new("baz", "zzz"));
 
         assert_eq!(headers.len(), 5);
+        assert!(!headers.is_empty());
 
         assert_eq!(headers.get("foo"), Some(&Header::new("foo", "xxx")));
         assert_eq!(headers.get("FOO"), Some(&Header::new("foo", "xxx")));
@@ -151,6 +172,12 @@ mod tests {
         );
         assert_eq!(headers.get_all("BAZ"), vec![&Header::new("baz", "zzz")]);
         assert_eq!(headers.get_all("qux"), Vec::<&Header>::new());
+
+        assert!(headers.contains_key("FOO"));
+        assert!(!headers.contains_key("fuu"));
+
+        headers.retain(|h| h.name.to_lowercase() == "bar");
+        assert_eq!(headers.len(), 3);
     }
 
     #[test]

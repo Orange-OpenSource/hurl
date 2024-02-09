@@ -36,15 +36,11 @@ impl RequestSpec {
             arguments.append(&mut header.curl_args());
         }
 
-        let has_explicit_content_type = self
-            .headers
-            .iter()
-            .map(|h| &h.name)
-            .any(|n| n.as_str() == CONTENT_TYPE);
+        let has_explicit_content_type = self.headers.contains_key(CONTENT_TYPE);
         if !has_explicit_content_type {
-            if let Some(content_type) = &self.content_type {
-                if content_type.as_str() != "application/x-www-form-urlencoded"
-                    && content_type.as_str() != "multipart/form-data"
+            if let Some(content_type) = &self.implicit_content_type {
+                if content_type != "application/x-www-form-urlencoded"
+                    && content_type != "multipart/form-data"
                 {
                     arguments.push("--header".to_string());
                     arguments.push(format!("'{}: {content_type}'", CONTENT_TYPE));
@@ -158,11 +154,11 @@ impl Method {
 
 impl Header {
     pub fn curl_args(&self) -> Vec<String> {
-        let name = self.name.clone();
-        let value = self.value.clone();
+        let name = &self.name;
+        let value = &self.value;
         vec![
             "--header".to_string(),
-            encode_shell_string(format!("{name}: {value}").as_str()),
+            encode_shell_string(&format!("{name}: {value}")),
         ]
     }
 }
@@ -261,13 +257,16 @@ pub mod tests {
     use super::*;
 
     fn form_http_request() -> RequestSpec {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new(
+            "Content-Type",
+            "application/x-www-form-urlencoded",
+        ));
+
         RequestSpec {
             method: Method("POST".to_string()),
             url: "http://localhost/form-params".to_string(),
-            headers: vec![Header::new(
-                "Content-Type",
-                "application/x-www-form-urlencoded",
-            )],
+            headers,
             form: vec![
                 Param {
                     name: String::from("param1"),
@@ -278,7 +277,20 @@ pub mod tests {
                     value: String::from("a b"),
                 },
             ],
-            content_type: Some("multipart/form-data".to_string()),
+            implicit_content_type: Some("multipart/form-data".to_string()),
+            ..Default::default()
+        }
+    }
+
+    fn json_request() -> RequestSpec {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("content-type", "application/vnd.api+json"));
+        RequestSpec {
+            method: Method("POST".to_string()),
+            url: "http://localhost/json".to_string(),
+            headers,
+            body: Body::Text("{\"foo\":\"bar\"}".to_string()),
+            implicit_content_type: Some("application/json".to_string()),
             ..Default::default()
         }
     }
@@ -397,6 +409,16 @@ pub mod tests {
                 "--data".to_string(),
                 "'param2=a%20b'".to_string(),
                 "'http://localhost/form-params'".to_string(),
+            ]
+        );
+        assert_eq!(
+            json_request().curl_args(context_dir),
+            vec![
+                "--header".to_string(),
+                "'content-type: application/vnd.api+json'".to_string(),
+                "--data".to_string(),
+                "'{\"foo\":\"bar\"}'".to_string(),
+                "'http://localhost/json'".to_string(),
             ]
         );
     }
