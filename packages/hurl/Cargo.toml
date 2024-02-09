@@ -34,6 +34,7 @@ libflate = "2.0.0"
 libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
+pretty_assertions = "1.4.0"
 regex = "1.10.3"
 serde = "1.0.196"
 serde_json = { version = "1.0.113", features = ["arbitrary_precision"] }

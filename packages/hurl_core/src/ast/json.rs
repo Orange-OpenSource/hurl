@@ -55,6 +55,14 @@ impl Value {
             Value::Expression(_) => "expression".to_string(),
         }
     }
+
+    pub fn pretty(&self) -> PrettyValue {
+        PrettyValue {
+            value: self,
+            spacing: 0,
+            actual_spacing: 0,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -72,6 +80,22 @@ pub struct ObjectElement {
     pub space2: String,
     pub value: Value,
     pub space3: String,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub struct PrettyValue<'a> {
+    value: &'a Value,
+    /// Number of spaces to use as padding on the left hand size.
+    ///
+    /// # Notes
+    ///
+    /// When formatting a value in an object this will be 0, because it needs to
+    /// be written right after the key field, i.e. `"key": "value"`. The
+    /// `actual_spacing` will hold the actual spacing which should be used in
+    /// calculating the next spacing value.
+    spacing: usize,
+    /// Actual spacing to use, see `spacing` field.
+    actual_spacing: usize,
 }
 
 impl fmt::Display for Value {
@@ -130,6 +154,67 @@ impl fmt::Display for ObjectElement {
         s.push_str(self.value.to_string().as_str());
         s.push_str(self.space3.as_str());
         write!(f, "{s}")
+    }
+}
+
+impl fmt::Display for PrettyValue<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let spacing = " ".repeat(self.spacing);
+        match self.value {
+            Value::Expression(expr) => {
+                // TODO: eval expr.
+                write!(f, "{spacing}{expr}")
+            }
+            Value::Number(s) => write!(f, "{spacing}{s}"),
+            Value::String(template) => {
+                // TODO: expand template.
+                write!(f, "{spacing}\"{template}\"")
+            }
+            Value::Boolean(value) => write!(f, "{spacing}{value}"),
+            Value::List { elements, .. } => {
+                writeln!(f, "{spacing}[")?;
+                let mut first = true;
+                for element in elements {
+                    if !first {
+                        writeln!(f, ",")?;
+                    } else {
+                        first = false;
+                    }
+
+                    PrettyValue {
+                        value: &element.value,
+                        spacing: self.actual_spacing + 2,
+                        actual_spacing: self.actual_spacing + 2,
+                    }
+                    .fmt(f)?;
+                }
+                let actual_spacing = " ".repeat(self.actual_spacing);
+                write!(f, "\n{actual_spacing}]")
+            }
+            Value::Object { elements, .. } => {
+                writeln!(f, "{spacing}{{")?;
+                let mut first = true;
+                let obj_spacing = " ".repeat(self.actual_spacing + 2);
+                for element in elements {
+                    if !first {
+                        writeln!(f, ",")?;
+                    } else {
+                        first = false;
+                    }
+
+                    write!(f, "{obj_spacing}\"{}\": ", element.name)?;
+                    PrettyValue {
+                        value: &element.value,
+                        spacing: 0,
+                        actual_spacing: self.actual_spacing + 2,
+                    }
+                    .fmt(f)?;
+                }
+                let actual_spacing = " ".repeat(self.actual_spacing);
+                write!(f, "\n{actual_spacing}}}")
+            }
+            Value::Null => write!(f, "{spacing}null"),
+        }
     }
 }
 

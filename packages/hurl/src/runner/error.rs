@@ -17,7 +17,7 @@
  */
 use std::path::PathBuf;
 
-use hurl_core::ast::SourceInfo;
+use hurl_core::ast::{JsonValue, SourceInfo};
 
 use crate::http::{HttpError, RequestedHttpVersion};
 
@@ -47,6 +47,10 @@ pub enum RunnerError {
     AssertBodyValueError {
         actual: String,
         expected: String,
+    },
+    AssertJsonBodyValueError {
+        actual: JsonValue,
+        expected: JsonValue,
     },
     AssertFailure {
         actual: String,
@@ -125,7 +129,8 @@ impl hurl_core::error::Error for Error {
 
     fn description(&self) -> String {
         match &self.inner {
-            RunnerError::AssertBodyValueError { .. } => "Assert body value".to_string(),
+            RunnerError::AssertBodyValueError { .. }
+            | RunnerError::AssertJsonBodyValueError { .. } => "Assert body value".to_string(),
             RunnerError::AssertFailure { .. } => "Assert failure".to_string(),
             RunnerError::AssertHeaderValueError { .. } => "Assert header value".to_string(),
             RunnerError::AssertStatus { .. } => "Assert status code".to_string(),
@@ -165,6 +170,11 @@ impl hurl_core::error::Error for Error {
         match &self.inner {
             RunnerError::AssertBodyValueError { actual, .. } => {
                 format!("actual value is <{actual}>")
+            }
+            RunnerError::AssertJsonBodyValueError { actual, expected } => {
+                let actual = format!("{}", actual.pretty());
+                let expected = format!("{}", expected.pretty());
+                pretty_assertions::StrComparison::new(&actual, &expected).to_string()
             }
             RunnerError::AssertFailure {
                 actual,

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::JsonValue;
 use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::http::{Call, Cookie};
@@ -94,6 +95,11 @@ pub enum AssertResult {
     Body {
         actual: Result<Value, Error>,
         expected: Result<Value, Error>,
+        source_info: SourceInfo,
+    },
+    JsonBody {
+        actual: Result<JsonValue, Error>,
+        expected: Result<JsonValue, Error>,
         source_info: SourceInfo,
     },
     Explicit {

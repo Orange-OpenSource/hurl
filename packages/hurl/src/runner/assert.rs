@@ -98,21 +98,43 @@ impl AssertResult {
                     }
                 },
             },
+            AssertResult::JsonBody {
+                actual,
+                expected,
+                source_info,
+            } => match expected {
+                Err(e) => Some(e.clone()),
+                Ok(expected) => match actual {
+                    Err(e) => Some(e.clone()),
+                    Ok(actual) => {
+                        if actual == expected {
+                            None
+                        } else {
+                            let inner = RunnerError::AssertJsonBodyValueError {
+                                actual: actual.clone(),
+                                expected: expected.clone(),
+                            };
+                            Some(Error::new(*source_info, inner, false))
+                        }
+                    }
+                },
+            },
             AssertResult::Explicit { actual: Err(e), .. } => Some(e.clone()),
             AssertResult::Explicit {
                 predicate_result: Some(Err(e)),
                 ..
             } => Some(e.clone()),
-            _ => None,
+            AssertResult::Explicit { .. } => None,
         }
     }
     pub fn line(&self) -> usize {
         match self {
-            AssertResult::Version { source_info, .. } => source_info.start.line,
-            AssertResult::Status { source_info, .. } => source_info.start.line,
-            AssertResult::Header { source_info, .. } => source_info.start.line,
-            AssertResult::Body { source_info, .. } => source_info.start.line,
-            AssertResult::Explicit { source_info, .. } => source_info.start.line,
+            AssertResult::Version { source_info, .. }
+            | AssertResult::Status { source_info, .. }
+            | AssertResult::Header { source_info, .. }
+            | AssertResult::Body { source_info, .. }
+            | AssertResult::JsonBody { source_info, .. }
+            | AssertResult::Explicit { source_info, .. } => source_info.start.line,
         }
     }
 }

@@ -24,7 +24,6 @@ use crate::runner::assert::eval_explicit_assert;
 use crate::runner::body::eval_body;
 use crate::runner::capture::eval_capture;
 use crate::runner::error::{Error, RunnerError};
-use crate::runner::json::eval_json_value;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::result::{AssertResult, CaptureResult};
 use crate::runner::template::eval_template;
@@ -165,12 +164,12 @@ fn eval_implicit_body_asserts(
 ) -> AssertResult {
     match &spec_body.value {
         Bytes::Json(value) => {
-            let expected = match eval_json_value(value, variables, true) {
-                Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(e),
-            };
             let actual = match http_response.text() {
-                Ok(s) => Ok(Value::String(s)),
+                Ok(body) => {
+                    let mut reader = hurl_core::parser::Reader::new(&body);
+                    // FIXME: handle error.
+                    Ok(hurl_core::parser::parse_json(&mut reader).unwrap())
+                }
                 Err(e) => {
                     let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
@@ -179,9 +178,9 @@ fn eval_implicit_body_asserts(
                     Err(Error::new(source_info, e.into(), true))
                 }
             };
-            AssertResult::Body {
+            AssertResult::JsonBody {
                 actual,
-                expected,
+                expected: Ok(value.clone()),
                 source_info: spec_body.space0.source_info,
             }
         }
