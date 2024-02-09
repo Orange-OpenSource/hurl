@@ -22,6 +22,7 @@ use base64::Engine;
 use hurl_core::ast::*;
 
 use crate::http;
+use crate::http::AUTHORIZATION;
 use crate::runner::body::eval_body;
 use crate::runner::error::Error;
 use crate::runner::multipart::eval_multipart_param;
@@ -55,7 +56,7 @@ pub fn eval_request(
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
         let value = format!("Basic {authorization}");
-        let header = http::Header::new(http::Header::AUTHORIZATION, &value);
+        let header = http::Header::new(AUTHORIZATION, &value);
         headers.push(header);
     }
 

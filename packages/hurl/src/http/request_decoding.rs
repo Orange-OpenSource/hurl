@@ -23,7 +23,7 @@ impl Request {
     /// Returns character encoding of the HTTP request.
     fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
         match self.content_type() {
-            Some(content_type) => match mimetype::charset(&content_type) {
+            Some(content_type) => match mimetype::charset(content_type) {
                 Some(charset) => {
                     match encoding::label::encoding_from_whatwg_label(charset.as_str()) {
                         None => Err(HttpError::InvalidCharset { charset }),

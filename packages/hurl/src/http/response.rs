@@ -19,6 +19,7 @@ use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
+use crate::http::header::CONTENT_TYPE;
 use crate::http::{header, Header};
 
 /// Represents a runtime HTTP response.
@@ -78,7 +79,7 @@ impl Response {
 
     /// Returns optional Content-type header value.
     pub fn content_type(&self) -> Option<String> {
-        header::get_values(&self.headers, Header::CONTENT_TYPE)
+        header::get_values(&self.headers, CONTENT_TYPE)
             .first()
             .cloned()
     }

@@ -29,6 +29,9 @@ use url::Url;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
+use crate::http::header::{
+    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, USER_AGENT,
+};
 use crate::http::options::ClientOptions;
 use crate::http::request::*;
 use crate::http::request_spec::*;
@@ -164,7 +167,7 @@ impl Client {
         let start = Utc::now();
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
-        let mut request_headers: Vec<Header> = vec![];
+        let mut request_headers = HeaderVec::new();
         let mut status_lines = vec![];
         let mut response_headers = vec![];
         let has_body_data = !request_spec.body.bytes().is_empty()
@@ -523,15 +526,15 @@ impl Client {
         }
 
         // If request has no Content-Type header, we set it if the content type has been set explicitly on this request.
-        if request.get_header_values(Header::CONTENT_TYPE).is_empty() {
+        if request.get_header_values(CONTENT_TYPE).is_empty() {
             if let Some(s) = &request.content_type {
-                list.append(&format!("{}: {s}", Header::CONTENT_TYPE))?;
+                list.append(&format!("{}: {s}", CONTENT_TYPE))?;
             } else {
                 // We remove default Content-Type headers added by curl because we want
                 // to explicitly manage this header.
                 // For instance, with --data option, curl will send a 'Content-type: application/x-www-form-urlencoded'
                 // header.
-                list.append(&format!("{}:", Header::CONTENT_TYPE))?;
+                list.append(&format!("{}:", CONTENT_TYPE))?;
             }
         }
 
@@ -539,18 +542,18 @@ impl Client {
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
         // Therefore we only remove this header when not in aws_sigv4 mode.
-        if request.get_header_values(Header::EXPECT).is_empty() && options.aws_sigv4.is_none() {
+        if request.get_header_values(EXPECT).is_empty() && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
-            list.append(&format!("{}:", Header::EXPECT))?;
+            list.append(&format!("{}:", EXPECT))?;
         }
 
-        if request.get_header_values(Header::USER_AGENT).is_empty() {
+        if request.get_header_values(USER_AGENT).is_empty() {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
             };
-            list.append(&format!("{}: {user_agent}", Header::USER_AGENT))?;
+            list.append(&format!("{}: {user_agent}", USER_AGENT))?;
         }
 
         if let Some(ref user) = options.user {
@@ -565,17 +568,13 @@ impl Client {
             } else {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
-                if request.get_header_values(Header::AUTHORIZATION).is_empty() {
-                    list.append(&format!("{}: Basic {authorization}", Header::AUTHORIZATION))?;
+                if request.get_header_values(AUTHORIZATION).is_empty() {
+                    list.append(&format!("{}: Basic {authorization}", AUTHORIZATION))?;
                 }
             }
         }
-        if options.compressed
-            && request
-                .get_header_values(Header::ACCEPT_ENCODING)
-                .is_empty()
-        {
-            list.append(&format!("{}: gzip, deflate, br", Header::ACCEPT_ENCODING))?;
+        if options.compressed && request.get_header_values(ACCEPT_ENCODING).is_empty() {
+            list.append(&format!("{}: gzip, deflate, br", ACCEPT_ENCODING))?;
         }
 
         self.handle.http_headers(list)?;

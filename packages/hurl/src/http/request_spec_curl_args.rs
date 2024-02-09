@@ -18,6 +18,7 @@
 use std::collections::HashMap;
 
 use crate::http::core::*;
+use crate::http::header::CONTENT_TYPE;
 use crate::http::{RequestSpec, *};
 use crate::util::path::ContextDir;
 
@@ -39,31 +40,28 @@ impl RequestSpec {
             .headers
             .iter()
             .map(|h| &h.name)
-            .any(|n| n.as_str() == Header::CONTENT_TYPE);
+            .any(|n| n.as_str() == CONTENT_TYPE);
         if !has_explicit_content_type {
             if let Some(content_type) = &self.content_type {
                 if content_type.as_str() != "application/x-www-form-urlencoded"
                     && content_type.as_str() != "multipart/form-data"
                 {
                     arguments.push("--header".to_string());
-                    arguments.push(format!("'{}: {content_type}'", Header::CONTENT_TYPE));
+                    arguments.push(format!("'{}: {content_type}'", CONTENT_TYPE));
                 }
             } else if !self.body.bytes().is_empty() {
                 match self.body {
                     Body::Text(_) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!("'{}:'", Header::CONTENT_TYPE))
+                        arguments.push(format!("'{}:'", CONTENT_TYPE))
                     }
                     Body::Binary(_) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!(
-                            "'{}: application/octet-stream'",
-                            Header::CONTENT_TYPE
-                        ))
+                        arguments.push(format!("'{}: application/octet-stream'", CONTENT_TYPE))
                     }
                     Body::File(_, _) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!("'{}:'", Header::CONTENT_TYPE))
+                        arguments.push(format!("'{}:'", CONTENT_TYPE))
                     }
                 }
             }

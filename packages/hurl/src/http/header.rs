@@ -16,6 +16,14 @@
  *
  */
 use core::fmt;
+use std::slice::Iter;
+
+pub const ACCEPT_ENCODING: &str = "Accept-Encoding";
+pub const AUTHORIZATION: &str = "Authorization";
+pub const COOKIE: &str = "Cookie";
+pub const CONTENT_TYPE: &str = "Content-Type";
+pub const EXPECT: &str = "Expect";
+pub const USER_AGENT: &str = "User-Agent";
 
 /// Represents an HTTP header
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -31,12 +39,6 @@ impl fmt::Display for Header {
 }
 
 impl Header {
-    pub const ACCEPT_ENCODING: &'static str = "Accept-Encoding";
-    pub const AUTHORIZATION: &'static str = "Authorization";
-    pub const CONTENT_TYPE: &'static str = "Content-Type";
-    pub const EXPECT: &'static str = "Expect";
-    pub const USER_AGENT: &'static str = "User-Agent";
-
     pub fn new(name: &str, value: &str) -> Self {
         Header {
             name: name.to_string(),
@@ -57,4 +59,119 @@ pub fn get_values(headers: &[Header], name: &str) -> Vec<String> {
             }
         })
         .collect()
+}
+
+/// Represents an ordered list of [`Header`].
+/// The headers are sorted by insertion order.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct HeaderVec {
+    headers: Vec<Header>,
+}
+
+impl HeaderVec {
+    /// Creates an empty [`HeaderVec`].
+    pub fn new() -> Self {
+        HeaderVec::default()
+    }
+
+    /// Returns a reference to the header associated with `name`.
+    ///
+    /// If there are multiple headers associated with `name`, then the first one is returned.
+    /// Use [`get_all`] to get all values associated with a given key.
+    pub fn get(&self, name: &str) -> Option<&Header> {
+        self.headers
+            .iter()
+            .find(|h| h.name.to_lowercase() == name.to_lowercase())
+    }
+
+    /// Returns a list of header associated with `name`.
+    pub fn get_all(&self, name: &str) -> Vec<&Header> {
+        self.headers
+            .iter()
+            .filter(|h| h.name.to_lowercase() == name.to_lowercase())
+            .collect()
+    }
+
+    /// Returns an iterator over all the headers.
+    pub fn iter(&self) -> impl Iterator<Item = &Header> {
+        self.headers.iter()
+    }
+
+    /// Returns the number of headers stored in the list.
+    ///
+    /// This number represents the total numbers of header, including header with the same name and
+    /// different values.
+    pub fn len(&self) -> usize {
+        self.headers.len()
+    }
+
+    /// Push a new `header` into the headers list.
+    pub fn push(&mut self, header: Header) {
+        self.headers.push(header)
+    }
+}
+
+impl<'a> IntoIterator for &'a HeaderVec {
+    type Item = &'a Header;
+    type IntoIter = Iter<'a, Header>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.headers.iter()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::http::header::HeaderVec;
+    use crate::http::Header;
+
+    #[test]
+    fn test_simple_header_map() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("foo", "xxx"));
+        headers.push(Header::new("bar", "yyy0"));
+        headers.push(Header::new("bar", "yyy1"));
+        headers.push(Header::new("bar", "yyy2"));
+        headers.push(Header::new("baz", "zzz"));
+
+        assert_eq!(headers.len(), 5);
+
+        assert_eq!(headers.get("foo"), Some(&Header::new("foo", "xxx")));
+        assert_eq!(headers.get("FOO"), Some(&Header::new("foo", "xxx")));
+        assert_eq!(headers.get("bar"), Some(&Header::new("bar", "yyy0")));
+        assert_eq!(headers.get("qux"), None);
+
+        assert_eq!(
+            headers.get_all("bar"),
+            vec![
+                &Header::new("bar", "yyy0"),
+                &Header::new("bar", "yyy1"),
+                &Header::new("bar", "yyy2"),
+            ]
+        );
+        assert_eq!(headers.get_all("BAZ"), vec![&Header::new("baz", "zzz")]);
+        assert_eq!(headers.get_all("qux"), Vec::<&Header>::new());
+    }
+
+    #[test]
+    fn test_iter() {
+        let data = vec![("foo", "xxx"), ("bar", "yyy0"), ("baz", "yyy1")];
+        let mut headers = HeaderVec::new();
+        data.iter()
+            .for_each(|(name, value)| headers.push(Header::new(name, value)));
+
+        // Test iter()
+        for (i, h) in headers.iter().enumerate() {
+            assert_eq!(h.name, data[i].0);
+            assert_eq!(h.value, data[i].1)
+        }
+
+        // Test into_iter()
+        let mut i = 0;
+        for h in &headers {
+            assert_eq!(h.name, data[i].0);
+            assert_eq!(h.value, data[i].1);
+            i += 1;
+        }
+    }
 }

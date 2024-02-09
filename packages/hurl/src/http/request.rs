@@ -20,7 +20,8 @@ use std::fmt;
 use url::Url;
 
 use crate::http::core::*;
-use crate::http::{header, Header, HttpError};
+use crate::http::header::{HeaderVec, CONTENT_TYPE, COOKIE};
+use crate::http::HttpError;
 
 /// Represents a runtime HTTP request.
 /// This is a real request, that has been executed by our HTTP client.
@@ -31,7 +32,7 @@ use crate::http::{header, Header, HttpError};
 pub struct Request {
     pub url: String,
     pub method: String,
-    pub headers: Vec<Header>,
+    pub headers: HeaderVec,
     pub body: Vec<u8>,
 }
 
@@ -68,7 +69,7 @@ pub enum IpResolve {
 
 impl Request {
     /// Creates a new request.
-    pub fn new(method: &str, url: &str, headers: Vec<Header>, body: Vec<u8>) -> Self {
+    pub fn new(method: &str, url: &str, headers: HeaderVec, body: Vec<u8>) -> Self {
         Request {
             url: url.to_string(),
             method: method.to_string(),
@@ -96,17 +97,15 @@ impl Request {
     /// see <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>
     pub fn cookies(&self) -> Vec<RequestCookie> {
         self.headers
+            .get_all(COOKIE)
             .iter()
-            .filter(|h| h.name.as_str() == "Cookie")
             .flat_map(|h| parse_cookies(h.value.as_str().trim()))
             .collect()
     }
 
     /// Returns optional Content-type header value.
-    pub fn content_type(&self) -> Option<String> {
-        header::get_values(&self.headers, Header::CONTENT_TYPE)
-            .first()
-            .cloned()
+    pub fn content_type(&self) -> Option<&str> {
+        self.headers.get(CONTENT_TYPE).map(|h| h.value.as_str())
     }
 
     /// Returns the base url http(s)://host(:port)
@@ -152,32 +151,26 @@ fn parse_cookie(s: &str) -> RequestCookie {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::http::RequestCookie;
+    use crate::http::{Header, RequestCookie};
 
     fn hello_request() -> Request {
-        Request::new(
-            "GET",
-            "http://localhost:8000/hello",
-            vec![
-                Header::new("Host", "localhost:8000"),
-                Header::new("Accept", "*/*"),
-                Header::new("User-Agent", "hurl/1.0"),
-            ],
-            vec![],
-        )
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Host", "localhost:8000"));
+        headers.push(Header::new("Accept", "*/*"));
+        headers.push(Header::new("User-Agent", "hurl/1.0"));
+        headers.push(Header::new("content-type", "application/json"));
+
+        Request::new("GET", "http://localhost:8000/hello", headers, vec![])
     }
 
     fn query_string_request() -> Request {
-        Request::new("GET", "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3", vec![], vec![])
+        Request::new("GET", "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3", HeaderVec::new(), vec![])
     }
 
     fn cookies_request() -> Request {
-        Request::new(
-            "GET",
-            "http://localhost:8000/cookies",
-            vec![Header::new("Cookie", "cookie1=value1; cookie2=value2")],
-            vec![],
-        )
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Cookie", "cookie1=value1; cookie2=value2"));
+        Request::new("GET", "http://localhost:8000/cookies", headers, vec![])
     }
 
     #[test]
@@ -204,6 +197,13 @@ mod tests {
                 },
             ]
         )
+    }
+
+    #[test]
+    fn test_content_type() {
+        assert_eq!(hello_request().content_type(), Some("application/json"));
+        assert_eq!(query_string_request().content_type(), None);
+        assert_eq!(cookies_request().content_type(), None);
     }
 
     #[test]
@@ -255,7 +255,7 @@ mod tests {
     #[test]
     fn test_base_url() {
         assert_eq!(
-            Request::new("", "http://localhost", vec![], vec![])
+            Request::new("", "http://localhost", HeaderVec::new(), vec![])
                 .base_url()
                 .unwrap(),
             "http://localhost".to_string()
@@ -264,7 +264,7 @@ mod tests {
             Request::new(
                 "",
                 "http://localhost:8000/redirect-relative",
-                vec![],
+                HeaderVec::new(),
                 vec![]
             )
             .base_url()
@@ -272,7 +272,7 @@ mod tests {
             "http://localhost:8000".to_string()
         );
         assert_eq!(
-            Request::new("", "https://localhost:8000", vec![], vec![])
+            Request::new("", "https://localhost:8000", HeaderVec::new(), vec![])
                 .base_url()
                 .unwrap(),
             "https://localhost:8000".to_string()
