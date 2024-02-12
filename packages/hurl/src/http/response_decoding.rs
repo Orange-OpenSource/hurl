@@ -64,7 +64,7 @@ impl Response {
     /// Returns character encoding of the HTTP response.
     fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
         match self.content_type() {
-            Some(content_type) => match mimetype::charset(&content_type) {
+            Some(content_type) => match mimetype::charset(content_type) {
                 Some(charset) => {
                     match encoding::label::encoding_from_whatwg_label(charset.as_str()) {
                         None => Err(HttpError::InvalidCharset { charset }),
@@ -91,10 +91,7 @@ impl Response {
 
     /// Returns true if response is an HTML response.
     pub fn is_html(&self) -> bool {
-        match self.content_type() {
-            None => false,
-            Some(s) => mimetype::is_html(&s),
-        }
+        self.content_type().map_or(false, mimetype::is_html)
     }
 
     /// Returns list of content encoding from HTTP response headers.
@@ -179,7 +176,7 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::http::{Header, Response};
+    use crate::http::{Header, HeaderVec, Response};
 
     #[test]
     fn test_parse_content_encoding() {
@@ -200,8 +197,11 @@ pub mod tests {
         let response = Response::default();
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Encoding", "xx"));
+
         let response = Response {
-            headers: vec![Header::new("Content-Encoding", "xx")],
+            headers,
             ..Default::default()
         };
         assert_eq!(
@@ -211,8 +211,11 @@ pub mod tests {
             }
         );
 
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Encoding", "br"));
+
         let response = Response {
-            headers: vec![Header::new("Content-Encoding", "br")],
+            headers,
             ..Default::default()
         };
         assert_eq!(
@@ -223,8 +226,10 @@ pub mod tests {
 
     #[test]
     fn test_multiple_content_encoding() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Encoding", "br, identity"));
         let response = Response {
-            headers: vec![Header::new("Content-Encoding", "br, identity")],
+            headers,
             ..Default::default()
         };
         assert_eq!(
@@ -235,8 +240,11 @@ pub mod tests {
 
     #[test]
     fn test_uncompress_body() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Encoding", "br"));
+
         let response = Response {
-            headers: vec![Header::new("Content-Encoding", "br")],
+            headers,
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
@@ -245,8 +253,10 @@ pub mod tests {
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Encoding", "br, identity"));
         let response = Response {
-            headers: vec![Header::new("Content-Encoding", "br, identity")],
+            headers,
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
@@ -315,19 +325,25 @@ pub mod tests {
     }
 
     fn utf8_encoding_response() -> Response {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Type", "text/plain; charset=utf-8"));
+
         Response {
-            headers: vec![Header::new("Content-Type", "text/plain; charset=utf-8")],
+            headers,
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
             ..Default::default()
         }
     }
 
     fn latin1_encoding_response() -> Response {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new(
+            "Content-Type",
+            "text/plain; charset=ISO-8859-1",
+        ));
+
         Response {
-            headers: vec![Header::new(
-                "Content-Type",
-                "text/plain; charset=ISO-8859-1",
-            )],
+            headers,
             body: vec![0x63, 0x61, 0x66, 0xe9],
             ..Default::default()
         }
@@ -338,11 +354,11 @@ pub mod tests {
         assert_eq!(hello_response().content_type(), None);
         assert_eq!(
             utf8_encoding_response().content_type(),
-            Some("text/plain; charset=utf-8".to_string())
+            Some("text/plain; charset=utf-8")
         );
         assert_eq!(
             latin1_encoding_response().content_type(),
-            Some("text/plain; charset=ISO-8859-1".to_string())
+            Some("text/plain; charset=ISO-8859-1")
         );
     }
 
@@ -380,9 +396,12 @@ pub mod tests {
 
     #[test]
     pub fn test_invalid_charset() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Type", "test/plain; charset=xxx"));
+
         assert_eq!(
             Response {
-                headers: vec![Header::new("Content-Type", "test/plain; charset=xxx"),],
+                headers,
                 body: b"Hello World!".to_vec(),
                 ..Default::default()
             }
@@ -410,12 +429,15 @@ pub mod tests {
             }
         );
 
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new(
+            "Content-Type",
+            "text/plain; charset=ISO-8859-1",
+        ));
+
         assert_eq!(
             Response {
-                headers: vec![Header::new(
-                    "Content-Type",
-                    "text/plain; charset=ISO-8859-1"
-                ),],
+                headers,
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
                 ..Default::default()
             }

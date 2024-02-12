@@ -23,6 +23,7 @@ pub const AUTHORIZATION: &str = "Authorization";
 pub const COOKIE: &str = "Cookie";
 pub const CONTENT_TYPE: &str = "Content-Type";
 pub const EXPECT: &str = "Expect";
+pub const LOCATION: &str = "Location";
 pub const USER_AGENT: &str = "User-Agent";
 
 /// Represents an HTTP header
@@ -45,20 +46,6 @@ impl Header {
             value: value.to_string(),
         }
     }
-}
-
-/// Returns all `headers` values for given `name`.
-pub fn get_values(headers: &[Header], name: &str) -> Vec<String> {
-    headers
-        .iter()
-        .filter_map(|Header { name: key, value }| {
-            if key.to_lowercase() == name.to_lowercase() {
-                Some(value.to_string())
-            } else {
-                None
-            }
-        })
-        .collect()
 }
 
 /// Represents an ordered list of [`Header`].

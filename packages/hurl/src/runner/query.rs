@@ -313,6 +313,7 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
+    use crate::http::HeaderVec;
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
 
@@ -600,10 +601,11 @@ pub mod tests {
             value: String::new(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
+        let mut headers = HeaderVec::new();
+        headers.push(http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly"));
+
         let response = http::Response {
-            headers: vec![
-                http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly")
-            ],
+            headers,
             ..Default::default()
         };
 

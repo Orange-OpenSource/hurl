@@ -112,12 +112,12 @@ pub fn eval_asserts(
                                 actuals
                                     .iter()
                                     .map(|v| format!("\"{v}\""))
-                                    .collect::<Vec<String>>()
+                                    .collect::<Vec<_>>()
                                     .join(", ")
                             );
                             for value in actuals {
                                 if value == expected {
-                                    actual = value;
+                                    actual = value.to_string();
                                     break;
                                 }
                             }

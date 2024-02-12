@@ -30,7 +30,7 @@ use url::Url;
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
 use crate::http::header::{
-    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, USER_AGENT,
+    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
 };
 use crate::http::options::ClientOptions;
 use crate::http::request::*;
@@ -676,8 +676,8 @@ impl Client {
     }
 
     /// Parse headers from libcurl responses.
-    fn parse_response_headers(&mut self, lines: &[String]) -> Vec<Header> {
-        let mut headers: Vec<Header> = vec![];
+    fn parse_response_headers(&mut self, lines: &[String]) -> HeaderVec {
+        let mut headers = HeaderVec::new();
         for line in lines {
             if let Some(header) = Header::parse(line) {
                 headers.push(header);
@@ -697,16 +697,10 @@ impl Client {
         if !(300..400).contains(&response_code) {
             return None;
         }
-        let location = match response.get_header_values("Location").first() {
-            None => return None,
-            Some(value) => get_redirect_url(value, base_url),
-        };
-
-        if location.is_empty() {
-            None
-        } else {
-            Some(location)
-        }
+        response
+            .headers
+            .get(LOCATION)
+            .map(|h| get_redirect_url(&h.value, base_url))
     }
 
     /// Returns cookie storage.

@@ -20,7 +20,7 @@ use std::time::Duration;
 
 use crate::http::certificate::Certificate;
 use crate::http::header::CONTENT_TYPE;
-use crate::http::{header, Header};
+use crate::http::HeaderVec;
 
 /// Represents a runtime HTTP response.
 /// This is a real response, that has been executed by our HTTP client.
@@ -28,7 +28,7 @@ use crate::http::{header, Header};
 pub struct Response {
     pub version: HttpVersion,
     pub status: u32,
-    pub headers: Vec<Header>,
+    pub headers: HeaderVec,
     pub body: Vec<u8>,
     pub duration: Duration,
     pub url: String,
@@ -41,7 +41,7 @@ impl Default for Response {
         Response {
             version: HttpVersion::Http10,
             status: 200,
-            headers: vec![],
+            headers: HeaderVec::new(),
             body: vec![],
             duration: Default::default(),
             url: String::new(),
@@ -55,7 +55,7 @@ impl Response {
     pub fn new(
         version: HttpVersion,
         status: u32,
-        headers: Vec<Header>,
+        headers: HeaderVec,
         body: Vec<u8>,
         duration: Duration,
         url: &str,
@@ -73,15 +73,17 @@ impl Response {
     }
 
     /// Returns all header values.
-    pub fn get_header_values(&self, name: &str) -> Vec<String> {
-        header::get_values(&self.headers, name)
+    pub fn get_header_values(&self, name: &str) -> Vec<&str> {
+        self.headers
+            .get_all(name)
+            .iter()
+            .map(|h| h.value.as_str())
+            .collect::<Vec<_>>()
     }
 
     /// Returns optional Content-type header value.
-    pub fn content_type(&self) -> Option<String> {
-        header::get_values(&self.headers, CONTENT_TYPE)
-            .first()
-            .cloned()
+    pub fn content_type(&self) -> Option<&str> {
+        self.headers.get(CONTENT_TYPE).map(|h| h.value.as_str())
     }
 }
 
@@ -110,17 +112,18 @@ impl fmt::Display for HttpVersion {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::http::Header;
 
     #[test]
     fn get_header_values() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Length", "12"));
+
         let response = Response {
-            headers: vec![Header::new("Content-Length", "12")],
+            headers,
             ..Default::default()
         };
-        assert_eq!(
-            response.get_header_values("Content-Length"),
-            vec!["12".to_string()]
-        );
+        assert_eq!(response.get_header_values("Content-Length"), vec!["12"]);
         assert!(response.get_header_values("Unknown").is_empty());
     }
 }
