@@ -22,7 +22,7 @@ brotli = "3.4.0"
 chrono = { version = "0.4.34", default-features = false, features = ["clock"] }
 clap = { version = "4.5.0", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
-curl = "0.4.45"
+curl = "0.4.46"
 curl-sys = "0.4.72"
 encoding = "0.2.33"
 float-cmp = "0.9.0"
@@ -51,5 +51,5 @@ termion = "3.0.0"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.83"
+cc = "1.0.85"
 
