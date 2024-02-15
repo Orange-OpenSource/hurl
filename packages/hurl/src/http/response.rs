@@ -19,7 +19,6 @@ use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
-use crate::http::header::CONTENT_TYPE;
 use crate::http::HeaderVec;
 
 /// Represents a runtime HTTP response.
@@ -71,20 +70,6 @@ impl Response {
             certificate,
         }
     }
-
-    /// Returns all header values.
-    pub fn get_header_values(&self, name: &str) -> Vec<&str> {
-        self.headers
-            .get_all(name)
-            .iter()
-            .map(|h| h.value.as_str())
-            .collect::<Vec<_>>()
-    }
-
-    /// Returns optional Content-type header value.
-    pub fn content_type(&self) -> Option<&str> {
-        self.headers.get(CONTENT_TYPE).map(|h| h.value.as_str())
-    }
 }
 
 /// Represents the HTTP version of a HTTP transaction.
@@ -123,7 +108,7 @@ mod tests {
             headers,
             ..Default::default()
         };
-        assert_eq!(response.get_header_values("Content-Length"), vec!["12"]);
-        assert!(response.get_header_values("Unknown").is_empty());
+        assert_eq!(response.headers.values("Content-Length"), vec!["12"]);
+        assert!(response.headers.values("Unknown").is_empty());
     }
 }

@@ -83,7 +83,7 @@ pub fn eval_asserts(
             Ok(expected) => {
                 match eval_template(&header.key, variables) {
                     Ok(header_name) => {
-                        let actuals = http_response.get_header_values(&header_name);
+                        let actuals = http_response.headers.values(&header_name);
                         if actuals.is_empty() {
                             let result = AssertResult::Header {
                                 actual: Err(Error::new(

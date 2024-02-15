@@ -42,6 +42,7 @@ mod debug;
 mod easy_ext;
 mod error;
 mod header;
+mod headers_helper;
 mod mimetype;
 mod options;
 mod request;

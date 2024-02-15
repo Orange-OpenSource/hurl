@@ -21,9 +21,11 @@ use std::slice::Iter;
 pub const ACCEPT_ENCODING: &str = "Accept-Encoding";
 pub const AUTHORIZATION: &str = "Authorization";
 pub const COOKIE: &str = "Cookie";
+pub const CONTENT_ENCODING: &str = "Content-Encoding";
 pub const CONTENT_TYPE: &str = "Content-Type";
 pub const EXPECT: &str = "Expect";
 pub const LOCATION: &str = "Location";
+pub const SET_COOKIE: &str = "Set-Cookie";
 pub const USER_AGENT: &str = "User-Agent";
 
 /// Represents an HTTP header
@@ -115,6 +117,14 @@ impl HeaderVec {
     /// Push a new `header` into the headers list.
     pub fn push(&mut self, header: Header) {
         self.headers.push(header)
+    }
+
+    /// Returns all headers values.
+    pub fn values(&self, name: &str) -> Vec<&str> {
+        self.get_all(name)
+            .iter()
+            .map(|h| h.value.as_str())
+            .collect::<Vec<_>>()
     }
 }
 

@@ -15,19 +15,20 @@
  * limitations under the License.
  *
  */
+use crate::http::header::SET_COOKIE;
 use crate::http::{Response, ResponseCookie};
 
 impl Response {
     pub fn cookies(&self) -> Vec<ResponseCookie> {
         self.headers
+            .get_all(SET_COOKIE)
             .iter()
-            .filter(|&h| h.name.to_lowercase().as_str() == "set-cookie")
-            .filter_map(|h| ResponseCookie::parse(h.value.clone()))
+            .filter_map(|h| ResponseCookie::parse(&h.value))
             .collect()
     }
 
     /// Returns optional cookies from response.
-    pub fn get_cookie(&self, name: String) -> Option<ResponseCookie> {
+    pub fn get_cookie(&self, name: &str) -> Option<ResponseCookie> {
         self.cookies()
             .into_iter()
             .find(|cookie| cookie.name == name)

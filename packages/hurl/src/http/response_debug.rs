@@ -31,7 +31,7 @@ impl Response {
         // We try to decode the HTTP body as text if the request has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we
         // print the body first 64 bytes.
-        if let Some(content_type) = self.content_type() {
+        if let Some(content_type) = self.headers.content_type() {
             if !mimetype::is_kind_of_text(content_type) {
                 debug::log_bytes(&self.body, 64, debug, logger);
                 return;
