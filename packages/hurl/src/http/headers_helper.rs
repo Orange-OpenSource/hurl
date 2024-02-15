@@ -48,7 +48,7 @@ impl HeaderVec {
     /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
     pub fn content_encoding(&self) -> Result<Vec<ContentEncoding>, HttpError> {
         for header in self {
-            if header.name.to_lowercase() == CONTENT_ENCODING.to_lowercase() {
+            if header.name_eq(CONTENT_ENCODING) {
                 let mut encodings = vec![];
                 for value in header.value.split(',') {
                     let encoding = ContentEncoding::parse(value.trim())?;

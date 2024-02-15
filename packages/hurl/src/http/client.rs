@@ -133,9 +133,7 @@ impl Client {
             let headers = if options.follow_location_trusted {
                 request_spec.headers
             } else {
-                request_spec
-                    .headers
-                    .retain(|h| h.name.to_lowercase() != AUTHORIZATION.to_lowercase());
+                request_spec.headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 request_spec.headers
             };
             request_spec = RequestSpec {
