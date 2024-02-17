@@ -20,7 +20,7 @@ vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.21.7"
 brotli = "3.4.0"
 chrono = { version = "0.4.34", default-features = false, features = ["clock"] }
-clap = { version = "4.5.0", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.5.1", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.46"
 curl-sys = "0.4.72"
