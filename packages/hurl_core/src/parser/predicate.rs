@@ -87,6 +87,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             string_predicate,
             collection_predicate,
             date_predicate,
+            is_iso_date_predicate,
             exist_predicate,
             is_empty_predicate,
         ],
@@ -325,6 +326,11 @@ fn date_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     Ok(PredicateFuncValue::IsDate)
 }
 
+fn is_iso_date_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isIsoDate", reader)?;
+    Ok(PredicateFuncValue::IsIsoDate)
+}
+
 fn exist_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("exists", reader)?;
     Ok(PredicateFuncValue::Exist)
@@ -519,5 +525,12 @@ mod tests {
         let mut reader = Reader::new("isDate");
         let result = date_predicate(&mut reader);
         assert_eq!(result.unwrap(), PredicateFuncValue::IsDate);
+    }
+
+    #[test]
+    fn test_is_iso_date_predicate() {
+        let mut reader = Reader::new("isIsoDate");
+        let result = is_iso_date_predicate(&mut reader);
+        assert_eq!(result.unwrap(), PredicateFuncValue::IsIsoDate);
     }
 }

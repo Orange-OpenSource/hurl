@@ -4,5 +4,6 @@ HTTP 200
 certificate "Subject" replace " = " "=" replace ";" ", " == "CN=hurl.dev"
 certificate "Issuer"  replace " = " "=" replace ";" ", " == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" isDate
+certificate "Expire-Date" isIsoDate
 certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches /^([\da-f]{2}:){17}[\da-f]{2}$/

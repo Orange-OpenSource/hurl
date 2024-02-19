@@ -529,6 +529,7 @@ impl HtmlFormatter {
             PredicateFuncValue::IsString => {}
             PredicateFuncValue::IsCollection => {}
             PredicateFuncValue::IsDate => {}
+            PredicateFuncValue::IsIsoDate => {}
             PredicateFuncValue::Exist => {}
             PredicateFuncValue::IsEmpty => {}
         }

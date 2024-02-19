@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use chrono::NaiveDateTime;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
@@ -235,6 +236,7 @@ fn expected_no_value(
         PredicateFuncValue::IsString => Ok("string".to_string()),
         PredicateFuncValue::IsCollection => Ok("collection".to_string()),
         PredicateFuncValue::IsDate => Ok("date".to_string()),
+        PredicateFuncValue::IsIsoDate => Ok("ISO string".to_string()),
         PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
     }
@@ -302,6 +304,7 @@ fn eval_predicate_func(
         PredicateFuncValue::IsString => eval_is_string(value),
         PredicateFuncValue::IsCollection => eval_is_collection(value),
         PredicateFuncValue::IsDate => eval_is_date(value),
+        PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
     }
@@ -582,6 +585,38 @@ fn eval_is_date(actual: &Value) -> Result<AssertResult, Error> {
         expected: "date".to_string(),
         type_mismatch: false,
     })
+}
+
+/// Evaluvates if an `actual` value is a ISO date.
+fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, Error> {
+    match actual {
+        Value::String(v) => {
+            // Add more ISO like formats here if needed
+            const DATE_FORMATS: [&str; 2] = ["%Y-%m-%dT%H:%M:%S%.f:z", "%Y-%m-%dT%H:%M:%S%.fZ"];
+            for fmt in DATE_FORMATS {
+                if let Ok(_) = NaiveDateTime::parse_from_str(v.as_str(), fmt) {
+                    return Ok(AssertResult {
+                        success: true,
+                        actual: actual.display(),
+                        expected: "ISO string".to_string(),
+                        type_mismatch: false,
+                    });
+                }
+            }
+            Ok(AssertResult {
+                success: false,
+                actual: actual.display(),
+                expected: "ISO string".to_string(),
+                type_mismatch: true,
+            })
+        }
+        _v => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: "ISO string".to_string(),
+            type_mismatch: true,
+        }),
+    }
 }
 
 /// Evaluates if an `actual` value exists.
@@ -1461,6 +1496,33 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "string <toto>");
         assert_eq!(assert_result.expected.as_str(), "date");
+    }
+
+    #[test]
+    fn test_iso_date_predicate() {
+        // predicate: `isIsoDate`
+        // value: 2024-02-15T19:47:46.266:z
+        let value = Value::String("2024-02-15T19:47:46.266:z".to_string());
+        let assert_result = eval_is_iso_date(&value).unwrap();
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.expected.as_str(), "ISO string");
+
+        // predicate: `isIsoDate`
+        // value: 2024-02-15T19:47:46.266Z
+        let value = Value::String("2024-02-15T19:47:46.266Z".to_string());
+        let assert_result = eval_is_iso_date(&value).unwrap();
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.expected.as_str(), "ISO string");
+
+        // predicate: `isIsoDate`
+        // value: 2025-10-30 08:29:52 UTC
+        let value = Value::String("2025-10-30 08:29:52 UTC".to_string());
+        let assert_result = eval_is_iso_date(&value).unwrap();
+        assert!(!assert_result.success);
+        assert!(assert_result.type_mismatch);
+        assert_eq!(assert_result.expected.as_str(), "ISO string");
     }
 
     #[test]
