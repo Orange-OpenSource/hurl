@@ -76,11 +76,11 @@ fn eval_query_url(response: &http::Response) -> QueryResult {
 
 fn eval_query_header(
     response: &http::Response,
-    header: &Template,
+    name: &Template,
     variables: &HashMap<String, Value>,
 ) -> QueryResult {
-    let header = eval_template(header, variables)?;
-    let values = response.get_header_values(&header);
+    let name = eval_template(name, variables)?;
+    let values = response.headers.values(&name);
     if values.is_empty() {
         Ok(None)
     } else if values.len() == 1 {
@@ -102,7 +102,7 @@ fn eval_query_cookie(
     variables: &HashMap<String, Value>,
 ) -> QueryResult {
     let name = eval_template(name, variables)?;
-    match response.get_cookie(name) {
+    match response.get_cookie(&name) {
         None => Ok(None),
         Some(cookie) => {
             let attribute_name = if let Some(attribute) = attribute {
@@ -313,6 +313,7 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
+    use crate::http::HeaderVec;
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
 
@@ -600,10 +601,11 @@ pub mod tests {
             value: String::new(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
+        let mut headers = HeaderVec::new();
+        headers.push(http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly"));
+
         let response = http::Response {
-            headers: vec![
-                http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly")
-            ],
+            headers,
             ..Default::default()
         };
 

@@ -47,11 +47,12 @@ pub fn json_http_response() -> Response {
 }
 
 pub fn xml_two_users_http_response() -> Response {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("Content-Type", "text/html; charset=utf-8"));
+    headers.push(Header::new("Content-Length", "12"));
+
     Response {
-        headers: vec![
-            Header::new("Content-Type", "text/html; charset=utf-8"),
-            Header::new("Content-Length", "12"),
-        ],
+        headers,
         body: String::into_bytes(
             r#"
 <?xml version="1.0"?>
@@ -67,11 +68,12 @@ pub fn xml_two_users_http_response() -> Response {
 }
 
 pub fn xml_three_users_http_response() -> Response {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("Content-Type", "text/html; charset=utf-8"));
+    headers.push(Header::new("Content-Length", "12"));
+
     Response {
-        headers: vec![
-            Header::new("Content-Type", "text/html; charset=utf-8"),
-            Header::new("Content-Length", "12"),
-        ],
+        headers,
         body: String::into_bytes(
             r#"
 <?xml version="1.0"?>
@@ -88,30 +90,35 @@ pub fn xml_three_users_http_response() -> Response {
 }
 
 pub fn hello_http_response() -> Response {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("Content-Type", "text/html; charset=utf-8"));
+    headers.push(Header::new("Content-Length", "12"));
+
     Response {
-        headers: vec![
-            Header::new("Content-Type", "text/html; charset=utf-8"),
-            Header::new("Content-Length", "12"),
-        ],
+        headers,
         body: String::into_bytes(String::from("Hello World!")),
         ..Default::default()
     }
 }
 
 pub fn bytes_http_response() -> Response {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("Content-Type", "application/octet-stream"));
+    headers.push(Header::new("Content-Length", "1"));
+
     Response {
-        headers: vec![
-            Header::new("Content-Type", "application/octet-stream"),
-            Header::new("Content-Length", "1"),
-        ],
+        headers,
         body: vec![255],
         ..Default::default()
     }
 }
 
 pub fn html_http_response() -> Response {
+    let mut headers = HeaderVec::new();
+    headers.push(Header::new("Content-Type", "application/octet-stream"));
+
     Response {
-        headers: vec![Header::new("Content-Type", "text/html; charset=utf-8")],
+        headers,
         body: String::into_bytes(String::from(
             "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
         )),

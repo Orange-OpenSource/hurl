@@ -20,7 +20,7 @@ use std::fmt;
 use url::Url;
 
 use crate::http::core::*;
-use crate::http::header::{HeaderVec, CONTENT_TYPE, COOKIE};
+use crate::http::header::{HeaderVec, COOKIE};
 use crate::http::HttpError;
 
 /// Represents a runtime HTTP request.
@@ -101,11 +101,6 @@ impl Request {
             .iter()
             .flat_map(|h| parse_cookies(h.value.as_str().trim()))
             .collect()
-    }
-
-    /// Returns optional Content-type header value.
-    pub fn content_type(&self) -> Option<&str> {
-        self.headers.get(CONTENT_TYPE).map(|h| h.value.as_str())
     }
 
     /// Returns the base url http(s)://host(:port)
@@ -201,9 +196,12 @@ mod tests {
 
     #[test]
     fn test_content_type() {
-        assert_eq!(hello_request().content_type(), Some("application/json"));
-        assert_eq!(query_string_request().content_type(), None);
-        assert_eq!(cookies_request().content_type(), None);
+        assert_eq!(
+            hello_request().headers.content_type(),
+            Some("application/json")
+        );
+        assert_eq!(query_string_request().headers.content_type(), None);
+        assert_eq!(cookies_request().headers.content_type(), None);
     }
 
     #[test]

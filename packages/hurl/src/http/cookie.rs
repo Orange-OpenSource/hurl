@@ -43,7 +43,7 @@ impl ResponseCookie {
     /// Parses value from Set-Cookie header into a `ResponseCookie`.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>
-    pub fn parse(s: String) -> Option<ResponseCookie> {
+    pub fn parse(s: &str) -> Option<ResponseCookie> {
         if let Some(index) = s.find('=') {
             let (name, remaining) = s.split_at(index);
             let mut tokens: Vec<&str> = remaining[1..].split(';').collect();
@@ -187,7 +187,7 @@ pub mod tests {
             attributes: vec![],
         };
         assert_eq!(
-            ResponseCookie::parse("sessionId=38afes7a8".to_string()).unwrap(),
+            ResponseCookie::parse("sessionId=38afes7a8").unwrap(),
             cookie
         );
         assert_eq!(cookie.expires(), None);
@@ -210,8 +210,7 @@ pub mod tests {
             }],
         };
         assert_eq!(
-            ResponseCookie::parse("id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT".to_string())
-                .unwrap(),
+            ResponseCookie::parse("id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT").unwrap(),
             cookie
         );
         assert_eq!(
@@ -237,7 +236,7 @@ pub mod tests {
             }],
         };
         assert_eq!(
-            ResponseCookie::parse("id=a3fWa; Max-Age=2592000".to_string()).unwrap(),
+            ResponseCookie::parse("id=a3fWa; Max-Age=2592000").unwrap(),
             cookie
         );
         assert_eq!(cookie.expires(), None);
@@ -274,7 +273,7 @@ pub mod tests {
             ],
         };
         assert_eq!(
-            ResponseCookie::parse("LSID=DQAAAK…Eaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly".to_string()).unwrap(),
+            ResponseCookie::parse("LSID=DQAAAK…Eaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly").unwrap(),
             cookie
         );
         assert_eq!(
@@ -314,7 +313,7 @@ pub mod tests {
             ],
         };
         assert_eq!(
-            ResponseCookie::parse("HSID=AYQEVn…DKrdst; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly".to_string()).unwrap(),
+            ResponseCookie::parse("HSID=AYQEVn…DKrdst; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly").unwrap(),
             cookie
         );
         assert_eq!(
@@ -332,7 +331,7 @@ pub mod tests {
     #[test]
     fn test_trailing_semicolon() {
         assert_eq!(
-            ResponseCookie::parse("xx=yy;".to_string()).unwrap(),
+            ResponseCookie::parse("xx=yy;").unwrap(),
             ResponseCookie {
                 name: "xx".to_string(),
                 value: "yy".to_string(),
@@ -343,7 +342,7 @@ pub mod tests {
 
     #[test]
     fn test_invalid_cookie() {
-        assert_eq!(ResponseCookie::parse("xx".to_string()), None);
+        assert_eq!(ResponseCookie::parse("xx"), None);
     }
 
     #[test]
@@ -363,7 +362,7 @@ pub mod tests {
             ],
         };
         assert_eq!(
-            ResponseCookie::parse("id=a3fWa; Secure=0; Max-Age=".to_string()).unwrap(),
+            ResponseCookie::parse("id=a3fWa; Secure=0; Max-Age=").unwrap(),
             cookie
         );
         assert_eq!(cookie.expires(), None);

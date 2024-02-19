@@ -21,8 +21,11 @@ use std::slice::Iter;
 pub const ACCEPT_ENCODING: &str = "Accept-Encoding";
 pub const AUTHORIZATION: &str = "Authorization";
 pub const COOKIE: &str = "Cookie";
+pub const CONTENT_ENCODING: &str = "Content-Encoding";
 pub const CONTENT_TYPE: &str = "Content-Type";
 pub const EXPECT: &str = "Expect";
+pub const LOCATION: &str = "Location";
+pub const SET_COOKIE: &str = "Set-Cookie";
 pub const USER_AGENT: &str = "User-Agent";
 
 /// Represents an HTTP header
@@ -39,26 +42,20 @@ impl fmt::Display for Header {
 }
 
 impl Header {
+    /// Creates an HTTP header with this `name`and `value`.
     pub fn new(name: &str, value: &str) -> Self {
         Header {
             name: name.to_string(),
             value: value.to_string(),
         }
     }
-}
 
-/// Returns all `headers` values for given `name`.
-pub fn get_values(headers: &[Header], name: &str) -> Vec<String> {
-    headers
-        .iter()
-        .filter_map(|Header { name: key, value }| {
-            if key.to_lowercase() == name.to_lowercase() {
-                Some(value.to_string())
-            } else {
-                None
-            }
-        })
-        .collect()
+    /// Returns `true` if this HTTP header name is equal to `name`.
+    ///
+    /// An HTTP header consists of a case-insensitive name.
+    pub fn name_eq(&self, name: &str) -> bool {
+        self.name.to_lowercase() == name.to_lowercase()
+    }
 }
 
 /// Represents an ordered list of [`Header`].
@@ -79,24 +76,17 @@ impl HeaderVec {
     /// If there are multiple headers associated with `name`, then the first one is returned.
     /// Use [`get_all`] to get all values associated with a given key.
     pub fn get(&self, name: &str) -> Option<&Header> {
-        self.headers
-            .iter()
-            .find(|h| h.name.to_lowercase() == name.to_lowercase())
+        self.headers.iter().find(|h| h.name_eq(name))
     }
 
     /// Returns a list of header associated with `name`.
     pub fn get_all(&self, name: &str) -> Vec<&Header> {
-        self.headers
-            .iter()
-            .filter(|h| h.name.to_lowercase() == name.to_lowercase())
-            .collect()
+        self.headers.iter().filter(|h| h.name_eq(name)).collect()
     }
 
     /// Returns true if there is at least one header with the specified `name`.
     pub fn contains_key(&self, name: &str) -> bool {
-        self.headers
-            .iter()
-            .any(|h| h.name.to_lowercase() == name.to_lowercase())
+        self.headers.iter().any(|h| h.name_eq(name))
     }
 
     /// Retains only the header specified by the predicate.
@@ -128,6 +118,14 @@ impl HeaderVec {
     /// Push a new `header` into the headers list.
     pub fn push(&mut self, header: Header) {
         self.headers.push(header)
+    }
+
+    /// Returns all headers values.
+    pub fn values(&self, name: &str) -> Vec<&str> {
+        self.get_all(name)
+            .iter()
+            .map(|h| h.value.as_str())
+            .collect::<Vec<_>>()
     }
 }
 
@@ -176,7 +174,7 @@ mod tests {
         assert!(headers.contains_key("FOO"));
         assert!(!headers.contains_key("fuu"));
 
-        headers.retain(|h| h.name.to_lowercase() == "bar");
+        headers.retain(|h| h.name_eq("Bar"));
         assert_eq!(headers.len(), 3);
     }
 

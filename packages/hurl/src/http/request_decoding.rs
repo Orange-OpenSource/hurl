@@ -15,30 +15,14 @@
  * limitations under the License.
  *
  */
-use encoding::{DecoderTrap, EncodingRef};
+use encoding::DecoderTrap;
 
-use crate::http::{mimetype, HttpError, Request};
+use crate::http::{HttpError, Request};
 
 impl Request {
-    /// Returns character encoding of the HTTP request.
-    fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
-        match self.content_type() {
-            Some(content_type) => match mimetype::charset(content_type) {
-                Some(charset) => {
-                    match encoding::label::encoding_from_whatwg_label(charset.as_str()) {
-                        None => Err(HttpError::InvalidCharset { charset }),
-                        Some(enc) => Ok(enc),
-                    }
-                }
-                None => Ok(encoding::all::UTF_8),
-            },
-            None => Ok(encoding::all::UTF_8),
-        }
-    }
-
     /// Returns response body as text.
     pub fn text(&self) -> Result<String, HttpError> {
-        let encoding = self.character_encoding()?;
+        let encoding = self.headers.character_encoding()?;
         match encoding.decode(&self.body, DecoderTrap::Strict) {
             Ok(s) => Ok(s),
             Err(_) => Err(HttpError::InvalidDecoding {
