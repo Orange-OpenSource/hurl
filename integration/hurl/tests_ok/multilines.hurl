@@ -8,7 +8,6 @@ line1
 line2
 line3
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
@@ -34,7 +33,6 @@ POST http://localhost:8000/multilines/json
   "baz": 123456
 }
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
@@ -71,7 +69,6 @@ POST http://localhost:8000/multilines/xml
     </book>
 </catalog>
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:

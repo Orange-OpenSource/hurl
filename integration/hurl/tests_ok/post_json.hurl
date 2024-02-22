@@ -1,5 +1,4 @@
 POST http://localhost:8000/post-json
-
 {
     "name": "Bob",
     "password": "&secret\\'<>",
@@ -10,29 +9,28 @@ POST http://localhost:8000/post-json
     "items": [true, "true", 1],
     "variable": "{{string_variable}}"
 }
-
 HTTP 200
+
 
 POST http://localhost:8000/post-json-array
 [1,2,3]
-
 HTTP 200
 
 
 POST http://localhost:8000/post-json-array-empty
 []
-
 HTTP 200
+
 
 POST http://localhost:8000/post-json-string
 "Hello"
-
 HTTP 200
+
 
 POST http://localhost:8000/post-json-number
 100
-
 HTTP 200
+
 
 POST http://localhost:8000/post-json-numbers
 {
@@ -41,13 +39,11 @@ POST http://localhost:8000/post-json-numbers
     "float": "3.333333333333333",
     "exponent": 100e100
 }
-
-
 HTTP 200
+
 
 POST http://localhost:8000/post-json-boolean
 true
-
 HTTP 200
 
 #
@@ -58,8 +54,8 @@ HTTP 200
 [Captures]
 name: body
 
-POST http://localhost:8000/check_name
 
+POST http://localhost:8000/check_name
 {
     "name": "{{name}}"
 }

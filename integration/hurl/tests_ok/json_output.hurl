@@ -10,7 +10,6 @@ HTTP 200
 
 # Cookies!
 GET http://localhost:8000/cookies/set-session-cookie2-valueA
-
 HTTP 200
 [Asserts]
 cookie "cookie2" == "valueA"
@@ -29,7 +28,6 @@ GET http://localhost:8000/follow-redirect
 Accept: text/plain
 [Options]
 location: true
-
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -38,7 +36,6 @@ header "Location" not exists
 
 # Some Captures
 GET http://localhost:8000/captures
-
 HTTP 200
 [Captures]
 param1: header "header1"
@@ -50,7 +47,6 @@ data2: variable "data1"
 
 # Some JSON asserts
 GET http://localhost:8000/assert-json
-
 HTTP 200
 [Asserts]
 jsonpath "$.errors[1].id" == "error2"
