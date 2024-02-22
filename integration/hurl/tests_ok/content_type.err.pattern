@@ -6,8 +6,6 @@
 * Request:
 * POST http://localhost:8000/content-type-json
 *
-* Implicit content-type=application/json
-*
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-json'
 *
@@ -36,8 +34,6 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-json
-*
-* Implicit content-type=application/json
 *
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "age": 30\n}\n' 'http://localhost:8000/content-type-json'
@@ -98,8 +94,6 @@
 * Request:
 * POST http://localhost:8000/content-type-json
 *
-* Implicit content-type=application/json
-*
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/json' --data '{"query":"{\n  project(name: \"GraphQL\") {\n    tagline\n  }\n}"}' 'http://localhost:8000/content-type-json'
 *
@@ -129,8 +123,6 @@
 * Request:
 * POST http://localhost:8000/content-type-json
 * Content-Type: application/json
-*
-* Implicit content-type=application/json
 *
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-json'
@@ -162,8 +154,6 @@
 * POST http://localhost:8000/content-type-vnd-json
 * Content-Type: application/vnd.api+json
 *
-* Implicit content-type=application/json
-*
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/vnd.api+json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
 *
@@ -193,8 +183,6 @@
 * Request:
 * POST http://localhost:8000/content-type-vnd-json
 * content-type: application/vnd.api+json
-*
-* Implicit content-type=application/json
 *
 * Request can be run with the following curl command:
 * curl --header 'content-type: application/vnd.api+json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
@@ -229,8 +217,6 @@
 * field2: bar
 * field2: baz
 *
-* Implicit content-type=application/x-www-form-urlencoded
-*
 * Request can be run with the following curl command:
 * curl --data 'field1=foo' --data 'field2=bar' --data 'field2=baz' 'http://localhost:8000/content-type-form'
 *
@@ -264,8 +250,6 @@
 * field2: bar
 * field2: baz
 *
-* Implicit content-type=multipart/form-data
-*
 * Request can be run with the following curl command:
 * curl --form 'field1=foo' --form 'field2=bar' --form 'field2=baz' 'http://localhost:8000/content-type-multipart'
 *
@@ -295,8 +279,6 @@
 * Request:
 * POST http://localhost:8000/content-type-xml
 *
-* Implicit content-type=application/xml
-*
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/xml' --data $'<note>\n    <to>Tove</to>\n    <from>Jani</from>\n    <heading>Reminder</heading>\n    <body>Don\'t forget me this weekend!</body>\n</note>' 'http://localhost:8000/content-type-xml'
 *
@@ -325,8 +307,6 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-xml
-*
-* Implicit content-type=application/xml
 *
 * Request can be run with the following curl command:
 * curl --header 'Content-Type: application/xml' --data $'<note>\n    <to>Tove</to>\n    <from>Jani</from>\n    <heading>Reminder</heading>\n    <body>Don\'t forget me this weekend!</body>\n</note>\n' 'http://localhost:8000/content-type-xml'

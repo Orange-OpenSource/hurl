@@ -28,6 +28,7 @@ use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_a
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::value::Value;
+use crate::runner::CaptureResult;
 use crate::util::logger::{Logger, Verbosity};
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
@@ -44,19 +45,18 @@ pub fn run(
     runner_options: &RunnerOptions,
     logger: &Logger,
 ) -> EntryResult {
+    let compressed = runner_options.compressed;
+    let source_info = entry.source_info();
     let context_dir = &runner_options.context_dir;
     let http_request = match eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
                 entry_index,
-                source_info: entry.source_info(),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
+                source_info,
                 errors: vec![error],
-                time_in_ms: 0,
-                compressed: runner_options.compressed,
+                compressed,
+                ..Default::default()
             };
         }
     };
@@ -68,27 +68,20 @@ pub fn run(
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(&cookie, &client_options);
         } else {
-            logger.warning(format!("Cookie string can not be parsed: '{s}'").as_str());
+            logger.warning(&format!("Cookie string can not be parsed: '{s}'"));
         }
     }
     if cookie_storage_clear(&entry.request) {
         http_client.clear_cookie_storage(&client_options);
     }
 
-    logger.debug("");
-    logger.debug_important("Cookie store:");
-    for cookie in http_client.get_cookie_storage() {
-        logger.debug(cookie.to_string().as_str());
-    }
-    logger.debug("");
-    log_request_spec(&http_request, logger);
-
-    logger.debug("Request can be run with the following curl command:");
-    let output = runner_options.output.clone();
-    let curl_command =
-        http_client.curl_command_line(&http_request, context_dir, output.as_ref(), &client_options);
-    logger.debug(curl_command.as_str());
-    logger.debug("");
+    log_request(
+        http_client,
+        &http_request,
+        runner_options,
+        &client_options,
+        logger,
+    );
 
     // Run the HTTP requests (optionally follow redirection)
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
@@ -100,13 +93,10 @@ pub fn run(
             let error = Error::new(error_source_info, http_error.into(), false);
             return EntryResult {
                 entry_index,
-                source_info: entry.source_info(),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
+                source_info,
                 errors: vec![error],
-                time_in_ms: 0,
-                compressed: client_options.compressed,
+                compressed,
+                ..Default::default()
             };
         }
     };
@@ -125,26 +115,26 @@ pub fn run(
     // 1. first, check implicit assert on status and version. If KO, test is failed
     // 2. then, we compute captures, we might need them in asserts
     // 3. finally, run the remaining asserts
-    let mut all_asserts = vec![];
+    let mut asserts = vec![];
 
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut asserts = eval_version_status_asserts(response_spec, http_response);
-            let errors = asserts_to_errors(&asserts);
+            let mut status_asserts = eval_version_status_asserts(response_spec, http_response);
+            let errors = asserts_to_errors(&status_asserts);
+            asserts.append(&mut status_asserts);
             if !errors.is_empty() {
                 logger.debug("");
                 return EntryResult {
                     entry_index,
-                    source_info: entry.source_info(),
+                    source_info,
                     calls,
                     captures: vec![],
                     asserts,
                     errors,
                     time_in_ms,
-                    compressed: client_options.compressed,
+                    compressed,
                 };
             }
-            all_asserts.append(&mut asserts);
         }
     };
 
@@ -155,45 +145,40 @@ pub fn run(
             Err(e) => {
                 return EntryResult {
                     entry_index,
-                    source_info: entry.source_info(),
+                    source_info,
                     calls,
                     captures: vec![],
-                    asserts: all_asserts,
+                    asserts,
                     errors: vec![e],
                     time_in_ms,
-                    compressed: client_options.compressed,
+                    compressed,
                 };
             }
         },
     };
-
-    if !captures.is_empty() {
-        logger.debug_important("Captures:");
-        for c in captures.iter() {
-            logger.capture(&c.name, &c.value);
-        }
-    }
+    log_captures(&captures, logger);
     logger.debug("");
 
     // Compute asserts
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut asserts = eval_asserts(response_spec, variables, http_response, context_dir);
-            all_asserts.append(&mut asserts);
+            let mut other_asserts =
+                eval_asserts(response_spec, variables, http_response, context_dir);
+            asserts.append(&mut other_asserts);
         }
     };
 
-    let errors = asserts_to_errors(&all_asserts);
+    let errors = asserts_to_errors(&asserts);
 
     EntryResult {
         entry_index,
-        source_info: entry.source_info(),
+        source_info,
         calls,
         captures,
-        asserts: all_asserts,
+        asserts,
         errors,
         time_in_ms,
-        compressed: client_options.compressed,
+        compressed,
     }
 }
 
@@ -249,40 +234,67 @@ impl ClientOptions {
     }
 }
 
-/// Logs this HTTP `request` spec.
-fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
+/// Logs this HTTP `request`.
+fn log_request(
+    http_client: &mut http::Client,
+    request: &http::RequestSpec,
+    runner_options: &RunnerOptions,
+    client_options: &ClientOptions,
+    logger: &Logger,
+) {
+    logger.debug("");
+    logger.debug_important("Cookie store:");
+    for cookie in &http_client.get_cookie_storage() {
+        logger.debug(&cookie.to_string());
+    }
+
+    logger.debug("");
     logger.debug_important("Request:");
-    logger.debug(format!("{} {}", request.method, request.url).as_str());
+    logger.debug(&format!("{} {}", request.method, request.url));
     for header in &request.headers {
-        logger.debug(header.to_string().as_str());
+        logger.debug(&header.to_string());
     }
     if !request.querystring.is_empty() {
         logger.debug("[QueryStringParams]");
         for param in &request.querystring {
-            logger.debug(param.to_string().as_str());
+            logger.debug(&param.to_string());
         }
     }
     if !request.form.is_empty() {
         logger.debug("[FormParams]");
         for param in &request.form {
-            logger.debug(param.to_string().as_str());
+            logger.debug(&param.to_string());
         }
     }
     if !request.multipart.is_empty() {
         logger.debug("[MultipartFormData]");
         for param in &request.multipart {
-            logger.debug(param.to_string().as_str());
+            logger.debug(&param.to_string());
         }
     }
     if !request.cookies.is_empty() {
         logger.debug("[Cookies]");
         for cookie in &request.cookies {
-            logger.debug(cookie.to_string().as_str());
+            logger.debug(&cookie.to_string());
         }
     }
-    if let Some(s) = &request.implicit_content_type {
-        logger.debug("");
-        logger.debug(format!("Implicit content-type={s}").as_str());
-    }
     logger.debug("");
+    logger.debug("Request can be run with the following curl command:");
+    let context_dir = &runner_options.context_dir;
+    let output = &runner_options.output;
+    let curl_command =
+        http_client.curl_command_line(request, context_dir, output.as_ref(), client_options);
+    logger.debug(&curl_command);
+    logger.debug("");
+}
+
+/// Logs the `captures` from the entry HTTP response.
+fn log_captures(captures: &[CaptureResult], logger: &Logger) {
+    if captures.is_empty() {
+        return;
+    }
+    logger.debug_important("Captures:");
+    for c in captures.iter() {
+        logger.capture(&c.name, &c.value);
+    }
 }

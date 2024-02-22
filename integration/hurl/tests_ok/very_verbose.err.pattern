@@ -148,8 +148,6 @@
 * POST http://localhost:8000/very-verbose/compressed/brotli
 * Accept-Encoding: brotli
 *
-* Implicit content-type=application/json
-*
 * Request can be run with the following curl command:
 * curl --header 'Accept-Encoding: brotli' --header 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' --location 'http://localhost:8000/very-verbose/compressed/brotli'
 *
@@ -251,8 +249,6 @@
 * POST http://localhost:8000/very-verbose/update-cat
 * [MultipartFormData]
 * cat: file,cat.jpg; image/jpeg
-*
-* Implicit content-type=multipart/form-data
 *
 * Request can be run with the following curl command:
 * curl --form 'cat=@tests_ok~cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'

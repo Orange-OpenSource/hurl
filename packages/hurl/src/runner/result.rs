@@ -74,6 +74,21 @@ pub struct EntryResult {
     pub compressed: bool,
 }
 
+impl Default for EntryResult {
+    fn default() -> Self {
+        EntryResult {
+            entry_index: 1,
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            calls: vec![],
+            captures: vec![],
+            asserts: vec![],
+            errors: vec![],
+            time_in_ms: 0,
+            compressed: false,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum AssertResult {
     Version {
