@@ -220,7 +220,6 @@ pub fn run(
                 // an error. If we want to treat it as an error, we've to add it to the current
                 // `entry_result` errors, and optionally deals with retry if we can't write to the
                 // specified path.
-
                 let authorized = if let Output::File(filename) = &output {
                     if !runner_options.context_dir.is_access_allowed(filename) {
                         let inner = RunnerError::UnauthorizedFileAccess {

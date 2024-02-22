@@ -46,8 +46,6 @@ mod headers_helper;
 mod mimetype;
 mod options;
 mod request;
-mod request_debug;
-mod request_decoding;
 mod request_spec;
 mod request_spec_curl_args;
 mod response;

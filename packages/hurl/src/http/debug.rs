@@ -15,7 +15,38 @@
  * limitations under the License.
  *
  */
+use crate::http::{mimetype, HeaderVec};
 use crate::util::logger::Logger;
+use encoding::DecoderTrap;
+
+/// Logs a buffer of bytes representing an HTTP request or response `body`.
+/// If the body is kind of text, we log all the text lines. If we can't detect that this is a text
+/// body (using Content-Type header in `headers`), we print the first 64 bytes.
+/// TODO: this function does not manage any kind of compression so we can only use for an HTTP
+/// request. For an HTTP response, see `[crate::http::Response::log_body]`.
+/// If `debug` is true, logs are printed using debug (with * prefix), otherwise logs are printed
+/// in info.
+pub fn log_body(body: &[u8], headers: &HeaderVec, debug: bool, logger: &Logger) {
+    if let Some(content_type) = headers.content_type() {
+        if !mimetype::is_kind_of_text(content_type) {
+            log_bytes(body, 64, debug, logger);
+            return;
+        }
+    }
+    // Decode body as text:
+    let encoding = match headers.character_encoding() {
+        Ok(encoding) => encoding,
+        Err(_) => {
+            log_bytes(body, 64, debug, logger);
+            return;
+        }
+    };
+
+    match encoding.decode(body, DecoderTrap::Strict) {
+        Ok(text) => log_text(&text, debug, logger),
+        Err(_) => log_bytes(body, 64, debug, logger),
+    }
+}
 
 /// Debug log text.
 pub fn log_text(text: &str, debug: bool, logger: &Logger) {

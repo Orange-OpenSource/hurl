@@ -24,11 +24,7 @@ use crate::util::logger::Logger;
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.
     pub fn log_body(&self, debug: bool, logger: &Logger) {
-        if debug {
-            logger.debug_important("Response body:");
-        }
-
-        // We try to decode the HTTP body as text if the request has a text kind content type.
+        // We try to decode the HTTP body as text if the response has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we
         // print the body first 64 bytes.
         if let Some(content_type) = self.headers.content_type() {

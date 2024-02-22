@@ -29,6 +29,7 @@ use url::Url;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
+use crate::http::debug::log_body;
 use crate::http::header::{
     HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
 };
@@ -121,7 +122,7 @@ impl Client {
             }
             let redirect_url = redirect_url.unwrap();
             logger.debug("");
-            logger.debug(format!("=> Redirect to {redirect_url}").as_str());
+            logger.debug(&format!("=> Redirect to {redirect_url}"));
             logger.debug("");
             redirect_count += 1;
             if let Some(max_redirect) = options.max_redirect {
@@ -183,63 +184,40 @@ impl Client {
             transfer.debug_function(|info_type, data| match info_type {
                 // Return all request headers (not one by one)
                 easy::InfoType::HeaderOut => {
-                    let mut lines = split_lines(data);
-                    logger.debug_method_version_out(&lines[0]);
-
+                    let lines = split_lines(data);
                     // Extracts request headers from libcurl debug info.
-                    lines.pop().unwrap(); // Remove last empty line.
-                    lines.remove(0); // Remove method/path/version line.
-                    for line in lines {
-                        if let Some(header) = Header::parse(&line) {
+                    // First line is method/path/version line, last line is empty
+                    for line in &lines[1..lines.len() - 1] {
+                        if let Some(header) = Header::parse(line) {
                             request_headers.push(header);
                         }
                     }
 
-                    // If we don't send any data, we log headers and empty body here
-                    // instead of relying on libcurl computing body in `easy::InfoType::DataOut`.
-                    // because libcurl dont call `easy::InfoType::DataOut` if there is no data
-                    // to send.
-                    if !has_body_data && verbose {
-                        let debug_request = Request::new(
-                            &method.to_string(),
-                            &url,
-                            request_headers.clone(),
-                            vec![],
-                        );
-                        for header in &debug_request.headers {
+                    // Logs method, version and request headers now.
+                    if verbose {
+                        logger.debug_method_version_out(&lines[0]);
+                        for header in &request_headers {
                             logger.debug_header_out(&header.name, &header.value);
                         }
                         logger.info(">");
+                    }
 
-                        if very_verbose {
-                            debug_request.log_body(true, logger);
-                        }
+                    // If we don't send any data, we log an empty body here instead of relying on
+                    // libcurl computing body in `easy::InfoType::DataOut` because libcurl doesn't
+                    // call `easy::InfoType::DataOut` if there is no data to send.
+                    if !has_body_data && very_verbose {
+                        logger.debug_important("Request body:");
+                        log_body(&[], &request_headers, true, logger);
                     }
                 }
-                // We use this callback to get the real body bytes sent by libcurl.
+                // We use this callback to get the real body bytes sent by libcurl and logs request
+                // body chunks.
                 easy::InfoType::DataOut => {
-                    // We log request headers with `easy::InfoType::DataOut` using libcurl
-                    // debug functions: there is no libcurl function to get the request headers.
-                    // As we can be called multiple times in this callback, we only log headers the
-                    // first time we send data (marked when the request body is empty).
-                    if verbose && request_body.is_empty() {
-                        let debug_request = Request::new(
-                            &method.to_string(),
-                            &url,
-                            request_headers.clone(),
-                            Vec::from(data),
-                        );
-                        for header in &debug_request.headers {
-                            logger.debug_header_out(&header.name, &header.value);
-                        }
-                        logger.info(">");
-
-                        if very_verbose {
-                            debug_request.log_body(true, logger);
-                        }
+                    if very_verbose {
+                        logger.debug_important("Request body:");
+                        log_body(data, &request_headers, true, logger);
                     }
-
-                    // Extracts request body from libcurl debug info.
+                    // Constructs request body from libcurl debug info.
                     request_body.extend(data);
                 }
                 // Curl debug logs
@@ -292,7 +270,7 @@ impl Client {
             match Certificate::try_from(cert_info) {
                 Ok(value) => Some(value),
                 Err(message) => {
-                    logger.error(format!("can not parse certificate - {message}").as_str());
+                    logger.error(&format!("can not parse certificate - {message}"));
                     None
                 }
             }
@@ -320,9 +298,9 @@ impl Client {
             //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
             //  ok with Rust >= 1.67.0.
             let duration = duration.as_millis() as u64;
-            logger.debug_important(
-                format!("Response: (received {length} bytes in {duration} ms)").as_str(),
-            );
+            logger.debug_important(&format!(
+                "Response: (received {length} bytes in {duration} ms)"
+            ));
             logger.debug("");
 
             // FIXME: Explain why there may be multiple status line
@@ -336,6 +314,7 @@ impl Client {
             }
             logger.info("<");
             if very_verbose {
+                logger.debug_important("Response body:");
                 response.log_body(true, logger);
                 logger.debug("");
                 timings.log(logger);
