@@ -1,3 +1,21 @@
+[4.3.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
+========================================================================================================================
+
+Thanks to
+[@jaminalder](https://github.com/jaminalder)
+
+Enhancements:
+
+* Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
+* Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
+* Add --netrc, --netrc-file and --netrc-optional options [#2094](https://github.com/Orange-OpenSource/hurl/issues/2094)
+
+
+Bugs Fixed:
+
+* Fix Content-type header override when used in lowercase [#2416](https://github.com/Orange-OpenSource/hurl/issues/2416)
+
+
 [4.2.0 (2024-01-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)
 ========================================================================================================================
 
@@ -18,7 +36,7 @@ Thanks to
 [@iredmail](https://github.com/iredmail),
 [@andres-lowrie](https://github.com/andres-lowrie),
 [@nikeee](https://github.com/nikeee),
-[@ztittle](https://github.com/ztittle)
+[@ztittle](https://github.com/ztittle),
 [@legzo](https://github.com/legzo)
 
 Enhancements:
