@@ -91,6 +91,7 @@ impl Verbosity {
 
 /// A Hurl dedicated logger for an Hurl file. Contrary to [`BaseLogger`], this logger can display
 /// rich error for parsing and runtime errors.
+#[derive(Clone)]
 pub struct Logger {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,

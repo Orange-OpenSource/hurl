@@ -219,10 +219,15 @@ pub fn get_entry_options(
                         let value = eval_variable_value(value, variables)?;
                         variables.insert(name.clone(), value);
                     }
-                    // verbose and very-verbose option have been previously processed as thy
-                    // can impact the logging.
-                    OptionKind::Verbose(_) => {}
-                    OptionKind::VeryVerbose(_) => {}
+                    // verbose and very-verbose option have been previously processed as they
+                    // can impact the logging. We compute here their values to check the potential
+                    // templatized error.
+                    OptionKind::Verbose(value) => {
+                        eval_boolean_option(value, variables)?;
+                    }
+                    OptionKind::VeryVerbose(value) => {
+                        eval_boolean_option(value, variables)?;
+                    }
                 }
                 log_option(option, logger);
             }

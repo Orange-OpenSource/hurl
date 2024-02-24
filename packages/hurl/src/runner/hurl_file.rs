@@ -114,11 +114,6 @@ pub fn run(
         }
         let entry = &hurl_file.entries[entry_index - 1];
 
-        // We compute the new logger for this entry, before entering into the `run` function because
-        // entry options can modify the logger and we want the preamble "Executing entry..." to be
-        // displayed based on the entry level verbosity.
-        let logger =
-            get_entry_logger(entry, logger_options, &variables).map_err(|e| e.description())?;
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
             if exit {
@@ -126,10 +121,15 @@ pub fn run(
             }
         }
 
+        // We compute the new logger for this entry, before entering into the `run` function because
+        // entry options can modify the logger and we want the preamble "Executing entry..." to be
+        // displayed based on the entry level verbosity.
+        let logger = get_entry_logger(entry, logger_options, &variables).unwrap_or(logger.clone());
+
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
-        logger.debug_important(format!("Executing entry {entry_index}").as_str());
+        logger.debug_important(&format!("Executing entry {entry_index}"));
 
         warn_deprecated(entry, &logger);
 
@@ -138,11 +138,16 @@ pub fn run(
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, &logger);
         let entry_result = match &options {
+            Err(error) => EntryResult {
+                entry_index,
+                source_info: entry.source_info(),
+                errors: vec![error.clone()],
+                ..Default::default()
+            },
             Ok(options) => {
                 if options.skip {
-                    logger
-                        .debug_important(format!("Entry {entry_index} has been skipped").as_str());
                     logger.debug("");
+                    logger.debug_important(&format!("Entry {entry_index} has been skipped"));
                     entry_index += 1;
                     continue;
                 }
@@ -151,10 +156,9 @@ pub fn run(
                 let delay_ms = delay.as_millis();
                 if delay_ms > 0 {
                     logger.debug("");
-                    logger.debug_important(
-                        format!("Delay entry {entry_index} (x{retry_count} by {delay_ms} ms)")
-                            .as_str(),
-                    );
+                    logger.debug_important(&format!(
+                        "Delay entry {entry_index} (x{retry_count} by {delay_ms} ms)"
+                    ));
                     thread::sleep(delay);
                 };
 
@@ -167,16 +171,6 @@ pub fn run(
                     &logger,
                 )
             }
-            Err(error) => EntryResult {
-                entry_index,
-                source_info: entry.source_info(),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
-                errors: vec![error.clone()],
-                time_in_ms: 0,
-                compressed: false,
-            },
         };
 
         // Check if we need to retry.
@@ -246,9 +240,9 @@ pub fn run(
         if retry {
             let delay = retry_interval.as_millis();
             logger.debug("");
-            logger.debug_important(
-                format!("Retry entry {entry_index} (x{retry_count} pause {delay} ms)").as_str(),
-            );
+            logger.debug_important(&format!(
+                "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
+            ));
             retry_count += 1;
             // If we retry the entry, we do not want to display a 'blank' progress bar during the
             // sleep delay. During the pause, we artificially show the previously erased progress

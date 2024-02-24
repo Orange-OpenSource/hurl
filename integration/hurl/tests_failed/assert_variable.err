@@ -37,3 +37,12 @@ error: Assert failure
    |   expected: string <0>
    |
 
+error: Undefined variable
+  --> tests_failed/assert_variable.hurl:16:12
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+16 | verbose: {{verbose}}
+   |            ^^^^^^^ you must set the variable verbose
+   |
+
