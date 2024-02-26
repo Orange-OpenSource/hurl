@@ -5,7 +5,6 @@ from app import app
 
 @app.route("/key-template/header")
 def key_template_header():
-    print(request.headers)
     assert request.headers["name"] == "value"
     return ""
 
