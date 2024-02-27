@@ -69,7 +69,7 @@ while read -r script ; do
     else
         echo "[\$ErrorActionPreference = 'Stop'] is present in second line of ${color_green}${script}${color_reset}"
     fi
-done < <(find . -type f -name "*.ps1")
+done < <(find . -type f -name "*.ps1" | grep -v "./completions/")
 
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then

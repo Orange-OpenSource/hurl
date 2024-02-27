@@ -54,8 +54,14 @@ def generate_completion_files(name: str, option_files: List[str]):
         [Option.parse_file(option_file) for option_file in option_files],
         key=lambda option: option.name,
     )
+
     output_file = "completions/" + name + ".bash"
     src = generate_completion.generate_bash_completion(name, options)
+    sys.stderr.write("Generate " + output_file + "\n")
+    open(output_file, "w").write(src + "\n")
+
+    output_file = "completions/_" + name + ".ps1"
+    src = generate_completion.generate_powershell_completion(name, options)
     sys.stderr.write("Generate " + output_file + "\n")
     open(output_file, "w").write(src + "\n")
 
