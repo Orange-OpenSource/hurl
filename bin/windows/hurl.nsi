@@ -116,7 +116,7 @@ SectionGroup "dlls"
   SectionEnd
 SectionGroupEnd
 
-SectionGroup "txt"
+SectionGroup "doc"
   Section "version.txt"
     SectionIn 3
     SetOutPath $INSTDIR
@@ -136,6 +136,16 @@ SectionGroup "txt"
     SectionIn 3
     SetOutPath $INSTDIR
     File "..\..\LICENSE"
+  SectionEnd
+  Section "completions\_hurl.ps1"
+    SectionIn 3
+    SetOutPath $INSTDIR\completions
+    File "..\..\completions\_hurl.ps1"
+  SectionEnd
+  Section "completions\_hurlfmt.ps1"
+    SectionIn 3
+    SetOutPath $INSTDIR\completions
+    File "..\..\completions\_hurlfmt.ps1"
   SectionEnd
 SectionGroupEnd
 
