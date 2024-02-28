@@ -65,6 +65,11 @@ def generate_completion_files(name: str, option_files: List[str]):
     sys.stderr.write("Generate " + output_file + "\n")
     open(output_file, "w").write(src + "\n")
 
+    output_file = "completions/" + name + ".fish"
+    src = generate_completion.generate_fish_completion(name, options)
+    sys.stderr.write("Generate " + output_file + "\n")
+    open(output_file, "w").write(src + "\n")
+
     output_file = "completions/_" + name + ".ps1"
     src = generate_completion.generate_powershell_completion(name, options)
     sys.stderr.write("Generate " + output_file + "\n")

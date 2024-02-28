@@ -1,0 +1,12 @@
+complete -c hurlfmt -l check -d 'Run in 'check' mode'
+complete -c hurlfmt -l color -d 'Colorize Output'
+complete -c hurlfmt -l format -d 'Specify output format: hurl, json or html'
+complete -c hurlfmt -l in-place -d 'Modify files in place'
+complete -c hurlfmt -l in -d 'Specify input format: hurl or curl'
+complete -c hurlfmt -l no-color -d 'Do not colorize output'
+complete -c hurlfmt -l output -d 'Write to FILE instead of stdout'
+complete -c hurlfmt -l out -d 'Specify output format: hurl, json or html'
+complete -c hurlfmt -l standalone -d 'Standalone HTML'
+complete -c hurlfmt -l help -d 'Print help'
+complete -c hurlfmt -l version -d 'Print version'
+

@@ -110,6 +110,24 @@ def zsh_option(option: Option):
     )
 
 
+def generate_fish_completion(name: str, options: List[Option]):
+    return (
+        "\n".join([fish_option(name, option) for option in options])
+        + """
+complete -c """
+        + name
+        + """ -l help -d 'Print help'
+complete -c """
+        + name
+        + """ -l version -d 'Print version'
+"""
+    )
+
+
+def fish_option(name: str, option: Option):
+    return "complete -c " + name + " -l " + option.long + " -d '" + option.help + "'"
+
+
 def generate_powershell_completion(name: str, options: List[Option]):
     return (
         """using namespace System.Management.Automation
