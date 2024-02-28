@@ -65,8 +65,8 @@ pub fn write_body(
                 output.extend(bytes);
             }
             match filename_out {
-                Some(Output::File(file)) => Output::File(file.to_string()).write(&output)?,
-                _ => runner::Output::StdOut.write(&output)?,
+                Some(Output::File(file)) => Output::File(file.to_string()).write(&output, None)?,
+                _ => runner::Output::StdOut.write(&output, None)?,
             }
         } else {
             logger.info("No response has been received");

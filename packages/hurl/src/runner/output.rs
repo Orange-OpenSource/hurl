@@ -22,6 +22,7 @@ use std::io::Write;
 use std::{fmt, io};
 
 use crate::runner::{Error, RunnerError};
+use crate::util::path::ContextDir;
 use hurl_core::ast::{Pos, SourceInfo};
 
 /// Represents the output of write operation: can be either a file or stdout.
@@ -43,20 +44,35 @@ impl fmt::Display for Output {
 
 impl Output {
     /// Writes these `bytes` to the output.
-    pub fn write(&self, bytes: &[u8]) -> Result<(), Error> {
+    pub fn write(&self, bytes: &[u8], context_dir: Option<&ContextDir>) -> Result<(), Error> {
         match self {
             Output::StdOut => match write_stdout(bytes) {
                 Ok(_) => Ok(()),
                 Err(e) => Err(Error::new_file_write_access("stdout", &e.to_string())),
             },
             Output::File(filename) => {
-                let mut file = match File::create(filename) {
+                // If we have a context dir, we check if we can write to this filename and compute
+                // the new filename given this context dir.
+                let filename = match context_dir {
+                    None => filename.to_string(),
+                    Some(context_dir) => {
+                        if !context_dir.is_access_allowed(filename) {
+                            return Err(Error::new_file_write_access(
+                                filename,
+                                "unauthorized context dir",
+                            ));
+                        }
+                        let path = context_dir.get_path(filename);
+                        path.into_os_string().into_string().unwrap()
+                    }
+                };
+                let mut file = match File::create(&filename) {
                     Ok(file) => file,
-                    Err(e) => return Err(Error::new_file_write_access(filename, &e.to_string())),
+                    Err(e) => return Err(Error::new_file_write_access(&filename, &e.to_string())),
                 };
                 match file.write_all(bytes) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(Error::new_file_write_access(filename, &e.to_string())),
+                    Err(e) => Err(Error::new_file_write_access(&filename, &e.to_string())),
                 }
             }
         }

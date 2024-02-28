@@ -16,7 +16,6 @@
  *
  */
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::thread;
 use std::time::Instant;
 
@@ -28,7 +27,7 @@ use hurl_core::parser;
 
 use crate::http::Call;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, Output, RunnerError, Value};
+use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 use crate::{http, runner};
 
@@ -201,7 +200,7 @@ pub fn run(
             log_errors(&entry_result, content, retry, &logger);
         }
 
-        // When --output is overriden on a request level, we output the HTTP response only if the
+        // When --output is overridden on a request level, we output the HTTP response only if the
         // call has succeeded.
         if let Ok(RunnerOptions {
             output: Some(output),
@@ -214,24 +213,11 @@ pub fn run(
                 // an error. If we want to treat it as an error, we've to add it to the current
                 // `entry_result` errors, and optionally deals with retry if we can't write to the
                 // specified path.
-                let authorized = if let Output::File(filename) = &output {
-                    if !runner_options.context_dir.is_access_allowed(filename) {
-                        let inner = RunnerError::UnauthorizedFileAccess {
-                            path: PathBuf::from(filename.clone()),
-                        };
-                        let error = runner::Error::new(entry.request.source_info, inner, false);
-                        logger.warning(&error.fixme());
-                        false
-                    } else {
-                        true
-                    }
-                } else {
-                    true
-                };
-                if authorized {
-                    if let Err(error) = entry_result.write_response(&output) {
-                        logger.warning(&error.fixme());
-                    }
+                let source_info = entry.source_info();
+                if let Err(error) =
+                    entry_result.write_response(&output, &runner_options.context_dir, source_info)
+                {
+                    logger.warning(&error.fixme());
                 }
             }
         }

@@ -34,8 +34,8 @@ pub fn write_json(
     let s = format!("{serialized}\n");
     let bytes = s.into_bytes();
     match filename_out {
-        Some(Output::File(file)) => Output::File(file.to_string()).write(&bytes)?,
-        _ => Output::StdOut.write(&bytes)?,
+        Some(Output::File(file)) => Output::File(file.to_string()).write(&bytes, None)?,
+        _ => Output::StdOut.write(&bytes, None)?,
     }
     Ok(())
 }

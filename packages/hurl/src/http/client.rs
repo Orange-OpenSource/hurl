@@ -743,9 +743,17 @@ impl Client {
         arguments.append(&mut options.curl_args());
 
         // --output is not an option of the HTTP client, we deal with it here:
-        if let Some(output) = output {
-            arguments.push("--output".to_string());
-            arguments.push(output.to_string());
+        match output {
+            Some(Output::File(filename)) => {
+                let filename = context_dir.get_path(filename);
+                arguments.push("--output".to_string());
+                arguments.push(filename.into_os_string().into_string().unwrap());
+            }
+            Some(Output::StdOut) => {
+                arguments.push("--output".to_string());
+                arguments.push("-".to_string());
+            }
+            None => {}
         }
 
         arguments.push(url);

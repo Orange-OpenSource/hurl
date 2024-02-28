@@ -364,8 +364,8 @@ impl Options {
         let compressed = self.compressed;
         let connect_timeout = self.connect_timeout;
         let connects_to = self.connects_to.clone();
-        let file_root = match self.file_root {
-            Some(ref filename) => Path::new(filename),
+        let file_root = match &self.file_root {
+            Some(filename) => Path::new(filename),
             None => {
                 if filename == "-" {
                     current_dir

@@ -16,11 +16,14 @@
  *
  */
 use hurl_core::ast::{Pos, SourceInfo};
+use std::path::PathBuf;
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
+use crate::runner::RunnerError;
+use crate::util::path::ContextDir;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
@@ -127,30 +130,43 @@ pub struct CaptureResult {
 pub type PredicateResult = Result<(), Error>;
 
 impl EntryResult {
-    /// Writes the last HTTP response of this entry result to the file `filename`.
+    /// Writes the last HTTP response of this entry result to this `output`.
     /// The HTTP response can be decompressed if the entry's `compressed` option has been set.
-    pub fn write_response(&self, output: &Output) -> Result<(), Error> {
-        match self.calls.last() {
-            Some(call) => {
-                let response = &call.response;
-                if self.compressed {
-                    let bytes = match response.uncompress_body() {
-                        Ok(bytes) => bytes,
-                        Err(e) => {
-                            // TODO: pass a [`SourceInfo`] in case of error
-                            // We may pass a [`SourceInfo`] as a parameter of this method to make
-                            // a more accurate error (for instance a [`SourceInfo`] pointing at
-                            // `output: foo.bin`
-                            let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-                            return Err(Error::new(source_info, e.into(), false));
-                        }
-                    };
-                    output.write(&bytes)
-                } else {
-                    output.write(&response.body)
-                }
+    /// This method checks if the response has write access to this output, given a `context_dir`.
+    pub fn write_response(
+        &self,
+        output: &Output,
+        context_dir: &ContextDir,
+        source_info: SourceInfo,
+    ) -> Result<(), Error> {
+        let Some(call) = self.calls.last() else {
+            return Ok(());
+        };
+        // We check file access authorization for file output when a context dir has been given
+        if let Output::File(filename) = output {
+            if !context_dir.is_access_allowed(filename) {
+                let inner = RunnerError::UnauthorizedFileAccess {
+                    path: PathBuf::from(filename.clone()),
+                };
+                return Err(Error::new(source_info, inner, false));
             }
-            None => Ok(()),
+        }
+        let response = &call.response;
+        if self.compressed {
+            let bytes = match response.uncompress_body() {
+                Ok(bytes) => bytes,
+                Err(e) => {
+                    // TODO: pass a [`SourceInfo`] in case of error
+                    // We may pass a [`SourceInfo`] as a parameter of this method to make
+                    // a more accurate error (for instance a [`SourceInfo`] pointing at
+                    // `output: foo.bin`
+                    let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+                    return Err(Error::new(source_info, e.into(), false));
+                }
+            };
+            output.write(&bytes, Some(context_dir))
+        } else {
+            output.write(&response.body, Some(context_dir))
         }
     }
 }
