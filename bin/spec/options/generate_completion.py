@@ -40,6 +40,76 @@ _"""
     )
 
 
+def generate_zsh_completion(name: str, options: List[Option]):
+    return (
+        """#compdef """
+        + name
+        + """
+
+autoload -U is-at-least
+
+_"""
+        + name
+        + """() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" \
+    """
+        + """\n    """.join([zsh_option(option) for option in options])
+        + """
+    '--help[Print help]' \
+    '--version[Print version]' \
+    '*::params:' \\
+    && ret=0
+}
+
+(( $+functions[_"""
+        + name
+        + """_commands] )) ||
+_"""
+        + name
+        + """_commands() {
+    local commands; commands=()
+    _describe -t commands '"""
+        + name
+        + """ commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_"""
+        + name
+        + """" ]; then
+    _"""
+        + name
+        + """ "$@"
+else
+    compdef _"""
+        + name
+        + " "
+        + name
+        + """
+fi"""
+    )
+
+
+def zsh_option(option: Option):
+    return (
+        "'--"
+        + option.long
+        + "["
+        + option.help.replace("[", "\[").replace("]", "\]")
+        + "]: : ' \\"
+    )
+
+
 def generate_powershell_completion(name: str, options: List[Option]):
     return (
         """using namespace System.Management.Automation
