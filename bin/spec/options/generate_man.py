@@ -28,13 +28,16 @@ def generate_man_option(option: Option):
     s += " {#%s}" % option.long.replace(".", "")
     s += "\n\n"
     s += option.description
+    if option.cli_only:
+        s += "\n\n"
+        s += "This is a cli-only option."
     return s
 
 
 def main():
     # Parse all options file given at the command line
     if len(sys.argv) < 2:
-        print("usage: generate_nab.py OPTION_FILE1 OPTION_FILE2 ...")
+        print("usage: generate_man.py OPTION_FILE1 OPTION_FILE2 ...")
         sys.exit(1)
     options = sorted(
         [Option.parse_file(filename) for filename in sys.argv[1:]],

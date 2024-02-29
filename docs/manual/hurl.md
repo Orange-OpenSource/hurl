@@ -121,7 +121,8 @@ More information on asserts can be found here [https://hurl.dev/docs/asserting-r
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry.
+Options specified on the command line are defined for every Hurl file's entry,
+except if they are tagged as cli-only (can not be defined in the Hurl request [Options] entry)
 
 For instance:
 
@@ -191,6 +192,8 @@ Note that this option does not affect the behavior with multiple input Hurl file
 
 All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
+This is a cli-only option.
+
 ### -b, --cookie <FILE> {#cookie}
 
 Read cookies from FILE (using the Netscape cookie file format).
@@ -217,12 +220,16 @@ Control the format of error message (short by default or long)
 Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
 When it is not explicitly defined, files are relative to the current directory in which Hurl is running.
 
+This is a cli-only option.
+
 ### --glob <GLOB> {#glob}
 
 Specify input files that match the given glob pattern.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
+
+This is a cli-only option.
 
 ### -0, --http1.0 {#http10}
 
@@ -347,17 +354,23 @@ Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
 
+This is a cli-only option.
+
 ### --report-junit <FILE> {#report-junit}
 
 Generate JUnit File.
 
 If the FILE report already exists, it will be updated with the new test results.
 
+This is a cli-only option.
+
 ### --report-tap <FILE> {#report-tap}
 
 Generate TAP report.
 
 If the FILE report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
 
 ### --resolve <HOST:PORT:ADDR> {#resolve}
 
@@ -379,10 +392,14 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
 
+This is a cli-only option.
+
 ### --to-entry <ENTRY_NUMBER> {#to-entry}
 
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
+
+This is a cli-only option.
 
 ### --unix-socket <PATH> {#unix-socket}
 

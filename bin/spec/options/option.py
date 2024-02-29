@@ -14,6 +14,7 @@ class Option:
         help,
         conflict,
         append,
+        cli_only,
         deprecated,
         description,
     ):
@@ -26,6 +27,7 @@ class Option:
         self.help = help
         self.conflict = conflict
         self.append = append
+        self.cli_only = cli_only
         self.deprecated = deprecated
         self.description = description
 
@@ -44,6 +46,7 @@ class Option:
             and self.append == other.append
             and self.deprecated == other.deprecated
             and self.description == other.description
+            and self.cli_only == other.cli_only
         )
 
     def __str__(self):
@@ -63,6 +66,8 @@ class Option:
             s += "\nconflict: " + " ".join(self.conflict)
         if self.append:
             s += "\nmulti: append"
+        if self.cli_only:
+            s += "\ncli_only: true"
         if self.deprecated:
             s += "\ndeprecated: true"
         s += "\n---"
@@ -82,6 +87,7 @@ class Option:
                 self.conflict,
                 self.append,
                 self.description,
+                self.cli_only,
             )
         )
 
@@ -96,6 +102,7 @@ class Option:
         help = None
         conflict = None
         append = False
+        cli_only = False
         deprecated = False
         description = ""
         in_description = False
@@ -126,6 +133,13 @@ class Option:
                 elif key == "multi":
                     if v == "append":
                         append = True
+                elif key == "cli_only":
+                    if v == "true":
+                        cli_only = True
+                    elif v == "false":
+                        cli_only = False
+                    else:
+                        raise Exception("Expected true or false for cli attribute")
                 elif key == "deprecated":
                     if v == "true":
                         deprecated = True
@@ -154,6 +168,7 @@ class Option:
             help,
             conflict,
             append,
+            cli_only,
             deprecated,
             description.strip(),
         )

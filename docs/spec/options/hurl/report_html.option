@@ -2,6 +2,7 @@ name: report_html
 long: report-html
 value: DIR
 help: Generate HTML report to DIR
+cli_only: true
 ---
 Generate HTML report in DIR.
 

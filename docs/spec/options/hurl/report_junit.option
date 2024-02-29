@@ -2,6 +2,7 @@ name: report_junit
 long: report-junit
 value: FILE
 help: Write a JUnit XML report to FILE
+cli_only: true
 ---
 Generate JUnit File.
 

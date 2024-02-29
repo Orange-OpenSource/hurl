@@ -4,6 +4,7 @@ value: ENTRY_NUMBER
 value_parser: clap::value_parser!(u32).range(1..)
 help: Execute Hurl file to ENTRY_NUMBER (starting at 1)
 conflict: interactive
+cli_only: true
 ---
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
