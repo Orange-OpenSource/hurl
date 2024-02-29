@@ -94,7 +94,7 @@ impl HeaderVec {
     where
         F: FnMut(&Header) -> bool,
     {
-        self.headers.retain(|h| f(h))
+        self.headers.retain(|h| f(h));
     }
 
     /// Returns an iterator over all the headers.
@@ -117,7 +117,7 @@ impl HeaderVec {
 
     /// Push a new `header` into the headers list.
     pub fn push(&mut self, header: Header) {
-        self.headers.push(header)
+        self.headers.push(header);
     }
 
     /// Returns all headers values.
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn test_iter() {
-        let data = vec![("foo", "xxx"), ("bar", "yyy0"), ("baz", "yyy1")];
+        let data = [("foo", "xxx"), ("bar", "yyy0"), ("baz", "yyy1")];
         let mut headers = HeaderVec::new();
         data.iter()
             .for_each(|(name, value)| headers.push(Header::new(name, value)));
@@ -188,7 +188,7 @@ mod tests {
         // Test iter()
         for (i, h) in headers.iter().enumerate() {
             assert_eq!(h.name, data[i].0);
-            assert_eq!(h.value, data[i].1)
+            assert_eq!(h.value, data[i].1);
         }
 
         // Test into_iter()

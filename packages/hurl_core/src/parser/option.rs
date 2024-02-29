@@ -451,7 +451,7 @@ mod tests {
     fn test_option_insecure_error() {
         let mut reader = Reader::new("insecure: error");
         let error = parse(&mut reader).err().unwrap();
-        assert!(!error.recoverable)
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -534,7 +534,7 @@ mod tests {
     fn test_option_cacert_error() {
         let mut reader = Reader::new("cacert: ###");
         let error = parse(&mut reader).err().unwrap();
-        assert!(!error.recoverable)
+        assert!(!error.recoverable);
     }
 
     #[test]

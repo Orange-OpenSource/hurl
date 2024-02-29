@@ -53,7 +53,7 @@ pub fn parse(s: &str) -> Result<String, String> {
         let hurl_str = parse_line(line).map_err(|message| {
             format!("Can not parse curl command at line {}: {message}", i + 1)
         })?;
-        s.push_str(format!("{hurl_str}\n").as_str())
+        s.push_str(format!("{hurl_str}\n").as_str());
     }
     Ok(s)
 }

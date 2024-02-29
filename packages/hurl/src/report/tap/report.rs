@@ -168,7 +168,7 @@ not ok 3 - tests_ok/test.3.hurl
                     success: false
                 }
             ]
-        )
+        );
     }
 
     #[test]
@@ -196,6 +196,6 @@ not ok 3 - tests_ok/test.3.hurl
                     success: false
                 }
             ]
-        )
+        );
     }
 }

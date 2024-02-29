@@ -187,7 +187,7 @@ impl ClientOptions {
         }
         if let Some(ref unix_socket) = self.unix_socket {
             arguments.push("--unix-socket".to_string());
-            arguments.push(format!("'{unix_socket}'"))
+            arguments.push(format!("'{unix_socket}'"));
         }
         if let Some(ref user) = self.user {
             arguments.push("--user".to_string());

@@ -131,6 +131,6 @@ mod tests {
         assert_eq!(
             parse_value("\"123").err().unwrap(),
             OptionsError::Error("Value should end with a double quote".to_string())
-        )
+        );
     }
 }

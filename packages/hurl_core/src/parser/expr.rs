@@ -28,7 +28,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
     let space1 = zero_or_more_spaces(reader)?;
 
     if try_literal("}}}", reader).is_err() {
-        literal("}}", reader)?
+        literal("}}", reader)?;
     }
 
     Ok(Expr {

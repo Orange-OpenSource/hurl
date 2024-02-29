@@ -88,7 +88,7 @@ fn log_request(request: Request) {
                 for param in multipart_params {
                     match param {
                         MultipartParam::Param(value) => {
-                            eprintln!("\r{}: {}", value.key, value.value)
+                            eprintln!("\r{}: {}", value.key, value.value);
                         }
                         MultipartParam::FileParam(file_param) => {
                             let content_type =

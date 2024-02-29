@@ -130,7 +130,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
     }
 
     if !value.is_empty() {
-        elements.push(TemplateElement::String { value, encoded })
+        elements.push(TemplateElement::String { value, encoded });
     }
     Ok(elements)
 }

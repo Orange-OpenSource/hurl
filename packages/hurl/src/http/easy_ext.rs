@@ -192,7 +192,7 @@ fn to_list(slist: *mut curl_slist) -> Vec<String> {
             let ret = CStr::from_ptr((*cur).data).to_bytes();
             let value = String::from_utf8_lossy(ret);
             data.push(value.to_string());
-            cur = (*cur).next
+            cur = (*cur).next;
         }
     }
     data

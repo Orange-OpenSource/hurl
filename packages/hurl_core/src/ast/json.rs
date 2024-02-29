@@ -193,12 +193,12 @@ impl Template {
     fn encoded(&self) -> String {
         let mut s = String::new();
         if let Some(d) = self.delimiter {
-            s.push(d)
+            s.push(d);
         }
         let elements: Vec<String> = self.elements.iter().map(|e| e.encoded()).collect();
         s.push_str(elements.join("").as_str());
         if let Some(d) = self.delimiter {
-            s.push(d)
+            s.push(d);
         }
         s
     }

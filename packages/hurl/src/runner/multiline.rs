@@ -111,7 +111,7 @@ mod tests {
             body,
             r#"{"query":"{\n  human(id: \"1000\") {\n    name\n    height(unit: FOOT)\n  }\n}"}"#
                 .to_string()
-        )
+        );
     }
 
     #[test]
@@ -184,6 +184,6 @@ mod tests {
         });
 
         let body = eval_multiline(&multiline, &hurl_variables).unwrap();
-        assert_eq!(body, r#"{"query":"{\n  human(id: \"1000\") {\n    name\n    height(unit: FOOT)\n  }\n}","variables":{"episode":"JEDI","withFriends":false}}"#.to_string())
+        assert_eq!(body, r#"{"query":"{\n  human(id: \"1000\") {\n    name\n    height(unit: FOOT)\n  }\n}","variables":{"episode":"JEDI","withFriends":false}}"#.to_string());
     }
 }

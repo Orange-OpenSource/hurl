@@ -59,9 +59,9 @@ pub fn log_text(text: &str, debug: bool, logger: &Logger) {
     } else {
         let lines = text.split('\n');
         if debug {
-            lines.for_each(|l| logger.debug(l))
+            lines.for_each(|l| logger.debug(l));
         } else {
-            lines.for_each(|l| logger.info(l))
+            lines.for_each(|l| logger.info(l));
         }
     }
 }
@@ -82,6 +82,6 @@ pub fn log_bytes(bytes: &[u8], max: usize, debug: bool, logger: &Logger) {
     if debug {
         logger.debug(&log);
     } else {
-        logger.info(&log)
+        logger.info(&log);
     }
 }

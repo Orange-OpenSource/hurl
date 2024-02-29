@@ -83,7 +83,7 @@ impl Response {
         let encodings = self.headers.content_encoding()?;
         let mut data = self.body.clone();
         for encoding in &encodings {
-            data = encoding.decode(&data)?
+            data = encoding.decode(&data)?;
         }
         Ok(data)
     }

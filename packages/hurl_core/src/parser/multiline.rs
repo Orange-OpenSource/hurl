@@ -393,7 +393,7 @@ mod tests {
 
         for text in datas.iter() {
             let mut reader = Reader::new(text);
-            assert!(multiline_string(&mut reader).is_err())
+            assert!(multiline_string(&mut reader).is_err());
         }
     }
 
@@ -692,7 +692,7 @@ variables {
                     }
                 })
             })
-        )
+        );
     }
 
     #[test]
@@ -713,7 +713,7 @@ variables
         assert_eq!(
             error,
             Error::new(Pos::new(8, 10), false, ParseError::GraphQlVariables)
-        )
+        );
     }
 
     #[test]
@@ -738,6 +738,6 @@ variables [
         assert_eq!(
             error,
             Error::new(Pos::new(8, 11), false, ParseError::GraphQlVariables)
-        )
+        );
     }
 }

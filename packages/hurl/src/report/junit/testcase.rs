@@ -65,11 +65,11 @@ impl Testcase {
             .attr("time", &time_in_seconds);
 
         for failure in self.failures.iter() {
-            element = element.add_child(Element::new("failure").text(failure))
+            element = element.add_child(Element::new("failure").text(failure));
         }
 
         for error in self.errors.iter() {
-            element = element.add_child(Element::new("error").text(error))
+            element = element.add_child(Element::new("error").text(error));
         }
         element
     }

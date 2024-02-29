@@ -49,15 +49,15 @@ impl RequestSpec {
                 match self.body {
                     Body::Text(_) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!("'{}:'", CONTENT_TYPE))
+                        arguments.push(format!("'{}:'", CONTENT_TYPE));
                     }
                     Body::Binary(_) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!("'{}: application/octet-stream'", CONTENT_TYPE))
+                        arguments.push(format!("'{}: application/octet-stream'", CONTENT_TYPE));
                     }
                     Body::File(_, _) => {
                         arguments.push("--header".to_string());
-                        arguments.push(format!("'{}:'", CONTENT_TYPE))
+                        arguments.push(format!("'{}:'", CONTENT_TYPE));
                     }
                 }
             }

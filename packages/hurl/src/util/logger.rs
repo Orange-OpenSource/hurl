@@ -36,7 +36,7 @@ impl BaseLogger {
     }
 
     pub fn info(&self, message: &str) {
-        log_info(message)
+        log_info(message);
     }
 
     pub fn debug(&self, message: &str) {
@@ -44,25 +44,25 @@ impl BaseLogger {
             return;
         }
         if self.color {
-            log_debug(message)
+            log_debug(message);
         } else {
-            log_debug_no_color(message)
+            log_debug_no_color(message);
         }
     }
 
     pub fn warning(&self, message: &str) {
         if self.color {
-            log_warning(message)
+            log_warning(message);
         } else {
-            log_warning_no_color(message)
+            log_warning_no_color(message);
         }
     }
 
     pub fn error(&self, message: &str) {
         if self.color {
-            log_error(message)
+            log_error(message);
         } else {
-            log_error_no_color(message)
+            log_error_no_color(message);
         }
     }
 }
@@ -204,7 +204,7 @@ impl Default for LoggerOptionsBuilder {
 
 impl Logger {
     pub fn info(&self, message: &str) {
-        log_info(message)
+        log_info(message);
     }
 
     pub fn debug(&self, message: &str) {
@@ -212,9 +212,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug(message)
+            log_debug(message);
         } else {
-            log_debug_no_color(message)
+            log_debug_no_color(message);
         }
     }
 
@@ -223,9 +223,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_curl(message)
+            log_debug_curl(message);
         } else {
-            log_debug_curl_no_color(message)
+            log_debug_curl_no_color(message);
         }
     }
 
@@ -234,9 +234,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_error(&self.filename, content, error, entry_src_info)
+            log_debug_error(&self.filename, content, error, entry_src_info);
         } else {
-            log_debug_error_no_color(&self.filename, content, error, entry_src_info)
+            log_debug_error_no_color(&self.filename, content, error, entry_src_info);
         }
     }
 
@@ -245,9 +245,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_header_in(name, value)
+            log_debug_header_in(name, value);
         } else {
-            log_debug_header_in_no_color(name, value)
+            log_debug_header_in_no_color(name, value);
         }
     }
 
@@ -256,9 +256,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_header_out(name, value)
+            log_debug_header_out(name, value);
         } else {
-            log_debug_header_out_no_color(name, value)
+            log_debug_header_out_no_color(name, value);
         }
     }
 
@@ -267,9 +267,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_important(message)
+            log_debug_important(message);
         } else {
-            log_debug_no_color(message)
+            log_debug_no_color(message);
         }
     }
 
@@ -278,33 +278,33 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_status_version_in(line)
+            log_debug_status_version_in(line);
         } else {
-            log_debug_status_version_in_no_color(line)
+            log_debug_status_version_in_no_color(line);
         }
     }
 
     pub fn warning(&self, message: &str) {
         if self.color {
-            log_warning(message)
+            log_warning(message);
         } else {
-            log_warning_no_color(message)
+            log_warning_no_color(message);
         }
     }
 
     pub fn error(&self, message: &str) {
         if self.color {
-            log_error(message)
+            log_error(message);
         } else {
-            log_error_no_color(message)
+            log_error_no_color(message);
         }
     }
 
     pub fn error_parsing_rich<E: Error>(&self, content: &str, error: &E) {
         if self.color {
-            log_error_rich(&self.filename, content, error, None)
+            log_error_rich(&self.filename, content, error, None);
         } else {
-            log_error_rich_no_color(&self.filename, content, error, None)
+            log_error_rich_no_color(&self.filename, content, error, None);
         }
     }
 
@@ -315,9 +315,9 @@ impl Logger {
         entry_src_info: SourceInfo,
     ) {
         if self.color {
-            log_error_rich(&self.filename, content, error, Some(entry_src_info))
+            log_error_rich(&self.filename, content, error, Some(entry_src_info));
         } else {
-            log_error_rich_no_color(&self.filename, content, error, Some(entry_src_info))
+            log_error_rich_no_color(&self.filename, content, error, Some(entry_src_info));
         }
     }
 
@@ -326,9 +326,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_method_version_out(line)
+            log_debug_method_version_out(line);
         } else {
-            log_debug_method_version_out_no_color(line)
+            log_debug_method_version_out_no_color(line);
         }
     }
 
@@ -337,9 +337,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_capture(name, value)
+            log_capture(name, value);
         } else {
-            log_capture_no_color(name, value)
+            log_capture_no_color(name, value);
         }
     }
 
@@ -348,9 +348,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_test_running(&self.filename, current, total)
+            log_test_running(&self.filename, current, total);
         } else {
-            log_test_running_no_color(&self.filename, current, total)
+            log_test_running_no_color(&self.filename, current, total);
         }
     }
 
@@ -358,7 +358,7 @@ impl Logger {
         if !self.progress_bar {
             return;
         }
-        log_test_progress(entry_index, count)
+        log_test_progress(entry_index, count);
     }
 
     pub fn test_completed(&self, result: &HurlResult) {
@@ -366,9 +366,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_test_completed(result, &self.filename)
+            log_test_completed(result, &self.filename);
         } else {
-            log_test_completed_no_color(result, &self.filename)
+            log_test_completed_no_color(result, &self.filename);
         }
     }
 
@@ -445,35 +445,35 @@ fn log_debug_error_no_color<E: Error>(
 }
 
 fn log_debug_header_in(name: &str, value: &str) {
-    eprintln!("< {}: {}", name.cyan().bold(), value)
+    eprintln!("< {}: {}", name.cyan().bold(), value);
 }
 
 fn log_debug_header_in_no_color(name: &str, value: &str) {
-    eprintln!("< {name}: {value}")
+    eprintln!("< {name}: {value}");
 }
 
 fn log_debug_header_out(name: &str, value: &str) {
-    eprintln!("> {}: {}", name.cyan().bold(), value)
+    eprintln!("> {}: {}", name.cyan().bold(), value);
 }
 
 fn log_debug_header_out_no_color(name: &str, value: &str) {
-    eprintln!("> {name}: {value}")
+    eprintln!("> {name}: {value}");
 }
 
 fn log_debug_method_version_out(line: &str) {
-    eprintln!("> {}", line.purple().bold())
+    eprintln!("> {}", line.purple().bold());
 }
 
 fn log_debug_method_version_out_no_color(line: &str) {
-    eprintln!("> {line}")
+    eprintln!("> {line}");
 }
 
 fn log_debug_status_version_in(line: &str) {
-    eprintln!("< {}", line.green().bold())
+    eprintln!("< {}", line.green().bold());
 }
 
 fn log_debug_status_version_in_no_color(line: &str) {
-    eprintln!("< {line}")
+    eprintln!("< {line}");
 }
 
 fn log_warning(message: &str) {
@@ -499,7 +499,7 @@ fn log_error_rich<E: Error>(
     entry_src_info: Option<SourceInfo>,
 ) {
     let message = error_string(filename, content, error, entry_src_info, true);
-    eprintln!("{}: {}\n", "error".red().bold(), &message)
+    eprintln!("{}: {}\n", "error".red().bold(), &message);
 }
 
 fn log_error_rich_no_color<E: Error>(
@@ -509,15 +509,15 @@ fn log_error_rich_no_color<E: Error>(
     entry_src_info: Option<SourceInfo>,
 ) {
     let message = error_string(filename, content, error, entry_src_info, false);
-    eprintln!("error: {}\n", &message)
+    eprintln!("error: {}\n", &message);
 }
 
 fn log_capture(name: &str, value: &Value) {
-    eprintln!("{} {}: {}", "*".blue().bold(), name.yellow().bold(), value)
+    eprintln!("{} {}: {}", "*".blue().bold(), name.yellow().bold(), value);
 }
 
 fn log_capture_no_color(name: &str, value: &Value) {
-    eprintln!("* {name}: {value}")
+    eprintln!("* {name}: {value}");
 }
 
 fn log_test_running(filename: &str, current: usize, total: usize) {
@@ -527,11 +527,11 @@ fn log_test_running(filename: &str, current: usize, total: usize) {
         "Running".cyan().bold(),
         current,
         total
-    )
+    );
 }
 
 fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
-    eprintln!("{filename}: Running [{current}/{total}]")
+    eprintln!("{filename}: Running [{current}/{total}]");
 }
 
 fn log_test_progress(entry_index: usize, count: usize) {
@@ -567,7 +567,7 @@ fn log_test_completed(result: &HurlResult, filename: &str) {
         state,
         count,
         result.time_in_ms
-    )
+    );
 }
 
 fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
@@ -576,7 +576,7 @@ fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
     eprintln!(
         "{}: {} ({} request(s) in {} ms)",
         filename, state, count, result.time_in_ms
-    )
+    );
 }
 
 /// Returns the string representation of an `error`, given `lines` of content and a `filename`.
@@ -786,7 +786,7 @@ pub mod tests {
         assert_eq!(
             add_line_prefix("line1\nline2\nline3", ">", false),
             ">line1\n>line2\n>line3"
-        )
+        );
     }
 
     #[test]
@@ -806,7 +806,7 @@ pub mod tests {
  1 | GET http://unknown
    |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
    |"#
-        )
+        );
     }
 
     #[test]
@@ -830,7 +830,7 @@ HTTP/1.0 200
  2 | HTTP/1.0 200
    |          ^^^ actual value is <404>
    |"#
-        )
+        );
     }
 
     #[test]
@@ -858,7 +858,7 @@ xpath "strong(//head/title)" == "Hello"
  4 | xpath "strong(//head/title)" == "Hello"
    |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
    |"#
-        )
+        );
     }
 
     #[test]
@@ -891,7 +891,7 @@ jsonpath "$.count" >= 5
    |   actual:   int <2>
    |   expected: greater than int <5>
    |"#
-        )
+        );
     }
 
     #[test]
@@ -921,7 +921,7 @@ HTTP/1.0 200
 
 >
    |"#
-        )
+        );
     }
 
     #[test]
@@ -941,7 +941,7 @@ HTTP/1.0 200
  1 | GET abc
    |     ^ expecting http://, https:// or {{
    |"#
-        )
+        );
     }
 
     #[rustfmt::skip]

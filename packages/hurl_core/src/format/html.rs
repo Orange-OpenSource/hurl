@@ -177,17 +177,17 @@ impl HtmlFormatter {
             SectionValue::QueryParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
             SectionValue::BasicAuth(item) => {
                 if let Some(kv) = item {
-                    self.fmt_kv(kv)
+                    self.fmt_kv(kv);
                 }
             }
             SectionValue::FormParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
             SectionValue::MultipartFormData(items) => {
-                items.iter().for_each(|item| self.fmt_multipart_param(item))
+                items.iter().for_each(|item| self.fmt_multipart_param(item));
             }
             SectionValue::Cookies(items) => items.iter().for_each(|item| self.fmt_cookie(item)),
             SectionValue::Captures(items) => items.iter().for_each(|item| self.fmt_capture(item)),
             SectionValue::Options(items) => {
-                items.iter().for_each(|item| self.fmt_entry_option(item))
+                items.iter().for_each(|item| self.fmt_entry_option(item));
             }
         }
     }
@@ -632,7 +632,7 @@ impl HtmlFormatter {
             self.fmt_span("multiline", &tail);
             // As we have added a span close, we must remove one to have the right number
             // of span. The current span line will add a closing span.
-            pop_str(&mut self.buffer, "</span>")
+            pop_str(&mut self.buffer, "</span>");
         }
     }
 
@@ -865,7 +865,7 @@ impl Template {
                 TemplateElement::String { encoded, .. } => encoded.to_string(),
                 TemplateElement::Expression(expr) => format!("{{{{{expr}}}}}"),
             };
-            s.push_str(elem_str.as_str())
+            s.push_str(elem_str.as_str());
         }
         if let Some(d) = self.delimiter {
             s.push(d);
@@ -1065,7 +1065,7 @@ mod tests {
         assert_eq!(
             fmt.buffer,
             "<span class=\"json\"><span class=\"line\">\"\\n\"</span></span>"
-        )
+        );
     }
 
     #[test]
@@ -1076,7 +1076,7 @@ mod tests {
         assert_eq!(
             fmt.buffer,
             "<span class=\"xml\"><span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span></span>"
-        )
+        );
     }
 
     #[test]

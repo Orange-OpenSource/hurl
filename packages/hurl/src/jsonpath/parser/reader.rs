@@ -88,7 +88,7 @@ impl Reader {
                 None => return s,
                 Some(c) => {
                     if predicate(&c) {
-                        s.push(self.read().unwrap())
+                        s.push(self.read().unwrap());
                     } else {
                         return s;
                     }

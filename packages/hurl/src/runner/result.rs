@@ -50,7 +50,7 @@ impl HurlResult {
                     if next.entry_index != entry.entry_index {
                         let new_errors =
                             entry.errors.iter().map(|error| (error, entry.source_info));
-                        errors.extend(new_errors)
+                        errors.extend(new_errors);
                     }
                 }
             }

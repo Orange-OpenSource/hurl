@@ -137,7 +137,7 @@ impl Selector {
                 let mut values = vec![];
                 for index in indexes {
                     if let Some(value) = root.get(index) {
-                        values.push(value.clone())
+                        values.push(value.clone());
                     }
                 }
                 Some(JsonpathResult::Collection(values))

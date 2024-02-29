@@ -51,7 +51,7 @@ mod tests {
             ),
         ];
         for (input, output) in tests.iter() {
-            assert_eq!(html_escape(input), output.to_string())
+            assert_eq!(html_escape(input), output.to_string());
         }
     }
 }

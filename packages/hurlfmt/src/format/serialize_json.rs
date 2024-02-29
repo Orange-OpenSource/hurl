@@ -90,7 +90,7 @@ pub mod tests {
         assert_eq!(format_char('a'), "a");
         assert_eq!(format_char('"'), "\\\""); //    \"
         assert_eq!(format_char('\n'), "\\n");
-        assert_eq!(format_char('\x07'), "\\u0007")
+        assert_eq!(format_char('\x07'), "\\u0007");
     }
 
     #[test]

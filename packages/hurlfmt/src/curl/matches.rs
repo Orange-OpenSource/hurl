@@ -62,7 +62,7 @@ pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
     if !has_content_type(&headers) {
         if let Some(data) = get_string(arg_matches, "data") {
             if !data.starts_with('@') {
-                headers.push("Content-Type: application/x-www-form-urlencoded".to_string())
+                headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
             }
         }
     }

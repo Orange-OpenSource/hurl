@@ -37,7 +37,7 @@ pub fn make_logger_parser_error(
     filename: Option<PathBuf>,
 ) -> impl Fn(&parser::Error, bool) {
     move |error: &parser::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning)
+        log_error(lines.clone(), color, filename.clone(), error, warning);
     }
 }
 
@@ -47,7 +47,7 @@ pub fn make_logger_linter_error(
     filename: Option<PathBuf>,
 ) -> impl Fn(&linter::Error, bool) {
     move |error: &linter::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning)
+        log_error(lines.clone(), color, filename.clone(), error, warning);
     }
 }
 

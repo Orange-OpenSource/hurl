@@ -191,7 +191,7 @@ mod tests {
                     value: "1,2,3".to_string(),
                 },
             ]
-        )
+        );
     }
 
     #[test]
@@ -219,7 +219,7 @@ mod tests {
                     value: "value2".to_string(),
                 },
             ]
-        )
+        );
     }
 
     #[test]
@@ -236,7 +236,7 @@ mod tests {
                     value: "value2".to_string(),
                 },
             ]
-        )
+        );
     }
 
     #[test]
@@ -247,7 +247,7 @@ mod tests {
                 name: "cookie1".to_string(),
                 value: "value1".to_string(),
             },
-        )
+        );
     }
 
     #[test]

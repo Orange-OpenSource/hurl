@@ -93,7 +93,7 @@ impl Element {
 
     /// Adds a `child` to this element.
     pub fn add_child(&mut self, child: Element) {
-        self.children.push(child)
+        self.children.push(child);
     }
 
     /// Returns an iterator over these element's children.
@@ -170,7 +170,7 @@ impl fmt::Display for Element {
 }
 
 fn push_attr(f: &mut String, key: &str, value: &str) {
-    f.push_str(&format!(" {key}=\"{value}\""))
+    f.push_str(&format!(" {key}=\"{value}\""));
 }
 
 /// SVG elements can be modified using attributes.

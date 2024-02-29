@@ -237,7 +237,7 @@ impl Client {
                     if s.starts_with("HTTP/") {
                         status_lines.push(s);
                     } else {
-                        response_headers.push(s)
+                        response_headers.push(s);
                     }
                 }
                 true
@@ -588,7 +588,7 @@ impl Client {
                 // from libcurl::FormError to HttpError
                 match param {
                     MultipartParam::Param(Param { name, value }) => {
-                        form.part(name).contents(value.as_bytes()).add().unwrap()
+                        form.part(name).contents(value.as_bytes()).add().unwrap();
                     }
                     MultipartParam::FileParam(FileParam {
                         name,

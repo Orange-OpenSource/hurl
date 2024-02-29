@@ -514,7 +514,7 @@ pub mod tests {
         assert_eq!(
             Value::from_json(&json_number),
             Value::Number(Number::Float(1000000000000000000000.5f64))
-        )
+        );
     }
 
     #[test]

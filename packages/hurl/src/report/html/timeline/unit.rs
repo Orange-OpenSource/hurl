@@ -182,13 +182,13 @@ impl Mul<usize> for Pixel {
 
 impl AddAssign for Pixel {
     fn add_assign(&mut self, rhs: Pixel) {
-        *self = *self + rhs
+        *self = *self + rhs;
     }
 }
 
 impl SubAssign for Pixel {
     fn sub_assign(&mut self, rhs: Pixel) {
-        *self = *self - rhs
+        *self = *self - rhs;
     }
 }
 

@@ -169,7 +169,7 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval)
+        assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval);
     }
 
     #[test]

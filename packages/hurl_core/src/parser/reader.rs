@@ -105,7 +105,7 @@ impl Reader {
                 None => return s,
                 Some(c) => {
                     if predicate(&c) {
-                        s.push(self.read().unwrap())
+                        s.push(self.read().unwrap());
                     } else {
                         return s;
                     }
@@ -124,12 +124,12 @@ impl Reader {
                 Some(c) => {
                     if escaped && c == ' ' {
                         escaped = false;
-                        s.push(self.read().unwrap())
+                        s.push(self.read().unwrap());
                     } else if c == '\\' {
                         escaped = true;
                         let _backslash = self.read().unwrap();
                     } else if predicate(&c) {
-                        s.push(self.read().unwrap())
+                        s.push(self.read().unwrap());
                     } else {
                         return s;
                     }

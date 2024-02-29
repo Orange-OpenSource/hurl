@@ -410,7 +410,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
 
     if options.unix_socket != default_options.unix_socket {
         if let Some(unix_socket) = &options.unix_socket {
-            non_default_options.push(("unix socket", unix_socket.to_string()))
+            non_default_options.push(("unix socket", unix_socket.to_string()));
         }
     }
 

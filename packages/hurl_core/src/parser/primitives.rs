@@ -117,7 +117,7 @@ pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
             _ => {
                 reader.state = save_state;
                 if let Some(c) = reader.read() {
-                    value.push(c)
+                    value.push(c);
                 }
             }
         }

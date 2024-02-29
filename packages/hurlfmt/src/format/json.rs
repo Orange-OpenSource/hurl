@@ -99,7 +99,7 @@ impl ToJson for Response {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
         if let Some(v) = get_json_version(&self.version.value) {
-            attributes.push(("version".to_string(), JValue::String(v)))
+            attributes.push(("version".to_string(), JValue::String(v)));
         }
         if let StatusValue::Specific(n) = self.status.value {
             attributes.push(("status".to_string(), JValue::Number(n.to_string())));
@@ -123,7 +123,7 @@ impl ToJson for Response {
 fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &[Header]) {
     if !headers.is_empty() {
         let headers = JValue::List(headers.iter().map(|h| h.to_json()).collect());
-        attributes.push(("headers".to_string(), headers))
+        attributes.push(("headers".to_string(), headers));
     }
 }
 
@@ -488,7 +488,7 @@ impl ToJson for Predicate {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
         if self.not {
-            attributes.push(("not".to_string(), JValue::Boolean(true)))
+            attributes.push(("not".to_string(), JValue::Boolean(true)));
         }
         match self.predicate_func.value.clone() {
             PredicateFuncValue::Equal { value, .. } => {

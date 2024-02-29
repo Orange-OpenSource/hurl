@@ -121,7 +121,7 @@ impl Tokenizable for Response {
         tokens.append(&mut self.headers.iter().flat_map(|e| e.tokenize()).collect());
         tokens.append(&mut self.sections.iter().flat_map(|e| e.tokenize()).collect());
         if let Some(body) = self.clone().body {
-            tokens.append(&mut body.tokenize())
+            tokens.append(&mut body.tokenize());
         }
         tokens
     }
@@ -207,7 +207,7 @@ impl Tokenizable for SectionValue {
             }
             SectionValue::BasicAuth(item) => {
                 if let Some(kv) = item {
-                    tokens.append(&mut kv.tokenize())
+                    tokens.append(&mut kv.tokenize());
                 }
             }
             SectionValue::FormParams(items) => {

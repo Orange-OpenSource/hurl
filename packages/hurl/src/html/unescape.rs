@@ -160,7 +160,7 @@ mod tests {
     #[test]
     fn test_html_unescape() {
         fn check(text: &str, expected: &str) {
-            assert_eq!(html_unescape(text), expected.to_string())
+            assert_eq!(html_unescape(text), expected.to_string());
         }
 
         fn check_num(num: usize, expected: &str) {
@@ -194,7 +194,7 @@ mod tests {
         // Check incomplete entities at the end of the string
         for x in ["&", "&#", "&#x", "&#X", "&#y", "&#xy", "&#Xy"].iter() {
             check(x, x);
-            check(&format!("{x};"), &format!("{x};"))
+            check(&format!("{x};"), &format!("{x};"));
         }
 
         // Check several combinations of numeric character references,
@@ -436,7 +436,7 @@ mod tests {
 
         // Check invalid numbers
         for (num, ch) in [(0x0d, "\r"), (0x80, "\u{20ac}"), (0x95, "\u{2022}")] {
-            check_num(num, ch)
+            check_num(num, ch);
         }
 
         // Check small numbers
@@ -448,26 +448,26 @@ mod tests {
 
         // Check that multiple trailing semicolons are handled correctly
         for e in ["&quot;;", "&#34;;", "&#x22;;", "&#X22;;"] {
-            check(e, "\";")
+            check(e, "\";");
         }
 
         // Check that semicolons in the middle don't create problems
         for e in ["&quot;quot;", "&#34;quot;", "&#x22;quot;", "&#X22;quot;"] {
-            check(e, "\"quot;")
+            check(e, "\"quot;");
         }
 
         // Check triple adjacent charrefs
         for e in ["&quot", "&#34", "&#x22", "&#X22"] {
             // check(&e.repeat(3), "\"\"\"");
-            check(&format!("{e};").repeat(3), "\"\"\"")
+            check(&format!("{e};").repeat(3), "\"\"\"");
         }
 
         // Check that the case is respected
         for e in ["&amp", "&amp;", "&AMP", "&AMP;"] {
-            check(e, "&")
+            check(e, "&");
         }
         for e in ["&Amp", "&Amp;"] {
-            check(e, e)
+            check(e, e);
         }
 
         // Check that nonexistent named entities are returned unchanged
@@ -499,6 +499,6 @@ mod tests {
             "&Eacuteric&Eacute;ric&alphacentauri&alpha;centauri",
             "ÉricÉric&alphacentauriαcentauri",
         );
-        check("&co;", "&co;")
+        check("&co;", "&co;");
     }
 }

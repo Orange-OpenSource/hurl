@@ -175,7 +175,7 @@ fn new_vert_lines(
             return;
         }
         let elt = svg::new_line(*x, 0.0, *x, pixels_y.end.0);
-        lines.add_child(elt)
+        lines.add_child(elt);
     });
     group.add_child(lines);
 

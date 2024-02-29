@@ -177,7 +177,7 @@ mod tests {
             chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                 .unwrap()
                 .with_timezone(&chrono::Utc)
-        )
+        );
     }
 
     #[test]
@@ -200,7 +200,7 @@ mod tests {
         assert_eq!(
             parse_serial_number(&attributes).unwrap(),
             "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0".to_string()
-        )
+        );
     }
 
     #[test]
