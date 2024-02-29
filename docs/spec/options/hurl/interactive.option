@@ -2,6 +2,7 @@ name: interactive
 long: interactive
 help: Turn on interactive mode
 conflict: to_entry
+cli_only: true
 ---
 Stop between requests.
 

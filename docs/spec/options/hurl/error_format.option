@@ -4,5 +4,6 @@ value: FORMAT
 value_default: short
 value_parser: ["short", "long"]
 help: Control the format of error messages
+cli_only: true
 ---
 Control the format of error message (short by default or long)

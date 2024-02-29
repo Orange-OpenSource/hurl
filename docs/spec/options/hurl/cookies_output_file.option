@@ -3,6 +3,7 @@ long: cookie-jar
 short: c
 value: FILE
 help: Write cookies to FILE after running the session (only for one session)
+cli_only: true
 ---
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.

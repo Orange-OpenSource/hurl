@@ -167,6 +167,8 @@ See also [`--key`](#key).
 
 Colorize debug output (the HTTP response output is not colorized).
 
+This is a cli-only option.
+
 ### --compressed {#compressed}
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
@@ -200,12 +202,16 @@ Read cookies from FILE (using the Netscape cookie file format).
 
 Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
+This is a cli-only option.
+
 ### -c, --cookie-jar <FILE> {#cookie-jar}
 
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
 Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
 
 ### --delay <MILLISECONDS> {#delay}
 
@@ -214,6 +220,8 @@ Sets delay before each request.
 ### --error-format <FORMAT> {#error-format}
 
 Control the format of error message (short by default or long)
+
+This is a cli-only option.
 
 ### --file-root <DIR> {#file-root}
 
@@ -253,9 +261,13 @@ Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP ve
 
 Ignore all asserts defined in the Hurl file.
 
+This is a cli-only option.
+
 ### -i, --include {#include}
 
 Include the HTTP headers in the output
+
+This is a cli-only option.
 
 ### -k, --insecure {#insecure}
 
@@ -266,6 +278,8 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 Stop between requests.
 
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+
+This is a cli-only option.
 
 ### -4, --ipv4 {#ipv4}
 
@@ -278,6 +292,8 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 ### --json {#json}
 
 Output each Hurl file result to JSON. The format is very closed to HAR format.
+
+This is a cli-only option.
 
 ### --key <KEY> {#key}
 
@@ -304,6 +320,8 @@ Maximum time in seconds that you allow a request/response to take. This is the s
 
 See also [`--connect-timeout`](#connect-timeout).
 
+This is a cli-only option.
+
 ### -n, --netrc {#netrc}
 
 Scan the .netrc file in the user's home directory for the username and password.
@@ -326,9 +344,13 @@ See also [`--netrc-file`](#netrc-file).
 
 Do not colorize output.
 
+This is a cli-only option.
+
 ### --no-output {#no-output}
 
 Suppress output. By default, Hurl outputs the body of the last response.
+
+This is a cli-only option.
 
 ### --noproxy <HOST(S)> {#noproxy}
 
@@ -388,6 +410,8 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
+This is a cli-only option.
+
 ### --test {#test}
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
@@ -409,9 +433,13 @@ This is a cli-only option.
 
 Add basic Authentication header to each request.
 
+This is a cli-only option.
+
 ### -A, --user-agent <NAME> {#user-agent}
 
 Specify the User-Agent string to send to the HTTP server.
+
+This is a cli-only option.
 
 ### --variable <NAME=VALUE> {#variable}
 
@@ -424,6 +452,8 @@ Set properties file in which your define your variables.
 Each variable is defined as name=value exactly as with [`--variable`](#variable) option.
 
 Note that defining a variable twice produces an error.
+
+This is a cli-only option.
 
 ### -v, --verbose {#verbose}
 

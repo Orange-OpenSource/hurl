@@ -3,5 +3,6 @@ long: user-agent
 short: A
 value: NAME
 help: Specify the User-Agent string to send to the HTTP server
+cli_only: true
 ---
 Specify the User-Agent string to send to the HTTP server.

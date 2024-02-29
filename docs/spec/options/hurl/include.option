@@ -2,5 +2,6 @@ name: include
 long: include
 short: i
 help: Include the HTTP headers in the output
+cli_only: true
 ---
 Include the HTTP headers in the output

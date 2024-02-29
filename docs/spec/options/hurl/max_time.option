@@ -5,6 +5,7 @@ value: SECONDS
 value_default: 300
 value_parser: clap::value_parser!(u64)
 help: Maximum time allowed for the transfer
+cli_only: true
 ---
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 

@@ -3,6 +3,7 @@ long: variables-file
 value: FILE
 help: Define a properties file in which you define your variables
 multi: append
+cli_only: true
 ---
 Set properties file in which your define your variables.
 
