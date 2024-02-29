@@ -25,14 +25,17 @@ use hurl_core::ast::{Body, Bytes, Entry, HurlFile, MultilineString, Request, Res
 use hurl_core::error::Error;
 use hurl_core::parser;
 
-use crate::http::Call;
+use crate::http::{Call, Client};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
-use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
-use crate::{http, runner};
+use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
+/// If `content` is a syntactically correct Hurl file, an `[HurlResult]` is always returned on
+/// run completion. The success or failure of the run (due to assertions checks, runtime failures
+/// etc..) can be read in the `[HurlResult]` `success` field. If `content` is not syntactically
+/// correct, a parsing error is returned. This is the only possible way for this function to fail.
 ///
 /// # Example
 ///
@@ -75,7 +78,7 @@ pub fn run(
     variables: &HashMap<String, Value>,
     logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
-    let logger = Logger::from(logger_options);
+    let mut logger = Logger::from(logger_options);
 
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
@@ -89,17 +92,39 @@ pub fn run(
 
     log_run_info(&hurl_file, runner_options, variables, &logger);
 
+    let result = run_entries(
+        &hurl_file.entries,
+        content,
+        runner_options,
+        variables,
+        &mut logger,
+    );
+
+    Ok(result)
+}
+
+/// Runs a list of `entries` and returns a [`HurlResult`] upon completion.
+/// `content` is the original source content, used to construct `entries`. It is used to construct
+/// rich error messages with annotated source code.
+fn run_entries(
+    entries: &[Entry],
+    content: &str,
+    runner_options: &RunnerOptions,
+    variables: &HashMap<String, Value>,
+    logger: &mut Logger,
+) -> HurlResult {
     // Now, we have a syntactically correct HurlFile instance, we can run it.
-    let mut http_client = http::Client::new();
-    let mut entries = vec![];
+    let mut http_client = Client::new();
+    let mut entries_result = vec![];
     let mut variables = variables.clone();
     let mut entry_index = 1;
     let mut retry_count = 1;
     let n = if let Some(to_entry) = runner_options.to_entry {
         to_entry
     } else {
-        hurl_file.entries.len()
+        entries.len()
     };
+    let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
 
@@ -111,7 +136,7 @@ pub fn run(
         if entry_index > n {
             break;
         }
-        let entry = &hurl_file.entries[entry_index - 1];
+        let entry = &entries[entry_index - 1];
 
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
@@ -123,19 +148,23 @@ pub fn run(
         // We compute the new logger for this entry, before entering into the `run` function because
         // entry options can modify the logger and we want the preamble "Executing entry..." to be
         // displayed based on the entry level verbosity.
-        let logger = get_entry_logger(entry, logger_options, &variables).unwrap_or(logger.clone());
+        logger.verbosity = default_verbosity;
+        let entry_verbosity = options::get_entry_verbosity(entry, default_verbosity, &variables);
+        if let Ok(entry_verbosity) = entry_verbosity {
+            logger.verbosity = entry_verbosity;
+        }
 
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
         logger.debug_important(&format!("Executing entry {entry_index}"));
 
-        warn_deprecated(entry, &logger);
+        warn_deprecated(entry, logger);
 
         logger.test_progress(entry_index, n);
 
         // The real execution of the entry happens here, with the overridden entry options.
-        let options = options::get_entry_options(entry, runner_options, &mut variables, &logger);
+        let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
         let entry_result = match &options {
             Err(error) => EntryResult {
                 entry_index,
@@ -167,7 +196,7 @@ pub fn run(
                     &mut http_client,
                     &mut variables,
                     options,
-                    &logger,
+                    logger,
                 )
             }
         };
@@ -197,7 +226,7 @@ pub fn run(
         // We logs eventual errors, only if we're not retrying the current entry...
         let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
         if has_error {
-            log_errors(&entry_result, content, retry, &logger);
+            log_errors(&entry_result, content, retry, logger);
         }
 
         // When --output is overridden on a request level, we output the HTTP response only if the
@@ -221,7 +250,7 @@ pub fn run(
                 }
             }
         }
-        entries.push(entry_result);
+        entries_result.push(entry_result);
 
         if retry {
             let delay = retry_interval.as_millis();
@@ -256,14 +285,14 @@ pub fn run(
 
     let time_in_ms = start.elapsed().as_millis();
     let cookies = http_client.get_cookie_storage();
-    let success = is_success(&entries);
-    Ok(HurlResult {
-        entries,
+    let success = is_success(&entries_result);
+    HurlResult {
+        entries: entries_result,
         time_in_ms,
         success,
         cookies,
         timestamp,
-    })
+    }
 }
 
 /// Returns `true` if all the entries ar successful, `false` otherwise.
@@ -415,7 +444,7 @@ fn log_run_info(
         if !non_default_options.is_empty() {
             logger.debug_important("Options:");
             for (name, value) in non_default_options.iter() {
-                logger.debug(format!("    {name}: {value}").as_str());
+                logger.debug(&format!("    {name}: {value}"));
             }
         }
     }
@@ -423,12 +452,15 @@ fn log_run_info(
     if !variables.is_empty() {
         logger.debug_important("Variables:");
         for (name, value) in variables.iter() {
-            logger.debug(format!("    {name}: {value}").as_str());
+            logger.debug(&format!("    {name}: {value}"));
         }
     }
     if let Some(to_entry) = runner_options.to_entry {
-        logger
-            .debug(format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str());
+        logger.debug(&format!(
+            "Executing {}/{} entries",
+            to_entry,
+            hurl_file.entries.len()
+        ));
     }
 }
 
@@ -455,27 +487,6 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
         .errors
         .iter()
         .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));
-}
-
-/// Creates a new logger for this entry.
-/// Verbosity can be overridden at entry level with an Options section so each
-/// entry has its own logger.
-fn get_entry_logger(
-    entry: &Entry,
-    logger_options: &LoggerOptions,
-    variables: &HashMap<String, Value>,
-) -> Result<Logger, runner::Error> {
-    let entry_verbosity =
-        options::get_entry_verbosity(entry, &logger_options.verbosity, variables)?;
-    let entry_logger_options = LoggerOptionsBuilder::new()
-        .color(logger_options.color)
-        .filename(&logger_options.filename)
-        .error_format(logger_options.error_format)
-        .progress_bar(entry_verbosity.is_none() && logger_options.progress_bar)
-        .verbosity(entry_verbosity)
-        .test(logger_options.test)
-        .build();
-    Ok(Logger::from(&entry_logger_options))
 }
 
 #[cfg(test)]

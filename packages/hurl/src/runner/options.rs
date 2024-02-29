@@ -255,10 +255,10 @@ fn has_options(entry: &Entry) -> bool {
 /// Returns the overridden `entry` verbosity, or the default `verbosity` file.
 pub fn get_entry_verbosity(
     entry: &Entry,
-    verbosity: &Option<Verbosity>,
+    default_verbosity: Option<Verbosity>,
     variables: &HashMap<String, Value>,
 ) -> Result<Option<Verbosity>, Error> {
-    let mut verbosity = *verbosity;
+    let mut verbosity = default_verbosity;
 
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
