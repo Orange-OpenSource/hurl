@@ -91,6 +91,7 @@ pub struct CliOptions {
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
     pub very_verbose: bool,
+    pub max_filesize: usize,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -191,6 +192,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::max_redirects())
         .arg(commands::max_time())
         .arg(commands::max_workers())
+        .arg(commands::max_filesize())
         .arg(commands::netrc())
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional())
@@ -287,6 +289,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
+    let max_filesize = matches::max_filesize(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
         cacert_file,
@@ -339,6 +342,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         variables,
         verbose,
         very_verbose,
+        max_filesize,
     })
 }
 
@@ -438,6 +442,7 @@ impl CliOptions {
         let unix_socket = self.unix_socket.clone();
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
+        let max_filesize = self.max_filesize;
 
         RunnerOptionsBuilder::new()
             .aws_sigv4(aws_sigv4)
@@ -476,6 +481,7 @@ impl CliOptions {
             .unix_socket(unix_socket)
             .user(user)
             .user_agent(user_agent)
+            .max_filesize(max_filesize)
             .build()
     }
 

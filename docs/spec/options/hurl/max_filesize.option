@@ -1,0 +1,8 @@
+name: max_filesize
+long: max-filesize
+value: NUM
+value_default: 0
+value_parser: clap::value_parser!(u64)
+help: File size limits
+---
+A size modifier may be used. For example, Appending 'k' or 'K' counts the number as kilobytes, 'm' or 'M' makes it megabytes, while 'g' or 'G' makes it gigabytes. Examples: 200K, 3m and 1G. (Added in 7.58.0)

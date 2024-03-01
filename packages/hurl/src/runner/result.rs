@@ -87,6 +87,7 @@ pub struct EntryResult {
     /// server is requested to send compressed response, and the response should be uncompressed
     /// when outputted on stdout.
     pub compressed: bool,
+    pub max_filesize: usize,
 }
 
 impl Default for EntryResult {
@@ -100,6 +101,7 @@ impl Default for EntryResult {
             errors: vec![],
             time_in_ms: 0,
             compressed: false,
+            max_filesize: 0,
         }
     }
 }
@@ -163,9 +165,12 @@ impl EntryResult {
                     return Err(Error::new(source_info, e.into(), false));
                 }
             };
-            output.write(&bytes, stdout, Some(context_dir))
-        } else {
-            output.write(&response.body, stdout, Some(context_dir))
+            if bytes.len() > self.max_filesize {
+                return output.write(&bytes, stdout, Some(context_dir));
+            }
+        } else if response.body.len() > self.max_filesize {
+            return output.write(&response.body, stdout, Some(context_dir));
         }
+        Ok(())
     }
 }

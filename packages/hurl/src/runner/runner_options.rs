@@ -61,6 +61,7 @@ pub struct RunnerOptionsBuilder {
     unix_socket: Option<String>,
     user: Option<String>,
     user_agent: Option<String>,
+    max_filesize: usize,
 }
 
 impl Default for RunnerOptionsBuilder {
@@ -103,6 +104,7 @@ impl Default for RunnerOptionsBuilder {
             unix_socket: None,
             user: None,
             user_agent: None,
+            max_filesize: 0,
         }
     }
 }
@@ -367,6 +369,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Set the file size limit
+    pub fn max_filesize(&mut self, max_filesize: usize) -> &mut Self {
+        self.max_filesize = max_filesize;
+        self
+    }
+
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
@@ -407,6 +415,7 @@ impl RunnerOptionsBuilder {
             unix_socket: self.unix_socket.clone(),
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
+            max_filesize: self.max_filesize,
         }
     }
 }
@@ -450,6 +459,7 @@ pub struct RunnerOptions {
     pub(crate) unix_socket: Option<String>,
     pub(crate) user: Option<String>,
     pub(crate) user_agent: Option<String>,
+    pub(crate) max_filesize: usize,
 }
 
 impl Default for RunnerOptions {
