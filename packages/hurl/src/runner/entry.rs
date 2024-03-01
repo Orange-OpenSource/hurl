@@ -211,6 +211,7 @@ impl ClientOptions {
             follow_location_trusted: runner_options.follow_location_trusted,
             http_version: runner_options.http_version,
             ip_resolve: runner_options.ip_resolve,
+            max_filesize: runner_options.max_filesize,
             max_redirect: runner_options.max_redirect,
             netrc: runner_options.netrc,
             netrc_file: runner_options.netrc_file.clone(),

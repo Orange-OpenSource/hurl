@@ -67,6 +67,8 @@ Options:
           IPv4
       --json
           Output each Hurl file result to JSON
+      --max-filesize <BYTES>
+          Specify the maximum size (in bytes) of a file to download
       --max-redirs <NUM>
           Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]
   -m, --max-time <SECONDS>

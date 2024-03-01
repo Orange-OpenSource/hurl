@@ -51,6 +51,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--ipv6', 'ipv6', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4')
             [CompletionResult]::new('--jobs', 'jobs', [CompletionResultType]::ParameterName, '(Experimental) Maximum number of parallel jobs')
             [CompletionResult]::new('--json', 'json', [CompletionResultType]::ParameterName, 'Output each Hurl file result to JSON')
+            [CompletionResult]::new('--max-filesize', 'max-filesize', [CompletionResultType]::ParameterName, 'Specify the maximum size (in bytes) of a file to download')
             [CompletionResult]::new('--max-redirs', 'max-redirs', [CompletionResultType]::ParameterName, 'Maximum number of redirects allowed, -1 for unlimited redirects')
             [CompletionResult]::new('--max-time', 'max-time', [CompletionResultType]::ParameterName, 'Maximum time allowed for the transfer')
             [CompletionResult]::new('--netrc', 'netrc', [CompletionResultType]::ParameterName, 'Must read .netrc for username and password')

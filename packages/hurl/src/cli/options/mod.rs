@@ -67,6 +67,7 @@ pub struct CliOptions {
     pub ip_resolve: Option<IpResolve>,
     pub jobs: Option<usize>,
     pub junit_file: Option<PathBuf>,
+    pub max_filesize: Option<u64>,
     pub max_redirect: Option<usize>,
     pub netrc: bool,
     pub netrc_file: Option<String>,
@@ -191,6 +192,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::ipv6())
         .arg(commands::jobs())
         .arg(commands::json())
+        .arg(commands::max_filesize())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
         .arg(commands::netrc())
@@ -264,6 +266,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let interactive = matches::interactive(arg_matches);
     let ip_resolve = matches::ip_resolve(arg_matches);
     let junit_file = matches::junit_file(arg_matches);
+    let max_filesize = matches::max_filesize(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
     let netrc = matches::netrc(arg_matches);
     let netrc_file = matches::netrc_file(arg_matches)?;
@@ -289,7 +292,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
-    let workers = matches::jobs(arg_matches);
+    let jobs = matches::jobs(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
         cacert_file,
@@ -317,6 +320,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         interactive,
         ip_resolve,
         junit_file,
+        max_filesize,
         max_redirect,
         netrc,
         netrc_file,
@@ -342,7 +346,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         variables,
         verbose,
         very_verbose,
-        jobs: workers,
+        jobs,
     })
 }
 
@@ -389,6 +393,7 @@ impl CliOptions {
             Some(ip) => ip.into(),
             None => http::IpResolve::default(),
         };
+        let max_filesize = self.max_filesize;
         let max_redirect = self.max_redirect;
         let netrc = self.netrc;
         let netrc_file = self.netrc_file.clone();
@@ -466,6 +471,7 @@ impl CliOptions {
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)
             .ip_resolve(ip_resolve)
+            .max_filesize(max_filesize)
             .max_redirect(max_redirect)
             .netrc(netrc)
             .netrc_file(netrc_file)

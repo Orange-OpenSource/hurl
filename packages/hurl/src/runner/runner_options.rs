@@ -42,6 +42,7 @@ pub struct RunnerOptionsBuilder {
     ignore_asserts: bool,
     insecure: bool,
     ip_resolve: IpResolve,
+    max_filesize: Option<u64>,
     max_redirect: Option<usize>,
     netrc: bool,
     netrc_file: Option<String>,
@@ -85,6 +86,7 @@ impl Default for RunnerOptionsBuilder {
             ignore_asserts: false,
             insecure: false,
             ip_resolve: IpResolve::default(),
+            max_filesize: None,
             max_redirect: Some(50),
             netrc: false,
             netrc_file: None,
@@ -375,6 +377,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Set the file size limit
+    pub fn max_filesize(&mut self, max_filesize: Option<u64>) -> &mut Self {
+        self.max_filesize = max_filesize;
+        self
+    }
+
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
@@ -396,6 +404,7 @@ impl RunnerOptionsBuilder {
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
             ip_resolve: self.ip_resolve,
+            max_filesize: self.max_filesize,
             max_redirect: self.max_redirect,
             netrc: self.netrc,
             netrc_file: self.netrc_file.clone(),
@@ -440,6 +449,7 @@ pub struct RunnerOptions {
     pub(crate) ignore_asserts: bool,
     pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
+    pub(crate) max_filesize: Option<u64>,
     pub(crate) max_redirect: Option<usize>,
     pub(crate) netrc: bool,
     pub(crate) netrc_file: Option<String>,

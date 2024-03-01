@@ -1,4 +1,4 @@
-.TH hurl 1 "26 Mar 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "01 Apr 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -294,6 +294,10 @@ Follow redirect. To limit the amount of redirects to follow use the \fI--max-red
 
 Like \fI-L, --location\fP, but allows sending the name + password to all hosts that the site may redirect to.
 This may or may not introduce a security breach if the site redirects you to a site to which you send your authentication info (which is plaintext in the case of HTTP Basic authentication).
+
+.IP "--max-filesize <BYTES> "
+
+Specify the maximum size (in bytes) of a file to download. If the file requested is larger than this value, the transfer does not start.
 
 .IP "--max-redirs <NUM> "
 

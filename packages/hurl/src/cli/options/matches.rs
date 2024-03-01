@@ -423,6 +423,10 @@ pub fn very_verbose(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "very_verbose")
 }
 
+pub fn max_filesize(arg_matches: &ArgMatches) -> Option<u64> {
+    get::<u64>(arg_matches, "max_filesize")
+}
+
 /// Returns a list of path names from the command line options `matches`.
 fn glob_files(matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
     let mut all_files = vec![];

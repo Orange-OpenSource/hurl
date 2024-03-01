@@ -37,6 +37,7 @@ pub struct ClientOptions {
     pub http_version: RequestedHttpVersion,
     pub insecure: bool,
     pub ip_resolve: IpResolve,
+    pub max_filesize: Option<u64>,
     pub max_redirect: Option<usize>,
     pub netrc: bool,
     pub netrc_file: Option<String>,
@@ -77,6 +78,7 @@ impl Default for ClientOptions {
             http_version: RequestedHttpVersion::default(),
             insecure: false,
             ip_resolve: IpResolve::default(),
+            max_filesize: None,
             max_redirect: Some(50),
             netrc: false,
             netrc_file: None,
@@ -152,6 +154,10 @@ impl ClientOptions {
         } else if self.follow_location {
             arguments.push("--location".to_string());
         }
+        if let Some(max_filesize) = self.max_filesize {
+            arguments.push("--max-filesize".to_string());
+            arguments.push(max_filesize.to_string());
+        }
         if self.max_redirect != ClientOptions::default().max_redirect {
             let max_redirect = match self.max_redirect {
                 None => -1,
@@ -224,6 +230,7 @@ mod tests {
                 http_version: RequestedHttpVersion::Http10,
                 insecure: true,
                 ip_resolve: IpResolve::IpV6,
+                max_filesize: None,
                 max_redirect: Some(10),
                 netrc: false,
                 netrc_file: Some("/var/run/netrc".to_string()),
@@ -233,7 +240,7 @@ mod tests {
                 no_proxy: None,
                 resolves: vec![
                     "foo.com:80:192.168.0.1".to_string(),
-                    "bar.com:443:127.0.0.1".to_string()
+                    "bar.com:443:127.0.0.1".to_string(),
                 ],
                 retry: Retry::None,
                 ssl_no_revoke: false,

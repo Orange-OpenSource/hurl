@@ -439,6 +439,9 @@ impl Client {
         }
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
+        if let Some(max_filesize) = options.max_filesize {
+            self.handle.max_filesize(max_filesize)?;
+        }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 

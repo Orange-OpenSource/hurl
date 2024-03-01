@@ -29,6 +29,7 @@ complete -c hurl -l ipv4 -d 'Tell Hurl to use IPv4 addresses only when resolving
 complete -c hurl -l ipv6 -d 'Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4'
 complete -c hurl -l jobs -d '(Experimental) Maximum number of parallel jobs'
 complete -c hurl -l json -d 'Output each Hurl file result to JSON'
+complete -c hurl -l max-filesize -d 'Specify the maximum size (in bytes) of a file to download'
 complete -c hurl -l max-redirs -d 'Maximum number of redirects allowed, -1 for unlimited redirects'
 complete -c hurl -l max-time -d 'Maximum time allowed for the transfer'
 complete -c hurl -l netrc -d 'Must read .netrc for username and password'
