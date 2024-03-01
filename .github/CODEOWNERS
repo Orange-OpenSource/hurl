@@ -1,4 +1,4 @@
 # Protect ci 
 .github/CODEOWNERS @lepapareil @fabricereix @jcamiel
-.github/workflows/ @lepapareil @fabricereix @jcamiel
-.circleci/ @lepapareil @fabricereix @jcamiel
+.github/workflows/ @lepapareil
+.circleci/ @lepapareil
