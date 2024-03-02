@@ -39,6 +39,7 @@
 //! The main function of this crate is [`runner::run`].
 //!
 //! This crate works on Windows, macOS and Linux.
+mod diff;
 mod html;
 pub mod http;
 mod json;
