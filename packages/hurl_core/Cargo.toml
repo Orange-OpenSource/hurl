@@ -13,3 +13,11 @@ repository = "https://github.com/Orange-OpenSource/hurl"
 float-cmp = "0.9.0"
 libxml = "0.3.3"
 regex = "1.10.3"
+
+[lints.rust]
+warnings = "deny"
+
+[lints.clippy]
+empty_structs_with_brackets = "deny"
+manual_string_new = "deny"
+semicolon_if_nothing_returned = "deny"

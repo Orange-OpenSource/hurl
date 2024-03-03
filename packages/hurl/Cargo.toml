@@ -53,3 +53,10 @@ winres = "0.1.12"
 [build-dependencies]
 cc = "1.0.88"
 
+[lints.rust]
+warnings = "deny"
+
+[lints.clippy]
+empty_structs_with_brackets = "deny"
+manual_string_new = "deny"
+semicolon_if_nothing_returned = "deny"

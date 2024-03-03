@@ -20,5 +20,10 @@ regex = "1.10.3"
 [dev-dependencies]
 proptest = "1.4.0"
 
+[lints.rust]
+warnings = "deny"
 
-
+[lints.clippy]
+empty_structs_with_brackets = "deny"
+manual_string_new = "deny"
+semicolon_if_nothing_returned = "deny"
