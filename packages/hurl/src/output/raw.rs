@@ -68,8 +68,6 @@ pub fn write_body(
                 Some(Output::File(file)) => Output::File(file.to_string()).write(&output, None)?,
                 _ => runner::Output::StdOut.write(&output, None)?,
             }
-        } else {
-            logger.info("No response has been received");
         }
     } else {
         let source = if filename_in == "-" {

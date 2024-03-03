@@ -22,6 +22,7 @@ use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
 use crate::runner::{HurlResult, Value};
+use crate::util::term::{Term, WriteMode};
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 /// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
@@ -36,7 +37,7 @@ impl BaseLogger {
     }
 
     pub fn info(&self, message: &str) {
-        log_info(message);
+        eprintln!("{message}");
     }
 
     pub fn debug(&self, message: &str) {
@@ -44,25 +45,25 @@ impl BaseLogger {
             return;
         }
         if self.color {
-            log_debug(message);
+            eprintln!("{} {message}", "*".blue().bold());
         } else {
-            log_debug_no_color(message);
+            eprintln!("* {message}");
         }
     }
 
     pub fn warning(&self, message: &str) {
         if self.color {
-            log_warning(message);
+            eprintln!("{}: {}", "warning".yellow().bold(), message.bold());
         } else {
-            log_warning_no_color(message);
+            eprintln!("warning: {message}");
         }
     }
 
     pub fn error(&self, message: &str) {
         if self.color {
-            log_error(message);
+            eprintln!("{}: {}", "error".red().bold(), message.bold());
         } else {
-            log_error_no_color(message);
+            eprintln!("error: {message}");
         }
     }
 }
@@ -99,6 +100,7 @@ pub struct Logger {
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
     pub(crate) verbosity: Option<Verbosity>,
+    term: Term,
 }
 
 impl From<&LoggerOptions> for Logger {
@@ -110,6 +112,7 @@ impl From<&LoggerOptions> for Logger {
             progress_bar: options.progress_bar,
             test: options.test,
             verbosity: options.verbosity,
+            term: Term::new(WriteMode::Immediate),
         }
     }
 }
@@ -204,7 +207,7 @@ impl Default for LoggerOptionsBuilder {
 
 impl Logger {
     pub fn info(&self, message: &str) {
-        log_info(message);
+        self.term.eprintln(message);
     }
 
     pub fn debug(&self, message: &str) {
@@ -212,53 +215,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug(message);
+            self.term.eprintln_prefix(&"*".blue().bold(), message);
         } else {
-            log_debug_no_color(message);
-        }
-    }
-
-    pub fn debug_curl(&self, message: &str) {
-        if self.verbosity.is_none() {
-            return;
-        }
-        if self.color {
-            log_debug_curl(message);
-        } else {
-            log_debug_curl_no_color(message);
-        }
-    }
-
-    pub fn debug_error<E: Error>(&self, content: &str, error: &E, entry_src_info: SourceInfo) {
-        if self.verbosity.is_none() {
-            return;
-        }
-        if self.color {
-            log_debug_error(&self.filename, content, error, entry_src_info);
-        } else {
-            log_debug_error_no_color(&self.filename, content, error, entry_src_info);
-        }
-    }
-
-    pub fn debug_header_in(&self, name: &str, value: &str) {
-        if self.verbosity.is_none() {
-            return;
-        }
-        if self.color {
-            log_debug_header_in(name, value);
-        } else {
-            log_debug_header_in_no_color(name, value);
-        }
-    }
-
-    pub fn debug_header_out(&self, name: &str, value: &str) {
-        if self.verbosity.is_none() {
-            return;
-        }
-        if self.color {
-            log_debug_header_out(name, value);
-        } else {
-            log_debug_header_out_no_color(name, value);
+            self.term.eprintln_prefix("*", message);
         }
     }
 
@@ -267,10 +226,66 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_important(message);
+            self.term
+                .eprintln_prefix(&"*".blue().bold(), &message.bold());
         } else {
-            log_debug_no_color(message);
+            self.term.eprintln_prefix("*", message);
         }
+    }
+
+    pub fn debug_curl(&self, message: &str) {
+        if self.verbosity.is_none() {
+            return;
+        }
+        if self.color {
+            self.term.eprintln_prefix(&"**".blue().bold(), message);
+        } else {
+            self.term.eprintln_prefix("**", message);
+        }
+    }
+
+    pub fn debug_error<E: Error>(&self, content: &str, error: &E, entry_src_info: SourceInfo) {
+        if self.verbosity.is_none() {
+            return;
+        }
+        let message = error_string(
+            &self.filename,
+            content,
+            error,
+            Some(entry_src_info),
+            self.color,
+        );
+        split_lines(&message).iter().for_each(|l| self.debug(l));
+    }
+
+    pub fn debug_headers_in(&self, headers: &[(&str, &str)]) {
+        if self.verbosity.is_none() {
+            return;
+        }
+        for (name, value) in headers {
+            if self.color {
+                self.term
+                    .eprintln(&format!("< {}: {}", name.cyan().bold(), value));
+            } else {
+                self.term.eprintln(&format!("< {}: {}", name, value));
+            }
+        }
+        self.term.eprintln("<");
+    }
+
+    pub fn debug_headers_out(&self, headers: &[(&str, &str)]) {
+        if self.verbosity.is_none() {
+            return;
+        }
+        for (name, value) in headers {
+            if self.color {
+                self.term
+                    .eprintln(&format!("> {}: {}", name.cyan().bold(), value));
+            } else {
+                self.term.eprintln(&format!("> {}: {}", name, value));
+            }
+        }
+        self.term.eprintln(">");
     }
 
     pub fn debug_status_version_in(&self, line: &str) {
@@ -278,34 +293,36 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_status_version_in(line);
+            self.term.eprintln(&format!("< {}", line.green().bold()));
         } else {
-            log_debug_status_version_in_no_color(line);
+            self.term.eprintln(&format!("< {line}"));
         }
     }
 
     pub fn warning(&self, message: &str) {
         if self.color {
-            log_warning(message);
+            self.term.eprintln(&format!(
+                "{}: {}",
+                "warning".yellow().bold(),
+                message.bold()
+            ));
         } else {
-            log_warning_no_color(message);
+            self.term.eprintln(&format!("warning: {message}"));
         }
     }
 
     pub fn error(&self, message: &str) {
         if self.color {
-            log_error(message);
+            self.term
+                .eprintln(&format!("{}: {}", "error".red().bold(), message.bold()));
         } else {
-            log_error_no_color(message);
+            self.term.eprintln(&format!("error: {message}"));
         }
     }
 
     pub fn error_parsing_rich<E: Error>(&self, content: &str, error: &E) {
-        if self.color {
-            log_error_rich(&self.filename, content, error, None);
-        } else {
-            log_error_rich_no_color(&self.filename, content, error, None);
-        }
+        let message = error_string(&self.filename, content, error, None, self.color);
+        self.error_rich(&message);
     }
 
     pub fn error_runtime_rich<E: Error>(
@@ -314,10 +331,22 @@ impl Logger {
         error: &E,
         entry_src_info: SourceInfo,
     ) {
+        let message = error_string(
+            &self.filename,
+            content,
+            error,
+            Some(entry_src_info),
+            self.color,
+        );
+        self.error_rich(&message);
+    }
+
+    fn error_rich(&self, message: &str) {
         if self.color {
-            log_error_rich(&self.filename, content, error, Some(entry_src_info));
+            self.term
+                .eprintln(&format!("{}: {message}\n", "error".red().bold()));
         } else {
-            log_error_rich_no_color(&self.filename, content, error, Some(entry_src_info));
+            self.term.eprintln(&format!("error: {message}\n"));
         }
     }
 
@@ -326,9 +355,9 @@ impl Logger {
             return;
         }
         if self.color {
-            log_debug_method_version_out(line);
+            self.term.eprintln(&format!("> {}", line.purple().bold()));
         } else {
-            log_debug_method_version_out_no_color(line);
+            self.term.eprintln(&format!("> {line}"));
         }
     }
 
@@ -337,20 +366,42 @@ impl Logger {
             return;
         }
         if self.color {
-            log_capture(name, value);
+            self.term.eprintln(&format!(
+                "{} {}: {value}",
+                "*".blue().bold(),
+                name.yellow().bold()
+            ));
         } else {
-            log_capture_no_color(name, value);
+            self.term.eprintln(&format!("* {name}: {value}"));
         }
     }
+}
 
+impl Term {
+    fn eprintln_prefix(&self, prefix: &str, message: &str) {
+        if message.is_empty() {
+            self.eprintln(prefix);
+        } else {
+            self.eprintln(&format!("{prefix} {message}"));
+        }
+    }
+}
+
+/// WIP: These methods must be removed from `Logger`. Semantically, they're using for reporting
+/// test progress and we need to extract them from `Logger`.
+impl Logger {
     pub fn test_running(&self, current: usize, total: usize) {
         if !self.test {
             return;
         }
         if self.color {
-            log_test_running(&self.filename, current, total);
+            eprintln!(
+                "{}: {} [{current}/{total}]",
+                self.filename.bold(),
+                "Running".cyan().bold()
+            );
         } else {
-            log_test_running_no_color(&self.filename, current, total);
+            eprintln!("{}: Running [{current}/{total}]", self.filename);
         }
     }
 
@@ -358,7 +409,8 @@ impl Logger {
         if !self.progress_bar {
             return;
         }
-        log_test_progress(entry_index, count);
+        let progress = progress_string(entry_index, count);
+        eprint!(" {progress}\r");
     }
 
     pub fn test_completed(&self, result: &HurlResult) {
@@ -366,9 +418,26 @@ impl Logger {
             return;
         }
         if self.color {
-            log_test_completed(result, &self.filename);
+            let state = if result.success {
+                "Success".green().bold()
+            } else {
+                "Failure".red().bold()
+            };
+            let count = result.entries.iter().flat_map(|r| &r.calls).count();
+            eprintln!(
+                "{}: {} ({} request(s) in {} ms)",
+                self.filename.bold(),
+                state,
+                count,
+                result.time_in_ms
+            );
         } else {
-            log_test_completed_no_color(result, &self.filename);
+            let state = if result.success { "Success" } else { "Failure" };
+            let count = result.entries.iter().flat_map(|r| &r.calls).count();
+            eprintln!(
+                "{}: {} ({} request(s) in {} ms)",
+                self.filename, state, count, result.time_in_ms
+            );
         }
     }
 
@@ -381,162 +450,6 @@ impl Logger {
         // https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
         eprint!("\x1B[K");
     }
-}
-
-fn log_info(message: &str) {
-    eprintln!("{message}");
-}
-
-fn log_debug(message: &str) {
-    if message.is_empty() {
-        eprintln!("{}", "*".blue().bold());
-    } else {
-        eprintln!("{} {}", "*".blue().bold(), message);
-    }
-}
-
-fn log_debug_no_color(message: &str) {
-    if message.is_empty() {
-        eprintln!("*");
-    } else {
-        eprintln!("* {message}");
-    }
-}
-
-fn log_debug_curl(message: &str) {
-    if message.is_empty() {
-        eprintln!("{}", "**".blue().bold());
-    } else {
-        eprintln!("{} {}", "**".blue().bold(), message.green());
-    }
-}
-
-fn log_debug_curl_no_color(message: &str) {
-    if message.is_empty() {
-        eprintln!("**");
-    } else {
-        eprintln!("** {message}");
-    }
-}
-
-fn log_debug_important(message: &str) {
-    if message.is_empty() {
-        eprintln!("{}", "*".blue().bold());
-    } else {
-        eprintln!("{} {}", "*".blue().bold(), message.bold());
-    }
-}
-
-fn log_debug_error<E: Error>(filename: &str, content: &str, error: &E, entry_src_info: SourceInfo) {
-    let message = error_string(filename, content, error, Some(entry_src_info), true);
-    split_lines(&message).iter().for_each(|l| log_debug(l));
-}
-
-fn log_debug_error_no_color<E: Error>(
-    filename: &str,
-    content: &str,
-    error: &E,
-    entry_src_info: SourceInfo,
-) {
-    let message = error_string(filename, content, error, Some(entry_src_info), false);
-    split_lines(&message)
-        .iter()
-        .for_each(|l| log_debug_no_color(l));
-}
-
-fn log_debug_header_in(name: &str, value: &str) {
-    eprintln!("< {}: {}", name.cyan().bold(), value);
-}
-
-fn log_debug_header_in_no_color(name: &str, value: &str) {
-    eprintln!("< {name}: {value}");
-}
-
-fn log_debug_header_out(name: &str, value: &str) {
-    eprintln!("> {}: {}", name.cyan().bold(), value);
-}
-
-fn log_debug_header_out_no_color(name: &str, value: &str) {
-    eprintln!("> {name}: {value}");
-}
-
-fn log_debug_method_version_out(line: &str) {
-    eprintln!("> {}", line.purple().bold());
-}
-
-fn log_debug_method_version_out_no_color(line: &str) {
-    eprintln!("> {line}");
-}
-
-fn log_debug_status_version_in(line: &str) {
-    eprintln!("< {}", line.green().bold());
-}
-
-fn log_debug_status_version_in_no_color(line: &str) {
-    eprintln!("< {line}");
-}
-
-fn log_warning(message: &str) {
-    eprintln!("{}: {}", "warning".yellow().bold(), message.bold());
-}
-
-fn log_warning_no_color(message: &str) {
-    eprintln!("warning: {message}");
-}
-
-fn log_error(message: &str) {
-    eprintln!("{}: {}", "error".red().bold(), message.bold());
-}
-
-fn log_error_no_color(message: &str) {
-    eprintln!("error: {message}");
-}
-
-fn log_error_rich<E: Error>(
-    filename: &str,
-    content: &str,
-    error: &E,
-    entry_src_info: Option<SourceInfo>,
-) {
-    let message = error_string(filename, content, error, entry_src_info, true);
-    eprintln!("{}: {}\n", "error".red().bold(), &message);
-}
-
-fn log_error_rich_no_color<E: Error>(
-    filename: &str,
-    content: &str,
-    error: &E,
-    entry_src_info: Option<SourceInfo>,
-) {
-    let message = error_string(filename, content, error, entry_src_info, false);
-    eprintln!("error: {}\n", &message);
-}
-
-fn log_capture(name: &str, value: &Value) {
-    eprintln!("{} {}: {}", "*".blue().bold(), name.yellow().bold(), value);
-}
-
-fn log_capture_no_color(name: &str, value: &Value) {
-    eprintln!("* {name}: {value}");
-}
-
-fn log_test_running(filename: &str, current: usize, total: usize) {
-    eprintln!(
-        "{}: {} [{}/{}]",
-        filename.bold(),
-        "Running".cyan().bold(),
-        current,
-        total
-    );
-}
-
-fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
-    eprintln!("{filename}: Running [{current}/{total}]");
-}
-
-fn log_test_progress(entry_index: usize, count: usize) {
-    let progress = progress_string(entry_index, count);
-    eprint!(" {progress}\r");
 }
 
 /// Returns the progress string with the current entry at `entry_index`.
@@ -552,31 +465,6 @@ fn progress_string(entry_index: usize, count: usize) -> String {
     };
     let void = " ".repeat(WIDTH - col - 1);
     format!("[{completed}>{void}] {entry_index}/{count}")
-}
-
-fn log_test_completed(result: &HurlResult, filename: &str) {
-    let state = if result.success {
-        "Success".green().bold()
-    } else {
-        "Failure".red().bold()
-    };
-    let count = result.entries.iter().flat_map(|r| &r.calls).count();
-    eprintln!(
-        "{}: {} ({} request(s) in {} ms)",
-        filename.bold(),
-        state,
-        count,
-        result.time_in_ms
-    );
-}
-
-fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
-    let state = if result.success { "Success" } else { "Failure" };
-    let count = result.entries.iter().flat_map(|r| &r.calls).count();
-    eprintln!(
-        "{}: {} ({} request(s) in {} ms)",
-        filename, state, count, result.time_in_ms
-    );
 }
 
 /// Returns the string representation of an `error`, given `lines` of content and a `filename`.

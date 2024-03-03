@@ -15,6 +15,28 @@
  * limitations under the License.
  *
  */
-pub mod logger;
-pub mod path;
-mod term;
+
+#[derive(Clone)]
+pub struct Term {
+    mode: WriteMode,
+}
+
+#[allow(dead_code)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum WriteMode {
+    Immediate,
+    Buffered,
+}
+
+impl Term {
+    pub fn new(mode: WriteMode) -> Self {
+        Term { mode }
+    }
+
+    pub fn eprintln(&self, message: &str) {
+        match self.mode {
+            WriteMode::Immediate => eprintln!("{message}"),
+            WriteMode::Buffered => {}
+        }
+    }
+}

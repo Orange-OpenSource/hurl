@@ -196,10 +196,11 @@ impl Client {
                     // Logs method, version and request headers now.
                     if verbose {
                         logger.debug_method_version_out(&lines[0]);
-                        for header in &request_headers {
-                            logger.debug_header_out(&header.name, &header.value);
-                        }
-                        logger.info(">");
+                        let headers = request_headers
+                            .iter()
+                            .map(|h| (h.name.as_str(), h.value.as_str()))
+                            .collect::<Vec<_>>();
+                        logger.debug_headers_out(&headers);
                     }
 
                     // If we don't send any data, we log an empty body here instead of relying on
@@ -309,10 +310,13 @@ impl Client {
                 .filter(|s| s.starts_with("HTTP/"))
                 .for_each(|s| logger.debug_status_version_in(s.trim()));
 
-            for header in &response.headers {
-                logger.debug_header_in(&header.name, &header.value);
-            }
-            logger.info("<");
+            let headers = response
+                .headers
+                .iter()
+                .map(|h| (h.name.as_str(), h.value.as_str()))
+                .collect::<Vec<_>>();
+            logger.debug_headers_in(&headers);
+
             if very_verbose {
                 logger.debug_important("Response body:");
                 response.log_body(true, logger);

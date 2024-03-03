@@ -90,6 +90,7 @@ pub fn run(
         }
     };
 
+    // Now, we have a syntactically correct HurlFile instance, we can run it.
     log_run_info(&hurl_file, runner_options, variables, &logger);
 
     let result = run_entries(
@@ -113,7 +114,6 @@ fn run_entries(
     variables: &HashMap<String, Value>,
     logger: &mut Logger,
 ) -> HurlResult {
-    // Now, we have a syntactically correct HurlFile instance, we can run it.
     let mut http_client = Client::new();
     let mut entries_result = vec![];
     let mut variables = variables.clone();
@@ -477,10 +477,7 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
 
     if logger.error_format == ErrorFormat::Long {
         if let Some(Call { response, .. }) = entry_result.calls.last() {
-            response.log_all(logger);
-        } else {
-            logger.info("<No HTTP response>");
-            logger.info("");
+            response.log_info_all(logger);
         }
     }
     entry_result

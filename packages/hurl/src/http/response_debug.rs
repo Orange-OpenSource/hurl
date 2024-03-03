@@ -39,7 +39,7 @@ impl Response {
         }
     }
 
-    pub fn log_all(&self, logger: &Logger) {
+    pub fn log_info_all(&self, logger: &Logger) {
         let status_line = self.get_status_line_headers(logger.color);
         logger.info(&status_line);
         self.log_body(false, logger);
