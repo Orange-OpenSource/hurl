@@ -20,5 +20,5 @@ regex = "1.10.3"
 [dev-dependencies]
 proptest = "1.4.0"
 
-
-
+[lints]
+workspace = true
