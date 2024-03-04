@@ -20,19 +20,16 @@ use hurl_core::ast::{Pos, SourceInfo};
 use crate::output::Error;
 use crate::runner;
 use crate::runner::{HurlResult, Output};
-use crate::util::logger::Logger;
 
 /// Writes the `hurl_result` last body response to the file `filename_out`.
 ///
-/// If `filename` is `None`, stdout is used. If `include_headers` is true, the last HTTP
+/// If `filename_out` is `None`, stdout is used. If `include_headers` is true, the last HTTP
 /// response headers are written before the body response.
 pub fn write_body(
     hurl_result: &HurlResult,
-    filename_in: &str,
     include_headers: bool,
     color: bool,
     filename_out: &Option<Output>,
-    logger: &Logger,
 ) -> Result<(), Error> {
     // By default, we output the body response bytes of the last entry
     if let Some(entry_result) = hurl_result.entries.last() {
@@ -66,16 +63,9 @@ pub fn write_body(
             }
             match filename_out {
                 Some(Output::File(file)) => Output::File(file.to_string()).write(&output, None)?,
-                _ => runner::Output::StdOut.write(&output, None)?,
+                _ => Output::StdOut.write(&output, None)?,
             }
         }
-    } else {
-        let source = if filename_in == "-" {
-            String::new()
-        } else {
-            format!("for file {filename_in}")
-        };
-        logger.warning(format!("No entry have been executed {source}").as_str());
     }
     Ok(())
 }

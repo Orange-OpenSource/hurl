@@ -80,6 +80,8 @@ pub fn run(
 ) -> Result<HurlResult, String> {
     let mut logger = Logger::from(logger_options);
 
+    logger.test_running(logger_options.current + 1, logger_options.total);
+
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
     let hurl_file = match hurl_file {
@@ -100,6 +102,8 @@ pub fn run(
         variables,
         &mut logger,
     );
+
+    logger.test_completed(&result);
 
     Ok(result)
 }

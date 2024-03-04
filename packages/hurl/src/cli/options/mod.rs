@@ -489,15 +489,17 @@ impl Options {
             .build()
     }
 
-    pub fn to_logger_options(&self, filename: &str) -> LoggerOptions {
+    pub fn to_logger_options(&self, filename: &str, current: usize, total: usize) -> LoggerOptions {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())
             .filename(filename)
+            .verbosity(verbosity)
             .progress_bar(self.progress_bar)
             .test(self.test)
-            .verbosity(verbosity)
+            .current(current)
+            .total(total)
             .build()
     }
 }

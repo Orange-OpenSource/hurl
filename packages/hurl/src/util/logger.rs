@@ -121,18 +121,25 @@ pub struct LoggerOptions {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,
     pub(crate) filename: String,
+    pub(crate) verbosity: Option<Verbosity>,
+
+    // For --test reporting, will be cleaned later
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
-    pub(crate) verbosity: Option<Verbosity>,
+    pub(crate) current: usize, // index of the running file in the total list files
+    pub(crate) total: usize,   // number of total files
 }
 
 pub struct LoggerOptionsBuilder {
     color: bool,
     error_format: ErrorFormat,
     filename: String,
+    verbosity: Option<Verbosity>,
+
     progress_bar: bool,
     test: bool,
-    verbosity: Option<Verbosity>,
+    current: usize,
+    total: usize,
 }
 
 impl LoggerOptionsBuilder {
@@ -179,15 +186,29 @@ impl LoggerOptionsBuilder {
         self
     }
 
+    /// Set the index of the running file in the total list files
+    pub fn current(&mut self, current: usize) -> &mut Self {
+        self.current = current;
+        self
+    }
+
+    /// Set the index of the running file in the total list files
+    pub fn total(&mut self, total: usize) -> &mut Self {
+        self.total = total;
+        self
+    }
+
     /// Creates a new logger.
     pub fn build(&self) -> LoggerOptions {
         LoggerOptions {
             color: self.color,
             error_format: self.error_format,
             filename: self.filename.clone(),
+            verbosity: self.verbosity,
             progress_bar: self.progress_bar,
             test: self.test,
-            verbosity: self.verbosity,
+            current: self.current,
+            total: self.total,
         }
     }
 }
@@ -201,6 +222,8 @@ impl Default for LoggerOptionsBuilder {
             progress_bar: false,
             test: false,
             verbosity: None,
+            current: 0,
+            total: 0,
         }
     }
 }
