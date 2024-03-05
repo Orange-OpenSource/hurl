@@ -16,17 +16,19 @@
  *
  */
 mod cli;
+mod run;
 
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
 use std::{env, process};
 
+use crate::cli::CliError;
 use colored::control;
 use hurl::report::{html, junit, tap};
+use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::util::logger::BaseLogger;
-use hurl::{output, runner};
 
 use crate::cli::options::OptionsError;
 
@@ -77,54 +79,16 @@ fn main() {
     let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
     let start = Instant::now();
-    let mut runs = vec![];
 
-    for (current, filename) in opts.input_files.iter().enumerate() {
-        // We check the input file existence and check that we can read its contents.
-        // Once the preconditions succeed, we can parse the Hurl file, and run it.
-        if filename != "-" && !Path::new(filename).exists() {
-            let message = format!("hurl: cannot access '{filename}': No such file or directory");
-            exit_with_error(&message, EXIT_ERROR_PARSING, &base_logger);
-        }
-        let content = cli::read_to_string(filename.as_str());
-        let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
-        let total = opts.input_files.len();
-
-        // Run our Hurl file now
-        let hurl_result = execute(&content, filename, current, total, current_dir, &opts);
-        let hurl_result = match hurl_result {
-            Ok(h) => h,
-            Err(_) => process::exit(EXIT_ERROR_PARSING),
-        };
-
-        let success = hurl_result.success;
-
-        // We can output the result, either the raw body or a structured JSON representation.
-        let output_body = success
-            && !opts.interactive
-            && matches!(opts.output_type, cli::OutputType::ResponseBody);
-        if output_body {
-            if hurl_result.entries.last().is_some() {
-                let include_headers = opts.include;
-                let result =
-                    output::write_body(&hurl_result, include_headers, opts.color, &opts.output);
-                unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
-            } else {
-                base_logger.warning(&format!("No entry have been executed for file {filename}"));
-            }
-        }
-        if matches!(opts.output_type, cli::OutputType::Json) {
-            let result = output::write_json(&hurl_result, &content, filename, &opts.output);
-            unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
-        }
-
-        let run = HurlRun {
-            content,
-            filename: filename.to_string(),
-            hurl_result,
-        };
-        runs.push(run);
-    }
+    let runs = run::run_seq(&opts.input_files, current_dir, &opts, &base_logger);
+    let runs = match runs {
+        Ok(r) => r,
+        Err(CliError::IO(msg)) => exit_with_error(&msg, EXIT_ERROR_PARSING, &base_logger),
+        // In case of parsing error, there is no error because the display of parsing error has been
+        // done in the execution of the Hurl files, inside the crates (and not in the main).
+        Err(CliError::Parsing) => exit_with_error("", EXIT_ERROR_PARSING, &base_logger),
+        Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
+    };
 
     if let Some(filename) = opts.junit_file {
         base_logger.debug(format!("Writing JUnit report to {filename}").as_str());
@@ -157,21 +121,6 @@ fn main() {
     }
 
     process::exit(exit_code(&runs));
-}
-
-/// Runs a Hurl `content` and returns a result.
-fn execute(
-    content: &str,
-    filename: &str,
-    current: usize,
-    total: usize,
-    current_dir: &Path,
-    cli_options: &cli::options::Options,
-) -> Result<HurlResult, String> {
-    let variables = &cli_options.variables;
-    let runner_options = cli_options.to_runner_options(filename, current_dir);
-    let logger_options = cli_options.to_logger_options(filename, current, total);
-    runner::run(content, &runner_options, variables, &logger_options)
 }
 
 #[cfg(target_family = "unix")]

@@ -35,6 +35,7 @@ use hurl_core::ast::{Entry, Retry};
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
+/// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
     pub aws_sigv4: Option<String>,
