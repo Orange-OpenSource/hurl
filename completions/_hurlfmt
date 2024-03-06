@@ -14,16 +14,18 @@ _hurlfmt() {
     fi
 
     local context curcontext="$curcontext" state line
-    _arguments "${_arguments_options[@]}"     '--check[Run in 'check' mode]: : ' \
-    '--color[Colorize Output]: : ' \
-    '--format[Specify output format: hurl, json or html]: : ' \
-    '--in-place[Modify files in place]: : ' \
-    '--in[Specify input format: hurl or curl]: : ' \
-    '--no-color[Do not colorize output]: : ' \
-    '--output[Write to FILE instead of stdout]: : ' \
-    '--out[Specify output format: hurl, json or html]: : ' \
-    '--standalone[Standalone HTML]: : ' \
-    '--help[Print help]'     '--version[Print version]'     '*::params:' \
+    _arguments "${_arguments_options[@]}" \
+    '--check[Run in 'check' mode]::' \
+    '--color[Colorize Output]::' \
+    '--format[Specify output format: hurl, json or html]::' \
+    '--in-place[Modify files in place]::' \
+    '--in[Specify input format: hurl or curl]::' \
+    '--no-color[Do not colorize output]::' \
+    '-o[Write to FILE instead of stdout]::_files' \
+    '--output[Write to FILE instead of stdout]::_files' \
+    '--out[Specify output format: hurl, json or html]::' \
+    '--standalone[Standalone HTML]::' \
+    '--help[Print help]'     '--version[Print version]'     '*:file:_files' \
     && ret=0
 }
 

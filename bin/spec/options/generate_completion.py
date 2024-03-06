@@ -62,13 +62,13 @@ _"""
     fi
 
     local context curcontext="$curcontext" state line
-    _arguments "${_arguments_options[@]}" \
+    _arguments "${_arguments_options[@]}" \\\n\
     """
-        + """\n    """.join([zsh_option(option) for option in options])
+        + """\n    """.join([argument for option in options for argument in zsh_option(option)])
         + """
     '--help[Print help]' \
     '--version[Print version]' \
-    '*::params:' \\
+    '*:file:_files' \\
     && ret=0
 }
 
@@ -101,13 +101,21 @@ fi"""
 
 
 def zsh_option(option: Option):
-    return (
-        "'--"
-        + option.long
-        + "["
-        + option.help.replace("[", "\[").replace("]", "\]")
-        + "]: : ' \\"
-    )
+    arguments = []
+    help = option.help.replace("[", r"\[").replace("]", r"\]")
+    if option.value == "FILE":
+        action = '_files'
+    else:
+        action = ''
+    if option.append:
+        cardinality = '*'
+    else:
+        cardinality = ''
+    if option.short:
+        arguments.append(f"'{cardinality}-{option.short}[{help}]::{action}' \\")
+    if option.long:
+        arguments.append(f"'{cardinality}--{option.long}[{help}]::{action}' \\")
+    return arguments
 
 
 def generate_fish_completion(name: str, options: List[Option]):

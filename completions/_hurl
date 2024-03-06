@@ -14,63 +14,80 @@ _hurl() {
     fi
 
     local context curcontext="$curcontext" state line
-    _arguments "${_arguments_options[@]}"     '--aws-sigv4[Use AWS V4 signature authentication in the transfer]: : ' \
-    '--cacert[CA certificate to verify peer against (PEM format)]: : ' \
-    '--cert[Client certificate file and password]: : ' \
-    '--key[Private key file name]: : ' \
-    '--color[Colorize output]: : ' \
-    '--compressed[Request compressed response (using deflate or gzip)]: : ' \
-    '--connect-timeout[Maximum time allowed for connection]: : ' \
-    '--connect-to[For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead]: : ' \
-    '--continue-on-error[Continue executing requests even if an error occurs]: : ' \
-    '--cookie[Read cookies from FILE]: : ' \
-    '--cookie-jar[Write cookies to FILE after running the session (only for one session)]: : ' \
-    '--delay[Sets delay before each request.]: : ' \
-    '--error-format[Control the format of error messages]: : ' \
-    '--fail-at-end[Fail at end]: : ' \
-    '--file-root[Set root directory to import files \[default: current directory\]]: : ' \
-    '--location[Follow redirects]: : ' \
-    '--location-trusted[Follow redirects but allows sending the name + password to all hosts that the site may redirect to.]: : ' \
-    '--glob[Specify input files that match the given GLOB. Multiple glob flags may be used]: : ' \
-    '--http1.0[Tell Hurl to use HTTP version 1.0]: : ' \
-    '--http1.1[Tell Hurl to use HTTP version 1.1]: : ' \
-    '--http2[Tell Hurl to use HTTP version 2]: : ' \
-    '--http3[Tell Hurl to use HTTP version 3]: : ' \
-    '--ignore-asserts[Ignore asserts defined in the Hurl file]: : ' \
-    '--include[Include the HTTP headers in the output]: : ' \
-    '--insecure[Allow insecure SSL connections]: : ' \
-    '--interactive[Turn on interactive mode]: : ' \
-    '--ipv4[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]: : ' \
-    '--ipv6[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]: : ' \
-    '--json[Output each Hurl file result to JSON]: : ' \
-    '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]: : ' \
-    '--max-time[Maximum time allowed for the transfer]: : ' \
-    '--netrc[Must read .netrc for username and password]: : ' \
-    '--netrc-file[Specify FILE for .netrc]: : ' \
-    '--netrc-optional[Use either .netrc or the URL]: : ' \
-    '--no-color[Do not colorize output]: : ' \
-    '--no-output[Suppress output. By default, Hurl outputs the body of the last response]: : ' \
-    '--noproxy[List of hosts which do not use proxy]: : ' \
-    '--output[Write to FILE instead of stdout]: : ' \
-    '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]: : ' \
-    '--proxy[Use proxy on given PROTOCOL/HOST/PORT]: : ' \
-    '--report-html[Generate HTML report to DIR]: : ' \
-    '--report-junit[Write a JUnit XML report to FILE]: : ' \
-    '--report-tap[Write a TAP report to FILE]: : ' \
-    '--resolve[Provide a custom address for a specific HOST and PORT pair]: : ' \
-    '--retry[Maximum number of retries, 0 for no retries, -1 for unlimited retries]: : ' \
-    '--retry-interval[Interval in milliseconds before a retry]: : ' \
-    '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.]: : ' \
-    '--test[Activate test mode]: : ' \
-    '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]: : ' \
-    '--unix-socket[(HTTP) Connect through this Unix domain socket, instead of using the network]: : ' \
-    '--user[Add basic Authentication header to each request]: : ' \
-    '--user-agent[Specify the User-Agent string to send to the HTTP server]: : ' \
-    '--variable[Define a variable]: : ' \
-    '--variables-file[Define a properties file in which you define your variables]: : ' \
-    '--verbose[Turn on verbose]: : ' \
-    '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]: : ' \
-    '--help[Print help]'     '--version[Print version]'     '*::params:' \
+    _arguments "${_arguments_options[@]}" \
+    '--aws-sigv4[Use AWS V4 signature authentication in the transfer]::' \
+    '--cacert[CA certificate to verify peer against (PEM format)]::_files' \
+    '-E[Client certificate file and password]::' \
+    '--cert[Client certificate file and password]::' \
+    '--key[Private key file name]::' \
+    '--color[Colorize output]::' \
+    '--compressed[Request compressed response (using deflate or gzip)]::' \
+    '--connect-timeout[Maximum time allowed for connection]::' \
+    '*--connect-to[For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead]::' \
+    '--continue-on-error[Continue executing requests even if an error occurs]::' \
+    '-b[Read cookies from FILE]::_files' \
+    '--cookie[Read cookies from FILE]::_files' \
+    '-c[Write cookies to FILE after running the session (only for one session)]::_files' \
+    '--cookie-jar[Write cookies to FILE after running the session (only for one session)]::_files' \
+    '--delay[Sets delay before each request.]::' \
+    '--error-format[Control the format of error messages]::' \
+    '--fail-at-end[Fail at end]::' \
+    '--file-root[Set root directory to import files \[default: current directory\]]::' \
+    '-L[Follow redirects]::' \
+    '--location[Follow redirects]::' \
+    '--location-trusted[Follow redirects but allows sending the name + password to all hosts that the site may redirect to.]::' \
+    '*--glob[Specify input files that match the given GLOB. Multiple glob flags may be used]::' \
+    '-0[Tell Hurl to use HTTP version 1.0]::' \
+    '--http1.0[Tell Hurl to use HTTP version 1.0]::' \
+    '--http1.1[Tell Hurl to use HTTP version 1.1]::' \
+    '--http2[Tell Hurl to use HTTP version 2]::' \
+    '--http3[Tell Hurl to use HTTP version 3]::' \
+    '--ignore-asserts[Ignore asserts defined in the Hurl file]::' \
+    '-i[Include the HTTP headers in the output]::' \
+    '--include[Include the HTTP headers in the output]::' \
+    '-k[Allow insecure SSL connections]::' \
+    '--insecure[Allow insecure SSL connections]::' \
+    '--interactive[Turn on interactive mode]::' \
+    '-4[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]::' \
+    '--ipv4[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]::' \
+    '-6[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]::' \
+    '--ipv6[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]::' \
+    '--json[Output each Hurl file result to JSON]::' \
+    '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]::' \
+    '-m[Maximum time allowed for the transfer]::' \
+    '--max-time[Maximum time allowed for the transfer]::' \
+    '-n[Must read .netrc for username and password]::' \
+    '--netrc[Must read .netrc for username and password]::' \
+    '--netrc-file[Specify FILE for .netrc]::_files' \
+    '--netrc-optional[Use either .netrc or the URL]::' \
+    '--no-color[Do not colorize output]::' \
+    '--no-output[Suppress output. By default, Hurl outputs the body of the last response]::' \
+    '--noproxy[List of hosts which do not use proxy]::' \
+    '-o[Write to FILE instead of stdout]::_files' \
+    '--output[Write to FILE instead of stdout]::_files' \
+    '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]::' \
+    '-x[Use proxy on given PROTOCOL/HOST/PORT]::' \
+    '--proxy[Use proxy on given PROTOCOL/HOST/PORT]::' \
+    '--report-html[Generate HTML report to DIR]::' \
+    '--report-junit[Write a JUnit XML report to FILE]::_files' \
+    '--report-tap[Write a TAP report to FILE]::_files' \
+    '*--resolve[Provide a custom address for a specific HOST and PORT pair]::' \
+    '--retry[Maximum number of retries, 0 for no retries, -1 for unlimited retries]::' \
+    '--retry-interval[Interval in milliseconds before a retry]::' \
+    '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.]::' \
+    '--test[Activate test mode]::' \
+    '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]::' \
+    '--unix-socket[(HTTP) Connect through this Unix domain socket, instead of using the network]::' \
+    '-u[Add basic Authentication header to each request]::' \
+    '--user[Add basic Authentication header to each request]::' \
+    '-A[Specify the User-Agent string to send to the HTTP server]::' \
+    '--user-agent[Specify the User-Agent string to send to the HTTP server]::' \
+    '*--variable[Define a variable]::' \
+    '*--variables-file[Define a properties file in which you define your variables]::_files' \
+    '-v[Turn on verbose]::' \
+    '--verbose[Turn on verbose]::' \
+    '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]::' \
+    '--help[Print help]'     '--version[Print version]'     '*:file:_files' \
     && ret=0
 }
 
