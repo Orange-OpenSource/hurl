@@ -64,7 +64,9 @@ _"""
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \\\n\
     """
-        + """\n    """.join([argument for option in options for argument in zsh_option(option)])
+        + """\n    """.join(
+            [argument for option in options for argument in zsh_option(option)]
+        )
         + """
     '--help[Print help]' \
     '--version[Print version]' \
@@ -104,13 +106,13 @@ def zsh_option(option: Option):
     arguments = []
     help = option.help.replace("[", r"\[").replace("]", r"\]")
     if option.value == "FILE":
-        action = '_files'
+        action = "_files"
     else:
-        action = ''
+        action = ""
     if option.append:
-        cardinality = '*'
+        cardinality = "*"
     else:
-        cardinality = ''
+        cardinality = ""
     if option.short:
         arguments.append(f"'{cardinality}-{option.short}[{help}]::{action}' \\")
     if option.long:
