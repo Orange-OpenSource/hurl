@@ -1,5 +1,5 @@
 ﻿# This Hurl file begins with a BOM marker.
-# You can check it with 'hexdump -c bom.hurl'
+# You can check it with 'hexdump -C bom.hurl'
 GET http://localhost:8000/utf8_bom
 
 HTTP 200

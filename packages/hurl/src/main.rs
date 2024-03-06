@@ -264,9 +264,9 @@ fn exit_code(runs: &[HurlRun]) -> i32 {
 fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
-            return Err(cli::CliError {
-                message: format!("Issue writing to {filename}: {why:?}"),
-            });
+            return Err(cli::CliError::IO(format!(
+                "Issue writing to {filename}: {why:?}"
+            )));
         }
         Ok(file) => file,
     };
@@ -277,9 +277,7 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
     .to_string();
     match runs.first() {
         None => {
-            return Err(cli::CliError {
-                message: "Issue fetching results".to_string(),
-            });
+            return Err(cli::CliError::IO("Issue fetching results".to_string()));
         }
         Some(run) => {
             for cookie in run.hurl_result.cookies.iter() {
@@ -290,9 +288,9 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(cli::CliError {
-            message: format!("Issue writing to {filename}: {why:?}"),
-        });
+        return Err(cli::CliError::IO(format!(
+            "Issue writing to {filename}: {why:?}"
+        )));
     }
     Ok(())
 }

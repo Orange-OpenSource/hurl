@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
+use crate::cli::CliError;
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
-
-use crate::cli::CliError;
 
 /// Remove BOM from the input bytes
 fn strip_bom(bytes: &mut Vec<u8>) {
@@ -34,42 +33,21 @@ fn strip_bom(bytes: &mut Vec<u8>) {
 pub fn read_to_string(filename: &str) -> Result<String, CliError> {
     if filename == "-" {
         let mut contents = String::new();
-        return if let Err(e) = std::io::stdin().read_to_string(&mut contents) {
-            Err(CliError {
-                message: format!("Input stream can not be read - {e}"),
-            })
-        } else {
-            return Ok(contents);
-        };
+        std::io::stdin().read_to_string(&mut contents)?;
+        return Ok(contents);
     }
-
-    let mut f = match File::open(filename) {
-        Ok(f) => f,
-        Err(e) => {
-            return Err(CliError {
-                message: e.to_string(),
-            })
-        }
-    };
-    let metadata = fs::metadata(filename).expect("unable to read metadata");
+    let mut f = File::open(filename)?;
+    let metadata = fs::metadata(filename).unwrap();
     let mut buffer = vec![0; metadata.len() as usize];
-    if let Err(e) = f.read(&mut buffer) {
-        return Err(CliError {
-            message: e.to_string(),
-        });
-    }
+    f.read_exact(&mut buffer)?;
     string_from_utf8(buffer)
 }
 
-pub fn string_from_utf8(buffer: Vec<u8>) -> Result<String, CliError> {
+fn string_from_utf8(buffer: Vec<u8>) -> Result<String, CliError> {
     let mut buffer = buffer;
     strip_bom(&mut buffer);
-    match String::from_utf8(buffer) {
-        Ok(s) => Ok(s),
-        Err(e) => Err(CliError {
-            message: e.to_string(),
-        }),
-    }
+    let s = String::from_utf8(buffer)?;
+    Ok(s)
 }
 
 #[cfg(test)]
@@ -106,9 +84,7 @@ pub mod tests {
         );
         assert_eq!(
             string_from_utf8(vec![0xef]).err().unwrap(),
-            CliError {
-                message: "incomplete utf-8 byte sequence from index 0".to_string()
-            }
+            CliError::IO("incomplete utf-8 byte sequence from index 0".to_string()),
         );
     }
 }

@@ -15,54 +15,42 @@
  * limitations under the License.
  *
  */
-use std::error::Error;
-use std::fmt;
+use hurl::report;
+use std::string::FromUtf8Error;
+use std::{fmt, io};
 
-use hurl::{output, report};
-
+#[allow(unused)]
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CliError {
-    pub message: String,
+pub enum CliError {
+    IO(String),
+    Parsing,
+    Runtime(String),
 }
 
-impl From<Box<dyn Error>> for CliError {
-    fn from(e: Box<dyn Error>) -> Self {
-        Self {
-            message: format!("{e:?}"),
-        }
+impl From<io::Error> for CliError {
+    fn from(error: io::Error) -> Self {
+        CliError::IO(error.to_string())
     }
 }
 
-impl From<&str> for CliError {
-    fn from(e: &str) -> Self {
-        Self {
-            message: e.to_string(),
-        }
-    }
-}
-
-impl From<String> for CliError {
-    fn from(e: String) -> Self {
-        Self { message: e }
+impl From<FromUtf8Error> for CliError {
+    fn from(error: FromUtf8Error) -> Self {
+        CliError::IO(error.to_string())
     }
 }
 
 impl From<report::Error> for CliError {
-    fn from(e: report::Error) -> Self {
-        Self { message: e.message }
-    }
-}
-
-impl From<output::Error> for CliError {
-    fn from(e: output::Error) -> Self {
-        Self {
-            message: e.to_string(),
-        }
+    fn from(error: report::Error) -> Self {
+        CliError::IO(error.message)
     }
 }
 
 impl fmt::Display for CliError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
+        match self {
+            CliError::IO(message) => write!(f, "{}", message),
+            CliError::Parsing => Ok(()),
+            CliError::Runtime(message) => write!(f, "{}", message),
+        }
     }
 }
