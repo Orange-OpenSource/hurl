@@ -69,7 +69,7 @@ pub mod tests {
             Value::Number(Number::Integer(0))
         );
 
-        let now_plus_30hours = now + Duration::hours(30);
+        let now_plus_30hours = now + Duration::try_hours(30).unwrap();
         assert_eq!(
             eval_filter(
                 &Filter {

@@ -626,7 +626,7 @@ mod tests {
     #[test]
     fn grid_vert_lines_svg() {
         let start = Utc.with_ymd_and_hms(2022, 1, 1, 8, 0, 0).unwrap();
-        let end = start + Duration::seconds(1);
+        let end = start + Duration::try_seconds(1).unwrap();
         let times = Interval { start, end };
         let start = 0.px();
         let end = 1000.px();

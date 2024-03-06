@@ -18,7 +18,7 @@
 use std::io::Write;
 use std::path::Path;
 
-use chrono::{DateTime, Local, NaiveDateTime};
+use chrono::{DateTime, Local};
 
 use crate::report::html::{HTMLResult, Testcase};
 use crate::report::Error;
@@ -153,8 +153,9 @@ fn create_html_table_row(result: &HTMLResult) -> String {
     let displayed_time = if timestamp == 0 {
         "-".to_string()
     } else {
-        NaiveDateTime::from_timestamp_opt(timestamp, 0)
+        DateTime::from_timestamp(timestamp, 0)
             .unwrap()
+            .naive_local()
             .and_local_timezone(Local)
             .unwrap()
             .to_rfc3339()
