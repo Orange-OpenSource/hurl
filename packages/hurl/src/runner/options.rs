@@ -35,7 +35,7 @@ pub fn get_entry_options(
     entry: &Entry,
     runner_options: &RunnerOptions,
     variables: &mut HashMap<String, Value>,
-    logger: &Logger,
+    logger: &mut Logger,
 ) -> Result<RunnerOptions, Error> {
     let mut runner_options = runner_options.clone();
     if !has_options(entry) {
@@ -237,7 +237,7 @@ pub fn get_entry_options(
 }
 
 /// Logs an entry option.
-fn log_option(option: &EntryOption, logger: &Logger) {
+fn log_option(option: &EntryOption, logger: &mut Logger) {
     let name = option.kind.name();
     let value = option.kind.value_as_str();
     logger.debug(&format!("{name}: {value}"));

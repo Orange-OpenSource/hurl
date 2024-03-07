@@ -20,7 +20,7 @@ use crate::util::logger::Logger;
 
 impl Timings {
     /// Logs the response timings information.
-    pub fn log(&self, logger: &Logger) {
+    pub fn log(&self, logger: &mut Logger) {
         logger.debug_important("Timings:");
         logger.debug(&format!("begin: {}", self.begin_call));
         logger.debug(&format!("end: {}", self.end_call));

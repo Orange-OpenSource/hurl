@@ -101,7 +101,7 @@ impl Client {
         &mut self,
         request_spec: &RequestSpec,
         options: &ClientOptions,
-        logger: &Logger,
+        logger: &mut Logger,
     ) -> Result<Vec<Call>, HttpError> {
         let mut calls = vec![];
 
@@ -153,7 +153,7 @@ impl Client {
         &mut self,
         request_spec: &RequestSpec,
         options: &ClientOptions,
-        logger: &Logger,
+        logger: &mut Logger,
     ) -> Result<Call, HttpError> {
         // The handle can be mutated in this function: to start from a clean state, we reset it
         // prior to everything.
@@ -338,7 +338,7 @@ impl Client {
         &mut self,
         request_spec: &RequestSpec,
         options: &ClientOptions,
-        logger: &Logger,
+        logger: &mut Logger,
     ) -> Result<(String, Method), HttpError> {
         // Activates cookie engine.
         // See <https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html>

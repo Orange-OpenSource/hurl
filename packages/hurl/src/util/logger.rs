@@ -229,11 +229,11 @@ impl Default for LoggerOptionsBuilder {
 }
 
 impl Logger {
-    pub fn info(&self, message: &str) {
+    pub fn info(&mut self, message: &str) {
         self.term.eprintln(message);
     }
 
-    pub fn debug(&self, message: &str) {
+    pub fn debug(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
@@ -244,7 +244,7 @@ impl Logger {
         }
     }
 
-    pub fn debug_important(&self, message: &str) {
+    pub fn debug_important(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
@@ -256,7 +256,7 @@ impl Logger {
         }
     }
 
-    pub fn debug_curl(&self, message: &str) {
+    pub fn debug_curl(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
@@ -267,7 +267,7 @@ impl Logger {
         }
     }
 
-    pub fn debug_error<E: Error>(&self, content: &str, error: &E, entry_src_info: SourceInfo) {
+    pub fn debug_error<E: Error>(&mut self, content: &str, error: &E, entry_src_info: SourceInfo) {
         if self.verbosity.is_none() {
             return;
         }
@@ -281,7 +281,7 @@ impl Logger {
         split_lines(&message).iter().for_each(|l| self.debug(l));
     }
 
-    pub fn debug_headers_in(&self, headers: &[(&str, &str)]) {
+    pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {
         if self.verbosity.is_none() {
             return;
         }
@@ -296,7 +296,7 @@ impl Logger {
         self.term.eprintln("<");
     }
 
-    pub fn debug_headers_out(&self, headers: &[(&str, &str)]) {
+    pub fn debug_headers_out(&mut self, headers: &[(&str, &str)]) {
         if self.verbosity.is_none() {
             return;
         }
@@ -311,7 +311,7 @@ impl Logger {
         self.term.eprintln(">");
     }
 
-    pub fn debug_status_version_in(&self, line: &str) {
+    pub fn debug_status_version_in(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
         }
@@ -322,7 +322,7 @@ impl Logger {
         }
     }
 
-    pub fn warning(&self, message: &str) {
+    pub fn warning(&mut self, message: &str) {
         if self.color {
             self.term.eprintln(&format!(
                 "{}: {}",
@@ -334,7 +334,7 @@ impl Logger {
         }
     }
 
-    pub fn error(&self, message: &str) {
+    pub fn error(&mut self, message: &str) {
         if self.color {
             self.term
                 .eprintln(&format!("{}: {}", "error".red().bold(), message.bold()));
@@ -343,13 +343,13 @@ impl Logger {
         }
     }
 
-    pub fn error_parsing_rich<E: Error>(&self, content: &str, error: &E) {
+    pub fn error_parsing_rich<E: Error>(&mut self, content: &str, error: &E) {
         let message = error_string(&self.filename, content, error, None, self.color);
         self.error_rich(&message);
     }
 
     pub fn error_runtime_rich<E: Error>(
-        &self,
+        &mut self,
         content: &str,
         error: &E,
         entry_src_info: SourceInfo,
@@ -364,7 +364,7 @@ impl Logger {
         self.error_rich(&message);
     }
 
-    fn error_rich(&self, message: &str) {
+    fn error_rich(&mut self, message: &str) {
         if self.color {
             self.term
                 .eprintln(&format!("{}: {message}\n", "error".red().bold()));
@@ -373,7 +373,7 @@ impl Logger {
         }
     }
 
-    pub fn debug_method_version_out(&self, line: &str) {
+    pub fn debug_method_version_out(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
         }
@@ -384,7 +384,7 @@ impl Logger {
         }
     }
 
-    pub fn capture(&self, name: &str, value: &Value) {
+    pub fn capture(&mut self, name: &str, value: &Value) {
         if self.verbosity.is_none() {
             return;
         }
@@ -401,7 +401,7 @@ impl Logger {
 }
 
 impl Term {
-    fn eprintln_prefix(&self, prefix: &str, message: &str) {
+    fn eprintln_prefix(&mut self, prefix: &str, message: &str) {
         if message.is_empty() {
             self.eprintln(prefix);
         } else {

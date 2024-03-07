@@ -19,6 +19,7 @@
 #[derive(Clone)]
 pub struct Term {
     mode: WriteMode,
+    stderr: String,
 }
 
 #[allow(dead_code)]
@@ -28,15 +29,46 @@ pub enum WriteMode {
     Buffered,
 }
 
+/// Represents a terminal and acts as an indirection for standard output / error.
+/// Depending on `mode`, messages are immediately printed to standard output /error, or buffered
+/// in strings.
 impl Term {
+    /// Creates a new terminal.
     pub fn new(mode: WriteMode) -> Self {
-        Term { mode }
+        Term {
+            mode,
+            stderr: String::new(),
+        }
     }
 
-    pub fn eprintln(&self, message: &str) {
+    /// Prints to the standard error, with a newline.
+    pub fn eprintln(&mut self, message: &str) {
         match self.mode {
             WriteMode::Immediate => eprintln!("{message}"),
-            WriteMode::Buffered => {}
+            WriteMode::Buffered => {
+                self.stderr.push_str(message);
+                self.stderr.push('\n');
+            }
         }
+    }
+
+    #[allow(dead_code)]
+    /// Returns the buffered standard error.
+    pub fn stderr(&self) -> &str {
+        &self.stderr
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::util::term::{Term, WriteMode};
+
+    #[test]
+    fn term_buffered() {
+        let mut term = Term::new(WriteMode::Buffered);
+        term.eprintln("toto");
+        term.eprintln("tutu");
+
+        assert_eq!(term.stderr(), "toto\ntutu\n")
     }
 }

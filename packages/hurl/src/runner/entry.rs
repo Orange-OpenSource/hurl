@@ -43,7 +43,7 @@ pub fn run(
     http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
     runner_options: &RunnerOptions,
-    logger: &Logger,
+    logger: &mut Logger,
 ) -> EntryResult {
     let compressed = runner_options.compressed;
     let source_info = entry.source_info();
@@ -240,7 +240,7 @@ fn log_request(
     request: &http::RequestSpec,
     runner_options: &RunnerOptions,
     client_options: &ClientOptions,
-    logger: &Logger,
+    logger: &mut Logger,
 ) {
     logger.debug("");
     logger.debug_important("Cookie store:");
@@ -289,7 +289,7 @@ fn log_request(
 }
 
 /// Logs the `captures` from the entry HTTP response.
-fn log_captures(captures: &[CaptureResult], logger: &Logger) {
+fn log_captures(captures: &[CaptureResult], logger: &mut Logger) {
     if captures.is_empty() {
         return;
     }

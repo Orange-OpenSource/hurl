@@ -26,7 +26,7 @@ use encoding::DecoderTrap;
 /// request. For an HTTP response, see `[crate::http::Response::log_body]`.
 /// If `debug` is true, logs are printed using debug (with * prefix), otherwise logs are printed
 /// in info.
-pub fn log_body(body: &[u8], headers: &HeaderVec, debug: bool, logger: &Logger) {
+pub fn log_body(body: &[u8], headers: &HeaderVec, debug: bool, logger: &mut Logger) {
     if let Some(content_type) = headers.content_type() {
         if !mimetype::is_kind_of_text(content_type) {
             log_bytes(body, 64, debug, logger);
@@ -49,7 +49,7 @@ pub fn log_body(body: &[u8], headers: &HeaderVec, debug: bool, logger: &Logger) 
 }
 
 /// Debug log text.
-pub fn log_text(text: &str, debug: bool, logger: &Logger) {
+pub fn log_text(text: &str, debug: bool, logger: &mut Logger) {
     if text.is_empty() {
         if debug {
             logger.debug("");
@@ -67,7 +67,7 @@ pub fn log_text(text: &str, debug: bool, logger: &Logger) {
 }
 
 /// Debug log `bytes` with a maximum size of `max` bytes.
-pub fn log_bytes(bytes: &[u8], max: usize, debug: bool, logger: &Logger) {
+pub fn log_bytes(bytes: &[u8], max: usize, debug: bool, logger: &mut Logger) {
     let bytes = if bytes.len() > max {
         &bytes[..max]
     } else {

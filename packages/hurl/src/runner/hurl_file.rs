@@ -93,7 +93,7 @@ pub fn run(
     };
 
     // Now, we have a syntactically correct HurlFile instance, we can run it.
-    log_run_info(&hurl_file, runner_options, variables, &logger);
+    log_run_info(&hurl_file, runner_options, variables, &mut logger);
 
     let result = run_entries(
         &hurl_file.entries,
@@ -321,7 +321,7 @@ fn is_success(entries: &[EntryResult]) -> bool {
 }
 
 /// Logs deprecated syntax and provides alternatives.
-fn warn_deprecated(entry: &Entry, logger: &Logger) {
+fn warn_deprecated(entry: &Entry, logger: &mut Logger) {
     // HTTP/* is used instead of HTTP.
     if let Some(response) = &entry.response {
         let filename = &logger.filename;
@@ -330,12 +330,7 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
         let line = &source_info.start.line;
         let column = &source_info.start.column;
         if version.value == VersionAnyLegacy {
-            logger.warning(
-                format!(
-                    "{filename}:{line}:{column} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead"
-                )
-                .as_str(),
-            );
+            logger.warning(&format!("{filename}:{line}:{column} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead"));
         }
     }
 
@@ -354,12 +349,7 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
         let line = &source_info.start.line;
         let column = &source_info.start.column;
         let template = template.to_string();
-        logger.warning(
-            format!(
-                "{filename}:{line}:{column} '```{template}```' request body is deprecated, please use '`{template}`' instead"
-            )
-            .as_str(),
-        );
+        logger.warning(&format!("{filename}:{line}:{column} '```{template}```' request body is deprecated, please use '`{template}`' instead"));
     }
 
     if let Some(Response {
@@ -441,7 +431,7 @@ fn log_run_info(
     hurl_file: &HurlFile,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
-    logger: &Logger,
+    logger: &mut Logger,
 ) {
     if logger.verbosity.is_some() {
         let non_default_options = get_non_default_options(runner_options);
@@ -470,7 +460,7 @@ fn log_run_info(
 
 /// Logs runner `errors`.
 /// If we're going to `retry` the entry, we log errors only in verbose. Otherwise, we log error on stderr.
-fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &Logger) {
+fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &mut Logger) {
     if retry {
         entry_result
             .errors

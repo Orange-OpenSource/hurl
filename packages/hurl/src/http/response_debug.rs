@@ -23,7 +23,7 @@ use crate::util::logger::Logger;
 
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.
-    pub fn log_body(&self, debug: bool, logger: &Logger) {
+    pub fn log_body(&self, debug: bool, logger: &mut Logger) {
         // We try to decode the HTTP body as text if the response has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we
         // print the body first 64 bytes.
@@ -39,7 +39,7 @@ impl Response {
         }
     }
 
-    pub fn log_info_all(&self, logger: &Logger) {
+    pub fn log_info_all(&self, logger: &mut Logger) {
         let status_line = self.get_status_line_headers(logger.color);
         logger.info(&status_line);
         self.log_body(false, logger);
