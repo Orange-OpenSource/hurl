@@ -64,14 +64,13 @@ _"""
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \\\n\
     """
-        + """\n    """.join(
-            [argument for option in options for argument in zsh_option(option)]
-        )
+        + """\n    """.join(zsh_option(option) for option in options)
         + """
-    '--help[Print help]' \
-    '--version[Print version]' \
+    '--help[Print help]' \\
+    '--version[Print version]' \\
     '*:file:_files' \\
     && ret=0
+
 }
 
 (( $+functions[_"""
@@ -103,21 +102,36 @@ fi"""
 
 
 def zsh_option(option: Option):
-    arguments = []
     help = option.help.replace("[", r"\[").replace("]", r"\]")
-    if option.value == "FILE":
-        action = "_files"
-    else:
-        action = ""
+    option_specifier = ""
+    cardinality = ""
+    action = ""
+
+    # TODO: Handle conflicting arguments like --color/--no-color
+
     if option.append:
         cardinality = "*"
+
+    if option.value == "FILE" or option.value == "PATH":
+        action = ": :_files"
+    # This ensures that the completion waits for user input
+    # TODO: Either check for a pattern using _guard
+    #       Or display a help message using _message
+    elif option.value:
+        action = ": :"
+
+    if option.short and option.long:
+        option_specifier = (
+            f"(-{option.short} --{option.long})'{{-{option.short},--{option.long}}}'"
+        )
+    elif option.long:
+        option_specifier = f"--{option.long}"
+    elif option.short:
+        option_specifier = f"-{option.short}"
     else:
-        cardinality = ""
-    if option.short:
-        arguments.append(f"'{cardinality}-{option.short}[{help}]::{action}' \\")
-    if option.long:
-        arguments.append(f"'{cardinality}--{option.long}[{help}]::{action}' \\")
-    return arguments
+        raise ValueError("No long or short option specified")
+
+    return f"'{cardinality}{option_specifier}[{help}]{action}' \\"
 
 
 def generate_fish_completion(name: str, options: List[Option]):
