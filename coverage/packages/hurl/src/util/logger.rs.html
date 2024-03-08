@@ -3749,7 +3749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn info(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn info(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3989,7 +3989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_important(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_important(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4181,7 +4181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_curl(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_curl(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4357,7 +4357,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_error&lt;E: Error&gt;(&amp;self, content: &amp;str, error: &amp;E, entry_src_info: SourceInfo) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_error&lt;E: Error&gt;(&amp;mut self, content: &amp;str, error: &amp;E, entry_src_info: SourceInfo) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4581,7 +4581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_headers_in(&amp;self, headers: &amp;[(&amp;str, &amp;str)]) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_headers_in(&amp;mut self, headers: &amp;[(&amp;str, &amp;str)]) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_headers_out(&amp;self, headers: &amp;[(&amp;str, &amp;str)]) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_headers_out(&amp;mut self, headers: &amp;[(&amp;str, &amp;str)]) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5061,7 +5061,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_status_version_in(&amp;self, line: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_status_version_in(&amp;mut self, line: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5237,7 +5237,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn warning(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn warning(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5429,7 +5429,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    pub fn error(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    pub fn error(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5573,7 +5573,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn error_parsing_rich&lt;E: Error&gt;(&amp;self, content: &amp;str, error: &amp;E) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn error_parsing_rich&lt;E: Error&gt;(&amp;mut self, content: &amp;str, error: &amp;E) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5669,7 +5669,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &amp;self,</pre>
+                <pre class="has-background-success-light py-0 px-2">        &amp;mut self,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5909,7 +5909,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn error_rich(&amp;self, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn error_rich(&amp;mut self, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6053,7 +6053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn debug_method_version_out(&amp;self, line: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn debug_method_version_out(&amp;mut self, line: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6229,7 +6229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn capture(&amp;self, name: &amp;str, value: &amp;Value) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn capture(&amp;mut self, name: &amp;str, value: &amp;Value) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6501,7 +6501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn eprintln_prefix(&amp;self, prefix: &amp;str, message: &amp;str) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn eprintln_prefix(&amp;mut self, prefix: &amp;str, message: &amp;str) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14075,7 +14075,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-03-07 08:08</p>
+                <p class="heading">Date: 2024-03-08 08:08</p>
             </div>
         </footer>
     </body>
