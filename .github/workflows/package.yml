@@ -598,3 +598,42 @@ jobs:
         path: |
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*.zip
+
+  package-anatomy:
+    needs:
+      - package-generic-linux-x64
+      - package-deb-x64
+      - package-macos-x64
+      - package-macos-aarch64
+      - package-windows-x64
+    name: package-anatomy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: actions/download-artifact@v4.1.4
+        with:
+          path: artifacts
+      - name: Prerequisites
+        if: ${{ always() }}
+        run: sudo apt-get install -y -qq --silent icdiff >/dev/null
+      - name: Package generic linux x64 anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-generic-linux-x64-artifacts/hurl-*-x86_64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
+      - name: Package deb x64 anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-deb-x64-artifacts/hurl_*_amd64.deb --compare-with-dir docs/spec/packages
+      - name: Package macos x64 anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-macos-x64-artifacts/hurl-*-x86_64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
+      - name: Package macos aarch64 anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-macos-aarch64-artifacts/hurl-*-aarch64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
+      - name: Package windows x64 installer anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc-installer.exe --compare-with-dir docs/spec/packages
+      - name: Package windows x64 zip anatomy
+        if: ${{ always() }}
+        run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc.zip --compare-with-dir docs/spec/packages
