@@ -1,0 +1,13 @@
+[semver pattern: hurl-x.y.z-aarch64-apple-darwin.tar.gz]
+[elements: total 10, dirs 4, files 4, empty-files 0]
+
+attr        user_group    type  file
+-------     ----------    ----  ----
+drwxr-xr-x  runner/staff  dir   hurl-x.y.z-aarch64-apple-darwin/
+drwxr-xr-x  runner/staff  dir   hurl-x.y.z-aarch64-apple-darwin/bin/
+-rwxr-xr-x  runner/staff  file  hurl-x.y.z-aarch64-apple-darwin/bin/hurl
+-rwxr-xr-x  runner/staff  file  hurl-x.y.z-aarch64-apple-darwin/bin/hurlfmt
+drwxr-xr-x  runner/staff  dir   hurl-x.y.z-aarch64-apple-darwin/man/
+drwxr-xr-x  runner/staff  dir   hurl-x.y.z-aarch64-apple-darwin/man/man1/
+-rw-r--r--  runner/staff  file  hurl-x.y.z-aarch64-apple-darwin/man/man1/hurl.1.gz
+-rw-r--r--  runner/staff  file  hurl-x.y.z-aarch64-apple-darwin/man/man1/hurlfmt.1.gz

@@ -1,0 +1,18 @@
+[semver pattern: hurl_x.y.z_amd64.deb]
+[elements: total 15, dirs 7, files 6, empty-files 0]
+
+attr        user_group  type  file
+-------     ----------  ----  ----
+drwxr-xr-x  root/root   dir   ./usr/
+drwxr-xr-x  root/root   dir   ./usr/bin/
+-rwxr-xr-x  root/root   file  ./usr/bin/hurl
+-rwxr-xr-x  root/root   file  ./usr/bin/hurlfmt
+drwxr-xr-x  root/root   dir   ./usr/share/
+drwxr-xr-x  root/root   dir   ./usr/share/doc/
+drwxr-xr-x  root/root   dir   ./usr/share/doc/hurl/
+-rw-r--r--  root/root   file  ./usr/share/doc/hurl/changelog.Debian.gz
+-rw-r--r--  root/root   file  ./usr/share/doc/hurl/copyright
+drwxr-xr-x  root/root   dir   ./usr/share/man/
+drwxr-xr-x  root/root   dir   ./usr/share/man/man1/
+-rw-r--r--  root/root   file  ./usr/share/man/man1/hurl.1.gz
+-rw-r--r--  root/root   file  ./usr/share/man/man1/hurlfmt.1.gz

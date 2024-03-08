@@ -1,0 +1,25 @@
+[semver pattern: hurl-x.y.z-x86_64-pc-windows-msvc-installer.exe]
+[elements: total 22, dirs 2, files 18, empty-files 0]
+
+attr     user_group  type  file
+-------  ----------  ----  ----
+-------  ---         dir   $PLUGINSDIR/
+-------  ---         file  $PLUGINSDIR/EnVar.dll
+-------  ---         file  $PLUGINSDIR/System.dll
+-------  ---         file  $PLUGINSDIR/modern-header.bmp
+-------  ---         file  $PLUGINSDIR/modern-wizard.bmp
+-------  ---         file  $PLUGINSDIR/nsDialogs.dll
+-------  ---         file  CHANGELOG.md
+-------  ---         file  LICENSE
+-------  ---         file  README.md
+-------  ---         dir   completions/
+-------  ---         file  completions/_hurl.ps1
+-------  ---         file  completions/_hurlfmt.ps1
+-------  ---         file  hurl.exe
+-------  ---         file  hurlfmt.exe
+-------  ---         file  iconv-2.dll
+-------  ---         file  libcurl.dll
+-------  ---         file  libxml2.dll
+-------  ---         file  nghttp2.dll
+-------  ---         file  version.txt
+-------  ---         file  zlib1.dll

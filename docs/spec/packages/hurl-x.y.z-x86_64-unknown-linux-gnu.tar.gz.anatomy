@@ -1,0 +1,13 @@
+[semver pattern: hurl-x.y.z-x86_64-unknown-linux-gnu.tar.gz]
+[elements: total 10, dirs 4, files 4, empty-files 0]
+
+attr        user_group     type  file
+-------     ----------     ----  ----
+drwxr-xr-x  runner/docker  dir   hurl-x.y.z-x86_64-unknown-linux-gnu/
+drwxr-xr-x  runner/docker  dir   hurl-x.y.z-x86_64-unknown-linux-gnu/bin/
+-rwxr-xr-x  runner/docker  file  hurl-x.y.z-x86_64-unknown-linux-gnu/bin/hurl
+-rwxr-xr-x  runner/docker  file  hurl-x.y.z-x86_64-unknown-linux-gnu/bin/hurlfmt
+drwxr-xr-x  runner/docker  dir   hurl-x.y.z-x86_64-unknown-linux-gnu/man/
+drwxr-xr-x  runner/docker  dir   hurl-x.y.z-x86_64-unknown-linux-gnu/man/man1/
+-rw-r--r--  runner/docker  file  hurl-x.y.z-x86_64-unknown-linux-gnu/man/man1/hurl.1.gz
+-rw-r--r--  runner/docker  file  hurl-x.y.z-x86_64-unknown-linux-gnu/man/man1/hurlfmt.1.gz

@@ -1,0 +1,19 @@
+[semver pattern: hurl-x.y.z-x86_64-pc-windows-msvc.zip]
+[elements: total 16, dirs 0, files 14, empty-files 0]
+
+attr     user_group  type  file
+-------  ----------  ----  ----
+-rw----  defN        file  CHANGELOG.md
+-rw----  defN        file  CONTRIBUTING.md
+-rw----  defN        file  README.md
+-rw----  defN        file  RELEASING.md
+-rw----  defN        file  completions/_hurl.ps1
+-rw----  defN        file  completions/_hurlfmt.ps1
+-rwx---  defN        file  hurl.exe
+-rwx---  defN        file  hurlfmt.exe
+-rw----  defN        file  iconv-2.dll
+-rw----  defN        file  libcurl.dll
+-rw----  defN        file  libxml2.dll
+-rw----  defN        file  nghttp2.dll
+-rw----  defN        file  version.txt
+-rw----  defN        file  zlib1.dll
