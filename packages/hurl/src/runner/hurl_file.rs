@@ -29,6 +29,7 @@ use crate::http::{Call, Client};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
+use crate::util::term::{Stderr, WriteMode};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -78,7 +79,24 @@ pub fn run(
     variables: &HashMap<String, Value>,
     logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
-    let mut logger = Logger::from(logger_options);
+    // In this method, we run Hurl content sequentially, so we create a logger that prints debug
+    // message immediately (in parallel mode, we'll us buffered standard output and error).
+    let color = logger_options.color;
+    let error_format = logger_options.error_format;
+    let filename = &logger_options.filename;
+    let verbosity = logger_options.verbosity;
+    let progress_bar = logger_options.progress_bar;
+    let test = logger_options.test;
+    let stderr = Stderr::new(WriteMode::Immediate);
+    let mut logger = Logger::new(
+        color,
+        error_format,
+        filename,
+        progress_bar,
+        test,
+        verbosity,
+        stderr,
+    );
 
     logger.test_running(logger_options.current + 1, logger_options.total);
 

@@ -17,4 +17,4 @@
  */
 pub mod logger;
 pub mod path;
-mod term;
+pub mod term;

@@ -22,7 +22,7 @@ use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
 use crate::runner::{HurlResult, Value};
-use crate::util::term::{Stderr, WriteMode};
+use crate::util::term::Stderr;
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 /// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
@@ -101,20 +101,6 @@ pub struct Logger {
     pub(crate) test: bool,
     pub(crate) verbosity: Option<Verbosity>,
     term: Stderr,
-}
-
-impl From<&LoggerOptions> for Logger {
-    fn from(options: &LoggerOptions) -> Self {
-        Logger {
-            color: options.color,
-            error_format: options.error_format,
-            filename: options.filename.clone(),
-            progress_bar: options.progress_bar,
-            test: options.test,
-            verbosity: options.verbosity,
-            term: Stderr::new(WriteMode::Immediate),
-        }
-    }
 }
 
 pub struct LoggerOptions {
@@ -229,6 +215,27 @@ impl Default for LoggerOptionsBuilder {
 }
 
 impl Logger {
+    /// Creates a new instance.
+    pub fn new(
+        color: bool,
+        error_format: ErrorFormat,
+        filename: &str,
+        progress_bar: bool,
+        test: bool,
+        verbosity: Option<Verbosity>,
+        term: Stderr,
+    ) -> Self {
+        Logger {
+            color,
+            error_format,
+            filename: filename.to_string(),
+            progress_bar,
+            test,
+            verbosity,
+            term,
+        }
+    }
+
     pub fn info(&mut self, message: &str) {
         self.term.eprintln(message);
     }
