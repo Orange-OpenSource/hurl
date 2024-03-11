@@ -42,6 +42,7 @@ mod options;
 mod output;
 mod predicate;
 mod predicate_value;
+mod progress;
 mod query;
 mod regex;
 mod request;

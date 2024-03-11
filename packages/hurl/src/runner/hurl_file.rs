@@ -26,6 +26,7 @@ use hurl_core::error::Error;
 use hurl_core::parser;
 
 use crate::http::{Call, Client};
+use crate::runner::progress::{Progress, SeqProgress};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
@@ -80,25 +81,30 @@ pub fn run(
     logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
     // In this method, we run Hurl content sequentially, so we create a logger that prints debug
-    // message immediately (in parallel mode, we'll us buffered standard output and error).
+    // message immediately (in parallel mode, we'll use buffered standard output and error).
     let color = logger_options.color;
     let error_format = logger_options.error_format;
     let filename = &logger_options.filename;
     let verbosity = logger_options.verbosity;
-    let progress_bar = logger_options.progress_bar;
-    let test = logger_options.test;
     let stderr = Stderr::new(WriteMode::Immediate);
-    let mut logger = Logger::new(
-        color,
-        error_format,
+    let mut logger = Logger::new(color, error_format, filename, verbosity, stderr);
+
+    // Create a progress bar for the sequential run, progress will be report in the main thread,
+    // as soon as an entry is executed.
+    let current_file = logger_options.current_file;
+    let total_files = logger_options.total_files;
+    let test = logger_options.test;
+    let progress_bar = logger_options.progress_bar;
+    let progress = SeqProgress::new(
         filename,
-        progress_bar,
+        current_file,
+        total_files,
         test,
-        verbosity,
-        stderr,
+        progress_bar,
+        color,
     );
 
-    logger.test_running(logger_options.current + 1, logger_options.total);
+    progress.on_start(&mut logger.stderr);
 
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
@@ -118,22 +124,27 @@ pub fn run(
         content,
         runner_options,
         variables,
+        &progress,
         &mut logger,
     );
 
-    logger.test_completed(&result);
+    progress.on_completed(&result, &mut logger.stderr);
 
     Ok(result)
 }
 
 /// Runs a list of `entries` and returns a [`HurlResult`] upon completion.
+///
 /// `content` is the original source content, used to construct `entries`. It is used to construct
 /// rich error messages with annotated source code.
+/// New entry run events are reported to `progress` and are usually used to
+/// display a progress bar in test mode.
 fn run_entries(
     entries: &[Entry],
     content: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
+    progress: &dyn Progress,
     logger: &mut Logger,
 ) -> HurlResult {
     let mut http_client = Client::new();
@@ -167,9 +178,9 @@ fn run_entries(
             }
         }
 
-        // We compute the new logger for this entry, before entering into the `run` function because
-        // entry options can modify the logger and we want the preamble "Executing entry..." to be
-        // displayed based on the entry level verbosity.
+        // We compute the new logger verbosity for this entry, before entering into the `run`
+        // function because entry options can modify the logger verbosity and we want the preamble
+        // "Executing entry..." to be displayed based on the entry level verbosity.
         logger.verbosity = default_verbosity;
         let entry_verbosity = options::get_entry_verbosity(entry, default_verbosity, &variables);
         if let Ok(entry_verbosity) = entry_verbosity {
@@ -183,7 +194,7 @@ fn run_entries(
 
         warn_deprecated(entry, logger);
 
-        logger.test_progress(entry_index, n);
+        progress.on_entry(entry_index - 1, n, &mut logger.stderr);
 
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
@@ -239,7 +250,6 @@ fn run_entries(
         // error so any potential error is the last thing displayed to the user.
         // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
         // we first log the error and a potential warning about retrying.
-        logger.test_erase_line();
         if retry_max_reached {
             logger.debug_important("Retry max count reached, no more retry");
             logger.debug("");
@@ -284,9 +294,7 @@ fn run_entries(
             // If we retry the entry, we do not want to display a 'blank' progress bar during the
             // sleep delay. During the pause, we artificially show the previously erased progress
             // line.
-            logger.test_progress(entry_index, n);
             thread::sleep(retry_interval);
-            logger.test_erase_line();
             continue;
         }
 
@@ -317,12 +325,19 @@ fn run_entries(
     }
 }
 
-/// Returns `true` if all the entries ar successful, `false` otherwise.
+/// Returns `true` if all the entries results are successful, `false` otherwise.
 ///
-/// For a given list of entry, only the last one on the same index is checked.
+/// For a given list of entry results, only the last one on the same index is checked.
+///
 /// For instance:
-/// entry a:1, entry b:1, entry c:2, entry d:3, entry e:3
-/// Only the entry b, c and e are checked for the success state.
+///
+/// - `entry result a`: `entry index 1` (retried)
+/// - `entry result b`: `entry index 1`
+/// - `entry result c`: `entry index 2`
+/// - `entry result d`: `entry index 3` (retried)
+/// - `entry result e`: `entry index 3`
+///
+/// Only the entry result b, c and e are checked for the success state.
 fn is_success(entries: &[EntryResult]) -> bool {
     let mut next_entries = entries.iter().skip(1);
     for entry in entries.iter() {

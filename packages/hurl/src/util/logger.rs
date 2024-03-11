@@ -21,7 +21,7 @@ use colored::*;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
-use crate::runner::{HurlResult, Value};
+use crate::runner::Value;
 use crate::util::term::Stderr;
 
 /// A simple logger to log app related event (start, high levels error, etc...).
@@ -97,10 +97,8 @@ pub struct Logger {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,
     pub(crate) filename: String,
-    pub(crate) progress_bar: bool,
-    pub(crate) test: bool,
     pub(crate) verbosity: Option<Verbosity>,
-    term: Stderr,
+    pub(crate) stderr: Stderr,
 }
 
 pub struct LoggerOptions {
@@ -110,10 +108,13 @@ pub struct LoggerOptions {
     pub(crate) verbosity: Option<Verbosity>,
 
     // For --test reporting, will be cleaned later
-    pub(crate) progress_bar: bool,
     pub(crate) test: bool,
-    pub(crate) current: usize, // index of the running file in the total list files
-    pub(crate) total: usize,   // number of total files
+    pub(crate) progress_bar: bool,
+
+    /// 0-based index of the running file in the total list files
+    pub(crate) current_file: usize,
+    /// Total number of files of this run
+    pub(crate) total_files: usize,
 }
 
 pub struct LoggerOptionsBuilder {
@@ -122,10 +123,10 @@ pub struct LoggerOptionsBuilder {
     filename: String,
     verbosity: Option<Verbosity>,
 
-    progress_bar: bool,
     test: bool,
-    current: usize,
-    total: usize,
+    progress_bar: bool,
+    current_file: usize,
+    total_files: usize,
 }
 
 impl LoggerOptionsBuilder {
@@ -154,15 +155,15 @@ impl LoggerOptionsBuilder {
         self
     }
 
-    /// Sets progress bar.
-    pub fn progress_bar(&mut self, progress_bar: bool) -> &mut Self {
-        self.progress_bar = progress_bar;
+    /// Sets test mode.
+    pub fn test(&mut self, test: bool) -> &mut Self {
+        self.test = test;
         self
     }
 
-    /// Sets test.
-    pub fn test(&mut self, test: bool) -> &mut Self {
-        self.test = test;
+    /// Sets progress bar.
+    pub fn progress_bar(&mut self, progress_bar: bool) -> &mut Self {
+        self.progress_bar = progress_bar;
         self
     }
 
@@ -172,15 +173,15 @@ impl LoggerOptionsBuilder {
         self
     }
 
-    /// Set the index of the running file in the total list files
-    pub fn current(&mut self, current: usize) -> &mut Self {
-        self.current = current;
+    /// Set the 0-based index of the running file in the total list files.
+    pub fn current_file(&mut self, current: usize) -> &mut Self {
+        self.current_file = current;
         self
     }
 
-    /// Set the index of the running file in the total list files
-    pub fn total(&mut self, total: usize) -> &mut Self {
-        self.total = total;
+    /// Set total number of files of this run.
+    pub fn total_files(&mut self, total: usize) -> &mut Self {
+        self.total_files = total;
         self
     }
 
@@ -191,10 +192,10 @@ impl LoggerOptionsBuilder {
             error_format: self.error_format,
             filename: self.filename.clone(),
             verbosity: self.verbosity,
-            progress_bar: self.progress_bar,
             test: self.test,
-            current: self.current,
-            total: self.total,
+            progress_bar: self.progress_bar,
+            current_file: self.current_file,
+            total_files: self.total_files,
         }
     }
 }
@@ -205,11 +206,11 @@ impl Default for LoggerOptionsBuilder {
             color: false,
             error_format: ErrorFormat::Short,
             filename: String::new(),
-            progress_bar: false,
             test: false,
+            progress_bar: false,
             verbosity: None,
-            current: 0,
-            total: 0,
+            current_file: 0,
+            total_files: 0,
         }
     }
 }
@@ -220,8 +221,6 @@ impl Logger {
         color: bool,
         error_format: ErrorFormat,
         filename: &str,
-        progress_bar: bool,
-        test: bool,
         verbosity: Option<Verbosity>,
         term: Stderr,
     ) -> Self {
@@ -229,15 +228,13 @@ impl Logger {
             color,
             error_format,
             filename: filename.to_string(),
-            progress_bar,
-            test,
             verbosity,
-            term,
+            stderr: term,
         }
     }
 
     pub fn info(&mut self, message: &str) {
-        self.term.eprintln(message);
+        self.stderr.eprintln(message);
     }
 
     pub fn debug(&mut self, message: &str) {
@@ -245,9 +242,9 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term.eprintln_prefix(&"*".blue().bold(), message);
+            self.stderr.eprintln_prefix(&"*".blue().bold(), message);
         } else {
-            self.term.eprintln_prefix("*", message);
+            self.stderr.eprintln_prefix("*", message);
         }
     }
 
@@ -256,10 +253,10 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term
+            self.stderr
                 .eprintln_prefix(&"*".blue().bold(), &message.bold());
         } else {
-            self.term.eprintln_prefix("*", message);
+            self.stderr.eprintln_prefix("*", message);
         }
     }
 
@@ -268,9 +265,9 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term.eprintln_prefix(&"**".blue().bold(), message);
+            self.stderr.eprintln_prefix(&"**".blue().bold(), message);
         } else {
-            self.term.eprintln_prefix("**", message);
+            self.stderr.eprintln_prefix("**", message);
         }
     }
 
@@ -294,13 +291,13 @@ impl Logger {
         }
         for (name, value) in headers {
             if self.color {
-                self.term
+                self.stderr
                     .eprintln(&format!("< {}: {}", name.cyan().bold(), value));
             } else {
-                self.term.eprintln(&format!("< {}: {}", name, value));
+                self.stderr.eprintln(&format!("< {}: {}", name, value));
             }
         }
-        self.term.eprintln("<");
+        self.stderr.eprintln("<");
     }
 
     pub fn debug_headers_out(&mut self, headers: &[(&str, &str)]) {
@@ -309,13 +306,13 @@ impl Logger {
         }
         for (name, value) in headers {
             if self.color {
-                self.term
+                self.stderr
                     .eprintln(&format!("> {}: {}", name.cyan().bold(), value));
             } else {
-                self.term.eprintln(&format!("> {}: {}", name, value));
+                self.stderr.eprintln(&format!("> {}: {}", name, value));
             }
         }
-        self.term.eprintln(">");
+        self.stderr.eprintln(">");
     }
 
     pub fn debug_status_version_in(&mut self, line: &str) {
@@ -323,30 +320,30 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term.eprintln(&format!("< {}", line.green().bold()));
+            self.stderr.eprintln(&format!("< {}", line.green().bold()));
         } else {
-            self.term.eprintln(&format!("< {line}"));
+            self.stderr.eprintln(&format!("< {line}"));
         }
     }
 
     pub fn warning(&mut self, message: &str) {
         if self.color {
-            self.term.eprintln(&format!(
+            self.stderr.eprintln(&format!(
                 "{}: {}",
                 "warning".yellow().bold(),
                 message.bold()
             ));
         } else {
-            self.term.eprintln(&format!("warning: {message}"));
+            self.stderr.eprintln(&format!("warning: {message}"));
         }
     }
 
     pub fn error(&mut self, message: &str) {
         if self.color {
-            self.term
+            self.stderr
                 .eprintln(&format!("{}: {}", "error".red().bold(), message.bold()));
         } else {
-            self.term.eprintln(&format!("error: {message}"));
+            self.stderr.eprintln(&format!("error: {message}"));
         }
     }
 
@@ -373,10 +370,10 @@ impl Logger {
 
     fn error_rich(&mut self, message: &str) {
         if self.color {
-            self.term
+            self.stderr
                 .eprintln(&format!("{}: {message}\n", "error".red().bold()));
         } else {
-            self.term.eprintln(&format!("error: {message}\n"));
+            self.stderr.eprintln(&format!("error: {message}\n"));
         }
     }
 
@@ -385,9 +382,9 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term.eprintln(&format!("> {}", line.purple().bold()));
+            self.stderr.eprintln(&format!("> {}", line.purple().bold()));
         } else {
-            self.term.eprintln(&format!("> {line}"));
+            self.stderr.eprintln(&format!("> {line}"));
         }
     }
 
@@ -396,13 +393,13 @@ impl Logger {
             return;
         }
         if self.color {
-            self.term.eprintln(&format!(
+            self.stderr.eprintln(&format!(
                 "{} {}: {value}",
                 "*".blue().bold(),
                 name.yellow().bold()
             ));
         } else {
-            self.term.eprintln(&format!("* {name}: {value}"));
+            self.stderr.eprintln(&format!("* {name}: {value}"));
         }
     }
 }
@@ -415,86 +412,6 @@ impl Stderr {
             self.eprintln(&format!("{prefix} {message}"));
         }
     }
-}
-
-/// WIP: These methods must be removed from `Logger`. Semantically, they're using for reporting
-/// test progress and we need to extract them from `Logger`.
-impl Logger {
-    pub fn test_running(&self, current: usize, total: usize) {
-        if !self.test {
-            return;
-        }
-        if self.color {
-            eprintln!(
-                "{}: {} [{current}/{total}]",
-                self.filename.bold(),
-                "Running".cyan().bold()
-            );
-        } else {
-            eprintln!("{}: Running [{current}/{total}]", self.filename);
-        }
-    }
-
-    pub fn test_progress(&self, entry_index: usize, count: usize) {
-        if !self.progress_bar {
-            return;
-        }
-        let progress = progress_string(entry_index, count);
-        eprint!(" {progress}\r");
-    }
-
-    pub fn test_completed(&self, result: &HurlResult) {
-        if !self.test {
-            return;
-        }
-        if self.color {
-            let state = if result.success {
-                "Success".green().bold()
-            } else {
-                "Failure".red().bold()
-            };
-            let count = result.entries.iter().flat_map(|r| &r.calls).count();
-            eprintln!(
-                "{}: {} ({} request(s) in {} ms)",
-                self.filename.bold(),
-                state,
-                count,
-                result.time_in_ms
-            );
-        } else {
-            let state = if result.success { "Success" } else { "Failure" };
-            let count = result.entries.iter().flat_map(|r| &r.calls).count();
-            eprintln!(
-                "{}: {} ({} request(s) in {} ms)",
-                self.filename, state, count, result.time_in_ms
-            );
-        }
-    }
-
-    pub fn test_erase_line(&self) {
-        if !self.progress_bar {
-            return;
-        }
-        // This is the "EL - Erase in Line" sequence. It clears from the cursor
-        // to the end of line.
-        // https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
-        eprint!("\x1B[K");
-    }
-}
-
-/// Returns the progress string with the current entry at `entry_index`.
-fn progress_string(entry_index: usize, count: usize) -> String {
-    const WIDTH: usize = 24;
-    // We report the number of entries already processed.
-    let progress = (entry_index - 1) as f64 / count as f64;
-    let col = (progress * WIDTH as f64) as usize;
-    let completed = if col > 0 {
-        "=".repeat(col)
-    } else {
-        String::new()
-    };
-    let void = " ".repeat(WIDTH - col - 1);
-    format!("[{completed}>{void}] {entry_index}/{count}")
 }
 
 /// Returns the string representation of an `error`, given `lines` of content and a `filename`.
@@ -860,25 +777,5 @@ HTTP/1.0 200
    |     ^ expecting http://, https:// or {{
    |"#
         );
-    }
-
-    #[rustfmt::skip]
-    #[test]
-    fn test_progress_string() {
-        // Progress strings with 20 entries:
-        assert_eq!(progress_string(1,  20), "[>                       ] 1/20");
-        assert_eq!(progress_string(2,  20), "[=>                      ] 2/20");
-        assert_eq!(progress_string(5,  20), "[====>                   ] 5/20");
-        assert_eq!(progress_string(10, 20), "[==========>             ] 10/20");
-        assert_eq!(progress_string(15, 20), "[================>       ] 15/20");
-        assert_eq!(progress_string(20, 20), "[======================> ] 20/20");
-
-        // Progress strings with 3 entries:
-        assert_eq!(progress_string(1, 3), "[>                       ] 1/3");
-        assert_eq!(progress_string(2, 3), "[========>               ] 2/3");
-        assert_eq!(progress_string(3, 3), "[================>       ] 3/3");
-
-        // Progress strings with 1 entries:
-        assert_eq!(progress_string(1, 1), "[>                       ] 1/1");
     }
 }

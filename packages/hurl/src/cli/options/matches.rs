@@ -301,12 +301,7 @@ pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
 }
 
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
-    let verbose = verbose(arg_matches) || very_verbose(arg_matches);
-    test(arg_matches)
-        && !verbose
-        && !interactive(arg_matches)
-        && !is_ci()
-        && io::stderr().is_terminal()
+    test(arg_matches) && !interactive(arg_matches) && !is_ci() && io::stderr().is_terminal()
 }
 
 pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
