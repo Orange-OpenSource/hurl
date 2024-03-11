@@ -1,5 +1,5 @@
 [semver pattern: hurl-x.y.z-x86_64-apple-darwin.tar.gz]
-[elements: total 10, dirs 4, files 4, empty-files 0]
+[elements: total 17, dirs 5, files 10, empty-files 0]
 
 attr        user_group    type  file
 -------     ----------    ----  ----
@@ -7,6 +7,13 @@ drwxr-xr-x  runner/staff  dir   hurl-x.y.z-x86_64-apple-darwin/
 drwxr-xr-x  runner/staff  dir   hurl-x.y.z-x86_64-apple-darwin/bin/
 -rwxr-xr-x  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/bin/hurl
 -rwxr-xr-x  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/bin/hurlfmt
+drwxr-xr-x  runner/staff  dir   hurl-x.y.z-x86_64-apple-darwin/completions/
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/_hurl
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/_hurlfmt
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/hurl.bash
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/hurl.fish
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/hurlfmt.bash
+-rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/completions/hurlfmt.fish
 drwxr-xr-x  runner/staff  dir   hurl-x.y.z-x86_64-apple-darwin/man/
 drwxr-xr-x  runner/staff  dir   hurl-x.y.z-x86_64-apple-darwin/man/man1/
 -rw-r--r--  runner/staff  file  hurl-x.y.z-x86_64-apple-darwin/man/man1/hurl.1.gz
