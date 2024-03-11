@@ -16,59 +16,96 @@
  *
  */
 
-#[derive(Clone)]
-pub struct Term {
+/// Indirection for standard error.
+///
+/// Depending on `mode`, messages are immediately printed to standard error, or buffered
+/// in an internal buffer.
+///
+/// An optional `progress` string can be used to report temporary progress indication to the user.
+/// It's always printed as the last lines of the standard error. When the standard error is created
+/// with [`WriteMode::Buffered`], the progress is not saved in the internal buffer.
+#[derive(Clone, Debug)]
+pub struct Stderr {
+    /// Write mode of the standard error: immediate or saved to a buffer.
     mode: WriteMode,
-    stderr: String,
+    /// Internal buffer, filled when `mode` is [`WriteMode::Buffered`]
+    buffer: String,
+    /// Progress string: when not empty, it is always displayed at the end of the terminal.
+    progress: String,
 }
 
 #[allow(dead_code)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum WriteMode {
+    /// Messages are printed immediately.
     Immediate,
+    /// Messages are saved to an internal buffer, and can be retrieved with [`Stderr::buffer`].
     Buffered,
 }
 
-/// Represents a terminal and acts as an indirection for standard output / error.
-/// Depending on `mode`, messages are immediately printed to standard output /error, or buffered
-/// in strings.
-impl Term {
+impl Stderr {
     /// Creates a new terminal.
     pub fn new(mode: WriteMode) -> Self {
-        Term {
+        Stderr {
             mode,
-            stderr: String::new(),
+            buffer: String::new(),
+            progress: String::new(),
         }
     }
 
     /// Prints to the standard error, with a newline.
     pub fn eprintln(&mut self, message: &str) {
         match self.mode {
-            WriteMode::Immediate => eprintln!("{message}"),
+            WriteMode::Immediate => {
+                let has_status = !self.progress.is_empty();
+                if has_status {
+                    // This is the "EL - Erase in Line" sequence. It clears from the cursor
+                    // to the end of line.
+                    // https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
+                    eprint!("\x1B[K");
+                }
+                eprintln!("{message}");
+                if has_status {
+                    eprint!("{}", self.progress);
+                }
+            }
             WriteMode::Buffered => {
-                self.stderr.push_str(message);
-                self.stderr.push('\n');
+                self.buffer.push_str(message);
+                self.buffer.push('\n');
             }
         }
     }
 
     #[allow(dead_code)]
+    /// Sets the progress string (only in [`WriteMode::Immediate`] mode).
+    pub fn set_progress(&mut self, progress: &str) {
+        match self.mode {
+            WriteMode::Immediate => {
+                self.progress = progress.to_string();
+                eprint!("{}", self.progress);
+            }
+            WriteMode::Buffered => {}
+        }
+    }
+
+    #[allow(dead_code)]
     /// Returns the buffered standard error.
-    pub fn stderr(&self) -> &str {
-        &self.stderr
+    pub fn buffer(&self) -> &str {
+        &self.buffer
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::util::term::{Term, WriteMode};
+    use crate::util::term::{Stderr, WriteMode};
 
     #[test]
     fn term_buffered() {
-        let mut term = Term::new(WriteMode::Buffered);
+        let mut term = Stderr::new(WriteMode::Buffered);
         term.eprintln("toto");
+        term.set_progress("some progress...\r");
         term.eprintln("tutu");
 
-        assert_eq!(term.stderr(), "toto\ntutu\n")
+        assert_eq!(term.buffer(), "toto\ntutu\n")
     }
 }
