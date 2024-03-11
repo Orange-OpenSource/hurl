@@ -104,6 +104,12 @@ fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
 
 #[cfg(target_family = "windows")]
 fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
+    // From <https://doc.rust-lang.org/std/io/struct.Stdout.html>:
+    // > When operating in a console, the Windows implementation of this stream does not support
+    // > non-UTF-8 byte sequences. Attempting to write bytes that are not valid UTF-8 will return
+    // > an error.
+    // As a workaround to prevent error, we convert the buffer to an UTF-8 string (with potential
+    // bytes losses) before writing to the standard output of the Windows console.
     if io::stdout().is_terminal() {
         println!("{}", String::from_utf8_lossy(buf));
     } else {

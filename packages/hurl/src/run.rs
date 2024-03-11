@@ -62,14 +62,10 @@ pub fn run_seq(
             && !options.interactive
             && matches!(options.output_type, cli::OutputType::ResponseBody);
         if output_body {
-            if hurl_result.entries.last().is_some() {
+            if let Some(last_entry) = hurl_result.entries.last() {
                 let include_headers = options.include;
-                let result = output::write_body(
-                    &hurl_result,
-                    include_headers,
-                    options.color,
-                    &options.output,
-                );
+                let result =
+                    output::write_body(last_entry, include_headers, options.color, &options.output);
                 if let Err(e) = result {
                     return Err(CliError::Runtime(e.to_string()));
                 }

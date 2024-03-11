@@ -19,52 +19,49 @@ use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::output::Error;
 use crate::runner;
-use crate::runner::{HurlResult, Output};
+use crate::runner::{EntryResult, Output};
 
-/// Writes the `hurl_result` last body response to the file `filename_out`.
+/// Writes the `entry_result` last response to the file `filename_out`.
 ///
-/// If `filename_out` is `None`, stdout is used. If `include_headers` is true, the last HTTP
-/// response headers are written before the body response.
+/// If `filename_out` is `None`, standard output is used. If `include_headers` is true, the last
+/// HTTP response headers are written before the body response.
 pub fn write_body(
-    hurl_result: &HurlResult,
+    entry_result: &EntryResult,
     include_headers: bool,
     color: bool,
     filename_out: &Option<Output>,
 ) -> Result<(), Error> {
-    // By default, we output the body response bytes of the last entry
-    if let Some(entry_result) = hurl_result.entries.last() {
-        if let Some(call) = entry_result.calls.last() {
-            let response = &call.response;
-            let mut output = vec![];
+    if let Some(call) = entry_result.calls.last() {
+        let response = &call.response;
+        let mut output = vec![];
 
-            // If include options is set, we output the HTTP response headers
-            // with status and version (to mimic curl outputs)
-            if include_headers {
-                let mut text = response.get_status_line_headers(color);
-                text.push('\n');
-                output.append(&mut text.into_bytes());
-            }
-            if entry_result.compressed {
-                let mut bytes = match response.uncompress_body() {
-                    Ok(b) => b,
-                    Err(e) => {
-                        // FIXME: we convert to a runner::Error to be able to use fixme!
-                        // We may pass a [`SourceInfo`] as a parameter of this method to make
-                        // a more accurate error
-                        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-                        let error = runner::Error::new(source_info, e.into(), false);
-                        return Err(error.into());
-                    }
-                };
-                output.append(&mut bytes);
-            } else {
-                let bytes = &response.body;
-                output.extend(bytes);
-            }
-            match filename_out {
-                Some(Output::File(file)) => Output::File(file.to_string()).write(&output, None)?,
-                _ => Output::StdOut.write(&output, None)?,
-            }
+        // If include options is set, we output the HTTP response headers
+        // with status and version (to mimic curl outputs)
+        if include_headers {
+            let mut text = response.get_status_line_headers(color);
+            text.push('\n');
+            output.append(&mut text.into_bytes());
+        }
+        if entry_result.compressed {
+            let mut bytes = match response.uncompress_body() {
+                Ok(b) => b,
+                Err(e) => {
+                    // FIXME: we convert to a runner::Error to be able to use fixme!
+                    // We may pass a [`SourceInfo`] as a parameter of this method to make
+                    // a more accurate error
+                    let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+                    let error = runner::Error::new(source_info, e.into(), false);
+                    return Err(error.into());
+                }
+            };
+            output.append(&mut bytes);
+        } else {
+            let bytes = &response.body;
+            output.extend(bytes);
+        }
+        match filename_out {
+            Some(out) => out.write(&output, None)?,
+            None => Output::StdOut.write(&output, None)?,
         }
     }
     Ok(())
