@@ -2,17 +2,25 @@
 ========================================================================================================================
 
 Thanks to
-[@jaminalder](https://github.com/jaminalder)
+[@jaminalder](https://github.com/jaminalder),
+[@teto](https://github.com/teto),
 
 Enhancements:
 
 * Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
 * Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
 * Add --netrc, --netrc-file and --netrc-optional options [#2094](https://github.com/Orange-OpenSource/hurl/issues/2094)
+* Generate bash completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
+* Generate powershell completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
+* Generate fish completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
+* Generate zsh completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
 
 
 Bugs Fixed:
 
+* Fix --test progress bar not displayed when verbose is used [#2506](https://github.com/Orange-OpenSource/hurl/issues/2506)
+* Per request output takes file-root into account for path resolving [#2445](https://github.com/Orange-OpenSource/hurl/issues/2445)
+* Fix silent error when verbose option use unset variable. [#2444](https://github.com/Orange-OpenSource/hurl/issues/2444)
 * Fix Content-type header override when used in lowercase [#2416](https://github.com/Orange-OpenSource/hurl/issues/2416)
 
 
