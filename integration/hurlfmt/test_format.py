@@ -19,7 +19,8 @@ def decode_string(encoded):
 
 
 def test(format_type, hurl_file):
-    output_file = hurl_file.replace(".hurl", "." + format_type)
+    extension = ".lint.hurl" if format_type == "hurl" else ("." + format_type)
+    output_file = hurl_file.replace(".hurl", extension)
     if not os.path.exists(output_file):
         return
     cmd = ["hurlfmt", "--out", format_type, hurl_file]

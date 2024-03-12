@@ -1,0 +1,16 @@
+GET http://localhost:8000/methods/get
+HEAD http://localhost:8000/methods/head
+POST http://localhost:8000/methods/post
+PUT http://localhost:8000/methods/put
+DELETE http://localhost:8000/methods/delete
+CONNECT http://localhost:8000/methods/connect
+OPTIONS http://localhost:8000/methods/options
+TRACE http://localhost:8000/methods/trace
+PATCH http://localhost:8000/methods/patch
+LINK http://localhost:8000/methods/link
+UNLINK http://localhost:8000/methods/unlink
+PURGE http://localhost:8000/methods/purge
+LOCK http://localhost:8000/methods/lock
+UNLOCK http://localhost:8000/methods/unlock
+PROPFIND http://localhost:8000/methods/propfind
+VIEW http://localhost:8000/methods/view

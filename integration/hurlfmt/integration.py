@@ -20,8 +20,10 @@ def accept(f: str) -> bool:
 
 
 def main():
-    [test_format.test("json", f) for f in get_files("tests_export/*.hurl")]
-    [test_format.test("html", f) for f in get_files("tests_export/*.hurl")]
+    hurl_files = get_files("tests_export/*.hurl")
+    [test_format.test("hurl", f) for f in hurl_files]
+    [test_format.test("json", f) for f in hurl_files]
+    [test_format.test("html", f) for f in hurl_files]
     [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
 
     extension = "ps1" if platform.system() == "Windows" else "sh"
