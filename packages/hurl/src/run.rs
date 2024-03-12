@@ -20,8 +20,9 @@ use crate::cli::CliError;
 use crate::{cli, HurlRun};
 use hurl::runner::HurlResult;
 use hurl::util::logger::BaseLogger;
-use hurl::{output, runner};
+use hurl::{output, runner, util};
 use std::path::Path;
+use util::fs;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -41,7 +42,7 @@ pub fn run_seq(
             let message = format!("hurl: cannot access '{filename}': No such file or directory");
             return Err(CliError::IO(message));
         }
-        let content = cli::read_to_string(filename)?;
+        let content = fs::read_to_string(filename)?;
         let total = files.len();
         let variables = &options.variables;
         let runner_options = options.to_runner_options(filename, current_dir);

@@ -15,25 +15,18 @@
  * limitations under the License.
  *
  */
-use crate::cli::CliError;
-use std::fs;
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::{ErrorKind, Read};
+use std::{fs, io};
 
-/// Remove BOM from the input bytes
-fn strip_bom(bytes: &mut Vec<u8>) {
-    if bytes.starts_with(&[0xefu8, 0xbb, 0xbf]) {
-        bytes.drain(0..3);
-    }
-}
-
-/// Similar to the standard read_to_string()
-/// But remove any existing BOM
-/// Support also input stream when filename = '-'
-pub fn read_to_string(filename: &str) -> Result<String, CliError> {
+/// Read the content of `filename` to a string.
+///
+/// This method is similar to the standard [`std::io::Stdin::read_to_string()`] but remove any
+/// existing BOM. It supports also input stream when filename = '-'.
+pub fn read_to_string(filename: &str) -> Result<String, io::Error> {
     if filename == "-" {
         let mut contents = String::new();
-        std::io::stdin().read_to_string(&mut contents)?;
+        io::stdin().read_to_string(&mut contents)?;
         return Ok(contents);
     }
     let mut f = File::open(filename)?;
@@ -43,11 +36,17 @@ pub fn read_to_string(filename: &str) -> Result<String, CliError> {
     string_from_utf8(buffer)
 }
 
-fn string_from_utf8(buffer: Vec<u8>) -> Result<String, CliError> {
+fn string_from_utf8(buffer: Vec<u8>) -> Result<String, io::Error> {
     let mut buffer = buffer;
     strip_bom(&mut buffer);
-    let s = String::from_utf8(buffer)?;
-    Ok(s)
+    String::from_utf8(buffer).map_err(|e| io::Error::new(ErrorKind::InvalidData, e))
+}
+
+/// Remove BOM from the input bytes
+fn strip_bom(bytes: &mut Vec<u8>) {
+    if bytes.starts_with(&[0xefu8, 0xbb, 0xbf]) {
+        bytes.drain(0..3);
+    }
 }
 
 #[cfg(test)]
@@ -82,9 +81,10 @@ pub mod tests {
             string_from_utf8(vec![0x68, 0x65, 0x6c, 0x6c, 0x6f]).unwrap(),
             "hello"
         );
+        let err = string_from_utf8(vec![0xef]).err().unwrap();
         assert_eq!(
-            string_from_utf8(vec![0xef]).err().unwrap(),
-            CliError::IO("incomplete utf-8 byte sequence from index 0".to_string()),
+            err.to_string(),
+            "incomplete utf-8 byte sequence from index 0"
         );
     }
 }

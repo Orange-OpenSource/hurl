@@ -16,9 +16,7 @@
  *
  */
 mod error;
-mod fs;
 mod interactive;
 pub(crate) mod options;
 pub use self::error::CliError;
-pub use self::fs::read_to_string;
 pub use self::options::OutputType;
