@@ -495,7 +495,11 @@ impl Tokenizable for CertificateAttributeName {
             CertificateAttributeName::ExpireDate => "Expire-Date",
             CertificateAttributeName::SerialNumber => "Serial-Number",
         };
-        vec![Token::String(value.to_string())]
+        vec![
+            Token::StringDelimiter("\"".to_string()),
+            Token::String(value.to_string()),
+            Token::StringDelimiter("\"".to_string()),
+        ]
     }
 }
 
