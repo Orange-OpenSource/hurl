@@ -18,17 +18,26 @@
 use core::fmt;
 use std::slice::Iter;
 
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding>
 pub const ACCEPT_ENCODING: &str = "Accept-Encoding";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization>
 pub const AUTHORIZATION: &str = "Authorization";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>
 pub const COOKIE: &str = "Cookie";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding>
 pub const CONTENT_ENCODING: &str = "Content-Encoding";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type>
 pub const CONTENT_TYPE: &str = "Content-Type";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expect>
 pub const EXPECT: &str = "Expect";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location>
 pub const LOCATION: &str = "Location";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>
 pub const SET_COOKIE: &str = "Set-Cookie";
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent>
 pub const USER_AGENT: &str = "User-Agent";
 
-/// Represents an HTTP header
+/// Represents an HTTP header.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Header {
     pub name: String,
@@ -74,7 +83,7 @@ impl HeaderVec {
     /// Returns a reference to the header associated with `name`.
     ///
     /// If there are multiple headers associated with `name`, then the first one is returned.
-    /// Use [`get_all`] to get all values associated with a given key.
+    /// Use [HeaderVec::get_all] to get all values associated with a given key.
     pub fn get(&self, name: &str) -> Option<&Header> {
         self.headers.iter().find(|h| h.name_eq(name))
     }

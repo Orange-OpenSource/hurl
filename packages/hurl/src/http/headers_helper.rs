@@ -45,7 +45,7 @@ impl HeaderVec {
 
     /// Returns list of content encoding from HTTP response headers.
     ///
-    /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding>
     pub fn content_encoding(&self) -> Result<Vec<ContentEncoding>, HttpError> {
         for header in self {
             if header.name_eq(CONTENT_ENCODING) {

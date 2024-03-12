@@ -55,7 +55,7 @@ impl ContextDir {
 
     /// Checks if a given `filename` access is authorized.
     /// This method is used to check if a local file can be included in POST request or if a
-    /// response can be outputted to a given file when using `output` option in [Options] sections.
+    /// response can be outputted to a given file when using `output` option in \[Options\] sections.
     pub fn is_access_allowed(&self, filename: &str) -> bool {
         let file = self.get_path(filename);
         let absolute_file = self.current_dir.join(file);

@@ -26,12 +26,18 @@ use crate::runner::RunnerError;
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 
+/// Represents the result of a valid Hurl file execution.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
+    /// The entries result for this run.
     pub entries: Vec<EntryResult>,
+    /// Duration in milliseconds of the run.
     pub time_in_ms: u128,
+    /// `true` if the run is successful, `false` if there has been runtime or asserts errors.
     pub success: bool,
+    /// The list of cookies at the end of the run.
     pub cookies: Vec<Cookie>,
+    /// Start of the run (in "UNIX timestamp").
     pub timestamp: i64,
 }
 

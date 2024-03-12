@@ -34,9 +34,9 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
-/// If `content` is a syntactically correct Hurl file, an `[HurlResult]` is always returned on
+/// If `content` is a syntactically correct Hurl file, an [`HurlResult`] is always returned on
 /// run completion. The success or failure of the run (due to assertions checks, runtime failures
-/// etc..) can be read in the `[HurlResult]` `success` field. If `content` is not syntactically
+/// etc..) can be read in the [`HurlResult`] `success` field. If `content` is not syntactically
 /// correct, a parsing error is returned. This is the only possible way for this function to fail.
 ///
 /// # Example

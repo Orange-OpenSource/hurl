@@ -19,7 +19,8 @@ pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
-pub(crate) use self::core::{Cookie, Param, RequestCookie};
+pub use self::core::Cookie;
+pub(crate) use self::core::{Param, RequestCookie};
 pub(crate) use self::error::HttpError;
 pub use self::header::{
     Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,

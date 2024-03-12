@@ -25,8 +25,8 @@ use crate::http::HttpError;
 
 /// Represents a runtime HTTP request.
 /// This is a real request, that has been executed by our HTTP client.
-/// It's different from [`crate::http::RequestSpec`] which is the request asked to be executed by our user.
-/// For instance, in the request spec, headers implicitly added by curl are not present, while
+/// It's different from `crate::http::RequestSpec` which is the request asked to be executed by our
+/// user. For instance, in the request spec, headers implicitly added by curl are not present, while
 /// they will be present in the [`Request`] instances.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Request {
