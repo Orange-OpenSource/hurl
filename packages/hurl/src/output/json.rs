@@ -17,6 +17,7 @@
  */
 use crate::output::error::Error;
 use crate::runner::{HurlResult, Output};
+use crate::util::term::{Stdout, WriteMode};
 
 /// Writes the `hurl_result` JSON representation to the file `filename_out`.
 ///
@@ -31,11 +32,12 @@ pub fn write_json(
 ) -> Result<(), Error> {
     let json_result = hurl_result.to_json(content, filename_in);
     let serialized = serde_json::to_string(&json_result).unwrap();
-    let s = format!("{serialized}\n");
-    let bytes = s.into_bytes();
+    let mut stdout = Stdout::new(WriteMode::Immediate);
+    let bytes = format!("{serialized}\n");
+    let bytes = bytes.into_bytes();
     match filename_out {
-        Some(Output::File(file)) => Output::File(file.to_string()).write(&bytes, None)?,
-        _ => Output::StdOut.write(&bytes, None)?,
+        Some(Output::File(file)) => Output::File(file.clone()).write(&bytes, &mut stdout, None)?,
+        _ => Output::StdOut.write(&bytes, &mut stdout, None)?,
     }
     Ok(())
 }

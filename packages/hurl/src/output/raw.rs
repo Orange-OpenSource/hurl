@@ -20,6 +20,7 @@ use hurl_core::ast::{Pos, SourceInfo};
 use crate::output::Error;
 use crate::runner;
 use crate::runner::{EntryResult, Output};
+use crate::util::term::{Stdout, WriteMode};
 
 /// Writes the `entry_result` last response to the file `filename_out`.
 ///
@@ -32,6 +33,7 @@ pub fn write_body(
     filename_out: &Option<Output>,
 ) -> Result<(), Error> {
     if let Some(call) = entry_result.calls.last() {
+        let mut stdout = Stdout::new(WriteMode::Immediate);
         let response = &call.response;
         let mut output = vec![];
 
@@ -60,8 +62,8 @@ pub fn write_body(
             output.extend(bytes);
         }
         match filename_out {
-            Some(out) => out.write(&output, None)?,
-            None => Output::StdOut.write(&output, None)?,
+            Some(out) => out.write(&output, &mut stdout, None)?,
+            None => Output::StdOut.write(&output, &mut stdout, None)?,
         }
     }
     Ok(())

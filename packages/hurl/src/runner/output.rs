@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
+use std::fmt;
 use std::fs::File;
-#[cfg(target_family = "windows")]
-use std::io::IsTerminal;
 use std::io::Write;
-use std::{fmt, io};
 
 use crate::runner::{Error, RunnerError};
 use crate::util::path::ContextDir;
+use crate::util::term::Stdout;
 use hurl_core::ast::{Pos, SourceInfo};
 
 /// Represents the output of write operation: can be either a file or stdout.
@@ -44,9 +43,18 @@ impl fmt::Display for Output {
 
 impl Output {
     /// Writes these `bytes` to the output.
-    pub fn write(&self, bytes: &[u8], context_dir: Option<&ContextDir>) -> Result<(), Error> {
+    ///
+    /// If output is a standard output variant, `stdout` is used to write the bytes.
+    /// If output is a file variant, an optional `context_dir` can be used to check authorized
+    /// write access.
+    pub fn write(
+        &self,
+        bytes: &[u8],
+        stdout: &mut Stdout,
+        context_dir: Option<&ContextDir>,
+    ) -> Result<(), Error> {
         match self {
-            Output::StdOut => match write_stdout(bytes) {
+            Output::StdOut => match stdout.write_all(bytes) {
                 Ok(_) => Ok(()),
                 Err(e) => Err(Error::new_file_write_access("stdout", &e.to_string())),
             },
@@ -93,28 +101,4 @@ impl Error {
             false,
         )
     }
-}
-
-#[cfg(target_family = "unix")]
-fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
-    let mut handle = io::stdout().lock();
-    handle.write_all(buf)?;
-    Ok(())
-}
-
-#[cfg(target_family = "windows")]
-fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
-    // From <https://doc.rust-lang.org/std/io/struct.Stdout.html>:
-    // > When operating in a console, the Windows implementation of this stream does not support
-    // > non-UTF-8 byte sequences. Attempting to write bytes that are not valid UTF-8 will return
-    // > an error.
-    // As a workaround to prevent error, we convert the buffer to an UTF-8 string (with potential
-    // bytes losses) before writing to the standard output of the Windows console.
-    if io::stdout().is_terminal() {
-        println!("{}", String::from_utf8_lossy(buf));
-    } else {
-        let mut handle = io::stdout().lock();
-        handle.write_all(buf)?;
-    }
-    Ok(())
 }

@@ -15,11 +15,82 @@
  * limitations under the License.
  *
  */
+use std::io;
+#[cfg(target_family = "windows")]
+use std::io::IsTerminal;
+use std::io::Write;
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum WriteMode {
+    /// Messages are printed immediately.
+    Immediate,
+    /// Messages are saved to an internal buffer, and can be retrieved with [`Stdout::buffer`] /
+    /// [`Stderr::buffer`].
+    Buffered,
+}
+
+/// Indirection for standard output.
+///
+/// Depending on `mode`, bytes are immediately printed to standard output, or buffered in an
+/// internal buffer.
+pub struct Stdout {
+    /// Write mode of the standard output: immediate or saved to a buffer.
+    mode: WriteMode,
+    /// Internal buffer, filled when `mode` is [`WriteMode::Buffered`]
+    buffer: Vec<u8>,
+}
+
+impl Stdout {
+    /// Creates a new standard output, buffered or immediate depending on `mode`.
+    pub fn new(mode: WriteMode) -> Self {
+        Stdout {
+            mode,
+            buffer: Vec::new(),
+        }
+    }
+
+    /// Attempts to write an entire buffer into standard output.
+    pub fn write_all(&mut self, buf: &[u8]) -> Result<(), io::Error> {
+        match self.mode {
+            WriteMode::Immediate => write_stdout(buf),
+            WriteMode::Buffered => self.buffer.write_all(buf),
+        }
+    }
+
+    /// Returns the buffered standard output.
+    pub fn buffer(&self) -> &[u8] {
+        &self.buffer
+    }
+}
+
+#[cfg(target_family = "unix")]
+fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
+    let mut handle = io::stdout().lock();
+    handle.write_all(buf)?;
+    Ok(())
+}
+
+#[cfg(target_family = "windows")]
+fn write_stdout(buf: &[u8]) -> Result<(), io::Error> {
+    // From <https://doc.rust-lang.org/std/io/struct.Stdout.html>:
+    // > When operating in a console, the Windows implementation of this stream does not support
+    // > non-UTF-8 byte sequences. Attempting to write bytes that are not valid UTF-8 will return
+    // > an error.
+    // As a workaround to prevent error, we convert the buffer to an UTF-8 string (with potential
+    // bytes losses) before writing to the standard output of the Windows console.
+    if io::stdout().is_terminal() {
+        println!("{}", String::from_utf8_lossy(buf));
+    } else {
+        let mut handle = io::stdout().lock();
+        handle.write_all(buf)?;
+    }
+    Ok(())
+}
 
 /// Indirection for standard error.
 ///
-/// Depending on `mode`, messages are immediately printed to standard error, or buffered
-/// in an internal buffer.
+/// Depending on `mode`, messages are immediately printed to standard error, or buffered in an
+/// internal buffer.
 ///
 /// An optional `progress` string can be used to report temporary progress indication to the user.
 /// It's always printed as the last lines of the standard error. When the standard error is created
@@ -34,17 +105,8 @@ pub struct Stderr {
     progress: String,
 }
 
-#[allow(dead_code)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum WriteMode {
-    /// Messages are printed immediately.
-    Immediate,
-    /// Messages are saved to an internal buffer, and can be retrieved with [`Stderr::buffer`].
-    Buffered,
-}
-
 impl Stderr {
-    /// Creates a new terminal.
+    /// Creates a new standard error, buffered or immediate depending on `mode`.
     pub fn new(mode: WriteMode) -> Self {
         Stderr {
             mode,
@@ -76,7 +138,6 @@ impl Stderr {
         }
     }
 
-    #[allow(dead_code)]
     /// Sets the progress string (only in [`WriteMode::Immediate`] mode).
     pub fn set_progress(&mut self, progress: &str) {
         match self.mode {
@@ -88,7 +149,6 @@ impl Stderr {
         }
     }
 
-    #[allow(dead_code)]
     /// Returns the buffered standard error.
     pub fn buffer(&self) -> &str {
         &self.buffer
@@ -97,15 +157,24 @@ impl Stderr {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::term::{Stderr, WriteMode};
+    use crate::util::term::{Stderr, Stdout, WriteMode};
 
     #[test]
-    fn term_buffered() {
-        let mut term = Stderr::new(WriteMode::Buffered);
-        term.eprintln("toto");
-        term.set_progress("some progress...\r");
-        term.eprintln("tutu");
+    fn buffered_stdout() {
+        let mut stdout = Stdout::new(WriteMode::Buffered);
+        stdout.write_all(b"Hello").unwrap();
+        stdout.write_all(b" ").unwrap();
+        stdout.write_all(b"World!").unwrap();
+        assert_eq!(stdout.buffer(), b"Hello World!")
+    }
 
-        assert_eq!(term.buffer(), "toto\ntutu\n")
+    #[test]
+    fn buffered_stderr() {
+        let mut stderr = Stderr::new(WriteMode::Buffered);
+        stderr.eprintln("toto");
+        stderr.set_progress("some progress...\r");
+        stderr.eprintln("tutu");
+
+        assert_eq!(stderr.buffer(), "toto\ntutu\n")
     }
 }

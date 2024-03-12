@@ -30,7 +30,7 @@ use crate::runner::progress::{Progress, SeqProgress};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
-use crate::util::term::{Stderr, WriteMode};
+use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -80,13 +80,17 @@ pub fn run(
     variables: &HashMap<String, Value>,
     logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
-    // In this method, we run Hurl content sequentially, so we create a logger that prints debug
-    // message immediately (in parallel mode, we'll use buffered standard output and error).
+    // In this method, we run Hurl content sequentially. Standard output and standard error messages
+    // are written immediately (in parallel mode, we'll use buffered standard output and error).
+    let mut stdout = Stdout::new(WriteMode::Immediate);
+    let stderr = Stderr::new(WriteMode::Immediate);
+
+    // We also create a common logger for this run (logger verbosity can eventually be mutated on
+    // each entry) .
     let color = logger_options.color;
     let error_format = logger_options.error_format;
     let filename = &logger_options.filename;
     let verbosity = logger_options.verbosity;
-    let stderr = Stderr::new(WriteMode::Immediate);
     let mut logger = Logger::new(color, error_format, filename, verbosity, stderr);
 
     // Create a progress bar for the sequential run, progress will be report in the main thread,
@@ -124,6 +128,7 @@ pub fn run(
         content,
         runner_options,
         variables,
+        &mut stdout,
         &progress,
         &mut logger,
     );
@@ -144,6 +149,7 @@ fn run_entries(
     content: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
+    stdout: &mut Stdout,
     progress: &dyn Progress,
     logger: &mut Logger,
 ) -> HurlResult {
@@ -275,9 +281,12 @@ fn run_entries(
                 // `entry_result` errors, and optionally deals with retry if we can't write to the
                 // specified path.
                 let source_info = entry.source_info();
-                if let Err(error) =
-                    entry_result.write_response(&output, &runner_options.context_dir, source_info)
-                {
+                if let Err(error) = entry_result.write_response(
+                    &output,
+                    &runner_options.context_dir,
+                    stdout,
+                    source_info,
+                ) {
                     logger.warning(&error.fixme());
                 }
             }

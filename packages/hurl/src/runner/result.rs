@@ -24,6 +24,7 @@ use crate::runner::output::Output;
 use crate::runner::value::Value;
 use crate::runner::RunnerError;
 use crate::util::path::ContextDir;
+use crate::util::term::Stdout;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
@@ -137,6 +138,7 @@ impl EntryResult {
         &self,
         output: &Output,
         context_dir: &ContextDir,
+        stdout: &mut Stdout,
         source_info: SourceInfo,
     ) -> Result<(), Error> {
         let Some(call) = self.calls.last() else {
@@ -164,9 +166,9 @@ impl EntryResult {
                     return Err(Error::new(source_info, e.into(), false));
                 }
             };
-            output.write(&bytes, Some(context_dir))
+            output.write(&bytes, stdout, Some(context_dir))
         } else {
-            output.write(&response.body, Some(context_dir))
+            output.write(&response.body, stdout, Some(context_dir))
         }
     }
 }
