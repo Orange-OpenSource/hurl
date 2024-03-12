@@ -69,7 +69,7 @@ pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsEr
 
 pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
     if has_flag(arg_matches, "in_place") {
-        if get_string(arg_matches, "format") != Some("hurl".to_string()) {
+        if get_string(arg_matches, "input_format") != Some("hurl".to_string()) {
             Err(OptionsError::Error(
                 "You can use --in-place only hurl format!".to_string(),
             ))
