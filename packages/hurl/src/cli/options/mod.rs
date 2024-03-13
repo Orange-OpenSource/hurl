@@ -37,7 +37,7 @@ use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Options {
+pub struct CliOptions {
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
@@ -90,18 +90,18 @@ pub struct Options {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum OptionsError {
+pub enum CliOptionsError {
     Info(String),
     NoInput(String),
     Error(String),
 }
 
-impl From<clap::Error> for OptionsError {
+impl From<clap::Error> for CliOptionsError {
     fn from(error: clap::Error) -> Self {
         match error.kind() {
-            clap::error::ErrorKind::DisplayVersion => OptionsError::Info(error.to_string()),
-            clap::error::ErrorKind::DisplayHelp => OptionsError::Info(error.to_string()),
-            _ => OptionsError::Error(error.to_string()),
+            clap::error::ErrorKind::DisplayVersion => CliOptionsError::Info(error.to_string()),
+            clap::error::ErrorKind::DisplayHelp => CliOptionsError::Info(error.to_string()),
+            _ => CliOptionsError::Error(error.to_string()),
         }
     }
 }
@@ -166,7 +166,7 @@ fn get_version() -> String {
     )
 }
 
-pub fn parse() -> Result<Options, OptionsError> {
+pub fn parse() -> Result<CliOptions, CliOptionsError> {
     let mut command = clap::Command::new("hurl")
         .version(get_version())
         .disable_colored_help(true)
@@ -236,18 +236,18 @@ pub fn parse() -> Result<Options, OptionsError> {
     // we just print help and exit.
     if opts.input_files.is_empty() {
         let help = command.render_help().to_string();
-        return Err(OptionsError::NoInput(help));
+        return Err(CliOptionsError::NoInput(help));
     }
 
     if opts.cookie_output_file.is_some() && opts.input_files.len() > 1 {
-        return Err(OptionsError::Error(
+        return Err(CliOptionsError::Error(
             "Only save cookies for a unique session".to_string(),
         ));
     }
     Ok(opts)
 }
 
-fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
+fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError> {
     let aws_sigv4 = matches::aws_sigv4(arg_matches);
     let cacert_file = matches::cacert_file(arg_matches)?;
     let client_cert_file = matches::client_cert_file(arg_matches)?;
@@ -296,7 +296,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
-    Ok(Options {
+    Ok(CliOptions {
         aws_sigv4,
         cacert_file,
         client_cert_file,
@@ -356,7 +356,7 @@ pub enum OutputType {
     NoOutput,
 }
 
-impl Options {
+impl CliOptions {
     pub fn to_runner_options(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
         let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();

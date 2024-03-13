@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::cli::options::Options;
+use crate::cli::options::CliOptions;
 use crate::cli::CliError;
 use crate::{cli, HurlRun};
 use hurl::runner::HurlResult;
@@ -24,12 +24,12 @@ use hurl::{output, runner};
 use std::path::Path;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
-/// [`crate::cli::options::Options`]). This function returns a list of [`HurlRun`] results or
+/// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
 /// an error.
 pub fn run_seq(
     files: &[String],
     current_dir: &Path,
-    options: &Options,
+    options: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];

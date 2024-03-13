@@ -16,12 +16,12 @@
  *
  */
 
-use super::OptionsError;
+use super::CliOptionsError;
 use crate::runner::{Number, Value};
 
-pub fn parse(s: &str) -> Result<(String, Value), OptionsError> {
+pub fn parse(s: &str) -> Result<(String, Value), CliOptionsError> {
     match s.find('=') {
-        None => Err(OptionsError::Error(format!(
+        None => Err(CliOptionsError::Error(format!(
             "Missing value for variable {s}!"
         ))),
         Some(index) => {
@@ -32,7 +32,7 @@ pub fn parse(s: &str) -> Result<(String, Value), OptionsError> {
     }
 }
 
-pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
+pub fn parse_value(s: &str) -> Result<Value, CliOptionsError> {
     if s == "true" {
         Ok(Value::Bool(true))
     } else if s == "false" {
@@ -47,7 +47,7 @@ pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
         if let Some(s) = s.strip_suffix('"') {
             Ok(Value::String(s.to_string()))
         } else {
-            Err(OptionsError::Error(
+            Err(CliOptionsError::Error(
                 "Value should end with a double quote".to_string(),
             ))
         }
@@ -58,7 +58,7 @@ pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
 
 #[cfg(test)]
 mod tests {
-    use super::{OptionsError, *};
+    use super::{CliOptionsError, *};
 
     #[test]
     fn test_parse() {
@@ -92,7 +92,7 @@ mod tests {
     fn test_parse_error() {
         assert_eq!(
             parse("name").err().unwrap(),
-            OptionsError::Error("Missing value for variable name!".to_string())
+            CliOptionsError::Error("Missing value for variable name!".to_string())
         );
     }
 
@@ -130,7 +130,7 @@ mod tests {
     fn test_parse_value_error() {
         assert_eq!(
             parse_value("\"123").err().unwrap(),
-            OptionsError::Error("Value should end with a double quote".to_string())
+            CliOptionsError::Error("Value should end with a double quote".to_string())
         );
     }
 }

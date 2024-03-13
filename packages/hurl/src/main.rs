@@ -30,7 +30,7 @@ use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::util::logger::BaseLogger;
 
-use crate::cli::options::OptionsError;
+use crate::cli::options::CliOptionsError;
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -56,15 +56,15 @@ fn main() {
     let opts = match cli::options::parse() {
         Ok(v) => v,
         Err(e) => match e {
-            OptionsError::Info(message) => {
+            CliOptionsError::Info(message) => {
                 print!("{message}");
                 process::exit(EXIT_OK);
             }
-            OptionsError::NoInput(message) => {
+            CliOptionsError::NoInput(message) => {
                 eprintln!("{message}");
                 process::exit(EXIT_ERROR_COMMANDLINE);
             }
-            OptionsError::Error(message) => {
+            CliOptionsError::Error(message) => {
                 eprintln!("error: {message}");
                 process::exit(EXIT_ERROR_COMMANDLINE);
             }

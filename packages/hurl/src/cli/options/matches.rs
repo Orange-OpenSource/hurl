@@ -27,11 +27,11 @@ use hurl::runner::Value;
 use hurl_core::ast::Retry;
 
 use super::variables::{parse as parse_variable, parse_value};
-use super::OptionsError;
+use super::CliOptionsError;
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 
-pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
+pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
     match get_string(arg_matches, "cacert_file") {
         None => Ok(None),
         Some(filename) => {
@@ -39,7 +39,7 @@ pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsEr
             if path.exists() {
                 Ok(Some(filename))
             } else {
-                Err(OptionsError::Error(format!(
+                Err(CliOptionsError::Error(format!(
                     "input file {} does not exist",
                     path.display()
                 )))
@@ -52,13 +52,13 @@ pub fn aws_sigv4(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "aws_sigv4")
 }
 
-pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
+pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "client_cert_file") {
         None => Ok(None),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
-                Err(OptionsError::Error(message))
+                Err(CliOptionsError::Error(message))
             } else {
                 Ok(Some(filename))
             }
@@ -66,13 +66,13 @@ pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, Opti
     }
 }
 
-pub fn client_key_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
+pub fn client_key_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "client_key_file") {
         None => Ok(None),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
-                Err(OptionsError::Error(message))
+                Err(CliOptionsError::Error(message))
             } else {
                 Ok(Some(filename))
             }
@@ -150,12 +150,12 @@ pub fn follow_location(arg_matches: &ArgMatches) -> (bool, bool) {
     (follow_location, follow_location_trusted)
 }
 
-pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsError> {
+pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsError> {
     if let Some(dir) = get::<String>(arg_matches, "report_html") {
         let path = Path::new(&dir);
         if !path.exists() {
             match std::fs::create_dir(path) {
-                Err(_) => Err(OptionsError::Error(format!(
+                Err(_) => Err(CliOptionsError::Error(format!(
                     "HTML dir {} can not be created",
                     path.display()
                 ))),
@@ -164,7 +164,7 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsErro
         } else if path.is_dir() {
             Ok(Some(path.to_path_buf()))
         } else {
-            return Err(OptionsError::Error(format!(
+            return Err(CliOptionsError::Error(format!(
                 "{} is not a valid directory",
                 path.display()
             )));
@@ -197,7 +197,7 @@ pub fn include(arg_matches: &ArgMatches) -> bool {
 }
 
 /// Returns the input files from the positional arguments and the glob options
-pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
+pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
         for filename in filenames {
@@ -205,7 +205,7 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError
             if path.exists() {
                 files.push(filename);
             } else {
-                return Err(OptionsError::Error(format!(
+                return Err(CliOptionsError::Error(format!(
                     "hurl: cannot access '{}': No such file or directory",
                     path.display()
                 )));
@@ -254,13 +254,13 @@ pub fn netrc(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "netrc")
 }
 
-pub fn netrc_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
+pub fn netrc_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "netrc_file") {
         None => Ok(None),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
-                Err(OptionsError::Error(message))
+                Err(CliOptionsError::Error(message))
             } else {
                 Ok(Some(filename))
             }
@@ -359,7 +359,7 @@ pub fn user_agent(arg_matches: &ArgMatches) -> Option<String> {
 }
 
 /// Returns a map of variables from the command line options `matches`.
-pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, OptionsError> {
+pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOptionsError> {
     let mut variables = HashMap::new();
 
     // Use environment variables prefix by HURL_
@@ -374,7 +374,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, Options
         for f in filenames.iter() {
             let path = Path::new(&f);
             if !path.exists() {
-                return Err(OptionsError::Error(format!(
+                return Err(CliOptionsError::Error(format!(
                     "Properties file {} does not exist",
                     path.display()
                 )));
@@ -386,7 +386,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, Options
                 let line = match line {
                     Ok(s) => s,
                     Err(_) => {
-                        return Err(OptionsError::Error(format!(
+                        return Err(CliOptionsError::Error(format!(
                             "Can not parse line {} of {}",
                             index + 1,
                             path.display()
@@ -422,14 +422,14 @@ pub fn very_verbose(arg_matches: &ArgMatches) -> bool {
 }
 
 /// Returns a list of path names from the command line options `matches`.
-fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
+fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
     let mut filenames = vec![];
     if let Some(exprs) = get_strings(matches, "glob") {
         for expr in exprs {
             let paths = match glob::glob(&expr) {
                 Ok(paths) => paths,
                 Err(_) => {
-                    return Err(OptionsError::Error(
+                    return Err(CliOptionsError::Error(
                         "Failed to read glob pattern".to_string(),
                     ))
                 }
@@ -439,13 +439,13 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
                     Ok(path) => match path.into_os_string().into_string() {
                         Ok(filename) => filenames.push(filename),
                         Err(_) => {
-                            return Err(OptionsError::Error(
+                            return Err(CliOptionsError::Error(
                                 "Failed to read glob pattern".to_string(),
                             ))
                         }
                     },
                     Err(_) => {
-                        return Err(OptionsError::Error(
+                        return Err(CliOptionsError::Error(
                             "Failed to read glob pattern".to_string(),
                         ))
                     }
@@ -453,7 +453,7 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
             }
             if filenames.is_empty() {
                 let message = format!("hurl: cannot access '{expr}': No such file or directory");
-                return Err(OptionsError::Error(message));
+                return Err(CliOptionsError::Error(message));
             }
         }
     }
