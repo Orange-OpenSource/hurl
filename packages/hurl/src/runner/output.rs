@@ -18,6 +18,7 @@
 use std::fmt;
 use std::fs::File;
 use std::io::Write;
+use std::path::{Path, PathBuf};
 
 use crate::runner::{Error, RunnerError};
 use crate::util::path::ContextDir;
@@ -65,10 +66,7 @@ impl Output {
                     None => filename.to_string(),
                     Some(context_dir) => {
                         if !context_dir.is_access_allowed(filename) {
-                            return Err(Error::new_file_write_access(
-                                filename,
-                                "unauthorized context dir",
-                            ));
+                            return Err(Error::new_unauthorized_file_access(Path::new(filename)));
                         }
                         let path = context_dir.get_path(filename);
                         path.into_os_string().into_string().unwrap()
@@ -87,18 +85,24 @@ impl Output {
     }
 }
 
+// TODO: improve the error with a [`SourceInfo`] passed in parameter.
 impl Error {
     /// Creates a new file write access error.
     fn new_file_write_access(filename: &str, error: &str) -> Error {
-        // TODO: improve the error with a [`SourceInfo`] passed in parameter.
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-        Error::new(
-            source_info,
-            RunnerError::FileWriteAccess {
-                file: filename.to_string(),
-                error: error.to_string(),
-            },
-            false,
-        )
+        let inner = RunnerError::FileWriteAccess {
+            path: PathBuf::from(filename),
+            error: error.to_string(),
+        };
+        Error::new(source_info, inner, false)
+    }
+
+    /// Creates a new authorization access error.
+    fn new_unauthorized_file_access(path: &Path) -> Error {
+        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+        let inner = RunnerError::UnauthorizedFileAccess {
+            path: path.to_path_buf(),
+        };
+        Error::new(source_info, inner, false)
     }
 }
