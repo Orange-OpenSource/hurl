@@ -80,10 +80,13 @@ pub fn eval_file(
         return Err(Error::new(filename.source_info, inner, false));
     }
     let resolved_file = context_dir.get_path(&file);
-    let inner = RunnerError::FileReadAccess { file };
     match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
-        Err(_) => Err(Error::new(filename.source_info, inner, false)),
+        Err(_) => {
+            let path = PathBuf::from(&file);
+            let inner = RunnerError::FileReadAccess { path };
+            Err(Error::new(filename.source_info, inner, false))
+        }
     }
 }
 
@@ -156,7 +159,7 @@ mod tests {
         assert_eq!(
             error.inner,
             RunnerError::FileReadAccess {
-                file: "data.bin".to_string()
+                path: PathBuf::from("data.bin")
             }
         );
         assert_eq!(

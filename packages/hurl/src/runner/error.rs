@@ -65,7 +65,7 @@ pub enum RunnerError {
     CouldNotParseResponse,
     CouldNotUncompressResponse(String),
     FileReadAccess {
-        file: String,
+        path: PathBuf,
     },
     // I/O write error on a path
     FileWriteAccess {
@@ -188,7 +188,9 @@ impl hurl_core::error::Error for Error {
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("could not uncompress response with {algorithm}")
             }
-            RunnerError::FileReadAccess { file } => format!("file {file} can not be read"),
+            RunnerError::FileReadAccess { path } => {
+                format!("file {} can not be read", path.to_string_lossy())
+            }
             RunnerError::FileWriteAccess { file, error } => {
                 format!("{file} can not be written ({error})")
             }
@@ -239,7 +241,7 @@ impl hurl_core::error::Error for Error {
             RunnerError::UnauthorizedFileAccess { path } => {
                 format!(
                     "unauthorized access to file {}, check --file-root option",
-                    path.to_str().unwrap()
+                    path.to_string_lossy()
                 )
             }
             RunnerError::UnrenderableVariable { name, value } => {
