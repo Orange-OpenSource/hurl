@@ -29,20 +29,29 @@ use hurl_core::ast::{Pos, SourceInfo};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Output {
     StdOut,
-    File(String),
+    File(PathBuf),
 }
 
 impl fmt::Display for Output {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let output = match self {
             Output::StdOut => "-".to_string(),
-            Output::File(file) => file.to_string(),
+            Output::File(file) => file.to_string_lossy().to_string(),
         };
         write!(f, "{output}")
     }
 }
 
 impl Output {
+    /// Creates a new output from a string filename.
+    pub fn new(filename: &str) -> Self {
+        if filename == "-" {
+            Output::StdOut
+        } else {
+            Output::File(PathBuf::from(filename))
+        }
+    }
+
     /// Writes these `bytes` to the output.
     ///
     /// If output is a standard output variant, `stdout` is used to write the bytes.
@@ -57,19 +66,21 @@ impl Output {
         match self {
             Output::StdOut => match stdout.write_all(bytes) {
                 Ok(_) => Ok(()),
-                Err(e) => Err(Error::new_file_write_access("stdout", &e.to_string())),
+                Err(e) => {
+                    let filename = Path::new("stdout");
+                    Err(Error::new_file_write_access(filename, &e.to_string()))
+                }
             },
             Output::File(filename) => {
                 // If we have a context dir, we check if we can write to this filename and compute
                 // the new filename given this context dir.
                 let filename = match context_dir {
-                    None => filename.to_string(),
+                    None => filename.clone(),
                     Some(context_dir) => {
-                        if !context_dir.is_access_allowed(filename) {
-                            return Err(Error::new_unauthorized_file_access(Path::new(filename)));
+                        if !context_dir.is_access_allowed(&filename.to_string_lossy()) {
+                            return Err(Error::new_unauthorized_file_access(filename));
                         }
-                        let path = context_dir.get_path(filename);
-                        path.into_os_string().into_string().unwrap()
+                        context_dir.get_path(&filename.to_string_lossy())
                     }
                 };
                 let mut file = match File::create(&filename) {
@@ -88,10 +99,11 @@ impl Output {
 // TODO: improve the error with a [`SourceInfo`] passed in parameter.
 impl Error {
     /// Creates a new file write access error.
-    fn new_file_write_access(filename: &str, error: &str) -> Error {
+    fn new_file_write_access(path: &Path, error: &str) -> Error {
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+        let path = path.to_path_buf();
         let inner = RunnerError::FileWriteAccess {
-            path: PathBuf::from(filename),
+            path,
             error: error.to_string(),
         };
         Error::new(source_info, inner, false)
@@ -100,9 +112,8 @@ impl Error {
     /// Creates a new authorization access error.
     fn new_unauthorized_file_access(path: &Path) -> Error {
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-        let inner = RunnerError::UnauthorizedFileAccess {
-            path: path.to_path_buf(),
-        };
+        let path = path.to_path_buf();
+        let inner = RunnerError::UnauthorizedFileAccess { path };
         Error::new(source_info, inner, false)
     }
 }

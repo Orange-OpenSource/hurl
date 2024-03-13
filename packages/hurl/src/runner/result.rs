@@ -16,7 +16,6 @@
  *
  */
 use hurl_core::ast::{Pos, SourceInfo};
-use std::path::PathBuf;
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
@@ -152,9 +151,9 @@ impl EntryResult {
         };
         // We check file access authorization for file output when a context dir has been given
         if let Output::File(filename) = output {
-            if !context_dir.is_access_allowed(filename) {
+            if !context_dir.is_access_allowed(&filename.to_string_lossy()) {
                 let inner = RunnerError::UnauthorizedFileAccess {
-                    path: PathBuf::from(filename.clone()),
+                    path: filename.clone(),
                 };
                 return Err(Error::new(source_info, inner, false));
             }

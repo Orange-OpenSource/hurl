@@ -277,13 +277,7 @@ pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
 }
 
 pub fn output(arg_matches: &ArgMatches) -> Option<Output> {
-    get::<String>(arg_matches, "output").map(|filename| {
-        if filename == "-" {
-            Output::StdOut
-        } else {
-            Output::File(filename)
-        }
-    })
+    get::<String>(arg_matches, "output").map(|filename| Output::new(&filename))
 }
 
 pub fn output_type(arg_matches: &ArgMatches) -> OutputType {

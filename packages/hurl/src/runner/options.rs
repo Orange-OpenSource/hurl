@@ -180,11 +180,7 @@ pub fn get_entry_options(
                     }
                     OptionKind::Output(output) => {
                         let filename = eval_template(output, variables)?;
-                        let output = if filename == "-" {
-                            Output::StdOut
-                        } else {
-                            Output::File(filename)
-                        };
+                        let output = Output::new(&filename);
                         runner_options.output = Some(output);
                     }
                     OptionKind::PathAsIs(value) => {

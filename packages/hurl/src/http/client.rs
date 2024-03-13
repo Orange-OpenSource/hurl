@@ -749,9 +749,9 @@ impl Client {
         // --output is not an option of the HTTP client, we deal with it here:
         match output {
             Some(Output::File(filename)) => {
-                let filename = context_dir.get_path(filename);
+                let filename = context_dir.get_path(&filename.to_string_lossy());
                 arguments.push("--output".to_string());
-                arguments.push(filename.into_os_string().into_string().unwrap());
+                arguments.push(filename.to_string_lossy().to_string());
             }
             Some(Output::StdOut) => {
                 arguments.push("--output".to_string());
@@ -947,6 +947,7 @@ impl From<IpResolve> for easy::IpResolve {
 mod tests {
     use super::*;
     use std::default::Default;
+    use std::path::PathBuf;
 
     #[test]
     fn test_parse_header() {
@@ -1111,7 +1112,7 @@ mod tests {
             ..Default::default()
         };
         let context_dir = ContextDir::default();
-        let file = Output::File("/tmp/foo.bin".to_string());
+        let file = Output::File(PathBuf::from("/tmp/foo.bin"));
         let output = Some(&file);
         let options = ClientOptions {
             aws_sigv4: Some("aws:amz:sts".to_string()),
