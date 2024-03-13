@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct Options {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct CliOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum OptionsError {</pre>
+                <pre class="has-background-white py-0 px-2">pub enum CliOptionsError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl From&lt;clap::Error&gt; for OptionsError {</pre>
+                <pre class="has-background-white py-0 px-2">impl From&lt;clap::Error&gt; for CliOptionsError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1669,7 +1669,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            clap::error::ErrorKind::DisplayVersion =&gt; OptionsError::Info(error.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            clap::error::ErrorKind::DisplayVersion =&gt; CliOptionsError::Info(error.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1685,7 +1685,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            clap::error::ErrorKind::DisplayHelp =&gt; OptionsError::Info(error.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            clap::error::ErrorKind::DisplayHelp =&gt; CliOptionsError::Info(error.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            _ =&gt; OptionsError::Error(error.to_string()),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            _ =&gt; CliOptionsError::Error(error.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2741,7 +2741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn parse() -&gt; Result&lt;Options, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn parse() -&gt; Result&lt;CliOptions, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3861,7 +3861,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        return Err(OptionsError::NoInput(help));</pre>
+                <pre class="has-background-danger-light py-0 px-2">        return Err(CliOptionsError::NoInput(help));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3925,7 +3925,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        return Err(OptionsError::Error(</pre>
+                <pre class="has-background-danger-light py-0 px-2">        return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4037,7 +4037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn parse_matches(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Options, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn parse_matches(arg_matches: &amp;ArgMatches) -&gt; Result&lt;CliOptions, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(Options {</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(CliOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5781,7 +5781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Options {</pre>
+                <pre class="has-background-white py-0 px-2">impl CliOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8219,7 +8219,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-03-12 08:08</p>
+                <p class="heading">Date: 2024-03-13 08:08</p>
             </div>
         </footer>
     </body>

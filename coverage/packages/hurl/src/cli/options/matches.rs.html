@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::OptionsError;</pre>
+                <pre class="has-background-white py-0 px-2">use super::CliOptionsError;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn cacert_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn cacert_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -917,7 +917,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn client_cert_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn client_cert_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1013,7 +1013,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(OptionsError::Error(message))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(CliOptionsError::Error(message))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1141,7 +1141,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn client_key_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn client_key_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1237,7 +1237,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(OptionsError::Error(message))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(CliOptionsError::Error(message))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn html_dir(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;PathBuf&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn html_dir(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;PathBuf&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(_) =&gt; Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(_) =&gt; Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2709,7 +2709,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            return Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3237,7 +3237,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn input_files(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn input_files(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                return Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-success-light py-0 px-2">                return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4149,7 +4149,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn netrc_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn netrc_file(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Option&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4245,7 +4245,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(OptionsError::Error(message))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(CliOptionsError::Error(message))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5829,7 +5829,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn variables(matches: &amp;ArgMatches) -&gt; Result&lt;HashMap&lt;String, Value&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn variables(matches: &amp;ArgMatches) -&gt; Result&lt;HashMap&lt;String, Value&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5888,8 +5888,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="81003">
-                81003
+                role="cell" aria-label="81678">
+                81678
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5904,8 +5904,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="80328">
-                80328
+                role="cell" aria-label="81003">
+                81003
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -6069,7 +6069,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                return Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6261,7 +6261,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        return Err(OptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6837,7 +6837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn glob_files(matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;String&gt;, OptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn glob_files(matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;String&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6949,7 +6949,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    return Err(OptionsError::Error(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7109,7 +7109,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            return Err(OptionsError::Error(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7205,7 +7205,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        return Err(OptionsError::Error(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7333,7 +7333,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                return Err(OptionsError::Error(message));</pre>
+                <pre class="has-background-success-light py-0 px-2">                return Err(CliOptionsError::Error(message));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7835,7 +7835,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-03-12 08:08</p>
+                <p class="heading">Date: 2024-03-13 08:08</p>
             </div>
         </footer>
     </body>
