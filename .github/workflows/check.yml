@@ -89,10 +89,6 @@ jobs:
         export PATH=target/release:$PATH
         bin/check/hurlfmt.sh
 
-    - name: Run crates update
-      if: always()
-      run: bin/check/crates.sh
-
     - name: Check crates licence
       if: always()
       run: python3 bin/check/license.py
