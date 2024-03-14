@@ -201,7 +201,7 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsErr
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
         for filename in &filenames {
-            let file = Input::File(PathBuf::from(filename));
+            let file = Input::new(filename);
             if !file.exists() {
                 return Err(CliOptionsError::InvalidInputFile(PathBuf::from(filename)));
             }
