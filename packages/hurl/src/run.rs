@@ -18,31 +18,24 @@
 use crate::cli::options::CliOptions;
 use crate::cli::CliError;
 use crate::{cli, HurlRun};
-use hurl::runner::HurlResult;
+use hurl::runner::{HurlResult, Input};
 use hurl::util::logger::BaseLogger;
-use hurl::{output, runner, util};
+use hurl::{output, runner};
 use std::path::Path;
-use util::fs;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
 /// an error.
 pub fn run_seq(
-    files: &[String],
+    files: &[Input],
     current_dir: &Path,
     options: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];
 
-    for (current, filename) in files.as_ref().iter().enumerate() {
-        // We check the input file existence and check that we can read its contents.
-        // Once the preconditions succeed, we can parse the Hurl file, and run it.
-        if filename != "-" && !Path::new(filename).exists() {
-            let message = format!("hurl: cannot access '{filename}': No such file or directory");
-            return Err(CliError::IO(message));
-        }
-        let content = fs::read_to_string(filename)?;
+    for (current, filename) in files.iter().enumerate() {
+        let content = filename.read_to_string()?;
         let total = files.len();
         let variables = &options.variables;
         let runner_options = options.to_runner_options(filename, current_dir);
@@ -75,7 +68,8 @@ pub fn run_seq(
             }
         }
         if matches!(options.output_type, cli::OutputType::Json) {
-            let result = output::write_json(&hurl_result, &content, filename, &options.output);
+            let result =
+                output::write_json(&hurl_result, &content, filename, options.output.as_ref());
             if let Err(e) = result {
                 return Err(CliError::Runtime(e.to_string()));
             }

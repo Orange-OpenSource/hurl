@@ -753,7 +753,7 @@ impl Client {
                 arguments.push("--output".to_string());
                 arguments.push(filename.to_string_lossy().to_string());
             }
-            Some(Output::StdOut) => {
+            Some(Output::Stdout) => {
                 arguments.push("--output".to_string());
                 arguments.push("-".to_string());
             }

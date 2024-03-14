@@ -68,6 +68,13 @@ fn main() {
                 eprintln!("error: {message}");
                 process::exit(EXIT_ERROR_COMMANDLINE);
             }
+            CliOptionsError::InvalidInputFile(path) => {
+                eprintln!(
+                    "error: Cannot access '{}': No such file or directory",
+                    path.display()
+                );
+                process::exit(EXIT_ERROR_COMMANDLINE);
+            }
         },
     };
 

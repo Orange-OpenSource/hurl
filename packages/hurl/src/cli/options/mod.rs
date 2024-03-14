@@ -27,7 +27,7 @@ use std::time::Duration;
 use clap::ArgMatches;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
-use hurl::runner::Output;
+use hurl::runner::{Input, Output};
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::{Entry, Retry};
@@ -58,7 +58,7 @@ pub struct CliOptions {
     pub http_version: Option<HttpVersion>,
     pub ignore_asserts: bool,
     pub include: bool,
-    pub input_files: Vec<String>,
+    pub input_files: Vec<Input>,
     pub insecure: bool,
     pub interactive: bool,
     pub ip_resolve: Option<IpResolve>,
@@ -94,6 +94,7 @@ pub enum CliOptionsError {
     Info(String),
     NoInput(String),
     Error(String),
+    InvalidInputFile(PathBuf),
 }
 
 impl From<clap::Error> for CliOptionsError {
@@ -357,7 +358,7 @@ pub enum OutputType {
 }
 
 impl CliOptions {
-    pub fn to_runner_options(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
+    pub fn to_runner_options(&self, filename: &Input, current_dir: &Path) -> RunnerOptions {
         let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();
         let client_cert_file = self.client_cert_file.clone();
@@ -366,15 +367,11 @@ impl CliOptions {
         let connect_timeout = self.connect_timeout;
         let connects_to = self.connects_to.clone();
         let file_root = match &self.file_root {
-            Some(filename) => Path::new(filename),
-            None => {
-                if filename == "-" {
-                    current_dir
-                } else {
-                    let path = Path::new(filename);
-                    path.parent().unwrap()
-                }
-            }
+            Some(f) => Path::new(f),
+            None => match filename {
+                Input::File(path) => path.parent().unwrap(),
+                Input::Stdin => current_dir,
+            },
         };
         let context_dir = ContextDir::new(current_dir, file_root);
         let continue_on_error = self.continue_on_error;
@@ -492,7 +489,7 @@ impl CliOptions {
 
     pub fn to_logger_options(
         &self,
-        filename: &str,
+        filename: &Input,
         current_file: usize,
         total_files: usize,
     ) -> LoggerOptions {
@@ -500,7 +497,7 @@ impl CliOptions {
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())
-            .filename(filename)
+            .filename(&filename.to_string())
             .verbosity(verbosity)
             .test(self.test)
             .progress_bar(self.progress_bar)

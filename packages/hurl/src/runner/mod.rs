@@ -20,6 +20,7 @@
 
 pub use self::error::{Error, RunnerError};
 pub use self::hurl_file::run;
+pub use self::input::Input;
 pub use self::number::Number;
 pub use self::output::Output;
 pub use self::result::{AssertResult, CaptureResult, EntryResult, HurlResult};
@@ -34,6 +35,7 @@ mod error;
 mod expr;
 mod filter;
 mod hurl_file;
+mod input;
 mod json;
 mod multiline;
 mod multipart;

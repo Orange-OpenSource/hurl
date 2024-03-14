@@ -17,23 +17,73 @@
  */
 use std::fs::File;
 use std::io::{ErrorKind, Read};
-use std::{fs, io};
+use std::path::{Path, PathBuf};
+use std::{fmt, fs, io};
 
-/// Read the content of `filename` to a string.
-///
-/// This method is similar to the standard [`std::io::Stdin::read_to_string()`] but remove any
-/// existing BOM. It supports also input stream when filename = '-'.
-pub fn read_to_string(filename: &str) -> Result<String, io::Error> {
-    if filename == "-" {
-        let mut contents = String::new();
-        io::stdin().read_to_string(&mut contents)?;
-        return Ok(contents);
+/// Represents the input of read operation: can be either a file or standard input.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Input {
+    File(PathBuf),
+    Stdin,
+}
+
+impl fmt::Display for Input {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let output = match self {
+            Input::File(file) => file.to_string_lossy().to_string(),
+            Input::Stdin => "-".to_string(),
+        };
+        write!(f, "{output}")
     }
-    let mut f = File::open(filename)?;
-    let metadata = fs::metadata(filename).unwrap();
-    let mut buffer = vec![0; metadata.len() as usize];
-    f.read_exact(&mut buffer)?;
-    string_from_utf8(buffer)
+}
+
+impl From<&Path> for Input {
+    fn from(value: &Path) -> Self {
+        Input::File(value.to_path_buf())
+    }
+}
+
+impl From<PathBuf> for Input {
+    fn from(value: PathBuf) -> Self {
+        Input::File(value)
+    }
+}
+
+impl Input {
+    /// Creates a new input from a string filename.
+    pub fn new(filename: &str) -> Self {
+        if filename == "-" {
+            Input::Stdin
+        } else {
+            Input::File(PathBuf::from(filename))
+        }
+    }
+
+    /// Returns `true` if the path points at an existing entity.
+    pub fn exists(&self) -> bool {
+        match self {
+            Input::File(path) => path.exists(),
+            Input::Stdin => true,
+        }
+    }
+
+    /// Reads the content of this input to a string, removing any BOM.
+    pub fn read_to_string(&self) -> Result<String, io::Error> {
+        match self {
+            Input::File(path) => {
+                let mut f = File::open(path)?;
+                let metadata = fs::metadata(path).unwrap();
+                let mut buffer = vec![0; metadata.len() as usize];
+                f.read_exact(&mut buffer)?;
+                string_from_utf8(buffer)
+            }
+            Input::Stdin => {
+                let mut contents = String::new();
+                io::stdin().read_to_string(&mut contents)?;
+                Ok(contents)
+            }
+        }
+    }
 }
 
 fn string_from_utf8(buffer: Vec<u8>) -> Result<String, io::Error> {

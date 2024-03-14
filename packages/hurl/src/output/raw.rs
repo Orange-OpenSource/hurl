@@ -63,7 +63,7 @@ pub fn write_body(
         }
         match filename_out {
             Some(out) => out.write(&output, &mut stdout, None)?,
-            None => Output::StdOut.write(&output, &mut stdout, None)?,
+            None => Output::Stdout.write(&output, &mut stdout, None)?,
         }
     }
     Ok(())

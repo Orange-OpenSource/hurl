@@ -25,18 +25,18 @@ use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 use hurl_core::ast::{Pos, SourceInfo};
 
-/// Represents the output of write operation: can be either a file or stdout.
+/// Represents the output of write operation: can be either a file or standard ouput.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Output {
-    StdOut,
     File(PathBuf),
+    Stdout,
 }
 
 impl fmt::Display for Output {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let output = match self {
-            Output::StdOut => "-".to_string(),
             Output::File(file) => file.to_string_lossy().to_string(),
+            Output::Stdout => "-".to_string(),
         };
         write!(f, "{output}")
     }
@@ -46,7 +46,7 @@ impl Output {
     /// Creates a new output from a string filename.
     pub fn new(filename: &str) -> Self {
         if filename == "-" {
-            Output::StdOut
+            Output::Stdout
         } else {
             Output::File(PathBuf::from(filename))
         }
@@ -64,7 +64,7 @@ impl Output {
         context_dir: Option<&ContextDir>,
     ) -> Result<(), Error> {
         match self {
-            Output::StdOut => match stdout.write_all(bytes) {
+            Output::Stdout => match stdout.write_all(bytes) {
                 Ok(_) => Ok(()),
                 Err(e) => {
                     let filename = Path::new("stdout");

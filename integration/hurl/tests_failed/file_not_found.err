@@ -1,1 +1,1 @@
-error: hurl: cannot access 'does_not_exist.hurl': No such file or directory
+error: Cannot access 'does_not_exist.hurl': No such file or directory

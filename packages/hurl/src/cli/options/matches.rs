@@ -23,7 +23,7 @@ use std::time::Duration;
 use std::{env, io};
 
 use clap::ArgMatches;
-use hurl::runner::Value;
+use hurl::runner::{Input, Value};
 use hurl_core::ast::Retry;
 
 use super::variables::{parse as parse_variable, parse_value};
@@ -197,26 +197,22 @@ pub fn include(arg_matches: &ArgMatches) -> bool {
 }
 
 /// Returns the input files from the positional arguments and the glob options
-pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
+pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
-        for filename in filenames {
-            let path = Path::new(&filename);
-            if path.exists() {
-                files.push(filename);
-            } else {
-                return Err(CliOptionsError::Error(format!(
-                    "hurl: cannot access '{}': No such file or directory",
-                    path.display()
-                )));
+        for filename in &filenames {
+            let file = Input::File(PathBuf::from(filename));
+            if !file.exists() {
+                return Err(CliOptionsError::InvalidInputFile(PathBuf::from(filename)));
             }
+            files.push(file);
         }
     }
     for filename in glob_files(arg_matches)? {
         files.push(filename);
     }
     if files.is_empty() && !io::stdin().is_terminal() {
-        files.push("-".to_string());
+        files.push(Input::Stdin);
     }
     Ok(files)
 }
@@ -416,8 +412,8 @@ pub fn very_verbose(arg_matches: &ArgMatches) -> bool {
 }
 
 /// Returns a list of path names from the command line options `matches`.
-fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
-    let mut filenames = vec![];
+fn glob_files(matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
+    let mut all_files = vec![];
     if let Some(exprs) = get_strings(matches, "glob") {
         for expr in exprs {
             let paths = match glob::glob(&expr) {
@@ -428,16 +424,10 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
                     ))
                 }
             };
+            let mut files = vec![];
             for entry in paths {
                 match entry {
-                    Ok(path) => match path.into_os_string().into_string() {
-                        Ok(filename) => filenames.push(filename),
-                        Err(_) => {
-                            return Err(CliOptionsError::Error(
-                                "Failed to read glob pattern".to_string(),
-                            ))
-                        }
-                    },
+                    Ok(path) => files.push(Input::from(path)),
                     Err(_) => {
                         return Err(CliOptionsError::Error(
                             "Failed to read glob pattern".to_string(),
@@ -445,13 +435,13 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliOptionsError> {
                     }
                 }
             }
-            if filenames.is_empty() {
-                let message = format!("hurl: cannot access '{expr}': No such file or directory");
-                return Err(CliOptionsError::Error(message));
+            if files.is_empty() {
+                return Err(CliOptionsError::InvalidInputFile(PathBuf::from(&expr)));
             }
+            all_files.extend(files);
         }
     }
-    Ok(filenames)
+    Ok(all_files)
 }
 
 /// Returns an optional value of type `T` from the command line `matches` given the option `name`.

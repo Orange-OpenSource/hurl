@@ -23,7 +23,7 @@ use crate::http::{
     Call, Certificate, Cookie, Header, HttpVersion, Param, Request, RequestCookie, Response,
     ResponseCookie, Timings,
 };
-use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
+use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, Input};
 use crate::util::logger;
 
 impl HurlResult {
@@ -32,7 +32,7 @@ impl HurlResult {
     /// Note: `content` is passed to this method to save asserts and
     /// errors messages (with lines and columns). This parameter will be removed
     /// soon and the original content will be accessible through the [`HurlResult`] instance.
-    pub fn to_json(&self, content: &str, filename: &str) -> serde_json::Value {
+    pub fn to_json(&self, content: &str, filename: &Input) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
             "filename".to_string(),
@@ -56,7 +56,7 @@ impl HurlResult {
 }
 
 impl EntryResult {
-    fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
+    fn to_json(&self, filename: &Input, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
         map.insert(
@@ -332,7 +332,7 @@ impl CaptureResult {
 impl AssertResult {
     fn to_json(
         &self,
-        filename: &str,
+        filename: &Input,
         content: &str,
         entry_src_info: SourceInfo,
     ) -> serde_json::Value {
@@ -342,8 +342,13 @@ impl AssertResult {
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.error() {
-            let message =
-                logger::error_string(filename, content, &err, Some(entry_src_info), false);
+            let message = logger::error_string(
+                &filename.to_string(),
+                content,
+                &err,
+                Some(entry_src_info),
+                false,
+            );
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(
