@@ -36,6 +36,7 @@ impl HurlOption {
         }
     }
 }
+
 impl fmt::Display for HurlOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}: {}", self.name, self.value)

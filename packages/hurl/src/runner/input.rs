@@ -23,7 +23,9 @@ use std::{fmt, fs, io};
 /// Represents the input of read operation: can be either a file or standard input.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Input {
+    /// Read from file.
     File(PathBuf),
+    /// Read from standard input.
     Stdin,
 }
 

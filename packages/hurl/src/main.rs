@@ -56,23 +56,12 @@ fn main() {
     let opts = match cli::options::parse() {
         Ok(v) => v,
         Err(e) => match e {
-            CliOptionsError::Info(message) => {
-                print!("{message}");
+            CliOptionsError::Info(_) => {
+                print!("{e}");
                 process::exit(EXIT_OK);
             }
-            CliOptionsError::NoInput(message) => {
-                eprintln!("{message}");
-                process::exit(EXIT_ERROR_COMMANDLINE);
-            }
-            CliOptionsError::Error(message) => {
-                eprintln!("error: {message}");
-                process::exit(EXIT_ERROR_COMMANDLINE);
-            }
-            CliOptionsError::InvalidInputFile(path) => {
-                eprintln!(
-                    "error: Cannot access '{}': No such file or directory",
-                    path.display()
-                );
+            _ => {
+                eprintln!("{e}");
                 process::exit(EXIT_ERROR_COMMANDLINE);
             }
         },

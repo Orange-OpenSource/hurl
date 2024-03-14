@@ -18,5 +18,5 @@
 mod error;
 mod interactive;
 pub(crate) mod options;
-pub use self::error::CliError;
-pub use self::options::OutputType;
+pub(crate) use self::error::CliError;
+pub(crate) use self::options::OutputType;

@@ -28,7 +28,9 @@ use hurl_core::ast::{Pos, SourceInfo};
 /// Represents the output of write operation: can be either a file or standard ouput.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Output {
+    /// Write to file.
     File(PathBuf),
+    /// Write to standard output.
     Stdout,
 }
 

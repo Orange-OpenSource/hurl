@@ -16,6 +16,7 @@
  *
  */
 mod commands;
+mod error;
 mod matches;
 mod variables;
 
@@ -34,6 +35,7 @@ use hurl_core::ast::{Entry, Retry};
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
+pub use error::CliOptionsError;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -87,24 +89,6 @@ pub struct CliOptions {
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
     pub very_verbose: bool,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum CliOptionsError {
-    Info(String),
-    NoInput(String),
-    Error(String),
-    InvalidInputFile(PathBuf),
-}
-
-impl From<clap::Error> for CliOptionsError {
-    fn from(error: clap::Error) -> Self {
-        match error.kind() {
-            clap::error::ErrorKind::DisplayVersion => CliOptionsError::Info(error.to_string()),
-            clap::error::ErrorKind::DisplayHelp => CliOptionsError::Info(error.to_string()),
-            _ => CliOptionsError::Error(error.to_string()),
-        }
-    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
