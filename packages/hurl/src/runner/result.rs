@@ -21,7 +21,6 @@ use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
-use crate::runner::RunnerError;
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 
@@ -68,18 +67,25 @@ impl HurlResult {
     }
 }
 
+/// Represents the execution result of an entry.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryResult {
+    /// 1-based index of the entry on the file execution.
     pub entry_index: usize,
+    /// Source information of this entry.
     pub source_info: SourceInfo,
+    /// List of HTTP request / response pair.
     pub calls: Vec<Call>,
+    /// List of captures.
     pub captures: Vec<CaptureResult>,
+    /// List of asserts.
     pub asserts: Vec<AssertResult>,
+    /// List of errors.
     pub errors: Vec<Error>,
     pub time_in_ms: u128,
-    // The entry has been executed with `--compressed` option:
-    // server is requested to send compressed response, and the response should be uncompressed
-    // when outputted on stdout.
+    /// The entry has been executed with `--compressed` option:
+    /// server is requested to send compressed response, and the response should be uncompressed
+    /// when outputted on stdout.
     pub compressed: bool,
 }
 
@@ -149,25 +155,11 @@ impl EntryResult {
         let Some(call) = self.calls.last() else {
             return Ok(());
         };
-        // We check file access authorization for file output when a context dir has been given
-        if let Output::File(filename) = output {
-            if !context_dir.is_access_allowed(&filename.to_string_lossy()) {
-                let inner = RunnerError::UnauthorizedFileAccess {
-                    path: filename.clone(),
-                };
-                return Err(Error::new(source_info, inner, false));
-            }
-        }
         let response = &call.response;
         if self.compressed {
             let bytes = match response.uncompress_body() {
                 Ok(bytes) => bytes,
                 Err(e) => {
-                    // TODO: pass a [`SourceInfo`] in case of error
-                    // We may pass a [`SourceInfo`] as a parameter of this method to make
-                    // a more accurate error (for instance a [`SourceInfo`] pointing at
-                    // `output: foo.bin`
-                    let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
                     return Err(Error::new(source_info, e.into(), false));
                 }
             };

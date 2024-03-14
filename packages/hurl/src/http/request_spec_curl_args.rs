@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::path::Path;
 
 use crate::http::core::*;
 use crate::http::header::CONTENT_TYPE;
@@ -125,8 +126,8 @@ fn encode_byte(b: u8) -> String {
     format!("\\x{b:02x}")
 }
 
-fn encode_bytes(b: Vec<u8>) -> String {
-    b.iter().map(|b| encode_byte(*b)).collect()
+fn encode_bytes(bytes: &[u8]) -> String {
+    bytes.iter().map(|b| encode_byte(*b)).collect()
 }
 
 impl Method {
@@ -187,8 +188,8 @@ impl MultipartParam {
                 content_type,
                 ..
             }) => {
-                let path = context_dir.get_path(filename);
-                let value = format!("@{};type={}", path.to_str().unwrap(), content_type);
+                let path = context_dir.resolved_path(Path::new(filename));
+                let value = format!("@{};type={}", path.to_string_lossy(), content_type);
                 format!("{name}={value}")
             }
         }
@@ -197,12 +198,12 @@ impl MultipartParam {
 
 impl Body {
     pub fn curl_arg(&self, context_dir: &ContextDir) -> String {
-        match self.clone() {
-            Body::Text(s) => encode_shell_string(&s),
+        match self {
+            Body::Text(s) => encode_shell_string(s),
             Body::Binary(bytes) => format!("$'{}'", encode_bytes(bytes)),
             Body::File(_, filename) => {
-                let path = context_dir.get_path(&filename);
-                format!("'@{}'", path.to_str().unwrap())
+                let path = context_dir.resolved_path(Path::new(filename));
+                format!("'@{}'", path.to_string_lossy())
             }
         }
     }

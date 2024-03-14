@@ -749,7 +749,7 @@ impl Client {
         // --output is not an option of the HTTP client, we deal with it here:
         match output {
             Some(Output::File(filename)) => {
-                let filename = context_dir.get_path(&filename.to_string_lossy());
+                let filename = context_dir.resolved_path(filename);
                 arguments.push("--output".to_string());
                 arguments.push(filename.to_string_lossy().to_string());
             }

@@ -77,10 +77,10 @@ impl Output {
                 let filename = match context_dir {
                     None => filename.clone(),
                     Some(context_dir) => {
-                        if !context_dir.is_access_allowed(&filename.to_string_lossy()) {
+                        if !context_dir.is_access_allowed(filename) {
                             return Err(Error::new_unauthorized_file_access(filename));
                         }
-                        context_dir.get_path(&filename.to_string_lossy())
+                        context_dir.resolved_path(filename)
                     }
                 };
                 let mut file = match File::create(&filename) {

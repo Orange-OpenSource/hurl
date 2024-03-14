@@ -73,17 +73,15 @@ pub fn eval_file(
     let file = eval_template(filename, variables)?;
     // In order not to leak any private date, we check that the user provided file
     // is a child of the context directory.
-    if !context_dir.is_access_allowed(&file) {
-        let inner = RunnerError::UnauthorizedFileAccess {
-            path: PathBuf::from(file),
-        };
+    let path = PathBuf::from(file);
+    if !context_dir.is_access_allowed(&path) {
+        let inner = RunnerError::UnauthorizedFileAccess { path };
         return Err(Error::new(filename.source_info, inner, false));
     }
-    let resolved_file = context_dir.get_path(&file);
+    let resolved_file = context_dir.resolved_path(&path);
     match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
         Err(_) => {
-            let path = PathBuf::from(&file);
             let inner = RunnerError::FileReadAccess { path };
             Err(Error::new(filename.source_info, inner, false))
         }
