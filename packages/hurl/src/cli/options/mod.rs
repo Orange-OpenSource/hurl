@@ -66,6 +66,7 @@ pub struct CliOptions {
     pub ip_resolve: Option<IpResolve>,
     pub junit_file: Option<String>,
     pub max_redirect: Option<usize>,
+    pub max_workers: usize,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -189,6 +190,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::json())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
+        .arg(commands::max_workers())
         .arg(commands::netrc())
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional())
@@ -260,6 +262,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let ip_resolve = matches::ip_resolve(arg_matches);
     let junit_file = matches::junit_file(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
+    let max_workers = matches::max_workers(arg_matches);
     let netrc = matches::netrc(arg_matches);
     let netrc_file = matches::netrc_file(arg_matches)?;
     let netrc_optional = matches::netrc_optional(arg_matches);
@@ -311,6 +314,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         ip_resolve,
         junit_file,
         max_redirect,
+        max_workers,
         netrc,
         netrc_file,
         netrc_optional,

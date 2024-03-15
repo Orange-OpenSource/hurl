@@ -284,6 +284,17 @@ pub fn max_time() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn max_workers() -> clap::Arg {
+    clap::Arg::new("max_workers")
+        .long("max-workers")
+        .value_name("NUM")
+        .default_value("6")
+        .value_parser(clap::value_parser!(u32).range(1..))
+        .help("(Experimental) Maximum number of parallel execution")
+        .num_args(1)
+        .hide(true)
+}
+
 pub fn netrc() -> clap::Arg {
     clap::Arg::new("netrc")
         .long("netrc")

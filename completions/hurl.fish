@@ -29,6 +29,7 @@ complete -c hurl -l ipv6 -d 'Tell Hurl to use IPv6 addresses only when resolving
 complete -c hurl -l json -d 'Output each Hurl file result to JSON'
 complete -c hurl -l max-redirs -d 'Maximum number of redirects allowed, -1 for unlimited redirects'
 complete -c hurl -l max-time -d 'Maximum time allowed for the transfer'
+complete -c hurl -l max-workers -d '(Experimental) Maximum number of parallel execution'
 complete -c hurl -l netrc -d 'Must read .netrc for username and password'
 complete -c hurl -l netrc-file -d 'Specify FILE for .netrc'
 complete -c hurl -l netrc-optional -d 'Use either .netrc or the URL'
