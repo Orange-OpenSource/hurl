@@ -44,6 +44,8 @@ pub mod http;
 mod json;
 mod jsonpath;
 pub mod output;
+#[doc(hidden)]
+pub mod parallel;
 pub mod report;
 pub mod runner;
 pub mod util;

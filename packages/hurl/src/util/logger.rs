@@ -101,6 +101,7 @@ pub struct Logger {
     pub(crate) stderr: Stderr,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LoggerOptions {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,
@@ -395,6 +396,10 @@ impl Logger {
         } else {
             self.stderr.eprintln(&format!("* {name}: {value}"));
         }
+    }
+
+    pub fn stderr(&self) -> &Stderr {
+        &self.stderr
     }
 }
 

@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::fmt;
+
+use hurl::parallel::error::JobError;
 use hurl::report;
-use std::string::FromUtf8Error;
-use std::{fmt, io};
 
 #[allow(unused)]
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -27,21 +28,18 @@ pub enum CliError {
     Runtime(String),
 }
 
-impl From<io::Error> for CliError {
-    fn from(error: io::Error) -> Self {
-        CliError::IO(error.to_string())
-    }
-}
-
-impl From<FromUtf8Error> for CliError {
-    fn from(error: FromUtf8Error) -> Self {
-        CliError::IO(error.to_string())
-    }
-}
-
 impl From<report::Error> for CliError {
     fn from(error: report::Error) -> Self {
         CliError::IO(error.message)
+    }
+}
+
+impl From<JobError> for CliError {
+    fn from(error: JobError) -> Self {
+        match error {
+            JobError::IO(message) => CliError::IO(message),
+            JobError::Parsing => CliError::Parsing,
+        }
     }
 }
 

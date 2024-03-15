@@ -86,7 +86,7 @@ pub fn run(
     let stderr = Stderr::new(WriteMode::Immediate);
 
     // We also create a common logger for this run (logger verbosity can eventually be mutated on
-    // each entry) .
+    // each entry).
     let mut logger = Logger::new(logger_options, stderr);
 
     // Create a progress bar for the sequential run, progress will be report in the main thread,

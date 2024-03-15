@@ -76,7 +76,11 @@ fn main() {
     let current_dir = current_dir.as_path();
     let start = Instant::now();
 
-    let runs = run::run_seq(&opts.input_files, current_dir, &opts);
+    let runs = if opts.parallel {
+        run::run_par(&opts.input_files, current_dir, &opts)
+    } else {
+        run::run_seq(&opts.input_files, current_dir, &opts)
+    };
     let runs = match runs {
         Ok(r) => r,
         Err(CliError::IO(msg)) => exit_with_error(&msg, EXIT_ERROR_PARSING, &base_logger),

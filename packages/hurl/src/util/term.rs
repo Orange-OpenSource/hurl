@@ -135,6 +135,25 @@ impl Stderr {
         }
     }
 
+    /// Prints to the standard error.
+    pub fn eprint(&mut self, message: &str) {
+        match self.mode {
+            WriteMode::Immediate => {
+                let has_progress = !self.progress.is_empty();
+                if has_progress {
+                    self.rewind_cursor();
+                }
+                eprint!("{message}");
+                if has_progress {
+                    eprint!("{}", self.progress);
+                }
+            }
+            WriteMode::Buffered => {
+                self.buffer.push_str(message);
+            }
+        }
+    }
+
     /// Sets the progress string (only in [`WriteMode::Immediate`] mode).
     pub fn set_progress(&mut self, progress: &str) {
         match self.mode {
@@ -144,6 +163,12 @@ impl Stderr {
             }
             WriteMode::Buffered => {}
         }
+    }
+
+    /// Clears the progress string (only in [`WriteMode::Immediate`] mode).
+    pub fn clear_progress(&mut self) {
+        self.rewind_cursor();
+        self.progress.clear();
     }
 
     /// Returns the buffered standard error.
