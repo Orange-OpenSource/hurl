@@ -5,20 +5,19 @@ from option import Option
 """
 Generate options for man
 """
-from typing import *
 import sys
 
 
-def generate_man(options: List[Option]):
+def generate_man(options: list[Option]) -> str:
     s = ""
     for option in options:
-        if not option.deprecated:
+        if not option.deprecated and not option.experimental:
             s += generate_man_option(option)
             s += "\n\n"
     return s
 
 
-def generate_man_option(option: Option):
+def generate_man_option(option: Option) -> str:
     s = "###"
     if option.short:
         s += " -%s," % option.short

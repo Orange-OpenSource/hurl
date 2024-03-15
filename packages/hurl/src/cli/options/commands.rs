@@ -344,6 +344,14 @@ pub fn output() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn parallel() -> clap::Arg {
+    clap::Arg::new("parallel")
+        .long("parallel")
+        .help("(Experimental) Run files in parallel")
+        .action(clap::ArgAction::SetTrue)
+        .hide(true)
+}
+
 pub fn path_as_is() -> clap::Arg {
     clap::Arg::new("path_as_is")
         .long("path-as-is")

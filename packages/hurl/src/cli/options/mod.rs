@@ -72,6 +72,7 @@ pub struct CliOptions {
     pub no_proxy: Option<String>,
     pub output: Option<Output>,
     pub output_type: OutputType,
+    pub parallel: bool,
     pub path_as_is: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
@@ -195,6 +196,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::no_output())
         .arg(commands::noproxy())
         .arg(commands::output())
+        .arg(commands::parallel())
         .arg(commands::path_as_is())
         .arg(commands::proxy())
         .arg(commands::report_html())
@@ -262,8 +264,9 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let netrc_file = matches::netrc_file(arg_matches)?;
     let netrc_optional = matches::netrc_optional(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
-    let progress_bar = matches::progress_bar(arg_matches);
+    let parallel = matches::parallel(arg_matches);
     let path_as_is = matches::path_as_is(arg_matches);
+    let progress_bar = matches::progress_bar(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
@@ -313,6 +316,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         netrc_optional,
         no_proxy,
         path_as_is,
+        parallel,
         progress_bar,
         proxy,
         output,

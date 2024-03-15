@@ -53,6 +53,7 @@ _hurl() {
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--noproxy[List of hosts which do not use proxy]: :' \
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \
+    '--parallel[(Experimental) Run files in parallel]' \
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
     '--report-html[Generate HTML report to DIR]: :' \

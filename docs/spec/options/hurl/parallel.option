@@ -1,0 +1,9 @@
+name: parallel
+long: parallel
+help: (Experimental) Run files in parallel
+cli_only: true
+experimental: true
+---
+(Experimental) Run files in parallel.
+
+Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential.

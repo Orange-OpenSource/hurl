@@ -286,6 +286,10 @@ pub fn output_type(arg_matches: &ArgMatches) -> OutputType {
     }
 }
 
+pub fn parallel(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "parallel")
+}
+
 pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "path_as_is")
 }

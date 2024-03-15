@@ -16,6 +16,7 @@ class Option:
         append,
         cli_only,
         deprecated,
+        experimental,
         description,
     ):
         self.name = name
@@ -29,6 +30,7 @@ class Option:
         self.append = append
         self.cli_only = cli_only
         self.deprecated = deprecated
+        self.experimental = experimental
         self.description = description
 
     def __eq__(self, other):
@@ -45,6 +47,7 @@ class Option:
             and self.conflict == other.conflict
             and self.append == other.append
             and self.deprecated == other.deprecated
+            and self.experimental == other.experimental
             and self.description == other.description
             and self.cli_only == other.cli_only
         )
@@ -70,6 +73,8 @@ class Option:
             s += "\ncli_only: true"
         if self.deprecated:
             s += "\ndeprecated: true"
+        if self.experimental:
+            s += "\nexperimental: true"
         s += "\n---"
         s += "\n" + self.description
         return s
@@ -86,13 +91,15 @@ class Option:
                 self.help,
                 self.conflict,
                 self.append,
-                self.description,
                 self.cli_only,
+                self.deprecated,
+                self.experimental,
+                self.description,
             )
         )
 
     @staticmethod
-    def parse(s):
+    def parse(s) -> "Option":
         name = None
         long = None
         short = None
@@ -105,6 +112,7 @@ class Option:
         cli_only = False
         deprecated = False
         description = ""
+        experimental = False
         in_description = False
 
         for line in s.split("\n"):
@@ -149,6 +157,15 @@ class Option:
                         raise Exception(
                             "Expected true or false for deprecated attribute"
                         )
+                elif key == "experimental":
+                    if v == "true":
+                        experimental = True
+                    elif v == "false":
+                        experimental = False
+                    else:
+                        raise Exception(
+                            "Expected true or false for experimental attribute"
+                        )
                 else:
                     raise Exception("Invalid attribute " + key)
 
@@ -170,11 +187,12 @@ class Option:
             append,
             cli_only,
             deprecated,
+            experimental,
             description.strip(),
         )
 
     @staticmethod
-    def parse_file(filename):
+    def parse_file(filename: str) -> "Option":
         import sys
 
         # sys.stderr.write("Parsing " + filename + "\n")
@@ -182,7 +200,7 @@ class Option:
         return Option.parse(s)
 
 
-def parse_key_value(s) -> tuple[str, str]:
+def parse_key_value(s: str) -> tuple[str, str]:
     if ":" not in s:
         raise Exception("Expecting key value")
     index = s.index(":")

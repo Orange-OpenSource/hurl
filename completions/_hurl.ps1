@@ -58,6 +58,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--no-output', 'no-output', [CompletionResultType]::ParameterName, 'Suppress output. By default, Hurl outputs the body of the last response')
             [CompletionResult]::new('--noproxy', 'noproxy', [CompletionResultType]::ParameterName, 'List of hosts which do not use proxy')
             [CompletionResult]::new('--output', 'output', [CompletionResultType]::ParameterName, 'Write to FILE instead of stdout')
+            [CompletionResult]::new('--parallel', 'parallel', [CompletionResultType]::ParameterName, '(Experimental) Run files in parallel')
             [CompletionResult]::new('--path-as-is', 'path-as-is', [CompletionResultType]::ParameterName, 'Tell Hurl to not handle sequences of /../ or /./ in the given URL path')
             [CompletionResult]::new('--proxy', 'proxy', [CompletionResultType]::ParameterName, 'Use proxy on given PROTOCOL/HOST/PORT')
             [CompletionResult]::new('--report-html', 'report-html', [CompletionResultType]::ParameterName, 'Generate HTML report to DIR')
