@@ -217,18 +217,12 @@ impl Default for LoggerOptionsBuilder {
 
 impl Logger {
     /// Creates a new instance.
-    pub fn new(
-        color: bool,
-        error_format: ErrorFormat,
-        filename: &str,
-        verbosity: Option<Verbosity>,
-        term: Stderr,
-    ) -> Self {
+    pub fn new(options: &LoggerOptions, term: Stderr) -> Self {
         Logger {
-            color,
-            error_format,
-            filename: filename.to_string(),
-            verbosity,
+            color: options.color,
+            error_format: options.error_format,
+            filename: options.filename.to_string(),
+            verbosity: options.verbosity,
             stderr: term,
         }
     }

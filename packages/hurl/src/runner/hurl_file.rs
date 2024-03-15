@@ -87,17 +87,15 @@ pub fn run(
 
     // We also create a common logger for this run (logger verbosity can eventually be mutated on
     // each entry) .
-    let color = logger_options.color;
-    let error_format = logger_options.error_format;
-    let filename = &logger_options.filename;
-    let verbosity = logger_options.verbosity;
-    let mut logger = Logger::new(color, error_format, filename, verbosity, stderr);
+    let mut logger = Logger::new(logger_options, stderr);
 
     // Create a progress bar for the sequential run, progress will be report in the main thread,
     // as soon as an entry is executed.
+    let filename = &logger_options.filename;
     let current_file = logger_options.current_file;
     let total_files = logger_options.total_files;
     let test = logger_options.test;
+    let color = logger_options.color;
     let progress_bar = logger_options.progress_bar;
     let progress = SeqProgress::new(
         filename,
