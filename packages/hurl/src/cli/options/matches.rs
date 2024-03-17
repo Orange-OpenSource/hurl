@@ -121,8 +121,8 @@ pub fn cookie_input_file(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "cookies_input_file")
 }
 
-pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "cookies_output_file")
+pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
+    get::<String>(arg_matches, "cookies_output_file").map(PathBuf::from)
 }
 
 pub fn delay(arg_matches: &ArgMatches) -> Duration {
@@ -235,8 +235,8 @@ pub fn ip_resolve(arg_matches: &ArgMatches) -> Option<IpResolve> {
     }
 }
 
-pub fn junit_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "report_junit")
+pub fn junit_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
+    get::<String>(arg_matches, "report_junit").map(PathBuf::from)
 }
 
 pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
@@ -329,8 +329,8 @@ pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "ssl_no_revoke")
 }
 
-pub fn tap_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "report_tap")
+pub fn tap_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
+    get::<String>(arg_matches, "report_tap").map(PathBuf::from)
 }
 
 pub fn test(arg_matches: &ArgMatches) -> bool {

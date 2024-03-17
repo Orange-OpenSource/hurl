@@ -57,6 +57,7 @@
 mod testcase;
 mod xml;
 use std::fs::File;
+use std::path::Path;
 
 pub use testcase::Testcase;
 
@@ -64,15 +65,18 @@ use crate::report::junit::xml::{Element, XmlDocument};
 use crate::report::Error;
 
 /// Creates a JUnit from a list of `testcases`.
-pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {
+pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Error> {
     // If there is an existing JUnit report, we parses it to insert a new testsuite.
-    let path = std::path::Path::new(&filename);
-    let mut root = if path.exists() {
-        let file = match File::open(path) {
+    let mut root = if filename.exists() {
+        let file = match File::open(filename) {
             Ok(s) => s,
             Err(why) => {
                 return Err(Error {
-                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
+                    message: format!(
+                        "Issue reading {} to string to {:?}",
+                        filename.display(),
+                        why
+                    ),
                 });
             }
         };

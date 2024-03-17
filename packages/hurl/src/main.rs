@@ -87,25 +87,25 @@ fn main() {
     };
 
     if let Some(filename) = opts.junit_file {
-        base_logger.debug(format!("Writing JUnit report to {filename}").as_str());
+        base_logger.debug(&format!("Writing JUnit report to {}", filename.display()));
         let result = create_junit_report(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if let Some(filename) = opts.tap_file {
-        base_logger.debug(format!("Writing TAP report to {filename}").as_str());
+        base_logger.debug(&format!("Writing TAP report to {}", filename.display()));
         let result = create_tap_report(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if let Some(dir) = opts.html_dir {
-        base_logger.debug(format!("Writing HTML report to {}", dir.display()).as_str());
+        base_logger.debug(&format!("Writing HTML report to {}", dir.display()));
         let result = create_html_report(&runs, &dir);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if let Some(filename) = opts.cookie_output_file {
-        base_logger.debug(format!("Writing cookies to {filename}").as_str());
+        base_logger.debug(&format!("Writing cookies to {}", filename.display()));
         let result = create_cookies_file(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
@@ -150,7 +150,7 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
 }
 
 /// Create a JUnit report for this run.
-fn create_junit_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
+fn create_junit_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let testcases: Vec<junit::Testcase> = runs
         .iter()
         .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
@@ -160,7 +160,7 @@ fn create_junit_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
 }
 
 /// Create a TAP report for this run.
-fn create_tap_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
+fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let testcases: Vec<tap::Testcase> = runs
         .iter()
         .map(|r| tap::Testcase::from(&r.hurl_result, &r.filename))
@@ -170,7 +170,7 @@ fn create_tap_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliErr
 }
 
 /// Create an HTML report for this run.
-fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), cli::CliError> {
+fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
     std::fs::create_dir_all(dir_path.join("store")).unwrap();
 
@@ -206,11 +206,12 @@ fn exit_code(runs: &[HurlRun]) -> i32 {
     }
 }
 
-fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
+fn create_cookies_file(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
-            return Err(cli::CliError::IO(format!(
-                "Issue writing to {filename}: {why:?}"
+            return Err(CliError::IO(format!(
+                "Issue writing to {}: {why:?}",
+                filename.display()
             )));
         }
         Ok(file) => file,
@@ -222,7 +223,7 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
     .to_string();
     match runs.first() {
         None => {
-            return Err(cli::CliError::IO("Issue fetching results".to_string()));
+            return Err(CliError::IO("Issue fetching results".to_string()));
         }
         Some(run) => {
             for cookie in run.hurl_result.cookies.iter() {
@@ -233,8 +234,9 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(cli::CliError::IO(format!(
-            "Issue writing to {filename}: {why:?}"
+        return Err(CliError::IO(format!(
+            "Issue writing to {}: {why:?}",
+            filename.display()
         )));
     }
     Ok(())

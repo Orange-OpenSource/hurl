@@ -18,6 +18,7 @@
 
 use std::fs::File;
 use std::io::Write;
+use std::path::Path;
 
 use super::Testcase;
 use crate::report::Error;
@@ -26,7 +27,7 @@ use crate::report::Error;
 const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";
 
 /// Creates/Append a Tap report from a list of `testcases`
-pub fn write_report(filename: &str, new_testcases: &[Testcase]) -> Result<(), Error> {
+pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), Error> {
     let mut testcases = vec![];
 
     let existing_testcases = parse_tap_file(filename)?;
@@ -40,7 +41,7 @@ pub fn write_report(filename: &str, new_testcases: &[Testcase]) -> Result<(), Er
 }
 
 /// Creates a Tap from a list of `testcases`.
-fn write_tap_file(filename: &str, testcases: &[&Testcase]) -> Result<(), Error> {
+fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Error> {
     let mut file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
@@ -70,14 +71,17 @@ fn write_tap_file(filename: &str, testcases: &[&Testcase]) -> Result<(), Error> 
 }
 
 /// Parse Tap report file
-fn parse_tap_file(filename: &str) -> Result<Vec<Testcase>, Error> {
-    let path = std::path::Path::new(&filename);
-    if path.exists() {
-        let s = match std::fs::read_to_string(path) {
+fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, Error> {
+    if filename.exists() {
+        let s = match std::fs::read_to_string(filename) {
             Ok(s) => s,
             Err(why) => {
                 return Err(Error {
-                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
+                    message: format!(
+                        "Issue reading {} to string to {:?}",
+                        filename.display(),
+                        why
+                    ),
                 });
             }
         };
