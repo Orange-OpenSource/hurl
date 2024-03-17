@@ -1,7 +1,9 @@
+
 [4.3.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
 ========================================================================================================================
 
 Thanks to
+[@tarampampam](https://github.com/tarampampam),
 [@jaminalder](https://github.com/jaminalder),
 [@teto](https://github.com/teto),
 
@@ -19,11 +21,12 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix charset parsing logic of Content-Type header [#2540](https://github.com/Orange-OpenSource/hurl/issues/2540)
 * Fix empty glob not always returning an error [#2517](https://github.com/Orange-OpenSource/hurl/issues/2517)
 * Fix hurlfmt query certificate for hurl output format [#2511](https://github.com/Orange-OpenSource/hurl/issues/2511)
 * Fix --test progress bar not displayed when verbose is used [#2506](https://github.com/Orange-OpenSource/hurl/issues/2506)
 * Per request output takes file-root into account for path resolving [#2445](https://github.com/Orange-OpenSource/hurl/issues/2445)
-* Fix silent error when verbose option use unset variable. [#2444](https://github.com/Orange-OpenSource/hurl/issues/2444)
+* Fix silent error when verbose option use unset variable [#2444](https://github.com/Orange-OpenSource/hurl/issues/2444)
 * Fix Content-type header override when used in lowercase [#2416](https://github.com/Orange-OpenSource/hurl/issues/2416)
 
 
