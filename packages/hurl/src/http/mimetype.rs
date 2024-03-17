@@ -36,9 +36,14 @@ pub fn is_html(content_type: &str) -> bool {
 
 /// Extracts charset from mime-type String
 pub fn charset(mime_type: &str) -> Option<String> {
-    mime_type
-        .find("charset=")
-        .map(|index| mime_type[(index + 8)..].to_string())
+    let parts = mime_type.trim().split(';');
+    for part in parts {
+        let param = part.trim().split('=').collect::<Vec<_>>();
+        if param.len() == 2 && param[0].trim().eq_ignore_ascii_case("charset") {
+            return Some(param[1].trim().to_string());
+        }
+    }
+    None
 }
 
 #[cfg(test)]
@@ -51,10 +56,22 @@ pub mod tests {
             charset("text/plain; charset=utf-8"),
             Some("utf-8".to_string())
         );
+
         assert_eq!(
             charset("text/plain; charset=ISO-8859-1"),
             Some("ISO-8859-1".to_string())
         );
+
         assert_eq!(charset("text/plain;"), None);
+
+        assert_eq!(
+            charset("text/plain; CHARSET=ISO-8859-1"),
+            Some("ISO-8859-1".to_string())
+        );
+
+        assert_eq!(
+            charset("text/plain; version=0.0.4; charset=utf-8; escaping=values"),
+            Some("utf-8".to_string())
+        );
     }
 }

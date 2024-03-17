@@ -7,10 +7,19 @@ def charset_default():
     return "<p>Hello World!</p>"
 
 
-@app.route("/charset/uppercase")
-def charset_uppercase():
+@app.route("/charset/uppercase-value")
+def charset_uppercase_value():
     resp = make_response("<p>Hello World!</p>")
     resp.headers["Content-Type"] = "text/html; charset=UTF-8"
+    return resp
+
+
+@app.route("/charset/many-keys")
+def charset_uppercase_many_keys():
+    resp = make_response("<p>Hello World!</p>")
+    resp.headers[
+        "Content-Type"
+    ] = "text/plain; version=0.0.4; charset=utf-8; escaping=values"
     return resp
 
 
@@ -18,6 +27,13 @@ def charset_uppercase():
 def charset_latin1():
     resp = make_response("<p>café</p>".encode("latin1"))
     resp.headers["Content-Type"] = "text/html; charset=latin1"
+    return resp
+
+
+@app.route("/charset/latin1/uppercase-key")
+def charset_latin1_uppercase_key():
+    resp = make_response("<p>café</p>".encode("latin1"))
+    resp.headers["Content-Type"] = "text/html; CHARSET=latin1"
     return resp
 
 
