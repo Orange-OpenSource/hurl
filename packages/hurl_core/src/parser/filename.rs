@@ -27,6 +27,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
 
     let mut elements = vec![];
     loop {
+        let start = reader.state;
         match template(reader) {
             Ok(expr) => {
                 let element = TemplateElement::Expression(expr);
@@ -209,5 +210,70 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.inner, ParseError::Filename);
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
+    }
+
+    #[test]
+    fn test_filename_with_variables() {
+        let mut reader = Reader::new("foo_{{bar}}");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Template {
+                delimiter: None,
+                elements: vec![
+                    TemplateElement::String {
+                        value: "foo_".to_string(),
+                        encoded: "foo_".to_string(),
+                    },
+                    TemplateElement::Expression(Expr {
+                        space0: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
+                        },
+                        variable: Variable {
+                            name: "bar".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                        },
+                        space1: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
+                        },
+                    })
+                ],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
+            }
+        );
+
+        let mut reader = Reader::new("foo_{{bar}}_baz");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Template {
+                delimiter: None,
+                elements: vec![
+                    TemplateElement::String {
+                        value: "foo_".to_string(),
+                        encoded: "foo_".to_string(),
+                    },
+                    TemplateElement::Expression(Expr {
+                        space0: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
+                        },
+                        variable: Variable {
+                            name: "bar".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                        },
+                        space1: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
+                        },
+                    }),
+                    TemplateElement::String {
+                        value: "_baz".to_string(),
+                        encoded: "_baz".to_string(),
+                    },
+                ],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
+            }
+        );
     }
 }

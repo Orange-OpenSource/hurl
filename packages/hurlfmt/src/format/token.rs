@@ -707,7 +707,7 @@ impl Tokenizable for Template {
         if let Some(d) = self.delimiter {
             tokens.push(Token::StringDelimiter(d.to_string()));
         }
-        for element in self.elements.clone() {
+        for element in &self.elements {
             tokens.append(&mut element.tokenize());
         }
         if let Some(d) = self.delimiter {
