@@ -19,7 +19,6 @@ use crate::cli::options::CliOptions;
 use crate::cli::CliError;
 use crate::{cli, HurlRun};
 use hurl::runner::{HurlResult, Input};
-use hurl::util::logger::BaseLogger;
 use hurl::{output, runner};
 use std::path::Path;
 
@@ -30,7 +29,6 @@ pub fn run_seq(
     files: &[Input],
     current_dir: &Path,
     options: &CliOptions,
-    logger: &BaseLogger,
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];
 
@@ -63,8 +61,6 @@ pub fn run_seq(
                 if let Err(e) = result {
                     return Err(CliError::Runtime(e.to_string()));
                 }
-            } else {
-                logger.warning(&format!("No entry have been executed for file {filename}"));
             }
         }
         if matches!(options.output_type, cli::OutputType::Json) {

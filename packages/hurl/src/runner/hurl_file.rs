@@ -131,6 +131,10 @@ pub fn run(
         &mut logger,
     );
 
+    if result.success && result.entries.last().is_none() {
+        logger.warning(&format!("No entry have been executed for file {filename}"));
+    }
+
     progress.on_completed(&result, &mut logger.stderr);
 
     Ok(result)
