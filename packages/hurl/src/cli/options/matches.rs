@@ -154,7 +154,7 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsE
     if let Some(dir) = get::<String>(arg_matches, "report_html") {
         let path = Path::new(&dir);
         if !path.exists() {
-            match std::fs::create_dir(path) {
+            match std::fs::create_dir_all(path) {
                 Err(_) => Err(CliOptionsError::Error(format!(
                     "HTML dir {} can not be created",
                     path.display()
