@@ -169,6 +169,16 @@ pub fn follow_location_trusted() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn from_entry() -> clap::Arg {
+    clap::Arg::new("from_entry")
+        .long("from-entry")
+        .value_name("ENTRY_NUMBER")
+        .value_parser(clap::value_parser!(u32).range(1..))
+        .help("Execute Hurl file from ENTRY_NUMBER (starting at 1)")
+        .conflicts_with("interactive")
+        .num_args(1)
+}
+
 pub fn glob() -> clap::Arg {
     clap::Arg::new("glob")
         .long("glob")

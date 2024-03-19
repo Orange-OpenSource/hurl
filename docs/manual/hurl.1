@@ -1,4 +1,4 @@
-.TH hurl 1 "17 Jan 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "19 Mar 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -106,7 +106,8 @@ More information on asserts can be found here \fIhttps://hurl.dev/docs/asserting
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry.
+Options specified on the command line are defined for every Hurl file's entry,
+except if they are tagged as cli-only (can not be defined in the Hurl request [Options] entry)
 
 For instance:
 
@@ -147,6 +148,8 @@ See also \fI--key\fP.
 
 Colorize debug output (the HTTP response output is not colorized).
 
+This is a cli-only option.
+
 .IP "--compressed "
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
@@ -172,11 +175,15 @@ Note that this option does not affect the behavior with multiple input Hurl file
 
 All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
+This is a cli-only option.
+
 .IP "-b, --cookie <FILE> "
 
 Read cookies from FILE (using the Netscape cookie file format).
 
 Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
 
 .IP "-c, --cookie-jar <FILE> "
 
@@ -184,6 +191,8 @@ Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
 Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
 
 .IP "--delay <MILLISECONDS> "
 
@@ -193,10 +202,20 @@ Sets delay before each request.
 
 Control the format of error message (short by default or long)
 
+This is a cli-only option.
+
 .IP "--file-root <DIR> "
 
 Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
 When it is not explicitly defined, files are relative to the current directory in which Hurl is running.
+
+This is a cli-only option.
+
+.IP "--from-entry <ENTRY_NUMBER> "
+
+Execute Hurl file from ENTRY_NUMBER (starting at 1).
+
+This is a cli-only option.
 
 .IP "--glob <GLOB> "
 
@@ -204,6 +223,8 @@ Specify input files that match the given glob pattern.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
+
+This is a cli-only option.
 
 .IP "-0, --http1.0 "
 
@@ -227,9 +248,13 @@ Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP ve
 
 Ignore all asserts defined in the Hurl file.
 
+This is a cli-only option.
+
 .IP "-i, --include "
 
 Include the HTTP headers in the output
+
+This is a cli-only option.
 
 .IP "-k, --insecure "
 
@@ -240,6 +265,8 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 Stop between requests.
 
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+
+This is a cli-only option.
 
 .IP "-4, --ipv4 "
 
@@ -252,6 +279,8 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 .IP "--json "
 
 Output each Hurl file result to JSON. The format is very closed to HAR format.
+
+This is a cli-only option.
 
 .IP "--key <KEY> "
 
@@ -278,13 +307,37 @@ Maximum time in seconds that you allow a request/response to take. This is the s
 
 See also \fI--connect-timeout\fP.
 
+This is a cli-only option.
+
+.IP "-n, --netrc "
+
+Scan the .netrc file in the user's home directory for the username and password.
+
+See also \fI--netrc-file\fP and \fI--netrc-optional\fP.
+
+.IP "--netrc-file <FILE> "
+
+Like \fI--netrc\fP, but provide the path to the netrc file.
+
+See also \fI--netrc-optional\fP.
+
+.IP "--netrc-optional "
+
+Similar to \fI--netrc\fP, but make the .netrc usage optional.
+
+See also \fI--netrc-file\fP.
+
 .IP "--no-color "
 
 Do not colorize output.
 
+This is a cli-only option.
+
 .IP "--no-output "
 
 Suppress output. By default, Hurl outputs the body of the last response.
+
+This is a cli-only option.
 
 .IP "--noproxy <HOST(S)> "
 
@@ -310,17 +363,23 @@ Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
 
+This is a cli-only option.
+
 .IP "--report-junit <FILE> "
 
 Generate JUnit File.
 
 If the FILE report already exists, it will be updated with the new test results.
 
+This is a cli-only option.
+
 .IP "--report-tap <FILE> "
 
 Generate TAP report.
 
 If the FILE report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
 
 .IP "--resolve <HOST:PORT:ADDR> "
 
@@ -338,14 +397,20 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
+This is a cli-only option.
+
 .IP "--test "
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
+
+This is a cli-only option.
 
 .IP "--to-entry <ENTRY_NUMBER> "
 
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
+
+This is a cli-only option.
 
 .IP "--unix-socket <PATH> "
 
@@ -355,9 +420,13 @@ Ignore the remaining of the file. It is useful for debugging a session.
 
 Add basic Authentication header to each request.
 
+This is a cli-only option.
+
 .IP "-A, --user-agent <NAME> "
 
 Specify the User-Agent string to send to the HTTP server.
+
+This is a cli-only option.
 
 .IP "--variable <NAME=VALUE> "
 
@@ -370,6 +439,8 @@ Set properties file in which your define your variables.
 Each variable is defined as name=value exactly as with \fI--variable\fP option.
 
 Note that defining a variable twice produces an error.
+
+This is a cli-only option.
 
 .IP "-v, --verbose "
 

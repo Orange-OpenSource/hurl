@@ -158,13 +158,9 @@ fn run_entries(
     let mut http_client = Client::new();
     let mut entries_result = vec![];
     let mut variables = variables.clone();
-    let mut entry_index = 1;
+    let mut entry_index = runner_options.from_entry.unwrap_or(1);
+    let n = runner_options.to_entry.unwrap_or(entries.len());
     let mut retry_count = 1;
-    let n = if let Some(to_entry) = runner_options.to_entry {
-        to_entry
-    } else {
-        entries.len()
-    };
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();

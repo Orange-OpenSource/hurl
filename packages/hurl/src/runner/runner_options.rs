@@ -37,6 +37,7 @@ pub struct RunnerOptionsBuilder {
     delay: Duration,
     follow_location: bool,
     follow_location_trusted: bool,
+    from_entry: Option<usize>,
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
@@ -79,6 +80,7 @@ impl Default for RunnerOptionsBuilder {
             delay: Duration::from_millis(0),
             follow_location: false,
             follow_location_trusted: false,
+            from_entry: None,
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
@@ -215,6 +217,12 @@ impl RunnerOptionsBuilder {
     /// To limit the amount of redirects to follow use [`self.max_redirect()`]
     pub fn follow_location_trusted(&mut self, follow_location_trusted: bool) -> &mut Self {
         self.follow_location_trusted = follow_location_trusted;
+        self
+    }
+
+    /// Executes Hurl file from `from_entry` (starting at 1), ignores the beginning of the file.
+    pub fn from_entry(&mut self, from_entry: Option<usize>) -> &mut Self {
+        self.from_entry = from_entry;
         self
     }
 
@@ -383,6 +391,7 @@ impl RunnerOptionsBuilder {
             cookie_input_file: self.cookie_input_file.clone(),
             follow_location: self.follow_location,
             follow_location_trusted: self.follow_location_trusted,
+            from_entry: self.from_entry,
             http_version: self.http_version,
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
@@ -426,6 +435,7 @@ pub struct RunnerOptions {
     pub(crate) cookie_input_file: Option<String>,
     pub(crate) follow_location: bool,
     pub(crate) follow_location_trusted: bool,
+    pub(crate) from_entry: Option<usize>,
     pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,
     pub(crate) ip_resolve: IpResolve,

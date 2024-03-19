@@ -230,6 +230,12 @@ When it is not explicitly defined, files are relative to the current directory i
 
 This is a cli-only option.
 
+### --from-entry <ENTRY_NUMBER> {#from-entry}
+
+Execute Hurl file from ENTRY_NUMBER (starting at 1).
+
+This is a cli-only option.
+
 ### --glob <GLOB> {#glob}
 
 Specify input files that match the given glob pattern.

@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/to_entry.hurl --to-entry 3 --verbose
+hurl --from-entry 10 --to-entry 1 tests_failed/entry.hurl

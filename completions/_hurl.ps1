@@ -37,6 +37,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--file-root', 'file-root', [CompletionResultType]::ParameterName, 'Set root directory to import files [default: current directory]')
             [CompletionResult]::new('--location', 'location', [CompletionResultType]::ParameterName, 'Follow redirects')
             [CompletionResult]::new('--location-trusted', 'location-trusted', [CompletionResultType]::ParameterName, 'Follow redirects but allows sending the name + password to all hosts that the site may redirect to.')
+            [CompletionResult]::new('--from-entry', 'from-entry', [CompletionResultType]::ParameterName, 'Execute Hurl file from ENTRY_NUMBER (starting at 1)')
             [CompletionResult]::new('--glob', 'glob', [CompletionResultType]::ParameterName, 'Specify input files that match the given GLOB. Multiple glob flags may be used')
             [CompletionResult]::new('--http1.0', 'http1.0', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 1.0')
             [CompletionResult]::new('--http1.1', 'http1.1', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 1.1')

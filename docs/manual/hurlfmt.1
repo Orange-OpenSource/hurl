@@ -1,4 +1,4 @@
-.TH hurl 1 "17 Jan 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "19 Mar 2024" "hurl 4.3.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurlfmt - format Hurl files
@@ -60,28 +60,21 @@ hurlfmt can also be used to convert a curl command-line to Hurl
 
 .IP "--check "
 
-Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise. 
+Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise.
 
 This can not be used with \fI--output\fP.
 
 This option is not stable yet.
 
-
 .IP "--color "
 
 Colorize Output.
- 
+
 This can not be used \fI--in-place\fP.
 
+.IP "--in <FORMAT> "
 
-.IP "-h, --help "
-
-Usage help.
-
-.IP "--in "
-
-Specify input format: hurl (default) or curl
-
+Specify input format: hurl or curl.
 
 .IP "--in-place "
 
@@ -89,27 +82,27 @@ Modify file in place.
 
 This can be used only with text output.
 
-
 .IP "--no-color "
 
-Do not colorize Output.
+Do not colorize output.
 
+.IP "--out <FORMAT> "
 
-.IP "--out "
+Specify output format: hurl, json or html.
 
+.IP "-o, --output <FILE> "
 
-Specify output format: hurl (default), json or html
-
-.IP "-o, --output <file> "
-
-Write output to <file> instead of stdout.
-
+Write output to FILE instead of stdout.
 
 .IP "--standalone "
 
 Output full html file with css instead of html fragment (default).
-     
+
 This can be used only with html output.
+
+.IP "-h, --help "
+
+Usage help.
 
 
 .IP "-V, --version "
