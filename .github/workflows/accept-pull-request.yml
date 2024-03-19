@@ -9,7 +9,7 @@ concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
-    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/rebase') }}
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
@@ -75,21 +75,24 @@ jobs:
 
       - name: Notify user
         run: |
-          if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
-            order="/accept --force"
-          else
+          if [[ "${PR_COMMENT}" == "/accept" ]] ; then
             order="/accept"
+          elif [[ "${PR_COMMENT}" == "/accept --force" ]] ; then
+            order="/accept --force"
+          elif [[ "${PR_COMMENT}" == "/rebase" ]] ; then
+            order="/rebase"
           fi
           comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
           gh pr comment "${PR_NUMBER}" --body "${comment}"
+          echo "ORDER=${order}" | tee -a "${GITHUB_ENV}"
 
       - name: Init git bot context
         uses: crazy-max/ghaction-import-gpg@v6.1.0
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
-          git_committer_name: "hurl-bot"
-          git_committer_email: "bot@hurl.dev"
+          git_committer_name: ${{ secrets.HURL_BOT_USER }}
+          git_committer_email: ${{ secrets.HURL_BOT_EMAIL }}
           git_user_signingkey: true
           git_commit_gpgsign: true
 
@@ -106,7 +109,7 @@ jobs:
       - name: Check if PR source branch is not master
         if: env.HEAD_REF == 'master'
         run: |
-          comment="❌ Can not merge this pull request because your working branch is master, please create a new branch as requested in [CONTRIBUTING.md](https://github.com/Orange-OpenSource/hurl/blob/master/CONTRIBUTING.md)."
+          comment="❌ Can not ${{ env.ORDER }} this pull request because your working branch is master, please create a new branch as requested in [CONTRIBUTING.md](https://github.com/Orange-OpenSource/hurl/blob/master/CONTRIBUTING.md)."
           echo "  - ${comment}"
           gh pr comment "${PR_NUMBER}" --body "${comment}"
           exit 1
@@ -116,24 +119,26 @@ jobs:
           if [ "${{ env.PR_STATE }}" = "open" ] ; then
             echo "  - ✅ Pull request is ${{ env.PR_STATE }}."
           else
-            comment="❌ Can not merge this pull request because it is not open (actual state=${{ env.PR_STATE }})."
+            comment="❌ Can not ${{ env.ORDER }} this pull request because it is not open (actual state=${{ env.PR_STATE }})."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
 
       - name: Check if pull request is ready
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           if [ "${{ env.PR_DRAFT }}" = "false" ] ; then
             echo "  - ✅ Pull request draft state is ${{ env.PR_DRAFT }}."
           else
-            comment="❌ Can not merge this pull request because it is still in draft."
+            comment="❌ Can not ${{ env.ORDER }} this pull request because it is still in draft."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
 
       - name: Check if pull request is mergeable
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           if [ "${{ env.PR_MERGEABLE }}" = "true" ] ; then
             echo "  - ✅ Pull request mergeable state is ${{ env.PR_MERGEABLE }}."
@@ -145,6 +150,7 @@ jobs:
           fi
 
       - name: Check GitHub release
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         id: check-github-release
         run: |
           if [ $(echo ${{ env.HEAD_REF }} | grep -Ec '^release/') -eq 0 ] ; then
@@ -171,6 +177,7 @@ jobs:
           fi
 
       - name: Check if source branch is rebased from target branch
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/rebase' }}
         run: |
           git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 1 ] ; then
@@ -181,7 +188,11 @@ jobs:
           fi
           diff_count=$(grep -c ^+ ${{ env.REMAINING_COMMITS_FILE }} || true)
           if [ ${diff_count} -eq 0 ] ; then
-            echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
+            comment="👌 No needs to auto rebase, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` is already rebased from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\`."
+            echo "${comment}" 
+            if [ "${{ env.ORDER }}" == "/rebase" ] ; then
+                gh pr comment "${PR_NUMBER}" --body "${comment}"
+            fi
           else
             git fetch --all
             git switch ${{ env.HEAD_REF }}
@@ -200,17 +211,14 @@ jobs:
               git push --force && exit_code=0 || exit_code=1
             fi
             if [ ${exit_code} -eq 0 ] ; then
-              comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
+              comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/  -/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
-              if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
-                order="/accept --force"
-              else
-                order="/accept"
+              if [ "${{ env.ORDER }}" == "/accept" ] || [ "${{ env.ORDER }}" == "/accept --force" ] ; then
+                  comment="🕗 [${{ env.ORDER }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is still running, please wait for completion."
+                  gh pr comment "${PR_NUMBER}" --body "${comment}"
+                  sleep 15
               fi
-              comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
-              gh pr comment "${PR_NUMBER}" --body "${comment}"
-              sleep 15
             else
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails on `git push --force`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
@@ -220,7 +228,7 @@ jobs:
           fi
 
       - name: Check if pull request checks are successful
-        if: ${{ !contains(github.event.comment.body, '--force') }}
+        if: ${{ github.event.comment.body == '/accept' }}
         run: |
           gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
           if [ "${exit_code}" -eq 0 ] ; then
@@ -233,6 +241,7 @@ jobs:
           fi
 
       - name: Check if source branch is rebased from target branch
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           git pull
           git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
@@ -253,10 +262,12 @@ jobs:
           fi
 
       - name: Get new commits list
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
 
       - name: Merge fast forward head ref to base ref
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
@@ -278,6 +289,7 @@ jobs:
           fi
 
       - name: Close pull request
+        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
             comment="✅ Pull request merged without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
