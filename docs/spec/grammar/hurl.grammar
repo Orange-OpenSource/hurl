@@ -153,7 +153,7 @@ aws-sigv4-option: "aws-sigv4" ":" value-string lt
 
 ca-certificate-option: "cacert" ":" filename lt
 
-client-certificate-option: "cert" ":" value-string lt
+client-certificate-option: "cert" ":" filename-password lt
 
 client-key-option: "key" ":" value-string lt
 
@@ -429,10 +429,18 @@ filename: (filename-content | template)*
 
 filename-content: (filename-text | filename-escaped-char)*
 
-filename-text: ~[#; \n\\]+
+filename-text: ~[#;{} \n\\]+
 
-filename-escaped-char: "\\" (";" | "#" | [ ])
+filename-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";"| " " | "{" | "}" | "u" unicode-char)
 
+
+filename-password: (filename-password-content | template)*
+
+filename-password-content: (filename-password-text | filename-password-escaped-char)*
+
+filename-password-text: ~[#;{} \n\\]+
+
+filename-password-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";" | " "  | "{" | "}" | "u" unicode-char)
 
 unicode-char: "{" hexdigit+ "}"
 
