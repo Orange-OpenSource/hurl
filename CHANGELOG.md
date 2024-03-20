@@ -4,11 +4,14 @@
 
 Thanks to
 [@tarampampam](https://github.com/tarampampam),
+[@CodeMan99](https://github.com/CodeMan99),
+[@OverkillGuy](https://github.com/OverkillGuy),
 [@jaminalder](https://github.com/jaminalder),
 [@teto](https://github.com/teto),
 
 Enhancements:
 
+* Create intermediate directory when using --report-html [#2531](https://github.com/Orange-OpenSource/hurl/issues/2531)
 * Use '-' to read Hurl file from standard input [#2523](https://github.com/Orange-OpenSource/hurl/issues/2523)
 * Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
 * Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
@@ -22,6 +25,7 @@ Enhancements:
 Bugs Fixed:
 
 * Fix charset parsing logic of Content-Type header [#2540](https://github.com/Orange-OpenSource/hurl/issues/2540)
+* Fix filename templatization bug under certains conditions [#2533](https://github.com/Orange-OpenSource/hurl/issues/2533)
 * Fix empty glob not always returning an error [#2517](https://github.com/Orange-OpenSource/hurl/issues/2517)
 * Fix hurlfmt query certificate for hurl output format [#2511](https://github.com/Orange-OpenSource/hurl/issues/2511)
 * Fix --test progress bar not displayed when verbose is used [#2506](https://github.com/Orange-OpenSource/hurl/issues/2506)
