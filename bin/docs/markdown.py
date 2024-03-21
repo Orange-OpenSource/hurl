@@ -6,6 +6,7 @@ This module allows to manipulate Markdown document:
 - extend a Markdown document with another Markdown document,
 - provide utility methods to construct toc.
 """
+
 import re
 import unicodedata
 from textwrap import dedent

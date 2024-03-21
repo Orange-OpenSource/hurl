@@ -17,9 +17,9 @@ def charset_uppercase_value():
 @app.route("/charset/many-keys")
 def charset_uppercase_many_keys():
     resp = make_response("<p>Hello World!</p>")
-    resp.headers[
-        "Content-Type"
-    ] = "text/plain; version=0.0.4; charset=utf-8; escaping=values"
+    resp.headers["Content-Type"] = (
+        "text/plain; version=0.0.4; charset=utf-8; escaping=values"
+    )
     return resp
 
 
