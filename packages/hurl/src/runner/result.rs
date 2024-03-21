@@ -104,28 +104,53 @@ impl Default for EntryResult {
     }
 }
 
+/// Result of a Hurl assertions, either implicit or explicit.
+///
+/// ## Example
+///
+/// ```hurl
+///  GET https://foo.com
+///  HTTP 200
+///  x-baz: bar
+///  [Asserts]
+///  header "toto" == "tutu"
+///  jsonpath "$.state" = "running"
+/// ```
+///
+/// In this Hurl sample, everything after the keyword `HTTP` is an assertion. We distinguish two
+/// types of assertions: implicit and explicit.
+///
+/// - `HTTP 200`: implicit status code assert
+/// - `x-baz: bar`: implicit HTTP header assert
+/// - `header "toto" == "tutu"`: explicit HTTP header assert
+/// - `jsonpath "$.state" = "running"`: explicit JSONPath assert on HTTP body response
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum AssertResult {
+    /// Implicit HTTP version assert (like HTTP/3, HTTP/2 etc...).
     Version {
         actual: String,
         expected: String,
         source_info: SourceInfo,
     },
+    /// Implicit HTTP status code assert.
     Status {
         actual: u64,
         expected: u64,
         source_info: SourceInfo,
     },
+    /// Implicit HTTP response header assert.
     Header {
         actual: Result<String, Error>,
         expected: String,
         source_info: SourceInfo,
     },
+    /// Implicit HTTP response body assert.
     Body {
         actual: Result<Value, Error>,
         expected: Result<Value, Error>,
         source_info: SourceInfo,
     },
+    /// Explicit assert on HTTP response.
     Explicit {
         actual: Result<Option<Value>, Error>,
         source_info: SourceInfo,
@@ -133,9 +158,15 @@ pub enum AssertResult {
     },
 }
 
+/// Represents a [capture](https://hurl.dev/docs/capturing-response.html) of an HTTP response.
+///
+/// Captures are datas extracted by querying the HTTP response. Captures can be part of the response
+/// body, headers, cookies etc... Captures can be used to re-inject datas in next HTTP requests.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CaptureResult {
+    /// Name of the capture.
     pub name: String,
+    /// Value of the capture.
     pub value: Value,
 }
 

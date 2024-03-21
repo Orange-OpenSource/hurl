@@ -17,10 +17,12 @@
  */
 //! Serialize a Hurl run result to a file.
 //!
-//! Therea are two supported serialisation:
+//! There are two supported serialisation:
+//!
 //! - JSON: the whole run is serialized to JSON (like the [HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) format)
+//! [`self::json::write_json`]
 //! - raw: the last response of a run is serialized to a file. The body can be automatically uncompress
-//! or written as it.
+//! or written as it [`self::raw::write_body`]
 mod error;
 mod json;
 mod raw;

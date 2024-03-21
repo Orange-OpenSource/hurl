@@ -15,6 +15,10 @@
  * limitations under the License.
  *
  */
+//! Various HTTP structures like requests, responses, cookies etc.
+//!
+//! The Hurl HTTP engine is not public. It's a wrapper around libcurl and only the models
+//! returned by an HTTP exchange are exposed.
 pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;

@@ -18,15 +18,23 @@
 use core::fmt;
 use std::str::FromStr;
 
+/// [Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) returned by
+/// the server with `Set-Cookie` header, and saved in the cookie storage of the internal HTTP
+/// engine.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {
+    /// Defines the host to which the cookie will be sent.
     pub domain: String,
     pub include_subdomain: String,
+    /// Indicates the path that must exist in the requested URL for the browser to send the Cookie header.
     pub path: String,
+    /// Indicates that the cookie is sent to the server only when a request is made with the https: scheme
     pub https: String,
+    /// Indicates the maximum lifetime of the cookie as an HTTP-date timestamp.
     pub expires: String,
     pub name: String,
     pub value: String,
+    /// Forbids JavaScript from accessing the cookie.
     pub http_only: bool,
 }
 
