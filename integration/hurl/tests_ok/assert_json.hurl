@@ -61,9 +61,13 @@ jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
 jsonpath "$.errors[0]" not isEmpty
 jsonpath "$.empty" isEmpty
-jsonpath "$.*" count == 10
+jsonpath "$.*" count == 11
 jsonpath "$.errors..*" count == 4
 jsonpath "$..id" count == 3
+jsonpath "$.dates[0]" isIsoDate
+jsonpath "$.dates[1]" isIsoDate
+jsonpath "$.tags[0]" not isIsoDate
+
 
 # FIXME do we accept count filter on object?
 # jsonpath "$.empty" count == 0
@@ -77,6 +81,10 @@ jsonpath "$..id" count == 3
   "tags": ["test"],
   "nullable": null,
   "profile-id": "123abc",
+  "dates": [
+    "2022-10-31T09:00:00.594Z",
+    "2024-03-20T11:23:56.773+02:00"
+  ],
   "empty": {}
 }
 

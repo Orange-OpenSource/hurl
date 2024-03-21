@@ -490,6 +490,7 @@ pub enum PredicateFuncValue {
     IsString,
     IsCollection,
     IsDate,
+    IsIsoDate,
     Exist,
     IsEmpty,
 }

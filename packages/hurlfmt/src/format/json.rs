@@ -562,6 +562,9 @@ impl ToJson for Predicate {
             PredicateFuncValue::IsDate => {
                 attributes.push(("type".to_string(), JValue::String("isDate".to_string())));
             }
+            PredicateFuncValue::IsIsoDate => {
+                attributes.push(("type".to_string(), JValue::String("isIsoDate".to_string())));
+            }
             PredicateFuncValue::Exist => {
                 attributes.push(("type".to_string(), JValue::String("exist".to_string())));
             }

@@ -235,6 +235,7 @@ fn expected_no_value(
         PredicateFuncValue::IsString => Ok("string".to_string()),
         PredicateFuncValue::IsCollection => Ok("collection".to_string()),
         PredicateFuncValue::IsDate => Ok("date".to_string()),
+        PredicateFuncValue::IsIsoDate => Ok("date".to_string()),
         PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
     }
@@ -302,6 +303,7 @@ fn eval_predicate_func(
         PredicateFuncValue::IsString => eval_is_string(value),
         PredicateFuncValue::IsCollection => eval_is_collection(value),
         PredicateFuncValue::IsDate => eval_is_date(value),
+        PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
     }
@@ -582,6 +584,27 @@ fn eval_is_date(actual: &Value) -> Result<AssertResult, Error> {
         expected: "date".to_string(),
         type_mismatch: false,
     })
+}
+
+/// Evaluates if `actual` is a string representing a RFC339 date (format YYYY-MM-DDTHH:mm:ss.sssZ).
+///
+/// [`eval_is_date`] performs type check (is the input of [`Value::Date`]), whereas [`eval_is_iso_date`]
+/// checks if a string conforms to a certain date-time format.
+fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, Error> {
+    match actual {
+        Value::String(actual) => Ok(AssertResult {
+            success: chrono::DateTime::parse_from_rfc3339(actual).is_ok(),
+            actual: actual.clone(),
+            expected: "string with format YYYY-MM-DDTHH:mm:ss.sssZ".to_string(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: "string".to_string(),
+            type_mismatch: true,
+        }),
+    }
 }
 
 /// Evaluates if an `actual` value exists.
@@ -982,8 +1005,8 @@ mod tests {
         // FIXME: should be type_mismatch = true here
         // assert!(assert_result.type_mismatch);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <true>");
-        assert_eq!(assert_result.expected.as_str(), "int <10>");
+        assert_eq!(assert_result.actual, "bool <true>");
+        assert_eq!(assert_result.expected, "int <10>");
     }
 
     #[test]
@@ -1000,8 +1023,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "unit");
-        assert_eq!(assert_result.expected.as_str(), "int <10>");
+        assert_eq!(assert_result.actual, "unit");
+        assert_eq!(assert_result.expected, "int <10>");
     }
 
     #[test]
@@ -1018,8 +1041,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "int <1>");
-        assert_eq!(assert_result.expected.as_str(), "int <10>");
+        assert_eq!(assert_result.actual, "int <1>");
+        assert_eq!(assert_result.expected, "int <10>");
 
         // predicate: `== true`
         // value: false
@@ -1028,8 +1051,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <false>");
-        assert_eq!(assert_result.expected.as_str(), "bool <true>");
+        assert_eq!(assert_result.actual, "bool <false>");
+        assert_eq!(assert_result.expected, "bool <true>");
 
         // predicate: `== 1.2`
         // value: 1.1
@@ -1041,8 +1064,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "float <1.1>");
-        assert_eq!(assert_result.expected.as_str(), "float <1.2>");
+        assert_eq!(assert_result.actual, "float <1.1>");
+        assert_eq!(assert_result.expected, "float <1.2>");
     }
 
     #[test]
@@ -1071,8 +1094,8 @@ mod tests {
             eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "none");
-        assert_eq!(assert_result.expected.as_str(), "something");
+        assert_eq!(assert_result.actual, "none");
+        assert_eq!(assert_result.expected, "something");
     }
 
     #[test]
@@ -1089,8 +1112,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "int <1>");
-        assert_eq!(assert_result.expected.as_str(), "int <1>");
+        assert_eq!(assert_result.actual, "int <1>");
+        assert_eq!(assert_result.expected, "int <1>");
     }
 
     #[test]
@@ -1107,8 +1130,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <false>");
-        assert_eq!(assert_result.expected.as_str(), "bool <false>");
+        assert_eq!(assert_result.actual, "bool <false>");
+        assert_eq!(assert_result.expected, "bool <false>");
 
         // predicate: `== true`
         // value: false
@@ -1117,8 +1140,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <false>");
-        assert_eq!(assert_result.expected.as_str(), "bool <true>");
+        assert_eq!(assert_result.actual, "bool <false>");
+        assert_eq!(assert_result.expected, "bool <true>");
 
         // predicate: `== true`
         // value: true
@@ -1127,8 +1150,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <true>");
-        assert_eq!(assert_result.expected.as_str(), "bool <true>");
+        assert_eq!(assert_result.actual, "bool <true>");
+        assert_eq!(assert_result.expected, "bool <true>");
     }
 
     #[test]
@@ -1148,8 +1171,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "float <1.1>");
-        assert_eq!(assert_result.expected.as_str(), "float <1.1>");
+        assert_eq!(assert_result.actual, "float <1.1>");
+        assert_eq!(assert_result.expected, "float <1.1>");
     }
 
     #[test]
@@ -1166,8 +1189,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "float <1.0>");
-        assert_eq!(assert_result.expected.as_str(), "int <1>");
+        assert_eq!(assert_result.actual, "float <1.0>");
+        assert_eq!(assert_result.expected, "int <1>");
     }
 
     #[test]
@@ -1184,8 +1207,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "int <2>");
-        assert_eq!(assert_result.expected.as_str(), "int <1>");
+        assert_eq!(assert_result.actual, "int <2>");
+        assert_eq!(assert_result.expected, "int <1>");
     }
 
     #[test]
@@ -1243,14 +1266,8 @@ mod tests {
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(
-            assert_result.actual.as_str(),
-            "string <http://localhost:8000>"
-        );
-        assert_eq!(
-            assert_result.expected.as_str(),
-            "string <http://localhost:8000>"
-        );
+        assert_eq!(assert_result.actual, "string <http://localhost:8000>");
+        assert_eq!(assert_result.expected, "string <http://localhost:8000>");
     }
 
     #[test]
@@ -1313,8 +1330,8 @@ mod tests {
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "count equals to 1");
-        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+        assert_eq!(assert_result.actual, "count equals to 1");
+        assert_eq!(assert_result.expected, "count equals to 0");
 
         // predicate: `isEmpty`
         // value: Nodeset(12)
@@ -1322,8 +1339,8 @@ mod tests {
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "count equals to 12");
-        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+        assert_eq!(assert_result.actual, "count equals to 12");
+        assert_eq!(assert_result.expected, "count equals to 0");
     }
 
     #[test]
@@ -1334,8 +1351,8 @@ mod tests {
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "count equals to 0");
-        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+        assert_eq!(assert_result.actual, "count equals to 0");
+        assert_eq!(assert_result.expected, "count equals to 0");
 
         // predicate: `isEmpty`
         // value: Nodeset(0)
@@ -1343,8 +1360,8 @@ mod tests {
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "count equals to 0");
-        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+        assert_eq!(assert_result.actual, "count equals to 0");
+        assert_eq!(assert_result.expected, "count equals to 0");
     }
 
     #[test]
@@ -1355,8 +1372,8 @@ mod tests {
         let assert_result = eval_is_integer(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "int <1>");
-        assert_eq!(assert_result.expected.as_str(), "integer");
+        assert_eq!(assert_result.actual, "int <1>");
+        assert_eq!(assert_result.expected, "integer");
 
         // predicate: `isInteger`
         // value: 1
@@ -1364,8 +1381,8 @@ mod tests {
         let assert_result = eval_is_integer(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "float <1.0>");
-        assert_eq!(assert_result.expected.as_str(), "integer");
+        assert_eq!(assert_result.actual, "float <1.0>");
+        assert_eq!(assert_result.expected, "integer");
     }
 
     #[test]
@@ -1447,11 +1464,8 @@ mod tests {
         let assert_result = eval_is_date(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(
-            assert_result.actual.as_str(),
-            "date <2002-06-16 10:10:10 UTC>"
-        );
-        assert_eq!(assert_result.expected.as_str(), "date");
+        assert_eq!(assert_result.actual, "date <2002-06-16 10:10:10 UTC>");
+        assert_eq!(assert_result.expected, "date");
 
         // predicate: `isDate`
         // value: "toto"
@@ -1459,8 +1473,8 @@ mod tests {
         let assert_result = eval_is_date(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "string <toto>");
-        assert_eq!(assert_result.expected.as_str(), "date");
+        assert_eq!(assert_result.actual, "string <toto>");
+        assert_eq!(assert_result.expected, "date");
     }
 
     #[test]
@@ -1528,7 +1542,52 @@ mod tests {
         let assert_result = eval_match(&expected, source_info, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "string <aa>");
-        assert_eq!(assert_result.expected.as_str(), "matches regex <a{3}>");
+        assert_eq!(assert_result.actual, "string <aa>");
+        assert_eq!(assert_result.expected, "matches regex <a{3}>");
+    }
+
+    #[test]
+    fn test_predicate_is_iso_date() {
+        let value = Value::String("2020-03-09T22:18:26.625Z".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+        assert!(!res.type_mismatch);
+        assert_eq!(res.actual, "2020-03-09T22:18:26.625Z");
+        assert_eq!(res.expected, "string with format YYYY-MM-DDTHH:mm:ss.sssZ");
+
+        // Some values from <https://datatracker.ietf.org/doc/html/rfc3339>
+        let value = Value::String("1985-04-12T23:20:50.52Z".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+
+        let value = Value::String("1996-12-19T16:39:57-08:00".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+
+        let value = Value::String("1990-12-31T23:59:60Z".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+
+        let value = Value::String("1990-12-31T15:59:60-08:00".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+
+        let value = Value::String("1937-01-01T12:00:27.87+00:20".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(res.success);
+
+        let value = Value::String("1978-01-15".to_string());
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(!res.success);
+        assert!(!res.type_mismatch);
+        assert_eq!(res.actual, "1978-01-15");
+        assert_eq!(res.expected, "string with format YYYY-MM-DDTHH:mm:ss.sssZ");
+
+        let value = Value::Bool(true);
+        let res = eval_is_iso_date(&value).unwrap();
+        assert!(!res.success);
+        assert!(res.type_mismatch);
+        assert_eq!(res.actual, "bool <true>");
+        assert_eq!(res.expected, "string");
     }
 }

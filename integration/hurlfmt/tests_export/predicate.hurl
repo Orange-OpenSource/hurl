@@ -16,7 +16,8 @@ jsonpath "$.book" exists                     # exists
 jsonpath "$.nooks" includes "Dune"           # includes
 jsonpath "$.succeeded" isBoolean             # isBoolean
 jsonpath "$.books" isCollection              # isCollection
-jsonpath "$.publication_date" isDate         # isDate
+certificate "Expire-Date" isDate             # isDate
+jsonpath "$.publication_date" isIsoDate      # isIsoDate
 jsonpath "$.movies" isEmpty                  # isEmpty
 jsonpath "$.height" isFloat                  # isFloat
 jsonpath "$.count" isInteger                 # isInteger

@@ -15,6 +15,10 @@ def assert_json():
   "tags": ["test"],
   "nullable": null,
   "profile-id": "123abc",
+  "dates": [
+    "2022-10-31T09:00:00.594Z",
+    "2024-03-20T11:23:56.773+02:00"
+  ],
   "empty": {}
 }""",
         mimetype="application/json",

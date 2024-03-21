@@ -9,5 +9,7 @@ def predicate_error_type():
      "count": 1, 
      "empty": "", 
      "number": 1.0,
-     "list": [1,2,3] 
+     "list": [1,2,3],
+     "not_a_date": "2018",
+     "is_a_date": "2018-12-10T13:45:00.000Z"
 }"""
