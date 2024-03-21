@@ -6,13 +6,17 @@ Thanks to
 [@tarampampam](https://github.com/tarampampam),
 [@CodeMan99](https://github.com/CodeMan99),
 [@OverkillGuy](https://github.com/OverkillGuy),
+[@hsanson](https://github.com/hsanson),
 [@jaminalder](https://github.com/jaminalder),
 [@teto](https://github.com/teto),
+[@humphd](https://github.com/humphd),
 
 Enhancements:
 
 * Create intermediate directory when using --report-html [#2531](https://github.com/Orange-OpenSource/hurl/issues/2531)
 * Use '-' to read Hurl file from standard input [#2523](https://github.com/Orange-OpenSource/hurl/issues/2523)
+* Add --from-entry option to execute a file from a given entry [#2500](https://github.com/Orange-OpenSource/hurl/issues/2500)
+* Add isIsoDate predicate (take a string, checks YYYY-MM-DDTHH:mm:sssZ) [#2427](https://github.com/Orange-OpenSource/hurl/issues/2427)
 * Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
 * Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
 * Add --netrc, --netrc-file and --netrc-optional options [#2094](https://github.com/Orange-OpenSource/hurl/issues/2094)
