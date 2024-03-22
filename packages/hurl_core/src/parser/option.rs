@@ -23,7 +23,7 @@ use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{expr, filename, ParseResult};
+use crate::parser::{expr, filename, filename_password, ParseResult};
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -101,7 +101,7 @@ fn option_cacert(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_cert(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = filename::parse(reader)?;
+    let value = filename_password::parse(reader)?;
     Ok(OptionKind::ClientCert(value))
 }
 

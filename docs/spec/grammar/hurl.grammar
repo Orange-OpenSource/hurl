@@ -443,7 +443,7 @@ filename-password-content: (filename-password-text | filename-password-escaped-c
 
 filename-password-text: ~[#;{} \n\\]+
 
-filename-password-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";" | " "  | "{" | "}" | "u" unicode-char)
+filename-password-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";" | " " | "{" | "}" | ":" | "u" unicode-char)
 
 unicode-char: "{" hexdigit+ "}"
 

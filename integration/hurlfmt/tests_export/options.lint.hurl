@@ -3,6 +3,7 @@ GET http://localhost:8000/hello
 aws-sigv4: aws:amz:eu-central-1:sts
 cacert: cacertfile
 cert: certfile
+cert: certfile:qU114@q,["NO
 key: keyfile
 compressed: false
 connect-to: example.com:443:example.net:8443
@@ -42,7 +43,7 @@ GET http://localhost:8000/hello
 [Options]
 aws-sigv4: {{aws-sigv4}}
 #cacert: {{cacert}}         NOT SUPPORTED YET
-#cert: {{cert}}             NOT SUPPORTED YET
+cert: {{cert}}
 #key: {{key}}               NOT SUPPORTED YET
 compressed: {{compressed}}
 connect-to: {{connect-to}}

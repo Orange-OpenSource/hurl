@@ -39,6 +39,7 @@ mod cookiepath;
 mod error;
 mod expr;
 mod filename;
+mod filename_password;
 mod filter;
 mod json;
 mod key_string;

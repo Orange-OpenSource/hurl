@@ -22,6 +22,12 @@ use crate::parser::reader::Reader;
 use crate::parser::template::template;
 use crate::parser::{string, ParseResult};
 
+/// Parse a filename.
+///
+/// A few characters need to be escaped such as space
+/// for example: file\ with\ space.txt
+/// This is very similar to the behaviour in a standard shell.
+///
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.state;
 
@@ -105,26 +111,15 @@ fn filename_text(reader: &mut Reader) -> String {
         match reader.read() {
             None => break,
             Some(c) => {
-                if c.is_alphanumeric()
-                    || c == '_'
-                    || c == '-'
-                    || c == '.'
-                    || c == '['
-                    || c == ']'
-                    || c == '@'
-                    || c == '$'
-                    || c == '/'
-                    || c == ':'
-                {
-                    s.push(c);
-                } else {
+                if ['#', ';', '{', '}', ' ', '\n', '\\'].contains(&c) {
                     reader.state = save;
                     break;
+                } else {
+                    s.push(c);
                 }
             }
         }
     }
-
     s
 }
 
@@ -132,19 +127,17 @@ fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
     let start = reader.state;
     match reader.read() {
-        Some(';') => Ok(';'),
-        Some('#') => Ok('#'),
-        Some('[') => Ok('['),
-        Some(' ') => Ok(' '),
-        Some(']') => Ok(']'),
-        Some(':') => Ok(':'),
         Some('\\') => Ok('\\'),
-        Some('/') => Ok('/'),
         Some('b') => Ok('\x08'),
         Some('f') => Ok('\x0c'),
         Some('n') => Ok('\n'),
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
+        Some('#') => Ok('#'),
+        Some(';') => Ok(';'),
+        Some(' ') => Ok(' '),
+        Some('{') => Ok('{'),
+        Some('}') => Ok('}'),
         Some('u') => string::unicode(reader),
         _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
     }
@@ -205,11 +198,33 @@ mod tests {
     }
 
     #[test]
+    fn test_escaped_chars() {
+        let mut reader = Reader::new("filename\\{"); // to the possible escaped chars
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "filename{".to_string(),
+                    encoded: "filename\\{".to_string()
+                }],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11)),
+            }
+        );
+        assert_eq!(reader.state.cursor, 10);
+    }
+
+    #[test]
     fn test_filename_error() {
-        let mut reader = Reader::new("???");
+        let mut reader = Reader::new("{");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.inner, ParseError::Filename);
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
+
+        let mut reader = Reader::new("\\:");
+        let error = parse(&mut reader).err().unwrap();
+        assert_eq!(error.inner, ParseError::EscapeChar);
+        assert_eq!(error.pos, Pos { line: 1, column: 2 });
     }
 
     #[test]
@@ -226,7 +241,7 @@ mod tests {
                     },
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
                         variable: Variable {
@@ -234,7 +249,7 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                         },
                         space1: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
                         },
                     })
@@ -255,7 +270,7 @@ mod tests {
                     },
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
                         variable: Variable {
@@ -263,7 +278,7 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                         },
                         space1: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
                         },
                     }),
