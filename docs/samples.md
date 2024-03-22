@@ -307,6 +307,7 @@ jsonpath "$.links" count == 12
 jsonpath "$.state" != null
 jsonpath "$.order" matches "^order-\\d{8}$"
 jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex literal
+jsonpath "$.created" isIsoDate
 ```
 
 [Doc](/docs/asserting-response.md#jsonpath-assert)

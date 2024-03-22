@@ -182,7 +182,7 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
 | __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                    |
 | __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
-| __`isDate`__       | Query returns a date                                                                | `jsonpath "$.publication_date" isDate`                                                |
+| __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                 | `jsonpath "$.publication_date" isIsoDate`                                             |
 | __`isEmpty`__      | Query returns an empty collection                                                   | `jsonpath "$.movies" isEmpty`                                                         |
 | __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
 | __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
@@ -828,3 +828,4 @@ of all file nodes.
 [count]: /docs/filters.md#count
 [`decode` filter]: /docs/filters.md#decode
 [headers implicit asserts]: #headers
+[RFC 3339]: https://www.rfc-editor.org/rfc/rfc3339

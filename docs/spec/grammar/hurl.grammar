@@ -296,6 +296,7 @@ predicate-func:
   | string-predicate
   | collection-predicate
   | date-predicate
+  | iso-date-predicate
 
 equal-predicate: ("equals" | "==") sp predicate-value
 
@@ -334,6 +335,8 @@ string-predicate: "isString"
 collection-predicate: "isCollection"
 
 date-predicate: "isDate"
+
+iso-date-predicate: "isIsoDate"
 
 predicate-value:
     boolean
