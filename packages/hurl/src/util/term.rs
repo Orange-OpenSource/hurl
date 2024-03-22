@@ -119,15 +119,12 @@ impl Stderr {
     pub fn eprintln(&mut self, message: &str) {
         match self.mode {
             WriteMode::Immediate => {
-                let has_status = !self.progress.is_empty();
-                if has_status {
-                    // This is the "EL - Erase in Line" sequence. It clears from the cursor
-                    // to the end of line.
-                    // https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
-                    eprint!("\x1B[K");
+                let has_progress = !self.progress.is_empty();
+                if has_progress {
+                    self.rewind_cursor();
                 }
                 eprintln!("{message}");
-                if has_status {
+                if has_progress {
                     eprint!("{}", self.progress);
                 }
             }
@@ -152,6 +149,32 @@ impl Stderr {
     /// Returns the buffered standard error.
     pub fn buffer(&self) -> &str {
         &self.buffer
+    }
+
+    /// Clears any progress and reset cursor terminal to the position of the last "real" message.
+    fn rewind_cursor(&self) {
+        if self.progress.is_empty() {
+            return;
+        }
+        match self.mode {
+            WriteMode::Immediate => {
+                // We count the number of new lines \n. We can't use the `String::lines()` because
+                // it counts a line for a single carriage return. We don't want to go up for a
+                // single carriage return.
+                let lines = self.progress.chars().filter(|c| *c == '\n').count();
+
+                // We used the following ANSI codes:
+                // - K: "EL - Erase in Line" sequence. It clears from the cursor to the end of line.
+                // - 1A: "Cursor Up". Up to one line
+                // <https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences>
+                if lines > 0 {
+                    (0..lines).for_each(|_| eprint!("\x1B[1A\x1B[K"));
+                } else {
+                    eprint!("\x1B[K");
+                }
+            }
+            WriteMode::Buffered => {}
+        }
     }
 }
 
