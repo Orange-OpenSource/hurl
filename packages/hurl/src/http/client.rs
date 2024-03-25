@@ -50,7 +50,7 @@ use crate::util::path::ContextDir;
 #[derive(Debug)]
 pub struct Client {
     /// The handle to libcurl binding
-    handle: Box<easy::Easy>,
+    handle: easy::Easy,
     /// Current State
     state: ClientState,
     /// HTTP version support
@@ -89,7 +89,7 @@ impl Client {
         let handle = easy::Easy::new();
         let version = Version::get();
         Client {
-            handle: Box::new(handle),
+            handle,
             state: ClientState::default(),
             http2: version.feature_http2(),
             http3: version.feature_http3(),
