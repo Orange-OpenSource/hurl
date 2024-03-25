@@ -281,6 +281,7 @@ pub mod tests {
                 errors: vec![],
                 time_in_ms: 0,
                 compressed: false,
+                max_filesize: 0,
             };
             HurlRun {
                 content: String::new(),

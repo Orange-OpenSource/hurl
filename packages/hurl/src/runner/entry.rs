@@ -117,6 +117,8 @@ pub fn run(
     // 3. finally, run the remaining asserts
     let mut asserts = vec![];
 
+    let max_filesize = client_options.max_filesize;
+
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
             let mut status_asserts = eval_version_status_asserts(response_spec, http_response);
@@ -133,6 +135,7 @@ pub fn run(
                     errors,
                     time_in_ms,
                     compressed,
+                    max_filesize,
                 };
             }
         }
@@ -152,6 +155,7 @@ pub fn run(
                     errors: vec![e],
                     time_in_ms,
                     compressed,
+                    max_filesize,
                 };
             }
         },
@@ -179,6 +183,7 @@ pub fn run(
         errors,
         time_in_ms,
         compressed,
+        max_filesize,
     }
 }
 
@@ -230,6 +235,7 @@ impl ClientOptions {
                 Some(Verbosity::VeryVerbose) => Some(http::Verbosity::VeryVerbose),
                 _ => None,
             },
+            max_filesize: runner_options.max_filesize,
         }
     }
 }

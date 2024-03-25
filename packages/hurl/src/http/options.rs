@@ -52,6 +52,7 @@ pub struct ClientOptions {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub verbosity: Option<Verbosity>,
+    pub max_filesize: usize,
 }
 
 // FIXME/ we could implement copy here
@@ -92,6 +93,7 @@ impl Default for ClientOptions {
             user: None,
             user_agent: None,
             verbosity: None,
+            max_filesize: 0,
         }
     }
 }
@@ -242,6 +244,7 @@ mod tests {
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
                 verbosity: None,
+                max_filesize: 0,
             }
             .curl_args(),
             [
