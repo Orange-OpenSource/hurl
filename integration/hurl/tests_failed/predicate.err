@@ -173,7 +173,7 @@ error: Assert failure
    |   expected: count equals to 0
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/predicate.hurl:21:22
    |
    | GET http://localhost:8000/predicate/error/type
@@ -272,7 +272,7 @@ error: Assert failure
    |   expected: less than or equals to <integer <1>>
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/predicate.hurl:31:24
    |
    | GET http://localhost:8000/predicate/error/type

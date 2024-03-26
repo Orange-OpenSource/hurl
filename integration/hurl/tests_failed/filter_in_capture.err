@@ -1,4 +1,4 @@
-error: Filter Error
+error: Filter error
   --> tests_failed/filter_in_capture.hurl:4:21
    |
    | GET http://localhost:8000/error-filter-in-capture

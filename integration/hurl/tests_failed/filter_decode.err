@@ -1,4 +1,4 @@
-error: Filter Error
+error: Filter error
   --> tests_failed/filter_decode.hurl:6:7
    |
    | GET http://localhost:8000/filter-decode
@@ -7,7 +7,7 @@ error: Filter Error
    |       ^^^^^^^^^^^^^^^^ <unknown> encoding is not supported
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/filter_decode.hurl:7:7
    |
    | GET http://localhost:8000/filter-decode

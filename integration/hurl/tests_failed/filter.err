@@ -1,4 +1,4 @@
-error: Filter Error
+error: Filter error
   --> tests_failed/filter.hurl:4:17
    |
    | GET http://localhost:8000/error-filter
@@ -7,7 +7,7 @@ error: Filter Error
    |                 ^^^^^ invalid filter input: string <123x>
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/filter.hurl:5:21
    |
    | GET http://localhost:8000/error-filter
@@ -16,7 +16,7 @@ error: Filter Error
    |                     ^^^^^ invalid filter input: bool <true>
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/filter.hurl:6:22
    |
    | GET http://localhost:8000/error-filter
@@ -25,7 +25,7 @@ error: Filter Error
    |                      ^^^^^ missing value to apply filter
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/filter.hurl:7:19
    |
    | GET http://localhost:8000/error-filter
@@ -34,7 +34,7 @@ error: Filter Error
    |                   ^^^^^ invalid filter input: Out of bound - size is 3
    |
 
-error: Filter Error
+error: Filter error
   --> tests_failed/filter.hurl:8:17
    |
    | GET http://localhost:8000/error-filter
