@@ -172,7 +172,7 @@ pub fn get_entry_options(
                     }
                     OptionKind::NetRcFile(value) => {
                         let filename = eval_template(value, variables)?;
-                        runner_options.netrc_file = Some(filename.to_string());
+                        runner_options.netrc_file = Some(filename);
                     }
                     OptionKind::NetRcOptional(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -189,7 +189,7 @@ pub fn get_entry_options(
                     }
                     OptionKind::Proxy(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.proxy = Some(value.to_string());
+                        runner_options.proxy = Some(value);
                     }
                     OptionKind::Resolve(value) => {
                         let value = eval_template(value, variables)?;
@@ -209,7 +209,11 @@ pub fn get_entry_options(
                     }
                     OptionKind::UnixSocket(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.unix_socket = Some(value.to_string());
+                        runner_options.unix_socket = Some(value);
+                    }
+                    OptionKind::User(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.user = Some(value);
                     }
                     OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;

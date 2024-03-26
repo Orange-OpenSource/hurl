@@ -3,6 +3,6 @@ POST http://localhost:8000/aws-sigv4
 test: test
 [Options]
 aws-sigv4: aws:amz:eu-central-1:hurltest
-
+user: someAccessKeyId:someSecretKey
 HTTP 200
 

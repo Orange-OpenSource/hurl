@@ -31,6 +31,7 @@ retry: 4
 retry-interval: 1000
 skip: false
 unix-socket: build/unix_socket.sock
+user: bob:secret
 variable: user=null
 variable: status=true
 variable: count=2
@@ -42,13 +43,14 @@ very-verbose: false
 GET http://localhost:8000/hello
 [Options]
 aws-sigv4: {{aws-sigv4}}
-#cacert: {{cacert}}         NOT SUPPORTED YET
+cacert: {{cacert}}
 cert: {{cert}}
-#key: {{key}}               NOT SUPPORTED YET
+key: {{key}}
 compressed: {{compressed}}
 connect-to: {{connect-to}}
 delay: {{delay}}
 location: {{location}}
+location-trusted: {{location-trusted}}
 http1.0: {{http10}}
 http1.1: {{http11}}
 http2: {{http2}}
@@ -58,16 +60,17 @@ ipv4: {{ipv4}}
 ipv6: {{ipv6}}
 max-redirs: {{max-redirs}}
 netrc: {{netrc}}
-#netrc-file: {{netrc-file}} NOT SUPPORTED YET
+netrc-file: {{netrc-file}}
 netrc-optional: {{netrc-optional}}
-#output: {{output}}         NOT SUPPORTED YET
+output: {{output}}
 path-as-is: {{path-as-is}}
 proxy: {{proxy}}
 resolve: {{resolve}}
 retry: {{retry}}
 retry-interval: {{retry-interval}}
 skip: {{skip}}
+unix-socket: {{socket-file}}
+user: {{user}}
 #variable: {{variable}}     NOT SUPPORTED YET
-unix-socket: {{socket_file}}
 verbose: {{verbose}}
 very-verbose: {{very-verbose}}

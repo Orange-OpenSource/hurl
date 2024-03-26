@@ -740,6 +740,7 @@ pub enum OptionKind {
     RetryInterval(NaturalOption),
     Skip(BooleanOption),
     UnixSocket(Template),
+    User(Template),
     Variable(VariableDefinition),
     Verbose(BooleanOption),
     VeryVerbose(BooleanOption),
@@ -776,6 +777,7 @@ impl OptionKind {
             OptionKind::RetryInterval(_) => "retry-interval",
             OptionKind::Skip(_) => "skip",
             OptionKind::UnixSocket(_) => "unix-socket",
+            OptionKind::User(_) => "user",
             OptionKind::Variable(_) => "variable",
             OptionKind::Verbose(_) => "verbose",
             OptionKind::VeryVerbose(_) => "very-verbose",
@@ -812,6 +814,7 @@ impl OptionKind {
             OptionKind::RetryInterval(value) => value.to_string(),
             OptionKind::Skip(value) => value.to_string(),
             OptionKind::UnixSocket(value) => value.to_string(),
+            OptionKind::User(value) => value.to_string(),
             OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                 format!("{name}={value}")
             }

@@ -242,6 +242,7 @@ impl HtmlFormatter {
             OptionKind::RetryInterval(value) => self.fmt_natural_option(value),
             OptionKind::Skip(value) => self.fmt_bool_option(value),
             OptionKind::UnixSocket(value) => self.fmt_template(value),
+            OptionKind::User(value) => self.fmt_template(value),
             OptionKind::Variable(value) => self.fmt_variable_definition(value),
             OptionKind::Verbose(value) => self.fmt_bool_option(value),
             OptionKind::VeryVerbose(value) => self.fmt_bool_option(value),

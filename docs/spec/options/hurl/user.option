@@ -3,6 +3,5 @@ long: user
 short: u
 value: USER:PASSWORD
 help: Add basic Authentication header to each request
-cli_only: true
 ---
 Add basic Authentication header to each request.

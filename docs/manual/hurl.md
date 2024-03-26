@@ -439,8 +439,6 @@ This is a cli-only option.
 
 Add basic Authentication header to each request.
 
-This is a cli-only option.
-
 ### -A, --user-agent <NAME> {#user-agent}
 
 Specify the User-Agent string to send to the HTTP server.

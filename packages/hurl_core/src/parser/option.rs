@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
@@ -67,6 +66,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "retry-interval" => option_retry_interval(reader)?,
         "skip" => option_skip(reader)?,
         "unix-socket" => option_unix_socket(reader)?,
+        "user" => option_user(reader)?,
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
@@ -223,6 +223,11 @@ fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_skip(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Skip(value))
+}
+
+fn option_user(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::User(value))
 }
 
 fn option_unix_socket(reader: &mut Reader) -> ParseResult<OptionKind> {

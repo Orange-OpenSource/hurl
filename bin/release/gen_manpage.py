@@ -13,16 +13,15 @@ Examples:
 import sys
 import re
 from datetime import date
+from typing import Optional
 
 
-def header(version, date):
-    return '.TH hurl 1 "%s" "hurl %s" " Hurl Manual"' % (
-        date.strftime("%d %b %Y"),
-        version,
-    )
+def header(version: str, today: date) -> str:
+    today_formatted = today.strftime("%d %b %Y")
+    return f'.TH hurl 1 "{today_formatted}" "hurl {version}" " Hurl Manual"'
 
 
-def version():
+def version() -> Optional[str]:
     p = re.compile('version = "(.*)"')
     for line in open("packages/hurl/Cargo.toml", "r").readlines():
         m = p.match(line)
@@ -31,7 +30,7 @@ def version():
     return None
 
 
-def process_code_block(s):
+def process_code_block(s: str) -> str:
     output = ""
     indent = False
     for line in s.split("\n"):
@@ -47,25 +46,24 @@ def process_code_block(s):
             output += "\n"
 
     return output
-    # p.sub('\\\\f[C]\\1\\\\f[R]', s)
 
 
-def convert_md(s):
-    p = re.compile("^###\s+(.*)")
+def convert_md(s) -> str:
+    p = re.compile(r"^###\s+(.*)")
     s = p.sub('.IP "\\1"', s)
 
-    p = re.compile("^##")
+    p = re.compile(r"^##")
     s = p.sub(".SH", s)
 
-    p = re.compile("\*\*(.*)\*\*\s+")
+    p = re.compile(r"\*\*(.*)\*\*\s+")
     s = p.sub(".B \\1\n", s)
 
     # Remove link Text
-    p = re.compile("\[`?(.*?)`?\]\(.*?\)")
+    p = re.compile(r"\[`?(.*?)`?\]\(.*?\)")
     s = p.sub("\\\\fI\\1\\\\fP", s)
 
     # Remove local anchor
-    p = re.compile("{#.*}")
+    p = re.compile(r"{#.*}")
     s = p.sub("", s)
     return s
 
