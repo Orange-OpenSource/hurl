@@ -23,12 +23,10 @@ use hurl_core::ast::*;
 use crate::http;
 use crate::http::ClientOptions;
 use crate::runner::error::Error;
-use crate::runner::request::{cookie_storage_clear, cookie_storage_set, eval_request};
-use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_asserts};
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::value::Value;
-use crate::runner::CaptureResult;
+use crate::runner::{request, response, CaptureResult};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
@@ -48,7 +46,7 @@ pub fn run(
     let compressed = runner_options.compressed;
     let source_info = entry.source_info();
     let context_dir = &runner_options.context_dir;
-    let http_request = match eval_request(&entry.request, variables, context_dir) {
+    let http_request = match request::eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
@@ -64,14 +62,14 @@ pub fn run(
 
     // Experimental features with cookie storage
     use std::str::FromStr;
-    if let Some(s) = cookie_storage_set(&entry.request) {
+    if let Some(s) = request::cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(&cookie, &client_options);
         } else {
             logger.warning(&format!("Cookie string can not be parsed: '{s}'"));
         }
     }
-    if cookie_storage_clear(&entry.request) {
+    if request::cookie_storage_clear(&entry.request) {
         http_client.clear_cookie_storage(&client_options);
     }
 
@@ -119,7 +117,8 @@ pub fn run(
 
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut status_asserts = eval_version_status_asserts(response_spec, http_response);
+            let mut status_asserts =
+                response::eval_version_status_asserts(response_spec, http_response);
             let errors = asserts_to_errors(&status_asserts);
             asserts.append(&mut status_asserts);
             if !errors.is_empty() {
@@ -140,21 +139,23 @@ pub fn run(
 
     let captures = match &entry.response {
         None => vec![],
-        Some(response_spec) => match eval_captures(response_spec, http_response, variables) {
-            Ok(captures) => captures,
-            Err(e) => {
-                return EntryResult {
-                    entry_index,
-                    source_info,
-                    calls,
-                    captures: vec![],
-                    asserts,
-                    errors: vec![e],
-                    time_in_ms,
-                    compressed,
-                };
+        Some(response_spec) => {
+            match response::eval_captures(response_spec, http_response, variables) {
+                Ok(captures) => captures,
+                Err(e) => {
+                    return EntryResult {
+                        entry_index,
+                        source_info,
+                        calls,
+                        captures: vec![],
+                        asserts,
+                        errors: vec![e],
+                        time_in_ms,
+                        compressed,
+                    };
+                }
             }
-        },
+        }
     };
     log_captures(&captures, logger);
     logger.debug("");
@@ -163,7 +164,7 @@ pub fn run(
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
             let mut other_asserts =
-                eval_asserts(response_spec, variables, http_response, context_dir);
+                response::eval_asserts(response_spec, variables, http_response, context_dir);
             asserts.append(&mut other_asserts);
         }
     };

@@ -23,11 +23,9 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::{HeaderVec, AUTHORIZATION};
-use crate::runner::body::eval_body;
 use crate::runner::error::Error;
-use crate::runner::multipart::eval_multipart_param;
-use crate::runner::template::eval_template;
 use crate::runner::value::Value;
+use crate::runner::{body, multipart, template};
 use crate::util::path::ContextDir;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
@@ -37,21 +35,21 @@ pub fn eval_request(
     context_dir: &ContextDir,
 ) -> Result<http::RequestSpec, Error> {
     let method = eval_method(&request.method);
-    let url = eval_template(&request.url, variables)?;
+    let url = template::eval_template(&request.url, variables)?;
 
     // Headers
     let mut headers = HeaderVec::new();
     for header in &request.headers {
-        let name = eval_template(&header.key, variables)?;
-        let value = eval_template(&header.value, variables)?;
+        let name = template::eval_template(&header.key, variables)?;
+        let value = template::eval_template(&header.value, variables)?;
         let header = http::Header::new(&name, &value);
         headers.push(header);
     }
 
     // Basic auth
     if let Some(kv) = &request.basic_auth() {
-        let name = eval_template(&kv.key, variables)?;
-        let value = eval_template(&kv.value, variables)?;
+        let name = template::eval_template(&kv.key, variables)?;
+        let value = template::eval_template(&kv.value, variables)?;
         let user_password = format!("{}:{}", name, value);
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
@@ -61,19 +59,19 @@ pub fn eval_request(
     }
 
     // Query string params
-    let mut querystring: Vec<http::Param> = vec![];
+    let mut querystring = vec![];
     for param in &request.querystring_params() {
-        let name = eval_template(&param.key, variables)?;
-        let value = eval_template(&param.value, variables)?;
+        let name = template::eval_template(&param.key, variables)?;
+        let value = template::eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
         querystring.push(param);
     }
 
     // Form params
-    let mut form: Vec<http::Param> = vec![];
+    let mut form = vec![];
     for param in &request.form_params() {
-        let name = eval_template(&param.key, variables)?;
-        let value = eval_template(&param.value, variables)?;
+        let name = template::eval_template(&param.key, variables)?;
+        let value = template::eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
         form.push(param);
     }
@@ -81,20 +79,20 @@ pub fn eval_request(
     // Cookies
     let mut cookies = vec![];
     for cookie in &request.cookies() {
-        let name = eval_template(&cookie.name, variables)?;
-        let value = eval_template(&cookie.value, variables)?;
+        let name = template::eval_template(&cookie.name, variables)?;
+        let value = template::eval_template(&cookie.value, variables)?;
         let cookie = http::RequestCookie { name, value };
         cookies.push(cookie);
     }
 
     let body = match &request.body {
-        Some(body) => eval_body(body, variables, context_dir)?,
+        Some(body) => body::eval_body(body, variables, context_dir)?,
         None => http::Body::Binary(vec![]),
     };
 
     let mut multipart = vec![];
     for multipart_param in &request.multipart_form_data() {
-        let param = eval_multipart_param(multipart_param, variables, context_dir)?;
+        let param = multipart::eval_multipart_param(multipart_param, variables, context_dir)?;
         multipart.push(param);
     }
 

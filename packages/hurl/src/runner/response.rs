@@ -20,15 +20,9 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::assert::eval_explicit_assert;
-use crate::runner::body::eval_body;
-use crate::runner::capture::eval_capture;
 use crate::runner::error::{Error, RunnerError};
-use crate::runner::json::eval_json_value;
-use crate::runner::multiline::eval_multiline;
 use crate::runner::result::{AssertResult, CaptureResult};
-use crate::runner::template::eval_template;
-use crate::runner::Value;
+use crate::runner::{assert, body, capture, json, multiline, template, Value};
 use crate::util::path::ContextDir;
 
 /// Returns a list of assert results on the response status code and HTTP version,
@@ -70,8 +64,8 @@ pub fn eval_asserts(
     let mut asserts = vec![];
 
     // First, evaluates implicit asserts on response headers.
-    for header in response.headers.iter() {
-        match eval_template(&header.value, variables) {
+    for header in &response.headers {
+        match template::eval_template(&header.value, variables) {
             Err(e) => {
                 let result = AssertResult::Header {
                     actual: Err(e),
@@ -81,7 +75,7 @@ pub fn eval_asserts(
                 asserts.push(result);
             }
             Ok(expected) => {
-                match eval_template(&header.key, variables) {
+                match template::eval_template(&header.key, variables) {
                     Ok(header_name) => {
                         let actuals = http_response.headers.values(&header_name);
                         if actuals.is_empty() {
@@ -149,8 +143,9 @@ pub fn eval_asserts(
     }
 
     // Then, checks all the explicit asserts.
-    for assert in response.asserts().iter() {
-        let assert_result = eval_explicit_assert(assert, variables, http_response, context_dir);
+    for assert in &response.asserts() {
+        let assert_result =
+            assert::eval_explicit_assert(assert, variables, http_response, context_dir);
         asserts.push(assert_result);
     }
     asserts
@@ -165,7 +160,7 @@ fn eval_implicit_body_asserts(
 ) -> AssertResult {
     match &spec_body.value {
         Bytes::Json(value) => {
-            let expected = match eval_json_value(value, variables, true) {
+            let expected = match json::eval_json_value(value, variables, true) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };
@@ -204,7 +199,7 @@ fn eval_implicit_body_asserts(
             }
         }
         Bytes::OnelineString(value) => {
-            let expected = match eval_template(value, variables) {
+            let expected = match template::eval_template(value, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };
@@ -225,7 +220,7 @@ fn eval_implicit_body_asserts(
             }
         }
         Bytes::MultilineString(multi) => {
-            let expected = match eval_multiline(multi, variables) {
+            let expected = match multiline::eval_multiline(multi, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };
@@ -298,7 +293,7 @@ fn eval_implicit_body_asserts(
             }
         }
         Bytes::File { .. } => {
-            let expected = match eval_body(spec_body, variables, context_dir) {
+            let expected = match body::eval_body(spec_body, variables, context_dir) {
                 Ok(body) => Ok(Value::Bytes(body.bytes())),
                 Err(e) => Err(e),
             };
@@ -328,8 +323,8 @@ pub fn eval_captures(
     variables: &mut HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, Error> {
     let mut captures = vec![];
-    for capture in response.captures().iter() {
-        let capture_result = eval_capture(capture, variables, http_response)?;
+    for capture in &response.captures() {
+        let capture_result = capture::eval_capture(capture, variables, http_response)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.
         variables.insert(capture_result.name.clone(), capture_result.value.clone());
