@@ -13,6 +13,7 @@ Thanks to
 
 Enhancements:
 
+* Support --user option per request [#2585](https://github.com/Orange-OpenSource/hurl/issues/2585)
 * Create intermediate directory when using --report-html [#2531](https://github.com/Orange-OpenSource/hurl/issues/2531)
 * Use '-' to read Hurl file from standard input [#2523](https://github.com/Orange-OpenSource/hurl/issues/2523)
 * Add --from-entry option to execute a file from a given entry [#2500](https://github.com/Orange-OpenSource/hurl/issues/2500)
