@@ -18,7 +18,6 @@
 use std::fmt;
 use std::sync::mpsc::Sender;
 use std::thread;
-use std::time::Duration;
 
 use hurl_core::parser;
 
@@ -26,9 +25,10 @@ use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::{
     CompletedMsg, IOErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,
 };
-use crate::runner::HurlResult;
+use crate::runner;
+use crate::runner::EventListener;
 use crate::util::logger::Logger;
-use crate::util::term::{Stderr, WriteMode};
+use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// A worker runs job in its own thread.
 pub struct Worker {
@@ -56,8 +56,11 @@ impl fmt::Display for WorkerId {
 
 impl Worker {
     /// Creates a new worker, with id `worker_id` and sender `tx`.
-    pub fn new(worker_id: WorkerId, tx: Sender<WorkerMessage>) -> Self {
-        Worker { worker_id, tx }
+    pub fn new(worker_id: WorkerId, tx: &Sender<WorkerMessage>) -> Self {
+        Worker {
+            worker_id,
+            tx: tx.clone(),
+        }
     }
 
     /// Requests to process a `job`.
@@ -72,50 +75,79 @@ impl Worker {
         thread::spawn(move || {
             // In parallel execution, standard output and standard error messages are buffered
             // (in sequential mode, we'll use immediate standard output and error).
+            let mut stdout = Stdout::new(WriteMode::Buffered);
             let stderr = Stderr::new(WriteMode::Buffered);
 
             // We also create a common logger for this run (logger verbosity can eventually be
             // mutated on each entry).
             let mut logger = Logger::new(&job.logger_options, stderr);
 
+            // Create a worker progress listener.
+            let progress = WorkerProgress::new(worker_id, &job, &tx);
+
             let content = job.filename.read_to_string();
             let content = match content {
                 Ok(c) => c,
                 Err(e) => {
-                    let msg = IOErrorMsg::new(worker_id, job.clone(), e);
+                    let msg = IOErrorMsg::new(worker_id, &job, e);
                     return tx.send(WorkerMessage::IOError(msg));
                 }
             };
 
-            let msg = RunningMsg::new(worker_id, job.clone());
-            _ = tx.send(WorkerMessage::Running(msg));
-
             // Try to parse the content
             let hurl_file = parser::parse_hurl_file(&content);
-            let _hurl_file = match hurl_file {
+            let hurl_file = match hurl_file {
                 Ok(h) => h,
                 Err(e) => {
                     logger.error_parsing_rich(&content, &e);
-                    let stderr = logger.stderr().clone();
-                    let msg = ParsingErrorMsg::new(worker_id, job.clone(), stderr);
+                    let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
                     return tx.send(WorkerMessage::ParsingError(msg));
                 }
             };
 
-            // TODO: execute Hurl file!
-            thread::sleep(Duration::from_secs(1));
+            // Now, we have a syntactically correct HurlFile instance, we can run it.
+            let result = runner::run_entries(
+                &hurl_file.entries,
+                &content,
+                &job.runner_options,
+                &job.variables,
+                &mut stdout,
+                &progress,
+                &mut logger,
+            );
 
-            // Placeholder for execution
-            let result = HurlResult {
-                entries: vec![],
-                time_in_ms: 0,
-                success: true,
-                cookies: vec![],
-                timestamp: 0,
-            };
+            if result.success && result.entries.last().is_none() {
+                logger.warning(&format!(
+                    "No entry have been executed for file {}",
+                    job.filename
+                ));
+            }
             let job_result = JobResult::new(job, content, result);
             let msg = CompletedMsg::new(worker_id, job_result);
             tx.send(WorkerMessage::Completed(msg))
         });
+    }
+}
+
+struct WorkerProgress {
+    worker_id: WorkerId,
+    job: Job,
+    tx: Sender<WorkerMessage>,
+}
+
+impl WorkerProgress {
+    fn new(worker_id: WorkerId, job: &Job, tx: &Sender<WorkerMessage>) -> Self {
+        WorkerProgress {
+            worker_id,
+            job: job.clone(),
+            tx: tx.clone(),
+        }
+    }
+}
+
+impl EventListener for WorkerProgress {
+    fn on_running(&self, entry_index: usize, entry_count: usize, _stderr: &mut Stderr) {
+        let msg = RunningMsg::new(self.worker_id, &self.job, entry_index, entry_count);
+        _ = self.tx.send(WorkerMessage::Running(msg));
     }
 }

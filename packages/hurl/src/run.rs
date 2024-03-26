@@ -102,7 +102,9 @@ pub fn run_par(
     current_dir: &Path,
     options: &CliOptions,
 ) -> Result<Vec<HurlRun>, CliError> {
+    // TODO: default worker count to [`std::thread::available_parallelism`]
     let workers_count = min(files.len(), options.max_workers);
+    let variables = &options.variables;
 
     let jobs = files
         .iter()
@@ -110,11 +112,16 @@ pub fn run_par(
         .map(|(seq, input)| {
             let runner_options = options.to_runner_options(input, current_dir);
             let logger_options = options.to_logger_options(input, seq, files.len());
-            Job::new(input, seq, &runner_options, &logger_options)
+            Job::new(input, seq, &runner_options, variables, &logger_options)
         })
         .collect::<Vec<_>>();
 
-    let mut runner = ParallelRunner::new(workers_count, options.progress_bar, options.color);
+    let mut runner = ParallelRunner::new(
+        workers_count,
+        options.test,
+        options.progress_bar,
+        options.color,
+    );
     let results = runner.run(&jobs)?;
     let results = results.into_iter().map(HurlRun::from).collect();
     Ok(results)

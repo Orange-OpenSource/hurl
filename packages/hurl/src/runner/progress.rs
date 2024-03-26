@@ -15,30 +15,16 @@
  * limitations under the License.
  *
  */
-use crate::runner::HurlResult;
-use crate::util::term::Stderr;
 use colored::Colorize;
 
-/// This trait represents the operation progress of the execution of one Hurl file.
-pub trait Progress {
-    /// Call at the beginning of the execution of a Hurl file, just before the parsing of content.
-    /// Should be called only once during the execution of a file.
-    fn on_start(&self, stderr: &mut Stderr);
-
-    /// Call when starting a new entry, `current` is the entry 0-based index in the Hurl file,
-    /// and `total` is the total number of entries in the Hurl file.
-    fn on_entry(&self, current: usize, total: usize, stderr: &mut Stderr);
-
-    /// Call when an Hurl file has been executed, whether the run is successful or failed. `result`
-    /// can be used to check the success of the run.
-    /// Note: a parsing error will only trigger [`on_start`] and not [`on_complete`], as we consider
-    /// that there hasn't been any execution.
-    fn on_completed(&self, result: &HurlResult, stderr: &mut Stderr);
-}
+use crate::runner::{EventListener, HurlResult};
+use crate::util;
+use crate::util::term::Stderr;
 
 /// Implements a progress report specifically used for sequential execution of multiple Hurl files,
-/// in `--test` mode.
-/// This progress bar uses standard error to report information.
+///
+/// In `--test` mode, this progress can display a progress bar or not. This progress uses standard
+/// error to report information, us
 pub struct SeqProgress {
     /// Filename of the running Hurl file.
     filename: String,
@@ -46,12 +32,20 @@ pub struct SeqProgress {
     current_file: usize,
     /// The total number of files that will be executed sequentially.
     total_files: usize,
-    /// Report start and completion event.
-    test: bool,
-    /// Show a progress bar or not (usually `true` in interactive mode)
-    progress_bar: bool,
-    /// Is the progress bar using color.
+    /// Mode of the progress reporter
+    mode: Mode,
+    /// The standard error uses color or not.
     color: bool,
+}
+
+#[derive(Copy, Clone)]
+pub enum Mode {
+    /// Run without --test
+    Default,
+    /// Run with --test and with a progress bar
+    TestWithProgress,
+    /// Run with --test and no progress bar
+    TestWithoutProgress,
 }
 
 impl SeqProgress {
@@ -60,26 +54,26 @@ impl SeqProgress {
         filename: &str,
         current_file: usize,
         total_files: usize,
-        test: bool,
-        progress_bar: bool,
+        mode: Mode,
         color: bool,
     ) -> Self {
         SeqProgress {
             filename: filename.to_string(),
             current_file,
             total_files,
-            test,
-            progress_bar,
+            mode,
             color,
         }
     }
 }
 
-impl Progress for SeqProgress {
-    fn on_start(&self, stderr: &mut Stderr) {
-        if !self.test {
+impl SeqProgress {
+    /// Displays start of the entry processing on `stderr`.
+    pub fn print_test_start(&self, stderr: &mut Stderr) {
+        if matches!(self.mode, Mode::Default) {
             return;
         }
+
         let current = self.current_file + 1;
         let total = self.total_files;
         let message = if self.color {
@@ -94,80 +88,47 @@ impl Progress for SeqProgress {
         stderr.eprintln(&message);
     }
 
-    fn on_entry(&self, current: usize, total: usize, stderr: &mut Stderr) {
-        if !self.progress_bar {
+    /// Displays the test result of an entry run, on `stderr`.
+    pub fn print_test_completed(&self, result: &HurlResult, stderr: &mut Stderr) {
+        if matches!(self.mode, Mode::Default) {
             return;
         }
-        let progress = progress_string(current + 1, total);
-        stderr.set_progress(&format!(" {progress}\r"));
-    }
 
-    fn on_completed(&self, result: &HurlResult, stderr: &mut Stderr) {
-        if !self.test {
-            return;
-        }
+        let count = result.entries.iter().flat_map(|r| &r.calls).count();
+        let duration = result.time_in_ms;
         let message = if self.color {
             let state = if result.success {
                 "Success".green().bold()
             } else {
                 "Failure".red().bold()
             };
-            let count = result.entries.iter().flat_map(|r| &r.calls).count();
-            format!(
-                "{}: {} ({} request(s) in {} ms)",
-                self.filename.bold(),
-                state,
-                count,
-                result.time_in_ms
-            )
+            let filename = self.filename.bold();
+            format!("{filename}: {state} ({count} request(s) in {duration} ms)")
         } else {
             let state = if result.success { "Success" } else { "Failure" };
-            let count = result.entries.iter().flat_map(|r| &r.calls).count();
-            format!(
-                "{}: {} ({} request(s) in {} ms)",
-                self.filename, state, count, result.time_in_ms
-            )
+            let filename = &self.filename;
+            format!("{filename}: {state} ({count} request(s) in {duration} ms)")
         };
         stderr.eprintln(&message);
     }
 }
 
-/// Returns the progress string with the current entry at `entry_index` (1-based index).
-fn progress_string(entry_index: usize, count: usize) -> String {
-    const WIDTH: usize = 24;
-    // We report the number of entries already processed.
-    let progress = (entry_index - 1) as f64 / count as f64;
-    let col = (progress * WIDTH as f64) as usize;
-    let completed = if col > 0 {
-        "=".repeat(col)
-    } else {
-        String::new()
-    };
-    let void = " ".repeat(WIDTH - col - 1);
-    format!("[{completed}>{void}] {entry_index}/{count}")
+impl EventListener for SeqProgress {
+    fn on_running(&self, entry_index: usize, entry_count: usize, stderr: &mut Stderr) {
+        if !matches!(self.mode, Mode::TestWithProgress) {
+            return;
+        }
+        let bar = util::progress_bar(entry_index + 1, entry_count);
+        stderr.set_progress_bar(&format!(" {bar}\r"));
+    }
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::runner::progress::progress_string;
-
-    #[rustfmt::skip]
-    #[test]
-    fn test_progress_string() {
-        // Progress strings with 20 entries:
-        assert_eq!(progress_string(1,  20), "[>                       ] 1/20");
-        assert_eq!(progress_string(2,  20), "[=>                      ] 2/20");
-        assert_eq!(progress_string(5,  20), "[====>                   ] 5/20");
-        assert_eq!(progress_string(10, 20), "[==========>             ] 10/20");
-        assert_eq!(progress_string(15, 20), "[================>       ] 15/20");
-        assert_eq!(progress_string(20, 20), "[======================> ] 20/20");
-
-        // Progress strings with 3 entries:
-        assert_eq!(progress_string(1, 3), "[>                       ] 1/3");
-        assert_eq!(progress_string(2, 3), "[========>               ] 2/3");
-        assert_eq!(progress_string(3, 3), "[================>       ] 3/3");
-
-        // Progress strings with 1 entries:
-        assert_eq!(progress_string(1, 1), "[>                       ] 1/1");
+impl Mode {
+    pub fn new(test: bool, progress_bar: bool) -> Self {
+        match (test, progress_bar) {
+            (true, true) => Mode::TestWithProgress,
+            (true, false) => Mode::TestWithoutProgress,
+            _ => Mode::Default,
+        }
     }
 }

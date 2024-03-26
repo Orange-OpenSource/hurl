@@ -101,8 +101,8 @@ pub struct Stderr {
     mode: WriteMode,
     /// Internal buffer, filled when `mode` is [`WriteMode::Buffered`]
     buffer: String,
-    /// Progress string: when not empty, it is always displayed at the end of the terminal.
-    progress: String,
+    /// Progress bar: when not empty, it is always displayed at the end of the terminal.
+    progress_bar: String,
 }
 
 impl Stderr {
@@ -111,7 +111,7 @@ impl Stderr {
         Stderr {
             mode,
             buffer: String::new(),
-            progress: String::new(),
+            progress_bar: String::new(),
         }
     }
 
@@ -119,13 +119,13 @@ impl Stderr {
     pub fn eprintln(&mut self, message: &str) {
         match self.mode {
             WriteMode::Immediate => {
-                let has_progress = !self.progress.is_empty();
+                let has_progress = !self.progress_bar.is_empty();
                 if has_progress {
                     self.rewind_cursor();
                 }
                 eprintln!("{message}");
                 if has_progress {
-                    eprint!("{}", self.progress);
+                    eprint!("{}", self.progress_bar);
                 }
             }
             WriteMode::Buffered => {
@@ -139,13 +139,13 @@ impl Stderr {
     pub fn eprint(&mut self, message: &str) {
         match self.mode {
             WriteMode::Immediate => {
-                let has_progress = !self.progress.is_empty();
+                let has_progress = !self.progress_bar.is_empty();
                 if has_progress {
                     self.rewind_cursor();
                 }
                 eprint!("{message}");
                 if has_progress {
-                    eprint!("{}", self.progress);
+                    eprint!("{}", self.progress_bar);
                 }
             }
             WriteMode::Buffered => {
@@ -154,21 +154,21 @@ impl Stderr {
         }
     }
 
-    /// Sets the progress string (only in [`WriteMode::Immediate`] mode).
-    pub fn set_progress(&mut self, progress: &str) {
+    /// Sets the progress bar (only in [`WriteMode::Immediate`] mode).
+    pub fn set_progress_bar(&mut self, progress: &str) {
         match self.mode {
             WriteMode::Immediate => {
-                self.progress = progress.to_string();
-                eprint!("{}", self.progress);
+                self.progress_bar = progress.to_string();
+                eprint!("{}", self.progress_bar);
             }
             WriteMode::Buffered => {}
         }
     }
 
     /// Clears the progress string (only in [`WriteMode::Immediate`] mode).
-    pub fn clear_progress(&mut self) {
+    pub fn clear_progress_bar(&mut self) {
         self.rewind_cursor();
-        self.progress.clear();
+        self.progress_bar.clear();
     }
 
     /// Returns the buffered standard error.
@@ -178,7 +178,7 @@ impl Stderr {
 
     /// Clears any progress and reset cursor terminal to the position of the last "real" message.
     fn rewind_cursor(&self) {
-        if self.progress.is_empty() {
+        if self.progress_bar.is_empty() {
             return;
         }
         match self.mode {
@@ -186,7 +186,7 @@ impl Stderr {
                 // We count the number of new lines \n. We can't use the `String::lines()` because
                 // it counts a line for a single carriage return. We don't want to go up for a
                 // single carriage return.
-                let lines = self.progress.chars().filter(|c| *c == '\n').count();
+                let lines = self.progress_bar.chars().filter(|c| *c == '\n').count();
 
                 // We used the following ANSI codes:
                 // - K: "EL - Erase in Line" sequence. It clears from the cursor to the end of line.
@@ -220,7 +220,7 @@ mod tests {
     fn buffered_stderr() {
         let mut stderr = Stderr::new(WriteMode::Buffered);
         stderr.eprintln("toto");
-        stderr.set_progress("some progress...\r");
+        stderr.set_progress_bar("some progress...\r");
         stderr.eprintln("tutu");
 
         assert_eq!(stderr.buffer(), "toto\ntutu\n")

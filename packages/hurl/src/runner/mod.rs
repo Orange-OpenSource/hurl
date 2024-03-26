@@ -19,7 +19,11 @@
 //! A runner for Hurl files. If you want to execute an Hurl file, this is the right place.
 
 pub use self::error::{Error, RunnerError};
+#[doc(hidden)]
+pub use self::event::EventListener;
 pub use self::hurl_file::run;
+#[doc(hidden)]
+pub use self::hurl_file::run_entries;
 pub use self::input::Input;
 pub use self::number::Number;
 pub use self::output::Output;
@@ -32,6 +36,7 @@ mod body;
 mod capture;
 mod entry;
 mod error;
+mod event;
 mod expr;
 mod filter;
 mod hurl_file;

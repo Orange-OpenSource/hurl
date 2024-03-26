@@ -19,6 +19,6 @@
 pub mod error;
 pub mod job;
 mod message;
-mod progress_bar;
+mod progress;
 pub mod runner;
 mod worker;

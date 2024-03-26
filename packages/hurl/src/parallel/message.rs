@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use std::io;
+
 use crate::parallel::job::{Job, JobResult};
 use crate::parallel::worker::WorkerId;
 use crate::util::term::Stderr;
-use std::io;
 
 /// Represents a message sent from the worker to the runner (running on the main thread).
 pub enum WorkerMessage {
@@ -40,10 +41,10 @@ pub struct IOErrorMsg {
 }
 
 impl IOErrorMsg {
-    pub fn new(worker_id: WorkerId, job: Job, error: io::Error) -> Self {
+    pub fn new(worker_id: WorkerId, job: &Job, error: io::Error) -> Self {
         IOErrorMsg {
             worker_id,
-            job,
+            job: job.clone(),
             error,
         }
     }
@@ -57,11 +58,11 @@ pub struct ParsingErrorMsg {
 }
 
 impl ParsingErrorMsg {
-    pub fn new(worker_id: WorkerId, job: Job, stderr: Stderr) -> Self {
+    pub fn new(worker_id: WorkerId, job: &Job, stderr: &Stderr) -> Self {
         ParsingErrorMsg {
             worker_id,
-            job,
-            stderr,
+            job: job.clone(),
+            stderr: stderr.clone(),
         }
     }
 }
@@ -69,12 +70,22 @@ impl ParsingErrorMsg {
 /// A message sent from worker to runner at regular time to inform that the job is being run.
 pub struct RunningMsg {
     pub worker_id: WorkerId,
+    /// Current job for this message
     pub job: Job,
+    /// 0-based index of the current entry
+    pub entry_index: usize,
+    /// Number of entries
+    pub entry_count: usize,
 }
 
 impl RunningMsg {
-    pub fn new(worker_id: WorkerId, job: Job) -> Self {
-        RunningMsg { worker_id, job }
+    pub fn new(worker_id: WorkerId, job: &Job, entry_index: usize, entry_count: usize) -> Self {
+        RunningMsg {
+            worker_id,
+            job: job.clone(),
+            entry_index,
+            entry_count,
+        }
     }
 }
 

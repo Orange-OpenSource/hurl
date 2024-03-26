@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::runner::{HurlResult, Input, RunnerOptions};
+use std::collections::HashMap;
+
+use crate::runner::{HurlResult, Input, RunnerOptions, Value};
 use crate::util::logger::LoggerOptions;
 
 /// Represents the job to run. A job instance groups the input data to execute, and has no methods
@@ -26,6 +28,8 @@ pub struct Job {
     pub filename: Input,
     /// The options to run this file.
     pub runner_options: RunnerOptions,
+    /// Set of variables injected in the Hurl file
+    pub variables: HashMap<String, Value>,
     /// The logger options for this run
     pub logger_options: LoggerOptions,
     /// The job 0-based index in the jobs list
@@ -38,11 +42,13 @@ impl Job {
         filename: &Input,
         seq: usize,
         runner_options: &RunnerOptions,
+        variables: &HashMap<String, Value>,
         logger_options: &LoggerOptions,
     ) -> Self {
         Job {
             filename: filename.clone(),
             runner_options: runner_options.clone(),
+            variables: variables.clone(),
             logger_options: logger_options.clone(),
             seq,
         }

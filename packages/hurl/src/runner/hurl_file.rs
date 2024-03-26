@@ -21,12 +21,13 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
-use hurl_core::ast::{Body, Bytes, Entry, HurlFile, MultilineString, Request, Response, Retry};
+use hurl_core::ast::{Body, Bytes, Entry, MultilineString, Request, Response, Retry};
 use hurl_core::error::Error;
 use hurl_core::parser;
 
 use crate::http::{Call, Client};
-use crate::runner::progress::{Progress, SeqProgress};
+use crate::runner::event::EventListener;
+use crate::runner::progress::{Mode, SeqProgress};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
@@ -101,12 +102,11 @@ pub fn run(
         filename,
         current_file,
         total_files,
-        test,
-        progress_bar,
+        Mode::new(test, progress_bar),
         color,
     );
 
-    progress.on_start(&mut logger.stderr);
+    progress.print_test_start(&mut logger.stderr);
 
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
@@ -119,8 +119,6 @@ pub fn run(
     };
 
     // Now, we have a syntactically correct HurlFile instance, we can run it.
-    log_run_info(&hurl_file, runner_options, variables, &mut logger);
-
     let result = run_entries(
         &hurl_file.entries,
         content,
@@ -135,7 +133,7 @@ pub fn run(
         logger.warning(&format!("No entry have been executed for file {filename}"));
     }
 
-    progress.on_completed(&result, &mut logger.stderr);
+    progress.print_test_completed(&result, &mut logger.stderr);
 
     Ok(result)
 }
@@ -144,15 +142,15 @@ pub fn run(
 ///
 /// `content` is the original source content, used to construct `entries`. It is used to construct
 /// rich error messages with annotated source code.
-/// New entry run events are reported to `progress` and are usually used to
-/// display a progress bar in test mode.
-fn run_entries(
+/// New entry run events are reported to `progress` and are usually used to display a progress bar
+/// in test mode.
+pub fn run_entries(
     entries: &[Entry],
     content: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     stdout: &mut Stdout,
-    progress: &dyn Progress,
+    listener: &dyn EventListener,
     logger: &mut Logger,
 ) -> HurlResult {
     let mut http_client = Client::new();
@@ -164,6 +162,8 @@ fn run_entries(
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
+
+    log_run_info(entries, runner_options, &variables, logger);
 
     // Main loop processing each entry.
     // The `entry_index` is not always incremented of each loop tick: an entry can be retried upon
@@ -198,7 +198,7 @@ fn run_entries(
 
         warn_deprecated(entry, logger);
 
-        progress.on_entry(entry_index - 1, n, &mut logger.stderr);
+        listener.on_running(entry_index - 1, n, &mut logger.stderr);
 
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
@@ -468,7 +468,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
 
 /// Logs various debug information at the start of `hurl_file` run.
 fn log_run_info(
-    hurl_file: &HurlFile,
+    entries: &[Entry],
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     logger: &mut Logger,
@@ -490,11 +490,7 @@ fn log_run_info(
         }
     }
     if let Some(to_entry) = runner_options.to_entry {
-        logger.debug(&format!(
-            "Executing {}/{} entries",
-            to_entry,
-            hurl_file.entries.len()
-        ));
+        logger.debug(&format!("Executing {to_entry}/{} entries", entries.len()));
     }
 }
 
