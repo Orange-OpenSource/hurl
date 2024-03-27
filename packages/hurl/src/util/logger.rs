@@ -474,11 +474,10 @@ pub(crate) fn error_string<E: Error>(
     };
     let line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
     text.push_str(&line);
-    text.push('\n');
 
-    // 3. Appends line separator.
-    text.push_str(&prefix);
+    // 3. Appends additional empty line
     text.push('\n');
+    text.push_str(&prefix);
 
     // 4. Appends the optional entry line.
     if let Some(entry_line) = entry_line {
@@ -489,14 +488,15 @@ pub(crate) fn error_string<E: Error>(
             } else {
                 line.to_string()
             };
+            text.push('\n');
             text.push_str(&prefix);
             text.push(' ');
             text.push_str(&line);
-            text.push('\n');
         }
         if error_line - entry_line > 1 {
+            text.push('\n');
             text.push_str(&prefix);
-            let dots = " ...\n";
+            let dots = " ...";
             let dots = if colored {
                 dots.bright_black().to_string()
             } else {
@@ -506,41 +506,73 @@ pub(crate) fn error_string<E: Error>(
         }
     }
 
-    // 5. Then, we build error line (whitespace is uniformized)
-    // ex. ` 2 | HTTP/1.0 200`
-    let line = line_with_loc(&lines, error_line, &separator, colored);
-    text.push_str(&line);
-    text.push('\n');
+    // 5. Appends the error message (one or more lines)
+    // with the line number '|' prefix
+    let message = get_message(error, &lines, colored);
+    for (i, line) in split_lines(&message).iter().enumerate() {
+        if i == 0 {
+            let loc_max_width = max(lines.len().to_string().len(), 2);
 
-    // 6. Then, we append the error detailed message:
-    // ```
-    // |   actual:   byte array <ff>
-    // |   expected: byte array <00>
-    // ````
-
-    // Explicit asserts output is multi-line, with actual and expected value aligned, while
-    // other errors (implicit assert for instance) are one-line, with a column error marker "^^^..."
-    // on a second line.
-    // So, we have "marked" explicit asserts to suppress the display of the column error marker
-    // by setting their `source_info`'s column to 0 (see [`hurl::runner::predicate::eval_predicate::`]).
-    let message = if error_column == 0 {
-        let new_prefix = format!("{prefix}   "); // actual and expected are prefixed by 2 spaces
-        let fix_me = error.fixme();
-        add_line_prefix(&fix_me, &new_prefix, colored)
-    } else {
-        // We take tabs into account because we have normalize the display of the error line by replacing
-        // tabs with 4 spaces.
-        // TODO: add a unit test with tabs in source info.
-        let mut tab_shift = 0;
-        let line_raw = lines.get(error_line - 1).unwrap();
-        for (i, c) in line_raw.chars().enumerate() {
-            if i >= error_column - 1 {
-                break;
-            };
-            if c == '\t' {
-                tab_shift += 1;
+            let mut s = format!("{error_line:>loc_max_width$}");
+            if colored {
+                s = s.blue().bold().to_string();
             }
+
+            text.push_str(format!("\n{s} |{line}").as_str());
+        } else {
+            text.push_str(format!("\n{prefix}{line}").as_str());
         }
+    }
+
+    // 6. Appends additional empty line
+    if !message.ends_with('\n') {
+        text.push('\n');
+        text.push_str(&prefix);
+    }
+
+    text
+}
+
+/// Return the constructed message for the error
+///
+/// It may include:
+/// - source line
+/// - column position and number of characters (with one or more carets)
+///
+/// Examples:
+///
+/// GET abc
+///     ^ expecting http://, https:// or {{
+///
+/// HTTP/1.0 200
+///          ^^^ actual value is <404>
+///
+/// jsonpath "$.count" >= 5
+///   actual:   int <2>
+///   expected: greater than int <5>
+///
+/// {
+///    "name": "John",
+///-   "age": 27
+///+   "age": 28
+/// }
+///
+fn get_message<E: Error>(error: &E, lines: &[&str], colored: bool) -> String {
+    let mut text = String::new();
+
+    if error.show_source_line() {
+        let line = lines.get(error.source_info().start.line - 1).unwrap();
+        let line = line.replace('\t', "    ");
+        text.push(' ');
+        text.push_str(&line);
+        text.push('\n');
+    }
+
+    let mut prefix = if error.show_caret() {
+        //let mut prefix = String::new();
+        // the fixme message is offset with space and carets according to the error column
+        let error_line = error.source_info().start.line;
+        let error_column = error.source_info().start.column;
 
         // Error source info start and end can be on different lines, we insure a minimum width.
         let width = if error.source_info().end.column > error_column {
@@ -549,61 +581,54 @@ pub(crate) fn error_string<E: Error>(
             1
         };
 
-        let mut fix_me = "^".repeat(width);
-        fix_me.push(' ');
-        fix_me.push_str(&error.fixme());
-        if colored {
-            fix_me = fix_me.red().bold().to_string();
-        }
-        format!(
-            "{spaces} {separator} {}{fix_me}",
-            " ".repeat(error_column - 1 + tab_shift * 3)
-        )
-    };
-    text.push_str(&message);
-    text.push('\n');
-
-    // 6. Appends final line separator.
-    text.push_str(&prefix);
-
-    text
-}
-
-/// Returns the `line` count prefix.
-/// Example: `   45 `
-fn line_with_loc(lines: &[&str], loc: usize, separator: &str, colored: bool) -> String {
-    let mut text = String::new();
-    let loc_max_width = max(lines.len().to_string().len(), 2);
-    let line = lines.get(loc - 1).unwrap();
-    let line = line.replace('\t', "    ");
-    let mut line_number = format!("{loc:>loc_max_width$}");
-    if colored {
-        line_number = line_number.blue().bold().to_string();
-    }
-    text.push_str(&line_number);
-    text.push(' ');
-    text.push_str(separator);
-    if !line.is_empty() {
-        text.push(' ');
-        text.push_str(&line);
-    }
-    text
-}
-
-/// Prefixes each line of the string `s` with a `prefix` and returns the new string.
-/// If `colored` is true, each line is colored with ANSI escape codes.
-fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
-    split_lines(s)
-        .iter()
-        .map(|line| {
-            if colored {
-                format!("{}{}", prefix, line.red().bold())
-            } else {
-                format!("{prefix}{line}")
+        //  We take tabs into account because we have normalize the display of the error line by replacing
+        //  tabs with 4 spaces.
+        //  TODO: add a unit test with tabs in source info.
+        let mut tab_shift = 0;
+        let line_raw = lines.get(error_line - 1).unwrap();
+        for (i, c) in line_raw.chars().enumerate() {
+            if i >= (error_column - 1) {
+                break;
+            };
+            if c == '\t' {
+                tab_shift += 1;
             }
-        })
-        .collect::<Vec<_>>()
-        .join("\n")
+        }
+
+        let mut value = " ".repeat(error_column + tab_shift * 3);
+        value.push_str("^".repeat(width).as_str());
+        value.push(' ');
+        value
+    } else {
+        String::new()
+    };
+
+    let fixme = error.fixme();
+    let lines = split_lines(&fixme);
+    for (i, line) in lines.iter().enumerate() {
+        if i > 0 {
+            if !prefix.is_empty() {
+                prefix = " ".repeat(prefix.len());
+            }
+            text.push('\n');
+        }
+        if !line.is_empty() {
+            text.push_str(color_if_needed(&prefix, colored).as_str());
+        }
+        text.push_str(color_if_needed(line, colored).as_str());
+    }
+
+    text
+}
+
+// This function is temporary
+// the fixme function in the Error trait should return the colored String directly
+fn color_if_needed(s: &str, colored: bool) -> String {
+    if colored {
+        s.red().bold().to_string()
+    } else {
+        s.to_string()
+    }
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -613,18 +638,11 @@ fn split_lines(text: &str) -> Vec<&str> {
 
 #[cfg(test)]
 pub mod tests {
+
     use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
     use crate::runner;
-
-    #[test]
-    fn test_add_line_prefix_no_colored() {
-        assert_eq!(
-            add_line_prefix("line1\nline2\nline3", ">", false),
-            ">line1\n>line2\n>line3"
-        );
-    }
 
     #[test]
     fn test_error_timeout() {
@@ -635,6 +653,10 @@ pub mod tests {
         let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
         let error = runner::Error::new(error_source_info, inner, true);
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
+        );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
             r#"HTTP connection
@@ -658,6 +680,17 @@ HTTP/1.0 200
         let error_source_info = SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
         let error = runner::Error::new(error_source_info, inner, true);
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " HTTP/1.0 200\n          ^^^ actual value is <404>"
+        );
+        colored::control::set_override(true);
+        assert_eq!(
+            get_message(&error, &split_lines(content), true),
+            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ \u{1b}[0m\u{1b}[1;31mactual value is <404>\u{1b}[0m"
+        );
+
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert status code
@@ -684,6 +717,10 @@ xpath "strong(//head/title)" == "Hello"
             error_source_info,
             runner::RunnerError::QueryInvalidXpathEval,
             true,
+        );
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " xpath \"strong(//head/title)\" == \"Hello\"\n       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid"
         );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
@@ -717,6 +754,14 @@ jsonpath "$.count" >= 5
             },
             assert: true,
         };
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            r#" jsonpath "$.count" >= 5
+   actual:   int <2>
+   expected: greater than int <5>"#
+        );
+
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert failure
@@ -746,6 +791,11 @@ HTTP/1.0 200
         let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
         let error = runner::Error::new(error_source_info, inner, true);
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " ```<p>Hello</p>\n    ^ actual value is <<p>Hello</p>\n\n      >"
+        );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
             r#"Assert body value
@@ -755,8 +805,8 @@ HTTP/1.0 200
    | ...
  3 | ```<p>Hello</p>
    |    ^ actual value is <<p>Hello</p>
-
->
+   |
+   |      >
    |"#
         );
     }
@@ -777,6 +827,72 @@ HTTP/1.0 200
    |
  1 | GET abc
    |     ^ expecting http://, https:// or {{
+   |"#
+        );
+    }
+
+    #[test]
+    fn test_diff_error() {
+        let content = r#"GET http://localhost:8000/failed/multiline/json
+HTTP 200
+```
+{
+  "name": "John",
+  "age": 27
+}
+```
+"#;
+        let filename = "test.hurl";
+        struct E;
+        impl Error for E {
+            fn source_info(&self) -> SourceInfo {
+                SourceInfo::new(Pos::new(4, 1), Pos::new(4, 0))
+            }
+
+            fn description(&self) -> String {
+                "Assert body value".to_string()
+            }
+
+            fn fixme(&self) -> String {
+                r#" {
+   "name": "John",
+-  "age": 27
++  "age": 28
+ }
+"#
+                .to_string()
+            }
+
+            fn show_source_line(&self) -> bool {
+                false
+            }
+
+            fn show_caret(&self) -> bool {
+                false
+            }
+        }
+        let error = E;
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            r#" {
+   "name": "John",
+-  "age": 27
++  "age": 28
+ }
+"#
+        );
+
+        assert_eq!(
+            error_string(filename, content, &error, None, false),
+            r#"Assert body value
+  --> test.hurl:4:1
+   |
+ 4 | {
+   |   "name": "John",
+   |-  "age": 27
+   |+  "age": 28
+   | }
    |"#
         );
     }

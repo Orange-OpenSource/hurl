@@ -76,9 +76,9 @@ error: Assert failure
    | ...
 11 | jsonpath "$.line_terminator" == "\r\n"
    |   actual:   string <
-   |   >
+   |>
    |   expected: string <
-   |   >
+   |>
    |
 
 error: Assert failure

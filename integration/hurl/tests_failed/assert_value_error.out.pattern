@@ -48,7 +48,7 @@
         },
         {
           "line": 11,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |   >\n   |   expected: string <\n   |   >\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\n   |>\n   |",
           "success": false
         },
         {

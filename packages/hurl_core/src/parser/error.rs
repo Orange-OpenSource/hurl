@@ -235,6 +235,14 @@ impl crate::error::Error for Error {
             ParseError::Xml => "invalid XML".to_string(),
         }
     }
+
+    fn show_source_line(&self) -> bool {
+        true
+    }
+
+    fn show_caret(&self) -> bool {
+        true
+    }
 }
 
 fn did_you_mean(valid_values: &[&str], actual: &str, default: &str) -> String {

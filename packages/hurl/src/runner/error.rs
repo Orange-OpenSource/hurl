@@ -175,11 +175,11 @@ impl hurl_core::error::Error for Error {
                 ..
             } => {
                 let additional = if *type_mismatch {
-                    "\n>>> types between actual and expected are not consistent"
+                    "\n   >>> types between actual and expected are not consistent"
                 } else {
                     ""
                 };
-                format!("actual:   {actual}\nexpected: {expected}{additional}")
+                format!("   actual:   {actual}\n   expected: {expected}{additional}")
             }
             RunnerError::AssertHeaderValueError { actual } => {
                 format!("actual value is <{actual}>")
@@ -256,6 +256,14 @@ impl hurl_core::error::Error for Error {
                 format!("{version} is not supported, check --version")
             }
         }
+    }
+
+    fn show_source_line(&self) -> bool {
+        true
+    }
+
+    fn show_caret(&self) -> bool {
+        !matches!(&self.inner, RunnerError::AssertFailure { .. })
     }
 }
 

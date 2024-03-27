@@ -5,7 +5,7 @@ error: Assert body value
    | ...
 10 | <p>Hello</p>
    | ^ actual value is <<p>Hello</p>
-
->
+   |
+   |   >
    |
 

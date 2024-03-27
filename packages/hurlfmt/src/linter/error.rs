@@ -44,4 +44,12 @@ impl Error for linter::Error {
             LinterError::OneSpace => "Use only one space".to_string(),
         }
     }
+
+    fn show_source_line(&self) -> bool {
+        true
+    }
+
+    fn show_caret(&self) -> bool {
+        true
+    }
 }

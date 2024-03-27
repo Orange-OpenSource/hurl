@@ -21,4 +21,6 @@ pub trait Error {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
     fn fixme(&self) -> String;
+    fn show_source_line(&self) -> bool;
+    fn show_caret(&self) -> bool;
 }
