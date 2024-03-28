@@ -22,11 +22,11 @@
 //! - JSON: the whole run is serialized to JSON (like the [HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) format)
 //! [`self::json::write_json`]
 //! - raw: the last response of a run is serialized to a file. The body can be automatically uncompress
-//! or written as it [`self::raw::write_body`]
+//! or written as it [`self::raw::write_last_body`]
 mod error;
 mod json;
 mod raw;
 
 pub use self::error::Error;
 pub use self::json::write_json;
-pub use self::raw::write_body;
+pub use self::raw::write_last_body;
