@@ -136,13 +136,13 @@ mod tests {
 
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
-    use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
+    use crate::runner::{EntryResult, Error, HurlResult, Input, RunnerError};
 
     #[test]
     fn create_junit_report() {
         let content = "GET http://localhost:8000/not_found\n\
                        HTTP/1.0 200";
-        let filename = "-";
+        let filename = Input::Stdin;
         let mut testcases = vec![];
         let res = HurlResult {
             entries: vec![],
@@ -151,7 +151,7 @@ mod tests {
             cookies: vec![],
             timestamp: 1,
         };
-        let tc = Testcase::from(&res, content, filename);
+        let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
 
         let res = HurlResult {
@@ -176,7 +176,7 @@ mod tests {
             cookies: vec![],
             timestamp: 1,
         };
-        let tc = Testcase::from(&res, content, filename);
+        let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
 
         let res = HurlResult {
@@ -199,7 +199,7 @@ mod tests {
             cookies: vec![],
             timestamp: 1,
         };
-        let tc = Testcase::from(&res, content, filename);
+        let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
 
         let suite = create_testsuite(&testcases);

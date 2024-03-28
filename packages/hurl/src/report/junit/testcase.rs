@@ -16,7 +16,7 @@
  *
  */
 use crate::report::junit::xml::Element;
-use crate::runner::HurlResult;
+use crate::runner::{HurlResult, Input};
 use crate::util::logger;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -30,7 +30,7 @@ pub struct Testcase {
 
 impl Testcase {
     /// Creates an XML Junit &lt;testcase&gt; from an [`HurlResult`].
-    pub fn from(hurl_result: &HurlResult, content: &str, filename: &str) -> Testcase {
+    pub fn from(hurl_result: &HurlResult, content: &str, filename: &Input) -> Testcase {
         let id = filename.to_string();
         let name = filename.to_string();
         let time_in_ms = hurl_result.time_in_ms;
@@ -38,8 +38,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for (error, entry_src_info) in hurl_result.errors() {
-            let message =
-                logger::error_string(filename, content, error, Some(entry_src_info), false);
+            let message = logger::error_string(&name, content, error, Some(entry_src_info), false);
             if error.assert {
                 failures.push(message);
             } else {
@@ -89,7 +88,7 @@ mod test {
 
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
-    use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
+    use crate::runner::{EntryResult, Error, HurlResult, Input, RunnerError};
 
     #[test]
     fn test_create_testcase_success() {
@@ -102,8 +101,8 @@ mod test {
         };
 
         let content = "";
-        let filename = "test.hurl";
-        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let filename = Input::new("test.hurl");
+        let element = Testcase::from(&hurl_result, content, &filename).to_xml();
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),
@@ -116,7 +115,7 @@ mod test {
         let content = r#"GET http://localhost:8000/not_found
 HTTP/1.0 200
 "#;
-        let filename = "test.hurl";
+        let filename = Input::new("test.hurl");
         let hurl_result = HurlResult {
             entries: vec![EntryResult {
                 entry_index: 1,
@@ -140,7 +139,7 @@ HTTP/1.0 200
             timestamp: 1,
         };
 
-        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let element = Testcase::from(&hurl_result, content, &filename).to_xml();
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),
@@ -157,7 +156,7 @@ HTTP/1.0 200
     #[test]
     fn test_create_testcase_error() {
         let content = "GET http://unknown";
-        let filename = "test.hurl";
+        let filename = Input::new("test.hurl");
         let hurl_result = HurlResult {
             entries: vec![EntryResult {
                 entry_index: 1,
@@ -178,7 +177,7 @@ HTTP/1.0 200
             cookies: vec![],
             timestamp: 1,
         };
-        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let element = Testcase::from(&hurl_result, content, &filename).to_xml();
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),

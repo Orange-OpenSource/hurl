@@ -85,7 +85,7 @@ pub fn run_seq(
 
         let run = HurlRun {
             content,
-            filename: filename.to_string(),
+            filename: filename.clone(),
             hurl_result,
         };
         runs.push(run);
@@ -131,7 +131,7 @@ impl From<JobResult> for HurlRun {
     fn from(job_result: JobResult) -> Self {
         HurlRun {
             content: job_result.content,
-            filename: job_result.job.filename.to_string(),
+            filename: job_result.job.filename,
             hurl_result: job_result.hurl_result,
         }
     }

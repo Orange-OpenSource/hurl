@@ -22,7 +22,7 @@ use std::path::Path;
 use hurl_core::parser;
 use uuid::Uuid;
 
-use crate::runner::{EntryResult, Error, HurlResult};
+use crate::runner::{EntryResult, Error, HurlResult, Input};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -36,7 +36,7 @@ pub struct Testcase {
 
 impl Testcase {
     /// Creates an HTML testcase.
-    pub fn from(hurl_result: &HurlResult, filename: &str) -> Testcase {
+    pub fn from(hurl_result: &HurlResult, filename: &Input) -> Testcase {
         let id = Uuid::new_v4();
         let errors = hurl_result
             .errors()

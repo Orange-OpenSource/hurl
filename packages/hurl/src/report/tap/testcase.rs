@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-
 use crate::report::Error;
-use crate::runner::HurlResult;
+use crate::runner::{HurlResult, Input};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -27,7 +26,7 @@ pub struct Testcase {
 
 impl Testcase {
     /// Creates an Tap &lt;testcase&gt; from an [`HurlResult`].
-    pub fn from(hurl_result: &HurlResult, filename: &str) -> Testcase {
+    pub fn from(hurl_result: &HurlResult, filename: &Input) -> Testcase {
         let description = filename.to_string();
         let success = hurl_result.errors().is_empty();
         Testcase {

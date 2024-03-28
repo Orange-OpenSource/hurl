@@ -27,7 +27,7 @@ use crate::cli::CliError;
 use colored::control;
 use hurl::report::{html, junit, tap};
 use hurl::runner;
-use hurl::runner::HurlResult;
+use hurl::runner::{HurlResult, Input};
 use hurl::util::logger::BaseLogger;
 
 use crate::cli::options::CliOptionsError;
@@ -44,8 +44,8 @@ const EXIT_ERROR_UNDEFINED: i32 = 127;
 struct HurlRun {
     /// Source string for this [`HurlFile`]
     content: String,
-    /// Filename of the content
-    filename: String,
+    /// Content's source file
+    filename: Input,
     hurl_result: HurlResult,
 }
 
@@ -155,20 +155,20 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
 
 /// Create a JUnit report for this run.
 fn create_junit_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
-    let testcases: Vec<junit::Testcase> = runs
+    let testcases = runs
         .iter()
         .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
-        .collect();
+        .collect::<Vec<_>>();
     junit::write_report(filename, &testcases)?;
     Ok(())
 }
 
 /// Create a TAP report for this run.
 fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
-    let testcases: Vec<tap::Testcase> = runs
+    let testcases = runs
         .iter()
         .map(|r| tap::Testcase::from(&r.hurl_result, &r.filename))
-        .collect();
+        .collect::<Vec<_>>();
     tap::write_report(filename, &testcases)?;
     Ok(())
 }
@@ -284,7 +284,7 @@ pub mod tests {
             };
             HurlRun {
                 content: String::new(),
-                filename: String::new(),
+                filename: Input::new(""),
                 hurl_result: HurlResult {
                     entries: vec![dummy_entry; entries_count],
                     time_in_ms: 0,
