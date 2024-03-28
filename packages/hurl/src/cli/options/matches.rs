@@ -250,10 +250,8 @@ pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
     }
 }
 
-pub fn max_workers(arg_matches: &ArgMatches) -> usize {
-    get::<u32>(arg_matches, "max_workers")
-        .map(|m| m as usize)
-        .unwrap()
+pub fn max_workers(arg_matches: &ArgMatches) -> Option<usize> {
+    get::<u32>(arg_matches, "max_workers").map(|m| m as usize)
 }
 
 pub fn netrc(arg_matches: &ArgMatches) -> bool {

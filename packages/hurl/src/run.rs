@@ -17,6 +17,7 @@
  */
 use std::cmp::min;
 use std::path::Path;
+use std::thread;
 
 use crate::cli::options::CliOptions;
 use crate::cli::CliError;
@@ -102,8 +103,10 @@ pub fn run_par(
     current_dir: &Path,
     options: &CliOptions,
 ) -> Result<Vec<HurlRun>, CliError> {
-    // TODO: default worker count to [`std::thread::available_parallelism`]
-    let workers_count = min(files.len(), options.max_workers);
+    let max_workers = options
+        .max_workers
+        .unwrap_or(thread::available_parallelism()?.get());
+    let workers_count = min(files.len(), max_workers);
     let variables = &options.variables;
 
     let jobs = files

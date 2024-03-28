@@ -155,6 +155,12 @@ impl ParallelRunner {
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
                 WorkerMessage::Completed(msg) => {
+                    // First, we display the job standard error, then the job standard output
+                    // (similar to the sequential runner).
+                    if !msg.stderr.buffer().is_empty() {
+                        stderr.eprint(msg.stderr.buffer());
+                    }
+
                     self.progress.print_completed(&msg.result, &mut stderr);
 
                     results.push(msg.result);

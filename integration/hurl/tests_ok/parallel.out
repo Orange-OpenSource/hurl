@@ -1,0 +1,9 @@
+TAP version 13
+1..7
+ok 1 - tests_ok/parallel_a.hurl
+ok 2 - tests_ok/parallel_b.hurl
+ok 3 - tests_ok/parallel_c.hurl
+ok 4 - tests_ok/parallel_d.hurl
+ok 5 - tests_ok/parallel_e.hurl
+ok 6 - tests_ok/parallel_f.hurl
+ok 7 - tests_ok/parallel_g.hurl

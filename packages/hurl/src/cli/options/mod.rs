@@ -67,7 +67,7 @@ pub struct CliOptions {
     pub ip_resolve: Option<IpResolve>,
     pub junit_file: Option<PathBuf>,
     pub max_redirect: Option<usize>,
-    pub max_workers: usize,
+    pub max_workers: Option<usize>,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,

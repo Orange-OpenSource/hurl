@@ -19,7 +19,7 @@ use std::io;
 
 use crate::parallel::job::{Job, JobResult};
 use crate::parallel::worker::WorkerId;
-use crate::util::term::Stderr;
+use crate::util::term::{Stderr, Stdout};
 
 /// Represents a message sent from the worker to the runner (running on the main thread).
 pub enum WorkerMessage {
@@ -93,10 +93,17 @@ impl RunningMsg {
 pub struct CompletedMsg {
     pub worker_id: WorkerId,
     pub result: JobResult,
+    pub stdout: Stdout,
+    pub stderr: Stderr,
 }
 
 impl CompletedMsg {
-    pub fn new(worker_id: WorkerId, result: JobResult) -> Self {
-        CompletedMsg { worker_id, result }
+    pub fn new(worker_id: WorkerId, result: JobResult, stdout: Stdout, stderr: Stderr) -> Self {
+        CompletedMsg {
+            worker_id,
+            result,
+            stdout,
+            stderr,
+        }
     }
 }

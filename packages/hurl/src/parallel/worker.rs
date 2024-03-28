@@ -123,7 +123,7 @@ impl Worker {
                 ));
             }
             let job_result = JobResult::new(job, content, result);
-            let msg = CompletedMsg::new(worker_id, job_result);
+            let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
             tx.send(WorkerMessage::Completed(msg))
         });
     }

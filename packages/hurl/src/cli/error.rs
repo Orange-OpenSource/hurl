@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::fmt;
+use std::{fmt, io};
 
 use hurl::parallel::error::JobError;
 use hurl::report;
@@ -50,5 +50,11 @@ impl fmt::Display for CliError {
             CliError::Parsing => Ok(()),
             CliError::Runtime(message) => write!(f, "{}", message),
         }
+    }
+}
+
+impl From<io::Error> for CliError {
+    fn from(error: io::Error) -> Self {
+        CliError::IO(error.to_string())
     }
 }
