@@ -44,3 +44,4 @@ jsonpath "$.not-exist" exists
 jsonpath "$.not-exist" isEmpty
 jsonpath "$.not_a_date" isIsoDate
 jsonpath "$.is_a_date" not isIsoDate
+jsonpath "$.not_a_date" isNumber

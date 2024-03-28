@@ -273,6 +273,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsIsoDate => "isIsoDate".to_string(),
             PredicateFuncValue::Exist => "exists".to_string(),
             PredicateFuncValue::IsEmpty => "isEmpty".to_string(),
+            PredicateFuncValue::IsNumber => "isNumber".to_string(),
         }
     }
 }

@@ -431,3 +431,13 @@ error: Assert failure
    |   expected: not string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
+error: Assert failure
+  --> tests_failed/predicate.hurl:47:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+47 | jsonpath "$.not_a_date" isNumber
+   |   actual:   string <2018>
+   |   expected: number
+   |
+

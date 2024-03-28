@@ -572,6 +572,9 @@ impl ToJson for Predicate {
             PredicateFuncValue::IsEmpty => {
                 attributes.push(("type".to_string(), JValue::String("isEmpty".to_string())));
             }
+            PredicateFuncValue::IsNumber => {
+                attributes.push(("type".to_string(), JValue::String("isNumber".to_string())));
+            }
         }
         JValue::Object(attributes)
     }

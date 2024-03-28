@@ -137,7 +137,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
     let next_c = reader.peek();
     match next_c {
         Some('/') => {
-            let available_version = vec![
+            let available_version = [
                 ("/1.0", VersionValue::Version1),
                 ("/1.1", VersionValue::Version11),
                 ("/2", VersionValue::Version2),

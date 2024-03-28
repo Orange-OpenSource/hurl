@@ -399,6 +399,7 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
         PredicateFuncValue::IsIsoDate => PredicateFuncValue::IsIsoDate,
         PredicateFuncValue::Exist => PredicateFuncValue::Exist,
         PredicateFuncValue::IsEmpty => PredicateFuncValue::IsEmpty,
+        PredicateFuncValue::IsNumber => PredicateFuncValue::IsNumber,
     }
 }
 

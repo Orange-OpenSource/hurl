@@ -90,6 +90,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             iso_date_predicate,
             exist_predicate,
             is_empty_predicate,
+            is_number_predicate,
         ],
         reader,
     ) {
@@ -339,6 +340,11 @@ fn exist_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn is_empty_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isEmpty", reader)?;
     Ok(PredicateFuncValue::IsEmpty)
+}
+
+fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isNumber", reader)?;
+    Ok(PredicateFuncValue::IsNumber)
 }
 
 #[cfg(test)]

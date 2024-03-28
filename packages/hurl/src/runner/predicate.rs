@@ -238,6 +238,7 @@ fn expected_no_value(
         PredicateFuncValue::IsIsoDate => Ok("date".to_string()),
         PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
+        PredicateFuncValue::IsNumber => Ok("number".to_string()),
     }
 }
 
@@ -306,6 +307,7 @@ fn eval_predicate_func(
         PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
+        PredicateFuncValue::IsNumber => eval_is_number(value),
     }
 }
 
@@ -668,6 +670,16 @@ fn eval_is_empty(actual: &Value) -> Result<AssertResult, Error> {
             type_mismatch: true,
         }),
     }
+}
+
+/// Evaluates if an `actual` value is a number.
+fn eval_is_number(actual: &Value) -> Result<AssertResult, Error> {
+    Ok(AssertResult {
+        success: matches!(actual, Value::Number(_)),
+        actual: actual.display(),
+        expected: "number".to_string(),
+        type_mismatch: false,
+    })
 }
 
 fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
@@ -1589,5 +1601,22 @@ mod tests {
         assert!(res.type_mismatch);
         assert_eq!(res.actual, "bool <true>");
         assert_eq!(res.expected, "string");
+    }
+
+    #[test]
+    fn test_predicate_is_number() {
+        let value = Value::Number(Number::Integer(1));
+        let res = eval_is_number(&value).unwrap();
+        assert!(res.success);
+        assert!(!res.type_mismatch);
+        assert_eq!(res.actual, "int <1>");
+        assert_eq!(res.expected, "number");
+
+        let value = Value::Number(Number::Float(1.0));
+        let res = eval_is_number(&value).unwrap();
+        assert!(res.success);
+        assert!(!res.type_mismatch);
+        assert_eq!(res.actual, "float <1.0>");
+        assert_eq!(res.expected, "number");
     }
 }

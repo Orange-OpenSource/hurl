@@ -608,6 +608,9 @@ impl Tokenizable for PredicateFuncValue {
             PredicateFuncValue::IsEmpty => {
                 tokens.push(Token::PredicateType(self.name()));
             }
+            PredicateFuncValue::IsNumber => {
+                tokens.push(Token::PredicateType(self.name()));
+            }
         }
         tokens
     }

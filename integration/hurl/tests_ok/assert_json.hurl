@@ -50,6 +50,7 @@ jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" < 2
 jsonpath "$.duration" < {{two}}
 jsonpath "$.duration" isFloat
+jsonpath "$.duration" isNumber
 jsonpath "$.duration" not isInteger
 jsonpath "$.nullable" == null
 jsonpath "$.tags[0]" == "test"
@@ -67,6 +68,7 @@ jsonpath "$..id" count == 3
 jsonpath "$.dates[0]" isIsoDate
 jsonpath "$.dates[1]" isIsoDate
 jsonpath "$.tags[0]" not isIsoDate
+jsonpath "$.tags[0]" not isNumber
 
 
 # FIXME do we accept count filter on object?
