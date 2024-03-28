@@ -26,6 +26,7 @@ use crate::{cli, HurlRun};
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::Input;
+use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, runner};
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
@@ -62,23 +63,34 @@ pub fn run_seq(
 
         let success = hurl_result.success;
 
-        // We can output the result, either the raw body or a structured JSON representation.
+        // We can output the result, either the last raw body response or a structured JSON
+        // representation of the full Hurl result.
+        // In sequential run, we use an immediate (non-buffered) standard output.
+        let mut stdout = Stdout::new(WriteMode::Immediate);
         let output_body = success
             && !options.interactive
             && matches!(options.output_type, cli::OutputType::ResponseBody);
         if output_body {
-            if let Some(last_entry) = hurl_result.entries.last() {
-                let include_headers = options.include;
-                let result =
-                    output::write_body(last_entry, include_headers, options.color, &options.output);
-                if let Err(e) = result {
-                    return Err(CliError::Runtime(e.to_string()));
-                }
+            let include_headers = options.include;
+            let result = output::write_last_body(
+                &hurl_result,
+                include_headers,
+                options.color,
+                options.output.as_ref(),
+                &mut stdout,
+            );
+            if let Err(e) = result {
+                return Err(CliError::Runtime(e.to_string()));
             }
         }
         if matches!(options.output_type, cli::OutputType::Json) {
-            let result =
-                output::write_json(&hurl_result, &content, filename, options.output.as_ref());
+            let result = output::write_json(
+                &hurl_result,
+                &content,
+                filename,
+                options.output.as_ref(),
+                &mut stdout,
+            );
             if let Err(e) = result {
                 return Err(CliError::Runtime(e.to_string()));
             }
