@@ -1,10 +1,8 @@
 from app import app
+from flask import request
 
 
-@app.route("/parallel/hello/<name>")
-def parallel_hello(name: str):
-    return hello_from(name)
-
-
-def hello_from(name: str) -> str:
-    return f"Hello from {name}!\n"
+@app.route("/parallel/hello")
+def parallel_hello():
+    name = request.args.get("name")
+    return f"Hello {name} from a parallel world!\n"

@@ -1,19 +1,21 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-if (Test-Path build/result.tap) {
-    Remove-Item build/parallel.tap
+
+# We run 4 Hurl files in parallel, each one has a ~5s duration.
+# On usual hardware, this should be executed in ~5s.
+
+$Start = [DateTimeOffset]::Now.ToUnixTimeSeconds()
+
+hurl --parallel --verbose `
+  tests_ok/parallel.hurl `
+  tests_ok/parallel.hurl `
+  tests_ok/parallel.hurl `
+  tests_ok/parallel.hurl
+
+$End = [DateTimeOffset]::Now.ToUnixTimeSeconds()
+
+$Duration = $End - $Start
+if ($Duration -gt 6) {
+    Write-Host "Parallel execution duration failed ${Duration}s (limit 6s)"
+    exit 1
 }
-
-# We use TAP report in parallel because the reports (Junit, HTML, TAP)
-# are in the same order as in the command line (which can be different
-# from the real execution time).
-hurl --parallel --report-tap build/parallel.tap `
-  tests_ok/parallel_a.hurl `
-  tests_ok/parallel_b.hurl `
-  tests_ok/parallel_c.hurl `
-  tests_ok/parallel_d.hurl `
-  tests_ok/parallel_e.hurl `
-  tests_ok/parallel_f.hurl `
-  tests_ok/parallel_g.hurl
-
-Write-Host (Get-Content build/parallel.tap -Raw) -NoNewLine

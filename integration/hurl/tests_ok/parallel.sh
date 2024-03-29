@@ -2,16 +2,22 @@
 set -Eeuo pipefail
 rm -f build/parallel.tap
 
-# We use TAP report in parallel because the reports (Junit, HTML, TAP)
-# are in the same order as in the command line (which can be different
-# from the real execution time).
-hurl --parallel --report-tap build/parallel.tap \
-  tests_ok/parallel_a.hurl \
-  tests_ok/parallel_b.hurl \
-  tests_ok/parallel_c.hurl \
-  tests_ok/parallel_d.hurl \
-  tests_ok/parallel_e.hurl \
-  tests_ok/parallel_f.hurl \
-  tests_ok/parallel_g.hurl
+# We run 4 Hurl files in parallel, each one has a ~5s duration.
+# On usual hardware, this should be executed in ~5s.
 
-cat build/parallel.tap
+start=$(date +%s)
+
+hurl --parallel --verbose \
+  tests_ok/parallel.hurl \
+  tests_ok/parallel.hurl \
+  tests_ok/parallel.hurl \
+  tests_ok/parallel.hurl
+
+end=timestamp=$(date +%s)
+
+duration=$((end-start))
+if ((duration > 6)); then
+  echo "Parallel execution duration failed ${duration}s (limit 6s)"
+  exit 1
+fi
+

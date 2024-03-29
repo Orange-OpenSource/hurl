@@ -35,12 +35,16 @@ pub enum WorkerMessage {
 
 /// A message sent from worker to runner when the input file can't be read.
 pub struct IOErrorMsg {
+    /// Identifier of the worker sending this message.
     pub worker_id: WorkerId,
+    /// Job originator of this message.
     pub job: Job,
+    /// Inner error that has triggered this message.
     pub error: io::Error,
 }
 
 impl IOErrorMsg {
+    /// Creates a new I/O error message.
     pub fn new(worker_id: WorkerId, job: &Job, error: io::Error) -> Self {
         IOErrorMsg {
             worker_id,
@@ -52,12 +56,16 @@ impl IOErrorMsg {
 
 /// A message sent from worker to runner when the input file can't be parsed.
 pub struct ParsingErrorMsg {
+    /// Identifier of the worker sending this message.
     pub worker_id: WorkerId,
+    /// Job originator of this message.
     pub job: Job,
+    /// Standard error of the worker for this job.
     pub stderr: Stderr,
 }
 
 impl ParsingErrorMsg {
+    /// Creates a new parsing error message.
     pub fn new(worker_id: WorkerId, job: &Job, stderr: &Stderr) -> Self {
         ParsingErrorMsg {
             worker_id,
@@ -69,16 +77,18 @@ impl ParsingErrorMsg {
 
 /// A message sent from worker to runner at regular time to inform that the job is being run.
 pub struct RunningMsg {
+    /// Identifier of the worker sending this message.
     pub worker_id: WorkerId,
-    /// Current job for this message
+    /// Job originator of this message.
     pub job: Job,
-    /// 0-based index of the current entry
+    /// 0-based index of the current entry.
     pub entry_index: usize,
     /// Number of entries
     pub entry_count: usize,
 }
 
 impl RunningMsg {
+    /// Creates a new running message: the job is in progress.
     pub fn new(worker_id: WorkerId, job: &Job, entry_index: usize, entry_count: usize) -> Self {
         RunningMsg {
             worker_id,
@@ -91,13 +101,18 @@ impl RunningMsg {
 
 /// A message sent from worker to runner when a Hurl file has completed, whether successful or not.
 pub struct CompletedMsg {
+    /// Identifier of the worker sending this message.
     pub worker_id: WorkerId,
+    /// Result execution of the originator job, can successful or failed.
     pub result: JobResult,
+    /// Standard output of the worker for this job.
     pub stdout: Stdout,
+    /// Standard error of the worker for this job.
     pub stderr: Stderr,
 }
 
 impl CompletedMsg {
+    /// Creates a new completed message: the job has completed, successfully or not.
     pub fn new(worker_id: WorkerId, result: JobResult, stdout: Stdout, stderr: Stderr) -> Self {
         CompletedMsg {
             worker_id,

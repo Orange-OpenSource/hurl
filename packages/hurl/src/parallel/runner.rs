@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::output;
 use std::sync::mpsc;
 use std::sync::mpsc::Receiver;
 
@@ -23,7 +24,7 @@ use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::WorkerMessage;
 use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
-use crate::util::term::{Stderr, WriteMode};
+use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle, or running a
 /// [`Job`]. To run jobs, the [`ParallelRunner::run`] method much be executed on the main thread.
@@ -45,6 +46,8 @@ pub struct ParallelRunner {
     rx: Receiver<WorkerMessage>,
     /// Progress reporter to display the advancement of the parallel runs.
     progress: ParProgress,
+    /// Output type for each completed job on standard output.
+    output_type: OutputType,
 }
 
 /// Represents a worker's state.
@@ -59,17 +62,37 @@ pub enum WorkerState {
     },
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum OutputType {
+    /// The last HTTP response body of a Hurl file is outputted on standard output.
+    ResponseBody { include_headers: bool, color: bool },
+    /// The whole Hurl file run is exported in a structured JSON export on standard output.
+    Json,
+    /// Nothing is outputted on standard output when a Hurl file run is completed.
+    NoOutput,
+}
+
 const MAX_RUNNING_DISPLAYED: usize = 8;
 
 impl ParallelRunner {
     /// Creates a new parallel runner, with `worker_count` worker.
+    ///
+    /// The runner runs a list of [`Job`] in parallel. When a job is completed, depending on
+    /// `output_type`, it can be outputted to standard output: whether as a raw response body bytes,
+    /// or in a structured JSON output.
     ///
     /// If `test` mode is `true` the runner is run in "test" mode, reporting the success or failure
     /// of each file on standard error. Additionally to the test mode, a `progress_bar` designed for
     /// parallel run progression can be use.
     ///
     /// `color` determines if color if used in standard error.
-    pub fn new(workers_count: usize, test: bool, progress_bar: bool, color: bool) -> Self {
+    pub fn new(
+        workers_count: usize,
+        output_type: OutputType,
+        test: bool,
+        progress_bar: bool,
+        color: bool,
+    ) -> Self {
         // Create the channel to communicate from workers to the parallel runner (worker are running
         // on theirs own thread, while parallel runner is running in the main thread).
         let (tx, rx) = mpsc::channel();
@@ -90,6 +113,7 @@ impl ParallelRunner {
             workers,
             rx,
             progress,
+            output_type,
         }
     }
 
@@ -102,6 +126,7 @@ impl ParallelRunner {
         // The parallel runner runs on the main thread. It's responsible for displaying standard
         // output and standard error. Workers are buffering their output and error in memory, and
         // delegate the display to the runners.
+        let mut stdout = Stdout::new(WriteMode::Immediate);
         let mut stderr = Stderr::new(WriteMode::Immediate);
 
         // Create the jobs queue (last item is the first job to run):
@@ -161,6 +186,40 @@ impl ParallelRunner {
                         stderr.eprint(msg.stderr.buffer());
                     }
 
+                    match self.output_type {
+                        OutputType::ResponseBody {
+                            include_headers,
+                            color,
+                        } => {
+                            if msg.result.hurl_result.success {
+                                let result = output::write_last_body(
+                                    &msg.result.hurl_result,
+                                    include_headers,
+                                    color,
+                                    msg.result.job.runner_options.output.as_ref(),
+                                    &mut stdout,
+                                );
+                                if let Err(e) = result {
+                                    return Err(JobError::Runtime(e.to_string()));
+                                }
+                            }
+                        }
+                        OutputType::Json => {
+                            let result = output::write_json(
+                                &msg.result.hurl_result,
+                                &msg.result.content,
+                                &msg.result.job.filename,
+                                msg.result.job.runner_options.output.as_ref(),
+                                &mut stdout,
+                            );
+                            if let Err(e) = result {
+                                return Err(JobError::Runtime(e.to_string()));
+                            }
+                        }
+                        OutputType::NoOutput => {}
+                    }
+
+                    // Resport the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
 
                     results.push(msg.result);

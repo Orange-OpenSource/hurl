@@ -20,4 +20,5 @@
 pub enum JobError {
     IO(String),
     Parsing,
+    Runtime(String),
 }

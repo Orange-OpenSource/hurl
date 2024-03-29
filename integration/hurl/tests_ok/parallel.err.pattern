@@ -1,0 +1,129 @@
+* Parallel run using ~~~ workers
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Entry options:
+* delay: 5000
+*
+* Delay entry 1 (x1 by 5000 ms)
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/parallel/hello?name=Bob
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/parallel/hello?name=Bob'
+*
+> GET /parallel/hello?name=Bob HTTP/1.1
+> Host: localhost:8000~
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 33 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 33
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Entry options:
+* delay: 5000
+*
+* Delay entry 1 (x1 by 5000 ms)
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/parallel/hello?name=Bob
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/parallel/hello?name=Bob'
+*
+> GET /parallel/hello?name=Bob HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 33 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 33
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Entry options:
+* delay: 5000
+*
+* Delay entry 1 (x1 by 5000 ms)
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/parallel/hello?name=Bob
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/parallel/hello?name=Bob'
+*
+> GET /parallel/hello?name=Bob HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 33 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 33
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Entry options:
+* delay: 5000
+*
+* Delay entry 1 (x1 by 5000 ms)
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/parallel/hello?name=Bob
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/parallel/hello?name=Bob'
+*
+> GET /parallel/hello?name=Bob HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 33 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 33
+< Server: Flask Server
+< Connection: close
+<
+*

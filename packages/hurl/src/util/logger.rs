@@ -237,7 +237,8 @@ impl Logger {
             return;
         }
         if self.color {
-            self.stderr.eprintln_prefix(&"*".blue().bold(), message);
+            let prefix = "*".blue().bold().to_string();
+            self.stderr.eprintln_prefix(&prefix, message);
         } else {
             self.stderr.eprintln_prefix("*", message);
         }
@@ -248,8 +249,9 @@ impl Logger {
             return;
         }
         if self.color {
-            self.stderr
-                .eprintln_prefix(&"*".blue().bold(), &message.bold());
+            let prefix = "*".blue().bold().to_string();
+            let message = message.bold().to_string();
+            self.stderr.eprintln_prefix(&prefix, &message);
         } else {
             self.stderr.eprintln_prefix("*", message);
         }
@@ -260,7 +262,8 @@ impl Logger {
             return;
         }
         if self.color {
-            self.stderr.eprintln_prefix(&"**".blue().bold(), message);
+            let prefix = "**".blue().bold().to_string();
+            self.stderr.eprintln_prefix(&prefix, message);
         } else {
             self.stderr.eprintln_prefix("**", message);
         }

@@ -39,6 +39,7 @@ impl From<JobError> for CliError {
         match error {
             JobError::IO(message) => CliError::IO(message),
             JobError::Parsing => CliError::Parsing,
+            JobError::Runtime(message) => CliError::Runtime(message),
         }
     }
 }

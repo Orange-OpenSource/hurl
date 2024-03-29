@@ -17,7 +17,6 @@
  */
 use std::cmp::min;
 use std::path::Path;
-use std::thread;
 
 use crate::cli::options::CliOptions;
 use crate::cli::CliError;
@@ -27,7 +26,7 @@ use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::Input;
 use hurl::util::term::{Stdout, WriteMode};
-use hurl::{output, runner};
+use hurl::{output, parallel, runner};
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -114,12 +113,13 @@ pub fn run_par(
     files: &[Input],
     current_dir: &Path,
     options: &CliOptions,
+    max_workers: usize,
 ) -> Result<Vec<HurlRun>, CliError> {
-    let max_workers = options
-        .max_workers
-        .unwrap_or(thread::available_parallelism()?.get());
     let workers_count = min(files.len(), max_workers);
     let variables = &options.variables;
+    let output_type = options
+        .output_type
+        .to_output_type(options.include, options.color);
 
     let jobs = files
         .iter()
@@ -133,6 +133,7 @@ pub fn run_par(
 
     let mut runner = ParallelRunner::new(
         workers_count,
+        output_type,
         options.test,
         options.progress_bar,
         options.color,
@@ -148,6 +149,19 @@ impl From<JobResult> for HurlRun {
             content: job_result.content,
             filename: job_result.job.filename,
             hurl_result: job_result.hurl_result,
+        }
+    }
+}
+
+impl cli::OutputType {
+    fn to_output_type(&self, include_headers: bool, color: bool) -> parallel::runner::OutputType {
+        match self {
+            cli::OutputType::ResponseBody => parallel::runner::OutputType::ResponseBody {
+                include_headers,
+                color,
+            },
+            cli::OutputType::Json => parallel::runner::OutputType::Json,
+            cli::OutputType::NoOutput => parallel::runner::OutputType::NoOutput,
         }
     }
 }

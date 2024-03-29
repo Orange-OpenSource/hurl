@@ -348,8 +348,11 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OutputType {
+    /// The last HTTP response body of a Hurl file is outputted on standard output.
     ResponseBody,
+    /// The whole Hurl file run is exported in a structured JSON export on standard output.
     Json,
+    /// Nothing is outputted on standard output when a Hurl file run is completed.
     NoOutput,
 }
 

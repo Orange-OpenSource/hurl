@@ -21,7 +21,7 @@ mod run;
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
-use std::{env, process};
+use std::{env, process, thread};
 
 use crate::cli::CliError;
 use colored::control;
@@ -77,7 +77,15 @@ fn main() {
     let start = Instant::now();
 
     let runs = if opts.parallel {
-        run::run_par(&opts.input_files, current_dir, &opts)
+        let available = unwrap_or_exit(
+            thread::available_parallelism(),
+            EXIT_ERROR_UNDEFINED,
+            &base_logger,
+        );
+        let max_workers = opts.max_workers.unwrap_or(available.get());
+        base_logger.debug(&format!("Parallel run using {max_workers} workers"));
+
+        run::run_par(&opts.input_files, current_dir, &opts, max_workers)
     } else {
         run::run_seq(&opts.input_files, current_dir, &opts)
     };
