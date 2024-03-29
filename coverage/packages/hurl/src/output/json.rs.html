@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::util::term::{Stdout, WriteMode};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::util::term::Stdout;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -549,7 +549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;(), Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    stdout: &amp;mut Stdout,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -565,7 +565,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let json_result = hurl_result.to_json(content, filename_in);</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;(), Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let serialized = serde_json::to_string(&amp;json_result).unwrap();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let json_result = hurl_result.to_json(content, filename_in);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut stdout = Stdout::new(WriteMode::Immediate);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let serialized = serde_json::to_string(&amp;json_result).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Some(out) =&gt; out.write(&amp;bytes, &amp;mut stdout, None)?,</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Some(out) =&gt; out.write(&amp;bytes, stdout, None)?,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        None =&gt; Output::Stdout.write(&amp;bytes, &amp;mut stdout, None)?,</pre>
+                <pre class="has-background-success-light py-0 px-2">        None =&gt; Output::Stdout.write(&amp;bytes, stdout, None)?,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -731,7 +731,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-03-28 08:08</p>
+                <p class="heading">Date: 2024-03-29 08:08</p>
             </div>
         </footer>
     </body>
