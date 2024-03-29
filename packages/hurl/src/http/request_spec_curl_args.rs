@@ -19,8 +19,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use crate::http::core::*;
-use crate::http::header::CONTENT_TYPE;
-use crate::http::{RequestSpec, *};
+use crate::http::*;
 use crate::util::path::ContextDir;
 
 impl RequestSpec {

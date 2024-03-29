@@ -19,7 +19,6 @@ use std::cmp::Ordering;
 use std::collections::HashMap;
 
 use hurl_core::ast::*;
-use regex;
 
 use crate::runner::error::Error;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};

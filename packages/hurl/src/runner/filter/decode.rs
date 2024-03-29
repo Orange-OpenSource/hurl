@@ -17,7 +17,6 @@
  */
 use std::collections::HashMap;
 
-use encoding;
 use encoding::DecoderTrap;
 use hurl_core::ast::{SourceInfo, Template};
 
