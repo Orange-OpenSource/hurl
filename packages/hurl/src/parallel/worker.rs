@@ -16,7 +16,8 @@
  *
  */
 use std::fmt;
-use std::sync::mpsc::Sender;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{Arc, Mutex};
 use std::thread;
 
 use hurl_core::parser;
@@ -34,8 +35,12 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 pub struct Worker {
     /// The id of this worker.
     worker_id: WorkerId,
-    /// The transmit end of the message, allowing to pass message to the parallel runner, on main thread.
-    tx: Sender<WorkerMessage>,
+}
+
+impl fmt::Display for Worker {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "id: {}", self.worker_id)
+    }
 }
 
 /// Identifier of a worker.
@@ -55,24 +60,23 @@ impl fmt::Display for WorkerId {
 }
 
 impl Worker {
-    /// Creates a new worker, with id `worker_id` and sender `tx`.
-    pub fn new(worker_id: WorkerId, tx: &Sender<WorkerMessage>) -> Self {
-        Worker {
-            worker_id,
-            tx: tx.clone(),
-        }
-    }
-
-    /// Requests to process a `job`.
+    /// Creates a new worker, with id `worker_id`.
     ///
-    /// This method returns immediately. To get the potential result of the job, a runner
-    /// has to receive messages from this worker and process them (see [`WorkerMessage`]).
-    pub fn run(&self, job: &Job) {
-        let tx = self.tx.clone();
-        let worker_id = self.worker_id;
-        let job = job.clone();
+    /// The worker spawns a new thread and process [`Job`] sent by the parallel runner through `rx`
+    /// (the receiving part of the `runner -> worker` channel). Worker send message back to the
+    /// runner to update the job progression thorough `tx` (the sending part of the `worker -> runner`.
+    pub fn new(
+        worker_id: WorkerId,
+        tx: &Sender<WorkerMessage>,
+        rx: &Arc<Mutex<Receiver<Job>>>,
+    ) -> Self {
+        let rx = Arc::clone(rx);
+        let tx = tx.clone();
 
-        thread::spawn(move || {
+        thread::spawn(move || loop {
+            let Ok(job) = rx.lock().unwrap().recv() else {
+                return tx.send(WorkerMessage::ShutDown);
+            };
             // In parallel execution, standard output and standard error messages are buffered
             // (in sequential mode, we'll use immediate standard output and error).
             let mut stdout = Stdout::new(WriteMode::Buffered);
@@ -124,8 +128,10 @@ impl Worker {
             }
             let job_result = JobResult::new(job, content, result);
             let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
-            tx.send(WorkerMessage::Completed(msg))
+            _ = tx.send(WorkerMessage::Completed(msg));
         });
+
+        Worker { worker_id }
     }
 }
 

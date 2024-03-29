@@ -16,8 +16,8 @@
  *
  */
 use crate::output;
-use std::sync::mpsc;
-use std::sync::mpsc::Receiver;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{mpsc, Arc, Mutex};
 
 use crate::parallel::error::JobError;
 use crate::parallel::job::{Job, JobResult};
@@ -42,7 +42,9 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 pub struct ParallelRunner {
     /// The list of workers, running Hurl file in their inner thread.
     workers: Vec<(Worker, WorkerState)>,
-    /// The receiving end of the channel used to communicate with workers.
+    /// The transmit end of the channel used to send messages to workers.
+    tx: Sender<Job>,
+    /// The receiving end of the channel used to communicate to workers.
     rx: Receiver<WorkerMessage>,
     /// Progress reporter to display the advancement of the parallel runs.
     progress: ParProgress,
@@ -75,11 +77,17 @@ pub enum OutputType {
 const MAX_RUNNING_DISPLAYED: usize = 8;
 
 impl ParallelRunner {
-    /// Creates a new parallel runner, with `worker_count` worker.
+    /// Creates a new parallel runner, with `worker_count` worker thread.
     ///
-    /// The runner runs a list of [`Job`] in parallel. When a job is completed, depending on
-    /// `output_type`, it can be outputted to standard output: whether as a raw response body bytes,
-    /// or in a structured JSON output.
+    /// The runner runs a list of [`Job`] in parallel. It creates two channels to communicate
+    /// with the workers:
+    ///
+    /// - `runner -> worker`: is used to send [`Job`] processing request to a worker,
+    /// - `worker -> runner`: is used to send [`WorkerMessage`] to update job progression, from a
+    ///    worker to the runner.
+    ///
+    /// When a job is completed, depending on `output_type`, it can be outputted to standard output:
+    /// whether as a raw response body bytes, or in a structured JSON output.
     ///
     /// If `test` mode is `true` the runner is run in "test" mode, reporting the success or failure
     /// of each file on standard error. Additionally to the test mode, a `progress_bar` designed for
@@ -93,14 +101,18 @@ impl ParallelRunner {
         progress_bar: bool,
         color: bool,
     ) -> Self {
-        // Create the channel to communicate from workers to the parallel runner (worker are running
-        // on theirs own thread, while parallel runner is running in the main thread).
-        let (tx, rx) = mpsc::channel();
+        // Worker are running on theirs own thread, while parallel runner is running in the main
+        // thread.
+        // We create the channel to communicate from workers to the parallel runner.
+        let (tx_in, rx_in) = mpsc::channel();
+        // We create the channel to communicate from the parallel runner to the workers.
+        let (tx_out, rx_out) = mpsc::channel();
+        let rx_out = Arc::new(Mutex::new(rx_out));
 
         // Create the workers:
         let workers = (0..workers_count)
             .map(|i| {
-                let worker = Worker::new(WorkerId::from(i), &tx);
+                let worker = Worker::new(WorkerId::from(i), &tx_in, &rx_out);
                 let state = WorkerState::Idle;
                 (worker, state)
             })
@@ -111,7 +123,8 @@ impl ParallelRunner {
 
         ParallelRunner {
             workers,
-            rx,
+            tx: tx_out,
+            rx: rx_in,
             progress,
             output_type,
         }
@@ -134,11 +147,11 @@ impl ParallelRunner {
         let mut jobs = jobs.iter().rev().collect::<Vec<_>>();
 
         // Initiate the runner, fill our workers
-        for (worker, _) in &self.workers {
+        self.workers.iter().for_each(|_| {
             if let Some(job) = jobs.pop() {
-                worker.run(job);
+                _ = self.tx.send(job.clone());
             }
-        }
+        });
 
         // Start the message pump:
         let mut results = vec![];
@@ -180,6 +193,9 @@ impl ParallelRunner {
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
                 WorkerMessage::Completed(msg) => {
+                    // The worker is becoming idle.
+                    self.workers[msg.worker_id.0].1 = WorkerState::Idle;
+
                     // First, we display the job standard error, then the job standard output
                     // (similar to the sequential runner).
                     if !msg.stderr.buffer().is_empty() {
@@ -224,21 +240,20 @@ impl ParallelRunner {
 
                     results.push(msg.result);
 
+                    self.progress.update_progress_bar(
+                        &self.workers,
+                        results.len(),
+                        jobs_count,
+                        &mut stderr,
+                    );
+
                     // We run the next job to process:
                     let job = jobs.pop();
                     match job {
-                        Some(job) => self.workers[msg.worker_id.0].0.run(job),
+                        Some(job) => {
+                            _ = self.tx.send(job.clone());
+                        }
                         None => {
-                            // A worker is becoming idle.
-                            self.workers[msg.worker_id.0].1 = WorkerState::Idle;
-
-                            self.progress.update_progress_bar(
-                                &self.workers,
-                                results.len(),
-                                jobs_count,
-                                &mut stderr,
-                            );
-
                             // If we have received all the job results, we can stop the run.
                             if results.len() == jobs_count {
                                 break;
@@ -246,6 +261,8 @@ impl ParallelRunner {
                         }
                     }
                 }
+                // Graceful shutdown for the worker.
+                WorkerMessage::ShutDown => {}
             }
         }
 
