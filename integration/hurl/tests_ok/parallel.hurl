@@ -1,4 +1,4 @@
-GET http://localhost:8000/parallel/hello?name=Bob
+GET http://localhost:8000/parallel/hello?name={{name}}
 [Options]
 delay: 5000
 HTTP 200

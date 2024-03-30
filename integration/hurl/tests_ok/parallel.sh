@@ -7,7 +7,7 @@ rm -f build/parallel.tap
 
 start=$(date +%s)
 
-hurl --parallel --verbose \
+hurl --parallel --verbose --variable name=Bob \
   tests_ok/parallel.hurl \
   tests_ok/parallel.hurl \
   tests_ok/parallel.hurl \
