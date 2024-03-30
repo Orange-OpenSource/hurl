@@ -3,7 +3,7 @@
 ## Definition
 
 [Captures] and [asserts] share a common structure: query. A query is used to extract data from an HTTP response; this data 
-can come from the HTTP response body, the HTTP response headers or from the HTTP meta-informations (like `duration` for instance)...
+can come from the HTTP response body, the HTTP response headers or from the HTTP meta-information (like `duration` for instance)...
 
 In this example, the query __`jsonpath "$.books[0].name"`__ is used in a capture to save data and in an assert to test 
 the HTTP response body.

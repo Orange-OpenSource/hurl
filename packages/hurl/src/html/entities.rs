@@ -21,8 +21,8 @@ use lazy_static::lazy_static;
 
 // HTML5 named character references
 //
-// Generated from https://html.spec.whatwg.org/entities.json and
-// https://html.spec.whatwg.org/multipage/named-characters.html.
+// Generated from <https://html.spec.whatwg.org/entities.json> and
+// <https://html.spec.whatwg.org/multipage/named-characters.html>.
 // Map HTML5 named character references to the equivalent Unicode character(s).
 lazy_static! {
     pub static ref HTML5_ENTITIES: HashMap<&'static str, &'static str> = {

@@ -145,10 +145,10 @@ main() {
                         sed "s/ Updating //g" |
                             sed "s/->//g" > "${updated_lock_file}"
         while read -r crate actual_version last_version ; do
-            formated_actual_version=$(echo "${actual_version}" | (grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]" || true))
-            formated_last_version=$(echo "${last_version}" | (grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]" || true))
+            formatted_actual_version=$(echo "${actual_version}" | (grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]" || true))
+            formatted_last_version=$(echo "${last_version}" | (grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]" || true))
             crate_url="${crates_api_root_url}/${crate}"
-            echo "- ${crate} ${formated_actual_version} ${color_blue}updated to ${formated_last_version}${color_reset}"
+            echo "- ${crate} ${formatted_actual_version} ${color_blue}updated to ${formatted_last_version}${color_reset}"
             get_crate_github_release_body "${crate_url}" "${last_version}"
 
         done < "${updated_lock_file}"

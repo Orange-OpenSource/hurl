@@ -19,7 +19,7 @@
 use crate::http::{Request, Response, Timings};
 
 /// Holds an HTTP request and the corresponding HTTP response.
-/// The request and responses are the runtime, evaluated datas created by an HTTP exchange.
+/// The request and responses are the runtime, evaluated data created by an HTTP exchange.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Call {
     /// The real HTTP request (vs the specified request in a Hurl file source)

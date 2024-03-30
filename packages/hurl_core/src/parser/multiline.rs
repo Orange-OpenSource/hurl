@@ -386,12 +386,12 @@ mod tests {
 
     #[test]
     fn test_multiline_string_failed() {
-        let datas = [
+        let data = [
             "```hexaaa\nline1\nline2\nline3\n```",
             "```aaa\nline1\nline2\nline3\n```",
         ];
 
-        for text in datas.iter() {
+        for text in data.iter() {
             let mut reader = Reader::new(text);
             assert!(multiline_string(&mut reader).is_err());
         }

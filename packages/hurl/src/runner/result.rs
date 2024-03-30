@@ -160,8 +160,8 @@ pub enum AssertResult {
 
 /// Represents a [capture](https://hurl.dev/docs/capturing-response.html) of an HTTP response.
 ///
-/// Captures are datas extracted by querying the HTTP response. Captures can be part of the response
-/// body, headers, cookies etc... Captures can be used to re-inject datas in next HTTP requests.
+/// Captures are data extracted by querying the HTTP response. Captures can be part of the response
+/// body, headers, cookies etc... Captures can be used to re-inject data in next HTTP requests.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CaptureResult {
     /// Name of the capture.

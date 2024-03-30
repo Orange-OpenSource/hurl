@@ -4,13 +4,13 @@
 
 Asserts are used to test various properties of an HTTP response. Asserts can be implicits (such as version, status, 
 headers) or explicit within an `[Asserts]` section. The delimiter of the request / response is `HTTP <STATUS-CODE>`: 
-after this delimiter, you'll find the implicit asserts, then an `[Asserts]` section with all the explicits checks.
+after this delimiter, you'll find the implicit asserts, then an `[Asserts]` section with all the explicit checks.
 
 
 ```hurl
 GET https://api/example.org/cats
 HTTP 200
-Content-Type: application/json; charset=utf-8      # Implicit assert on Content-Type Hedaer
+Content-Type: application/json; charset=utf-8      # Implicit assert on Content-Type Header
 [Asserts]                                          # Explicit asserts section 
 bytes count == 120
 header "Content-Type" contains "utf-8"

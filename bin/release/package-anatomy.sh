@@ -52,7 +52,7 @@ function usage(){
     echo
     echo "Usage: $(basename "$0") <package file> [Options]..."
     echo
-    echo "   Example: this comand outputs hurl_4.2.0_amd64.deb anatomy"
+    echo "   Example: this command outputs hurl_4.2.0_amd64.deb anatomy"
     echo
     echo "   $ $(basename "$0") hurl_4.2.0_amd64.deb"
     echo

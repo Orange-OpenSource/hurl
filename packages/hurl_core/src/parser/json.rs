@@ -379,7 +379,7 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     let save = reader.state.pos;
     let space2 = whitespace(reader);
     // Checks if there is no element after ':'. In this case, a special error must be reported
-    // because this is a common occurance.
+    // because this is a common occurrence.
     let next_char = reader.peek();
     // Comparing to None because `next_char` can be EOF.
     if next_char == Some('}') || next_char.is_none() {

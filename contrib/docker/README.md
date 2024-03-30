@@ -183,7 +183,8 @@ echo <hurl-bot github token> | docker login ghcr.io --username hurl-bot --passwo
 docker push ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}"
 ```
 
-# Create image containing builded amd64 and arm64 images
+# Create image containing built amd64 and arm64 images
+
 ## Create tag and latest manifest
 
 ```

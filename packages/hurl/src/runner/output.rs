@@ -25,7 +25,7 @@ use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 use hurl_core::ast::{Pos, SourceInfo};
 
-/// Represents the output of write operation: can be either a file or standard ouput.
+/// Represents the output of write operation: can be either a file or standard output.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Output {
     /// Write to file.
