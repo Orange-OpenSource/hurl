@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::output;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
+use crate::output;
 use crate::parallel::error::JobError;
 use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::WorkerMessage;
@@ -56,7 +56,8 @@ pub struct ParallelRunner {
 pub enum WorkerState {
     /// Worker has no job to run.
     Idle,
-    /// Worker is currently running a job.
+    /// Worker is currently running a `job`, the entry being executed is at 0-based index
+    /// `entry_index`, the total number of entries being `entry_count`.
     Running {
         job: Job,
         entry_index: usize,
@@ -202,40 +203,10 @@ impl ParallelRunner {
                         stderr.eprint(msg.stderr.buffer());
                     }
 
-                    match self.output_type {
-                        OutputType::ResponseBody {
-                            include_headers,
-                            color,
-                        } => {
-                            if msg.result.hurl_result.success {
-                                let result = output::write_last_body(
-                                    &msg.result.hurl_result,
-                                    include_headers,
-                                    color,
-                                    msg.result.job.runner_options.output.as_ref(),
-                                    &mut stdout,
-                                );
-                                if let Err(e) = result {
-                                    return Err(JobError::Runtime(e.to_string()));
-                                }
-                            }
-                        }
-                        OutputType::Json => {
-                            let result = output::write_json(
-                                &msg.result.hurl_result,
-                                &msg.result.content,
-                                &msg.result.job.filename,
-                                msg.result.job.runner_options.output.as_ref(),
-                                &mut stdout,
-                            );
-                            if let Err(e) = result {
-                                return Err(JobError::Runtime(e.to_string()));
-                            }
-                        }
-                        OutputType::NoOutput => {}
-                    }
+                    // Then, we print job output on standard output.
+                    self.print_output(&msg.result, &mut stdout)?;
 
-                    // Resport the completion of this job and update the progress.
+                    // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
 
                     results.push(msg.result);
@@ -270,5 +241,44 @@ impl ParallelRunner {
         // as the input jobs list.
         results.sort_unstable_by_key(|result| result.job.seq);
         Ok(results)
+    }
+
+    /// Prints a job `result` to standard output `stdout`, either as a raw HTTP response (last
+    /// body of the run), or in a structured JSON way.
+    fn print_output(&self, result: &JobResult, stdout: &mut Stdout) -> Result<(), JobError> {
+        let job = &result.job;
+        let content = &result.content;
+        let hurl_result = &result.hurl_result;
+        let filename_in = &job.filename;
+        let filename_out = job.runner_options.output.as_ref();
+
+        match self.output_type {
+            OutputType::ResponseBody {
+                include_headers,
+                color,
+            } => {
+                if hurl_result.success {
+                    let result = output::write_last_body(
+                        hurl_result,
+                        include_headers,
+                        color,
+                        filename_out,
+                        stdout,
+                    );
+                    if let Err(e) = result {
+                        return Err(JobError::Runtime(e.to_string()));
+                    }
+                }
+            }
+            OutputType::Json => {
+                let result =
+                    output::write_json(hurl_result, content, filename_in, filename_out, stdout);
+                if let Err(e) = result {
+                    return Err(JobError::Runtime(e.to_string()));
+                }
+            }
+            OutputType::NoOutput => {}
+        }
+        Ok(())
     }
 }

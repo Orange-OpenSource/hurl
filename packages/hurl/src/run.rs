@@ -24,7 +24,7 @@ use crate::{cli, HurlRun};
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::Input;
+use hurl::runner::{HurlResult, Input};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 
@@ -60,40 +60,11 @@ pub fn run_seq(
             return Err(CliError::Parsing);
         };
 
-        let success = hurl_result.success;
-
         // We can output the result, either the last raw body response or a structured JSON
         // representation of the full Hurl result.
         // In sequential run, we use an immediate (non-buffered) standard output.
         let mut stdout = Stdout::new(WriteMode::Immediate);
-        let output_body = success
-            && !options.interactive
-            && matches!(options.output_type, cli::OutputType::ResponseBody);
-        if output_body {
-            let include_headers = options.include;
-            let result = output::write_last_body(
-                &hurl_result,
-                include_headers,
-                options.color,
-                options.output.as_ref(),
-                &mut stdout,
-            );
-            if let Err(e) = result {
-                return Err(CliError::Runtime(e.to_string()));
-            }
-        }
-        if matches!(options.output_type, cli::OutputType::Json) {
-            let result = output::write_json(
-                &hurl_result,
-                &content,
-                filename,
-                options.output.as_ref(),
-                &mut stdout,
-            );
-            if let Err(e) = result {
-                return Err(CliError::Runtime(e.to_string()));
-            }
-        }
+        print_output(&hurl_result, &content, filename, options, &mut stdout)?;
 
         let run = HurlRun {
             content,
@@ -104,6 +75,47 @@ pub fn run_seq(
     }
 
     Ok(runs)
+}
+
+/// Prints a `hurl_result` to standard output `stdout`, either as a raw HTTP response (last
+/// body of the run), or in a structured JSON way.
+///
+/// `content` (the source string), `filename` (the source file) are used in JSON output.
+fn print_output(
+    hurl_result: &HurlResult,
+    content: &str,
+    filename: &Input,
+    options: &CliOptions,
+    stdout: &mut Stdout,
+) -> Result<(), CliError> {
+    let output_body = hurl_result.success
+        && !options.interactive
+        && matches!(options.output_type, cli::OutputType::ResponseBody);
+    if output_body {
+        let result = output::write_last_body(
+            hurl_result,
+            options.include,
+            options.color,
+            options.output.as_ref(),
+            stdout,
+        );
+        if let Err(e) = result {
+            return Err(CliError::Runtime(e.to_string()));
+        }
+    }
+    if matches!(options.output_type, cli::OutputType::Json) {
+        let result = output::write_json(
+            hurl_result,
+            content,
+            filename,
+            options.output.as_ref(),
+            stdout,
+        );
+        if let Err(e) = result {
+            return Err(CliError::Runtime(e.to_string()));
+        }
+    }
+    Ok(())
 }
 
 /// Runs Hurl `files` in parallel, given a current directory and command-line options (see
