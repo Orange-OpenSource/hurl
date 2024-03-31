@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --parallel --max-workers 1 `
+hurl --parallel --workers 1 `
   tests_ok/parallel_a.hurl `
   tests_ok/parallel_b.hurl `
   tests_ok/parallel_c.hurl `

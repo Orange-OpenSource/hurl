@@ -82,10 +82,10 @@ fn main() {
             EXIT_ERROR_UNDEFINED,
             &base_logger,
         );
-        let max_workers = opts.max_workers.unwrap_or(available.get());
-        base_logger.debug(&format!("Parallel run using {max_workers} workers"));
+        let workers = opts.workers.unwrap_or(available.get());
+        base_logger.debug(&format!("Parallel run using {workers} workers"));
 
-        run::run_par(&opts.input_files, current_dir, &opts, max_workers)
+        run::run_par(&opts.input_files, current_dir, &opts, workers)
     } else {
         run::run_seq(&opts.input_files, current_dir, &opts)
     };

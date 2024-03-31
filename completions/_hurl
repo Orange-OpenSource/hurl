@@ -47,7 +47,6 @@ _hurl() {
     '--json[Output each Hurl file result to JSON]' \
     '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]: :' \
     '(-m --max-time)'{-m,--max-time}'[Maximum time allowed for the transfer]: :' \
-    '--max-workers[(Experimental) Maximum number of parallel execution]: :' \
     '(-n --netrc)'{-n,--netrc}'[Must read .netrc for username and password]' \
     '--netrc-file[Specify FILE for .netrc]: :_files' \
     '--netrc-optional[Use either .netrc or the URL]' \
@@ -74,6 +73,7 @@ _hurl() {
     '*--variables-file[Define a properties file in which you define your variables]: :_files' \
     '(-v --verbose)'{-v,--verbose}'[Turn on verbose]' \
     '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]' \
+    '--workers[(Experimental) Maximum number of parallel execution]: :' \
     '--help[Print help]' \
     '--version[Print version]' \
     '*:file:_files' \

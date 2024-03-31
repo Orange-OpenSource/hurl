@@ -67,7 +67,6 @@ pub struct CliOptions {
     pub ip_resolve: Option<IpResolve>,
     pub junit_file: Option<PathBuf>,
     pub max_redirect: Option<usize>,
-    pub max_workers: Option<usize>,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -92,6 +91,7 @@ pub struct CliOptions {
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
     pub very_verbose: bool,
+    pub workers: Option<usize>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -192,7 +192,6 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::json())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
-        .arg(commands::max_workers())
         .arg(commands::netrc())
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional())
@@ -218,7 +217,8 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::variable())
         .arg(commands::variables_file())
         .arg(commands::verbose())
-        .arg(commands::very_verbose());
+        .arg(commands::very_verbose())
+        .arg(commands::workers());
 
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
@@ -265,7 +265,6 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let ip_resolve = matches::ip_resolve(arg_matches);
     let junit_file = matches::junit_file(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
-    let max_workers = matches::max_workers(arg_matches);
     let netrc = matches::netrc(arg_matches);
     let netrc_file = matches::netrc_file(arg_matches)?;
     let netrc_optional = matches::netrc_optional(arg_matches);
@@ -290,6 +289,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
+    let workers = matches::workers(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
         cacert_file,
@@ -318,7 +318,6 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         ip_resolve,
         junit_file,
         max_redirect,
-        max_workers,
         netrc,
         netrc_file,
         netrc_optional,
@@ -343,6 +342,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         variables,
         verbose,
         very_verbose,
+        workers,
     })
 }
 

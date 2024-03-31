@@ -52,7 +52,6 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--json', 'json', [CompletionResultType]::ParameterName, 'Output each Hurl file result to JSON')
             [CompletionResult]::new('--max-redirs', 'max-redirs', [CompletionResultType]::ParameterName, 'Maximum number of redirects allowed, -1 for unlimited redirects')
             [CompletionResult]::new('--max-time', 'max-time', [CompletionResultType]::ParameterName, 'Maximum time allowed for the transfer')
-            [CompletionResult]::new('--max-workers', 'max-workers', [CompletionResultType]::ParameterName, '(Experimental) Maximum number of parallel execution')
             [CompletionResult]::new('--netrc', 'netrc', [CompletionResultType]::ParameterName, 'Must read .netrc for username and password')
             [CompletionResult]::new('--netrc-file', 'netrc-file', [CompletionResultType]::ParameterName, 'Specify FILE for .netrc')
             [CompletionResult]::new('--netrc-optional', 'netrc-optional', [CompletionResultType]::ParameterName, 'Use either .netrc or the URL')
@@ -79,6 +78,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--variables-file', 'variables-file', [CompletionResultType]::ParameterName, 'Define a properties file in which you define your variables')
             [CompletionResult]::new('--verbose', 'verbose', [CompletionResultType]::ParameterName, 'Turn on verbose')
             [CompletionResult]::new('--very-verbose', 'very-verbose', [CompletionResultType]::ParameterName, 'Turn on verbose output, including HTTP response and libcurl logs')
+            [CompletionResult]::new('--workers', 'workers', [CompletionResultType]::ParameterName, '(Experimental) Maximum number of parallel execution')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--version', 'version', [CompletionResultType]::ParameterName, 'Print version')
             break

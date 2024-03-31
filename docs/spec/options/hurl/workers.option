@@ -1,12 +1,12 @@
-name: max_workers
-long: max-workers
+name: workers
+long: workers
 value: NUM
-value_default: 6
 value_parser: clap::value_parser!(u32).range(1..)
 help: (Experimental) Maximum number of parallel execution
 cli_only: true
 experimental: true
 ---
-(Experimental) Maximum number of parallel execution in parallel mode.
+(Experimental) Maximum number of parallel execution in parallel mode. Default value corresponds (in most cases) to the
+current amount of CPUs.
 
 See also [`--parallel`](#parallel).
