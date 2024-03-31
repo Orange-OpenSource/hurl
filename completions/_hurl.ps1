@@ -49,6 +49,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--interactive', 'interactive', [CompletionResultType]::ParameterName, 'Turn on interactive mode')
             [CompletionResult]::new('--ipv4', 'ipv4', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6')
             [CompletionResult]::new('--ipv6', 'ipv6', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4')
+            [CompletionResult]::new('--jobs', 'jobs', [CompletionResultType]::ParameterName, '(Experimental) Maximum number of parallel jobs')
             [CompletionResult]::new('--json', 'json', [CompletionResultType]::ParameterName, 'Output each Hurl file result to JSON')
             [CompletionResult]::new('--max-redirs', 'max-redirs', [CompletionResultType]::ParameterName, 'Maximum number of redirects allowed, -1 for unlimited redirects')
             [CompletionResult]::new('--max-time', 'max-time', [CompletionResultType]::ParameterName, 'Maximum time allowed for the transfer')
@@ -78,7 +79,6 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--variables-file', 'variables-file', [CompletionResultType]::ParameterName, 'Define a properties file in which you define your variables')
             [CompletionResult]::new('--verbose', 'verbose', [CompletionResultType]::ParameterName, 'Turn on verbose')
             [CompletionResult]::new('--very-verbose', 'very-verbose', [CompletionResultType]::ParameterName, 'Turn on verbose output, including HTTP response and libcurl logs')
-            [CompletionResult]::new('--workers', 'workers', [CompletionResultType]::ParameterName, '(Experimental) Maximum number of parallel execution')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--version', 'version', [CompletionResultType]::ParameterName, 'Print version')
             break

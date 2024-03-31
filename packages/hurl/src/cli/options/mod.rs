@@ -65,6 +65,7 @@ pub struct CliOptions {
     pub insecure: bool,
     pub interactive: bool,
     pub ip_resolve: Option<IpResolve>,
+    pub jobs: Option<usize>,
     pub junit_file: Option<PathBuf>,
     pub max_redirect: Option<usize>,
     pub netrc: bool,
@@ -91,7 +92,6 @@ pub struct CliOptions {
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
     pub very_verbose: bool,
-    pub workers: Option<usize>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -189,6 +189,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::interactive())
         .arg(commands::ipv4())
         .arg(commands::ipv6())
+        .arg(commands::jobs())
         .arg(commands::json())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
@@ -217,8 +218,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::variable())
         .arg(commands::variables_file())
         .arg(commands::verbose())
-        .arg(commands::very_verbose())
-        .arg(commands::workers());
+        .arg(commands::very_verbose());
 
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
@@ -289,7 +289,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
-    let workers = matches::workers(arg_matches);
+    let workers = matches::jobs(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
         cacert_file,
@@ -342,7 +342,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         variables,
         verbose,
         very_verbose,
-        workers,
+        jobs: workers,
     })
 }
 

@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 
 $Start = [DateTimeOffset]::Now.ToUnixTimeSeconds()
 
-hurl --parallel --verbose --variable name=Bob `
+hurl --parallel --jobs 4 --verbose --variable name=Bob `
   tests_ok/parallel.hurl `
   tests_ok/parallel.hurl `
   tests_ok/parallel.hurl `

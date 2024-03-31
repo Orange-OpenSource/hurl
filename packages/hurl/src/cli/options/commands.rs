@@ -264,6 +264,16 @@ pub fn ipv6() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn jobs() -> clap::Arg {
+    clap::Arg::new("jobs")
+        .long("jobs")
+        .value_name("NUM")
+        .value_parser(clap::value_parser!(u32).range(1..))
+        .help("(Experimental) Maximum number of parallel jobs")
+        .num_args(1)
+        .hide(true)
+}
+
 pub fn json() -> clap::Arg {
     clap::Arg::new("json")
         .long("json")
@@ -513,14 +523,4 @@ pub fn very_verbose() -> clap::Arg {
         .long("very-verbose")
         .help("Turn on verbose output, including HTTP response and libcurl logs")
         .action(clap::ArgAction::SetTrue)
-}
-
-pub fn workers() -> clap::Arg {
-    clap::Arg::new("workers")
-        .long("workers")
-        .value_name("NUM")
-        .value_parser(clap::value_parser!(u32).range(1..))
-        .help("(Experimental) Maximum number of parallel execution")
-        .num_args(1)
-        .hide(true)
 }

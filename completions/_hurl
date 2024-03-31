@@ -44,6 +44,7 @@ _hurl() {
     '--interactive[Turn on interactive mode]' \
     '(-4 --ipv4)'{-4,--ipv4}'[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]' \
     '(-6 --ipv6)'{-6,--ipv6}'[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]' \
+    '--jobs[(Experimental) Maximum number of parallel jobs]: :' \
     '--json[Output each Hurl file result to JSON]' \
     '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]: :' \
     '(-m --max-time)'{-m,--max-time}'[Maximum time allowed for the transfer]: :' \
@@ -73,7 +74,6 @@ _hurl() {
     '*--variables-file[Define a properties file in which you define your variables]: :_files' \
     '(-v --verbose)'{-v,--verbose}'[Turn on verbose]' \
     '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]' \
-    '--workers[(Experimental) Maximum number of parallel execution]: :' \
     '--help[Print help]' \
     '--version[Print version]' \
     '*:file:_files' \

@@ -125,9 +125,9 @@ pub fn run_par(
     files: &[Input],
     current_dir: &Path,
     options: &CliOptions,
-    workers: usize,
+    workers_count: usize,
 ) -> Result<Vec<HurlRun>, CliError> {
-    let workers_count = min(files.len(), workers);
+    let workers_count = min(files.len(), workers_count);
     let variables = &options.variables;
     let output_type = options
         .output_type
