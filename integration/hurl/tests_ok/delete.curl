@@ -1,2 +1,0 @@
-curl --request DELETE 'http://localhost:8000/delete'
-

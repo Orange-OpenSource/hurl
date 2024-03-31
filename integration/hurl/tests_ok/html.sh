@@ -22,7 +22,6 @@ hurl --test \
   tests_ok/charset.hurl \
   tests_ok/compressed_option.hurl \
   tests_ok/cookie_storage.hurl \
-  tests_ok/delete.hurl \
   tests_ok/deprecated.hurl \
   tests_ok/empty.hurl \
   tests_ok/encoding.hurl \
