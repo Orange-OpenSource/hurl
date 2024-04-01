@@ -144,11 +144,11 @@ HTTP/1.0 200
         assert_eq!(
             doc.to_string().unwrap(),
             r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
-  --> test.hurl:2:10
+  --&gt; test.hurl:2:10
    |
    | GET http://localhost:8000/not_found
  2 | HTTP/1.0 200
-   |          ^^^ actual value is &lt;404>
+   |          ^^^ actual value is &lt;404&gt;
    |</failure></testcase>"#
         );
     }
@@ -182,7 +182,7 @@ HTTP/1.0 200
         assert_eq!(
             doc.to_string().unwrap(),
             r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
-  --> test.hurl:1:5
+  --&gt; test.hurl:1:5
    |
  1 | GET http://unknown
    |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
