@@ -395,7 +395,7 @@ impl Client {
         }
         self.handle.ssl_verify_host(!options.insecure)?;
         self.handle.ssl_verify_peer(!options.insecure)?;
-        if let Some(cacert_file) = options.cacert_file.clone() {
+        if let Some(cacert_file) = &options.cacert_file {
             self.handle.cainfo(cacert_file)?;
             self.handle.ssl_cert_type("PEM")?;
         }
@@ -411,16 +411,16 @@ impl Client {
             }
             self.handle.ssl_cert_type("PEM")?;
         }
-        if let Some(client_key_file) = options.client_key_file.clone() {
+        if let Some(client_key_file) = &options.client_key_file {
             self.handle.ssl_key(client_key_file)?;
             self.handle.ssl_cert_type("PEM")?;
         }
         self.handle.path_as_is(options.path_as_is)?;
-        if let Some(proxy) = options.proxy.clone() {
-            self.handle.proxy(proxy.as_str())?;
+        if let Some(proxy) = &options.proxy {
+            self.handle.proxy(proxy)?;
         }
-        if let Some(s) = options.no_proxy.clone() {
-            self.handle.noproxy(s.as_str())?;
+        if let Some(no_proxy) = &options.no_proxy {
+            self.handle.noproxy(no_proxy)?;
         }
         if let Some(unix_socket) = &options.unix_socket {
             self.handle.unix_socket(unix_socket)?;
