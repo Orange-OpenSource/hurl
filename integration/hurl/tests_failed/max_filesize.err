@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_failed/max_filesize.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/max-filesize-fail
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (63) Maximum file size exceeded
+   |
+
