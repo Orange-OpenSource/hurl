@@ -49,14 +49,17 @@ jobs:
       run: |
         bin/check/install_prerequisites.sh
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
 
     - name: Check Rust version
       if: always()
-      run: bin/check/rust_version.py 7
+      run: |
+        python3 -m pip install requests --quiet
+        bin/check/rust_version.py 7
 
     - name: Generated
       if: always()
