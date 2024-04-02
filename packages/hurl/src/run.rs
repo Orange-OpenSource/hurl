@@ -25,7 +25,7 @@ use crate::{cli, HurlRun};
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::{HurlResult, Input};
-use hurl::util::term::{Stdout, WriteMode};
+use hurl::util::term::{Stderr, Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
@@ -64,7 +64,15 @@ pub fn run_seq(
         // representation of the full Hurl result.
         // In sequential run, we use an immediate (non-buffered) standard output.
         let mut stdout = Stdout::new(WriteMode::Immediate);
-        print_output(&hurl_result, &content, filename, options, &mut stdout)?;
+        let mut stderr = Stderr::new(WriteMode::Immediate);
+        print_output(
+            &hurl_result,
+            &content,
+            filename,
+            options,
+            &mut stdout,
+            &mut stderr,
+        )?;
 
         let run = HurlRun {
             content,
@@ -87,6 +95,7 @@ fn print_output(
     filename: &Input,
     options: &CliOptions,
     stdout: &mut Stdout,
+    stderr: &mut Stderr,
 ) -> Result<(), CliError> {
     let output_body = hurl_result.success
         && !options.interactive
@@ -98,6 +107,7 @@ fn print_output(
             options.color,
             options.output.as_ref(),
             stdout,
+            stderr,
         );
         if let Err(e) = result {
             return Err(CliError::Runtime(e.to_string()));

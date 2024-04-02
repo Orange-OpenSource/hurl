@@ -204,7 +204,7 @@ impl ParallelRunner {
                     }
 
                     // Then, we print job output on standard output.
-                    self.print_output(&msg.result, &mut stdout)?;
+                    self.print_output(&msg.result, &mut stdout, &mut stderr)?;
 
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
@@ -245,7 +245,12 @@ impl ParallelRunner {
 
     /// Prints a job `result` to standard output `stdout`, either as a raw HTTP response (last
     /// body of the run), or in a structured JSON way.
-    fn print_output(&self, result: &JobResult, stdout: &mut Stdout) -> Result<(), JobError> {
+    fn print_output(
+        &self,
+        result: &JobResult,
+        stdout: &mut Stdout,
+        stderr: &mut Stderr,
+    ) -> Result<(), JobError> {
         let job = &result.job;
         let content = &result.content;
         let hurl_result = &result.hurl_result;
@@ -264,6 +269,7 @@ impl ParallelRunner {
                         color,
                         filename_out,
                         stdout,
+                        stderr,
                     );
                     if let Err(e) = result {
                         return Err(JobError::Runtime(e.to_string()));

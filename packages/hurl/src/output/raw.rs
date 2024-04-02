@@ -15,12 +15,16 @@
  * limitations under the License.
  *
  */
+use std::cmp::min;
+use std::io::IsTerminal;
+
+use colored::Colorize;
 use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::output::Error;
 use crate::runner;
 use crate::runner::{HurlResult, Output};
-use crate::util::term::Stdout;
+use crate::util::term::{Stderr, Stdout};
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
@@ -32,6 +36,7 @@ pub fn write_last_body(
     color: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
+    stderr: &mut Stderr,
 ) -> Result<(), Error> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
@@ -67,11 +72,45 @@ pub fn write_last_body(
         let bytes = &response.body;
         output.extend(bytes);
     }
+    // We replicate curl's checks for binary output: a warning is displayed when user hasn't
+    // use `--output` option and the response is considered as a binary content. If user has used
+    // `--output` whether to save to a file, or to redirect output to standard output (`--output -`)
+    // we don't display any warning.
     match filename_out {
+        None => {
+            if std::io::stdout().is_terminal() && is_binary(&output) {
+                let message = "Binary output can mess up your terminal. Use \"--output -\" to tell Hurl to output it to your terminal anyway, or consider \"--output\" to save to a file.";
+                let message = if color {
+                    format!("{}: {}", "warning".yellow().bold(), message.bold())
+                } else {
+                    format!("warning: {message}")
+                };
+                stderr.eprintln(&message);
+                // We don't want to have any additional error message.
+                return Err(Error::new(""));
+            }
+            Output::Stdout.write(&output, stdout, None)?;
+        }
         Some(out) => out.write(&output, stdout, None)?,
-        None => Output::Stdout.write(&output, stdout, None)?,
     }
     Ok(())
+}
+
+/// Returns `true` if `bytes` is a binary content, false otherwise.
+///
+/// For the implementation, we use a simple heuristic on the buffer: just check the presence of NULL
+/// in the first 2000 bytes to determine if the content if binary or not.
+///
+/// See <https://github.com/curl/curl/pull/1512>
+/// and <https://github.com/curl/curl/blob/721941aadf4adf4f6aeb3f4c0ab489bb89610c36/src/tool_cb_wrt.c#L209>
+fn is_binary(bytes: &[u8]) -> bool {
+    let len = min(2000, bytes.len());
+    for c in &bytes[..len] {
+        if *c == 0 {
+            return true;
+        }
+    }
+    false
 }
 
 #[cfg(test)]
@@ -79,10 +118,10 @@ mod tests {
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
-    use crate::util::term::{Stdout, WriteMode};
+    use crate::util::term::{Stderr, Stdout, WriteMode};
     use hurl_core::ast::{Pos, SourceInfo};
 
-    fn hurl_result() -> HurlResult {
+    fn hurl_result_json() -> HurlResult {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("x-foo", "xxx"));
         headers.push(Header::new("x-bar", "yyy0"));
@@ -167,13 +206,22 @@ mod tests {
 
     #[test]
     fn write_last_body_with_headers() {
-        let result = hurl_result();
+        let result = hurl_result_json();
         let include_header = true;
         let color = false;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
+        let mut stderr = Stderr::new(WriteMode::Buffered);
 
-        write_last_body(&result, include_header, color, output.as_ref(), &mut stdout).unwrap();
+        write_last_body(
+            &result,
+            include_header,
+            color,
+            output.as_ref(),
+            &mut stdout,
+            &mut stderr,
+        )
+        .unwrap();
         let stdout = String::from_utf8(stdout.buffer().to_vec()).unwrap();
         assert_eq!(
             stdout,
