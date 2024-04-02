@@ -27,7 +27,8 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -68,7 +69,8 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -114,7 +116,8 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -285,11 +288,14 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: bin/install_prerequisites_macos.sh
+      run: |
+        bin/install_prerequisites_macos.sh
+        echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -330,11 +336,14 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: bin/install_prerequisites_macos.sh
+      run: |
+        bin/install_prerequisites_macos.sh
+        echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version

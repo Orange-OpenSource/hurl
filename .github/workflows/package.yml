@@ -29,7 +29,8 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -259,80 +260,6 @@ jobs:
         path: |
           ./**/*.log
 
-#  test-docker-arm64-packages:
-#   runs-on: ubuntu-latest
-#   steps:
-#   - name: Checkout repository
-#     uses: actions/checkout@v4.1.1
-#     with:
-#       ref: ${{ inputs.branch }}
-#   - name: Set up Docker Buildx
-#     uses: docker/setup-buildx-action@v3.2.0
-#   - name: Build docker images
-#     run: |
-#         echo "::group::Docker build prerequisites"
-#           sudo apt-get install -y qemu-user-static
-#           sudo apt-get install -y binfmt-support
-#           sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-#           sudo docker buildx create --name mybuilder
-#           sudo docker buildx use mybuilder
-#           sudo docker buildx inspect --bootstrap
-#           sudo docker buildx ls
-#         echo "::endgroup::"
-#         echo "::group::Build docker hurl"
-#           docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
-#           docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
-#           sudo docker buildx build \
-#             --progress=plain \
-#             --file contrib/docker/Dockerfile \
-#             --platform linux/arm64 \
-#             --build-arg docker_build_date="${docker_build_date}" \
-#             --build-arg docker_build_tag="${docker_build_tag}" \
-#             --tag local/hurl:arm64 \
-#             --load .
-#           sudo docker inspect local/hurl:arm64
-#           sudo docker run --rm local/hurl:arm64 --version
-#         echo "::endgroup::"
-#   - name: Integration tests
-#     uses: addnab/docker-run-action@v3
-#     with:
-#       image: local/hurl:arm64
-#       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/arm64
-#       run: |
-#         echo "::group::Install system prerequisites"
-#           set -e
-#           cat /etc/os-release
-#           apk add sudo bash curl python3 py3-pip
-#         echo "::endgroup::"
-#         echo "::group::Install alpine prerequisites"
-#           bash bin/install_prerequisites_alpine.sh
-#         echo "::endgroup::"
-#         echo "::group::Install tests prerequisites"
-#           bash bin/install_python3_venv.sh
-#           export PATH=/tmp/hurl-python3-venv/bin:$PATH
-#           which python3
-#           python3 --version
-#           pip --version
-#           bash bin/test/test_prerequisites.sh
-#         echo "::endgroup::"
-#         echo "::group::Environment"
-#           bash bin/environment.sh
-#         echo "::endgroup::"
-#         echo "::group::Integration tests"
-#           bash bin/test/test_integ.sh
-#         echo "::endgroup::"
-#   - name: find artifacts
-#     run: |
-#       pwd
-#       find . -name "*.log"
-#   - name: Archive production artifacts
-#     uses: actions/upload-artifact@v4.3.1
-#     if: ${{ always() }}
-#     with:
-#       name: test-docker-arm64-package-artifacts
-#       path: |
-#         ./**/*.log
-
   test-docker-x64-packages:
    runs-on: ubuntu-latest
    steps:
@@ -420,7 +347,8 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -462,11 +390,14 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: bin/install_prerequisites_macos.sh
+      run: |
+        bin/install_prerequisites_macos.sh
+        echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
@@ -508,11 +439,14 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: bin/install_prerequisites_macos.sh
+      run: |
+        bin/install_prerequisites_macos.sh
+        echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
         python3 --version
         pip --version
