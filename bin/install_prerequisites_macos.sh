@@ -7,7 +7,9 @@ curl -o curl.rb https://raw.githubusercontent.com/Homebrew/homebrew-core/5f1b24e
 brew uninstall --force --ignore-dependencies curl
 brew install -s curl.rb
 brew link curl --force
-PATH="/usr/local/opt/curl/bin/:/usr/local/bin:$PATH"
+curl_path="$(brew --prefix curl)/bin"
+echo "curl_path=$curl_path"
+PATH="$curl_path:$PATH"
 export PATH
 ###
 brew install bash pkg-config squid
