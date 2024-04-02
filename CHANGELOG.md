@@ -4,6 +4,7 @@
 
 Thanks to
 [@tarampampam](https://github.com/tarampampam),
+[@CMiksche](https://github.com/CMiksche),
 [@CodeMan99](https://github.com/CodeMan99),
 [@OverkillGuy](https://github.com/OverkillGuy),
 [@hsanson](https://github.com/hsanson),
@@ -14,12 +15,14 @@ Thanks to
 Enhancements:
 
 * Support --user option per request [#2585](https://github.com/Orange-OpenSource/hurl/issues/2585)
+* Add isNumber predicate [#2538](https://github.com/Orange-OpenSource/hurl/issues/2538)
 * Create intermediate directory when using --report-html [#2531](https://github.com/Orange-OpenSource/hurl/issues/2531)
 * Use '-' to read Hurl file from standard input [#2523](https://github.com/Orange-OpenSource/hurl/issues/2523)
 * Add --from-entry option to execute a file from a given entry [#2500](https://github.com/Orange-OpenSource/hurl/issues/2500)
 * Add isIsoDate predicate (take a string, checks YYYY-MM-DDTHH:mm:sssZ) [#2427](https://github.com/Orange-OpenSource/hurl/issues/2427)
 * Add completion files in Linux/MacOS packages [#2401](https://github.com/Orange-OpenSource/hurl/issues/2401)
 * Fix tarball layout to Linux filesystem [#2401](https://github.com/Orange-OpenSource/hurl/issues/2401)
+* Add --max-filesize option to limit HTTP response [#2353](https://github.com/Orange-OpenSource/hurl/issues/2353)
 * Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
 * Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
 * Add --netrc, --netrc-file and --netrc-optional options [#2094](https://github.com/Orange-OpenSource/hurl/issues/2094)
