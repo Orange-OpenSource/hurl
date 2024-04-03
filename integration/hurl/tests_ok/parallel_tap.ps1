@@ -1,6 +1,6 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-if (Test-Path build/result.tap) {
+if (Test-Path build/parallel.tap) {
     Remove-Item build/parallel.tap
 }
 
