@@ -1,1 +1,1 @@
-curl --unix-socket 'build/unix_socket.sock' 'http://example/hello'
+curl --unix-socket 'build/unix_socket.sock' 'http://localhost:8000/hello'
