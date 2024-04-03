@@ -27,12 +27,11 @@ def test(script_file: str):
     Arguments:
     script_file -- the script file to run
     """
-    cmd = (
-        "pwsh -Command " + script_file + " ; exit $LASTEXITCODE"
-        if script_file.endswith("ps1")
-        else script_file
-    )
-    print(cmd)
+    if script_file.endswith("ps1"):
+        cmd = ["pwsh", "-Command", script_file, ";", "exit $LASTEXITCODE"]
+    else:
+        cmd = [script_file]
+    print(" ".join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     basename = os.path.splitext(script_file)[0]
