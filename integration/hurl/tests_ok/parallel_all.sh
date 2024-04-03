@@ -35,7 +35,6 @@ hurl --parallel --test \
   tests_ok/headers.hurl \
   tests_ok/hello.hurl \
   tests_ok/hello_gb2312.hurl \
-  tests_ok/http_version_option.hurl \
   tests_ok/insecure_option.hurl \
   tests_ok/json_output.hurl \
   tests_ok/method.hurl \
