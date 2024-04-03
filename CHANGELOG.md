@@ -25,6 +25,7 @@ Enhancements:
 * Add --max-filesize option to limit HTTP response [#2353](https://github.com/Orange-OpenSource/hurl/issues/2353)
 * Display source request when there are asserts/runtime errors [#2351](https://github.com/Orange-OpenSource/hurl/issues/2351)
 * Using explicit stdout output [#2312](https://github.com/Orange-OpenSource/hurl/issues/2312)
+* Prevent raw binary response to be displayed on standard output [#2306](https://github.com/Orange-OpenSource/hurl/issues/2306)
 * Add --netrc, --netrc-file and --netrc-optional options [#2094](https://github.com/Orange-OpenSource/hurl/issues/2094)
 * Generate bash completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
 * Generate powershell completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
