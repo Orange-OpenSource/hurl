@@ -11,4 +11,3 @@ hurl --test --report-tap build/result.tap tests_ok/test.3.hurl
 $ErrorActionPreference = 'Stop'
 
 Write-Host (Get-Content build/result.tap -Raw) -NoNewLine
-Exit 0
