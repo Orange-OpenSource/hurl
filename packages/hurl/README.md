@@ -175,6 +175,7 @@ Table of Contents
          * [HTTP Headers](#http-headers)
          * [Query Params](#query-params)
          * [Basic Authentication](#basic-authentication)
+         * [Passing Data between Requests ](#passing-data-between-requests)
       * [Sending Data](#sending-data)
          * [Sending HTML Form Data](#sending-html-form-data)
          * [Sending Multipart Form Data](#sending-multipart-form-data)
@@ -183,12 +184,19 @@ Table of Contents
          * [Templating a XML Body](#templating-a-xml-body)
          * [Using GraphQL Query](#using-graphql-query)
       * [Testing Response](#testing-response)
+         * [Testing Status Code](#testing-status-code)
          * [Testing Response Headers](#testing-response-headers)
          * [Testing REST APIs](#testing-rest-apis)
          * [Testing HTML Response](#testing-html-response)
          * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
          * [Testing Bytes Content](#testing-bytes-content)
          * [SSL Certificate](#ssl-certificate)
+         * [Checking Full Body](#checking-full-body)
+      * [Reports](#reports)
+         * [HTML Report](#html-report)
+         * [JUnit Report](#junit-report)
+         * [TAP Report](#tap-report)
+         * [JSON Output](#json-output)
       * [Others](#others)
          * [HTTP Version](#http-version)
          * [Polling and Retry](#polling-and-retry)
@@ -259,6 +267,18 @@ oriented output, you can use [`--test` option]:
 $ hurl --test sample.hurl
 ```
 
+A particular response can be saved with [`[Options] section`][option]:
+
+```hurl
+GET https://example.ord/cats/123
+[Options]
+output: cat123.txt    # use - to output to stdout
+HTTP 200
+
+GET https://example.ord/dogs/567
+HTTP 200
+```
+
 
 You can check [Hurl tests suite] for more samples.
 
@@ -268,6 +288,15 @@ A simple GET:
 
 ```hurl
 GET https://example.org
+```
+
+Requests can be chained:
+
+```hurl
+GET https://example.org/a
+GET https://example.org/b
+HEAD https://example.org/c
+GET https://example.org/c
 ```
 
 [Doc](https://hurl.dev/docs/request.html#method)
@@ -303,6 +332,8 @@ Or:
 GET https://example.org/news?order=newest&search=something%20to%20search&count=100
 ```
 
+> With `[QueryStringParams]` section, params don't need to be URL escaped.
+
 [Doc](https://hurl.dev/docs/request.html#query-parameters)
 
 ### Basic Authentication
@@ -323,9 +354,42 @@ GET https://example.org/protected
 Authorization: Basic Ym9iOnNlY3JldA== 
 ```
 
-Basic authentication allows per request authentication.
-If you want to add basic authentication to all the requests of a Hurl file
-you could use [`-u/--user` option].
+Basic authentication section allows per request authentication. If you want to add basic authentication to all the
+requests of a Hurl file you could use [`-u/--user` option]:
+
+```shell
+$ hurl --user bob=secret login.hurl
+```
+
+[`--user`] option can also be set per request:
+
+```hurl
+GET https://example.org/login
+[Options]
+user: bob:secret
+HTTP 200
+
+GET https://example.org/login
+[Options]
+user: alice:secret
+HTTP 200
+```
+
+### Passing Data between Requests 
+
+[Captures] can be used to pass data from one request to another:
+
+```hurl
+POST https://sample.org/orders
+HTTP 201
+[Captures]
+order_id: jsonpath "$.order.id"
+
+GET https://sample.org/orders/{{order_id}}
+HTTP 200
+```
+
+[Doc](https://hurl.dev/docs/capturing-response.html)
 
 ## Sending Data
 
@@ -506,6 +570,44 @@ GraphQL queries can also use [Hurl templates].
 
 ## Testing Response
 
+Responses are optional, everything after `HTTP` is part of the response asserts.
+
+```hurl
+# A request with (almost) no check:
+GET https://foo.com
+
+# A status code check:
+GET https://foo.com
+HTTP 200
+
+# A test on response body
+GET https://foo.com
+HTTP 200
+[Asserts]
+jsonpath "$.state" == "running"
+```
+
+### Testing Status Code
+
+```hurl
+GET https://example.org/order/435
+HTTP 200
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#version-status)
+
+```hurl
+GET https://example.org/order/435
+# Testing status code is in a 200-300 range
+HTTP *
+[Asserts]
+status >= 200
+status < 300
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#status-assert)
+
+
 ### Testing Response Headers
 
 Use implicit response asserts to test header values:
@@ -531,6 +633,16 @@ header "Location" contains "www.example.net"
 
 [Doc](https://hurl.dev/docs/asserting-response.html#header-assert)
 
+Implicit and explicit asserts can be combined:
+
+```hurl
+GET https://example.org/index.html
+HTTP 200
+Set-Cookie: theme=light
+Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+[Asserts]
+header "Location" contains "www.example.net"
+```
 
 ### Testing REST APIs
 
@@ -553,27 +665,6 @@ jsonpath "$.created" isIsoDate
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
-
-
-Testing status code:
-
-```hurl
-GET https://example.org/order/435
-HTTP 200
-```
-
-[Doc](https://hurl.dev/docs/asserting-response.html#version-status)
-
-```hurl
-GET https://example.org/order/435
-# Testing status code is in a 200-300 range
-HTTP *
-[Asserts]
-status >= 200
-status < 300
-```
-
-[Doc](https://hurl.dev/docs/asserting-response.html#status-assert)
 
 
 ### Testing HTML Response
@@ -638,16 +729,141 @@ certificate "Serial-Number" matches /[\da-f]+/
 
 [Doc](https://hurl.dev/docs/asserting-response.html#ssl-certificate-assert)
 
+### Checking Full Body
+
+Use implicit body to test an exact JSON body match:
+
+```hurl
+GET https://example.org/api/cats/123
+HTTP 200
+{
+  "name" : "Purrsloud",
+  "species" : "Cat",
+  "favFoods" : ["wet food", "dry food", "<strong>any</strong> food"],
+  "birthYear" : 2016,
+  "photo" : "https://learnwebcode.github.io/json-example/images/cat-2.jpg"
+}
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#json-body)
+
+Or an explicit assert file:
+
+```hurl
+GET https://example.org/index.html
+HTTP 200
+[Asserts]
+body == file,cat.json;
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#body-assert)
+
+Implicit asserts supports XML body:
+
+```hurl
+GET https://example.org/api/catalog
+HTTP 200
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+   <book id="bk101">
+      <author>Gambardella, Matthew</author>
+      <title>XML Developer's Guide</title>
+      <genre>Computer</genre>
+      <price>44.95</price>
+      <publish_date>2000-10-01</publish_date>
+      <description>An in-depth look at creating applications with XML.</description>
+   </book>
+</catalog>
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#xml-body)
+
+Plain text:
+
+~~~hurl
+GET https://example.org/models
+HTTP 200
+```
+Year,Make,Model,Description,Price
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL! air, moon roof, loaded",4799.00
+```
+~~~
+
+[Doc](https://hurl.dev/docs/asserting-response.html#multiline-string-body)
+
+
+One line:
+
+```hurl
+POST https://example.org/helloworld
+HTTP 200
+`Hello world!`
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#oneline-string-body)
+
+File:
+
+```hurl
+GET https://example.org
+HTTP 200
+file,data.bin;
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#file-body)
+
+
+## Reports
+
+### HTML Report
+
+```shell
+$ hurl --test --report-html build/report/ *.hurl
+```
+
+[Doc](https://hurl.dev/docs/running-tests.html#generating-report)
+
+### JUnit Report
+
+```shell
+$ hurl --test --report-junit build/report.xml *.hurl
+```
+
+[Doc](https://hurl.dev/docs/running-tests.html#generating-report)
+
+### TAP Report
+
+```shell
+$ hurl --test --report-tap build/report.txt *.hurl
+```
+
+[Doc](https://hurl.dev/docs/running-tests.html#generating-report)
+
+### JSON Output
+
+A structured output of running Hurl files can be obtained with [`--json` option]. Each file will produce a JSON export of the run.
+
+
+```shell
+$ hurl --json *.hurl
+```
+
 
 ## Others
 
 ### HTTP Version
 
-Testing HTTP version (1.0, 1.1, 2 or 3):
+Testing HTTP version (HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3):
 
 ```hurl
-GET https://example.org/order/435
+GET https://foo.com
 HTTP/3 200
+
+GET https://bar.com
+HTTP/2 200
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#version-status)
@@ -698,7 +914,7 @@ HTTP 200
 ### Skipping Requests
 
 ```hurl
-# a, b, d are runner, c is skipped
+# a, c, d are run, b is skipped
 GET https://example.org/a
 
 GET https://example.org/b
@@ -784,7 +1000,17 @@ Action: GetCallerIdentity
 Version: 2011-06-15
 ```
 
-The Access Key is given per [`--user`]. 
+The Access Key is given per [`--user`], either with command line option or within the [`[Options]`][option] section:
+
+```hurl
+POST https://sts.eu-central-1.amazonaws.com/
+[Options]
+aws-sigv4: aws:amz:eu-central-1:sts
+user: bob=secret
+[FormParams]
+Action: GetCallerIdentity
+Version: 2011-06-15
+```
 
 [Doc](https://hurl.dev/docs/manual.html#aws-sigv4)
 
@@ -1244,6 +1470,9 @@ Please follow the [contrib on Windows section].
 [`--user`]: https://hurl.dev/docs/manual.html#user
 [Hurl templates]: https://hurl.dev/docs/templates.html
 [AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+[Captures]: https://hurl.dev/docs/capturing-response.html
+[option]: https://hurl.dev/docs/request.html#options
+[`--json` option]: https://hurl.dev/docs/manual.html#json
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository

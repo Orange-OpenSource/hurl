@@ -77,6 +77,16 @@ $ hurl --verbose --no-output basic.hurl
 Lines beginning with `*` are debug info, lines that begin with `>` are HTTP request headers and lines that begin with
 `<` are HTTP response headers.
 
+In each run request, we can also see a curl command line to replay this particular request:
+
+```shell
+...
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl --cookie 'x-session-id=s%3AEE3wsnrgUPSyAkgJZGa3jMWk7xmOtv4E.kXQpkmNBXnFOqmeSssqXnecF4qqv1D7bKu3rpbEJxmQ' 'http://localhost:3000/not-found'
+...
+```
+
+
 In verbose mode, HTTP request and response bodies are not displayed in the debug logs. If you need to inspect the 
 request or response body, you can display more logs with [`--very-verbose`] option:
 

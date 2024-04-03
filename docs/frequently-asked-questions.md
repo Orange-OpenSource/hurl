@@ -182,10 +182,9 @@ For example, the Hurl file
 ```hurl
 GET https://example.org/api/users/1
 User-Agent: Custom
-
-HTTP/1.1 200
+HTTP 200
 [Asserts]
-jsonpath "$.name" equals "Bob"
+jsonpath "$.name" == "Bob"
 ```
 
 will be converted to JSON with the following command:
@@ -206,7 +205,7 @@ $ hurlfmt test.hurl --out json | jq
         ]
       },
       "response": {
-        "version": "HTTP/1.1",
+        "version": "HTTP",
         "status": 200,
         "asserts": [
           {
@@ -215,7 +214,7 @@ $ hurlfmt test.hurl --out json | jq
               "expr": "$.name"
             },
             "predicate": {
-              "type": "equal",
+              "type": "==",
               "value": "Bob"
             }
           }
