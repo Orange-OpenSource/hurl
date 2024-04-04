@@ -168,7 +168,7 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 
 | Predicate          | Description                                                                         | Example                                                                               | 
 |--------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| __`==`__           | Query and predicate value are equals                                                | `jsonpath "$.book" == "Dune"`                                                         |
+| __`==`__           | Query and predicate value are equal                                                 | `jsonpath "$.book" == "Dune"`                                                         |
 | __`!=`__           | Query and predicate value are different                                             | `jsonpath "$.color" != "red"`                                                         |
 | __`>`__            | Query number is greater than predicate value                                        | `jsonpath "$.year" > 1978`                                                            |
 | __`>=`__           | Query number is greater than or equal to the predicate value                        | `jsonpath "$.year" >= 1978`                                                           |
