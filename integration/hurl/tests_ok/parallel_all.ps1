@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Continue'
 
 hurl --parallel --test `
   --report-tap build/parallel-all.txt `
-  tests_ok/assert_base64.hurl `
+  tests_ok/assert_body.hurl `
   tests_ok/assert_header.hurl `
   tests_ok/assert_json.hurl `
   tests_ok/assert_match.hurl `

@@ -1,6 +1,6 @@
 TAP version 13
 1..92
-ok 1 - tests_ok/assert_base64.hurl
+ok 1 - tests_ok/assert_body.hurl
 ok 2 - tests_ok/assert_header.hurl
 ok 3 - tests_ok/assert_json.hurl
 ok 4 - tests_ok/assert_match.hurl

@@ -7,7 +7,7 @@
 # bGluZTEKbGluZTIKbGluZTMK
 
 
-GET http://localhost:8000/assert-base64
+GET http://localhost:8000/error-assert-base64
 HTTP 200
 base64,bGluZTEKbGluZTIKbGluZTMK;
 
