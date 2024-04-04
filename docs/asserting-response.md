@@ -367,7 +367,7 @@ cookie "LSID[Domain]" not exists
 cookie "LSID[Path]" == "/accounts"
 cookie "LSID[Secure]" exists
 cookie "LSID[HttpOnly]" exists
-cookie "LSID[SameSite]" equals "Lax"
+cookie "LSID[SameSite]" == "Lax"
 ```
 
 > `Secure` and `HttpOnly` attributes can only be tested with `exists` or `not exists` predicates
@@ -657,7 +657,7 @@ certificate "Serial-Number" matches "[0-9af]+"
 ## Body
 
 Optional assertion on the received HTTP response body. Body section can be seen
-as syntactic sugar over [body asserts] (with `equals` predicate function). If the
+as syntactic sugar over [body asserts] (with `==` predicate). If the
 body of the response is a [JSON] string or a [XML] string, the body assertion can
 be directly inserted without any modification. For a text based body that is neither JSON nor XML,
 one can use multiline string that starts with <code>&#96;&#96;&#96;</code> and ends
