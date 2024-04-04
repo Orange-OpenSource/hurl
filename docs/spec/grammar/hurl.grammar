@@ -301,17 +301,17 @@ predicate-func:
   | date-predicate
   | iso-date-predicate
 
-equal-predicate: ("equals" | "==") sp predicate-value
+equal-predicate: ("==") sp predicate-value
 
-not-equal-predicate: ("notEquals" | "!=") sp predicate-value
+not-equal-predicate: ("!=") sp predicate-value
 
-greater-predicate: ("greaterThan" | ">") sp (number | quoted-string)
+greater-predicate: (">") sp (number | quoted-string)
 
-greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (number | quoted-string)
+greater-or-equal-predicate: (">=") sp sp* (number | quoted-string)
 
-less-predicate: ("lessThan" | "<") sp (number | quoted-string)
+less-predicate: ("<") sp (number | quoted-string)
 
-less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (number | quoted-string)
+less-or-equal-predicate: ("<=") sp (number | quoted-string)
 
 start-with-predicate: "startsWith" sp (quoted-string | oneline-hex | oneline-base64)
 
