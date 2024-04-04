@@ -5,11 +5,11 @@ echo "----- preinstalled curl version -----"
 curl --version
 
 echo "----- install prerequisite packages -----"
-### install curl 8.5.0 waiting for 8.6.1 (https://github.com/curl/curl/issues/12844)
-curl -o curl.rb https://raw.githubusercontent.com/Homebrew/homebrew-core/5f1b24e9882a1c1effa559a0000ff03ae155560b/Formula/c/curl.rb
+export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
 brew uninstall --force --ignore-dependencies curl
-brew install -s curl.rb
-brew link curl --force
+brew update
+brew install -s curl
+brew link --force --overwrite curl
 CURL_PATH="$(brew --prefix curl)/bin"
 export CURL_PATH
 echo "CURL_PATH=$CURL_PATH"

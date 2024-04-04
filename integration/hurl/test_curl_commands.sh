@@ -8,7 +8,12 @@ color_reset=$(echo -e "\033[0m")
 
 cmd_find_test_files="find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*'"
 exclude_lines="^#"
-if ! curl --version | grep brotli ; then
+echo -e "\n# curl infos"
+which curl
+curl --version
+
+echo -e "\n# execute curl commands"
+if ! curl --version | grep brotli >/dev/null 2>&1 ; then
     exclude_lines="^#|brotli"
     echo "${color_yellow}! Brotli tests excluded because curl does not contain this functionality in this system${color_reset}"
 fi
@@ -34,4 +39,3 @@ while read -r test_file ; do
 done < <(eval "$cmd_find_test_files")
 
 echo "${color_green}all curl commands have been run with success!${color_reset}"
-
