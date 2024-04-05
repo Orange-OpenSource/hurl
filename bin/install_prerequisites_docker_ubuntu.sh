@@ -19,7 +19,8 @@ apt-get -y install \
     python3-pip \
     python3-venv \
     netcat-openbsd \
-    squid
+    squid \
+    jq
 sudo service squid stop
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true

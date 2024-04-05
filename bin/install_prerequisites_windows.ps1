@@ -47,3 +47,7 @@ sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
 echo "==== Squid process status"
 Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
 
+# install jq
+echo "==== install jq"
+choco install --confirm jq
+if ($LASTEXITCODE) { Throw }
