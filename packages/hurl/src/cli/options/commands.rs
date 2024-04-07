@@ -533,3 +533,10 @@ pub fn very_verbose() -> clap::Arg {
         .help("Turn on verbose output, including HTTP response and libcurl logs")
         .action(clap::ArgAction::SetTrue)
 }
+
+pub fn pretty_print() -> clap::Arg {
+    clap::Arg::new("pretty_print")
+        .long("pretty-print")
+        .help("Pretty print the response body")
+        .action(clap::ArgAction::SetTrue)
+}

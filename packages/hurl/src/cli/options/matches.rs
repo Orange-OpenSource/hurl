@@ -302,6 +302,10 @@ pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "path_as_is")
 }
 
+pub fn pretty_print(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "pretty_print")
+}
+
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
     test(arg_matches) && !interactive(arg_matches) && !is_ci() && io::stderr().is_terminal()
 }

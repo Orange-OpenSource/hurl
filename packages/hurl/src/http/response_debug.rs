@@ -20,6 +20,7 @@ use colored::Colorize;
 
 use crate::http::{debug, mimetype, Response};
 use crate::util::logger::Logger;
+use serde_json::Value;
 
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.
@@ -34,7 +35,22 @@ impl Response {
             }
         }
         match self.text() {
-            Ok(text) => debug::log_text(&text, debug, logger),
+            Ok(text) => match serde_json::from_str::<Value>(&text) {
+                Ok(json_value) => {
+                    if logger.pretty_print {
+                        debug::log_text(
+                            &serde_json::to_string_pretty(&json_value).unwrap(),
+                            debug,
+                            logger,
+                        );
+                    } else {
+                        debug::log_text(&text, debug, logger);
+                    }
+                }
+                Err(_) => {
+                    debug::log_text(&text, debug, logger);
+                }
+            },
             Err(_) => debug::log_bytes(&self.body, 64, debug, logger),
         }
     }

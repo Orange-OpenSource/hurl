@@ -98,6 +98,7 @@ pub struct Logger {
     pub(crate) error_format: ErrorFormat,
     pub(crate) filename: String,
     pub(crate) verbosity: Option<Verbosity>,
+    pub(crate) pretty_print: bool,
     pub(crate) stderr: Stderr,
 }
 
@@ -107,6 +108,7 @@ pub struct LoggerOptions {
     pub(crate) error_format: ErrorFormat,
     pub(crate) filename: String,
     pub(crate) verbosity: Option<Verbosity>,
+    pub(crate) pretty_print: bool,
 
     // For --test reporting, will be cleaned later
     pub(crate) test: bool,
@@ -123,6 +125,7 @@ pub struct LoggerOptionsBuilder {
     error_format: ErrorFormat,
     filename: String,
     verbosity: Option<Verbosity>,
+    pretty_print: bool,
 
     test: bool,
     progress_bar: bool,
@@ -153,6 +156,12 @@ impl LoggerOptionsBuilder {
     /// Sets verbose logger.
     pub fn verbosity(&mut self, verbosity: Option<Verbosity>) -> &mut Self {
         self.verbosity = verbosity;
+        self
+    }
+
+    /// Sets pretty print logger.
+    pub fn pretty_print(&mut self, pretty_print: bool) -> &mut Self {
+        self.pretty_print = pretty_print;
         self
     }
 
@@ -193,6 +202,7 @@ impl LoggerOptionsBuilder {
             error_format: self.error_format,
             filename: self.filename.clone(),
             verbosity: self.verbosity,
+            pretty_print: self.pretty_print,
             test: self.test,
             progress_bar: self.progress_bar,
             current_file: self.current_file,
@@ -210,6 +220,7 @@ impl Default for LoggerOptionsBuilder {
             test: false,
             progress_bar: false,
             verbosity: None,
+            pretty_print: false,
             current_file: 0,
             total_files: 0,
         }
@@ -224,6 +235,7 @@ impl Logger {
             error_format: options.error_format,
             filename: options.filename.to_string(),
             verbosity: options.verbosity,
+            pretty_print: options.pretty_print,
             stderr: term,
         }
     }

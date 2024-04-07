@@ -58,7 +58,7 @@ pub fn run(
             };
         }
     };
-    let client_options = ClientOptions::from(runner_options, logger.verbosity);
+    let client_options = ClientOptions::from(runner_options, logger.verbosity, logger.pretty_print);
 
     // Experimental features with cookie storage
     use std::str::FromStr;
@@ -197,7 +197,11 @@ fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<Error> {
 }
 
 impl ClientOptions {
-    fn from(runner_options: &RunnerOptions, verbosity: Option<Verbosity>) -> Self {
+    fn from(
+        runner_options: &RunnerOptions,
+        verbosity: Option<Verbosity>,
+        pretty_print: bool,
+    ) -> Self {
         ClientOptions {
             aws_sigv4: runner_options.aws_sigv4.clone(),
             cacert_file: runner_options.cacert_file.clone(),
@@ -217,6 +221,7 @@ impl ClientOptions {
             netrc_file: runner_options.netrc_file.clone(),
             netrc_optional: runner_options.netrc_optional,
             path_as_is: runner_options.path_as_is,
+            pretty_print,
             proxy: runner_options.proxy.clone(),
             no_proxy: runner_options.no_proxy.clone(),
             insecure: runner_options.insecure,

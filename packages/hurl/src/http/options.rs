@@ -44,6 +44,7 @@ pub struct ClientOptions {
     pub netrc_optional: bool,
     pub no_proxy: Option<String>,
     pub path_as_is: bool,
+    pub pretty_print: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
     pub retry: Retry,
@@ -85,6 +86,7 @@ impl Default for ClientOptions {
             netrc_optional: false,
             no_proxy: None,
             path_as_is: false,
+            pretty_print: false,
             proxy: None,
             resolves: vec![],
             retry: Retry::None,
@@ -179,6 +181,9 @@ impl ClientOptions {
         if self.path_as_is {
             arguments.push("--path-as-is".to_string());
         }
+        if self.pretty_print {
+            arguments.push("--pretty-print".to_string());
+        }
         if let Some(ref proxy) = self.proxy {
             arguments.push("--proxy".to_string());
             arguments.push(format!("'{proxy}'"));
@@ -236,6 +241,7 @@ mod tests {
                 netrc_file: Some("/var/run/netrc".to_string()),
                 netrc_optional: true,
                 path_as_is: true,
+                pretty_print: false,
                 proxy: Some("localhost:3128".to_string()),
                 no_proxy: None,
                 resolves: vec![

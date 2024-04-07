@@ -77,6 +77,7 @@ pub struct CliOptions {
     pub output_type: OutputType,
     pub parallel: bool,
     pub path_as_is: bool,
+    pub pretty_print: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
@@ -204,6 +205,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::output())
         .arg(commands::parallel())
         .arg(commands::path_as_is())
+        .arg(commands::pretty_print())
         .arg(commands::proxy())
         .arg(commands::report_html())
         .arg(commands::report_junit())
@@ -274,6 +276,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let no_proxy = matches::no_proxy(arg_matches);
     let parallel = matches::parallel(arg_matches);
     let path_as_is = matches::path_as_is(arg_matches);
+    let pretty_print = matches::pretty_print(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
@@ -328,6 +331,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         no_proxy,
         path_as_is,
         parallel,
+        pretty_print,
         progress_bar,
         proxy,
         output,
@@ -506,6 +510,7 @@ impl CliOptions {
             .error_format(self.error_format.into())
             .filename(&filename.to_string())
             .verbosity(verbosity)
+            .pretty_print(self.pretty_print)
             .test(self.test)
             .progress_bar(self.progress_bar)
             .current_file(current_file)

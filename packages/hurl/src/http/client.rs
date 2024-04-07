@@ -1125,6 +1125,7 @@ mod tests {
             insecure: true,
             max_redirect: Some(10),
             path_as_is: true,
+            pretty_print: false,
             proxy: Some("localhost:3128".to_string()),
             no_proxy: None,
             unix_socket: Some("/var/run/example.sock".to_string()),
