@@ -82,7 +82,7 @@ def test_stdout(f, result):
     actual = result.stdout
     if actual != expected:
         print(">>> error in stdout")
-        print(f"actual: <{actual}>\nexpected: <{expected}>")
+        print(f"actual:   <{actual}>\nexpected: <{expected}>")
         sys.exit(1)
 
 
@@ -106,7 +106,7 @@ def test_stdout_pattern(f, result):
     if len(actual_lines) != len(expected_pattern_lines):
         print(">>> error in stdout / mismatch in number of lines")
         print(
-            f"actual: {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
+            f"actual:   {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
         )
         print(f"actual <{actual}>")
         print("# Actual lines")
@@ -123,7 +123,7 @@ def test_stdout_pattern(f, result):
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
             print(f">>> error in stdout in line {i+1}")
-            print(f"actual: <{actual_lines[i]}>")
+            print(f"actual:   <{actual_lines[i]}>")
             print(
                 f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
             )
@@ -140,7 +140,7 @@ def test_stderr(f, result):
     actual = ignore_lines(decode_string(result.stderr))
     if actual != expected:
         print(">>> error in stderr")
-        print(f"actual  : <{actual}>\nexpected: <{expected}>")
+        print(f"actual:   <{actual}>\nexpected: <{expected}>")
         sys.exit(1)
 
 
@@ -165,7 +165,7 @@ def test_stderr_pattern(f, result):
     if len(actual_lines) != len(expected_pattern_lines):
         print(">>> error in stderr / mismatch in number of lines")
         print(
-            f"actual: {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
+            f"actual:   {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
         )
         print("# Actual lines")
         for i, line in enumerate(actual_lines):
@@ -181,7 +181,7 @@ def test_stderr_pattern(f, result):
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
             print(f">>> error in stderr in line {i+1}")
-            print(f"actual: <{actual_lines[i]}>")
+            print(f"actual:   <{actual_lines[i]}>")
             print(
                 f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
             )
