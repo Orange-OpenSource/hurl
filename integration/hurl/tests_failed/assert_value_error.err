@@ -74,8 +74,20 @@ error: Assert failure
    |
    | GET http://localhost:8000/error-assert-value
    | ...
-11 | bytes contains hex,00;
-   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20327d>
+11 | jsonpath "$.line_terminator" == "\r\n"
+   |   actual:   string <
+   |>
+   |   expected: string <
+   |>
+   |
+
+error: Assert failure
+  --> tests_failed/assert_value_error.hurl:12:0
+   |
+   | GET http://localhost:8000/error-assert-value
+   | ...
+12 | bytes contains hex,00;
+   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>
    |   expected: contains byte array <00>
    |
 

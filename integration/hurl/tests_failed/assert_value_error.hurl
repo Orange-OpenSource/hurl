@@ -8,4 +8,5 @@ jsonpath "$.values" includes 100
 jsonpath "$.values" not contains "Hello"
 jsonpath "$.count" > 5
 jsonpath "$.count" isFloat
+jsonpath "$.line_terminator" == "\r\n"
 bytes contains hex,00;
