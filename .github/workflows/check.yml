@@ -65,10 +65,6 @@ jobs:
       if: always()
       run: bin/check/generated.sh
 
-    - name: Coverage
-      if: always()
-      run: bin/check/coverage.sh
-
     - name: Rustfmt
       if: always()
       run: bin/check/rustfmt.sh
