@@ -318,6 +318,8 @@ This may or may not introduce a security breach if the site redirects you to a s
 
 Specify the maximum size (in bytes) of a file to download. If the file requested is larger than this value, the transfer does not start.
 
+This is a cli-only option.
+
 ### --max-redirs <NUM> {#max-redirs}
 
 Set maximum number of redirection-followings allowed

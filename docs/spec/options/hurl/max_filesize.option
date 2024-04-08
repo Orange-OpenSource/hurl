@@ -3,5 +3,6 @@ long: max-filesize
 value: BYTES
 value_parser: clap::value_parser!(u64)
 help: Specify the maximum size (in bytes) of a file to download
+cli_only: true
 ---
 Specify the maximum size (in bytes) of a file to download. If the file requested is larger than this value, the transfer does not start.
