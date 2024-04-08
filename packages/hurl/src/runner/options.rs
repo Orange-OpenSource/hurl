@@ -37,7 +37,14 @@ pub fn get_entry_options(
     variables: &mut HashMap<String, Value>,
     logger: &mut Logger,
 ) -> Result<RunnerOptions, Error> {
-    let mut runner_options = runner_options.clone();
+    let runner_options = runner_options.clone();
+    // When used globally (on the command line), `--output` writes the last successful request
+    // to `output` file. We don't want to output every entry's response, so we initialise
+    // output to `None`.
+    let mut runner_options = RunnerOptions {
+        output: None,
+        ..runner_options
+    };
     if !has_options(entry) {
         return Ok(runner_options);
     }

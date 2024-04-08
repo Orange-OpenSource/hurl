@@ -399,37 +399,7 @@ impl CliOptions {
         let netrc_file = self.netrc_file.clone();
         let netrc_optional = self.netrc_optional;
         let no_proxy = self.no_proxy.clone();
-        // FIXME:
-        // When used globally (on the command line), `--output` writes the last successful request
-        // to `output` file. We don't want to output every entry's response, so we initialise
-        // output to `None`.
-        // The straightforward code should have been `let output = self.output;` but if we do this
-        // every entry's response would have been dumped to stdout.
-        //
-        // If we compare with `--compressed`:
-        //
-        // ```
-        // cli.compressed = true =>
-        //   entry_1.compressed = true
-        //   entry_2.compressed = true
-        //     entry_2.overridden.compressed = false
-        //   entry_3.compressed = true
-        //   etc...
-        //   entry_last.compressed = true
-        // ```
-        //
-        // whereas
-        //
-        // ```
-        // cli.output = /tmp/out.bin =>
-        //   entry_1.output = None
-        //   entry_2.output = None
-        //     entry_2.overridden.output = /tmp/bar.bin
-        //   entry_3.output = None
-        //   etc...
-        //   entry_last.output = /tmp/out.bin
-        // ```
-        let output = None;
+        let output = self.output.clone();
         let path_as_is = self.path_as_is;
         let post_entry = if self.interactive {
             Some(cli::interactive::post_entry as fn() -> bool)
