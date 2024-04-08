@@ -1,7 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl --parallel --output /dev/null \
+hurl --parallel --json \
   tests_ok/parallel_a.hurl \
   tests_ok/parallel_b.hurl \
   tests_ok/parallel_c.hurl \

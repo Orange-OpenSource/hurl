@@ -26,11 +26,11 @@ use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
-/// A parallel runner manages a list of `Worker`. Each worker is either idle, or running a
+/// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
 /// [`Job`]. To run jobs, the [`ParallelRunner::run`] method much be executed on the main thread.
-/// Each worker has its own thread that it used to run a Hurl file, and communicate with the main
-/// thread. The communication use a multi-producer, single-consumer channel: workers are the
-/// producers, and the parallel runner is the consumer.
+/// Each worker has its own thread that it uses to run a Hurl file, and communicates with the main
+/// thread. Standard multi-producer single-producer channels are used between the main runner and
+/// the workers to send job request and receive job result.
 ///
 /// The parallel runner is responsible to manage the state of the workers, and to display standard
 /// output and standard error, in the main thread. Each worker reports its progression to the
