@@ -179,6 +179,8 @@ impl ParallelRunner {
                 }
                 // Everything is OK, we report the progress
                 WorkerMessage::Running(msg) => {
+                    self.progress.clear_progress_bar(&mut stderr);
+
                     self.workers[msg.worker_id.0].1 = WorkerState::Running {
                         job: msg.job,
                         entry_index: msg.entry_index,
@@ -194,6 +196,8 @@ impl ParallelRunner {
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
                 WorkerMessage::Completed(msg) => {
+                    self.progress.clear_progress_bar(&mut stderr);
+
                     // The worker is becoming idle.
                     self.workers[msg.worker_id.0].1 = WorkerState::Idle;
 

@@ -81,7 +81,6 @@ impl ParProgress {
             .filter(|(_, state)| matches!(state, WorkerState::Running { .. }))
             .collect::<Vec<_>>();
         if workers.is_empty() {
-            stderr.clear_progress_bar();
             return;
         }
 
@@ -146,7 +145,6 @@ impl ParProgress {
             ));
         }
 
-        stderr.clear_progress_bar();
         stderr.set_progress_bar(&all_progress);
     }
 

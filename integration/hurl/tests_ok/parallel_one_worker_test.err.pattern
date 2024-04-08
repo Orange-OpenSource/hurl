@@ -1,0 +1,13 @@
+tests_ok/parallel_a.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_b.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_c.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_d.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_e.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_f.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok/parallel_g.hurl: Success (1 request(s) in ~~~ ms)
+--------------------------------------------------------------------------------
+Executed files:  7
+Succeeded files: 7 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        ~~~ ms
+
