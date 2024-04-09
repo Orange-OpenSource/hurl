@@ -56,6 +56,8 @@ ensure that there is no regression even if a Hurl file doesn't follow a stricter
 - [`hurl/tests_failed`]: every test must fail (exit code different from 0). Tests are syntactically correct, so the error
 raised by the test is a runtime error.
 - [`hurl/tests_error_parser`]: every test is not a syntactically correct Hurl file. We test here the parsing error message.
+- [`hurl/ssl`]: tests SSL features (server and client certificates, etc...)
+- [`hurl/unix_socket`]: tests Unix Socket
 
 
 Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` directory:
@@ -105,7 +107,7 @@ To run a particular integration test with all check (stdout, stderr, HTML/JSON e
 
 ```shell
 $ cd integration/hurl
-$ python3 test_script.py tests_ok/hello.sh
+$ python3 ../test_script.py tests_ok/hello.sh
 ```
 
 ### Sample
