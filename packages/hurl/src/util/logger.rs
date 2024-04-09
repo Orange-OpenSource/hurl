@@ -448,13 +448,21 @@ pub(crate) fn error_string<E: Error>(
     // The number of digits of the lines count.
     let loc_max_width = max(lines.len().to_string().len(), 2);
     let separator = "|";
-    let separator = if colored {
-        separator.blue().bold().to_string()
-    } else {
-        separator.to_string()
-    };
+
     let spaces = " ".repeat(loc_max_width);
     let prefix = format!("{spaces} {separator}");
+    let prefix = if colored {
+        prefix.blue().bold().to_string()
+    } else {
+        prefix.to_string()
+    };
+
+    let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
+    let prefix_with_number = if colored {
+        prefix_with_number.blue().bold().to_string()
+    } else {
+        prefix_with_number.to_string()
+    };
 
     // 1. First line is the description, ex. `Assert status code`.
     let description = if colored {
@@ -510,18 +518,9 @@ pub(crate) fn error_string<E: Error>(
     // with the line number '|' prefix
     let message = get_message(error, &lines, colored);
     for (i, line) in split_lines(&message).iter().enumerate() {
-        if i == 0 {
-            let loc_max_width = max(lines.len().to_string().len(), 2);
-
-            let mut s = format!("{error_line:>loc_max_width$}");
-            if colored {
-                s = s.blue().bold().to_string();
-            }
-
-            text.push_str(format!("\n{s} |{line}").as_str());
-        } else {
-            text.push_str(format!("\n{prefix}{line}").as_str());
-        }
+        text.push('\n');
+        text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
+        text.push_str(line);
     }
 
     // 6. Appends additional empty line
