@@ -50,7 +50,7 @@ jobs:
         git_commit_gpgsign: true
 
     - name: Deploy GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3.9.3
+      uses: peaceiris/actions-gh-pages@v4.0.0
       with:
         personal_token: ${{ secrets.HURL_BOT_TOKEN }}
         user_name: 'hurl-bot'
