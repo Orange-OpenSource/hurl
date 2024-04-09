@@ -16,6 +16,7 @@
  *
  */
 use colored::Colorize;
+use std::time::{Duration, Instant};
 
 use crate::parallel::job::JobResult;
 use crate::parallel::runner::WorkerState;
@@ -31,6 +32,8 @@ pub struct ParProgress {
     mode: Mode,
     /// The standard error uses color or not.
     color: bool,
+    /// Save last progress bar refresh to limits flickering.
+    throttle: Throttle,
 }
 
 #[derive(Copy, Clone)]
@@ -50,6 +53,7 @@ impl ParProgress {
             max_running_displayed,
             mode,
             color,
+            throttle: Throttle::new(),
         }
     }
 
@@ -65,7 +69,7 @@ impl ParProgress {
     ///
     /// This method is called on the parallel runner thread (usually the main thread).
     pub fn update_progress_bar(
-        &self,
+        &mut self,
         workers: &[(Worker, WorkerState)],
         completed: usize,
         count: usize,
@@ -74,6 +78,7 @@ impl ParProgress {
         if !matches!(self.mode, Mode::TestWithProgress) {
             return;
         }
+        self.throttle.update();
 
         // Select the running workers to be displayed
         let mut workers = workers
@@ -149,7 +154,7 @@ impl ParProgress {
     }
 
     /// Displays the completion of a job `result`.
-    pub fn print_completed(&self, result: &JobResult, stderr: &mut Stderr) {
+    pub fn print_completed(&mut self, result: &JobResult, stderr: &mut Stderr) {
         if matches!(self.mode, Mode::Default) {
             return;
         }
@@ -179,6 +184,10 @@ impl ParProgress {
         };
         stderr.eprintln(&message);
     }
+
+    pub fn allowed_update(&mut self) -> bool {
+        self.throttle.allowed()
+    }
 }
 
 impl Mode {
@@ -188,5 +197,38 @@ impl Mode {
             (true, false) => Mode::TestWithoutProgress,
             _ => Mode::Default,
         }
+    }
+}
+
+/// Records the instant when a progress bar is refreshed on the terminal.
+/// We don't want to update the progress bar too often as it can cause excessive performance loss
+/// just putting stuff onto the terminal. We also want to avoid flickering by not drawing anything
+/// that goes away too quickly.
+struct Throttle {
+    /// Last time the progress bar has be refreshed on the terminal.
+    last_update: Option<Instant>,
+}
+
+impl Throttle {
+    /// Creates a new instances.
+    fn new() -> Self {
+        Throttle { last_update: None }
+    }
+
+    /// Returns `true` if there has been sufficient time elapsed since the last refresh.
+    fn allowed(&mut self) -> bool {
+        let interval = Duration::from_millis(100);
+        let can_update = match self.last_update {
+            None => true,
+            Some(update) => update.elapsed() >= interval,
+        };
+        if can_update {
+            self.update();
+        }
+        can_update
+    }
+
+    fn update(&mut self) {
+        self.last_update = Some(Instant::now());
     }
 }

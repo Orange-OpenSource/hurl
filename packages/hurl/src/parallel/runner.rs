@@ -177,9 +177,13 @@ impl ParallelRunner {
                     stderr.eprint(msg.stderr.buffer());
                     return Err(JobError::Parsing);
                 }
-                // Everything is OK, we report the progress
+                // Everything is OK, we report the progress. As we can receive a lot of running
+                // messages, we don't want to update the progress bar too often to avoid flickering.
                 WorkerMessage::Running(msg) => {
-                    self.progress.clear_progress_bar(&mut stderr);
+                    let allowed_update = self.progress.allowed_update();
+                    if allowed_update {
+                        self.progress.clear_progress_bar(&mut stderr);
+                    }
 
                     self.workers[msg.worker_id.0].1 = WorkerState::Running {
                         job: msg.job,
@@ -187,14 +191,18 @@ impl ParallelRunner {
                         entry_count: msg.entry_count,
                     };
 
-                    self.progress.update_progress_bar(
-                        &self.workers,
-                        results.len(),
-                        jobs_count,
-                        &mut stderr,
-                    );
+                    if allowed_update {
+                        self.progress.update_progress_bar(
+                            &self.workers,
+                            results.len(),
+                            jobs_count,
+                            &mut stderr,
+                        );
+                    }
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
+                // Contrary to when we receive a running message, we clear the progress bar no
+                // matter what the frequency is.
                 WorkerMessage::Completed(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
