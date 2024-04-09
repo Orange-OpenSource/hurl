@@ -1,5 +1,4 @@
 GET http://localhost:8000/assert-xpath
-
 HTTP 200
 [Asserts]
 xpath "normalize-space(//data)" == "café"
@@ -12,7 +11,6 @@ xpath "//toto" not exists
 
 # Test XPath assert with XML namespace.
 GET http://localhost:8000/assert-xpath-simple-namespaces
-
 HTTP 200
 [Asserts]
 
@@ -28,7 +26,6 @@ xpath "string(//*[local-name()='book']/*[local-name()='number'])" == "1568491379
 # Test XPath assert with default XML namespace.
 # _ can be used to target a default namespace.
 GET http://localhost:8000/assert-xpath-svg
-
 HTTP 200
 [Asserts]
 xpath "//_:svg/_:g/_:circle" count == 3
@@ -39,7 +36,6 @@ xpath "//*[name()='svg']/*[name()='g']/*[name()='circle']" count == 3
 # Test XPath assert with default and prefixed XML namespace.
 # _ can be used to target a default namespace.
 GET http://localhost:8000/assert-xpath-namespaces
-
 HTTP 200
 [Asserts]
 xpath "string(//_:book/_:title)" == "Cheaper by the Dozen"

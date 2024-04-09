@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/assert_regex.hurl --verbose
+hurl tests_ok/assert_regex.hurl

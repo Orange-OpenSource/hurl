@@ -24,6 +24,7 @@ header "X-Fruit" nth 2 == "Grape"
 header "X-Fruit" nth 3 == "Strawberry"
 header "X-Fruit" includes "Strawberry"
 
+
 # Same request as previously, but now we check that we can capture the header "X-Fruit" collection as a variable
 # before asserting it s values.
 GET http://localhost:8000/assert-header

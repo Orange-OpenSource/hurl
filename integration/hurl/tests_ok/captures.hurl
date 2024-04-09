@@ -1,5 +1,4 @@
 GET http://localhost:8000/captures
-
 HTTP 200
 [Captures]
 param1: header "header1"
@@ -24,7 +23,6 @@ HTTP 200
 
 
 GET http://localhost:8000/captures-json
-
 HTTP 200
 [Captures]
 an_object: jsonpath "$['an_object']"

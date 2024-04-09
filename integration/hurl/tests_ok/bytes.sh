@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/bytes.hurl --verbose
+hurl tests_ok/bytes.hurl

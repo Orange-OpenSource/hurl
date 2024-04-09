@@ -115,6 +115,7 @@ jsonpath "$[0].name" == "Bob"
 jsonpath "$.[?(@.id == 1)].name" nth 0 == "Bob"
 jsonpath "$[?(@.id == 1)].name" nth 0 == "Bob"
 
+
 GET http://localhost:8000/assert-json/filter
 HTTP 200
 [Asserts]
@@ -138,6 +139,7 @@ jsonpath "$.fruit.[?(@.US == 100)]" count == 0   # To be clarified with spec: th
         }
     ]
 }
+
 
 GET http://localhost:8000/assert-json/filter-by-name
 HTTP 200
@@ -191,6 +193,7 @@ jsonpath "$.main..items[?(@.name=='wheel')].id" nth 0 == 4
     ]
   }
 }
+
 
 GET http://localhost:8000/assert-json/big-number
 HTTP 200
