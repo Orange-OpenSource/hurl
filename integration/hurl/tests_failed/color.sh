@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_failed/color.hurl --color
+hurl --continue-on-error --color tests_failed/color.hurl
