@@ -1,0 +1,7 @@
+[1;31merror[0m: [1mParsing URL[0m
+  [1;34m-->[0m tests_error_parser/parallel_parsing_error_c.hurl:4:5
+[1;34m   |[0m
+[1;34m 4 |[0m GET //localhost:8000/hello
+[1;34m   |[0m[1;31m     ^ [0m[1;31mexpecting http://, https:// or {{[0m
+[1;34m   |[0m
+
