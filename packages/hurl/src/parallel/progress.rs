@@ -46,6 +46,9 @@ pub enum Mode {
     TestWithoutProgress,
 }
 
+/// The minimum duration between two progress bar redraw (to avoid flickering).
+const UPDATE_INTERVAL: Duration = Duration::from_millis(100);
+
 impl ParProgress {
     /// Creates a new instance.
     pub fn new(max_running_displayed: usize, mode: Mode, color: bool) -> Self {
@@ -53,7 +56,7 @@ impl ParProgress {
             max_running_displayed,
             mode,
             color,
-            throttle: Throttle::new(),
+            throttle: Throttle::new(UPDATE_INTERVAL),
         }
     }
 
@@ -185,8 +188,15 @@ impl ParProgress {
         stderr.eprintln(&message);
     }
 
-    pub fn allowed_update(&mut self) -> bool {
+    /// Returns `true` if there has been sufficient time elapsed since the last progress bar
+    /// refresh, `false` otherwise.
+    pub fn can_update(&mut self) -> bool {
         self.throttle.allowed()
+    }
+
+    /// For the next progress bar update to be effectively drawn.
+    pub fn force_next_update(&mut self) {
+        self.throttle.reset();
     }
 }
 
@@ -207,28 +217,32 @@ impl Mode {
 struct Throttle {
     /// Last time the progress bar has be refreshed on the terminal.
     last_update: Option<Instant>,
+    /// Refresh interval
+    interval: Duration,
 }
 
 impl Throttle {
     /// Creates a new instances.
-    fn new() -> Self {
-        Throttle { last_update: None }
+    fn new(interval: Duration) -> Self {
+        Throttle {
+            last_update: None,
+            interval,
+        }
     }
 
     /// Returns `true` if there has been sufficient time elapsed since the last refresh.
-    fn allowed(&mut self) -> bool {
-        let interval = Duration::from_millis(100);
-        let can_update = match self.last_update {
+    fn allowed(&self) -> bool {
+        match self.last_update {
             None => true,
-            Some(update) => update.elapsed() >= interval,
-        };
-        if can_update {
-            self.update();
+            Some(update) => update.elapsed() >= self.interval,
         }
-        can_update
     }
 
     fn update(&mut self) {
         self.last_update = Some(Instant::now());
+    }
+
+    fn reset(&mut self) {
+        self.last_update = None;
     }
 }

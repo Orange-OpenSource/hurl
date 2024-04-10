@@ -180,18 +180,14 @@ impl ParallelRunner {
                 // Everything is OK, we report the progress. As we can receive a lot of running
                 // messages, we don't want to update the progress bar too often to avoid flickering.
                 WorkerMessage::Running(msg) => {
-                    let allowed_update = self.progress.allowed_update();
-                    if allowed_update {
-                        self.progress.clear_progress_bar(&mut stderr);
-                    }
-
                     self.workers[msg.worker_id.0].1 = WorkerState::Running {
                         job: msg.job,
                         entry_index: msg.entry_index,
                         entry_count: msg.entry_count,
                     };
 
-                    if allowed_update {
+                    if self.progress.can_update() {
+                        self.progress.clear_progress_bar(&mut stderr);
                         self.progress.update_progress_bar(
                             &self.workers,
                             results.len(),
@@ -229,6 +225,11 @@ impl ParallelRunner {
                         jobs_count,
                         &mut stderr,
                     );
+                    // We want to force the next refresh of the progress bar (when we receive a
+                    // running message) to be sure that the new next jobs will be printed. This
+                    // is needed because we've a throttle on the progress bar refresh and not every
+                    // running messages received leads to a progress bar refresh.
+                    self.progress.force_next_update();
 
                     // We run the next job to process:
                     let job = jobs.pop();
