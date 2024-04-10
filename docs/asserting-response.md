@@ -182,10 +182,11 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
 | __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                    |
 | __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
-| __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                 | `jsonpath "$.publication_date" isIsoDate`                                             |
 | __`isEmpty`__      | Query returns an empty collection                                                   | `jsonpath "$.movies" isEmpty`                                                         |
 | __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
 | __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
+| __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                 | `jsonpath "$.publication_date" isIsoDate`                                             |
+| __`isNumber`__     | Query returns an integer or a float                                                 | `jsonpath "$.count" isNumber`                                                         |
 | __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
 
 
