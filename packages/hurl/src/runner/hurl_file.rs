@@ -285,7 +285,7 @@ pub fn run_entries(
                     stdout,
                     source_info,
                 ) {
-                    logger.warning(&error.fixme());
+                    logger.warning(&error.fixme(&[]));
                 }
             }
         }

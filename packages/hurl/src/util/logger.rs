@@ -567,57 +567,14 @@ fn get_message<E: Error>(error: &E, lines: &[&str], colored: bool) -> String {
         text.push_str(&line);
         text.push('\n');
     }
-
-    let mut prefix = if error.show_caret() {
-        //let mut prefix = String::new();
-        // the fixme message is offset with space and carets according to the error column
-        let error_line = error.source_info().start.line;
-        let error_column = error.source_info().start.column;
-
-        // Error source info start and end can be on different lines, we insure a minimum width.
-        let width = if error.source_info().end.column > error_column {
-            error.source_info().end.column - error_column
-        } else {
-            1
-        };
-
-        //  We take tabs into account because we have normalize the display of the error line by replacing
-        //  tabs with 4 spaces.
-        //  TODO: add a unit test with tabs in source info.
-        let mut tab_shift = 0;
-        let line_raw = lines.get(error_line - 1).unwrap();
-        for (i, c) in line_raw.chars().enumerate() {
-            if i >= (error_column - 1) {
-                break;
-            };
-            if c == '\t' {
-                tab_shift += 1;
-            }
-        }
-
-        let mut value = " ".repeat(error_column + tab_shift * 3);
-        value.push_str("^".repeat(width).as_str());
-        value.push(' ');
-        value
-    } else {
-        String::new()
-    };
-
-    let fixme = error.fixme();
+    let fixme = error.fixme(lines);
     let lines = split_lines(&fixme);
     for (i, line) in lines.iter().enumerate() {
         if i > 0 {
-            if !prefix.is_empty() {
-                prefix = " ".repeat(prefix.len());
-            }
             text.push('\n');
-        }
-        if !line.is_empty() {
-            text.push_str(color_if_needed(&prefix, colored).as_str());
         }
         text.push_str(color_if_needed(line, colored).as_str());
     }
-
     text
 }
 
@@ -688,7 +645,7 @@ HTTP/1.0 200
         colored::control::set_override(true);
         assert_eq!(
             get_message(&error, &split_lines(content), true),
-            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ \u{1b}[0m\u{1b}[1;31mactual value is <404>\u{1b}[0m"
+            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m"
         );
 
         assert_eq!(
@@ -853,7 +810,7 @@ HTTP 200
                 "Assert body value".to_string()
             }
 
-            fn fixme(&self) -> String {
+            fn fixme(&self, _lines: &[&str]) -> String {
                 r#" {
    "name": "John",
 -  "age": 27
@@ -864,10 +821,6 @@ HTTP 200
             }
 
             fn show_source_line(&self) -> bool {
-                false
-            }
-
-            fn show_caret(&self) -> bool {
                 false
             }
         }

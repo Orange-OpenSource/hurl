@@ -131,8 +131,8 @@ impl crate::error::Error for Error {
         }
     }
 
-    fn fixme(&self) -> String {
-        match &self.inner {
+    fn fixme(&self, content: &[&str]) -> String {
+        let message = match &self.inner {
             ParseError::DuplicateSection => "the section is already defined".to_string(),
             ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
             ParseError::Expecting { value } => format!("expecting '{value}'"),
@@ -233,14 +233,12 @@ impl crate::error::Error for Error {
             }
             ParseError::XPathExpr => "expecting a XPath expression".to_string(),
             ParseError::Xml => "invalid XML".to_string(),
-        }
+        };
+
+        crate::error::add_carets(&message, self.source_info(), content)
     }
 
     fn show_source_line(&self) -> bool {
-        true
-    }
-
-    fn show_caret(&self) -> bool {
         true
     }
 }

@@ -37,7 +37,7 @@ impl Error for linter::Error {
         }
     }
 
-    fn fixme(&self) -> String {
+    fn fixme(&self, _lines: &[&str]) -> String {
         match self.inner {
             LinterError::UnnecessarySpace => "Remove space".to_string(),
             LinterError::UnnecessaryJsonEncoding => "Use Simple String".to_string(),
@@ -46,10 +46,6 @@ impl Error for linter::Error {
     }
 
     fn show_source_line(&self) -> bool {
-        true
-    }
-
-    fn show_caret(&self) -> bool {
         true
     }
 }

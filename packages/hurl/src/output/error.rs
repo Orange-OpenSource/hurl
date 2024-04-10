@@ -30,7 +30,7 @@ impl Error {
 
 impl From<runner::Error> for Error {
     fn from(error: runner::Error) -> Self {
-        Error::new(&error.fixme())
+        Error::new(&error.fixme(&[]))
     }
 }
 

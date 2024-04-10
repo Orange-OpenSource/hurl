@@ -159,10 +159,11 @@ impl hurl_core::error::Error for Error {
         }
     }
 
-    fn fixme(&self) -> String {
+    fn fixme(&self, content: &[&str]) -> String {
         match &self.inner {
             RunnerError::AssertBodyValueError { actual, .. } => {
-                format!("actual value is <{actual}>")
+                let message = &format!("actual value is <{actual}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::AssertFailure {
                 actual,
@@ -178,85 +179,136 @@ impl hurl_core::error::Error for Error {
                 format!("   actual:   {actual}\n   expected: {expected}{additional}")
             }
             RunnerError::AssertHeaderValueError { actual } => {
-                format!("actual value is <{actual}>")
+                let message = &format!("actual value is <{actual}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::AssertStatus { actual, .. } => format!("actual value is <{actual}>"),
-            RunnerError::AssertVersion { actual, .. } => format!("actual value is <{actual}>"),
+            RunnerError::AssertStatus { actual, .. } => {
+                let message = &format!("actual value is <{actual}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
+            RunnerError::AssertVersion { actual, .. } => {
+                let message = &format!("actual value is <{actual}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::CouldNotUncompressResponse(algorithm) => {
-                format!("could not uncompress response with {algorithm}")
+                let message = &format!("could not uncompress response with {algorithm}");
+
+                // only add carets if source_info is set
+                // TODO: add additional attribute in the error to be more explicit?
+                if self.source_info.start.line == 0 {
+                    message.to_string()
+                } else {
+                    hurl_core::error::add_carets(message, self.source_info, content)
+                }
             }
             RunnerError::FileReadAccess { path } => {
-                format!("file {} can not be read", path.to_string_lossy())
+                let message = &format!("file {} can not be read", path.to_string_lossy());
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::FileWriteAccess { path, error } => {
                 format!("{} can not be written ({error})", path.to_string_lossy())
             }
             RunnerError::FilterDecode(encoding) => {
-                format!("value can not be decoded with <{encoding}> encoding")
+                let message = &format!("value can not be decoded with <{encoding}> encoding");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::FilterInvalidEncoding(encoding) => {
-                format!("<{encoding}> encoding is not supported")
+                let message = &format!("<{encoding}> encoding is not supported");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::FilterInvalidInput(message) => {
-                format!("invalid filter input: {message}")
+                let message = &format!("invalid filter input: {message}");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::FilterMissingInput => "missing value to apply filter".to_string(),
-            RunnerError::HttpConnection(message) => message.to_string(),
+            RunnerError::FilterMissingInput => {
+                let message = "missing value to apply filter";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
+            RunnerError::HttpConnection(message) => {
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::InvalidCharset { charset } => {
-                format!("the charset '{charset}' is not valid")
+                let message = &format!("the charset '{charset}' is not valid");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::InvalidDecoding { charset } => {
-                format!("the body can not be decoded with charset '{charset}'")
+                let message = &format!("the body can not be decoded with charset '{charset}'");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::InvalidJson { value } => {
-                format!("actual value is <{value}>")
+                let message = &format!("actual value is <{value}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::InvalidRegex => "regex expression is not valid".to_string(),
-            RunnerError::InvalidUrl(url, reason) => format!("invalid URL <{url}> ({reason})"),
-
-            RunnerError::NoQueryResult => "The query didn't return any result".to_string(),
+            RunnerError::InvalidRegex => {
+                let message = "regex expression is not valid";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
+            RunnerError::InvalidUrl(url, reason) => {
+                let message = &format!("invalid URL <{url}> ({reason})");
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
+            RunnerError::NoQueryResult => {
+                let message = "The query didn't return any result";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::QueryHeaderNotFound => {
-                "this header has not been found in the response".to_string()
+                let message = "this header has not been found in the response";
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::QueryInvalidJson => "the HTTP response is not a valid JSON".to_string(),
+            RunnerError::QueryInvalidJson => {
+                let message = "the HTTP response is not a valid JSON";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::QueryInvalidJsonpathExpression { value } => {
-                format!("the JSONPath expression '{value}' is not valid")
+                let message = &format!("the JSONPath expression '{value}' is not valid");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::QueryInvalidXml => "the HTTP response is not a valid XML".to_string(),
-            RunnerError::QueryInvalidXpathEval => "the XPath expression is not valid".to_string(),
+            RunnerError::QueryInvalidXml => {
+                let message = "the HTTP response is not a valid XML";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
+            RunnerError::QueryInvalidXpathEval => {
+                let message = "the XPath expression is not valid";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::TemplateVariableInvalidType {
                 value, expecting, ..
             } => {
-                format!("expecting {expecting}, actual value is <{value}>")
+                let message = &format!("expecting {expecting}, actual value is <{value}>");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::TemplateVariableNotDefined { name } => {
-                format!("you must set the variable {name}")
+                let message = &format!("you must set the variable {name}");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
-            RunnerError::TooManyRedirect => "too many redirect".to_string(),
+            RunnerError::TooManyRedirect => {
+                let message = "too many redirect";
+                hurl_core::error::add_carets(message, self.source_info, content)
+            }
             RunnerError::UnauthorizedFileAccess { path } => {
-                format!(
+                let message = &format!(
                     "unauthorized access to file {}, check --file-root option",
                     path.to_string_lossy()
-                )
+                );
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::UnrenderableVariable { name, value } => {
-                format!("variable <{name}> with value {value} can not be rendered")
+                let message = &format!("variable <{name}> with value {value} can not be rendered");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::UnsupportedContentEncoding(algorithm) => {
-                format!("compression {algorithm} is not supported")
+                let message = &format!("compression {algorithm} is not supported");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
             RunnerError::UnsupportedHttpVersion(version) => {
-                format!("{version} is not supported, check --version")
+                let message = &format!("{version} is not supported, check --version");
+                hurl_core::error::add_carets(message, self.source_info, content)
             }
         }
     }
 
     fn show_source_line(&self) -> bool {
         true
-    }
-
-    fn show_caret(&self) -> bool {
-        !matches!(&self.inner, RunnerError::AssertFailure { .. })
     }
 }
 
