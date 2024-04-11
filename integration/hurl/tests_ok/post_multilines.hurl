@@ -4,7 +4,6 @@ name,age
 bob,10
 bill,22
 ```
-
 HTTP 200
 
 

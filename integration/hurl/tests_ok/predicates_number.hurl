@@ -1,7 +1,6 @@
 # testing predicates
 # on the number types: integer, float and big integer
 GET http://localhost:8000/predicates-number
-
 HTTP 200
 [Asserts]
 

@@ -1,5 +1,4 @@
 GET http://localhost:8000/filter
-
 HTTP 200
 [Captures]
 url: jsonpath "$.url"

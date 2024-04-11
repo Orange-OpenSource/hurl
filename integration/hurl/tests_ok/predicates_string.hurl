@@ -1,5 +1,4 @@
 GET http://localhost:8000/predicates-string
-
 HTTP 200
 [Asserts]
 body == "Hello World!"
@@ -15,6 +14,7 @@ HTTP 200
 [Asserts]
 body == ""
 body exists
+
 
 GET http://localhost:8000/predicates-string-unicode
 HTTP 200

@@ -178,12 +178,12 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
 fn section_value_index(section_value: SectionValue) -> u32 {
     match section_value {
         // Request sections
-        SectionValue::QueryParams(_) => 0,
-        SectionValue::BasicAuth(_) => 1,
-        SectionValue::FormParams(_) => 2,
-        SectionValue::MultipartFormData(_) => 3,
-        SectionValue::Cookies(_) => 4,
-        SectionValue::Options(_) => 5,
+        SectionValue::Options(_) => 0,
+        SectionValue::QueryParams(_) => 1,
+        SectionValue::BasicAuth(_) => 2,
+        SectionValue::FormParams(_) => 3,
+        SectionValue::MultipartFormData(_) => 4,
+        SectionValue::Cookies(_) => 5,
         // Response sections
         SectionValue::Captures(_) => 0,
         SectionValue::Asserts(_) => 1,

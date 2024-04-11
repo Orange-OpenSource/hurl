@@ -5,9 +5,11 @@ GET http://localhost:8000/cookies/set-request-cookie1-valueA
 cookie1: valueA
 HTTP 200
 
+
 # The cookie is not added in the cookie storage
 GET http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session
 HTTP 200
+
 
 GET http://localhost:8000/cookies/set-multiple-request-cookies
 [Cookies]
@@ -24,8 +26,10 @@ HTTP 200
 [Asserts]
 cookie "cookie2" == "valueA"
 
+
 GET http://localhost:8000/cookies/assert-that-cookie2-is-valueA
 HTTP 200
+
 
 GET http://localhost:8000/cookies/assert-that-cookie2-is-valueA-and-valueB
 [Cookies]
@@ -39,12 +43,12 @@ HTTP 200
 cookie "cookie2" == ""
 cookie "cookie2[Max-Age]" == 0
 
+
 GET http://localhost:8000/cookies/assert-that-cookie2-is-not-in-session
 HTTP 200
 
 
 GET http://localhost:8000/cookies/set
-
 HTTP 200
 Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/accounts
 Set-Cookie: HSID=AYQEVnDKrdst; Domain=localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/

@@ -11,7 +11,6 @@ POST http://localhost:8000/graphql
   }
 }
 ```
-
 HTTP 200
 [Asserts]
 jsonpath "$.data.allFilms.films" count == 6
@@ -27,7 +26,6 @@ jsonpath "$.data.allFilms.films[2].title" == "Return of the Jedi"
 POST http://localhost:8000/graphql
 Content-Type: application/json
 {"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}
-
 HTTP 200
 [Asserts]
 jsonpath "$.data.allFilms.films" count == 6
@@ -46,7 +44,6 @@ query Query {
   }
 }
 ```
-
 HTTP 200
 [Asserts]
 jsonpath "$.data.allFilms.films" count == 6
@@ -65,7 +62,6 @@ variables {
   "id": "cGVvcGxlOjQ="
 }
 ```
-
 HTTP 200
 [Asserts]
 jsonpath "$.data.person.name" == "Darth Vader"
@@ -86,7 +82,6 @@ variables {
   "id": "{{id}}"
 }
 ```
-
 HTTP 200
 [Asserts]
 jsonpath "$.data.person.name" == "Darth Vader"

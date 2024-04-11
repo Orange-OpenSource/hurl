@@ -8,6 +8,7 @@ location: {{redirect}}
 
 GET http://localhost:8000/delay-init
 HTTP 200
+
 GET http://localhost:8000/delay # This request must reach the server at least 1000ms after the previous request
 [Options]
 variable: duration=1000

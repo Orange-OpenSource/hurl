@@ -23,5 +23,6 @@ jsonpath "$.state" == "COMPLETED"
 DELETE http://localhost:8000/jobs/{{job_id}}
 HTTP 200
 
+
 GET http://localhost:8000/jobs/{{job_id}}
 HTTP 404

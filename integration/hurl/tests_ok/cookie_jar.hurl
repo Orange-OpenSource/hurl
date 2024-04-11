@@ -3,7 +3,6 @@
 # libcurl implementation for cookie secure export, we limit this test to non secure cookie.
 
 GET http://localhost:8000/cookie-jar
-
 HTTP 200
 Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/accounts
 Set-Cookie: HSID=AYQEVnDKrdst; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/

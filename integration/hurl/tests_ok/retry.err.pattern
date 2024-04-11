@@ -57,11 +57,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/retry.hurl:14:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 14 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -95,11 +95,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/retry.hurl:14:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 14 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -133,11 +133,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/retry.hurl:14:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 14 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -171,11 +171,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/retry.hurl:14:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 14 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |

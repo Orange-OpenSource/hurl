@@ -7,33 +7,33 @@ variable: key=name
 HTTP 200
 
 GET http://localhost:8000/key-template/querystring
-[QueryStringParams]
-{{key}}: value
 [Options]
 variable: key=name
+[QueryStringParams]
+{{key}}: value
 HTTP 200
 
 POST http://localhost:8000/key-template/form
-[FormParams]
-{{key}}: value
 [Options]
 variable: key=name
+[FormParams]
+{{key}}: value
 HTTP 200
 
 POST http://localhost:8000/key-template/multipart-form-data
-[MultipartFormData]
-{{key1}}: value
-{{key2}}: file,data.txt;
 [Options]
 variable: key1=name
 variable: key2=file
+[MultipartFormData]
+{{key1}}: value
+{{key2}}: file,data.txt;
 HTTP 200
 
 GET http://localhost:8000/key-template/cookie
-[Cookies]
-{{key}}: value
 [Options]
 variable: key=name
+[Cookies]
+{{key}}: value
 HTTP 200
 
 GET http://localhost:8000/key-template/capture

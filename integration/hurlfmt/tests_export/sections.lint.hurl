@@ -1,4 +1,6 @@
 GET http://localhost:8000/hello
+[Options]
+verbose: true
 [QueryStringParams]
 order: newest
 search: {{custom-search}}
@@ -17,8 +19,6 @@ field3: file,example.zip; application/zip
 [Cookies]
 theme: light
 sessionToken: abc123
-[Options]
-verbose: true
 HTTP 200
 [Captures]
 count: jsonpath "$.count"
@@ -29,13 +29,13 @@ variable "count" == 1
 
 # Empty sections
 GET http://localhost:8000/hello
+[Options]
 [QueryStringParams]
 # FIXME: [BasicAuth] section can't be empty
 #[BasicAuth]
 [FormParams]
 [MultipartFormData]
 [Cookies]
-[Options]
 HTTP 200
 [Captures]
 [Asserts]

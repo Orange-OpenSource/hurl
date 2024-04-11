@@ -28,7 +28,6 @@ variable: planet=The Earth
   "planet": "{{planet}}",
   "galaxy": "{{galaxy}}"
 }
-
 HTTP 200
 [Asserts]
 variable "name" == "Jennifer"
