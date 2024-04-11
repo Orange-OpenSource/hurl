@@ -1,6 +1,5 @@
 # Create a new job
 POST http://localhost:8000/jobs
-
 HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
@@ -13,7 +12,6 @@ GET http://localhost:8000/jobs/{{job_id}}
 [Options]
 retry: 10
 retry-interval: 100
-
 HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
