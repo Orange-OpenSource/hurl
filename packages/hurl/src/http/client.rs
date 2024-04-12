@@ -17,6 +17,7 @@
  */
 use std::str;
 use std::str::FromStr;
+use std::time::Instant;
 
 use base64::engine::general_purpose;
 use base64::Engine;
@@ -161,7 +162,8 @@ impl Client {
 
         let (url, method) = self.configure(request_spec, options, logger)?;
 
-        let start = Utc::now();
+        let start = Instant::now();
+        let start_dt = Utc::now();
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers = HeaderVec::new();
@@ -278,9 +280,9 @@ impl Client {
         } else {
             None
         };
-        let stop = Utc::now();
-        let duration = (stop - start).to_std().unwrap();
-        let timings = Timings::new(&mut self.handle, start, stop);
+        let duration = start.elapsed();
+        let stop_dt = start_dt + duration;
+        let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
 
         let request = Request::new(&method.to_string(), &url, request_headers, request_body);
         let response = Response::new(
