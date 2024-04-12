@@ -1,0 +1,211 @@
+error: Assert body value
+   --> tests_failed/runner_errors.hurl:6:1
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+  6 | `Hello World`
+    | ^^^^^^^^^^^^^ actual value is <Hello World!>
+    |
+
+error: Assert failure
+   --> tests_failed/runner_errors.hurl:12:0
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 12 | body == "Hello World"
+    |   actual:   string <Hello World!>
+    |   expected: string <Hello World>
+    |
+
+error: Assert header value
+   --> tests_failed/runner_errors.hurl:17:17
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 17 | Content-Length: 200
+    |                 ^^^ actual value is <12>
+    |
+
+error: Assert status code
+   --> tests_failed/runner_errors.hurl:21:6
+    |
+    | GET http://localhost:8000/undefined
+ 21 | HTTP 200
+    |      ^^^ actual value is <404>
+    |
+
+error: Assert HTTP version
+   --> tests_failed/runner_errors.hurl:25:1
+    |
+    | GET http://localhost:8000/undefined
+ 25 | HTTP/3 *
+    | ^^^^^^ actual value is <HTTP/1.1>
+    |
+
+error: Decompression error
+   --> tests_failed/runner_errors.hurl:35:1
+    |
+    | GET http://localhost:8000/runner_errors/could_not_uncompress
+    | ...
+ 35 | body startsWith "Hello"
+    | ^^^^ could not uncompress response with brotli
+    |
+
+error: File read access
+   --> tests_failed/runner_errors.hurl:39:6
+    |
+    | GET http://localhost:8000/undefined
+ 39 | file,undefined.txt;
+    |      ^^^^^^^^^^^^^ file undefined.txt can not be read
+    |
+
+warning: tests_failed~~~output can not be written (~~~)
+error: Filter error
+   --> tests_failed/runner_errors.hurl:50:5
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 50 | md5 decode "utf-8" == "café"
+    |     ^^^^^^^^^^^^^^ value can not be decoded with <utf-8> encoding
+    |
+
+error: Filter error
+   --> tests_failed/runner_errors.hurl:56:7
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 56 | bytes decode "toto" == "café"
+    |       ^^^^^^^^^^^^^ <toto> encoding is not supported
+    |
+
+error: Filter error
+   --> tests_failed/runner_errors.hurl:62:6
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 62 | body toInt == 1
+    |      ^^^^^ invalid filter input: string <Hello World!>
+    |
+
+error: Filter error
+   --> tests_failed/runner_errors.hurl:68:16
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 68 | header "count" toInt == 1
+    |                ^^^^^ missing value to apply filter
+    |
+
+error: HTTP connection
+   --> tests_failed/runner_errors.hurl:71:5
+    |
+ 71 | GET http://unknown
+    |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
+    |
+
+error: Invalid JSON
+   --> tests_failed/runner_errors.hurl:83:10
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 83 | { "a": {{x}} }
+    |          ^ actual value is <a>
+    |
+
+error: Invalid regex
+   --> tests_failed/runner_errors.hurl:89:12
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 89 | body regex "{}" == "a"
+    |            ^^^^ regex expression is not valid
+    |
+
+error: No query result
+   --> tests_failed/runner_errors.hurl:101:8
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+101 | count: header "count"
+    |        ^^^^^^^^^^^^^^ The query didn't return any result
+    |
+
+error: Header not found
+   --> tests_failed/runner_errors.hurl:106:1
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+106 | count: 10
+    | ^^^^^ this header has not been found in the response
+    |
+
+error: Invalid JSON
+   --> tests_failed/runner_errors.hurl:112:1
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+112 | jsonpath "$.count" == 10
+    | ^^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
+    |
+
+error: Invalid JSONPath
+   --> tests_failed/runner_errors.hurl:118:10
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+118 | jsonpath "xxx" == 10
+    |          ^^^^^ the JSONPath expression 'xxx' is not valid
+    |
+
+error: Invalid XML
+   --> tests_failed/runner_errors.hurl:124:1
+    |
+    | GET http://localhost:8000/runner_errors/invalid-xml
+    | ...
+124 | xpath "//a" == 10
+    | ^^^^^^^^^^^ the HTTP response is not a valid XML
+    |
+
+error: Invalid XPath expression
+   --> tests_failed/runner_errors.hurl:130:7
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+130 | xpath "//" == 10
+    |       ^^^^ the XPath expression is not valid
+    |
+
+error: Invalid variable type
+   --> tests_failed/runner_errors.hurl:136:12
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+136 | verbose: {{verbose}}
+    |            ^^^^^^^ expecting boolean, actual value is <1>
+    |
+
+error: Undefined variable
+   --> tests_failed/runner_errors.hurl:141:10
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+141 | param: {{value}}
+    |          ^^^^^ you must set the variable value
+    |
+
+error: Unauthorized file access
+   --> tests_failed/runner_errors.hurl:148:6
+    |
+    | GET http://localhost:8000/runner_errors
+148 | file,/root/file;
+    |      ^^^^^^^^^^ unauthorized access to file /root/file, check --file-root option
+    |
+
+error: Unrenderable variable
+   --> tests_failed/runner_errors.hurl:156:4
+    |
+    | GET http://localhost:8000/runner_errors
+156 | `{{list}}`
+    |    ^^^^ variable <list> with value [1,2,3] can not be rendered
+    |
+
