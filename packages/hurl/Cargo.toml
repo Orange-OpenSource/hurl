@@ -51,7 +51,7 @@ termion = "3.0.0"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.92"
+cc = "1.0.94"
 
 [lints]
 workspace = true
