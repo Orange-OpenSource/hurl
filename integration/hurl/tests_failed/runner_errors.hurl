@@ -24,10 +24,6 @@ HTTP 200
 GET http://localhost:8000/undefined
 HTTP/3 *
 
-# CouldNotParseResponse
-# TODO: return an invalid status line from the test server
-# is it possible with flask?
-
 # CouldNotUncompressResponse
 GET http://localhost:8000/runner_errors/could_not_uncompress
 HTTP 200

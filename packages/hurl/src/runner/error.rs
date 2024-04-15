@@ -62,7 +62,6 @@ pub enum RunnerError {
     AssertVersion {
         actual: String,
     },
-    CouldNotParseResponse,
     CouldNotUncompressResponse(String),
     /// I/O read error on `path`.
     FileReadAccess {
@@ -132,7 +131,6 @@ impl hurl_core::error::Error for Error {
             RunnerError::AssertHeaderValueError { .. } => "Assert header value".to_string(),
             RunnerError::AssertStatus { .. } => "Assert status code".to_string(),
             RunnerError::AssertVersion { .. } => "Assert HTTP version".to_string(),
-            RunnerError::CouldNotParseResponse => "HTTP connection".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
             RunnerError::FileReadAccess { .. } => "File read access".to_string(),
             RunnerError::FileWriteAccess { .. } => "File write access".to_string(),
@@ -186,7 +184,6 @@ impl hurl_core::error::Error for Error {
             }
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{actual}>"),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{actual}>"),
-            RunnerError::CouldNotParseResponse => "could not parse response".to_string(),
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("could not uncompress response with {algorithm}")
             }
@@ -271,7 +268,9 @@ impl From<HttpError> for RunnerError {
     /// Converts a HttpError to a RunnerError.
     fn from(item: HttpError) -> Self {
         match item {
-            HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
+            HttpError::CouldNotParseResponse => {
+                RunnerError::HttpConnection("could not parse Response".to_string())
+            }
             HttpError::CouldNotUncompressResponse { description } => {
                 RunnerError::CouldNotUncompressResponse(description)
             }
