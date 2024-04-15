@@ -150,7 +150,7 @@ pub fn file_root() -> clap::Arg {
     clap::Arg::new("file_root")
         .long("file-root")
         .value_name("DIR")
-        .help("Set root directory to import files [default: current directory]")
+        .help("Set root directory to import files [default: input file directory]")
         .num_args(1)
 }
 

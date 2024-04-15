@@ -29,7 +29,7 @@ _hurl() {
     '--delay[Sets delay before each request.]: :' \
     '--error-format[Control the format of error messages]: :' \
     '--fail-at-end[Fail at end]' \
-    '--file-root[Set root directory to import files \[default: current directory\]]: :' \
+    '--file-root[Set root directory to import files \[default: input file directory\]]: :' \
     '(-L --location)'{-L,--location}'[Follow redirects]' \
     '--location-trusted[Follow redirects but allows sending the name + password to all hosts that the site may redirect to.]' \
     '--from-entry[Execute Hurl file from ENTRY_NUMBER (starting at 1)]: :' \

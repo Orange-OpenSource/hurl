@@ -226,7 +226,7 @@ This is a cli-only option.
 ### --file-root <DIR> {#file-root}
 
 Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
-When it is not explicitly defined, files are relative to the current directory in which Hurl is running.
+When it is not explicitly defined, files are relative to the Hurl file's directory.
 
 This is a cli-only option.
 

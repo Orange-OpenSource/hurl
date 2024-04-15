@@ -33,7 +33,7 @@ Options:
       --error-format <FORMAT>
           Control the format of error messages [default: short] [possible values: short, long]
       --file-root <DIR>
-          Set root directory to import files [default: current directory]
+          Set root directory to import files [default: input file directory]
   -L, --location
           Follow redirects
       --location-trusted

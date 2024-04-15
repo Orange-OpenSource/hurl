@@ -34,7 +34,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--delay', 'delay', [CompletionResultType]::ParameterName, 'Sets delay before each request.')
             [CompletionResult]::new('--error-format', 'error-format', [CompletionResultType]::ParameterName, 'Control the format of error messages')
             [CompletionResult]::new('--fail-at-end', 'fail-at-end', [CompletionResultType]::ParameterName, 'Fail at end')
-            [CompletionResult]::new('--file-root', 'file-root', [CompletionResultType]::ParameterName, 'Set root directory to import files [default: current directory]')
+            [CompletionResult]::new('--file-root', 'file-root', [CompletionResultType]::ParameterName, 'Set root directory to import files [default: input file directory]')
             [CompletionResult]::new('--location', 'location', [CompletionResultType]::ParameterName, 'Follow redirects')
             [CompletionResult]::new('--location-trusted', 'location-trusted', [CompletionResultType]::ParameterName, 'Follow redirects but allows sending the name + password to all hosts that the site may redirect to.')
             [CompletionResult]::new('--from-entry', 'from-entry', [CompletionResultType]::ParameterName, 'Execute Hurl file from ENTRY_NUMBER (starting at 1)')
