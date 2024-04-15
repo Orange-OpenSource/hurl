@@ -8,7 +8,7 @@
 * Content-Type: application/octet-stream
 *
 * Request can be run with the following curl command:
-* curl --header 'Content-Type: application/octet-stream' --data-binary '@tests_ok~post_large.bin' 'http://localhost:8000/post_large'
+* curl --header 'Content-Type: application/octet-stream' --data-binary '@build~post_large.bin' 'http://localhost:8000/post_large'
 *
 > POST /post_large HTTP/1.1
 > Host: localhost:8000

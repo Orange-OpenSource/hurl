@@ -49,7 +49,6 @@ hurl --parallel --test `
   tests_ok/post_base64.hurl `
   tests_ok/post_bytes.hurl `
   tests_ok/post_file.hurl `
-  tests_ok/post_large.hurl `
   tests_ok/post_multilines.hurl `
   tests_ok/post_xml.hurl `
   tests_ok/predicates_string.hurl `
