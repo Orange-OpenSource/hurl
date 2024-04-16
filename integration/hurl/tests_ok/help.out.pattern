@@ -65,6 +65,8 @@ Options:
   -6, --ipv6
           Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
           IPv4
+      --jobs <NUM>
+          (Experimental) Maximum number of parallel jobs
       --json
           Output each Hurl file result to JSON
       --max-filesize <BYTES>
@@ -87,6 +89,8 @@ Options:
           List of hosts which do not use proxy
   -o, --output <FILE>
           Write to FILE instead of stdout
+      --parallel
+          (Experimental) Run files in parallel
       --path-as-is
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>

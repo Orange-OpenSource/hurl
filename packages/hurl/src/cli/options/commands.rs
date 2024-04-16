@@ -271,7 +271,6 @@ pub fn jobs() -> clap::Arg {
         .value_parser(clap::value_parser!(u32).range(1..))
         .help("(Experimental) Maximum number of parallel jobs")
         .num_args(1)
-        .hide(true)
 }
 
 pub fn json() -> clap::Arg {
@@ -378,7 +377,6 @@ pub fn parallel() -> clap::Arg {
         .long("parallel")
         .help("(Experimental) Run files in parallel")
         .action(clap::ArgAction::SetTrue)
-        .hide(true)
 }
 
 pub fn path_as_is() -> clap::Arg {

@@ -295,6 +295,15 @@ This option tells Hurl to use IPv4 addresses only when resolving host names, and
 
 This option tells Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4.
 
+### --jobs <NUM> {#jobs}
+
+(Experimental) Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
+current amount of CPUs.
+
+See also [`--parallel`](#parallel).
+
+This is a cli-only option.
+
 ### --json {#json}
 
 Output each Hurl file result to JSON. The format is very closed to HAR format.
@@ -373,6 +382,16 @@ Override value from Environment variable no_proxy.
 ### -o, --output <FILE> {#output}
 
 Write output to FILE instead of stdout.
+
+### --parallel {#parallel}
+
+(Experimental) Run files in parallel.
+
+Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential.
+
+See also [`--max-workers`](#max-workers).
+
+This is a cli-only option.
 
 ### --path-as-is {#path-as-is}
 

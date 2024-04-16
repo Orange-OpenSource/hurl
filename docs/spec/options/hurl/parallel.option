@@ -2,7 +2,6 @@ name: parallel
 long: parallel
 help: (Experimental) Run files in parallel
 cli_only: true
-experimental: true
 ---
 (Experimental) Run files in parallel.
 
