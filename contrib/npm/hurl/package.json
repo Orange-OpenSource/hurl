@@ -26,7 +26,7 @@
     "console.table": "0.10.0",
     "extract-zip": "2.0.1",
     "rimraf": "5.0.5",
-    "tar": "6.2.0"
+    "tar": "7.0.1"
   },
   "devDependencies": {},
   "keywords": [
