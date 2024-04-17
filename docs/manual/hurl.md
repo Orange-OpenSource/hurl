@@ -389,7 +389,7 @@ Write output to FILE instead of stdout.
 
 Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential.
 
-See also [`--max-workers`](#max-workers).
+See also [`--jobs`](#jobs).
 
 This is a cli-only option.
 
