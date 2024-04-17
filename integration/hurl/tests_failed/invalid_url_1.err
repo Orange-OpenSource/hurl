@@ -2,6 +2,6 @@ error: Invalid URL
   --> tests_failed/invalid_url_1.hurl:3:5
    |
  3 | GET {{host}}
-   |     ^^^^^^^^ URL <localhost:8000> must start with http:// or https://
+   |     ^^^^^^^^ invalid URL <localhost:8000> (Missing protocol http or https)
    |
 

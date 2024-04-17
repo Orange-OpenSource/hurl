@@ -108,15 +108,23 @@ impl Request {
         // FIXME: is it possible to do it with libcurl?
         let url = match Url::parse(&self.url) {
             Ok(url) => url,
-            Err(_) => return Err(HttpError::InvalidUrl(self.url.clone())),
+            Err(e) => return Err(HttpError::InvalidUrl(self.url.clone(), e.to_string())),
         };
         let scheme = url.scheme();
         if scheme != "http" && scheme != "https" {
-            return Err(HttpError::InvalidUrlPrefix(self.url.clone()));
+            return Err(HttpError::InvalidUrl(
+                self.url.clone(),
+                "Missing protocol http or https".to_string(),
+            ));
         }
         let host = match url.host() {
             Some(host) => host,
-            None => return Err(HttpError::InvalidUrl(self.url.clone())),
+            None => {
+                return Err(HttpError::InvalidUrl(
+                    self.url.clone(),
+                    "Can not extract host".to_string(),
+                ))
+            }
         };
         let port = match url.port() {
             Some(port) => format!(":{port}"),

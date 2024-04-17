@@ -91,10 +91,9 @@ HTTP 200
 body regex "{}" == "a"
 
 # InvalidUrl
-#GET http:///
-
-# InvalidUrlPrefix
-# TODO: remove enum variant if not used
+GET {{url}}
+[Options]
+variable: url=localhost:8000/runner_errors
 
 # NoQueryResult
 GET http://localhost:8000/runner_errors

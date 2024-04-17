@@ -87,8 +87,7 @@ pub enum RunnerError {
         charset: String,
     },
     InvalidRegex,
-    InvalidUrl(String),
-    InvalidUrlPrefix(String),
+    InvalidUrl(String, String),
     NoQueryResult,
     QueryHeaderNotFound,
     QueryInvalidJsonpathExpression {
@@ -144,7 +143,6 @@ impl hurl_core::error::Error for Error {
             RunnerError::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::InvalidRegex => "Invalid regex".to_string(),
             RunnerError::InvalidUrl(..) => "Invalid URL".to_string(),
-            RunnerError::InvalidUrlPrefix(..) => "Invalid URL".to_string(),
             RunnerError::NoQueryResult => "No query result".to_string(),
             RunnerError::QueryHeaderNotFound => "Header not found".to_string(),
             RunnerError::QueryInvalidJson => "Invalid JSON".to_string(),
@@ -214,10 +212,8 @@ impl hurl_core::error::Error for Error {
                 format!("actual value is <{value}>")
             }
             RunnerError::InvalidRegex => "regex expression is not valid".to_string(),
-            RunnerError::InvalidUrl(url) => format!("invalid URL <{url}>"),
-            RunnerError::InvalidUrlPrefix(url) => {
-                format!("URL <{url}> must start with http:// or https://")
-            }
+            RunnerError::InvalidUrl(url, reason) => format!("invalid URL <{url}> ({reason})"),
+
             RunnerError::NoQueryResult => "The query didn't return any result".to_string(),
             RunnerError::QueryHeaderNotFound => {
                 "this header has not been found in the response".to_string()
@@ -276,8 +272,7 @@ impl From<HttpError> for RunnerError {
             }
             HttpError::InvalidCharset { charset } => RunnerError::InvalidCharset { charset },
             HttpError::InvalidDecoding { charset } => RunnerError::InvalidDecoding { charset },
-            HttpError::InvalidUrl(url) => RunnerError::InvalidUrl(url),
-            HttpError::InvalidUrlPrefix(url) => RunnerError::InvalidUrlPrefix(url),
+            HttpError::InvalidUrl(url, reason) => RunnerError::InvalidUrl(url, reason),
             HttpError::Libcurl { code, description } => {
                 RunnerError::HttpConnection(format!("({code}) {description}"))
             }

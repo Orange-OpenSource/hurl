@@ -44,8 +44,7 @@ pub enum HttpError {
         description: String,
     },
     UnsupportedHttpVersion(RequestedHttpVersion),
-    InvalidUrl(String),
-    InvalidUrlPrefix(String),
+    InvalidUrl(String, String),
 }
 
 impl From<curl::Error> for HttpError {
