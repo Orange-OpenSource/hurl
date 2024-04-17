@@ -95,3 +95,7 @@ jobs:
     - name: Check hurl crate API changes
       if: always()
       run: bin/check/compatibility.sh
+
+    - name: Check doc generation
+      if: always()
+      run: bin/check/doc.sh
