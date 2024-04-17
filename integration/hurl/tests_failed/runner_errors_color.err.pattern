@@ -103,109 +103,150 @@
 [1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^ [0m[1;31m(6) Could not resolve host: unknown[0m
 [1;34m    |[0m
 
+[1;31merror[0m: [1mInvalid charset[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:73:1
+[1;34m    |[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-charset[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m 73 |[0m body == "Hello"
+[1;34m    |[0m[1;31m ^^^^ [0m[1;31mthe charset 'unknown' is not valid[0m
+[1;34m    |[0m
+
+[1;31merror[0m: [1mInvalid decoding[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:79:1
+[1;34m    |[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-decoding[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m 79 |[0m body == "Hello"
+[1;34m    |[0m[1;31m ^^^^ [0m[1;31mthe body can not be decoded with charset 'utf-8'[0m
+[1;34m    |[0m
+
 [1;31merror[0m: [1mInvalid JSON[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:79:10
+   [1;34m-->[0m tests_failed/runner_errors.hurl:85:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m 79 |[0m { "a": {{x}} }
+[1;34m 85 |[0m { "a": {{x}} }
 [1;34m    |[0m[1;31m          ^ [0m[1;31mactual value is <a>[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid regex[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:85:12
+   [1;34m-->[0m tests_failed/runner_errors.hurl:91:12
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m 85 |[0m body regex "{}" == "a"
+[1;34m 91 |[0m body regex "{}" == "a"
 [1;34m    |[0m[1;31m            ^^^^ [0m[1;31mregex expression is not valid[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mNo query result[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:97:8
+   [1;34m-->[0m tests_failed/runner_errors.hurl:103:8
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m 97 |[0m count: header "count"
+[1;34m103 |[0m count: header "count"
 [1;34m    |[0m[1;31m        ^^^^^^^^^^^^^^ [0m[1;31mThe query didn't return any result[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mHeader not found[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:102:1
-[1;34m    |[0m
-[1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
-[1;34m    |[0m[90m ...[0m
-[1;34m102 |[0m count: 10
-[1;34m    |[0m[1;31m ^^^^^ [0m[1;31mthis header has not been found in the response[0m
-[1;34m    |[0m
-
-[1;31merror[0m: [1mInvalid JSON[0m
    [1;34m-->[0m tests_failed/runner_errors.hurl:108:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m108 |[0m jsonpath "$.count" == 10
+[1;34m108 |[0m count: 10
+[1;34m    |[0m[1;31m ^^^^^ [0m[1;31mthis header has not been found in the response[0m
+[1;34m    |[0m
+
+[1;31merror[0m: [1mInvalid JSON[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:114:1
+[1;34m    |[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m114 |[0m jsonpath "$.count" == 10
 [1;34m    |[0m[1;31m ^^^^^^^^^^^^^^^^^^ [0m[1;31mthe HTTP response is not a valid JSON[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSONPath[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:114:10
+   [1;34m-->[0m tests_failed/runner_errors.hurl:120:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m114 |[0m jsonpath "xxx" == 10
+[1;34m120 |[0m jsonpath "xxx" == 10
 [1;34m    |[0m[1;31m          ^^^^^ [0m[1;31mthe JSONPath expression 'xxx' is not valid[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XML[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:120:1
+   [1;34m-->[0m tests_failed/runner_errors.hurl:126:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-xml[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m120 |[0m xpath "//a" == 10
+[1;34m126 |[0m xpath "//a" == 10
 [1;34m    |[0m[1;31m ^^^^^^^^^^^ [0m[1;31mthe HTTP response is not a valid XML[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XPath expression[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:126:7
+   [1;34m-->[0m tests_failed/runner_errors.hurl:132:7
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m126 |[0m xpath "//" == 10
+[1;34m132 |[0m xpath "//" == 10
 [1;34m    |[0m[1;31m       ^^^^ [0m[1;31mthe XPath expression is not valid[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid variable type[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:132:12
+   [1;34m-->[0m tests_failed/runner_errors.hurl:138:12
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m132 |[0m verbose: {{verbose}}
+[1;34m138 |[0m verbose: {{verbose}}
 [1;34m    |[0m[1;31m            ^^^^^^^ [0m[1;31mexpecting boolean, actual value is <1>[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUndefined variable[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:137:10
+   [1;34m-->[0m tests_failed/runner_errors.hurl:143:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m137 |[0m param: {{value}}
+[1;34m143 |[0m param: {{value}}
 [1;34m    |[0m[1;31m          ^^^^^ [0m[1;31myou must set the variable value[0m
 [1;34m    |[0m
 
+[1;31merror[0m: [1mHTTP connection[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:146:5
+[1;34m    |[0m
+[1;34m146 |[0m GET http://localhost:8000/runner_errors/redirect/2
+[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ [0m[1;31mtoo many redirect[0m
+[1;34m    |[0m
+
 [1;31merror[0m: [1mUnauthorized file access[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:144:6
+   [1;34m-->[0m tests_failed/runner_errors.hurl:153:6
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
-[1;34m144 |[0m file,/root/file;
+[1;34m153 |[0m file,/root/file;
 [1;34m    |[0m[1;31m      ^^^^^^^^^^ [0m[1;31munauthorized access to file /root/file, check --file-root option[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUnrenderable variable[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:152:4
+   [1;34m-->[0m tests_failed/runner_errors.hurl:161:4
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
-[1;34m152 |[0m `{{list}}`
+[1;34m161 |[0m `{{list}}`
 [1;34m    |[0m[1;31m    ^^^^ [0m[1;31mvariable <list> with value [1,2,3] can not be rendered[0m
+[1;34m    |[0m
+
+[1;31merror[0m: [1mDecompression error[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:167:1
+[1;34m    |[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors/unsupported-content-encoding[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m167 |[0m bytes count == 10
+[1;34m    |[0m[1;31m ^^^^^ [0m[1;31mcompression unknown is not supported[0m
+[1;34m    |[0m
+
+[1;31merror[0m: [1mUnsupported HTTP version[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:170:5
+[1;34m    |[0m
+[1;34m170 |[0m GET http://localhost:8000/runner_errors
+[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ [0m[1;31mHTTP/3 is not supported, check --version[0m
 [1;34m    |[0m
 

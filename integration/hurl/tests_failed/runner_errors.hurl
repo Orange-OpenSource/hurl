@@ -67,10 +67,16 @@ header "count" toInt == 1
 GET http://unknown
 
 # InvalidCharset
-# TODO: remove enum variant if not used
+GET http://localhost:8000/runner_errors/invalid-charset
+HTTP 200
+[Asserts]
+body == "Hello"
 
 # InvalidDecoding
-# TODO: remove enum variant if not used
+GET http://localhost:8000/runner_errors/invalid-decoding
+HTTP 200
+[Asserts]
+body == "Hello"
 
 # InvalidJson
 GET http://localhost:8000/runner_errors
@@ -85,7 +91,7 @@ HTTP 200
 body regex "{}" == "a"
 
 # InvalidUrl
-# TODO: remove enum variant if not used
+#GET http:///
 
 # InvalidUrlPrefix
 # TODO: remove enum variant if not used
@@ -137,7 +143,10 @@ GET http://localhost:8000/runner_errors
 param: {{value}}
 
 # TooManyRedirect
-# TODO: remove enum variant if not used
+GET http://localhost:8000/runner_errors/redirect/2
+[Options]
+location: true
+max-redirs: 1
 
 # UnauthorizedFileAccess
 GET http://localhost:8000/runner_errors
@@ -152,7 +161,12 @@ GET http://localhost:8000/runner_errors
 `{{list}}`
 
 # UnsupportedContentEncoding
-# TODO: remove enum variant if not used
+GET http://localhost:8000/runner_errors/unsupported-content-encoding
+HTTP 200
+[Asserts]
+bytes count == 10
 
 # UnsupportedHttpVersion
-# TODO: remove enum variant if not used
+GET http://localhost:8000/runner_errors
+[Options]
+http3: true

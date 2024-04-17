@@ -103,109 +103,150 @@ error: HTTP connection
     |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
     |
 
+error: Invalid charset
+   --> tests_failed/runner_errors.hurl:73:1
+    |
+    | GET http://localhost:8000/runner_errors/invalid-charset
+    | ...
+ 73 | body == "Hello"
+    | ^^^^ the charset 'unknown' is not valid
+    |
+
+error: Invalid decoding
+   --> tests_failed/runner_errors.hurl:79:1
+    |
+    | GET http://localhost:8000/runner_errors/invalid-decoding
+    | ...
+ 79 | body == "Hello"
+    | ^^^^ the body can not be decoded with charset 'utf-8'
+    |
+
 error: Invalid JSON
-   --> tests_failed/runner_errors.hurl:79:10
+   --> tests_failed/runner_errors.hurl:85:10
     |
     | GET http://localhost:8000/runner_errors
     | ...
- 79 | { "a": {{x}} }
+ 85 | { "a": {{x}} }
     |          ^ actual value is <a>
     |
 
 error: Invalid regex
-   --> tests_failed/runner_errors.hurl:85:12
+   --> tests_failed/runner_errors.hurl:91:12
     |
     | GET http://localhost:8000/runner_errors
     | ...
- 85 | body regex "{}" == "a"
+ 91 | body regex "{}" == "a"
     |            ^^^^ regex expression is not valid
     |
 
 error: No query result
-   --> tests_failed/runner_errors.hurl:97:8
+   --> tests_failed/runner_errors.hurl:103:8
     |
     | GET http://localhost:8000/runner_errors
     | ...
- 97 | count: header "count"
+103 | count: header "count"
     |        ^^^^^^^^^^^^^^ The query didn't return any result
     |
 
 error: Header not found
-   --> tests_failed/runner_errors.hurl:102:1
-    |
-    | GET http://localhost:8000/runner_errors
-    | ...
-102 | count: 10
-    | ^^^^^ this header has not been found in the response
-    |
-
-error: Invalid JSON
    --> tests_failed/runner_errors.hurl:108:1
     |
     | GET http://localhost:8000/runner_errors
     | ...
-108 | jsonpath "$.count" == 10
+108 | count: 10
+    | ^^^^^ this header has not been found in the response
+    |
+
+error: Invalid JSON
+   --> tests_failed/runner_errors.hurl:114:1
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+114 | jsonpath "$.count" == 10
     | ^^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
     |
 
 error: Invalid JSONPath
-   --> tests_failed/runner_errors.hurl:114:10
+   --> tests_failed/runner_errors.hurl:120:10
     |
     | GET http://localhost:8000/runner_errors
     | ...
-114 | jsonpath "xxx" == 10
+120 | jsonpath "xxx" == 10
     |          ^^^^^ the JSONPath expression 'xxx' is not valid
     |
 
 error: Invalid XML
-   --> tests_failed/runner_errors.hurl:120:1
+   --> tests_failed/runner_errors.hurl:126:1
     |
     | GET http://localhost:8000/runner_errors/invalid-xml
     | ...
-120 | xpath "//a" == 10
+126 | xpath "//a" == 10
     | ^^^^^^^^^^^ the HTTP response is not a valid XML
     |
 
 error: Invalid XPath expression
-   --> tests_failed/runner_errors.hurl:126:7
+   --> tests_failed/runner_errors.hurl:132:7
     |
     | GET http://localhost:8000/runner_errors
     | ...
-126 | xpath "//" == 10
+132 | xpath "//" == 10
     |       ^^^^ the XPath expression is not valid
     |
 
 error: Invalid variable type
-   --> tests_failed/runner_errors.hurl:132:12
+   --> tests_failed/runner_errors.hurl:138:12
     |
     | GET http://localhost:8000/runner_errors
     | ...
-132 | verbose: {{verbose}}
+138 | verbose: {{verbose}}
     |            ^^^^^^^ expecting boolean, actual value is <1>
     |
 
 error: Undefined variable
-   --> tests_failed/runner_errors.hurl:137:10
+   --> tests_failed/runner_errors.hurl:143:10
     |
     | GET http://localhost:8000/runner_errors
     | ...
-137 | param: {{value}}
+143 | param: {{value}}
     |          ^^^^^ you must set the variable value
     |
 
+error: HTTP connection
+   --> tests_failed/runner_errors.hurl:146:5
+    |
+146 | GET http://localhost:8000/runner_errors/redirect/2
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect
+    |
+
 error: Unauthorized file access
-   --> tests_failed/runner_errors.hurl:144:6
+   --> tests_failed/runner_errors.hurl:153:6
     |
     | GET http://localhost:8000/runner_errors
-144 | file,/root/file;
+153 | file,/root/file;
     |      ^^^^^^^^^^ unauthorized access to file /root/file, check --file-root option
     |
 
 error: Unrenderable variable
-   --> tests_failed/runner_errors.hurl:152:4
+   --> tests_failed/runner_errors.hurl:161:4
     |
     | GET http://localhost:8000/runner_errors
-152 | `{{list}}`
+161 | `{{list}}`
     |    ^^^^ variable <list> with value [1,2,3] can not be rendered
+    |
+
+error: Decompression error
+   --> tests_failed/runner_errors.hurl:167:1
+    |
+    | GET http://localhost:8000/runner_errors/unsupported-content-encoding
+    | ...
+167 | bytes count == 10
+    | ^^^^^ compression unknown is not supported
+    |
+
+error: Unsupported HTTP version
+   --> tests_failed/runner_errors.hurl:170:5
+    |
+170 | GET http://localhost:8000/runner_errors
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version
     |
 

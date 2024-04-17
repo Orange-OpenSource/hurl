@@ -1,5 +1,5 @@
 from app import app
-from flask import make_response, Response
+from flask import make_response, Response, redirect
 from io import BytesIO
 
 
@@ -21,6 +21,37 @@ def runner_errors_could_not_uncompress():
 @app.route("/runner_errors/invalid-xml")
 def runner_errors_invalid_xml():
     return Response("", mimetype="application/xml")
+
+
+@app.route("/runner_errors/invalid-charset")
+def runner_errors_invalid_charset():
+    headers = {"Content-Type": "text/html; charset=unknown"}
+    return Response("Hello", headers=headers)
+
+
+@app.route("/runner_errors/invalid-decoding")
+def runner_errors_invalid_decoding():
+    result = BytesIO()
+    result.write(b"\xff")
+    data = result.getvalue()
+    resp = make_response(data)
+    return resp
+
+
+@app.route("/runner_errors/redirect/2")
+def runner_errors_redirect2():
+    return redirect("http://localhost:8000/runner_errors/redirect/1")
+
+
+@app.route("/runner_errors/redirect/1")
+def runner_errors_redirect1():
+    return redirect("http://localhost:8000/runner_errors")
+
+
+@app.route("/runner_errors/unsupported-content-encoding")
+def runner_errors_unsupported_content_encoding():
+    headers = {"Content-Encoding": "unknown"}
+    return Response("Hello", headers=headers)
 
 
 @app.route("/runner_errors/json-list")
