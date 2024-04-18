@@ -491,6 +491,7 @@ pub(crate) fn error_string<E: Error>(
     if let Some(entry_line) = entry_line {
         if entry_line != error_line {
             let line = lines.get(entry_line - 1).unwrap();
+            let line = line.replace('\t', "    ");
             let line = if colored {
                 line.bright_black().to_string()
             } else {

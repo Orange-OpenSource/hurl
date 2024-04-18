@@ -1,0 +1,9 @@
+error: Assert body value
+  --> tests_failed_not_linted/tab.hurl:4:2
+   |
+   | GET    http://localhost:8000/hello
+   | ...
+ 4 |     `Hello World`
+   |     ^^^^^^^^^^^^^ actual value is <Hello World!>
+   |
+
