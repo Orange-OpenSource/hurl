@@ -154,7 +154,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
             }
             Err(Error::new(start.pos, false, ParseError::Version))
         }
-        Some(' ') => Ok(Version {
+        Some(' ') | Some('\t') => Ok(Version {
             value: VersionAny,
             source_info: SourceInfo::new(start.pos, reader.state.pos),
         }),
@@ -480,6 +480,20 @@ mod tests {
 
     #[test]
     fn test_version() {
+        let mut reader = Reader::new("HTTP 200");
+        assert_eq!(
+            version(&mut reader).unwrap().value,
+            VersionValue::VersionAny
+        );
+        assert_eq!(reader.state.cursor, 4);
+
+        let mut reader = Reader::new("HTTP\t200");
+        assert_eq!(
+            version(&mut reader).unwrap().value,
+            VersionValue::VersionAny
+        );
+        assert_eq!(reader.state.cursor, 4);
+
         let mut reader = Reader::new("HTTP/1.1 200");
         assert_eq!(version(&mut reader).unwrap().value, VersionValue::Version11);
 
