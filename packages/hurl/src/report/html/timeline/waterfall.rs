@@ -231,7 +231,9 @@ fn new_call_timings(
     let height = CALL_HEIGHT - CALL_INSET * 2;
 
     // DNS
-    let dns_x = (call.timings.begin_call - times.start).to_std().unwrap();
+    let dns_x = (call.timings.begin_call - times.start)
+        .to_std()
+        .unwrap_or_default();
     let dns_x = to_pixel(dns_x, scale_x);
     let dns_width = to_pixel(call.timings.name_lookup, scale_x);
     if dns_width.0 > 0.0 {
@@ -312,7 +314,9 @@ fn new_call_tooltip(
 
     let width = 600.px();
     let height = 235.px();
-    let offset_x = (call.timings.begin_call - times.start).to_std().unwrap();
+    let offset_x = (call.timings.begin_call - times.start)
+        .to_std()
+        .unwrap_or_default();
     let offset_x = to_pixel(offset_x, scale_x);
     let offset_y = CALL_HEIGHT * (call_ctx.call_index - 1) + pixels_y.start;
     let offset_y = offset_y + CALL_HEIGHT - CALL_INSET;
@@ -424,8 +428,12 @@ fn new_call_tooltip(
     y += delta_y;
 
     // Start and stop timestamps
-    let start = (call.timings.begin_call - times.start).to_std().unwrap();
-    let end = (call.timings.end_call - times.start).to_std().unwrap();
+    let start = (call.timings.begin_call - times.start)
+        .to_std()
+        .unwrap_or_default();
+    let end = (call.timings.end_call - times.start)
+        .to_std()
+        .unwrap_or_default();
     x = offset_x + 380.px();
     y = offset_y + 64.px();
     let value = Microsecond(start.as_micros() as f64);
@@ -489,9 +497,13 @@ fn new_call_sel(
     scale_x: Scale,
     pixels_y: Interval<Pixel>,
 ) -> Element {
-    let offset_x_start = (call.timings.begin_call - times.start).to_std().unwrap();
+    let offset_x_start = (call.timings.begin_call - times.start)
+        .to_std()
+        .unwrap_or_default();
     let offset_x_start = to_pixel(offset_x_start, scale_x);
-    let offset_x_end = (call.timings.end_call - times.start).to_std().unwrap();
+    let offset_x_end = (call.timings.end_call - times.start)
+        .to_std()
+        .unwrap_or_default();
     let offset_x_end = to_pixel(offset_x_end, scale_x);
     let color = match call_ctx.kind {
         CallContextKind::Success | CallContextKind::Retry => "green",
