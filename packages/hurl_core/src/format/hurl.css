@@ -42,7 +42,7 @@ code {
 }
 
 
-.string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+.string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value, .regex {
     color: darkgreen;
 }
 
