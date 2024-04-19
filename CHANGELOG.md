@@ -11,6 +11,7 @@ Thanks to
 [@jaminalder](https://github.com/jaminalder),
 [@teto](https://github.com/teto),
 [@humphd](https://github.com/humphd),
+[@mohammed90](https://github.com/mohammed90),
 
 Enhancements:
 
@@ -35,6 +36,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix standalone css for regex [#2693](https://github.com/Orange-OpenSource/hurl/issues/2693)
 * Fix charset parsing logic of Content-Type header [#2540](https://github.com/Orange-OpenSource/hurl/issues/2540)
 * Fix filename templatization bug under certains conditions [#2533](https://github.com/Orange-OpenSource/hurl/issues/2533)
 * Fix empty glob not always returning an error [#2517](https://github.com/Orange-OpenSource/hurl/issues/2517)
@@ -43,6 +45,11 @@ Bugs Fixed:
 * Per request output takes file-root into account for path resolving [#2445](https://github.com/Orange-OpenSource/hurl/issues/2445)
 * Fix silent error when verbose option use unset variable [#2444](https://github.com/Orange-OpenSource/hurl/issues/2444)
 * Fix Content-type header override when used in lowercase [#2416](https://github.com/Orange-OpenSource/hurl/issues/2416)
+
+
+Security Fixed:
+
+* Prevent script injection in HTML report [#GHSA-p4p2-ffh9-cc9c](https://github.com/Orange-OpenSource/hurl/security/advisories/GHSA-p4p2-ffh9-cc9c)
 
 
 [4.2.0 (2024-01-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)
