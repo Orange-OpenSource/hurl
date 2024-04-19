@@ -16,6 +16,7 @@
  *
  */
 use crate::report::html::Testcase;
+use crate::runner::Error;
 use crate::util::logger;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -57,22 +58,8 @@ impl Testcase {
         self.errors
             .iter()
             .map(|e| {
-                let line = e.source_info.start.line;
-                let column = e.source_info.start.column;
-                let filename = &self.filename;
-                let message =
-                    logger::error_string(filename, content, e, Some(e.source_info), false);
-                // We override the first part of the error string to add an anchor to
-                // the error context.
-                let old = format!("{filename}:{line}:{column}");
-                let href = self.source_filename();
-                let new = format!("<a href=\"{href}#l{line}\">{filename}:{line}:{column}</a>");
-                let message = message.replace(&old, &new);
-                format!(
-                    "<div class=\"error\">\
-                     <div class=\"error-desc\"><pre><code>{message}</code></pre></div>\
-                 </div>"
-                )
+                let error = error_to_html(e, content, &self.filename, &self.source_filename());
+                format!("<div class=\"error\"><div class=\"error-desc\">{error}</div></div>")
             })
             .collect::<Vec<_>>()
             .join("")
@@ -84,5 +71,68 @@ fn get_status_html(success: bool) -> &'static str {
         "<span class=\"success\">Success</span>"
     } else {
         "<span class=\"failure\">Failure</span>"
+    }
+}
+
+/// Returns an HTML `<pre>` tag representing this `error`.
+fn error_to_html(error: &Error, content: &str, filename: &str, source_filename: &str) -> String {
+    let line = error.source_info.start.line;
+    let column = error.source_info.start.column;
+    let message = logger::error_string(filename, content, error, Some(error.source_info), false);
+    let message = html_escape(&message);
+    // We override the first part of the error string to add an anchor to
+    // the error context.
+    let old = format!("{filename}:{line}:{column}");
+    let href = source_filename;
+    let new = format!("<a href=\"{href}#l{line}\">{filename}:{line}:{column}</a>");
+    let message = message.replace(&old, &new);
+    format!("<pre><code>{message}</code></pre>")
+}
+
+/// Escapes '<' and '>' from `text`.
+fn html_escape(text: &str) -> String {
+    text.replace('<', "&lt;").replace('>', "&gt;")
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::report::html::nav::error_to_html;
+    use crate::runner::{Error, RunnerError};
+    use hurl_core::ast::{Pos, SourceInfo};
+
+    #[test]
+    fn test_error_html() {
+        let error = Error::new(
+            SourceInfo::new(Pos::new(4, 1), Pos::new(4, 9)),
+            RunnerError::AssertFailure {
+                actual: "<script>alert('Hi')</script>".to_string(),
+                expected: "Hello world".to_string(),
+                type_mismatch: false,
+            },
+            true,
+        );
+        let content = "GET http://localhost:8000/inline-script\n\
+                       HTTP 200\n\
+                       [Asserts]\n\
+                       `Hello World`\n\
+                      ";
+        let filename = "a/b/c/foo.hurl";
+        let source_filename = "abc-source.hurl";
+        let html = error_to_html(&error, content, filename, source_filename);
+        assert_eq!(
+            html,
+            "\
+<pre>\
+  <code>\
+Assert failure\n  \
+  --&gt; <a href=\"abc-source.hurl#l4\">a/b/c/foo.hurl:4:1</a>\n   \
+   |\n \
+ 4 | `Hello World`\n   \
+   |   actual:   &lt;script&gt;alert('Hi')&lt;/script&gt;\n   \
+   |   expected: Hello world\n   \
+   |\
+  </code>\
+</pre>"
+        );
     }
 }
