@@ -260,7 +260,7 @@ jobs:
           fi
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.2
         if: ${{ always() }}
         with:
           name: release-changelog
@@ -305,7 +305,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - uses: actions/download-artifact@v4.1.4
+      - uses: actions/download-artifact@v4.1.5
         with:
           path: artifacts
 
