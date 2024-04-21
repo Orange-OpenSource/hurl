@@ -43,7 +43,7 @@ jobs:
     - name: Bench Suite
       run: bin/test/bench.sh
     - name: Archive artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-bench-artifacts
@@ -90,7 +90,7 @@ jobs:
     - name: Coverage
       run: bin/check/coverage.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-ubuntu-latest-${{ matrix.rust }}-artifacts
@@ -137,7 +137,7 @@ jobs:
     - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-ubuntu-20.04-${{ matrix.rust }}-artifacts
@@ -180,7 +180,7 @@ jobs:
             bin/test/test.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-archlinux-x64-artifacts
@@ -225,7 +225,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-fedora-x64-artifacts
@@ -272,7 +272,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-alpine-x64-artifacts
@@ -320,7 +320,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-macos-x64-${{ matrix.rust }}-artifacts
@@ -368,7 +368,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-macos-aarch64-${{ matrix.rust }}-artifacts
@@ -409,7 +409,7 @@ jobs:
     - name: Build and test
       run: .\bin\test\test.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.2
       if: ${{ always() }}
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
