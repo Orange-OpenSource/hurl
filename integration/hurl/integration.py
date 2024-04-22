@@ -17,17 +17,19 @@ def accept(f: str) -> bool:
     return not re.match(r".*\.\d+\.hurl$", f)
 
 
-def main():
+def main(script_files: list[str]):
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
-    script_files = (
-        get_files("tests_ok/*." + extension)
-        + get_files("tests_ok_not_linted/*." + extension)
-        + get_files("tests_failed/*." + extension)
-        + get_files("tests_failed_not_linted/*." + extension)
-        + get_files("tests_error_parser/*." + extension)
-        + get_files("ssl/*." + extension)
-    )
+
+    if not len(script_files):
+        script_files = (
+            get_files("tests_ok/*." + extension)
+            + get_files("tests_ok_not_linted/*." + extension)
+            + get_files("tests_failed/*." + extension)
+            + get_files("tests_failed_not_linted/*." + extension)
+            + get_files("tests_error_parser/*." + extension)
+            + get_files("ssl/*." + extension)
+        )
     for f in sorted(script_files):
         test_script.test(f)
 
@@ -35,4 +37,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
