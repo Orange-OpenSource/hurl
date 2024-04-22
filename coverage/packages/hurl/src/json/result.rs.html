@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use chrono::{DateTime, Utc};</pre>
+                <pre class="has-background-white py-0 px-2">use chrono::{DateTime, SecondsFormat, Utc};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4517,7 +4517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(self.begin_call.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(self.begin_call.to_rfc3339_opts(SecondsFormat::Micros, true)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4581,7 +4581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(self.end_call.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(self.end_call.to_rfc3339_opts(SecondsFormat::Micros, true)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6443,7 +6443,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-04-21 08:08</p>
+                <p class="heading">Date: 2024-04-22 08:09</p>
             </div>
         </footer>
     </body>
