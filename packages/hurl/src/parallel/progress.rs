@@ -48,6 +48,8 @@ pub enum Mode {
 
 /// The minimum duration between two progress bar redraw (to avoid flickering).
 const UPDATE_INTERVAL: Duration = Duration::from_millis(100);
+/// The minimum duration for the progress bar to be throttle (some delay to let the UI stabilize)
+const FIRST_THROTTLE: Duration = Duration::from_millis(16);
 
 impl ParProgress {
     /// Creates a new instance.
@@ -56,7 +58,7 @@ impl ParProgress {
             max_running_displayed,
             mode,
             color,
-            throttle: Throttle::new(UPDATE_INTERVAL),
+            throttle: Throttle::new(UPDATE_INTERVAL, FIRST_THROTTLE),
         }
     }
 
@@ -155,18 +157,24 @@ impl Mode {
 /// just putting stuff onto the terminal. We also want to avoid flickering by not drawing anything
 /// that goes away too quickly.
 struct Throttle {
+    /// Creation time of the progress.
+    start: Instant,
     /// Last time the progress bar has be refreshed on the terminal.
     last_update: Option<Instant>,
     /// Refresh interval
     interval: Duration,
+    /// First interval of non throttle to let the UI initialize
+    first_throttle: Duration,
 }
 
 impl Throttle {
     /// Creates a new instances.
-    fn new(interval: Duration) -> Self {
+    fn new(interval: Duration, first_throttle: Duration) -> Self {
         Throttle {
+            start: Instant::now(),
             last_update: None,
             interval,
+            first_throttle,
         }
     }
 
@@ -179,6 +187,9 @@ impl Throttle {
     }
 
     fn update(&mut self) {
+        if self.start.elapsed() < self.first_throttle {
+            return;
+        }
         self.last_update = Some(Instant::now());
     }
 
