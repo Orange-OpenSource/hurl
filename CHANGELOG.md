@@ -36,9 +36,10 @@ Enhancements:
 
 Bugs Fixed:
 
+* Export begin_call, end_call timings fields to RFC3339 (microseconds) [#2699](https://github.com/Orange-OpenSource/hurl/issues/2699)
 * Fix standalone css for regex [#2693](https://github.com/Orange-OpenSource/hurl/issues/2693)
 * Fix charset parsing logic of Content-Type header [#2540](https://github.com/Orange-OpenSource/hurl/issues/2540)
-* Fix filename templatization bug under certains conditions [#2533](https://github.com/Orange-OpenSource/hurl/issues/2533)
+* Fix filename templatization bug under certain conditions [#2533](https://github.com/Orange-OpenSource/hurl/issues/2533)
 * Fix empty glob not always returning an error [#2517](https://github.com/Orange-OpenSource/hurl/issues/2517)
 * Fix hurlfmt query certificate for hurl output format [#2511](https://github.com/Orange-OpenSource/hurl/issues/2511)
 * Fix --test progress bar not displayed when verbose is used [#2506](https://github.com/Orange-OpenSource/hurl/issues/2506)
@@ -47,7 +48,7 @@ Bugs Fixed:
 * Fix Content-type header override when used in lowercase [#2416](https://github.com/Orange-OpenSource/hurl/issues/2416)
 
 
-Security Fixed:
+Security Issues Fixed:
 
 * Prevent script injection in HTML report [#GHSA-p4p2-ffh9-cc9c](https://github.com/Orange-OpenSource/hurl/security/advisories/GHSA-p4p2-ffh9-cc9c)
 
