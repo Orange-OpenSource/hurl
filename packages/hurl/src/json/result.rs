@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, SecondsFormat, Utc};
 use hurl_core::ast::SourceInfo;
 use serde_json::Number;
 
@@ -277,11 +277,11 @@ impl Timings {
         let mut map = serde_json::Map::new();
         map.insert(
             "begin_call".to_string(),
-            serde_json::Value::String(self.begin_call.to_string()),
+            serde_json::Value::String(self.begin_call.to_rfc3339_opts(SecondsFormat::Micros, true)),
         );
         map.insert(
             "end_call".to_string(),
-            serde_json::Value::String(self.end_call.to_string()),
+            serde_json::Value::String(self.end_call.to_rfc3339_opts(SecondsFormat::Micros, true)),
         );
         let value = self.name_lookup.as_micros() as u64;
         map.insert(
