@@ -50,7 +50,7 @@ Bugs Fixed:
 
 Security Issues Fixed:
 
-* Prevent script injection in HTML report [#GHSA-p4p2-ffh9-cc9c](https://github.com/Orange-OpenSource/hurl/security/advisories/GHSA-p4p2-ffh9-cc9c)
+* Prevent script injection in HTML report [#2719](https://github.com/Orange-OpenSource/hurl/issues/2719)
 
 
 [4.2.0 (2024-01-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)

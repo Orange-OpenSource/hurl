@@ -191,6 +191,7 @@ def generate_md(
         "breaking": "Breaking Changes",
         "enhancement": "Enhancements",
         "bug": "Bugs Fixed",
+        "security": "Security Issues Fixed",
     }
 
     for category in categories:
