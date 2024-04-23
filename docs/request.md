@@ -650,7 +650,7 @@ output: out.html        # dump the response to this file
 path-as-is: true        # do not handle sequences of /../ or /./ in URL path
 skip: false             # skip this request
 unix-socket: sock       # use Unix socket for transfer
-user: bob=secret        # use basic authentication
+user: bob:secret        # use basic authentication
 variable: country=Italy # define variable country
 variable: planet=Earth  # define variable planet
 verbose: true           # allow verbose output
