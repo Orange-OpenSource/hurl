@@ -383,7 +383,7 @@ jobs:
         path: target/upload/*
 
   package-macos-x64:
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.1.1

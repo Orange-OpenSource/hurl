@@ -280,7 +280,7 @@ jobs:
           ./**/*.log
 
   test-macos-x64:
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         rust: [stable]
