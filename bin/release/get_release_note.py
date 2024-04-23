@@ -239,6 +239,8 @@ def main():
     parser.add_argument("version", help="Hurl release version ex 4.2.0")
     parser.add_argument("--token", help="GitHub authentication token")
     args = parser.parse_args()
+    if args.version == "":
+        raise Exception("version can not be empty")
     print(release_note(milestone=args.version, token=args.token))
 
 
