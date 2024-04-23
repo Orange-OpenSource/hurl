@@ -334,30 +334,45 @@ jobs:
 
       - name: Deliver release
         run: |
-          cat CHANGELOG.md | python3 bin/release/changelog_extract.py ${{ needs.set-context.outputs.release_version }} > release_changelog.md
-          gh release create ${{ needs.set-context.outputs.release_version }} \
-            --target ${{ needs.set-context.outputs.release_branch }} \
-            --notes-file release_changelog.md \
-            --title ${{ needs.set-context.outputs.release_version }} \
-            --draft \
-            artifacts/release-deb-x64-artifacts/hurl_"${{ needs.set-context.outputs.release_version }}"_amd64.deb \
-            artifacts/release-deb-x64-artifacts/hurl_"${{ needs.set-context.outputs.release_version }}"_amd64.deb.sha256 \
-            artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-unknown-linux-gnu.tar.gz \
-            artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-unknown-linux-gnu.tar.gz.sha256 \ 
-            artifacts/release-macos-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-apple-darwin.tar.gz \
-            artifacts/release-macos-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-apple-darwin.tar.gz.sha256 \
-            artifacts/release-macos-aarch64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-aarch64-apple-darwin.tar.gz \
-            artifacts/release-macos-aarch64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-aarch64-apple-darwin.tar.gz.sha256 \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe.sha256 \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip.sha256 && gh_exit_code=0 || gh_exit_code=$?
-          if [ ${gh_exit_code} -eq 0 ] ; then
-            echo "  - ✅ GitHub release ${{ needs.set-context.outputs.release_version }} created."
-          else
-            echo "  - ❌ A problem occurs when attempting to create GitHub release ${{ needs.set-context.outputs.release_version }}."
-            exit 1
-          fi
+          echo "::group::Extract CHANGELOG"
+            ls -l CHANGELOG.md
+            cat CHANGELOG.md | python3 bin/release/changelog_extract.py ${{ needs.set-context.outputs.release_version }} > release_changelog.md
+            ls -l release_changelog.md
+            cat release_changelog.md
+          echo "::endgroup::"
+          echo "::group::List artifacts"
+            ls -l \
+                artifacts/release-deb-x64-artifacts/* \
+                artifacts/release-generic-linux-x64-artifacts/* \
+                artifacts/release-macos-x64-artifacts/* \
+                artifacts/release-macos-aarch64-artifacts/* \
+                artifacts/release-windows-x64-artifacts/*
+          echo "::endgroup::"
+          echo "::group::Deliver Release"
+            gh release create ${{ needs.set-context.outputs.release_version }} \
+                --target ${{ needs.set-context.outputs.release_branch }} \
+                --notes-file release_changelog.md \
+                --title ${{ needs.set-context.outputs.release_version }} \
+                --draft \
+                artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb \
+                artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb.sha256 \
+                artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz \
+                artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz.sha256 \
+                artifacts/release-macos-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-apple-darwin.tar.gz \
+                artifacts/release-macos-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-apple-darwin.tar.gz.sha256 \
+                artifacts/release-macos-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-apple-darwin.tar.gz \
+                artifacts/release-macos-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-apple-darwin.tar.gz.sha256 \
+                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc-installer.exe \
+                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc-installer.exe.sha256 \
+                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc.zip \
+                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc.zip.sha256 && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then
+              echo "  - ✅ GitHub release ${{ needs.set-context.outputs.release_version }} created."
+            else
+               echo "  - ❌ A problem occurs when attempting to create GitHub release ${{ needs.set-context.outputs.release_version }}."
+               exit 1
+            fi
+          echo "::endgroup::"
 
       - name: Create new pull request
         run: |
