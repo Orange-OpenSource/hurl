@@ -1,4 +1,4 @@
-[4.3.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
+[4.3.0 (2024-04-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
 ========================================================================================================================
 
 Thanks to
