@@ -31,6 +31,7 @@ Enhancements:
 * Generate powershell completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
 * Generate fish completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
 * Generate zsh completion for hurl/hurlfmt [#1864](https://github.com/Orange-OpenSource/hurl/issues/1864)
+* Add experimental --parallel / --jobs options [#88](https://github.com/Orange-OpenSource/hurl/issues/88) [#87](https://github.com/Orange-OpenSource/hurl/issues/87)
 
 
 Bugs Fixed:
