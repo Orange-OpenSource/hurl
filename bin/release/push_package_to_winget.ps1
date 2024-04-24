@@ -19,4 +19,4 @@ if (-not (Test-Path variable:token)) {
     exit 1
 }
 
-wingetcreate update --submit --token "$token" --urls "https://github.com/Orange-OpenSource/hurl/releases/download/$release/hurl-$release-x86_64-pc-windows-msvc-installer.exe|x64" --version "$release" "Orange-OpenSource.Hurl"
+.\wingetcreate.exe update --submit --token "$token" --urls "https://github.com/Orange-OpenSource/hurl/releases/download/$release/hurl-$release-x86_64-pc-windows-msvc-installer.exe|x64" --version "$release" "Orange-OpenSource.Hurl"
