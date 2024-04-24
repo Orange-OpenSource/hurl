@@ -366,7 +366,7 @@ Basic authentication section allows per request authentication. If you want to a
 requests of a Hurl file you could use [`-u/--user` option]:
 
 ```shell
-$ hurl --user bob=secret login.hurl
+$ hurl --user bob:secret login.hurl
 ```
 
 [`--user`] option can also be set per request:
