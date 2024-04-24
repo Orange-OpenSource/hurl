@@ -1,6 +1,6 @@
 [package]
 name = "hurlfmt"
-version = "4.3.0"
+version = "5.0.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -14,7 +14,7 @@ rust-version = "1.73.0"
 base64 = "0.22.0"
 clap = { version = "4.5.4", features = ["cargo", "wrap_help"] }
 colored = "2.1.0"
-hurl_core = { version = "4.3.0", path = "../hurl_core" }
+hurl_core = { version = "5.0.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.10.4"
 
 [dev-dependencies]
