@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.3
 
       - name: Check release pull request existence
         id: check-release-pull-request-existence
@@ -169,7 +169,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: github.ref_name == 'master'
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.3
 
       - name: Create release branch
         if: github.ref_name == 'master'
@@ -185,7 +185,7 @@ jobs:
           fi
 
       - name: Checkout new release branch
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.3
         with:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
@@ -260,7 +260,7 @@ jobs:
           fi
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.3
         if: ${{ always() }}
         with:
           name: release-changelog
@@ -291,7 +291,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout new release branch
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.3
         with:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
@@ -305,7 +305,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - uses: actions/download-artifact@v4.1.4
+      - uses: actions/download-artifact@v4.1.6
         with:
           path: artifacts
 
