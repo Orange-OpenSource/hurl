@@ -84,6 +84,7 @@ jobs:
   package-generic-linux-aarch64:
     if: github.event.inputs.package-generic-linux-aarch64 == 'true'
     needs: check-release
+    name: Create generic linux aarch64 package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
