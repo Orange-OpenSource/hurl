@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -43,7 +43,7 @@ jobs:
     - name: Bench Suite
       run: bin/test/bench.sh
     - name: Archive artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-bench-artifacts
@@ -57,7 +57,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -90,7 +90,7 @@ jobs:
     - name: Coverage
       run: bin/check/coverage.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-ubuntu-latest-${{ matrix.rust }}-artifacts
@@ -106,7 +106,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -137,7 +137,7 @@ jobs:
     - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-ubuntu-20.04-${{ matrix.rust }}-artifacts
@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -180,7 +180,7 @@ jobs:
             bin/test/test.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-archlinux-x64-artifacts
@@ -191,7 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -225,7 +225,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-fedora-x64-artifacts
@@ -236,7 +236,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -272,7 +272,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-alpine-x64-artifacts
@@ -286,7 +286,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -320,7 +320,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-macos-x64-${{ matrix.rust }}-artifacts
@@ -334,7 +334,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -368,7 +368,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-macos-aarch64-${{ matrix.rust }}-artifacts
@@ -388,7 +388,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
       with:
         ref: ${{ inputs.branch }}
     - name: Manage vcpkg cache
@@ -409,7 +409,7 @@ jobs:
     - name: Build and test
       run: .\bin\test\test.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v4.3.3
       if: ${{ always() }}
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
