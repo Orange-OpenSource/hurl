@@ -17,6 +17,9 @@
  */
 mod error;
 mod interactive;
+mod logger;
 pub(crate) mod options;
+
 pub(crate) use self::error::CliError;
+pub(crate) use self::logger::BaseLogger;
 pub(crate) use self::options::OutputType;

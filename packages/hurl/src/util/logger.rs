@@ -24,50 +24,6 @@ use hurl_core::error::Error;
 use crate::runner::Value;
 use crate::util::term::Stderr;
 
-/// A simple logger to log app related event (start, high levels error, etc...).
-/// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
-pub struct BaseLogger {
-    pub color: bool,
-    pub verbose: bool,
-}
-
-impl BaseLogger {
-    pub fn new(color: bool, verbose: bool) -> BaseLogger {
-        BaseLogger { color, verbose }
-    }
-
-    pub fn info(&self, message: &str) {
-        eprintln!("{message}");
-    }
-
-    pub fn debug(&self, message: &str) {
-        if !self.verbose {
-            return;
-        }
-        if self.color {
-            eprintln!("{} {message}", "*".blue().bold());
-        } else {
-            eprintln!("* {message}");
-        }
-    }
-
-    pub fn warning(&self, message: &str) {
-        if self.color {
-            eprintln!("{}: {}", "warning".yellow().bold(), message.bold());
-        } else {
-            eprintln!("warning: {message}");
-        }
-    }
-
-    pub fn error(&self, message: &str) {
-        if self.color {
-            eprintln!("{}: {}", "error".red().bold(), message.bold());
-        } else {
-            eprintln!("error: {message}");
-        }
-    }
-}
-
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
     Short,
@@ -90,8 +46,7 @@ impl Verbosity {
     }
 }
 
-/// A Hurl dedicated logger for an Hurl file. Contrary to [`BaseLogger`], this logger can display
-/// rich error for parsing and runtime errors.
+/// A dedicated logger for an Hurl file. This logger can display rich parsing and runtime errors.
 #[derive(Clone)]
 pub struct Logger {
     pub(crate) color: bool,
