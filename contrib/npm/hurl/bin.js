@@ -27,7 +27,7 @@ const fs = require("fs");
  * @param name name of the binary (without extension)
  */
 function run(name) {
-    const execPath = path.join(__dirname, "bin", os.platform() === "win32" ? name + ".exe" : name);
+    const execPath = path.join(__dirname, "dist", "bin", os.platform() === "win32" ? name + ".exe" : name);
 
     try {
         const result = child_process.spawnSync(

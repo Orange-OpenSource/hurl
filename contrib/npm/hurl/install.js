@@ -4,7 +4,8 @@ const os = require("os");
 const path = require("path");
 const cTable = require("console.table");
 const archive = require("./archive");
-const {version} = require("./package.json");
+//const {version} = require("./package.json");
+const version = "4.3.0";
 
 const supportedPlatforms = require("./platform.json")
 
@@ -34,4 +35,4 @@ function getPlatformMetadata() {
 
 const metadata = getPlatformMetadata();
 const url = `https://github.com/Orange-OpenSource/hurl/releases/download/${version}/hurl-${version}-${metadata.rust_target}${metadata.archive_extension}`;
-archive.install(url, path.join(__dirname, "bin"), metadata.checksum);
+archive.install(url, path.join(__dirname, "dist"), metadata.checksum);
