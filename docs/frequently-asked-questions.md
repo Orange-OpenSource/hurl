@@ -145,6 +145,14 @@ ldd /root/.cargo/bin/hurl
 Note that some Hurl features are dependent on `libcurl` capacities: for instance, if your `libcurl` doesn't support
 HTTP/2 Hurl won't be able to send HTTP/2 request. 
 
+### What about MFA and SSO?
+
+Dealing with _Multi Factor Authentication_ and _Single Sign On_ isn't yet high
+on the priority list. For _SSO_ use `--cookie-jar`, examples for in the documentation
+are welcome.
+For entering a _MFA_ code would much extra code be needed. To avoid such _"side car"_,
+is the plan to document how to extract _MFA login cookies_ from webbrowser session
+and insert then in cookie jar.
 
 ### Why shouldn't I use Hurl?
 
