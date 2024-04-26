@@ -94,7 +94,7 @@ jobs:
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-      - name: Build, Test units and Integration tests
+      - name: Create package
         uses: addnab/docker-run-action@v3
         with:
           image: ubuntu:22.04
