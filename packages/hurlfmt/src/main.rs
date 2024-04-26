@@ -23,32 +23,26 @@ use hurl_core::parser;
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::{cli, curl, format, linter};
 
-#[cfg(target_family = "unix")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-}
+const EXIT_OK: i32 = 0;
+const EXIT_ERROR: i32 = 1;
 
-#[cfg(target_family = "windows")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
-}
-
+/// Executes `hurlfmt` entry point.
 fn main() {
+    init_colored();
+
     let opts = match cli::options::parse() {
         Ok(v) => v,
         Err(e) => match e {
             OptionsError::Info(message) => {
                 print!("{message}");
-                process::exit(0);
+                process::exit(EXIT_OK);
             }
             OptionsError::Error(message) => {
                 eprintln!("{message}");
-                process::exit(1);
+                process::exit(EXIT_ERROR);
             }
         },
     };
-    init_colored();
 
     let log_error_message = cli::make_logger_error_message(opts.color);
     let mut output_all = String::new();
@@ -124,6 +118,17 @@ fn main() {
     if !opts.in_place {
         write_output(&output_all, opts.output_file);
     }
+}
+
+#[cfg(target_family = "unix")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+}
+
+#[cfg(target_family = "windows")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 fn write_output(content: &str, filename: Option<PathBuf>) {
