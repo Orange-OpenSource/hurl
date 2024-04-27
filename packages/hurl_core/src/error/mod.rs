@@ -20,7 +20,7 @@ use crate::ast::SourceInfo;
 pub trait Error {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
-    fn fixme(&self, content: &[&str]) -> String;
+    fn fixme(&self, content: &[&str], color: bool) -> String;
     fn show_source_line(&self) -> bool;
 }
 

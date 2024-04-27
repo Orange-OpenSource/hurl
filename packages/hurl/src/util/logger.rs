@@ -522,25 +522,15 @@ fn get_message<E: Error>(error: &E, lines: &[&str], colored: bool) -> String {
         text.push_str(&line);
         text.push('\n');
     }
-    let fixme = error.fixme(lines);
+    let fixme = error.fixme(lines, colored);
     let lines = split_lines(&fixme);
     for (i, line) in lines.iter().enumerate() {
         if i > 0 {
             text.push('\n');
         }
-        text.push_str(color_if_needed(line, colored).as_str());
+        text.push_str(line);
     }
     text
-}
-
-// This function is temporary
-// the fixme function in the Error trait should return the colored String directly
-fn color_if_needed(s: &str, colored: bool) -> String {
-    if colored {
-        s.red().bold().to_string()
-    } else {
-        s.to_string()
-    }
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -765,7 +755,7 @@ HTTP 200
                 "Assert body value".to_string()
             }
 
-            fn fixme(&self, _lines: &[&str]) -> String {
+            fn fixme(&self, _lines: &[&str], _color: bool) -> String {
                 r#" {
    "name": "John",
 -  "age": 27

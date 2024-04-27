@@ -37,7 +37,7 @@ impl Error for linter::Error {
         }
     }
 
-    fn fixme(&self, _lines: &[&str]) -> String {
+    fn fixme(&self, _lines: &[&str], _color: bool) -> String {
         match self.inner {
             LinterError::UnnecessarySpace => "Remove space".to_string(),
             LinterError::UnnecessaryJsonEncoding => "Use Simple String".to_string(),

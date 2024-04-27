@@ -529,6 +529,7 @@ dependencies = [
 name = "hurl_core"
 version = "5.0.0-SNAPSHOT"
 dependencies = [
+ "colored",
  "float-cmp",
  "libxml",
  "regex",

@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::{Pos, SourceInfo};
+use colored::Colorize;
 use std::cmp;
 
 /// Represents a parser error.
@@ -131,7 +132,7 @@ impl crate::error::Error for Error {
         }
     }
 
-    fn fixme(&self, content: &[&str]) -> String {
+    fn fixme(&self, content: &[&str], color: bool) -> String {
         let message = match &self.inner {
             ParseError::DuplicateSection => "the section is already defined".to_string(),
             ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
@@ -235,7 +236,12 @@ impl crate::error::Error for Error {
             ParseError::Xml => "invalid XML".to_string(),
         };
 
-        crate::error::add_carets(&message, self.source_info(), content)
+        let message = crate::error::add_carets(&message, self.source_info(), content);
+        if color {
+            message.red().bold().to_string()
+        } else {
+            message.to_string()
+        }
     }
 
     fn show_source_line(&self) -> bool {

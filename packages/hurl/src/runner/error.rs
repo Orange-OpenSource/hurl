@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use colored::Colorize;
 use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
@@ -159,11 +160,16 @@ impl hurl_core::error::Error for Error {
         }
     }
 
-    fn fixme(&self, content: &[&str]) -> String {
+    fn fixme(&self, content: &[&str], color: bool) -> String {
         match &self.inner {
             RunnerError::AssertBodyValueError { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    color_red_multiline_string(&message)
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::AssertFailure {
                 actual,
@@ -176,133 +182,278 @@ impl hurl_core::error::Error for Error {
                 } else {
                     ""
                 };
-                format!("   actual:   {actual}\n   expected: {expected}{additional}")
+                let message = format!("   actual:   {actual}\n   expected: {expected}{additional}");
+                if color {
+                    color_red_multiline_string(&message)
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::AssertHeaderValueError { actual } => {
                 let message = &format!("actual value is <{actual}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::AssertStatus { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::AssertVersion { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 let message = &format!("could not uncompress response with {algorithm}");
 
                 // only add carets if source_info is set
                 // TODO: add additional attribute in the error to be more explicit?
-                if self.source_info.start.line == 0 {
+                let message = if self.source_info.start.line == 0 {
                     message.to_string()
                 } else {
                     hurl_core::error::add_carets(message, self.source_info, content)
+                };
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
                 }
             }
             RunnerError::FileReadAccess { path } => {
                 let message = &format!("file {} can not be read", path.to_string_lossy());
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::FileWriteAccess { path, error } => {
                 format!("{} can not be written ({error})", path.to_string_lossy())
             }
             RunnerError::FilterDecode(encoding) => {
                 let message = &format!("value can not be decoded with <{encoding}> encoding");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::FilterInvalidEncoding(encoding) => {
                 let message = &format!("<{encoding}> encoding is not supported");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::FilterInvalidInput(message) => {
                 let message = &format!("invalid filter input: {message}");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::FilterMissingInput => {
                 let message = "missing value to apply filter";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::HttpConnection(message) => {
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::InvalidCharset { charset } => {
                 let message = &format!("the charset '{charset}' is not valid");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::InvalidDecoding { charset } => {
                 let message = &format!("the body can not be decoded with charset '{charset}'");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::InvalidJson { value } => {
                 let message = &format!("actual value is <{value}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::InvalidRegex => {
                 let message = "regex expression is not valid";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::InvalidUrl(url, reason) => {
                 let message = &format!("invalid URL <{url}> ({reason})");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::NoQueryResult => {
                 let message = "The query didn't return any result";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::QueryHeaderNotFound => {
                 let message = "this header has not been found in the response";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::QueryInvalidJson => {
                 let message = "the HTTP response is not a valid JSON";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::QueryInvalidJsonpathExpression { value } => {
                 let message = &format!("the JSONPath expression '{value}' is not valid");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::QueryInvalidXml => {
                 let message = "the HTTP response is not a valid XML";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::QueryInvalidXpathEval => {
                 let message = "the XPath expression is not valid";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::TemplateVariableInvalidType {
                 value, expecting, ..
             } => {
                 let message = &format!("expecting {expecting}, actual value is <{value}>");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::TemplateVariableNotDefined { name } => {
                 let message = &format!("you must set the variable {name}");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::TooManyRedirect => {
                 let message = "too many redirect";
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::UnauthorizedFileAccess { path } => {
                 let message = &format!(
                     "unauthorized access to file {}, check --file-root option",
                     path.to_string_lossy()
                 );
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::UnrenderableVariable { name, value } => {
                 let message = &format!("variable <{name}> with value {value} can not be rendered");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::UnsupportedContentEncoding(algorithm) => {
                 let message = &format!("compression {algorithm} is not supported");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerError::UnsupportedHttpVersion(version) => {
                 let message = &format!("{version} is not supported, check --version");
-                hurl_core::error::add_carets(message, self.source_info, content)
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
         }
     }
@@ -310,6 +461,21 @@ impl hurl_core::error::Error for Error {
     fn show_source_line(&self) -> bool {
         true
     }
+}
+
+/// Color each line separately
+fn color_red_multiline_string(s: &str) -> String {
+    let lines = split_lines(s);
+    lines
+        .iter()
+        .map(|line| line.red().bold().to_string())
+        .collect::<Vec<String>>()
+        .join("\n")
+}
+
+/// Splits this `text` to a list of LF/CRLF separated lines.
+fn split_lines(text: &str) -> Vec<&str> {
+    regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
 
 impl From<HttpError> for RunnerError {
