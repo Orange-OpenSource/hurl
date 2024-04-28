@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4.1.4
         with:
           ref: master
           token: ${{ secrets.HURL_BOT_TOKEN }}
