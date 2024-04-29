@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4.1.4
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
@@ -54,7 +54,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4.1.4
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
@@ -71,7 +71,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4.1.4
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
@@ -88,12 +88,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4.1.4
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3.0.0
       - name: Create package
         uses: addnab/docker-run-action@v3
         with:
@@ -129,7 +129,7 @@ jobs:
               bin/release/sha256sum.sh --write target/upload/hurl-$VERSION-aarch64-unknown-linux-gnu.tar.gz
             echo "::endgroup::"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: release-generic-linux-aarch64-artifacts
           path: target/upload/*
