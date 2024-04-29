@@ -39,6 +39,7 @@ docs/*.md => packages/hurl/README.md
 4. generate crates.io README
 
 ```bash
+$ cd ..
 $ python3 bin/release/gen_manpage.py docs/manual/hurl.md > docs/manual/hurl.1
 $ python3 bin/release/gen_manpage.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
 $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md

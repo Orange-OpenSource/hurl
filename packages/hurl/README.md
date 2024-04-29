@@ -1296,7 +1296,11 @@ $ apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
 
 #### Arch Linux / Manjaro
 
-[`hurl-bin` package] for Arch Linux and derived distros is available via [AUR].
+Hurl is available on [extra] channel.
+
+```shell
+$ pacman -Sy hurl
+```
 
 #### NixOS / Nix
 
@@ -1477,12 +1481,11 @@ Please follow the [contrib on Windows section].
 [`--json` option]: https://hurl.dev/docs/manual.html#json
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
-[AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
-[`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
 [NixOS / Nix package]: https://search.nixos.org/packages?from=0&size=1&sort=relevance&type=packages&query=hurl
 [`conda-forge`]: https://conda-forge.org
 [`pixi`]: https://prefix.dev
+[extra]: https://archlinux.org/packages/extra/x86_64/hurl/
 
