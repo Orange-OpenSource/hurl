@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl --test --glob "tests_ok/test.*.hurl"
+# We're using --jobs 1 to fix the standard error order.
+hurl --test --jobs 1 --glob "tests_ok/test.*.hurl"

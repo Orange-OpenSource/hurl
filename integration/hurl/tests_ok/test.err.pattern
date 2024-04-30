@@ -1,6 +1,4 @@
-tests_ok~test.1.hurl: Running [1/3]
 tests_ok~test.1.hurl: Success (1 request(s) in ~~~ ms)
-tests_ok~test.2.hurl: Running [2/3]
 error: Assert body value
   --> tests_ok~test.2.hurl:8:1
    |
@@ -11,7 +9,6 @@ error: Assert body value
    |
 
 tests_ok~test.2.hurl: Failure (2 request(s) in ~~~ ms)
-tests_ok~test.3.hurl: Running [3/3]
 tests_ok~test.3.hurl: Success (1 request(s) in ~~~ ms)
 --------------------------------------------------------------------------------
 Executed files:  3
