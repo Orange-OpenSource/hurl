@@ -69,7 +69,8 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::max_redirects())
         .arg(commands::method())
         .arg(commands::retry())
-        .arg(commands::url());
+        .arg(commands::url())
+        .arg(commands::url_param());
 
     let params = args::split(s)?;
     let arg_matches = match command.try_get_matches_from_mut(params) {

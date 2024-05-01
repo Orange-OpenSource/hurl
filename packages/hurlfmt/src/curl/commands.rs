@@ -79,6 +79,13 @@ pub fn retry() -> clap::Arg {
 
 pub fn url() -> clap::Arg {
     clap::Arg::new("url")
+        .long("url")
+        .value_name("url")
+        .num_args(1)
+}
+
+pub fn url_param() -> clap::Arg {
+    clap::Arg::new("url_param")
         .help("Sets the url to use")
         .required(false)
         .num_args(1)

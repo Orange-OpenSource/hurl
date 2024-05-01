@@ -46,7 +46,11 @@ pub fn method(arg_matches: &ArgMatches) -> String {
 }
 
 pub fn url(arg_matches: &ArgMatches) -> String {
-    let s = get_string(arg_matches, "url").unwrap();
+    let s = if let Some(value) = get_string(arg_matches, "url") {
+        value
+    } else {
+        get_string(arg_matches, "url_param").unwrap()
+    };
     if !s.starts_with("http") {
         format!("https://{s}")
     } else {
