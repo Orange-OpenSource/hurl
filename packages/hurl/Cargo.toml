@@ -17,7 +17,7 @@ name = "hurl"
 vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
-base64 = "0.22.0"
+base64 = "0.22.1"
 brotli = "5.0.0"
 chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
 clap = { version = "4.5.4", features = ["cargo", "string", "wrap_help"] }
@@ -30,7 +30,7 @@ glob = "0.3.1"
 hex = "0.4.3"
 hex-literal = "0.4.1"
 hurl_core = { version = "5.0.0-SNAPSHOT", path = "../hurl_core" }
-libflate = "2.0.0"
+libflate = "2.1.0"
 libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
@@ -51,7 +51,7 @@ termion = "3.0.0"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.95"
+cc = "1.0.96"
 
 [lints]
 workspace = true
