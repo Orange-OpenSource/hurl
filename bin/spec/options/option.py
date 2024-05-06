@@ -84,6 +84,8 @@ class Option:
                     value_parser = v
                 elif key == "help":
                     help = v
+                    if help.endswith("."):
+                        raise Exception(f"{name}: help should not end with period")
                 elif key == "conflict":
                     conflict = [a.strip() for a in v.split(" ")]
                 elif key == "multi":
@@ -95,7 +97,7 @@ class Option:
                     elif v == "false":
                         cli_only = False
                     else:
-                        raise Exception("Expected true or false for cli attribute")
+                        raise Exception(f"{name}: Expected true or false for cli attribute")
                 elif key == "deprecated":
                     if v == "true":
                         deprecated = True
@@ -103,7 +105,7 @@ class Option:
                         deprecated = False
                     else:
                         raise Exception(
-                            "Expected true or false for deprecated attribute"
+                            f"{name}: Expected true or false for deprecated attribute"
                         )
                 elif key == "experimental":
                     if v == "true":
@@ -112,16 +114,16 @@ class Option:
                         experimental = False
                     else:
                         raise Exception(
-                            "Expected true or false for experimental attribute"
+                            f"{name}: Expected true or false for experimental attribute"
                         )
                 else:
-                    raise Exception("Invalid attribute " + key)
+                    raise Exception(f"{name}: Invalid attribute " + key)
 
         if name is None:
             raise Exception("missing name attribute")
 
         if long is None:
-            raise Exception("missing long attribute")
+            raise Exception(f"{name}: missing long attribute")
 
         return Option(
             name=name,
