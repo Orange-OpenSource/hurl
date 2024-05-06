@@ -6,7 +6,7 @@ from option import Option, parse_key_value
 
 class OptionParserTest(unittest.TestCase):
     def test_parse_key_value(self):
-        self.assertTrue(parse_key_value("xx") is None)
+        self.assertRaises(Exception, lambda: parse_key_value("xx"))
         self.assertEqual(parse_key_value("a: b"), ("a", "b"))
 
     def test_parse_connect_timeout(self):

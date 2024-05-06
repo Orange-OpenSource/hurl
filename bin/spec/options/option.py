@@ -1,56 +1,23 @@
 #!/usr/bin/env python3
+from dataclasses import dataclass
 from typing import *
 
 
+@dataclass
 class Option:
-    def __init__(
-        self,
-        name,
-        long,
-        short,
-        value,
-        value_default,
-        value_parser,
-        help,
-        conflict,
-        append,
-        cli_only,
-        deprecated,
-        experimental,
-        description,
-    ):
-        self.name = name
-        self.long = long
-        self.short = short
-        self.value = value
-        self.value_default = value_default
-        self.value_parser = value_parser
-        self.help = help
-        self.conflict = conflict
-        self.append = append
-        self.cli_only = cli_only
-        self.deprecated = deprecated
-        self.experimental = experimental
-        self.description = description
-
-    def __eq__(self, other):
-        if not isinstance(other, Option):
-            return False
-        return (
-            self.name == other.name
-            and self.long == other.long
-            and self.short == other.short
-            and self.value == other.value
-            and self.value_default == other.value_default
-            and self.value_parser == other.value_parser
-            and self.help == other.help
-            and self.conflict == other.conflict
-            and self.append == other.append
-            and self.deprecated == other.deprecated
-            and self.experimental == other.experimental
-            and self.description == other.description
-            and self.cli_only == other.cli_only
-        )
+    name: str
+    long: str
+    description: str
+    short: Optional[str] = None
+    value: Optional[str] = None
+    value_default: Optional[str] = None
+    value_parser: Optional[str] = None
+    help: Optional[str] = None
+    conflict: Optional[str] = None
+    append: bool = False
+    cli_only: bool = False
+    deprecated: bool = False
+    experimental: bool = False
 
     def __str__(self):
         s = "name: " + self.name
@@ -78,25 +45,6 @@ class Option:
         s += "\n---"
         s += "\n" + self.description
         return s
-
-    def __hash__(self):
-        return hash(
-            (
-                self.name,
-                self.long,
-                self.short,
-                self.value,
-                self.value_default,
-                self.value_parser,
-                self.help,
-                self.conflict,
-                self.append,
-                self.cli_only,
-                self.deprecated,
-                self.experimental,
-                self.description,
-            )
-        )
 
     @staticmethod
     def parse(s) -> "Option":
@@ -176,19 +124,19 @@ class Option:
             raise Exception("missing long attribute")
 
         return Option(
-            name,
-            long,
-            short,
-            value,
-            value_default,
-            value_parser,
-            help,
-            conflict,
-            append,
-            cli_only,
-            deprecated,
-            experimental,
-            description.strip(),
+            name=name,
+            long=long,
+            short=short,
+            value=value,
+            value_default=value_default,
+            value_parser=value_parser,
+            help=help,
+            conflict=conflict,
+            append=append,
+            cli_only=cli_only,
+            deprecated=deprecated,
+            experimental=experimental,
+            description=description.strip(),
         )
 
     @staticmethod
