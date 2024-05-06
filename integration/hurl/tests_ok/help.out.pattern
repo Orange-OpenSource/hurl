@@ -29,7 +29,7 @@ Options:
   -c, --cookie-jar <FILE>
           Write cookies to FILE after running the session (only for one session)
       --delay <MILLISECONDS>
-          Sets delay before each request. [default: 0]
+          Sets delay before each request [default: 0]
       --error-format <FORMAT>
           Control the format of error messages [default: short] [possible values: short, long]
       --file-root <DIR>
@@ -38,7 +38,7 @@ Options:
           Follow redirects
       --location-trusted
           Follow redirects but allows sending the name + password to all hosts that the site may
-          redirect to.
+          redirect to
       --from-entry <ENTRY_NUMBER>
           Execute Hurl file from ENTRY_NUMBER (starting at 1)
       --glob <GLOB>
@@ -108,8 +108,7 @@ Options:
       --retry-interval <MILLISECONDS>
           Interval in milliseconds before a retry [default: 1000]
       --ssl-no-revoke
-          (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens
-          the SSL security, and by using this flag you ask for exactly that.
+          (Windows) Tell Hurl to disable certificate revocation checks
       --test
           Activate test mode
       --to-entry <ENTRY_NUMBER>

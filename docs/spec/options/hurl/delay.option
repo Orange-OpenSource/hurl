@@ -3,6 +3,6 @@ long: delay
 value: MILLISECONDS
 value_default: 0
 value_parser: clap::value_parser!(u64)
-help: Sets delay before each request.
+help: Sets delay before each request
 ---
 Sets delay before each request.

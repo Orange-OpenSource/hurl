@@ -124,7 +124,7 @@ pub fn delay() -> clap::Arg {
         .value_name("MILLISECONDS")
         .default_value("0")
         .value_parser(clap::value_parser!(u64))
-        .help("Sets delay before each request.")
+        .help("Sets delay before each request")
         .num_args(1)
 }
 
@@ -165,7 +165,7 @@ pub fn follow_location() -> clap::Arg {
 pub fn follow_location_trusted() -> clap::Arg {
     clap::Arg::new("follow_location_trusted")
         .long("location-trusted")
-        .help("Follow redirects but allows sending the name + password to all hosts that the site may redirect to.")
+        .help("Follow redirects but allows sending the name + password to all hosts that the site may redirect to")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -452,7 +452,7 @@ pub fn retry_interval() -> clap::Arg {
 pub fn ssl_no_revoke() -> clap::Arg {
     clap::Arg::new("ssl_no_revoke")
         .long("ssl-no-revoke")
-        .help("(Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
+        .help("(Windows) Tell Hurl to disable certificate revocation checks")
         .action(clap::ArgAction::SetTrue)
 }
 

@@ -97,7 +97,9 @@ class Option:
                     elif v == "false":
                         cli_only = False
                     else:
-                        raise Exception(f"{name}: Expected true or false for cli attribute")
+                        raise Exception(
+                            f"{name}: Expected true or false for cli attribute"
+                        )
                 elif key == "deprecated":
                     if v == "true":
                         deprecated = True
