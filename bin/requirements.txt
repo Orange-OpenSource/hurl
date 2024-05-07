@@ -1,6 +1,6 @@
 black==24.3.0
 beautifulsoup4==4.12.2
-Flask==3.0.0
+Flask==3.0.3
 lxml==5.1.0
 mypy==1.8.0
 requests==2.31.0
