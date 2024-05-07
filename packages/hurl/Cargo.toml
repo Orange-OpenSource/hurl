@@ -45,13 +45,13 @@ lazy_static = "1.4.0"
 uuid = { version = "1.8.0", features = ["v4" , "fast-rng"] }
 
 [target.'cfg(unix)'.dependencies]
-termion = "3.0.0"
+termion = "4.0.0"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.96"
+cc = "1.0.97"
 
 [lints]
 workspace = true
