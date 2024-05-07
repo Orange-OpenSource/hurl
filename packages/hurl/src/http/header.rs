@@ -201,11 +201,9 @@ mod tests {
         }
 
         // Test into_iter()
-        let mut i = 0;
-        for h in &headers {
+        for (i, h) in (&headers).into_iter().enumerate() {
             assert_eq!(h.name, data[i].0);
             assert_eq!(h.value, data[i].1);
-            i += 1;
         }
     }
 }

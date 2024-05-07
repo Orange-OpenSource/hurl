@@ -213,7 +213,7 @@ mod tests {
         stdout.write_all(b"Hello").unwrap();
         stdout.write_all(b" ").unwrap();
         stdout.write_all(b"World!").unwrap();
-        assert_eq!(stdout.buffer(), b"Hello World!")
+        assert_eq!(stdout.buffer(), b"Hello World!");
     }
 
     #[test]
@@ -223,6 +223,6 @@ mod tests {
         stderr.set_progress_bar("some progress...\r");
         stderr.eprintln("tutu");
 
-        assert_eq!(stderr.buffer(), "toto\ntutu\n")
+        assert_eq!(stderr.buffer(), "toto\ntutu\n");
     }
 }

@@ -245,7 +245,7 @@ pub fn junit_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
 
 pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
     match get::<i32>(arg_matches, "max_redirects").unwrap() {
-        m if m == -1 => None,
+        -1 => None,
         m => Some(m as usize),
     }
 }

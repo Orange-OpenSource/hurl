@@ -185,7 +185,7 @@ mod tests {
                             headers,
                             body: b"{\"say\": \"Hello World!\"}".into(),
                             duration: Default::default(),
-                            url: "".to_string(),
+                            url: String::new(),
                             certificate: None,
                         },
                         timings: Default::default(),

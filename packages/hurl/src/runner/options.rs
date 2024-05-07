@@ -415,7 +415,7 @@ mod tests {
         // {{verbose}}
         BooleanOption::Expression(Expr {
             space0: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             variable: Variable {
@@ -423,7 +423,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         })
@@ -433,7 +433,7 @@ mod tests {
         // {{retry}}
         NaturalOption::Expression(Expr {
             space0: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             variable: Variable {
@@ -441,7 +441,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         })

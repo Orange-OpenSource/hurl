@@ -717,7 +717,7 @@ mod tests {
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                     comment: None,

@@ -128,8 +128,8 @@ fn number_components(s: &str) -> (bool, &str, &str) {
             None => (false, s.trim_start_matches('0'), ""),
             Some(index) => (
                 false,
-                &s[..index].trim_start_matches('0'),
-                &s[(index + 1)..].trim_end_matches('0'),
+                (s[..index].trim_start_matches('0')),
+                (s[(index + 1)..].trim_end_matches('0')),
             ),
         },
         Some(s) => {

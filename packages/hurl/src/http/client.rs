@@ -1169,7 +1169,7 @@ mod tests {
         );
         assert_eq!(
             parse_cert_password("foobar:"),
-            ("foobar".to_string(), Some("".to_string()))
+            ("foobar".to_string(), Some(String::new()))
         );
         assert_eq!(
             parse_cert_password("foobar\\"),
