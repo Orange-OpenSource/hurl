@@ -539,6 +539,8 @@ to-date-filter: "toDate"
 
 to-int-filter: "toInt"
 
+to-float-filter: "toFloat"
+
 url-decode-filter: "urlDecode"
 
 url-encode-filter: "urlEncode"

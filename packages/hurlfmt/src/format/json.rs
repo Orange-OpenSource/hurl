@@ -721,6 +721,9 @@ impl ToJson for FilterValue {
             FilterValue::ToInt => {
                 attributes.push(("type".to_string(), JValue::String("toInt".to_string())));
             }
+            FilterValue::ToFloat => {
+                attributes.push(("type".to_string(), JValue::String("toFloat".to_string())));
+            }
             FilterValue::XPath { expr, .. } => {
                 attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));

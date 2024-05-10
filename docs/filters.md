@@ -238,6 +238,17 @@ HTTP 200
 jsonpath "$.id" toInt == 123
 ```
 
+### toFloat
+
+Converts to float number.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+jsonpath "$.pi" toFloat == 3.14
+```
+
 ### urlDecode
 
 Replaces %xx escapes with their single-character equivalent.

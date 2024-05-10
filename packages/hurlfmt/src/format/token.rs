@@ -1042,6 +1042,7 @@ impl Tokenizable for Filter {
                 tokens
             }
             FilterValue::ToInt => vec![Token::FilterType(String::from("toInt"))],
+            FilterValue::ToFloat => vec![Token::FilterType(String::from("toFloat"))],
             FilterValue::XPath { space0, expr } => {
                 let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("xpath"))];
                 tokens.append(&mut space0.tokenize());

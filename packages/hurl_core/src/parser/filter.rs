@@ -65,6 +65,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             replace_filter,
             split_filter,
             to_int_filter,
+            to_float_filter,
             to_date_filter,
             url_decode_filter,
             url_encode_filter,
@@ -178,6 +179,11 @@ fn to_date_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn to_int_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("toInt", reader)?;
     Ok(FilterValue::ToInt)
+}
+
+fn to_float_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("toFloat", reader)?;
+    Ok(FilterValue::ToFloat)
 }
 
 fn url_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

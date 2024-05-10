@@ -38,3 +38,4 @@ mod to_int;
 mod url_decode;
 mod url_encode;
 mod xpath;
+mod to_float;

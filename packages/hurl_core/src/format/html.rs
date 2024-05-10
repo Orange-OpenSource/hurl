@@ -829,6 +829,7 @@ impl HtmlFormatter {
                 self.fmt_template(fmt);
             }
             FilterValue::ToInt => self.fmt_span("filter-type", "toInt"),
+            FilterValue::ToFloat => self.fmt_span("filter-type", "toFloat"),
             FilterValue::UrlDecode => self.fmt_span("filter-type", "urlDecode"),
             FilterValue::UrlEncode => self.fmt_span("filter-type", "urlEncode"),
             FilterValue::XPath { space0, expr } => {
