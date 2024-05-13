@@ -66,6 +66,7 @@ pub struct CliOptions {
     pub interactive: bool,
     pub ip_resolve: Option<IpResolve>,
     pub jobs: Option<usize>,
+    pub json_report_dir: Option<PathBuf>,
     pub junit_file: Option<PathBuf>,
     pub max_filesize: Option<u64>,
     pub max_redirect: Option<usize>,
@@ -206,6 +207,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::path_as_is())
         .arg(commands::proxy())
         .arg(commands::report_html())
+        .arg(commands::report_json())
         .arg(commands::report_junit())
         .arg(commands::report_tap())
         .arg(commands::resolve())
@@ -265,6 +267,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let insecure = matches::insecure(arg_matches);
     let interactive = matches::interactive(arg_matches);
     let ip_resolve = matches::ip_resolve(arg_matches);
+    let json_report_dir = matches::json_report_dir(arg_matches)?;
     let junit_file = matches::junit_file(arg_matches);
     let max_filesize = matches::max_filesize(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
@@ -319,6 +322,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         insecure,
         interactive,
         ip_resolve,
+        json_report_dir,
         junit_file,
         max_filesize,
         max_redirect,

@@ -60,6 +60,7 @@ _hurl() {
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
     '--report-html[Generate HTML report to DIR]: :' \
+    '--report-json[Generate JSON report to DIR]: :' \
     '--report-junit[Write a JUnit XML report to FILE]: :_files' \
     '--report-tap[Write a TAP report to FILE]: :_files' \
     '*--resolve[Provide a custom address for a specific HOST and PORT pair]: :' \

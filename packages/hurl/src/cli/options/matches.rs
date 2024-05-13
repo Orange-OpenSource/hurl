@@ -254,6 +254,30 @@ pub fn jobs(arg_matches: &ArgMatches) -> Option<usize> {
     get::<u32>(arg_matches, "jobs").map(|m| m as usize)
 }
 
+pub fn json_report_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsError> {
+    if let Some(dir) = get::<String>(arg_matches, "report_json") {
+        let path = Path::new(&dir);
+        if !path.exists() {
+            match std::fs::create_dir_all(path) {
+                Err(_) => Err(CliOptionsError::Error(format!(
+                    "JSON dir {} can not be created",
+                    path.display()
+                ))),
+                Ok(_) => Ok(Some(path.to_path_buf())),
+            }
+        } else if path.is_dir() {
+            Ok(Some(path.to_path_buf()))
+        } else {
+            return Err(CliOptionsError::Error(format!(
+                "{} is not a valid directory",
+                path.display()
+            )));
+        }
+    } else {
+        Ok(None)
+    }
+}
+
 pub fn netrc(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "netrc")
 }

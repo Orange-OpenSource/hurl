@@ -409,6 +409,14 @@ If the HTML report already exists, it will be updated with the new test results.
 
 This is a cli-only option.
 
+### --report-json <DIR> {#report-json}
+
+Generate JSON report in DIR.
+
+If the JSON report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
 ### --report-junit <FILE> {#report-junit}
 
 Generate JUnit File.

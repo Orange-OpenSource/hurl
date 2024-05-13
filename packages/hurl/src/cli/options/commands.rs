@@ -403,6 +403,14 @@ pub fn report_html() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn report_json() -> clap::Arg {
+    clap::Arg::new("report_json")
+        .long("report-json")
+        .value_name("DIR")
+        .help("Generate JSON report to DIR")
+        .num_args(1)
+}
+
 pub fn report_junit() -> clap::Arg {
     clap::Arg::new("report_junit")
         .long("report-junit")

@@ -65,6 +65,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--path-as-is', 'path-as-is', [CompletionResultType]::ParameterName, 'Tell Hurl to not handle sequences of /../ or /./ in the given URL path')
             [CompletionResult]::new('--proxy', 'proxy', [CompletionResultType]::ParameterName, 'Use proxy on given PROTOCOL/HOST/PORT')
             [CompletionResult]::new('--report-html', 'report-html', [CompletionResultType]::ParameterName, 'Generate HTML report to DIR')
+            [CompletionResult]::new('--report-json', 'report-json', [CompletionResultType]::ParameterName, 'Generate JSON report to DIR')
             [CompletionResult]::new('--report-junit', 'report-junit', [CompletionResultType]::ParameterName, 'Write a JUnit XML report to FILE')
             [CompletionResult]::new('--report-tap', 'report-tap', [CompletionResultType]::ParameterName, 'Write a TAP report to FILE')
             [CompletionResult]::new('--resolve', 'resolve', [CompletionResultType]::ParameterName, 'Provide a custom address for a specific HOST and PORT pair')

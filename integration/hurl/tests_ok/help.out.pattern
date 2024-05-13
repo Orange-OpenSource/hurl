@@ -97,6 +97,8 @@ Options:
           Use proxy on given PROTOCOL/HOST/PORT
       --report-html <DIR>
           Generate HTML report to DIR
+      --report-json <DIR>
+          Generate JSON report to DIR
       --report-junit <FILE>
           Write a JUnit XML report to FILE
       --report-tap <FILE>

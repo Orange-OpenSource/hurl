@@ -81,6 +81,8 @@ The input Hurl files (HTML version) are also included and are easily accessed fr
     <img class="u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/hurl-html-file.png" width="380" alt="Hurl HTML file">
 </div>
 
+### JSON Report
+
 ### JUnit Report
 
 A JUnit report can be produced by using the [`--report-junit FILE`] option.
