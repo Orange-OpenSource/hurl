@@ -23,7 +23,7 @@ const crypto = require("crypto");
 const rimraf = require("rimraf");
 const axios = require("axios");
 const tar = require("tar");
-const extract = require("extract-zip")
+const extract = require("extract-zip");
 
 
 /**
@@ -49,9 +49,7 @@ function install(url, dir, checksum) {
                 // Linux, macOS archives are tar.gz files.
                 if (url.endsWith(".tar.gz")) {
                     const archive = path.join(dir, "archive.tar.gz");
-                    const sink = res.data.pipe(
-                        fs.createWriteStream(archive)
-                    )
+                    const sink = res.data.pipe(fs.createWriteStream(archive));
                     sink.on("finish", () => {
                         verifyCheckSum(archive, checksum);
                         tar.x({ strip: 1, C: dir, file: archive });
@@ -64,7 +62,7 @@ function install(url, dir, checksum) {
                     const archive = path.join(dir, "archive.zip");
                     const sink = res.data.pipe(
                         fs.createWriteStream(archive)
-                    )
+                    );
                     sink.on("finish", () => {
                         verifyCheckSum(archive, checksum);
                         extract(archive, {dir: dir})
@@ -96,7 +94,7 @@ function verifyCheckSum(file, expectedChecksum) {
     const checksum = sha256(file);
     if (expectedChecksum !== checksum) {
         console.error(`Downloaded archive checksum didn't match the expected checksum (actual: ${checksum}, expected ${expectedChecksum}`);
-        process.exit(1)
+        process.exit(1);
     }
 }
 

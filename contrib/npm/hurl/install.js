@@ -7,7 +7,7 @@ const archive = require("./archive");
 //const {version} = require("./package.json");
 const version = "4.3.0";
 
-const supportedPlatforms = require("./platform.json")
+const supportedPlatforms = require("./platform.json");
 
 function error(msg) {
     console.error(msg);
@@ -18,7 +18,7 @@ function getPlatformMetadata() {
     const type = os.type();
     const architecture = os.arch();
 
-    for (let supportedPlatform of supportedPlatforms) {
+    for (const supportedPlatform of supportedPlatforms) {
         if (type === supportedPlatform.type &&
             architecture === supportedPlatform.architecture
         ) {
