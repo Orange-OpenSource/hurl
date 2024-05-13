@@ -31,7 +31,10 @@ pub fn write_json(
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
 ) -> Result<(), Error> {
-    let json_result = hurl_result.to_json(content, filename_in);
+    let json_result = match hurl_result.to_json(content, filename_in, None) {
+        Ok(res) => res,
+        Err(err) => return Err(Error::new(&err.to_string())),
+    };
     let serialized = serde_json::to_string(&json_result).unwrap();
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();

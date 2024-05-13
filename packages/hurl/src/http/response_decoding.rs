@@ -27,11 +27,15 @@ use encoding::DecoderTrap;
 
 use crate::http::{mimetype, HttpError, Response};
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ContentEncoding {
+    /// A format using the Brotli algorithm structure (defined in RFC 7932).
     Brotli,
+    /// A format using the Lempel-Ziv coding (LZ77), with a 32-bit CRC.
     Gzip,
+    /// Using the zlib structure (defined in RFC 1950) with the deflate compression algorithm.
     Deflate,
+    /// No encoding.
     Identity,
 }
 
@@ -76,6 +80,16 @@ impl Response {
     /// Returns true if response is an HTML response.
     pub fn is_html(&self) -> bool {
         self.headers.content_type().map_or(false, mimetype::is_html)
+    }
+
+    /// Returns true if response is a JSON response.
+    pub fn is_json(&self) -> bool {
+        self.headers.content_type().map_or(false, mimetype::is_json)
+    }
+
+    /// Returns true if response is a XML response.
+    pub fn is_xml(&self) -> bool {
+        self.headers.content_type().map_or(false, mimetype::is_xml)
     }
 
     /// Decompresses HTTP body response.

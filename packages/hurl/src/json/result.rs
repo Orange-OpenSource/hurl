@@ -18,6 +18,11 @@
 use chrono::{DateTime, SecondsFormat, Utc};
 use hurl_core::ast::SourceInfo;
 use serde_json::Number;
+use std::fs::File;
+use std::io;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use uuid::Uuid;
 
 use crate::http::{
     Call, Certificate, Cookie, Header, HttpVersion, Param, Request, RequestCookie, Response,
@@ -29,10 +34,16 @@ use crate::util::logger;
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.
     ///
-    /// Note: `content` is passed to this method to save asserts and
-    /// errors messages (with lines and columns). This parameter will be removed
-    /// soon and the original content will be accessible through the [`HurlResult`] instance.
-    pub fn to_json(&self, content: &str, filename: &Input) -> serde_json::Value {
+    /// Note: `content` is passed to this method to save asserts and errors messages (with lines
+    /// and columns). This parameter will be removed soon and the original content will be
+    /// accessible through the [`HurlResult`] instance.
+    /// An optional directory `response_dir` can be used to save HTTP response.
+    pub fn to_json(
+        &self,
+        content: &str,
+        filename: &Input,
+        response_dir: Option<&Path>,
+    ) -> Result<serde_json::Value, io::Error> {
         let mut map = serde_json::Map::new();
         map.insert(
             "filename".to_string(),
@@ -41,8 +52,8 @@ impl HurlResult {
         let entries = self
             .entries
             .iter()
-            .map(|e| e.to_json(filename, content))
-            .collect();
+            .map(|e| e.to_json(filename, content, response_dir))
+            .collect::<Result<_, _>>()?;
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
         map.insert("success".to_string(), serde_json::Value::Bool(self.success));
         map.insert(
@@ -51,12 +62,19 @@ impl HurlResult {
         );
         let cookies = self.cookies.iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
-        serde_json::Value::Object(map)
+        Ok(serde_json::Value::Object(map))
     }
 }
 
 impl EntryResult {
-    fn to_json(&self, filename: &Input, content: &str) -> serde_json::Value {
+    /// Serializes an [`EntryResult`] to a JSON representation, optionally saving HTTP response in
+    /// `response_dir` directory.
+    fn to_json(
+        &self,
+        filename: &Input,
+        content: &str,
+        response_dir: Option<&Path>,
+    ) -> Result<serde_json::Value, io::Error> {
         let mut map = serde_json::Map::new();
 
         map.insert(
@@ -67,7 +85,11 @@ impl EntryResult {
             "line".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.source_info.start.line)),
         );
-        let calls = self.calls.iter().map(|c| c.to_json()).collect();
+        let calls = self
+            .calls
+            .iter()
+            .map(|c| c.to_json(response_dir))
+            .collect::<Result<_, _>>()?;
         map.insert("calls".to_string(), calls);
         let captures = self.captures.iter().map(|c| c.to_json()).collect();
         map.insert("captures".to_string(), captures);
@@ -81,21 +103,24 @@ impl EntryResult {
             "time".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.time_in_ms as u64)),
         );
-        serde_json::Value::Object(map)
+        Ok(serde_json::Value::Object(map))
     }
 }
 
 impl Call {
-    fn to_json(&self) -> serde_json::Value {
+    /// Serializes a [`Call`] to a JSON representation, optionally saving HTTP response in
+    /// `response_dir` directory.
+    fn to_json(&self, response_dir: Option<&Path>) -> Result<serde_json::Value, io::Error> {
         let mut map = serde_json::Map::new();
         map.insert("request".to_string(), self.request.to_json());
-        map.insert("response".to_string(), self.response.to_json());
+        map.insert("response".to_string(), self.response.to_json(response_dir)?);
         map.insert("timings".to_string(), self.timings.to_json());
-        serde_json::Value::Object(map)
+        Ok(serde_json::Value::Object(map))
     }
 }
 
 impl Request {
+    /// Serializes a [`Request`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -124,7 +149,9 @@ impl Request {
 }
 
 impl Response {
-    fn to_json(&self) -> serde_json::Value {
+    /// Serializes a [`Response`] to a JSON representation, optionally saving HTTP response in
+    /// `response_dir` directory.
+    fn to_json(&self, response_dir: Option<&Path>) -> Result<serde_json::Value, io::Error> {
         let mut map = serde_json::Map::new();
         map.insert("httpVersion".to_string(), self.version.to_json());
         map.insert(
@@ -138,11 +165,19 @@ impl Response {
         if let Some(certificate) = &self.certificate {
             map.insert("certificate".to_string(), certificate.to_json());
         }
-        serde_json::Value::Object(map)
+        if let Some(response_dir) = response_dir {
+            let path = write_response(self, response_dir)?;
+            map.insert(
+                "body".to_string(),
+                serde_json::Value::String(path.display().to_string()),
+            );
+        }
+        Ok(serde_json::Value::Object(map))
     }
 }
 
 impl Header {
+    /// Serializes a [`Header`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -158,6 +193,7 @@ impl Header {
 }
 
 impl HttpVersion {
+    /// Serializes a [`HttpVersion`] to a JSON representation.
     fn to_json(self) -> serde_json::Value {
         let value = match self {
             HttpVersion::Http10 => "HTTP/1.0",
@@ -170,6 +206,7 @@ impl HttpVersion {
 }
 
 impl Param {
+    /// Serializes a [`Param`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -185,6 +222,7 @@ impl Param {
 }
 
 impl RequestCookie {
+    /// Serializes a [`RequestCookie`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -200,6 +238,7 @@ impl RequestCookie {
 }
 
 impl ResponseCookie {
+    /// Serializes a [`ResponseCookie`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -252,6 +291,7 @@ impl ResponseCookie {
 }
 
 impl Certificate {
+    /// Serializes a [`Certificate`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -273,6 +313,7 @@ impl Certificate {
 }
 
 impl Timings {
+    /// Serializes a [`Timings`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -318,6 +359,7 @@ impl Timings {
 }
 
 impl CaptureResult {
+    /// Serializes a [`CaptureResult`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -330,6 +372,7 @@ impl CaptureResult {
 }
 
 impl AssertResult {
+    /// Serializes an [`AssertResult`] to a JSON representation.
     fn to_json(
         &self,
         filename: &Input,
@@ -361,6 +404,7 @@ impl AssertResult {
 }
 
 impl Cookie {
+    /// Serializes a [`Cookie`] to a JSON representation.
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
@@ -395,6 +439,31 @@ impl Cookie {
     }
 }
 
+/// Serializes a [`DateTime<Utc>`] to a JSON representation.
 fn json_date(value: DateTime<Utc>) -> serde_json::Value {
     serde_json::Value::String(value.to_string())
+}
+
+/// Write the HTTP `response` body to directory `dir`.
+fn write_response(response: &Response, dir: &Path) -> Result<PathBuf, io::Error> {
+    let extension = if response.is_json() {
+        Some("json")
+    } else if response.is_xml() {
+        Some("xml")
+    } else if response.is_html() {
+        Some("html")
+    } else {
+        None
+    };
+    let id = Uuid::new_v4();
+    let relative_path = format!("{id}_response");
+    let relative_path = Path::new(&relative_path);
+    let relative_path = match extension {
+        Some(ext) => relative_path.with_extension(ext),
+        None => relative_path.to_path_buf(),
+    };
+    let path = dir.join(relative_path.clone());
+    let mut file = File::create(path)?;
+    file.write_all(&response.body)?;
+    Ok(relative_path)
 }

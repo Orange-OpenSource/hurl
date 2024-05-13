@@ -16,6 +16,9 @@
  *
  */
 
+// TODO: maybe add a proper MimeType enum (see <https://github.com/hyperium/mime>)
+// as implementation / api example.
+
 /// Returns true if binary data with this `content_type` can be decoded as text.
 pub fn is_kind_of_text(content_type: &str) -> bool {
     let content_types = [
@@ -32,6 +35,17 @@ pub fn is_kind_of_text(content_type: &str) -> bool {
 /// Returns true if this `content_type` is HTML.
 pub fn is_html(content_type: &str) -> bool {
     content_type.starts_with("text/html")
+}
+
+/// Returns true if this `content_type` is HTML.
+pub fn is_xml(content_type: &str) -> bool {
+    content_type.starts_with("text/xml") || content_type.starts_with("application/xml")
+}
+
+/// Returns true if this `content_type` is JSON.
+pub fn is_json(content_type: &str) -> bool {
+    content_type.starts_with("application/json")
+        || content_type.starts_with("application/problem+json")
 }
 
 /// Extracts charset from mime-type String
