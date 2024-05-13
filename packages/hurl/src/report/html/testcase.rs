@@ -53,7 +53,7 @@ impl Testcase {
         }
     }
 
-    /// Exports a [`Testcase`] to HTML.
+    /// Exports a [`Testcase`] to HTML in the directory `dir`.
     ///
     /// It will create three HTML files:
     /// - an HTML view of the Hurl source file (with potential errors and syntax colored),
@@ -63,7 +63,7 @@ impl Testcase {
         &self,
         content: &str,
         entries: &[EntryResult],
-        dir_path: &Path,
+        dir: &Path,
     ) -> Result<(), crate::report::Error> {
         // We parse the content as we'll reuse the AST to construct the HTML source file, and
         // the waterfall.
@@ -71,19 +71,19 @@ impl Testcase {
         let hurl_file = parser::parse_hurl_file(content).unwrap();
 
         // We create the timeline view.
-        let output_file = dir_path.join("store").join(self.timeline_filename());
+        let output_file = dir.join(self.timeline_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_timeline_html(&hurl_file, content, entries);
         file.write_all(html.as_bytes())?;
 
         // Then create the run view.
-        let output_file = dir_path.join("store").join(self.run_filename());
+        let output_file = dir.join(self.run_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_run_html(&hurl_file, content, entries);
         file.write_all(html.as_bytes())?;
 
         // And create the source view.
-        let output_file = dir_path.join("store").join(self.source_filename());
+        let output_file = dir.join(self.source_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_source_html(&hurl_file, content);
         file.write_all(html.as_bytes())?;

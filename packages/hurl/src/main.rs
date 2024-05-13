@@ -25,7 +25,7 @@ use std::{env, process, thread};
 
 use crate::cli::{BaseLogger, CliError};
 use colored::control;
-use hurl::report::{html, junit, tap};
+use hurl::report::{html, json, junit, tap};
 use hurl::runner;
 use hurl::runner::{HurlResult, Input};
 
@@ -146,21 +146,25 @@ fn export_results(
     opts: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<(), CliError> {
-    if let Some(filename) = &opts.junit_file {
-        logger.debug(&format!("Writing JUnit report to {}", filename.display()));
-        create_junit_report(runs, filename)?;
+    if let Some(file) = &opts.junit_file {
+        logger.debug(&format!("Writing JUnit report to {}", file.display()));
+        create_junit_report(runs, file)?;
     }
-    if let Some(filename) = &opts.tap_file {
-        logger.debug(&format!("Writing TAP report to {}", filename.display()));
-        create_tap_report(runs, filename)?;
+    if let Some(file) = &opts.tap_file {
+        logger.debug(&format!("Writing TAP report to {}", file.display()));
+        create_tap_report(runs, file)?;
     }
     if let Some(dir) = &opts.html_dir {
         logger.debug(&format!("Writing HTML report to {}", dir.display()));
         create_html_report(runs, dir)?;
     }
-    if let Some(filename) = &opts.cookie_output_file {
-        logger.debug(&format!("Writing cookies to {}", filename.display()));
-        create_cookies_file(runs, filename)?;
+    if let Some(dir) = &opts.json_report_dir {
+        logger.debug(&format!("Writing JSON report to {}", dir.display()));
+        create_json_report(runs, dir)?;
+    }
+    if let Some(file) = &opts.cookie_output_file {
+        logger.debug(&format!("Writing cookies to {}", file.display()));
+        create_cookies_file(runs, file)?;
     }
     Ok(())
 }
@@ -188,15 +192,33 @@ fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> 
 /// Create an HTML report for this run.
 fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
-    std::fs::create_dir_all(dir_path.join("store")).unwrap();
+    let store_path = dir_path.join("store");
+    std::fs::create_dir_all(&store_path)?;
 
     let mut testcases = vec![];
     for run in runs.iter() {
-        let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
-        testcase.write_html(&run.content, &run.hurl_result.entries, dir_path)?;
+        let result = &run.hurl_result;
+        let testcase = html::Testcase::from(result, &run.filename);
+        testcase.write_html(&run.content, &result.entries, &store_path)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;
+    Ok(())
+}
+
+/// Create an JSON report for this run.
+fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
+    // We ensure that the containing folder exists.
+    let store_path = dir_path.join("store");
+    std::fs::create_dir_all(&store_path)?;
+
+    let testcases = runs
+        .iter()
+        .map(|r| json::Testcase::new(&r.hurl_result, &r.content, &r.filename))
+        .collect::<Vec<_>>();
+
+    let index_path = dir_path.join("index.json");
+    json::write_report(&index_path, &testcases, &store_path)?;
     Ok(())
 }
 
