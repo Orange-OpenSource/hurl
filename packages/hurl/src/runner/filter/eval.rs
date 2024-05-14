@@ -32,8 +32,8 @@ use crate::runner::filter::regex::eval_regex;
 use crate::runner::filter::replace::eval_replace;
 use crate::runner::filter::split::eval_split;
 use crate::runner::filter::to_date::eval_to_date;
-use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::to_float::eval_to_float;
+use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::xpath::eval_xpath;
@@ -108,8 +108,8 @@ pub fn eval_filter(
         FilterValue::ToDate { fmt, .. } => {
             eval_to_date(value, fmt, variables, filter.source_info, in_assert)
         }
-        FilterValue::ToInt => eval_to_int(value, filter.source_info, in_assert),
         FilterValue::ToFloat => eval_to_float(value, filter.source_info, in_assert),
+        FilterValue::ToInt => eval_to_int(value, filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
         FilterValue::UrlEncode => eval_url_encode(value, filter.source_info, in_assert),
         FilterValue::XPath { expr, .. } => {

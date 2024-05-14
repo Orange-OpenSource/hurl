@@ -226,6 +226,16 @@ jsonpath "$.published" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
 jsonpath "$.published" toDate "%+" format "%A" == "Monday" # %+ can be used to parse ISO 8601 / RFC 3339
 ```
 
+### toFloat
+
+Converts to float number.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+jsonpath "$.pi" toFloat == 3.14
+```
 
 ### toInt
 
@@ -236,17 +246,6 @@ GET https://example.org/foo
 HTTP 200
 [Asserts]
 jsonpath "$.id" toInt == 123
-```
-
-### toFloat
-
-Converts to float number.
-
-```hurl
-GET https://example.org/foo
-HTTP 200
-[Asserts]
-jsonpath "$.pi" toFloat == 3.14
 ```
 
 ### urlDecode

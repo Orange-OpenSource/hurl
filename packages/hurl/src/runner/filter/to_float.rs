@@ -19,11 +19,11 @@ use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Error, Number, RunnerError, Value};
 
- pub fn eval_to_float(
+pub fn eval_to_float(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
- ) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::Number(Number::Float(v)) => Ok(Some(Value::Number(Number::Float(*v)))),
         Value::Number(Number::Integer(v)) => Ok(Some(Value::Number(Number::Float(*v as f64)))),
@@ -39,10 +39,10 @@ use crate::runner::{Error, Number, RunnerError, Value};
             Err(Error::new(source_info, inner, assert))
         }
     }
- }
+}
 
- #[cfg(test)]
- pub mod tests {
+#[cfg(test)]
+pub mod tests {
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Number, RunnerError, Value};
@@ -58,9 +58,9 @@ use crate::runner::{Error, Number, RunnerError, Value};
         };
         assert_eq!(
             eval_filter(
-                &filter, 
-                &Value::String("3.1415".to_string()), 
-                &variable, 
+                &filter,
+                &Value::String("3.1415".to_string()),
+                &variable,
                 false
             )
             .unwrap()
@@ -121,14 +121,9 @@ use crate::runner::{Error, Number, RunnerError, Value};
             err.inner,
             RunnerError::FilterInvalidInput("string <3x.1415>".to_string())
         );
-        let err = eval_filter(
-            &filter, 
-            &Value::Bool(true), 
-            &variable, 
-            false
-        )
-        .err()
-        .unwrap();
+        let err = eval_filter(&filter, &Value::Bool(true), &variable, false)
+            .err()
+            .unwrap();
         assert_eq!(
             err.inner,
             RunnerError::FilterInvalidInput("bool <true>".to_string())

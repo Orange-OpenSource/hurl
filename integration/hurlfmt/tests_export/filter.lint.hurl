@@ -17,8 +17,8 @@ body regex /Hello ([0-9]+)!/ == "Bob"                                           
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"                      # replace
 jsonpath "$.ips" split ", " count == 3                                                      # split
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000                    # toDate
-jsonpath "$.id" toInt == 123                                                                # toInt
 jsonpath "$.pi" toFloat == 3.14                                                             # toFloat
+jsonpath "$.id" toInt == 123                                                                # toInt
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"                        # urlDecode
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B" # urlEncode
 bytes decode "iso-8859-1" xpath "string(//p)" == "Hello"                                    # xpath

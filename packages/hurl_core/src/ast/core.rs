@@ -906,8 +906,8 @@ pub enum FilterValue {
         space0: Whitespace,
         fmt: Template,
     },
-    ToInt,
     ToFloat,
+    ToInt,
     UrlDecode,
     UrlEncode,
     XPath {
