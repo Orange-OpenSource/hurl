@@ -651,6 +651,7 @@ path-as-is: true        # do not handle sequences of /../ or /./ in URL path
 skip: false             # skip this request
 unix-socket: sock       # use Unix socket for transfer
 user: bob:secret        # use basic authentication
+proxy: my.proxy:8012    # define proxy (host:port where host can be an IP address)
 variable: country=Italy # define variable country
 variable: planet=Earth  # define variable planet
 verbose: true           # allow verbose output
