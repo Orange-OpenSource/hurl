@@ -10,7 +10,7 @@ Precompiled binary is available at [Hurl latest GitHub release]:
 $ INSTALL_DIR=/tmp
 $ VERSION=4.3.0
 $ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-$VERSION:$PATH
+$ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 ```
 
 #### Debian / Ubuntu
