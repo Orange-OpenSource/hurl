@@ -54,7 +54,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     let c = reader.peek();
     match c {
         Some('<') => {}
-        _ => return Err(Error::new(reader.state.pos, true, ParseError::Xml)),
+        _ => return Err(ParseError::new(reader.state.pos, true, ParseErrorKind::Xml)),
     }
 
     let mut buf = String::new();
@@ -90,7 +90,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             let ret = xmlParseChunk(context, bytes, count, end);
             if ret != 0 {
                 xmlFreeParserCtxt(context);
-                return Err(Error::new(prev_pos, false, ParseError::Xml));
+                return Err(ParseError::new(prev_pos, false, ParseErrorKind::Xml));
             }
 
             // End of the XML body is detected with a closing element event and depth of the tree.
@@ -221,19 +221,19 @@ mod tests {
         let mut reader = Reader::new("");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml);
+        assert_eq!(error.kind, ParseErrorKind::Xml);
         assert!(error.recoverable);
 
         let mut reader = Reader::new("x");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml);
+        assert_eq!(error.kind, ParseErrorKind::Xml);
         assert!(error.recoverable);
 
         let mut reader = Reader::new("<<");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.inner, ParseError::Xml);
+        assert_eq!(error.kind, ParseErrorKind::Xml);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("<users><user /></users");
@@ -245,7 +245,7 @@ mod tests {
                 column: 22
             }
         );
-        assert_eq!(error.inner, ParseError::Xml);
+        assert_eq!(error.kind, ParseErrorKind::Xml);
 
         let mut reader = Reader::new("<users aa><user /></users");
         let error = parse(&mut reader).err().unwrap();
@@ -256,7 +256,7 @@ mod tests {
                 column: 10
             }
         );
-        assert_eq!(error.inner, ParseError::Xml);
+        assert_eq!(error.kind, ParseErrorKind::Xml);
     }
 
     #[test]

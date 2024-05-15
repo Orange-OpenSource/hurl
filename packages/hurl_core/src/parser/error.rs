@@ -22,14 +22,14 @@ use std::cmp;
 
 /// Represents a parser error.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error {
+pub struct ParseError {
     pub pos: Pos,
     pub recoverable: bool,
-    pub inner: ParseError,
+    pub kind: ParseErrorKind,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ParseError {
+pub enum ParseErrorKind {
     DuplicateSection,
     EscapeChar,
     Expecting { value: String },
@@ -69,28 +69,28 @@ pub enum JsonErrorVariant {
     EmptyElement,
 }
 
-impl Error {
+impl ParseError {
     /// Creates a new error for the position `pos`, of type `inner`.
-    pub fn new(pos: Pos, recoverable: bool, inner: ParseError) -> Error {
-        Error {
+    pub fn new(pos: Pos, recoverable: bool, inner: ParseErrorKind) -> ParseError {
+        ParseError {
             pos,
             recoverable,
-            inner,
+            kind: inner,
         }
     }
 
     /// Makes a recoverable error.
-    pub fn recoverable(&self) -> Error {
-        Error::new(self.pos, true, self.inner.clone())
+    pub fn recoverable(&self) -> ParseError {
+        ParseError::new(self.pos, true, self.kind.clone())
     }
 
     /// Makes a non recoverable error.
-    pub fn non_recoverable(&self) -> Error {
-        Error::new(self.pos, false, self.inner.clone())
+    pub fn non_recoverable(&self) -> ParseError {
+        ParseError::new(self.pos, false, self.kind.clone())
     }
 }
 
-impl DisplaySourceError for Error {
+impl DisplaySourceError for ParseError {
     fn source_info(&self) -> SourceInfo {
         SourceInfo {
             start: self.pos,
@@ -99,53 +99,57 @@ impl DisplaySourceError for Error {
     }
 
     fn description(&self) -> String {
-        match self.inner {
-            ParseError::DuplicateSection => "Parsing section".to_string(),
-            ParseError::EscapeChar => "Parsing escape character".to_string(),
-            ParseError::Expecting { .. } => "Parsing literal".to_string(),
-            ParseError::FileContentType => "Parsing file content type".to_string(),
-            ParseError::Filename => "Parsing filename".to_string(),
-            ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
-            ParseError::HexDigit => "Parsing hexadecimal number".to_string(),
-            ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
-            ParseError::InvalidOption(_) => "Parsing option".to_string(),
-            ParseError::Json(_) => "Parsing JSON".to_string(),
-            ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
-            ParseError::Method { .. } => "Parsing method".to_string(),
-            ParseError::Multiline => "Parsing multiline".to_string(),
-            ParseError::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
-            ParseError::Predicate => "Parsing predicate".to_string(),
-            ParseError::PredicateValue => "Parsing predicate value".to_string(),
-            ParseError::RegexExpr { .. } => "Parsing regex".to_string(),
-            ParseError::RequestSection => "Parsing section".to_string(),
-            ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
-            ParseError::ResponseSection => "Parsing section".to_string(),
-            ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
-            ParseError::Space => "Parsing space".to_string(),
-            ParseError::Status => "Parsing status code".to_string(),
-            ParseError::TemplateVariable => "Parsing template variable".to_string(),
-            ParseError::Unicode => "Parsing unicode literal".to_string(),
-            ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
-            ParseError::UrlInvalidStart => "Parsing URL".to_string(),
-            ParseError::Version => "Parsing version".to_string(),
-            ParseError::XPathExpr => "Parsing XPath expression".to_string(),
-            ParseError::Xml => "Parsing XML".to_string(),
+        match self.kind {
+            ParseErrorKind::DuplicateSection => "Parsing section".to_string(),
+            ParseErrorKind::EscapeChar => "Parsing escape character".to_string(),
+            ParseErrorKind::Expecting { .. } => "Parsing literal".to_string(),
+            ParseErrorKind::FileContentType => "Parsing file content type".to_string(),
+            ParseErrorKind::Filename => "Parsing filename".to_string(),
+            ParseErrorKind::GraphQlVariables => "Parsing GraphQL variables".to_string(),
+            ParseErrorKind::HexDigit => "Parsing hexadecimal number".to_string(),
+            ParseErrorKind::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
+            ParseErrorKind::InvalidOption(_) => "Parsing option".to_string(),
+            ParseErrorKind::Json(_) => "Parsing JSON".to_string(),
+            ParseErrorKind::JsonPathExpr => "Parsing JSONPath expression".to_string(),
+            ParseErrorKind::Method { .. } => "Parsing method".to_string(),
+            ParseErrorKind::Multiline => "Parsing multiline".to_string(),
+            ParseErrorKind::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
+            ParseErrorKind::Predicate => "Parsing predicate".to_string(),
+            ParseErrorKind::PredicateValue => "Parsing predicate value".to_string(),
+            ParseErrorKind::RegexExpr { .. } => "Parsing regex".to_string(),
+            ParseErrorKind::RequestSection => "Parsing section".to_string(),
+            ParseErrorKind::RequestSectionName { .. } => "Parsing request section name".to_string(),
+            ParseErrorKind::ResponseSection => "Parsing section".to_string(),
+            ParseErrorKind::ResponseSectionName { .. } => {
+                "Parsing response section name".to_string()
+            }
+            ParseErrorKind::Space => "Parsing space".to_string(),
+            ParseErrorKind::Status => "Parsing status code".to_string(),
+            ParseErrorKind::TemplateVariable => "Parsing template variable".to_string(),
+            ParseErrorKind::Unicode => "Parsing unicode literal".to_string(),
+            ParseErrorKind::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
+            ParseErrorKind::UrlInvalidStart => "Parsing URL".to_string(),
+            ParseErrorKind::Version => "Parsing version".to_string(),
+            ParseErrorKind::XPathExpr => "Parsing XPath expression".to_string(),
+            ParseErrorKind::Xml => "Parsing XML".to_string(),
         }
     }
 
     fn fixme(&self, content: &[&str], color: bool) -> String {
-        let message = match &self.inner {
-            ParseError::DuplicateSection => "the section is already defined".to_string(),
-            ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
-            ParseError::Expecting { value } => format!("expecting '{value}'"),
-            ParseError::FileContentType => "expecting a content type".to_string(),
-            ParseError::Filename => "expecting a filename".to_string(),
-            ParseError::GraphQlVariables => {
+        let message = match &self.kind {
+            ParseErrorKind::DuplicateSection => "the section is already defined".to_string(),
+            ParseErrorKind::EscapeChar => "the escaping sequence is not valid".to_string(),
+            ParseErrorKind::Expecting { value } => format!("expecting '{value}'"),
+            ParseErrorKind::FileContentType => "expecting a content type".to_string(),
+            ParseErrorKind::Filename => "expecting a filename".to_string(),
+            ParseErrorKind::GraphQlVariables => {
                 "GraphQL variables is not a valid JSON object".to_string()
             }
-            ParseError::HexDigit => "expecting a valid hexadecimal number".to_string(),
-            ParseError::InvalidCookieAttribute => "the cookie attribute is not valid".to_string(),
-            ParseError::InvalidOption(name) => {
+            ParseErrorKind::HexDigit => "expecting a valid hexadecimal number".to_string(),
+            ParseErrorKind::InvalidCookieAttribute => {
+                "the cookie attribute is not valid".to_string()
+            }
+            ParseErrorKind::InvalidOption(name) => {
                 let valid_values = [
                     "aws-sigv4",
                     "cacert",
@@ -179,7 +183,7 @@ impl DisplaySourceError for Error {
                 let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the option name is not valid. {did_you_mean}")
             }
-            ParseError::Json(variant) => match variant {
+            ParseErrorKind::Json(variant) => match variant {
                 JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
                 JsonErrorVariant::EmptyElement => {
                     "expecting an element; found empty element instead".to_string()
@@ -188,8 +192,8 @@ impl DisplaySourceError for Error {
                     "expecting a boolean, number, string, array, object or null".to_string()
                 }
             },
-            ParseError::JsonPathExpr => "expecting a JSONPath expression".to_string(),
-            ParseError::Method { name } => {
+            ParseErrorKind::JsonPathExpr => "expecting a JSONPath expression".to_string(),
+            ParseErrorKind::Method { name } => {
                 let valid_values = [
                     "GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH",
                 ];
@@ -197,15 +201,17 @@ impl DisplaySourceError for Error {
                 let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the HTTP method <{name}> is not valid. {did_you_mean}")
             }
-            ParseError::Multiline => "the multiline is not valid".to_string(),
-            ParseError::OddNumberOfHexDigits => {
+            ParseErrorKind::Multiline => "the multiline is not valid".to_string(),
+            ParseErrorKind::OddNumberOfHexDigits => {
                 "expecting an even number of hex digits".to_string()
             }
-            ParseError::Predicate => "expecting a predicate".to_string(),
-            ParseError::PredicateValue => "invalid predicate value".to_string(),
-            ParseError::RegexExpr { message } => format!("invalid Regex expression: {message}"),
-            ParseError::RequestSection => "this is not a valid section for a request".to_string(),
-            ParseError::RequestSectionName { name } => {
+            ParseErrorKind::Predicate => "expecting a predicate".to_string(),
+            ParseErrorKind::PredicateValue => "invalid predicate value".to_string(),
+            ParseErrorKind::RegexExpr { message } => format!("invalid Regex expression: {message}"),
+            ParseErrorKind::RequestSection => {
+                "this is not a valid section for a request".to_string()
+            }
+            ParseErrorKind::RequestSectionName { name } => {
                 let valid_values = [
                     "QueryStringParams",
                     "FormParams",
@@ -217,24 +223,26 @@ impl DisplaySourceError for Error {
                 let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the section is not valid. {did_you_mean}")
             }
-            ParseError::ResponseSection => "this is not a valid section for a response".to_string(),
-            ParseError::ResponseSectionName { name } => {
+            ParseErrorKind::ResponseSection => {
+                "this is not a valid section for a response".to_string()
+            }
+            ParseErrorKind::ResponseSectionName { name } => {
                 let valid_values = ["Captures", "Asserts"];
                 let default = "Valid values are Captures or Asserts";
                 let did_your_mean = did_you_mean(&valid_values, name.as_str(), default);
                 format!("the section is not valid. {did_your_mean}")
             }
-            ParseError::Space => "expecting a space".to_string(),
-            ParseError::Status => "HTTP status code is not valid".to_string(),
-            ParseError::TemplateVariable => "expecting a variable".to_string(),
-            ParseError::Unicode => "Invalid unicode literal".to_string(),
-            ParseError::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
-            ParseError::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
-            ParseError::Version => {
+            ParseErrorKind::Space => "expecting a space".to_string(),
+            ParseErrorKind::Status => "HTTP status code is not valid".to_string(),
+            ParseErrorKind::TemplateVariable => "expecting a variable".to_string(),
+            ParseErrorKind::Unicode => "Invalid unicode literal".to_string(),
+            ParseErrorKind::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
+            ParseErrorKind::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
+            ParseErrorKind::Version => {
                 "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string()
             }
-            ParseError::XPathExpr => "expecting a XPath expression".to_string(),
-            ParseError::Xml => "invalid XML".to_string(),
+            ParseErrorKind::XPathExpr => "expecting a XPath expression".to_string(),
+            ParseErrorKind::Xml => "invalid XML".to_string(),
         };
 
         let message = crate::error::add_carets(&message, self.source_info(), content);

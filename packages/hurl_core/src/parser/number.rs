@@ -26,17 +26,17 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let start = reader.state;
 
     if reader.is_eof() {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(Error::new(start.pos, true, inner));
+        return Err(ParseError::new(start.pos, true, inner));
     }
     let first_digit = reader.read().unwrap();
     if !first_digit.is_ascii_digit() {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(Error::new(start.pos, true, inner));
+        return Err(ParseError::new(start.pos, true, inner));
     }
 
     let save = reader.state;
@@ -44,18 +44,18 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
 
     // if the first digit is zero, you should not have any more digits
     if first_digit == '0' && !s.is_empty() {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(Error::new(save.pos, false, inner));
+        return Err(ParseError::new(save.pos, false, inner));
     }
     match format!("{first_digit}{s}").parse() {
         Ok(value) => Ok(value),
         Err(_) => {
-            let inner = ParseError::Expecting {
+            let inner = ParseErrorKind::Expecting {
                 value: String::from("natural"),
             };
-            Err(Error::new(save.pos, false, inner))
+            Err(ParseError::new(save.pos, false, inner))
         }
     }
 }
@@ -77,18 +77,18 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     };
     let integer_digits = reader.read_while(|c| c.is_ascii_digit());
     if integer_digits.is_empty() {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: "number".to_string(),
         };
-        return Err(Error::new(reader.state.pos, true, inner));
+        return Err(ParseError::new(reader.state.pos, true, inner));
 
         // if the first digit is zero, you should not have any more digits
     } else if integer_digits.len() > 1 && integer_digits.starts_with('0') {
         let save = reader.state;
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(Error::new(save.pos, false, inner));
+        return Err(ParseError::new(save.pos, false, inner));
     }
 
     // Float
@@ -96,10 +96,10 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         let save = reader.state;
         let decimal_digits = reader.read_while(|c| c.is_ascii_digit());
         if decimal_digits.is_empty() {
-            let inner = ParseError::Expecting {
+            let inner = ParseErrorKind::Expecting {
                 value: String::from("decimal digits"),
             };
-            return Err(Error::new(save.pos, false, inner));
+            return Err(ParseError::new(save.pos, false, inner));
         }
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
@@ -107,10 +107,10 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
                 Ok(Number::Float(Float { value, encoded }))
             }
             Err(_) => {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: String::from("float"),
                 };
-                Err(Error::new(start.pos, false, inner))
+                Err(ParseError::new(start.pos, false, inner))
             }
         }
 
@@ -145,8 +145,8 @@ mod tests {
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("natural")
             }
         );
@@ -156,8 +156,8 @@ mod tests {
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("natural")
             }
         );
@@ -167,8 +167,8 @@ mod tests {
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("natural")
             }
         );
@@ -287,8 +287,8 @@ mod tests {
         let mut reader = Reader::new("");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("number")
             }
         );
@@ -298,8 +298,8 @@ mod tests {
         let mut reader = Reader::new("-");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("number")
             }
         );
@@ -310,8 +310,8 @@ mod tests {
         let error = number(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("number")
             }
         );
@@ -321,8 +321,8 @@ mod tests {
         let error = number(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("decimal digits")
             }
         );

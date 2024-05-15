@@ -29,10 +29,10 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     let mut buffer = String::new();
 
     if !url_prefix_valid(reader) {
-        return Err(Error::new(
+        return Err(ParseError::new(
             reader.state.pos,
             false,
-            ParseError::UrlInvalidStart,
+            ParseErrorKind::UrlInvalidStart,
         ));
     }
 
@@ -96,10 +96,10 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     if line_terminator(reader).is_err() {
         reader.state = save;
         let c = reader.peek().unwrap();
-        return Err(Error::new(
+        return Err(ParseError::new(
             reader.state.pos,
             false,
-            ParseError::UrlIllegalCharacter(c),
+            ParseErrorKind::UrlIllegalCharacter(c),
         ));
     }
 
@@ -215,8 +215,8 @@ mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("}}")
             }
         );
@@ -236,8 +236,8 @@ mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("}}")
             }
         );
@@ -249,7 +249,7 @@ mod tests {
         let mut reader = Reader::new(" # eol");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::UrlInvalidStart);
+        assert_eq!(error.kind, ParseErrorKind::UrlInvalidStart);
     }
 
     #[test]

@@ -150,8 +150,8 @@ mod tests {
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\"".to_string()
             },
         );
@@ -162,7 +162,7 @@ mod tests {
         let mut reader = Reader::new("```\nxxx ");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
-        assert_eq!(error.inner, ParseError::Multiline);
+        assert_eq!(error.kind, ParseErrorKind::Multiline);
     }
 
     #[test]
@@ -170,8 +170,8 @@ mod tests {
         let mut reader = Reader::new("");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("file")
             }
         );

@@ -547,6 +547,7 @@ fn split_lines(text: &str) -> Vec<&str> {
 pub mod tests {
 
     use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::parser::{ParseError, ParseErrorKind};
 
     use super::*;
     use crate::runner;
@@ -722,10 +723,10 @@ HTTP/1.0 200
     fn test_parsing_error() {
         let content = "GET abc";
         let filename = "test.hurl";
-        let error = hurl_core::parser::Error {
+        let error = ParseError {
             pos: Pos::new(1, 5),
             recoverable: false,
-            inner: hurl_core::parser::ParseError::UrlInvalidStart,
+            kind: ParseErrorKind::UrlInvalidStart,
         };
         assert_eq!(
             error_string(filename, content, &error, None, false),

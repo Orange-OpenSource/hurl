@@ -50,17 +50,17 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
     if elements.is_empty() {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: "key-string".to_string(),
         };
-        return Err(Error::new(start.pos, false, inner));
+        return Err(ParseError::new(start.pos, false, inner));
     }
     if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
         if encoded.starts_with('[') {
-            let inner = ParseError::Expecting {
+            let inner = ParseErrorKind::Expecting {
                 value: "key-string".to_string(),
             };
-            return Err(Error::new(start.pos, false, inner));
+            return Err(ParseError::new(start.pos, false, inner));
         }
     }
 
@@ -141,7 +141,11 @@ fn key_string_escaped_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => string::unicode(reader),
-        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
+        _ => Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::EscapeChar,
+        )),
     }
 }
 
@@ -258,14 +262,14 @@ mod tests {
         let mut reader = Reader::new("\\l");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.inner, ParseError::EscapeChar);
+        assert_eq!(error.kind, ParseErrorKind::EscapeChar);
 
         let mut reader = Reader::new(r#"{"id":1}"#);
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "key-string".to_string()
             }
         );
@@ -298,8 +302,8 @@ mod tests {
         let error = key_string_escaped_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\\".to_string()
             }
         );

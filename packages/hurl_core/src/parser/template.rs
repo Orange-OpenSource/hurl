@@ -118,10 +118,10 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
             encoded.push('{');
         }
         State::Template | State::FirstCloseBracket => {
-            let inner = error::ParseError::Expecting {
+            let inner = error::ParseErrorKind::Expecting {
                 value: "}}".to_string(),
             };
-            return Err(error::Error::new(
+            return Err(error::ParseError::new(
                 encoded_string.source_info.end,
                 false,
                 inner,
@@ -301,8 +301,8 @@ mod tests {
         let error = templatize(encoded_string).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
         assert_eq!(
-            error.inner,
-            error::ParseError::Expecting {
+            error.kind,
+            error::ParseErrorKind::Expecting {
                 value: "}}".to_string()
             }
         );

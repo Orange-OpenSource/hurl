@@ -22,7 +22,7 @@ use crate::parser::number::number;
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{expr, Error, ParseError, ParseResult};
+use crate::parser::{expr, ParseError, ParseErrorKind, ParseResult};
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(
@@ -72,11 +72,11 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     )
     .map_err(|e| {
         let inner = if e.recoverable {
-            ParseError::PredicateValue
+            ParseErrorKind::PredicateValue
         } else {
-            e.inner
+            e.kind
         };
-        Error::new(e.pos, false, inner)
+        ParseError::new(e.pos, false, inner)
     })
 }
 
@@ -84,7 +84,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
 mod tests {
 
     use super::*;
-    use crate::parser::ParseError;
+    use crate::parser::ParseErrorKind;
 
     #[test]
     fn test_predicate_value() {
@@ -115,7 +115,7 @@ mod tests {
         let mut reader = Reader::new("xx");
         let error = predicate_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::PredicateValue);
+        assert_eq!(error.kind, ParseErrorKind::PredicateValue);
         assert!(!error.recoverable);
     }
 
@@ -131,8 +131,8 @@ mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\"".to_string()
             }
         );

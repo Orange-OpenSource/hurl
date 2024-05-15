@@ -54,9 +54,9 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
         "Cookies" => section_value_cookies(reader)?,
         "Options" => section_value_options(reader)?,
         _ => {
-            let inner = ParseError::RequestSectionName { name: name.clone() };
+            let inner = ParseErrorKind::RequestSectionName { name: name.clone() };
             let pos = Pos::new(start.line, start.column + 1);
-            return Err(Error::new(pos, false, inner));
+            return Err(ParseError::new(pos, false, inner));
         }
     };
 
@@ -83,9 +83,9 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
         "Captures" => section_value_captures(reader)?,
         "Asserts" => section_value_asserts(reader)?,
         _ => {
-            let inner = ParseError::ResponseSectionName { name: name.clone() };
+            let inner = ParseErrorKind::ResponseSectionName { name: name.clone() };
             let pos = Pos::new(start.line, start.column + 1);
-            return Err(Error::new(pos, false, inner));
+            return Err(ParseError::new(pos, false, inner));
         }
     };
 
@@ -104,10 +104,10 @@ fn section_name(reader: &mut Reader) -> ParseResult<String> {
     let name = reader.read_while(|c| c.is_alphanumeric());
     if name.is_empty() {
         // Could be the empty json array for the body
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: "a valid section name".to_string(),
         };
-        return Err(Error::new(pos, true, inner));
+        return Err(ParseError::new(pos, true, inner));
     }
     try_literal("]", reader)?;
     Ok(name)
@@ -266,7 +266,11 @@ fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
 
     reader.state = save;
     if buf.is_empty() {
-        return Err(Error::new(start.pos, false, ParseError::FileContentType));
+        return Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::FileContentType,
+        ));
     }
     Ok(buf)
 }
@@ -426,8 +430,8 @@ mod tests {
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("[")
             }
         );
@@ -437,8 +441,8 @@ mod tests {
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
-            error.inner,
-            ParseError::ResponseSectionName {
+            error.kind,
+            ParseErrorKind::ResponseSectionName {
                 name: String::from("Assertsx")
             }
         );
@@ -476,8 +480,8 @@ mod tests {
         );
         assert!(!error.recoverable);
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "}}".to_string()
             }
         );
@@ -643,8 +647,8 @@ mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\" or /".to_string()
             }
         );
@@ -660,8 +664,8 @@ mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "line_terminator".to_string()
             }
         );

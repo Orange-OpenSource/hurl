@@ -25,7 +25,7 @@ use crate::parser::{base64, filename, key_string, ParseResult};
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state;
     match reader.read() {
-        None => Err(Error::new(start.pos, true, ParseError::Space)),
+        None => Err(ParseError::new(start.pos, true, ParseErrorKind::Space)),
         Some(c) => {
             if c == ' ' || c == '\t' {
                 Ok(Whitespace {
@@ -33,7 +33,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
                     source_info: SourceInfo::new(start.pos, reader.state.pos),
                 })
             } else {
-                Err(Error::new(start.pos, true, ParseError::Space))
+                Err(ParseError::new(start.pos, true, ParseErrorKind::Space))
             }
         }
     }
@@ -81,10 +81,10 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<LineTerminator> {
         match newline(reader) {
             Ok(r) => r,
             Err(e) => {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: String::from("line_terminator"),
                 };
-                return Err(Error::new(e.pos, false, inner));
+                return Err(ParseError::new(e.pos, false, inner));
             }
         }
     };
@@ -138,17 +138,17 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         let _state = reader.state;
         match reader.read() {
             None => {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: s.to_string(),
                 };
-                return Err(Error::new(start.pos, false, inner));
+                return Err(ParseError::new(start.pos, false, inner));
             }
             Some(x) => {
                 if x != c {
-                    let inner = ParseError::Expecting {
+                    let inner = ParseErrorKind::Expecting {
                         value: s.to_string(),
                     };
-                    return Err(Error::new(start.pos, false, inner));
+                    return Err(ParseError::new(start.pos, false, inner));
                 } else {
                     continue;
                 }
@@ -165,7 +165,7 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         Ok(_) => Ok(()),
         Err(e) => {
             reader.state = save_state;
-            Err(Error::new(e.pos, true, e.inner))
+            Err(ParseError::new(e.pos, true, e.kind))
         }
     }
 }
@@ -181,10 +181,10 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<Stri
                 Ok(_) => Ok(s2.to_string()),
                 Err(_) => {
                     reader.state = start;
-                    let inner = ParseError::Expecting {
+                    let inner = ParseErrorKind::Expecting {
                         value: format!("<{s1}> or <{s2}>"),
                     };
-                    Err(Error::new(start.pos, true, inner))
+                    Err(ParseError::new(start.pos, true, inner))
                 }
             }
         }
@@ -204,10 +204,10 @@ pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
                 source_info: SourceInfo::new(start.pos, reader.state.pos),
             }),
             Err(_) => {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: String::from("newline"),
                 };
-                Err(Error::new(start.pos, false, inner))
+                Err(ParseError::new(start.pos, false, inner))
             }
         },
     }
@@ -258,10 +258,10 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
         };
     }
     if current != -1 {
-        return Err(Error::new(
+        return Err(ParseError::new(
             reader.state.pos,
             false,
-            ParseError::OddNumberOfHexDigits,
+            ParseErrorKind::OddNumberOfHexDigits,
         ));
     }
     let encoded = reader.peek_back(start);
@@ -290,10 +290,10 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     loop {
         match reader.read() {
             None => {
-                let inner = ParseError::RegexExpr {
+                let inner = ParseErrorKind::RegexExpr {
                     message: "unexpected end of file".to_string(),
                 };
-                return Err(Error::new(reader.state.pos, false, inner));
+                return Err(ParseError::new(reader.state.pos, false, inner));
             }
             Some('/') => break,
             Some('\\') => {
@@ -331,7 +331,11 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
                 regex::Error::CompiledTooBig(_) => "Size limit exceeded".to_string(),
                 _ => "unknown".to_string(),
             };
-            Err(Error::new(start, false, ParseError::RegexExpr { message }))
+            Err(ParseError::new(
+                start,
+                false,
+                ParseErrorKind::RegexExpr { message },
+            ))
         }
     }
 }
@@ -347,10 +351,10 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
         Err(_) => match literal("false", reader) {
             Ok(_) => Ok(false),
             Err(_) => {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: String::from("true|false"),
                 };
-                Err(Error::new(start.pos, true, inner))
+                Err(ParseError::new(start.pos, true, inner))
             }
         },
     }
@@ -397,10 +401,10 @@ pub fn eof(reader: &mut Reader) -> ParseResult<()> {
     if reader.is_eof() {
         Ok(())
     } else {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: String::from("eof"),
         };
-        Err(Error::new(reader.state.pos, false, inner))
+        Err(ParseError::new(reader.state.pos, false, inner))
     }
 }
 
@@ -431,9 +435,9 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
     match reader.read() {
         Some(c) => match hex_digit_value(c) {
             Some(v) => Ok(v),
-            None => Err(Error::new(start.pos, true, ParseError::HexDigit)),
+            None => Err(ParseError::new(start.pos, true, ParseErrorKind::HexDigit)),
         },
-        None => Err(Error::new(start.pos, true, ParseError::HexDigit)),
+        None => Err(ParseError::new(start.pos, true, ParseErrorKind::HexDigit)),
     }
 }
 
@@ -555,8 +559,8 @@ mod tests {
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("hello")
             }
         );
@@ -566,8 +570,8 @@ mod tests {
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("hello")
             }
         );
@@ -577,8 +581,8 @@ mod tests {
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("hello")
             }
         );
@@ -754,8 +758,8 @@ mod tests {
         let mut reader = Reader::new("xxx");
         let error = boolean(&mut reader).err().unwrap();
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("true|false")
             }
         );
@@ -764,8 +768,8 @@ mod tests {
         let mut reader = Reader::new("trux");
         let error = boolean(&mut reader).err().unwrap();
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("true|false")
             }
         );
@@ -780,7 +784,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = hex_digit(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::HexDigit);
+        assert_eq!(error.kind, ParseErrorKind::HexDigit);
         assert!(error.recoverable);
     }
 
@@ -826,7 +830,7 @@ mod tests {
         let mut reader = Reader::new("hex,012;");
         let error = hex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
-        assert_eq!(error.inner, ParseError::OddNumberOfHexDigits);
+        assert_eq!(error.kind, ParseErrorKind::OddNumberOfHexDigits);
     }
 
     #[test]
@@ -876,8 +880,8 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(!error.recoverable);
         assert_eq!(
-            error.inner,
-            ParseError::RegexExpr {
+            error.kind,
+            ParseErrorKind::RegexExpr {
                 message: "unexpected end of file".to_string()
             }
         );
@@ -887,8 +891,8 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert!(!error.recoverable);
         assert_eq!(
-            error.inner,
-            ParseError::RegexExpr {
+            error.kind,
+            ParseErrorKind::RegexExpr {
                 message: "repetition quantifier expects a valid decimal".to_string()
             }
         );
@@ -1007,8 +1011,8 @@ mod tests {
         );
         assert!(!error.recoverable);
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from(";")
             }
         );
@@ -1024,8 +1028,8 @@ mod tests {
         );
         assert!(!error.recoverable);
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from(";")
             }
         );

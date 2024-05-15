@@ -39,14 +39,14 @@ pub fn recover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
     // but does not reset cursor
     match f(reader) {
         Ok(r) => Ok(r),
-        Err(e) => Err(Error::new(e.pos, true, e.inner)),
+        Err(e) => Err(ParseError::new(e.pos, true, e.kind)),
     }
 }
 
 pub fn nonrecover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
     match f(reader) {
         Ok(r) => Ok(r),
-        Err(e) => Err(Error::new(e.pos, false, e.inner)),
+        Err(e) => Err(ParseError::new(e.pos, false, e.kind)),
     }
 }
 
@@ -101,7 +101,9 @@ pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T
             }
         }
         // if zero occurrence => should fail?
-        Err(Error { pos, inner, .. }) => Err(Error::new(pos, false, inner)),
+        Err(ParseError {
+            pos, kind: inner, ..
+        }) => Err(ParseError::new(pos, false, inner)),
     }
 }
 
@@ -114,7 +116,7 @@ pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
             return f(reader);
         }
         match f(reader) {
-            Err(Error {
+            Err(ParseError {
                 recoverable: true, ..
             }) => {
                 reader.state = start;

@@ -21,7 +21,7 @@ use crate::parser::cookiepath::cookiepath;
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{Error, ParseError, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
     let start = reader.state.pos;
@@ -145,10 +145,10 @@ pub fn regex_value(reader: &mut Reader) -> ParseResult<RegexValue> {
         reader,
     )
     .map_err(|e| {
-        let inner = ParseError::Expecting {
+        let inner = ParseErrorKind::Expecting {
             value: "\" or /".to_string(),
         };
-        Error::new(e.pos, false, inner)
+        ParseError::new(e.pos, false, inner)
     })
 }
 
@@ -204,9 +204,9 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
     } else {
         let value =
             "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
-        let inner = ParseError::Expecting { value };
+        let inner = ParseErrorKind::Expecting { value };
         let pos = reader.state.pos;
-        Err(Error::new(pos, false, inner))
+        Err(ParseError::new(pos, false, inner))
     }
 }
 

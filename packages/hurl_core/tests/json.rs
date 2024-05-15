@@ -20,6 +20,7 @@ use std::fs::File;
 use std::io::Read;
 
 use hurl_core::ast::JsonValue;
+use hurl_core::parser::ParseError;
 
 #[test]
 fn debug() {
@@ -38,7 +39,7 @@ fn test_echo() {
     }
 }
 
-fn parse_json(content: String) -> Result<JsonValue, hurl_core::parser::Error> {
+fn parse_json(content: String) -> Result<JsonValue, ParseError> {
     let mut reader = hurl_core::parser::Reader::new(content.as_str());
     hurl_core::parser::parse_json(&mut reader)
 }

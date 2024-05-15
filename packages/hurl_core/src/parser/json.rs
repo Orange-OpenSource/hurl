@@ -42,8 +42,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
 fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
     if let Some(c) = reader.peek() {
         if c == ',' {
-            let inner = ParseError::Json(JsonErrorVariant::EmptyElement);
-            return Err(Error::new(reader.state.pos, false, inner));
+            let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+            return Err(ParseError::new(reader.state.pos, false, inner));
         }
     }
     match parse(reader) {
@@ -52,13 +52,13 @@ fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
         // but this is not recoverable in this case, because we already know that we are in a JSON
         // body. So, we change the error to CannotResolve for the object found.
         Err(e) => match e {
-            Error {
+            ParseError {
                 recoverable: true, ..
             } => {
-                let inner = ParseError::Json(JsonErrorVariant::ExpectingElement);
-                Err(Error::new(e.pos, false, inner))
+                let inner = ParseErrorKind::Json(JsonErrorVariant::ExpectingElement);
+                Err(ParseError::new(e.pos, false, inner))
             }
-            _ => Err(Error::new(e.pos, false, e.inner)),
+            _ => Err(ParseError::new(e.pos, false, e.kind)),
         },
     }
 }
@@ -116,17 +116,17 @@ fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
                 reader.state = start;
                 match reader.read() {
                     None => {
-                        let inner = ParseError::Expecting {
+                        let inner = ParseErrorKind::Expecting {
                             value: "char".to_string(),
                         };
-                        Err(Error::new(start.pos, true, inner))
+                        Err(ParseError::new(start.pos, true, inner))
                     }
                     Some(c) => {
                         if ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c) {
-                            let inner = ParseError::Expecting {
+                            let inner = ParseErrorKind::Expecting {
                                 value: "char".to_string(),
                             };
-                            Err(Error::new(start.pos, true, inner))
+                            Err(ParseError::new(start.pos, true, inner))
                         } else {
                             Ok((c, reader.peek_back(start.cursor), start.pos))
                         }
@@ -152,7 +152,11 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => unicode(reader),
-        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
+        _ => Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::EscapeChar,
+        )),
     }
 }
 
@@ -164,14 +168,14 @@ fn unicode(reader: &mut Reader) -> ParseResult<char> {
         let start = reader.state.pos;
         let cp2 = hex_value(reader)?;
         match cp_surrogate_pair(cp1, cp2) {
-            None => return Err(Error::new(start, false, ParseError::Unicode)),
+            None => return Err(ParseError::new(start, false, ParseErrorKind::Unicode)),
             Some(cp) => cp,
         }
     } else {
         cp1
     };
     let c = match char::from_u32(cp) {
-        None => return Err(Error::new(start, false, ParseError::Unicode)),
+        None => return Err(ParseError::new(start, false, ParseErrorKind::Unicode)),
         Some(c) => c,
     };
     Ok(c)
@@ -219,10 +223,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
         Err(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: "number".to_string(),
                 };
-                return Err(Error::new(start.pos, true, inner));
+                return Err(ParseError::new(start.pos, true, inner));
             } else {
                 digits
             }
@@ -234,10 +238,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
         Ok(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
-                let inner = ParseError::Expecting {
+                let inner = ParseErrorKind::Expecting {
                     value: "digits".to_string(),
                 };
-                return Err(Error::new(reader.state.pos, false, inner));
+                return Err(ParseError::new(reader.state.pos, false, inner));
             } else {
                 format!(".{digits}")
             }
@@ -296,8 +300,8 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             // If there is one more comma, e.g. [1, 2,], it's better to report to the user because
             // this occurrence is common.
             if reader.peek_ignoring_whitespace() == Some(']') {
-                let inner = ParseError::Json(JsonErrorVariant::TrailingComma);
-                return Err(Error::new(save, false, inner));
+                let inner = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
+                return Err(ParseError::new(save, false, inner));
             }
             let element = list_element(reader)?;
             elements.push(element);
@@ -343,8 +347,8 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             // If there is one more comma, e.g. {"a": "b",}, it's better to report to the user
             // because this occurrence is common.
             if reader.peek_ignoring_whitespace() == Some('}') {
-                let inner = ParseError::Json(JsonErrorVariant::TrailingComma);
-                return Err(Error::new(save, false, inner));
+                let inner = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
+                return Err(ParseError::new(save, false, inner));
             }
             let element = object_element(reader)?;
             elements.push(element);
@@ -362,8 +366,8 @@ fn key(reader: &mut Reader) -> ParseResult<Template> {
     let save = reader.state;
     let name = string_template(reader).map_err(|e| e.non_recoverable())?;
     if name.elements.is_empty() {
-        let inner = ParseError::Json(JsonErrorVariant::EmptyElement);
-        Err(Error::new(save.pos, false, inner))
+        let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+        Err(ParseError::new(save.pos, false, inner))
     } else {
         Ok(name)
     }
@@ -383,8 +387,8 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     let next_char = reader.peek();
     // Comparing to None because `next_char` can be EOF.
     if next_char == Some('}') || next_char.is_none() {
-        let inner = ParseError::Json(JsonErrorVariant::EmptyElement);
-        return Err(Error::new(save, false, inner));
+        let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+        return Err(ParseError::new(save, false, inner));
     }
     let value = parse_in_json(reader)?;
     let space3 = whitespace(reader);
@@ -413,8 +417,8 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
-            error.inner,
-            ParseError::Json(JsonErrorVariant::EmptyElement)
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::EmptyElement)
         );
         assert!(!error.recoverable);
 
@@ -422,8 +426,8 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
-            error.inner,
-            ParseError::Json(JsonErrorVariant::TrailingComma),
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
     }
@@ -438,8 +442,8 @@ mod tests {
         let error = null_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "null".to_string()
             }
         );
@@ -459,8 +463,8 @@ mod tests {
         let error = boolean_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "true|false".to_string()
             }
         );
@@ -537,8 +541,8 @@ mod tests {
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\"".to_string()
             }
         );
@@ -548,8 +552,8 @@ mod tests {
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\"".to_string()
             }
         );
@@ -559,8 +563,8 @@ mod tests {
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "}}".to_string()
             }
         );
@@ -632,8 +636,8 @@ mod tests {
         let error = escape_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\\".to_string()
             }
         );
@@ -659,8 +663,8 @@ mod tests {
         let error = unicode(&mut reader).unwrap_err();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\\u".to_string()
             }
         );
@@ -669,7 +673,7 @@ mod tests {
         let mut reader = Reader::new("d800\\ud800");
         let error = unicode(&mut reader).unwrap_err();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, ParseError::Unicode);
+        assert_eq!(error.kind, ParseErrorKind::Unicode);
         assert!(!error.recoverable);
     }
 
@@ -684,7 +688,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = hex_value(&mut reader).unwrap_err();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::HexDigit);
+        assert_eq!(error.kind, ParseErrorKind::HexDigit);
         assert!(!error.recoverable);
     }
 
@@ -746,8 +750,8 @@ mod tests {
         let error = number_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "number".to_string()
             }
         );
@@ -757,8 +761,8 @@ mod tests {
         let error = number_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "digits".to_string()
             }
         );
@@ -838,8 +842,8 @@ mod tests {
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "[".to_string()
             }
         );
@@ -849,8 +853,8 @@ mod tests {
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
-            error.inner,
-            ParseError::Json(JsonErrorVariant::TrailingComma),
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
     }
@@ -919,8 +923,8 @@ mod tests {
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "{".to_string()
             }
         );
@@ -933,8 +937,8 @@ mod tests {
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
-            error.inner,
-            ParseError::Json(JsonErrorVariant::EmptyElement)
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::EmptyElement)
         );
         assert!(!error.recoverable);
     }
@@ -969,8 +973,8 @@ mod tests {
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\"".to_string()
             }
         );
@@ -980,8 +984,8 @@ mod tests {
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(
-            error.inner,
-            ParseError::Json(JsonErrorVariant::EmptyElement),
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::EmptyElement),
         );
         assert!(!error.recoverable);
     }

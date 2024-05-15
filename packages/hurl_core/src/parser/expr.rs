@@ -54,7 +54,11 @@ fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
     let start = reader.state;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
-        return Err(Error::new(start.pos, false, ParseError::TemplateVariable));
+        return Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::TemplateVariable,
+        ));
     }
     Ok(Variable {
         name,
@@ -95,8 +99,8 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("}}")
             }
         );
@@ -109,8 +113,8 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: String::from("}}")
             }
         );

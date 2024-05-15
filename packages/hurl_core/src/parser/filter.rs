@@ -21,7 +21,7 @@ use crate::parser::number::natural;
 use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
 use crate::parser::string::quoted_template;
-use crate::parser::{Error, ParseError, ParseResult, Reader};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, Reader};
 
 pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];
@@ -75,10 +75,10 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
     )
     .map_err(|e| {
         if e.recoverable {
-            let inner = ParseError::Expecting {
+            let inner = ParseErrorKind::Expecting {
                 value: "filter".to_string(),
             };
-            Error::new(e.pos, true, inner)
+            ParseError::new(e.pos, true, inner)
         } else {
             e
         }
@@ -207,7 +207,7 @@ fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 mod tests {
     use super::*;
     use crate::ast::Pos;
-    use crate::parser::ParseError;
+    use crate::parser::ParseErrorKind;
 
     #[test]
     fn test_count() {
@@ -226,8 +226,8 @@ mod tests {
         let mut reader = Reader::new("xcount");
         let err = filter(&mut reader).err().unwrap();
         assert_eq!(
-            err.inner,
-            ParseError::Expecting {
+            err.kind,
+            ParseErrorKind::Expecting {
                 value: "filter".to_string()
             }
         );
@@ -237,8 +237,8 @@ mod tests {
         let mut reader = Reader::new("regex 1");
         let err = filter(&mut reader).err().unwrap();
         assert_eq!(
-            err.inner,
-            ParseError::Expecting {
+            err.kind,
+            ParseErrorKind::Expecting {
                 value: "\" or /".to_string()
             }
         );

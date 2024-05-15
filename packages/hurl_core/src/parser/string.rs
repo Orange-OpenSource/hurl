@@ -174,19 +174,19 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
                 reader.state = start;
                 match reader.read() {
                     None => {
-                        let inner = ParseError::Expecting {
+                        let inner = ParseErrorKind::Expecting {
                             value: "char".to_string(),
                         };
-                        Err(Error::new(start.pos, true, inner))
+                        Err(ParseError::new(start.pos, true, inner))
                     }
                     Some(c) => {
                         if except.contains(&c)
                             || ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
                         {
-                            let inner = ParseError::Expecting {
+                            let inner = ParseErrorKind::Expecting {
                                 value: "char".to_string(),
                             };
-                            Err(Error::new(start.pos, true, inner))
+                            Err(ParseError::new(start.pos, true, inner))
                         } else {
                             Ok((c, reader.peek_back(start.cursor)))
                         }
@@ -214,7 +214,11 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => unicode(reader),
-        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
+        _ => Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::EscapeChar,
+        )),
     }
 }
 
@@ -222,7 +226,13 @@ pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
     literal("{", reader)?;
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
-        None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
+        None => {
+            return Err(ParseError::new(
+                reader.state.pos,
+                false,
+                ParseErrorKind::Unicode,
+            ))
+        }
         Some(c) => c,
     };
     literal("}", reader)?;
@@ -581,8 +591,8 @@ mod tests {
         let error = escape_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            ParseError::Expecting {
+            error.kind,
+            ParseErrorKind::Expecting {
                 value: "\\".to_string()
             }
         );
@@ -609,7 +619,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = hex_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::HexDigit);
+        assert_eq!(error.kind, ParseErrorKind::HexDigit);
         assert!(!error.recoverable);
     }
 

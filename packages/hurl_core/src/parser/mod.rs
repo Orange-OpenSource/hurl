@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-pub type ParseResult<T> = Result<T, Error>;
+pub type ParseResult<T> = Result<T, ParseError>;
 pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
 
 pub fn parse_hurl_file(s: &str) -> ParseResult<HurlFile> {
@@ -23,7 +23,7 @@ pub fn parse_hurl_file(s: &str) -> ParseResult<HurlFile> {
     parsers::hurl_file(&mut reader)
 }
 
-pub use self::error::{Error, JsonErrorVariant, ParseError};
+pub use self::error::{JsonErrorVariant, ParseError, ParseErrorKind};
 pub use self::json::{
     boolean_value as parse_json_boolean, null_value as parse_json_null,
     number_value as parse_json_number, parse as parse_json,

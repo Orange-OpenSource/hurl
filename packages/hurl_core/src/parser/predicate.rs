@@ -94,9 +94,9 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
         ],
         reader,
     ) {
-        Err(Error {
+        Err(ParseError {
             recoverable: true, ..
-        }) => Err(Error::new(start.pos, false, ParseError::Predicate)),
+        }) => Err(ParseError::new(start.pos, false, ParseErrorKind::Predicate)),
         x => x,
     }
 }
@@ -173,7 +173,11 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
             operator,
         })
     } else {
-        Err(Error::new(start.pos, false, ParseError::PredicateValue))
+        Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ))
     }
 }
 
@@ -196,7 +200,11 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncV
             operator,
         })
     } else {
-        Err(Error::new(start.pos, false, ParseError::PredicateValue))
+        Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ))
     }
 }
 
@@ -219,7 +227,11 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
             operator,
         })
     } else {
-        Err(Error::new(start.pos, false, ParseError::PredicateValue))
+        Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ))
     }
 }
 
@@ -242,7 +254,11 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValu
             operator,
         })
     } else {
-        Err(Error::new(start.pos, false, ParseError::PredicateValue))
+        Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ))
     }
 }
 
@@ -252,7 +268,11 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
+        return Err(ParseError::new(
+            save.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ));
     }
     Ok(PredicateFuncValue::StartWith { space0, value })
 }
@@ -263,7 +283,11 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
+        return Err(ParseError::new(
+            save.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ));
     }
     Ok(PredicateFuncValue::EndWith { space0, value })
 }
@@ -274,7 +298,11 @@ fn contain_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
+        return Err(ParseError::new(
+            save.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ));
     }
     Ok(PredicateFuncValue::Contain { space0, value })
 }
@@ -292,7 +320,11 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !matches!(value, PredicateValue::String(_)) && !matches!(value, PredicateValue::Regex(_)) {
-        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
+        return Err(ParseError::new(
+            save.pos,
+            false,
+            ParseErrorKind::PredicateValue,
+        ));
     }
     Ok(PredicateFuncValue::Match { space0, value })
 }
@@ -413,7 +445,7 @@ mod tests {
         let error = predicate_func(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::Predicate);
+        assert_eq!(error.kind, ParseErrorKind::Predicate);
     }
 
     #[test]
@@ -523,7 +555,7 @@ mod tests {
             }
         );
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::PredicateValue);
+        assert_eq!(error.kind, ParseErrorKind::PredicateValue);
     }
 
     #[test]

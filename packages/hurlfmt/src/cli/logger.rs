@@ -34,8 +34,8 @@ pub fn make_logger_parser_error(
     lines: Vec<String>,
     color: bool,
     filename: Option<PathBuf>,
-) -> impl Fn(&parser::Error, bool) {
-    move |error: &parser::Error, warning: bool| {
+) -> impl Fn(&parser::ParseError, bool) {
+    move |error: &parser::ParseError, warning: bool| {
         log_error(lines.clone(), color, filename.clone(), error, warning);
     }
 }

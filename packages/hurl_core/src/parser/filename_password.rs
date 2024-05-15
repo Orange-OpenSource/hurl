@@ -58,15 +58,15 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
     if elements.is_empty() {
-        let inner = ParseError::Filename;
-        return Err(Error::new(start.pos, false, inner));
+        let inner = ParseErrorKind::Filename;
+        return Err(ParseError::new(start.pos, false, inner));
     }
     if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
         if encoded.starts_with('[') {
-            let inner = ParseError::Expecting {
+            let inner = ParseErrorKind::Expecting {
                 value: "filename".to_string(),
             };
-            return Err(Error::new(start.pos, false, inner));
+            return Err(ParseError::new(start.pos, false, inner));
         }
     }
 
@@ -146,7 +146,11 @@ fn filename_password_escaped_char(reader: &mut Reader) -> ParseResult<char> {
         Some('}') => Ok('}'),
         Some(':') => Ok(':'),
         Some('u') => string::unicode(reader),
-        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
+        _ => Err(ParseError::new(
+            start.pos,
+            false,
+            ParseErrorKind::EscapeChar,
+        )),
     }
 }
 
