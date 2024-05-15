@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_split(
     value: &Value,
@@ -28,7 +28,7 @@ pub fn eval_split(
     source_info: SourceInfo,
     assert: bool,
     sep: &Template,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(s) => {
             let sep = eval_template(sep, variables)?;
@@ -39,8 +39,8 @@ pub fn eval_split(
             Ok(Some(Value::List(values)))
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v.display());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

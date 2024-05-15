@@ -18,7 +18,7 @@
 use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::http::{Call, Cookie};
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
 use crate::util::path::ContextDir;
@@ -45,7 +45,7 @@ impl HurlResult {
     ///
     /// The errors are only the "effective" ones: those that are due to retry are
     /// ignored.
-    pub fn errors(&self) -> Vec<(&Error, SourceInfo)> {
+    pub fn errors(&self) -> Vec<(&RunnerError, SourceInfo)> {
         let mut errors = vec![];
         let mut next_entries = self.entries.iter().skip(1);
         for entry in self.entries.iter() {
@@ -81,7 +81,7 @@ pub struct EntryResult {
     /// List of asserts.
     pub asserts: Vec<AssertResult>,
     /// List of errors.
-    pub errors: Vec<Error>,
+    pub errors: Vec<RunnerError>,
     pub time_in_ms: u128,
     /// The entry has been executed with `--compressed` option:
     /// server is requested to send compressed response, and the response should be uncompressed
@@ -140,19 +140,19 @@ pub enum AssertResult {
     },
     /// Implicit HTTP response header assert.
     Header {
-        actual: Result<String, Error>,
+        actual: Result<String, RunnerError>,
         expected: String,
         source_info: SourceInfo,
     },
     /// Implicit HTTP response body assert.
     Body {
-        actual: Result<Value, Error>,
-        expected: Result<Value, Error>,
+        actual: Result<Value, RunnerError>,
+        expected: Result<Value, RunnerError>,
         source_info: SourceInfo,
     },
     /// Explicit assert on HTTP response.
     Explicit {
-        actual: Result<Option<Value>, Error>,
+        actual: Result<Option<Value>, RunnerError>,
         source_info: SourceInfo,
         predicate_result: Option<PredicateResult>,
     },
@@ -170,7 +170,7 @@ pub struct CaptureResult {
     pub value: Value,
 }
 
-pub type PredicateResult = Result<(), Error>;
+pub type PredicateResult = Result<(), RunnerError>;
 
 impl EntryResult {
     /// Writes the last HTTP response of this entry result to this `output`.
@@ -182,7 +182,7 @@ impl EntryResult {
         context_dir: &ContextDir,
         stdout: &mut Stdout,
         source_info: SourceInfo,
-    ) -> Result<(), Error> {
+    ) -> Result<(), RunnerError> {
         let Some(call) = self.calls.last() else {
             return Ok(());
         };
@@ -191,7 +191,7 @@ impl EntryResult {
             let bytes = match response.uncompress_body() {
                 Ok(bytes) => bytes,
                 Err(e) => {
-                    return Err(Error::new(source_info, e.into(), false));
+                    return Err(RunnerError::new(source_info, e.into(), false));
                 }
             };
             output.write(&bytes, stdout, Some(context_dir))

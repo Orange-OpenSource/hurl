@@ -21,7 +21,7 @@ use encoding::DecoderTrap;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_decode(
     value: &Value,
@@ -29,27 +29,27 @@ pub fn eval_decode(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let encoding_value = eval_template(encoding_value, variables)?;
     match value {
         Value::Bytes(value) => {
             match encoding::label::encoding_from_whatwg_label(encoding_value.as_str()) {
                 None => {
-                    let inner = RunnerError::FilterInvalidEncoding(encoding_value);
-                    Err(Error::new(source_info, inner, assert))
+                    let inner = RunnerErrorKind::FilterInvalidEncoding(encoding_value);
+                    Err(RunnerError::new(source_info, inner, assert))
                 }
                 Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
                     Ok(decoded) => Ok(Some(Value::String(decoded))),
                     Err(_) => {
-                        let inner = RunnerError::FilterDecode(encoding_value);
-                        Err(Error::new(source_info, inner, assert))
+                        let inner = RunnerErrorKind::FilterDecode(encoding_value);
+                        Err(RunnerError::new(source_info, inner, assert))
                     }
                 },
             }
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

@@ -21,18 +21,22 @@ use hurl_core::ast::RegexValue;
 use regex::Regex;
 
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_regex_value(
     regex_value: &RegexValue,
     variables: &HashMap<String, Value>,
-) -> Result<Regex, Error> {
+) -> Result<Regex, RunnerError> {
     match regex_value {
         RegexValue::Template(t) => {
             let value = eval_template(t, variables)?;
             match Regex::new(value.as_str()) {
                 Ok(re) => Ok(re),
-                Err(_) => Err(Error::new(t.source_info, RunnerError::InvalidRegex, false)),
+                Err(_) => Err(RunnerError::new(
+                    t.source_info,
+                    RunnerErrorKind::InvalidRegex,
+                    false,
+                )),
             }
         }
         RegexValue::Regex(re) => Ok(re.inner.clone()),

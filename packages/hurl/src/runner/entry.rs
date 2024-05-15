@@ -22,7 +22,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::ClientOptions;
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::value::Value;
@@ -88,7 +88,7 @@ pub fn run(
             let start = entry.request.url.source_info.start;
             let end = entry.request.url.source_info.end;
             let error_source_info = SourceInfo::new(start, end);
-            let error = Error::new(error_source_info, http_error.into(), false);
+            let error = RunnerError::new(error_source_info, http_error.into(), false);
             return EntryResult {
                 entry_index,
                 source_info,
@@ -183,15 +183,17 @@ pub fn run(
     }
 }
 
-/// Converts a list of [`AssertResult`] to a list of [`Error`].
-fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<Error> {
+/// Converts a list of [`AssertResult`] to a list of [`RunnerError`].
+fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<RunnerError> {
     asserts
         .iter()
         .filter_map(|assert| assert.error())
         .map(
-            |Error {
-                 source_info, inner, ..
-             }| Error::new(source_info, inner, true),
+            |RunnerError {
+                 source_info,
+                 kind: inner,
+                 ..
+             }| RunnerError::new(source_info, inner, true),
         )
         .collect()
 }

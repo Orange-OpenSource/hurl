@@ -18,26 +18,27 @@
 
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_url_decode(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
                 Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 Err(_) => {
-                    let inner = RunnerError::FilterInvalidInput("Invalid UTF-8 stream".to_string());
-                    Err(Error::new(source_info, inner, assert))
+                    let inner =
+                        RunnerErrorKind::FilterInvalidInput("Invalid UTF-8 stream".to_string());
+                    Err(RunnerError::new(source_info, inner, assert))
                 }
             }
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

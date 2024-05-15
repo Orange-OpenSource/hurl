@@ -21,7 +21,7 @@ use std::path::PathBuf;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::json::eval_json_value;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
@@ -32,7 +32,7 @@ pub fn eval_body(
     body: &Body,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<http::Body, Error> {
+) -> Result<http::Body, RunnerError> {
     eval_bytes(&body.value, variables, context_dir)
 }
 
@@ -40,7 +40,7 @@ pub fn eval_bytes(
     bytes: &Bytes,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<http::Body, Error> {
+) -> Result<http::Body, RunnerError> {
     match bytes {
         Bytes::OnelineString(value) => {
             let value = eval_template(value, variables)?;
@@ -69,21 +69,21 @@ pub fn eval_file(
     filename: &Template,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<Vec<u8>, Error> {
+) -> Result<Vec<u8>, RunnerError> {
     let file = eval_template(filename, variables)?;
     // In order not to leak any private date, we check that the user provided file
     // is a child of the context directory.
     let path = PathBuf::from(file);
     if !context_dir.is_access_allowed(&path) {
-        let inner = RunnerError::UnauthorizedFileAccess { path };
-        return Err(Error::new(filename.source_info, inner, false));
+        let inner = RunnerErrorKind::UnauthorizedFileAccess { path };
+        return Err(RunnerError::new(filename.source_info, inner, false));
     }
     let resolved_file = context_dir.resolved_path(&path);
     match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
         Err(_) => {
-            let inner = RunnerError::FileReadAccess { path };
-            Err(Error::new(filename.source_info, inner, false))
+            let inner = RunnerErrorKind::FileReadAccess { path };
+            Err(RunnerError::new(filename.source_info, inner, false))
         }
     }
 }
@@ -155,8 +155,8 @@ mod tests {
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         let error = eval_bytes(&bytes, &variables, &context_dir).err().unwrap();
         assert_eq!(
-            error.inner,
-            RunnerError::FileReadAccess {
+            error.kind,
+            RunnerErrorKind::FileReadAccess {
                 path: PathBuf::from("data.bin")
             }
         );

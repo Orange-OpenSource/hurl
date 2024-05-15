@@ -22,13 +22,13 @@ use serde_json::json;
 
 use crate::runner::json::eval_json_value;
 use crate::runner::template::eval_template;
-use crate::runner::{Error, Value};
+use crate::runner::{RunnerError, Value};
 
 /// Renders to string a multiline body, given a set of variables.
 pub fn eval_multiline(
     multiline: &MultilineString,
     variables: &HashMap<String, Value>,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     match multiline {
         MultilineString::OneLineText(value) => {
             let s = eval_template(value, variables)?;

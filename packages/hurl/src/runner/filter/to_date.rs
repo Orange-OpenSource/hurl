@@ -22,7 +22,7 @@ use chrono::NaiveDateTime;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_to_date(
     value: &Value,
@@ -30,7 +30,7 @@ pub fn eval_to_date(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let fmt = eval_template(fmt, variables)?;
 
     match value {
@@ -39,13 +39,13 @@ pub fn eval_to_date(
                 v.and_local_timezone(chrono::Utc).unwrap(),
             ))),
             Err(_) => {
-                let inner = RunnerError::FilterInvalidInput(value.display());
-                Err(Error::new(source_info, inner, assert))
+                let inner = RunnerErrorKind::FilterInvalidInput(value.display());
+                Err(RunnerError::new(source_info, inner, assert))
             }
         },
         v => {
-            let inner = RunnerError::FilterInvalidInput(v.display());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

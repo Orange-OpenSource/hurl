@@ -17,26 +17,26 @@
  */
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{Error, Number, RunnerError, Value};
+use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_to_float(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::Number(Number::Float(v)) => Ok(Some(Value::Number(Number::Float(*v)))),
         Value::Number(Number::Integer(v)) => Ok(Some(Value::Number(Number::Float(*v as f64)))),
         Value::String(v) => match v.parse::<f64>() {
             Ok(f) => Ok(Some(Value::Number(Number::Float(f)))),
             _ => {
-                let inner = RunnerError::FilterInvalidInput(value.display());
-                Err(Error::new(source_info, inner, assert))
+                let inner = RunnerErrorKind::FilterInvalidInput(value.display());
+                Err(RunnerError::new(source_info, inner, assert))
             }
         },
         v => {
-            let inner = RunnerError::FilterInvalidInput(v.display());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -45,7 +45,7 @@ pub fn eval_to_float(
 pub mod tests {
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Number, RunnerError, Value};
+    use crate::runner::{Number, RunnerErrorKind, Value};
     use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
@@ -118,15 +118,15 @@ pub mod tests {
         .err()
         .unwrap();
         assert_eq!(
-            err.inner,
-            RunnerError::FilterInvalidInput("string <3x.1415>".to_string())
+            err.kind,
+            RunnerErrorKind::FilterInvalidInput("string <3x.1415>".to_string())
         );
         let err = eval_filter(&filter, &Value::Bool(true), &variable, false)
             .err()
             .unwrap();
         assert_eq!(
-            err.inner,
-            RunnerError::FilterInvalidInput("bool <true>".to_string())
+            err.kind,
+            RunnerErrorKind::FilterInvalidInput("bool <true>".to_string())
         );
     }
 }

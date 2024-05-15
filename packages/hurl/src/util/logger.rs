@@ -550,17 +550,17 @@ pub mod tests {
     use hurl_core::parser::{ParseError, ParseErrorKind};
 
     use super::*;
-    use crate::runner;
+    use crate::runner::{RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_error_timeout() {
         let content = "GET http://unknown";
         let filename = "test.hurl";
         let inner =
-            runner::RunnerError::HttpConnection("(6) Could not resolve host: unknown".to_string());
+            RunnerErrorKind::HttpConnection("(6) Could not resolve host: unknown".to_string());
         let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
-        let error = runner::Error::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, inner, true);
         assert_eq!(
             get_message(&error, &split_lines(content), false),
             " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
@@ -582,12 +582,12 @@ pub mod tests {
 HTTP/1.0 200
 "#;
         let filename = "test.hurl";
-        let inner = runner::RunnerError::AssertStatus {
+        let inner = RunnerErrorKind::AssertStatus {
             actual: "404".to_string(),
         };
         let error_source_info = SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
-        let error = runner::Error::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, inner, true);
 
         assert_eq!(
             get_message(&error, &split_lines(content), false),
@@ -621,9 +621,9 @@ xpath "strong(//head/title)" == "Hello"
         let filename = "test.hurl";
         let error_source_info = SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 22));
-        let error = runner::Error::new(
+        let error = RunnerError::new(
             error_source_info,
-            runner::RunnerError::QueryInvalidXpathEval,
+            RunnerErrorKind::QueryInvalidXpathEval,
             true,
         );
         assert_eq!(
@@ -653,9 +653,9 @@ jsonpath "$.count" >= 5
         let filename = "test.hurl";
         let error_source_info = SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14));
-        let error = runner::Error {
+        let error = RunnerError {
             source_info: error_source_info,
-            inner: runner::RunnerError::AssertFailure {
+            kind: RunnerErrorKind::AssertFailure {
                 actual: "int <2>".to_string(),
                 expected: "greater than int <5>".to_string(),
                 type_mismatch: false,
@@ -692,13 +692,13 @@ HTTP/1.0 200
 ```
 "#;
         let filename = "test.hurl";
-        let inner = runner::RunnerError::AssertBodyValueError {
+        let inner = RunnerErrorKind::AssertBodyValueError {
             actual: "<p>Hello</p>\n\n".to_string(),
             expected: "<p>Hello</p>\n".to_string(),
         };
         let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
-        let error = runner::Error::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, inner, true);
 
         assert_eq!(
             get_message(&error, &split_lines(content), false),

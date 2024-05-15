@@ -22,7 +22,7 @@ use std::path::Path;
 use hurl_core::parser;
 use uuid::Uuid;
 
-use crate::runner::{EntryResult, Error, HurlResult, Input};
+use crate::runner::{EntryResult, HurlResult, Input, RunnerError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -30,7 +30,7 @@ pub struct Testcase {
     pub filename: String,
     pub success: bool,
     pub time_in_ms: u128,
-    pub errors: Vec<Error>,
+    pub errors: Vec<RunnerError>,
     pub timestamp: i64,
 }
 

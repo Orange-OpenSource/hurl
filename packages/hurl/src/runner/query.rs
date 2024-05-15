@@ -22,11 +22,11 @@ use regex::Regex;
 use sha2::Digest;
 
 use crate::http;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::eval_template;
 use crate::runner::{filter, Number, Value};
 
-pub type QueryResult = Result<Option<Value>, Error>;
+pub type QueryResult = Result<Option<Value>, RunnerError>;
 
 /// Evaluates this `query` and returns a [`QueryResult`], using the HTTP response `http_response` and `variables`.
 pub fn eval_query(
@@ -119,7 +119,7 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
     // Can return a string if encoding is known and utf8.
     match response.text() {
         Ok(s) => Ok(Some(Value::String(s))),
-        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -133,7 +133,7 @@ fn eval_query_xpath(
         Ok(xml) => {
             filter::eval_xpath_string(&xml, expr, variables, query_source_info, response.is_html())
         }
-        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -145,7 +145,7 @@ fn eval_query_jsonpath(
 ) -> QueryResult {
     match response.text() {
         Ok(json) => filter::eval_jsonpath_string(&json, expr, variables, query_source_info),
-        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -157,14 +157,20 @@ fn eval_query_regex(
 ) -> QueryResult {
     let s = match response.text() {
         Ok(v) => v,
-        Err(inner) => return Err(Error::new(query_source_info, inner.into(), false)),
+        Err(inner) => return Err(RunnerError::new(query_source_info, inner.into(), false)),
     };
     let re = match regex {
         RegexValue::Template(t) => {
             let value = eval_template(t, variables)?;
             match Regex::new(value.as_str()) {
                 Ok(re) => re,
-                Err(_) => return Err(Error::new(t.source_info, RunnerError::InvalidRegex, false)),
+                Err(_) => {
+                    return Err(RunnerError::new(
+                        t.source_info,
+                        RunnerErrorKind::InvalidRegex,
+                        false,
+                    ))
+                }
             }
         }
         RegexValue::Regex(re) => re.inner.clone(),
@@ -196,7 +202,7 @@ fn eval_query_duration(response: &http::Response) -> QueryResult {
 fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
-        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -204,7 +210,7 @@ fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(Error::new(query_source_info, inner.into(), false));
+            return Err(RunnerError::new(query_source_info, inner.into(), false));
         }
     };
     let mut hasher = sha2::Sha256::new();
@@ -218,7 +224,7 @@ fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> Q
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(Error::new(query_source_info, inner.into(), false));
+            return Err(RunnerError::new(query_source_info, inner.into(), false));
         }
     };
     let bytes = md5::compute(bytes).to_vec();
@@ -824,8 +830,8 @@ pub mod tests {
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2))
         );
         assert_eq!(
-            error.inner,
-            RunnerError::InvalidDecoding {
+            error.kind,
+            RunnerErrorKind::InvalidDecoding {
                 charset: "utf-8".to_string()
             }
         );
@@ -843,8 +849,8 @@ pub mod tests {
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
         assert_eq!(
-            error.inner,
-            RunnerError::InvalidDecoding {
+            error.kind,
+            RunnerErrorKind::InvalidDecoding {
                 charset: "utf-8".to_string()
             }
         );
@@ -874,7 +880,7 @@ pub mod tests {
         let error = eval_query(&query, &variables, &http::xml_two_users_http_response())
             .err()
             .unwrap();
-        assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval);
+        assert_eq!(error.kind, RunnerErrorKind::QueryInvalidXpathEval);
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
     }
 
@@ -976,8 +982,8 @@ pub mod tests {
             }
         );
         assert_eq!(
-            error.inner,
-            RunnerError::QueryInvalidJsonpathExpression {
+            error.kind,
+            RunnerErrorKind::QueryInvalidJsonpathExpression {
                 value: "xxx".to_string()
             }
         );
@@ -994,7 +1000,7 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, RunnerError::QueryInvalidJson);
+        assert_eq!(error.kind, RunnerErrorKind::QueryInvalidJson);
     }
 
     #[test]
@@ -1054,7 +1060,7 @@ pub mod tests {
             error.source_info,
             SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10))
         );
-        assert_eq!(error.inner, RunnerError::InvalidRegex);
+        assert_eq!(error.kind, RunnerErrorKind::InvalidRegex);
     }
 
     #[test]

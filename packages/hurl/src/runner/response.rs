@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::result::{AssertResult, CaptureResult};
 use crate::runner::{assert, body, capture, json, multiline, template, Value};
 use crate::util::path::ContextDir;
@@ -80,9 +80,9 @@ pub fn eval_asserts(
                         let actuals = http_response.headers.values(&header_name);
                         if actuals.is_empty() {
                             let result = AssertResult::Header {
-                                actual: Err(Error::new(
+                                actual: Err(RunnerError::new(
                                     header.key.source_info,
-                                    RunnerError::QueryHeaderNotFound,
+                                    RunnerErrorKind::QueryHeaderNotFound,
                                     false,
                                 )),
                                 expected,
@@ -171,7 +171,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -189,7 +189,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -210,7 +210,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -231,7 +231,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -254,7 +254,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -280,7 +280,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -304,7 +304,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(Error::new(source_info, e.into(), true))
+                    Err(RunnerError::new(source_info, e.into(), true))
                 }
             };
             AssertResult::Body {
@@ -321,7 +321,7 @@ pub fn eval_captures(
     response: &Response,
     http_response: &http::Response,
     variables: &mut HashMap<String, Value>,
-) -> Result<Vec<CaptureResult>, Error> {
+) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
     for capture in &response.captures() {
         let capture_result = capture::eval_capture(capture, variables, http_response)?;
@@ -399,9 +399,9 @@ mod tests {
             vec![AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(2)))),
                 source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 24)),
-                predicate_result: Some(Err(Error::new(
+                predicate_result: Some(Err(RunnerError::new(
                     SourceInfo::new(Pos::new(1, 0), Pos::new(1, 0)),
-                    RunnerError::AssertFailure {
+                    RunnerErrorKind::AssertFailure {
                         actual: "int <2>".to_string(),
                         expected: "int <3>".to_string(),
                         type_mismatch: false,

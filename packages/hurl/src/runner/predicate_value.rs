@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::runner::body::eval_file; // TODO move function out of body module
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
@@ -31,7 +31,7 @@ pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<Value, Error> {
+) -> Result<Value, RunnerError> {
     match predicate_value {
         PredicateValue::String(template) => {
             let s = eval_template(template, variables)?;
@@ -61,7 +61,7 @@ pub fn eval_predicate_value(
 pub fn eval_predicate_value_template(
     predicate_value: &PredicateValue,
     variables: &HashMap<String, Value>,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     match predicate_value {
         PredicateValue::String(template) => eval_template(template, variables),
         PredicateValue::Regex(regex) => Ok(regex.inner.to_string()),

@@ -21,7 +21,7 @@ use hurl_core::ast::{SourceInfo, Template};
 
 use crate::jsonpath;
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_jsonpath(
     value: &Value,
@@ -29,12 +29,12 @@ pub fn eval_jsonpath(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(json) => eval_jsonpath_string(json, expr, variables, source_info),
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -44,21 +44,21 @@ pub fn eval_jsonpath_string(
     expr: &Template,
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let value = eval_template(expr, variables)?;
     let expr_source_info = &expr.source_info;
     let jsonpath_query = match jsonpath::parse(value.as_str()) {
         Ok(q) => q,
         Err(_) => {
-            let inner = RunnerError::QueryInvalidJsonpathExpression { value };
-            return Err(Error::new(*expr_source_info, inner, false));
+            let inner = RunnerErrorKind::QueryInvalidJsonpathExpression { value };
+            return Err(RunnerError::new(*expr_source_info, inner, false));
         }
     };
     let value = match serde_json::from_str(json) {
         Err(_) => {
-            return Err(Error::new(
+            return Err(RunnerError::new(
                 source_info,
-                RunnerError::QueryInvalidJson,
+                RunnerErrorKind::QueryInvalidJson,
                 false,
             ));
         }

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::runner;
+use crate::runner::RunnerError;
 use hurl_core::error::DisplaySourceError;
 use std::fmt;
 
@@ -28,8 +28,8 @@ impl Error {
     }
 }
 
-impl From<runner::Error> for Error {
-    fn from(error: runner::Error) -> Self {
+impl From<RunnerError> for Error {
+    fn from(error: RunnerError) -> Self {
         Error::new(&error.fixme(&[], false))
     }
 }

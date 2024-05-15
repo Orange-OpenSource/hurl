@@ -38,7 +38,7 @@ use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::xpath::eval_xpath;
 
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 use super::count::eval_count;
 
@@ -49,15 +49,15 @@ pub fn eval_filters(
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let mut value = Some(value.clone());
     for filter in filters {
         value = if let Some(value) = value {
             eval_filter(filter, &value, variables, in_assert)?
         } else {
-            return Err(Error::new(
+            return Err(RunnerError::new(
                 filter.source_info,
-                RunnerError::FilterMissingInput,
+                RunnerErrorKind::FilterMissingInput,
                 in_assert,
             ));
         }
@@ -70,7 +70,7 @@ pub fn eval_filter(
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match &filter.value {
         FilterValue::Count => eval_count(value, filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),

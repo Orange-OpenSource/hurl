@@ -21,7 +21,7 @@ use hurl_core::ast::{RegexValue, SourceInfo};
 
 use crate::runner::regex::eval_regex_value;
 
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_regex(
     value: &Value,
@@ -29,7 +29,7 @@ pub fn eval_regex(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let re = eval_regex_value(regex_value, variables)?;
     match value {
         Value::String(s) => match re.captures(s.as_str()) {
@@ -40,8 +40,8 @@ pub fn eval_regex(
             None => Ok(None),
         },
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -51,7 +51,7 @@ pub mod tests {
     use std::collections::HashMap;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{RunnerError, Value};
+    use crate::runner::{RunnerErrorKind, Value};
     use hurl_core::ast::{
         Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
@@ -97,8 +97,8 @@ pub mod tests {
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20))
         );
         assert_eq!(
-            error.inner,
-            RunnerError::FilterInvalidInput("boolean".to_string())
+            error.kind,
+            RunnerErrorKind::FilterInvalidInput("boolean".to_string())
         );
     }
 
@@ -135,6 +135,6 @@ pub mod tests {
             error.source_info,
             SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20))
         );
-        assert_eq!(error.inner, RunnerError::InvalidRegex);
+        assert_eq!(error.kind, RunnerErrorKind::InvalidRegex);
     }
 }

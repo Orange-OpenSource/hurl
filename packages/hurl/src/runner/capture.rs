@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::filter::eval_filters;
 use crate::runner::query::eval_query;
 use crate::runner::result::CaptureResult;
@@ -28,19 +28,19 @@ use crate::runner::template::eval_template;
 use crate::runner::Value;
 
 /// Evaluates a `capture` with `variables` map and `http_response`, returns a
-/// [`CaptureResult`] on success or an [`Error`] .
+/// [`CaptureResult`] on success or an [`RunnerError`] .
 pub fn eval_capture(
     capture: &Capture,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
-) -> Result<CaptureResult, Error> {
+) -> Result<CaptureResult, RunnerError> {
     let name = eval_template(&capture.name, variables)?;
     let value = eval_query(&capture.query, variables, http_response)?;
     let value = match value {
         None => {
-            return Err(Error::new(
+            return Err(RunnerError::new(
                 capture.query.source_info,
-                RunnerError::NoQueryResult,
+                RunnerErrorKind::NoQueryResult,
                 false,
             ));
         }
@@ -48,9 +48,9 @@ pub fn eval_capture(
             let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
             match eval_filters(&filters, &value, variables, false)? {
                 None => {
-                    return Err(Error::new(
+                    return Err(RunnerError::new(
                         capture.query.source_info,
-                        RunnerError::NoQueryResult,
+                        RunnerErrorKind::NoQueryResult,
                         false,
                     ));
                 }
@@ -169,7 +169,7 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval);
+        assert_eq!(error.kind, RunnerErrorKind::QueryInvalidXpathEval);
     }
 
     #[test]

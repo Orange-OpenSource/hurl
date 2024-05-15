@@ -22,8 +22,7 @@ use colored::Colorize;
 use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::output::Error;
-use crate::runner;
-use crate::runner::{HurlResult, Output};
+use crate::runner::{HurlResult, Output, RunnerError};
 use crate::util::term::{Stderr, Stdout};
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
@@ -63,7 +62,7 @@ pub fn write_last_body(
                 // We may pass a [`SourceInfo`] as a parameter of this method to make
                 // a more accurate error
                 let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-                let error = runner::Error::new(source_info, e.into(), false);
+                let error = RunnerError::new(source_info, e.into(), false);
                 return Err(error.into());
             }
         };

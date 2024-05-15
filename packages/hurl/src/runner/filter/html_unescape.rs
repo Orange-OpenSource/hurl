@@ -19,21 +19,21 @@
 use hurl_core::ast::SourceInfo;
 
 use crate::html;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_html_unescape(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
             let decoded = html::html_unescape(value);
             Ok(Some(Value::String(decoded)))
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

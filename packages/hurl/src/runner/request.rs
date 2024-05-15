@@ -23,7 +23,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::{HeaderVec, AUTHORIZATION};
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::value::Value;
 use crate::runner::{body, multipart, template};
 use crate::util::path::ContextDir;
@@ -33,7 +33,7 @@ pub fn eval_request(
     request: &Request,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<http::RequestSpec, Error> {
+) -> Result<http::RequestSpec, RunnerError> {
     let method = eval_method(&request.method);
     let url = template::eval_template(&request.url, variables)?;
 
@@ -168,7 +168,7 @@ fn eval_method(method: &Method) -> http::Method {
 mod tests {
     use hurl_core::ast::SourceInfo;
 
-    use super::super::error::RunnerError;
+    use super::super::error::RunnerErrorKind;
     use super::*;
 
     fn whitespace() -> Whitespace {
@@ -317,8 +317,8 @@ mod tests {
             SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15))
         );
         assert_eq!(
-            error.inner,
-            RunnerError::TemplateVariableNotDefined {
+            error.kind,
+            RunnerErrorKind::TemplateVariableNotDefined {
                 name: String::from("base_url")
             }
         );

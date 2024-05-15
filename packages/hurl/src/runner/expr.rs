@@ -19,18 +19,18 @@ use std::collections::HashMap;
 
 use hurl_core::ast::Expr;
 
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
 
 /// Evaluates the expression `expr` with `variables` map and `http_response`, returns a
-/// [`Value`] on success or an [`Error`] .
-pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, Error> {
+/// [`Value`] on success or an [`RunnerError`] .
+pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, RunnerError> {
     if let Some(value) = variables.get(expr.variable.name.as_str()) {
         Ok(value.clone())
     } else {
-        let inner = RunnerError::TemplateVariableNotDefined {
+        let inner = RunnerErrorKind::TemplateVariableNotDefined {
             name: expr.variable.name.clone(),
         };
-        Err(Error::new(expr.variable.source_info, inner, false))
+        Err(RunnerError::new(expr.variable.source_info, inner, false))
     }
 }

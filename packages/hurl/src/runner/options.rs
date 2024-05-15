@@ -25,7 +25,7 @@ use hurl_core::ast::{
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
-use crate::runner::{Error, Number, Output, RunnerError, RunnerOptions, Value};
+use crate::runner::{Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
@@ -36,7 +36,7 @@ pub fn get_entry_options(
     runner_options: &RunnerOptions,
     variables: &mut HashMap<String, Value>,
     logger: &mut Logger,
-) -> Result<RunnerOptions, Error> {
+) -> Result<RunnerOptions, RunnerError> {
     let runner_options = runner_options.clone();
     // When used globally (on the command line), `--output` writes the last successful request
     // to `output` file. We don't want to output every entry's response, so we initialise
@@ -264,7 +264,7 @@ pub fn get_entry_verbosity(
     entry: &Entry,
     default_verbosity: Option<Verbosity>,
     variables: &HashMap<String, Value>,
-) -> Result<Option<Verbosity>, Error> {
+) -> Result<Option<Verbosity>, RunnerError> {
     let mut verbosity = default_verbosity;
 
     for section in &entry.request.sections {
@@ -298,18 +298,18 @@ pub fn get_entry_verbosity(
 fn eval_boolean_option(
     boolean_value: &BooleanOption,
     variables: &HashMap<String, Value>,
-) -> Result<bool, Error> {
+) -> Result<bool, RunnerError> {
     match boolean_value {
         BooleanOption::Literal(value) => Ok(*value),
         BooleanOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Bool(value) => Ok(value),
             v => {
-                let inner = RunnerError::TemplateVariableInvalidType {
+                let inner = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "boolean".to_string(),
                 };
-                Err(Error::new(expr.variable.source_info, inner, false))
+                Err(RunnerError::new(expr.variable.source_info, inner, false))
             }
         },
     }
@@ -318,29 +318,29 @@ fn eval_boolean_option(
 fn eval_natural_option(
     natural_value: &NaturalOption,
     variables: &HashMap<String, Value>,
-) -> Result<u64, Error> {
+) -> Result<u64, RunnerError> {
     match natural_value {
         NaturalOption::Literal(value) => Ok(*value),
         NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
-                    let inner = RunnerError::TemplateVariableInvalidType {
+                    let inner = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
                         value: value.to_string(),
                         expecting: "positive integer".to_string(),
                     };
-                    Err(Error::new(expr.variable.source_info, inner, false))
+                    Err(RunnerError::new(expr.variable.source_info, inner, false))
                 } else {
                     Ok(value as u64)
                 }
             }
             v => {
-                let inner = RunnerError::TemplateVariableInvalidType {
+                let inner = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "positive integer".to_string(),
                 };
-                Err(Error::new(expr.variable.source_info, inner, false))
+                Err(RunnerError::new(expr.variable.source_info, inner, false))
             }
         },
     }
@@ -349,7 +349,7 @@ fn eval_natural_option(
 fn eval_retry_option(
     retry_option_value: &RetryOption,
     variables: &HashMap<String, Value>,
-) -> Result<Retry, Error> {
+) -> Result<Retry, RunnerError> {
     match retry_option_value {
         RetryOption::Literal(retry) => Ok(*retry),
         RetryOption::Expression(expr) => match eval_expression(expr, variables)? {
@@ -361,21 +361,21 @@ fn eval_retry_option(
                 } else if value > 0 {
                     Ok(Retry::Finite(value as usize))
                 } else {
-                    let inner = RunnerError::TemplateVariableInvalidType {
+                    let inner = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
                         value: value.to_string(),
                         expecting: "integer".to_string(),
                     };
-                    Err(Error::new(expr.variable.source_info, inner, false))
+                    Err(RunnerError::new(expr.variable.source_info, inner, false))
                 }
             }
             v => {
-                let inner = RunnerError::TemplateVariableInvalidType {
+                let inner = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "integer".to_string(),
                 };
-                Err(Error::new(expr.variable.source_info, inner, false))
+                Err(RunnerError::new(expr.variable.source_info, inner, false))
             }
         },
     }
@@ -384,7 +384,7 @@ fn eval_retry_option(
 fn eval_variable_value(
     variable_value: &VariableValue,
     variables: &mut HashMap<String, Value>,
-) -> Result<Value, Error> {
+) -> Result<Value, RunnerError> {
     match variable_value {
         VariableValue::Null => Ok(Value::Null),
         VariableValue::Bool(v) => Ok(Value::Bool(*v)),
@@ -409,7 +409,7 @@ mod tests {
     use hurl_core::ast::{Expr, Pos, SourceInfo, Variable, Whitespace};
 
     use super::*;
-    use crate::runner::RunnerError;
+    use crate::runner::RunnerErrorKind;
 
     fn verbose_option_template() -> BooleanOption {
         // {{verbose}}
@@ -464,8 +464,8 @@ mod tests {
             .unwrap();
         assert!(!error.assert);
         assert_eq!(
-            error.inner,
-            RunnerError::TemplateVariableNotDefined {
+            error.kind,
+            RunnerErrorKind::TemplateVariableNotDefined {
                 name: "verbose".to_string()
             }
         );
@@ -475,8 +475,8 @@ mod tests {
             .err()
             .unwrap();
         assert_eq!(
-            error.inner,
-            RunnerError::TemplateVariableInvalidType {
+            error.kind,
+            RunnerErrorKind::TemplateVariableInvalidType {
                 name: "verbose".to_string(),
                 value: "10".to_string(),
                 expecting: "boolean".to_string()

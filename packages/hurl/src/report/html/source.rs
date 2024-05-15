@@ -20,7 +20,7 @@ use regex::{Captures, Regex};
 
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
-use crate::runner::Error as RunnerError;
+use crate::runner::RunnerError;
 
 impl Testcase {
     /// Returns the HTML string of the Hurl source file (syntax colored and errors).
@@ -86,7 +86,7 @@ mod tests {
     use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
-    use crate::runner::RunnerError::QueryHeaderNotFound;
+    use crate::runner::RunnerErrorKind::QueryHeaderNotFound;
 
     #[test]
     fn add_underlined_errors() {
@@ -138,7 +138,7 @@ mod tests {
 
         let errors = vec![RunnerError {
             source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 4)),
-            inner: QueryHeaderNotFound,
+            kind: QueryHeaderNotFound,
             assert: true,
         }];
 

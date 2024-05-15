@@ -16,7 +16,7 @@
  *
  */
 use crate::report::html::Testcase;
-use crate::runner::Error;
+use crate::runner::RunnerError;
 use crate::util::logger;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -75,7 +75,12 @@ fn get_status_html(success: bool) -> &'static str {
 }
 
 /// Returns an HTML `<pre>` tag representing this `error`.
-fn error_to_html(error: &Error, content: &str, filename: &str, source_filename: &str) -> String {
+fn error_to_html(
+    error: &RunnerError,
+    content: &str,
+    filename: &str,
+    source_filename: &str,
+) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
     let message = logger::error_string(filename, content, error, Some(error.source_info), false);
@@ -97,14 +102,14 @@ fn html_escape(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use crate::report::html::nav::error_to_html;
-    use crate::runner::{Error, RunnerError};
+    use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::{Pos, SourceInfo};
 
     #[test]
     fn test_error_html() {
-        let error = Error::new(
+        let error = RunnerError::new(
             SourceInfo::new(Pos::new(4, 1), Pos::new(4, 9)),
-            RunnerError::AssertFailure {
+            RunnerErrorKind::AssertFailure {
                 actual: "<script>alert('Hi')</script>".to_string(),
                 expected: "Hello world".to_string(),
                 type_mismatch: false,

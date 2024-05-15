@@ -18,7 +18,7 @@
 
 //! A runner for Hurl files. If you want to execute an Hurl file, this is the right place.
 
-pub use self::error::{Error, RunnerError};
+pub use self::error::{RunnerError, RunnerErrorKind};
 #[doc(hidden)]
 pub use self::event::EventListener;
 pub use self::hurl_file::run;

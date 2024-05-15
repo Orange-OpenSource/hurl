@@ -21,7 +21,7 @@ use hurl_core::ast::{RegexValue, SourceInfo, Template};
 
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_replace(
     value: &Value,
@@ -30,7 +30,7 @@ pub fn eval_replace(
     assert: bool,
     old_value: &RegexValue,
     new_value: &Template,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(v) => {
             let re = eval_regex_value(old_value, variables)?;
@@ -39,8 +39,8 @@ pub fn eval_replace(
             Ok(Some(Value::String(s)))
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v.display());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

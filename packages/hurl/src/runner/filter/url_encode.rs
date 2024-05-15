@@ -19,7 +19,7 @@
 use hurl_core::ast::SourceInfo;
 use percent_encoding::AsciiSet;
 
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 // does not encode "/"
 // like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
@@ -27,7 +27,7 @@ pub fn eval_url_encode(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
             const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
@@ -40,8 +40,8 @@ pub fn eval_url_encode(
             Ok(Some(Value::String(encoded)))
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

@@ -20,12 +20,12 @@ use std::collections::HashMap;
 
 use hurl_core::ast::*;
 
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
 use crate::runner::result::PredicateResult;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
-use crate::runner::{Number, RunnerError};
+use crate::runner::{Number, RunnerErrorKind};
 use crate::util::path::ContextDir;
 
 /// Evaluates a `predicate` against an actual `value`.
@@ -68,26 +68,26 @@ pub fn eval_predicate(
     if assert_result.type_mismatch {
         let not = if predicate.not { "not " } else { "" };
         let expected = format!("{}{}", not, assert_result.expected);
-        let inner = RunnerError::AssertFailure {
+        let inner = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected,
             type_mismatch: true,
         };
-        Err(Error::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, inner, true))
     } else if predicate.not && assert_result.success {
-        let inner = RunnerError::AssertFailure {
+        let inner = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected: format!("not {}", assert_result.expected),
             type_mismatch: false,
         };
-        Err(Error::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, inner, true))
     } else if !predicate.not && !assert_result.success {
-        let inner = RunnerError::AssertFailure {
+        let inner = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected: assert_result.expected,
             type_mismatch: false,
         };
-        Err(Error::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, inner, true))
     } else {
         Ok(())
     }
@@ -178,7 +178,7 @@ fn expected_no_value(
     predicate_func_value: &PredicateFuncValue,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     match &predicate_func_value {
         PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
@@ -249,7 +249,7 @@ fn eval_predicate_func(
     variables: &HashMap<String, Value>,
     value: Option<&Value>,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let value = match value {
         Some(value) => value,
         None => {
@@ -316,7 +316,7 @@ fn eval_equal(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_equal(actual, &expected))
 }
@@ -327,7 +327,7 @@ fn eval_not_equal(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_not_equal(actual, &expected))
 }
@@ -338,7 +338,7 @@ fn eval_greater_than(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater(actual, &expected))
 }
@@ -349,7 +349,7 @@ fn eval_greater_than_or_equal(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater_or_equal(actual, &expected))
 }
@@ -360,7 +360,7 @@ fn eval_less_than(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less(actual, &expected))
 }
@@ -371,7 +371,7 @@ fn eval_less_than_or_equal(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less_or_equal(actual, &expected))
 }
@@ -383,7 +383,7 @@ fn eval_start_with(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("starts with {}", expected.display());
     let actual_display = actual.display();
@@ -416,7 +416,7 @@ fn eval_end_with(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("ends with {}", expected.display());
     let actual_display = actual.display();
@@ -449,7 +449,7 @@ fn eval_contain(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("contains {}", expected.display());
     let actual_display = actual.display();
@@ -482,7 +482,7 @@ fn eval_include(
     variables: &HashMap<String, Value>,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_include(actual, &expected))
 }
@@ -493,13 +493,19 @@ fn eval_match(
     source_info: SourceInfo,
     variables: &HashMap<String, Value>,
     actual: &Value,
-) -> Result<AssertResult, Error> {
+) -> Result<AssertResult, RunnerError> {
     let regex = match expected {
         PredicateValue::String(template) => {
             let expected = eval_template(template, variables)?;
             match regex::Regex::new(expected.as_str()) {
                 Ok(re) => re,
-                Err(_) => return Err(Error::new(source_info, RunnerError::InvalidRegex, false)),
+                Err(_) => {
+                    return Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::InvalidRegex,
+                        false,
+                    ))
+                }
             }
         }
         PredicateValue::Regex(regex) => regex.inner.clone(),
@@ -524,7 +530,7 @@ fn eval_match(
 }
 
 /// Evaluates if an `actual` value is an integer.
-fn eval_is_integer(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_integer(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Number(Number::Integer(_)))
             || matches!(actual, Value::Number(Number::BigInteger(_))),
@@ -535,7 +541,7 @@ fn eval_is_integer(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a float.
-fn eval_is_float(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_float(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Number(Number::Float(_))),
         actual: actual.display(),
@@ -545,7 +551,7 @@ fn eval_is_float(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a boolean.
-fn eval_is_boolean(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_boolean(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Bool(_)),
         actual: actual.display(),
@@ -555,7 +561,7 @@ fn eval_is_boolean(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a string.
-fn eval_is_string(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_string(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::String(_)),
         actual: actual.display(),
@@ -565,7 +571,7 @@ fn eval_is_string(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a collection.
-fn eval_is_collection(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_collection(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Bytes(_))
             || matches!(actual, Value::List(_))
@@ -578,7 +584,7 @@ fn eval_is_collection(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a date.
-fn eval_is_date(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_date(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Date(_)),
         actual: actual.display(),
@@ -591,7 +597,7 @@ fn eval_is_date(actual: &Value) -> Result<AssertResult, Error> {
 ///
 /// [`eval_is_date`] performs type check (is the input of [`Value::Date`]), whereas [`eval_is_iso_date`]
 /// checks if a string conforms to a certain date-time format.
-fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, RunnerError> {
     match actual {
         Value::String(actual) => Ok(AssertResult {
             success: chrono::DateTime::parse_from_rfc3339(actual).is_ok(),
@@ -609,7 +615,7 @@ fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value exists.
-fn eval_exist(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_exist(actual: &Value) -> Result<AssertResult, RunnerError> {
     let actual_display = actual.display();
     let expected_display = "something".to_string();
     match actual {
@@ -629,7 +635,7 @@ fn eval_exist(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` is empty.
-fn eval_is_empty(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_empty(actual: &Value) -> Result<AssertResult, RunnerError> {
     let expected_display = "count equals to 0".to_string();
     match actual {
         Value::List(values) => Ok(AssertResult {
@@ -672,7 +678,7 @@ fn eval_is_empty(actual: &Value) -> Result<AssertResult, Error> {
 }
 
 /// Evaluates if an `actual` value is a number.
-fn eval_is_number(actual: &Value) -> Result<AssertResult, Error> {
+fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
     Ok(AssertResult {
         success: matches!(actual, Value::Number(_)),
         actual: actual.display(),
@@ -979,8 +985,8 @@ mod tests {
         )
         .unwrap_err();
         assert_eq!(
-            error.inner,
-            RunnerError::AssertFailure {
+            error.kind,
+            RunnerErrorKind::AssertFailure {
                 actual: "int <10>".to_string(),
                 expected: "not int <10>".to_string(),
                 type_mismatch: false,
@@ -1256,8 +1262,8 @@ mod tests {
         let value = Value::String(String::from("http://localhost:8000"));
         let error = eval_equal(&expected, &variables, &value, &context_dir).unwrap_err();
         assert_eq!(
-            error.inner,
-            RunnerError::TemplateVariableNotDefined {
+            error.kind,
+            RunnerErrorKind::TemplateVariableNotDefined {
                 name: String::from("base_url")
             }
         );
@@ -1456,8 +1462,8 @@ mod tests {
         )
         .unwrap_err();
         assert_eq!(
-            error.inner,
-            RunnerError::AssertFailure {
+            error.kind,
+            RunnerErrorKind::AssertFailure {
                 actual: "int <1>".to_string(),
                 expected: "not starts with string <toto>".to_string(),
                 type_mismatch: true,
@@ -1513,8 +1519,8 @@ mod tests {
             .err()
             .unwrap();
         assert_eq!(
-            error.inner,
-            RunnerError::AssertFailure {
+            error.kind,
+            RunnerErrorKind::AssertFailure {
                 actual: "none".to_string(),
                 expected: "null".to_string(),
                 type_mismatch: false,

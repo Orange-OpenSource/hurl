@@ -18,28 +18,28 @@
 
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_nth(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
     n: u64,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::List(values) => match values.get(n as usize) {
             None => {
-                let inner = RunnerError::FilterInvalidInput(format!(
+                let inner = RunnerErrorKind::FilterInvalidInput(format!(
                     "Out of bound - size is {}",
                     values.len()
                 ));
-                Err(Error::new(source_info, inner, assert))
+                Err(RunnerError::new(source_info, inner, assert))
             }
             Some(value) => Ok(Some(value.clone())),
         },
         v => {
-            let inner = RunnerError::FilterInvalidInput(v.display());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -47,7 +47,7 @@ pub fn eval_nth(
 #[cfg(test)]
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Error, Number, RunnerError, Value};
+    use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
     use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo, Whitespace};
     use std::collections::HashMap;
 
@@ -93,9 +93,9 @@ pub mod tests {
             )
             .err()
             .unwrap(),
-            Error::new(
+            RunnerError::new(
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                RunnerError::FilterInvalidInput("Out of bound - size is 2".to_string()),
+                RunnerErrorKind::FilterInvalidInput("Out of bound - size is 2".to_string()),
                 false
             )
         );

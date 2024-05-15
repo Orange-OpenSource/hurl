@@ -88,7 +88,7 @@ mod test {
 
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
-    use crate::runner::{EntryResult, Error, HurlResult, Input, RunnerError};
+    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_create_testcase_success() {
@@ -123,9 +123,9 @@ HTTP/1.0 200
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![Error::new(
+                errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
-                    RunnerError::AssertStatus {
+                    RunnerErrorKind::AssertStatus {
                         actual: "404".to_string(),
                     },
                     true,
@@ -164,9 +164,11 @@ HTTP/1.0 200
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![Error::new(
+                errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
-                    RunnerError::HttpConnection("(6) Could not resolve host: unknown".to_string()),
+                    RunnerErrorKind::HttpConnection(
+                        "(6) Could not resolve host: unknown".to_string(),
+                    ),
                     false,
                 )],
                 time_in_ms: 0,

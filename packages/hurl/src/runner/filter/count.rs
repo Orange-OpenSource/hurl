@@ -18,20 +18,20 @@
 
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{Error, Number, RunnerError, Value};
+use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_count(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::List(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Bytes(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Nodeset(size) => Ok(Some(Value::Number(Number::Integer(*size as i64)))),
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -76,8 +76,8 @@ pub mod tests {
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
         );
         assert_eq!(
-            error.inner,
-            RunnerError::FilterInvalidInput("boolean".to_string())
+            error.kind,
+            RunnerErrorKind::FilterInvalidInput("boolean".to_string())
         );
     }
 }

@@ -23,7 +23,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::runner::body::eval_file;
-use crate::runner::error::Error;
+use crate::runner::error::RunnerError;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 use crate::util::path::ContextDir;
@@ -32,7 +32,7 @@ pub fn eval_multipart_param(
     multipart_param: &MultipartParam,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
-) -> Result<http::MultipartParam, Error> {
+) -> Result<http::MultipartParam, RunnerError> {
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
             let name = eval_template(key, variables)?;
@@ -50,7 +50,7 @@ pub fn eval_file_param(
     file_param: &FileParam,
     context_dir: &ContextDir,
     variables: &HashMap<String, Value>,
-) -> Result<http::FileParam, Error> {
+) -> Result<http::FileParam, RunnerError> {
     let name = eval_template(&file_param.key, variables)?;
     let filename = eval_template(&file_param.value.filename, variables)?;
     let data = eval_file(&file_param.value.filename, variables, context_dir)?;
@@ -66,7 +66,7 @@ pub fn eval_file_param(
 pub fn file_value_content_type(
     file_value: &FileValue,
     variables: &HashMap<String, Value>,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     let value = match file_value.content_type.clone() {
         None => {
             let value = eval_template(&file_value.filename, variables)?;

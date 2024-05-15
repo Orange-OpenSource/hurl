@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{xpath, Error, RunnerError, Value};
+use crate::runner::{xpath, RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_xpath(
     value: &Value,
@@ -28,7 +28,7 @@ pub fn eval_xpath(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(xml) => {
             // The filter will use the HTML parser that should also work with XML input
@@ -36,8 +36,8 @@ pub fn eval_xpath(
             eval_xpath_string(xml, expr, variables, source_info, is_html)
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }
@@ -48,7 +48,7 @@ pub fn eval_xpath_string(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     is_html: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let expr = eval_template(expr_template, variables)?;
     let result = if is_html {
         xpath::eval_html(xml, &expr)
@@ -57,15 +57,19 @@ pub fn eval_xpath_string(
     };
     match result {
         Ok(value) => Ok(Some(value)),
-        Err(xpath::XpathError::InvalidXml) => {
-            Err(Error::new(source_info, RunnerError::QueryInvalidXml, false))
-        }
-        Err(xpath::XpathError::InvalidHtml) => {
-            Err(Error::new(source_info, RunnerError::QueryInvalidXml, false))
-        }
-        Err(xpath::XpathError::Eval) => Err(Error::new(
+        Err(xpath::XpathError::InvalidXml) => Err(RunnerError::new(
+            source_info,
+            RunnerErrorKind::QueryInvalidXml,
+            false,
+        )),
+        Err(xpath::XpathError::InvalidHtml) => Err(RunnerError::new(
+            source_info,
+            RunnerErrorKind::QueryInvalidXml,
+            false,
+        )),
+        Err(xpath::XpathError::Eval) => Err(RunnerError::new(
             expr_template.source_info,
-            RunnerError::QueryInvalidXpathEval,
+            RunnerErrorKind::QueryInvalidXpathEval,
             false,
         )),
         Err(xpath::XpathError::Unsupported) => {

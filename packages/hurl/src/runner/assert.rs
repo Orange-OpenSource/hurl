@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
 use crate::runner::query::eval_query;
@@ -30,7 +30,7 @@ use crate::util::path::ContextDir;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
-    pub fn error(&self) -> Option<Error> {
+    pub fn error(&self) -> Option<RunnerError> {
         match self {
             AssertResult::Version {
                 actual,
@@ -43,10 +43,10 @@ impl AssertResult {
                 {
                     None
                 } else {
-                    let inner = RunnerError::AssertVersion {
+                    let inner = RunnerErrorKind::AssertVersion {
                         actual: actual.to_string(),
                     };
-                    Some(Error::new(*source_info, inner, false))
+                    Some(RunnerError::new(*source_info, inner, false))
                 }
             }
             AssertResult::Status {
@@ -57,10 +57,10 @@ impl AssertResult {
                 if actual == expected {
                     None
                 } else {
-                    let inner = RunnerError::AssertStatus {
+                    let inner = RunnerErrorKind::AssertStatus {
                         actual: actual.to_string(),
                     };
-                    Some(Error::new(*source_info, inner, false))
+                    Some(RunnerError::new(*source_info, inner, false))
                 }
             }
             AssertResult::Header {
@@ -73,8 +73,8 @@ impl AssertResult {
                     if s == expected {
                         None
                     } else {
-                        let inner = RunnerError::AssertHeaderValueError { actual: s.clone() };
-                        Some(Error::new(*source_info, inner, false))
+                        let inner = RunnerErrorKind::AssertHeaderValueError { actual: s.clone() };
+                        Some(RunnerError::new(*source_info, inner, false))
                     }
                 }
             },
@@ -92,8 +92,8 @@ impl AssertResult {
                         } else {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
-                            let inner = RunnerError::AssertBodyValueError { actual, expected };
-                            Some(Error::new(*source_info, inner, false))
+                            let inner = RunnerErrorKind::AssertBodyValueError { actual, expected };
+                            Some(RunnerError::new(*source_info, inner, false))
                         }
                     }
                 },
@@ -131,14 +131,14 @@ pub fn eval_explicit_assert(
         query_result
     } else if let Ok(optional_value) = query_result {
         match optional_value {
-            None => Err(Error {
+            None => Err(RunnerError {
                 source_info: assert
                     .filters
                     .first()
                     .expect("at least one filter")
                     .1
                     .source_info,
-                inner: RunnerError::FilterMissingInput,
+                kind: RunnerErrorKind::FilterMissingInput,
                 assert: true,
             }),
             Some(value) => {

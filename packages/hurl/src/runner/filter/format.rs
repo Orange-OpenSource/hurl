@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_format(
     value: &Value,
@@ -28,7 +28,7 @@ pub fn eval_format(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
     assert: bool,
-) -> Result<Option<Value>, Error> {
+) -> Result<Option<Value>, RunnerError> {
     let fmt = eval_template(fmt, variables)?;
 
     match value {
@@ -37,8 +37,8 @@ pub fn eval_format(
             Ok(Some(Value::String(formatted)))
         }
         v => {
-            let inner = RunnerError::FilterInvalidInput(v._type());
-            Err(Error::new(source_info, inner, assert))
+            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, inner, assert))
         }
     }
 }

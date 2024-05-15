@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::render_expression;
 use crate::runner::value::Value;
 
@@ -31,7 +31,7 @@ pub fn eval_json_value(
     json_value: &JsonValue,
     variables: &HashMap<String, Value>,
     keep_whitespace: bool,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     match json_value {
         JsonValue::Null => Ok("null".to_string()),
         JsonValue::Number(s) => Ok(s.clone()),
@@ -82,8 +82,8 @@ pub fn eval_json_value(
             if parse_json_null(&mut reader).is_ok() {
                 return Ok(s);
             }
-            let inner = RunnerError::InvalidJson { value: s };
-            Err(Error::new(exp.variable.source_info, inner, false))
+            let inner = RunnerErrorKind::InvalidJson { value: s };
+            Err(RunnerError::new(exp.variable.source_info, inner, false))
         }
     }
 }
@@ -95,7 +95,7 @@ fn eval_json_list_element(
     element: &JsonListElement,
     variables: &HashMap<String, Value>,
     keep_whitespace: bool,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     let s = eval_json_value(&element.value, variables, keep_whitespace)?;
     if keep_whitespace {
         Ok(format!("{}{}{}", element.space0, s, element.space1))
@@ -111,7 +111,7 @@ fn eval_json_object_element(
     element: &JsonObjectElement,
     variables: &HashMap<String, Value>,
     keep_whitespace: bool,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     let value = eval_json_value(&element.value, variables, keep_whitespace)?;
     if keep_whitespace {
         Ok(format!(
@@ -132,7 +132,7 @@ fn eval_json_object_element(
 pub fn eval_json_template(
     template: &Template,
     variables: &HashMap<String, Value>,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     let Template { elements, .. } = template;
     {
         let mut value = String::new();
@@ -149,7 +149,7 @@ pub fn eval_json_template(
 fn eval_json_template_element(
     template_element: &TemplateElement,
     variables: &HashMap<String, Value>,
-) -> Result<String, Error> {
+) -> Result<String, RunnerError> {
     match template_element {
         TemplateElement::String { encoded, .. } => Ok(encoded.clone()),
         TemplateElement::Expression(expr) => {
@@ -178,7 +178,7 @@ fn encode_json_char(c: char) -> String {
 mod tests {
     use hurl_core::ast::*;
 
-    use super::super::error::RunnerError;
+    use super::super::error::RunnerErrorKind;
     use super::*;
 
     pub fn json_hello_world_value() -> JsonValue {
@@ -274,8 +274,8 @@ mod tests {
             SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19))
         );
         assert_eq!(
-            error.inner,
-            RunnerError::TemplateVariableNotDefined {
+            error.kind,
+            RunnerErrorKind::TemplateVariableNotDefined {
                 name: "name".to_string()
             }
         );
