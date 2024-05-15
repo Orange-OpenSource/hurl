@@ -16,7 +16,7 @@
  *
  */
 use crate::runner;
-use hurl_core::error::Error as CoreError;
+use hurl_core::error::DisplaySourceError;
 use std::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

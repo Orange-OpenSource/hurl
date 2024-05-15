@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::Error;
+use hurl_core::error::DisplaySourceError;
 
 use crate::linter;
 use crate::linter::LinterError;
@@ -24,7 +24,7 @@ use crate::linter::LinterError;
 ///
 /// Textual Output for linter errors
 ///
-impl Error for linter::Error {
+impl DisplaySourceError for linter::Error {
     fn source_info(&self) -> SourceInfo {
         self.source_info
     }

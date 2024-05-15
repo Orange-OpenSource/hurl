@@ -22,7 +22,7 @@ use std::time::Instant;
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::{Body, Bytes, Entry, MultilineString, Request, Response, Retry};
-use hurl_core::error::Error;
+use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
 
 use crate::http::{Call, Client};

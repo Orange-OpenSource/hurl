@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 use crate::linter;
 use colored::*;
-use hurl_core::error::Error;
+use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
@@ -78,7 +78,7 @@ fn log_error(
     lines: Vec<String>,
     color: bool,
     filename: Option<PathBuf>,
-    error: &dyn Error,
+    error: &dyn DisplaySourceError,
     warning: bool,
 ) {
     let line_number_size = if lines.len() < 100 {

@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::{Pos, SourceInfo};
+use crate::error::DisplaySourceError;
 use colored::Colorize;
 use std::cmp;
 
@@ -89,7 +90,7 @@ impl Error {
     }
 }
 
-impl crate::error::Error for Error {
+impl DisplaySourceError for Error {
     fn source_info(&self) -> SourceInfo {
         SourceInfo {
             start: self.pos,

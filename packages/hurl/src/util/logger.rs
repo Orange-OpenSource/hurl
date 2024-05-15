@@ -19,7 +19,7 @@ use std::cmp::max;
 
 use colored::*;
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::Error;
+use hurl_core::error::DisplaySourceError;
 
 use crate::runner::Value;
 use crate::util::term::Stderr;
@@ -224,7 +224,12 @@ impl Logger {
         }
     }
 
-    pub fn debug_error<E: Error>(&mut self, content: &str, error: &E, entry_src_info: SourceInfo) {
+    pub fn debug_error<E: DisplaySourceError>(
+        &mut self,
+        content: &str,
+        error: &E,
+        entry_src_info: SourceInfo,
+    ) {
         if self.verbosity.is_none() {
             return;
         }
@@ -300,12 +305,12 @@ impl Logger {
         }
     }
 
-    pub fn error_parsing_rich<E: Error>(&mut self, content: &str, error: &E) {
+    pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
         let message = error_string(&self.filename, content, error, None, self.color);
         self.error_rich(&message);
     }
 
-    pub fn error_runtime_rich<E: Error>(
+    pub fn error_runtime_rich<E: DisplaySourceError>(
         &mut self,
         content: &str,
         error: &E,
@@ -388,7 +393,7 @@ impl Stderr {
 ///   |          ^^^ actual value is <404>
 ///   |
 /// ```
-pub(crate) fn error_string<E: Error>(
+pub(crate) fn error_string<E: DisplaySourceError>(
     filename: &str,
     content: &str,
     error: &E,
@@ -512,7 +517,7 @@ pub(crate) fn error_string<E: Error>(
 ///+   "age": 28
 /// }
 ///
-fn get_message<E: Error>(error: &E, lines: &[&str], colored: bool) -> String {
+fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bool) -> String {
     let mut text = String::new();
 
     if error.show_source_line() {
@@ -746,7 +751,7 @@ HTTP 200
 "#;
         let filename = "test.hurl";
         struct E;
-        impl Error for E {
+        impl DisplaySourceError for E {
             fn source_info(&self) -> SourceInfo {
                 SourceInfo::new(Pos::new(4, 1), Pos::new(4, 0))
             }

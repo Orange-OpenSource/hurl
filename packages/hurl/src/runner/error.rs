@@ -19,6 +19,7 @@ use colored::Colorize;
 use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
+use hurl_core::error::DisplaySourceError;
 
 use crate::http::{HttpError, RequestedHttpVersion};
 
@@ -119,7 +120,7 @@ pub enum RunnerError {
 }
 
 /// Textual Output for runner errors
-impl hurl_core::error::Error for Error {
+impl DisplaySourceError for Error {
     fn source_info(&self) -> SourceInfo {
         self.source_info
     }

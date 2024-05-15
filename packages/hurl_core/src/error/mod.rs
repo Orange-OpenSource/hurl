@@ -17,7 +17,7 @@
  */
 use crate::ast::SourceInfo;
 
-pub trait Error {
+pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
     fn fixme(&self, content: &[&str], color: bool) -> String;
