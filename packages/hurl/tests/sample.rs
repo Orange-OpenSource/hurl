@@ -18,7 +18,7 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use hurl::http::{Call, HttpVersion, Request, Response};
+use hurl::http::{Call, HttpVersion, Request, Response, Url};
 use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
@@ -50,7 +50,10 @@ fn simple_sample() {
     fn check_call(_: &Call) {}
 
     fn check_request(request: &Request) {
-        assert_eq!(request.url, "http://localhost:8000/hello");
+        assert_eq!(
+            request.url,
+            Url::new("http://localhost:8000/hello").unwrap()
+        );
         assert_eq!(request.method, "GET");
         let header_names = request
             .headers

@@ -129,7 +129,7 @@ impl Request {
         );
         map.insert(
             "url".to_string(),
-            serde_json::Value::String(self.url.clone()),
+            serde_json::Value::String(self.url.to_string()),
         );
         let headers = self.headers.iter().map(|h| h.to_json()).collect();
         map.insert("headers".to_string(), headers);

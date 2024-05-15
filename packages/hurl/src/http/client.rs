@@ -26,7 +26,6 @@ use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Version};
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
-use url::Url;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
@@ -39,6 +38,7 @@ use crate::http::request::*;
 use crate::http::request_spec::*;
 use crate::http::response::*;
 use crate::http::timings::Timings;
+use crate::http::url::Url;
 use crate::http::{easy_ext, Call, Header, HttpError, Verbosity};
 use crate::runner::Output;
 use crate::util::logger::Logger;
@@ -284,14 +284,20 @@ impl Client {
         let stop_dt = start_dt + duration;
         let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
 
-        let request = Request::new(&method.to_string(), &url, request_headers, request_body);
+        let url = Url::new(&url)?;
+        let request = Request::new(
+            &method.to_string(),
+            url.clone(),
+            request_headers,
+            request_body,
+        );
         let response = Response::new(
             version,
             status,
             headers,
             response_body,
             duration,
-            &url,
+            &url.to_string(),
             certificate,
         );
 
@@ -810,7 +816,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
 /// Matches cookie for a given URL.
 pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
     // FIXME: is it possible to do it with libcurl?
-    let url = match Url::parse(url) {
+    let url = match url::Url::parse(url) {
         Ok(url) => url,
         Err(_) => return false,
     };

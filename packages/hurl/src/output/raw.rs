@@ -114,7 +114,7 @@ fn is_binary(bytes: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response};
+    use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stderr, Stdout, WriteMode};
@@ -135,7 +135,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: "https://foo.com".to_string(),
+                            url: Url::new("https://foo.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -154,7 +154,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: "https://bar.com".to_string(),
+                            url: Url::new("https://bar.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -173,7 +173,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: "https://baz.com".to_string(),
+                            url: Url::new("https://baz.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
