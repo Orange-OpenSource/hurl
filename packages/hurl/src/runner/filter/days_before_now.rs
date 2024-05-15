@@ -33,8 +33,8 @@ pub fn eval_days_before_now(
             Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

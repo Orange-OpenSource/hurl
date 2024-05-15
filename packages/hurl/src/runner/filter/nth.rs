@@ -29,17 +29,17 @@ pub fn eval_nth(
     match value {
         Value::List(values) => match values.get(n as usize) {
             None => {
-                let inner = RunnerErrorKind::FilterInvalidInput(format!(
+                let kind = RunnerErrorKind::FilterInvalidInput(format!(
                     "Out of bound - size is {}",
                     values.len()
                 ));
-                Err(RunnerError::new(source_info, inner, assert))
+                Err(RunnerError::new(source_info, kind, assert))
             }
             Some(value) => Ok(Some(value.clone())),
         },
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

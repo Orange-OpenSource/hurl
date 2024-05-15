@@ -30,13 +30,13 @@ pub fn eval_to_float(
         Value::String(v) => match v.parse::<f64>() {
             Ok(f) => Ok(Some(Value::Number(Number::Float(f)))),
             _ => {
-                let inner = RunnerErrorKind::FilterInvalidInput(value.display());
-                Err(RunnerError::new(source_info, inner, assert))
+                let kind = RunnerErrorKind::FilterInvalidInput(value.display());
+                Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

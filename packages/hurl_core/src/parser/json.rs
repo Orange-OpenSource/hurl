@@ -42,8 +42,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
 fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
     if let Some(c) = reader.peek() {
         if c == ',' {
-            let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
-            return Err(ParseError::new(reader.state.pos, false, inner));
+            let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+            return Err(ParseError::new(reader.state.pos, false, kind));
         }
     }
     match parse(reader) {
@@ -55,8 +55,8 @@ fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
             ParseError {
                 recoverable: true, ..
             } => {
-                let inner = ParseErrorKind::Json(JsonErrorVariant::ExpectingElement);
-                Err(ParseError::new(e.pos, false, inner))
+                let kind = ParseErrorKind::Json(JsonErrorVariant::ExpectingElement);
+                Err(ParseError::new(e.pos, false, kind))
             }
             _ => Err(ParseError::new(e.pos, false, e.kind)),
         },
@@ -116,17 +116,17 @@ fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
                 reader.state = start;
                 match reader.read() {
                     None => {
-                        let inner = ParseErrorKind::Expecting {
+                        let kind = ParseErrorKind::Expecting {
                             value: "char".to_string(),
                         };
-                        Err(ParseError::new(start.pos, true, inner))
+                        Err(ParseError::new(start.pos, true, kind))
                     }
                     Some(c) => {
                         if ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c) {
-                            let inner = ParseErrorKind::Expecting {
+                            let kind = ParseErrorKind::Expecting {
                                 value: "char".to_string(),
                             };
-                            Err(ParseError::new(start.pos, true, inner))
+                            Err(ParseError::new(start.pos, true, kind))
                         } else {
                             Ok((c, reader.peek_back(start.cursor), start.pos))
                         }
@@ -223,10 +223,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
         Err(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: "number".to_string(),
                 };
-                return Err(ParseError::new(start.pos, true, inner));
+                return Err(ParseError::new(start.pos, true, kind));
             } else {
                 digits
             }
@@ -238,10 +238,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
         Ok(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: "digits".to_string(),
                 };
-                return Err(ParseError::new(reader.state.pos, false, inner));
+                return Err(ParseError::new(reader.state.pos, false, kind));
             } else {
                 format!(".{digits}")
             }
@@ -300,8 +300,8 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             // If there is one more comma, e.g. [1, 2,], it's better to report to the user because
             // this occurrence is common.
             if reader.peek_ignoring_whitespace() == Some(']') {
-                let inner = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
-                return Err(ParseError::new(save, false, inner));
+                let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
+                return Err(ParseError::new(save, false, kind));
             }
             let element = list_element(reader)?;
             elements.push(element);
@@ -347,8 +347,8 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             // If there is one more comma, e.g. {"a": "b",}, it's better to report to the user
             // because this occurrence is common.
             if reader.peek_ignoring_whitespace() == Some('}') {
-                let inner = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
-                return Err(ParseError::new(save, false, inner));
+                let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
+                return Err(ParseError::new(save, false, kind));
             }
             let element = object_element(reader)?;
             elements.push(element);
@@ -366,8 +366,8 @@ fn key(reader: &mut Reader) -> ParseResult<Template> {
     let save = reader.state;
     let name = string_template(reader).map_err(|e| e.non_recoverable())?;
     if name.elements.is_empty() {
-        let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
-        Err(ParseError::new(save.pos, false, inner))
+        let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+        Err(ParseError::new(save.pos, false, kind))
     } else {
         Ok(name)
     }
@@ -387,8 +387,8 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     let next_char = reader.peek();
     // Comparing to None because `next_char` can be EOF.
     if next_char == Some('}') || next_char.is_none() {
-        let inner = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
-        return Err(ParseError::new(save, false, inner));
+        let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+        return Err(ParseError::new(save, false, kind));
     }
     let value = parse_in_json(reader)?;
     let space3 = whitespace(reader);

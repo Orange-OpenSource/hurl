@@ -39,13 +39,13 @@ pub fn eval_to_date(
                 v.and_local_timezone(chrono::Utc).unwrap(),
             ))),
             Err(_) => {
-                let inner = RunnerErrorKind::FilterInvalidInput(value.display());
-                Err(RunnerError::new(source_info, inner, assert))
+                let kind = RunnerErrorKind::FilterInvalidInput(value.display());
+                Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

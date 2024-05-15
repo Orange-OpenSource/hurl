@@ -39,8 +39,8 @@ pub fn eval_replace(
             Ok(Some(Value::String(s)))
         }
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

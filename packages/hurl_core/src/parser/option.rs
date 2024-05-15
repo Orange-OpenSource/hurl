@@ -260,10 +260,10 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
     } else if value > 0 {
         Ok(Retry::Finite(value as usize))
     } else {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "Expecting a retry value".to_string(),
         };
-        Err(ParseError::new(pos, false, inner))
+        Err(ParseError::new(pos, false, kind))
     }
 }
 
@@ -274,10 +274,10 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
         Err(_) => {
             reader.state = start;
             let exp = expr::parse(reader).map_err(|e| {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: "true|false".to_string(),
                 };
-                ParseError::new(e.pos, false, inner)
+                ParseError::new(e.pos, false, kind)
             })?;
             Ok(BooleanOption::Expression(exp))
         }
@@ -291,10 +291,10 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
         Err(_) => {
             reader.state = start;
             let exp = expr::parse(reader).map_err(|e| {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: "integer".to_string(),
                 };
-                ParseError::new(e.pos, false, inner)
+                ParseError::new(e.pos, false, kind)
             })?;
             Ok(NaturalOption::Expression(exp))
         }
@@ -308,10 +308,10 @@ fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
         Err(_) => {
             reader.state = start;
             let exp = expr::parse(reader).map_err(|e| {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: "integer".to_string(),
                 };
-                ParseError::new(e.pos, false, inner)
+                ParseError::new(e.pos, false, kind)
             })?;
             Ok(RetryOption::Expression(exp))
         }
@@ -336,10 +336,10 @@ fn variable_name(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "variable name".to_string(),
         };
-        return Err(ParseError::new(start.pos, false, inner));
+        return Err(ParseError::new(start.pos, false, kind));
     }
     Ok(name)
 }
@@ -371,10 +371,10 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
         reader,
     )
     .map_err(|e| {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "variable value".to_string(),
         };
-        ParseError::new(e.pos, false, inner)
+        ParseError::new(e.pos, false, kind)
     })
 }
 

@@ -556,11 +556,11 @@ pub mod tests {
     fn test_error_timeout() {
         let content = "GET http://unknown";
         let filename = "test.hurl";
-        let inner =
+        let kind =
             RunnerErrorKind::HttpConnection("(6) Could not resolve host: unknown".to_string());
         let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
-        let error = RunnerError::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, kind, true);
         assert_eq!(
             get_message(&error, &split_lines(content), false),
             " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
@@ -582,12 +582,12 @@ pub mod tests {
 HTTP/1.0 200
 "#;
         let filename = "test.hurl";
-        let inner = RunnerErrorKind::AssertStatus {
+        let kind = RunnerErrorKind::AssertStatus {
             actual: "404".to_string(),
         };
         let error_source_info = SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
-        let error = RunnerError::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
             get_message(&error, &split_lines(content), false),
@@ -692,13 +692,13 @@ HTTP/1.0 200
 ```
 "#;
         let filename = "test.hurl";
-        let inner = RunnerErrorKind::AssertBodyValueError {
+        let kind = RunnerErrorKind::AssertBodyValueError {
             actual: "<p>Hello</p>\n\n".to_string(),
             expected: "<p>Hello</p>\n".to_string(),
         };
         let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
-        let error = RunnerError::new(error_source_info, inner, true);
+        let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
             get_message(&error, &split_lines(content), false),

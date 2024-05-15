@@ -30,15 +30,15 @@ pub fn eval_url_decode(
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
                 Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 Err(_) => {
-                    let inner =
+                    let kind =
                         RunnerErrorKind::FilterInvalidInput("Invalid UTF-8 stream".to_string());
-                    Err(RunnerError::new(source_info, inner, assert))
+                    Err(RunnerError::new(source_info, kind, assert))
                 }
             }
         }
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

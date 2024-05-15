@@ -36,8 +36,8 @@ pub fn eval_xpath(
             eval_xpath_string(xml, expr, variables, source_info, is_html)
         }
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v._type());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

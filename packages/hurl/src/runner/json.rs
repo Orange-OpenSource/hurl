@@ -82,8 +82,8 @@ pub fn eval_json_value(
             if parse_json_null(&mut reader).is_ok() {
                 return Ok(s);
             }
-            let inner = RunnerErrorKind::InvalidJson { value: s };
-            Err(RunnerError::new(exp.variable.source_info, inner, false))
+            let kind = RunnerErrorKind::InvalidJson { value: s };
+            Err(RunnerError::new(exp.variable.source_info, kind, false))
         }
     }
 }

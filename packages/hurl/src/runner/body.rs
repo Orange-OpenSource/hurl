@@ -75,15 +75,15 @@ pub fn eval_file(
     // is a child of the context directory.
     let path = PathBuf::from(file);
     if !context_dir.is_access_allowed(&path) {
-        let inner = RunnerErrorKind::UnauthorizedFileAccess { path };
-        return Err(RunnerError::new(filename.source_info, inner, false));
+        let kind = RunnerErrorKind::UnauthorizedFileAccess { path };
+        return Err(RunnerError::new(filename.source_info, kind, false));
     }
     let resolved_file = context_dir.resolved_path(&path);
     match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
         Err(_) => {
-            let inner = RunnerErrorKind::FileReadAccess { path };
-            Err(RunnerError::new(filename.source_info, inner, false))
+            let kind = RunnerErrorKind::FileReadAccess { path };
+            Err(RunnerError::new(filename.source_info, kind, false))
         }
     }
 }

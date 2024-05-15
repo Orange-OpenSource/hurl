@@ -71,12 +71,12 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
         reader,
     )
     .map_err(|e| {
-        let inner = if e.recoverable {
+        let kind = if e.recoverable {
             ParseErrorKind::PredicateValue
         } else {
             e.kind
         };
-        ParseError::new(e.pos, false, inner)
+        ParseError::new(e.pos, false, kind)
     })
 }
 

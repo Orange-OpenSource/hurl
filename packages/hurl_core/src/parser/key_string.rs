@@ -50,17 +50,17 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
     if elements.is_empty() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "key-string".to_string(),
         };
-        return Err(ParseError::new(start.pos, false, inner));
+        return Err(ParseError::new(start.pos, false, kind));
     }
     if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
         if encoded.starts_with('[') {
-            let inner = ParseErrorKind::Expecting {
+            let kind = ParseErrorKind::Expecting {
                 value: "key-string".to_string(),
             };
-            return Err(ParseError::new(start.pos, false, inner));
+            return Err(ParseError::new(start.pos, false, kind));
         }
     }
 

@@ -68,26 +68,26 @@ pub fn eval_predicate(
     if assert_result.type_mismatch {
         let not = if predicate.not { "not " } else { "" };
         let expected = format!("{}{}", not, assert_result.expected);
-        let inner = RunnerErrorKind::AssertFailure {
+        let kind = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected,
             type_mismatch: true,
         };
-        Err(RunnerError::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, kind, true))
     } else if predicate.not && assert_result.success {
-        let inner = RunnerErrorKind::AssertFailure {
+        let kind = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected: format!("not {}", assert_result.expected),
             type_mismatch: false,
         };
-        Err(RunnerError::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, kind, true))
     } else if !predicate.not && !assert_result.success {
-        let inner = RunnerErrorKind::AssertFailure {
+        let kind = RunnerErrorKind::AssertFailure {
             actual: assert_result.actual,
             expected: assert_result.expected,
             type_mismatch: false,
         };
-        Err(RunnerError::new(source_info, inner, true))
+        Err(RunnerError::new(source_info, kind, true))
     } else {
         Ok(())
     }

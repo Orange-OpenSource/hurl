@@ -174,19 +174,19 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
                 reader.state = start;
                 match reader.read() {
                     None => {
-                        let inner = ParseErrorKind::Expecting {
+                        let kind = ParseErrorKind::Expecting {
                             value: "char".to_string(),
                         };
-                        Err(ParseError::new(start.pos, true, inner))
+                        Err(ParseError::new(start.pos, true, kind))
                     }
                     Some(c) => {
                         if except.contains(&c)
                             || ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
                         {
-                            let inner = ParseErrorKind::Expecting {
+                            let kind = ParseErrorKind::Expecting {
                                 value: "char".to_string(),
                             };
-                            Err(ParseError::new(start.pos, true, inner))
+                            Err(ParseError::new(start.pos, true, kind))
                         } else {
                             Ok((c, reader.peek_back(start.cursor)))
                         }

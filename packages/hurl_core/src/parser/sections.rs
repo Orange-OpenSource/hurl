@@ -54,9 +54,9 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
         "Cookies" => section_value_cookies(reader)?,
         "Options" => section_value_options(reader)?,
         _ => {
-            let inner = ParseErrorKind::RequestSectionName { name: name.clone() };
+            let kind = ParseErrorKind::RequestSectionName { name: name.clone() };
             let pos = Pos::new(start.line, start.column + 1);
-            return Err(ParseError::new(pos, false, inner));
+            return Err(ParseError::new(pos, false, kind));
         }
     };
 
@@ -83,9 +83,9 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
         "Captures" => section_value_captures(reader)?,
         "Asserts" => section_value_asserts(reader)?,
         _ => {
-            let inner = ParseErrorKind::ResponseSectionName { name: name.clone() };
+            let kind = ParseErrorKind::ResponseSectionName { name: name.clone() };
             let pos = Pos::new(start.line, start.column + 1);
-            return Err(ParseError::new(pos, false, inner));
+            return Err(ParseError::new(pos, false, kind));
         }
     };
 
@@ -104,10 +104,10 @@ fn section_name(reader: &mut Reader) -> ParseResult<String> {
     let name = reader.read_while(|c| c.is_alphanumeric());
     if name.is_empty() {
         // Could be the empty json array for the body
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "a valid section name".to_string(),
         };
-        return Err(ParseError::new(pos, true, inner));
+        return Err(ParseError::new(pos, true, kind));
     }
     try_literal("]", reader)?;
     Ok(name)

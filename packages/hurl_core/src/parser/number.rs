@@ -26,17 +26,17 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let start = reader.state;
 
     if reader.is_eof() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(ParseError::new(start.pos, true, inner));
+        return Err(ParseError::new(start.pos, true, kind));
     }
     let first_digit = reader.read().unwrap();
     if !first_digit.is_ascii_digit() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(ParseError::new(start.pos, true, inner));
+        return Err(ParseError::new(start.pos, true, kind));
     }
 
     let save = reader.state;
@@ -44,18 +44,18 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
 
     // if the first digit is zero, you should not have any more digits
     if first_digit == '0' && !s.is_empty() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(ParseError::new(save.pos, false, inner));
+        return Err(ParseError::new(save.pos, false, kind));
     }
     match format!("{first_digit}{s}").parse() {
         Ok(value) => Ok(value),
         Err(_) => {
-            let inner = ParseErrorKind::Expecting {
+            let kind = ParseErrorKind::Expecting {
                 value: String::from("natural"),
             };
-            Err(ParseError::new(save.pos, false, inner))
+            Err(ParseError::new(save.pos, false, kind))
         }
     }
 }
@@ -77,18 +77,18 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     };
     let integer_digits = reader.read_while(|c| c.is_ascii_digit());
     if integer_digits.is_empty() {
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: "number".to_string(),
         };
-        return Err(ParseError::new(reader.state.pos, true, inner));
+        return Err(ParseError::new(reader.state.pos, true, kind));
 
         // if the first digit is zero, you should not have any more digits
     } else if integer_digits.len() > 1 && integer_digits.starts_with('0') {
         let save = reader.state;
-        let inner = ParseErrorKind::Expecting {
+        let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
-        return Err(ParseError::new(save.pos, false, inner));
+        return Err(ParseError::new(save.pos, false, kind));
     }
 
     // Float
@@ -96,10 +96,10 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         let save = reader.state;
         let decimal_digits = reader.read_while(|c| c.is_ascii_digit());
         if decimal_digits.is_empty() {
-            let inner = ParseErrorKind::Expecting {
+            let kind = ParseErrorKind::Expecting {
                 value: String::from("decimal digits"),
             };
-            return Err(ParseError::new(save.pos, false, inner));
+            return Err(ParseError::new(save.pos, false, kind));
         }
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
@@ -107,10 +107,10 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
                 Ok(Number::Float(Float { value, encoded }))
             }
             Err(_) => {
-                let inner = ParseErrorKind::Expecting {
+                let kind = ParseErrorKind::Expecting {
                     value: String::from("float"),
                 };
-                Err(ParseError::new(start.pos, false, inner))
+                Err(ParseError::new(start.pos, false, kind))
             }
         }
 

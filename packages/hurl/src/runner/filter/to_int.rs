@@ -31,13 +31,13 @@ pub fn eval_to_int(
         Value::String(v) => match v.parse::<i64>() {
             Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
             _ => {
-                let inner = RunnerErrorKind::FilterInvalidInput(value.display());
-                Err(RunnerError::new(source_info, inner, assert))
+                let kind = RunnerErrorKind::FilterInvalidInput(value.display());
+                Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let inner = RunnerErrorKind::FilterInvalidInput(v.display());
-            Err(RunnerError::new(source_info, inner, assert))
+            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            Err(RunnerError::new(source_info, kind, assert))
         }
     }
 }

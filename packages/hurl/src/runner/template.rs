@@ -58,11 +58,11 @@ pub fn render_expression(
     if value.is_renderable() {
         Ok(value.to_string())
     } else {
-        let inner = RunnerErrorKind::UnrenderableVariable {
+        let kind = RunnerErrorKind::UnrenderableVariable {
             name: name.to_string(),
             value: value.to_string(),
         };
-        Err(RunnerError::new(source_info, inner, false))
+        Err(RunnerError::new(source_info, kind, false))
     }
 }
 
@@ -75,8 +75,8 @@ pub fn eval_expression(
     match variables.get(name.as_str()) {
         Some(value) => Ok(value.clone()),
         _ => {
-            let inner = RunnerErrorKind::TemplateVariableNotDefined { name: name.clone() };
-            Err(RunnerError::new(source_info, inner, false))
+            let kind = RunnerErrorKind::TemplateVariableNotDefined { name: name.clone() };
+            Err(RunnerError::new(source_info, kind, false))
         }
     }
 }

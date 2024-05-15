@@ -57,15 +57,15 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
     if elements.is_empty() {
-        let inner = ParseErrorKind::Filename;
-        return Err(ParseError::new(start.pos, false, inner));
+        let kind = ParseErrorKind::Filename;
+        return Err(ParseError::new(start.pos, false, kind));
     }
     if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
         if encoded.starts_with('[') {
-            let inner = ParseErrorKind::Expecting {
+            let kind = ParseErrorKind::Expecting {
                 value: "filename".to_string(),
             };
-            return Err(ParseError::new(start.pos, false, inner));
+            return Err(ParseError::new(start.pos, false, kind));
         }
     }
 

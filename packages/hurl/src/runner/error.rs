@@ -35,10 +35,10 @@ pub struct RunnerError {
 }
 
 impl RunnerError {
-    pub fn new(source_info: SourceInfo, inner: RunnerErrorKind, assert: bool) -> RunnerError {
+    pub fn new(source_info: SourceInfo, kind: RunnerErrorKind, assert: bool) -> RunnerError {
         RunnerError {
             source_info,
-            kind: inner,
+            kind,
             assert,
         }
     }

@@ -115,16 +115,16 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
 
 fn method(reader: &mut Reader) -> ParseResult<Method> {
     if reader.is_eof() {
-        let inner = ParseErrorKind::Method {
+        let kind = ParseErrorKind::Method {
             name: "<EOF>".to_string(),
         };
-        return Err(ParseError::new(reader.state.pos, true, inner));
+        return Err(ParseError::new(reader.state.pos, true, kind));
     }
     let start = reader.state;
     let name = reader.read_while(|c| c.is_ascii_alphabetic());
     if name.is_empty() || name.to_uppercase() != name {
-        let inner = ParseErrorKind::Method { name };
-        Err(ParseError::new(start.pos, false, inner))
+        let kind = ParseErrorKind::Method { name };
+        Err(ParseError::new(start.pos, false, kind))
     } else {
         Ok(Method(name))
     }

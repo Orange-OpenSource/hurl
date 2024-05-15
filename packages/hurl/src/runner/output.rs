@@ -112,18 +112,18 @@ impl RunnerError {
     fn new_file_write_access(path: &Path, error: &str) -> RunnerError {
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
         let path = path.to_path_buf();
-        let inner = RunnerErrorKind::FileWriteAccess {
+        let kind = RunnerErrorKind::FileWriteAccess {
             path,
             error: error.to_string(),
         };
-        RunnerError::new(source_info, inner, false)
+        RunnerError::new(source_info, kind, false)
     }
 
     /// Creates a new authorization access error.
     fn new_unauthorized_file_access(path: &Path) -> RunnerError {
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
         let path = path.to_path_buf();
-        let inner = RunnerErrorKind::UnauthorizedFileAccess { path };
-        RunnerError::new(source_info, inner, false)
+        let kind = RunnerErrorKind::UnauthorizedFileAccess { path };
+        RunnerError::new(source_info, kind, false)
     }
 }

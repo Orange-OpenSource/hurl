@@ -101,9 +101,7 @@ pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T
             }
         }
         // if zero occurrence => should fail?
-        Err(ParseError {
-            pos, kind: inner, ..
-        }) => Err(ParseError::new(pos, false, inner)),
+        Err(ParseError { pos, kind, .. }) => Err(ParseError::new(pos, false, kind)),
     }
 }
 

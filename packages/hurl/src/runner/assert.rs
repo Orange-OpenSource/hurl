@@ -43,10 +43,10 @@ impl AssertResult {
                 {
                     None
                 } else {
-                    let inner = RunnerErrorKind::AssertVersion {
+                    let kind = RunnerErrorKind::AssertVersion {
                         actual: actual.to_string(),
                     };
-                    Some(RunnerError::new(*source_info, inner, false))
+                    Some(RunnerError::new(*source_info, kind, false))
                 }
             }
             AssertResult::Status {
@@ -57,10 +57,10 @@ impl AssertResult {
                 if actual == expected {
                     None
                 } else {
-                    let inner = RunnerErrorKind::AssertStatus {
+                    let kind = RunnerErrorKind::AssertStatus {
                         actual: actual.to_string(),
                     };
-                    Some(RunnerError::new(*source_info, inner, false))
+                    Some(RunnerError::new(*source_info, kind, false))
                 }
             }
             AssertResult::Header {
@@ -73,8 +73,8 @@ impl AssertResult {
                     if s == expected {
                         None
                     } else {
-                        let inner = RunnerErrorKind::AssertHeaderValueError { actual: s.clone() };
-                        Some(RunnerError::new(*source_info, inner, false))
+                        let kind = RunnerErrorKind::AssertHeaderValueError { actual: s.clone() };
+                        Some(RunnerError::new(*source_info, kind, false))
                     }
                 }
             },
@@ -92,8 +92,8 @@ impl AssertResult {
                         } else {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
-                            let inner = RunnerErrorKind::AssertBodyValueError { actual, expected };
-                            Some(RunnerError::new(*source_info, inner, false))
+                            let kind = RunnerErrorKind::AssertBodyValueError { actual, expected };
+                            Some(RunnerError::new(*source_info, kind, false))
                         }
                     }
                 },

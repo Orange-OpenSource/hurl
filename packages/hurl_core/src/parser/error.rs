@@ -71,11 +71,11 @@ pub enum JsonErrorVariant {
 
 impl ParseError {
     /// Creates a new error for the position `pos`, of type `inner`.
-    pub fn new(pos: Pos, recoverable: bool, inner: ParseErrorKind) -> ParseError {
+    pub fn new(pos: Pos, recoverable: bool, kind: ParseErrorKind) -> ParseError {
         ParseError {
             pos,
             recoverable,
-            kind: inner,
+            kind,
         }
     }
 
