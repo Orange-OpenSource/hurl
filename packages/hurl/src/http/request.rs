@@ -81,22 +81,6 @@ impl Request {
         }
     }
 
-    /// Extracts query string params from the url of the request.
-    pub fn query_string_params(&self) -> Vec<Param> {
-        // TODO: expose a method on [`http::url::Url`] to get query params
-        // and remove the call to crate url here.
-        let u = url::Url::parse(&self.url.to_string()).expect("valid url");
-        let mut params = vec![];
-        for (name, value) in u.query_pairs() {
-            let param = Param {
-                name: name.to_string(),
-                value: value.to_string(),
-            };
-            params.push(param);
-        }
-        params
-    }
-
     /// Returns a list of request headers cookie.
     ///
     /// see <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>
@@ -142,13 +126,13 @@ mod tests {
         headers.push(Header::new("Accept", "*/*"));
         headers.push(Header::new("User-Agent", "hurl/1.0"));
         headers.push(Header::new("content-type", "application/json"));
-        let url = Url::new("http://localhost:8000/hello").unwrap();
+        let url = Url::try_from("http://localhost:8000/hello").unwrap();
 
         Request::new("GET", url, headers, vec![])
     }
 
     fn query_string_request() -> Request {
-        let url = Url::new("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
+        let url = Url::try_from("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
 
         Request::new("GET", url, HeaderVec::new(), vec![])
     }
@@ -156,34 +140,8 @@ mod tests {
     fn cookies_request() -> Request {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Cookie", "cookie1=value1; cookie2=value2"));
-        let url = Url::new("http://localhost:8000/cookies").unwrap();
+        let url = Url::try_from("http://localhost:8000/cookies").unwrap();
         Request::new("GET", url, headers, vec![])
-    }
-
-    #[test]
-    fn test_query_string() {
-        assert!(hello_request().query_string_params().is_empty());
-        assert_eq!(
-            query_string_request().query_string_params(),
-            vec![
-                Param {
-                    name: "param1".to_string(),
-                    value: "value1".to_string(),
-                },
-                Param {
-                    name: "param2".to_string(),
-                    value: String::new(),
-                },
-                Param {
-                    name: "param3".to_string(),
-                    value: "a=b".to_string(),
-                },
-                Param {
-                    name: "param4".to_string(),
-                    value: "1,2,3".to_string(),
-                },
-            ]
-        );
     }
 
     #[test]
@@ -247,7 +205,7 @@ mod tests {
         assert_eq!(
             Request::new(
                 "",
-                Url::new("http://localhost").unwrap(),
+                Url::try_from("http://localhost").unwrap(),
                 HeaderVec::new(),
                 vec![]
             )
@@ -258,7 +216,7 @@ mod tests {
         assert_eq!(
             Request::new(
                 "",
-                Url::new("http://localhost:8000/redirect-relative").unwrap(),
+                Url::try_from("http://localhost:8000/redirect-relative").unwrap(),
                 HeaderVec::new(),
                 vec![]
             )
@@ -269,7 +227,7 @@ mod tests {
         assert_eq!(
             Request::new(
                 "",
-                Url::new("https://localhost:8000").unwrap(),
+                Url::try_from("https://localhost:8000").unwrap(),
                 HeaderVec::new(),
                 vec![]
             )

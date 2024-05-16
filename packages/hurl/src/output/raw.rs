@@ -135,7 +135,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::new("https://foo.com").unwrap(),
+                            url: Url::try_from("https://foo.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -154,7 +154,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::new("https://bar.com").unwrap(),
+                            url: Url::try_from("https://bar.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -173,7 +173,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::new("https://baz.com").unwrap(),
+                            url: Url::try_from("https://baz.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],

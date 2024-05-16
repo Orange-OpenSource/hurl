@@ -136,7 +136,8 @@ impl Request {
         let cookies = self.cookies().iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
         let query_string = self
-            .query_string_params()
+            .url
+            .query_params()
             .iter()
             .map(|e| e.to_json())
             .collect();

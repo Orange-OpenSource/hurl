@@ -44,10 +44,21 @@ pub struct RequestCookie {
     pub value: String,
 }
 
+/// A key/value pair used for query params, form params and multipart-form params.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Param {
     pub name: String,
     pub value: String,
+}
+
+impl Param {
+    /// Creates a new param pair.
+    pub fn new(name: &str, value: &str) -> Param {
+        Param {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
 }
 
 impl fmt::Display for Cookie {

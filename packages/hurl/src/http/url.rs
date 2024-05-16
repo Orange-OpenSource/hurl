@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::http::HttpError;
+use crate::http::{HttpError, Param};
 use std::fmt;
 
 /// A parsed URL.
@@ -26,20 +26,12 @@ pub struct Url {
 }
 
 impl Url {
-    /// Parses an absolute URL from a string.
-    pub fn new(url: &str) -> Result<Self, HttpError> {
-        let inner = match url::Url::parse(url) {
-            Ok(url) => url,
-            Err(e) => return Err(HttpError::InvalidUrl(url.to_string(), e.to_string())),
-        };
-        let scheme = inner.scheme();
-        if scheme != "http" && scheme != "https" {
-            return Err(HttpError::InvalidUrl(
-                url.to_string(),
-                "Missing protocol http or https".to_string(),
-            ));
-        }
-        Ok(Url { inner })
+    /// Returns a list of query parameters (values are URL decoded).
+    pub fn query_params(&self) -> Vec<Param> {
+        self.inner
+            .query_pairs()
+            .map(|(k, v)| Param::new(&k, &v))
+            .collect()
     }
 
     /// TODO: Temporary method, will be deleted soon
@@ -68,6 +60,26 @@ impl Url {
     }
 }
 
+impl TryFrom<&str> for Url {
+    type Error = HttpError;
+
+    /// Parses an absolute URL from a string.
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let inner = match url::Url::parse(value) {
+            Ok(url) => url,
+            Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
+        };
+        let scheme = inner.scheme();
+        if scheme != "http" && scheme != "https" {
+            return Err(HttpError::InvalidUrl(
+                value.to_string(),
+                "Missing protocol http or https".to_string(),
+            ));
+        }
+        Ok(Url { inner })
+    }
+}
+
 impl fmt::Display for Url {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.inner)
@@ -77,6 +89,7 @@ impl fmt::Display for Url {
 #[cfg(test)]
 mod tests {
     use super::Url;
+    use crate::http::Param;
 
     #[test]
     fn parse_url_ok() {
@@ -88,7 +101,24 @@ mod tests {
             "https://localhost:8000",
         ];
         for url in urls {
-            assert!(Url::new(url).is_ok());
+            assert!(Url::try_from(url).is_ok());
         }
+    }
+
+    #[test]
+    fn query_params() {
+        let url = Url::try_from("http://localhost:8000/hello").unwrap();
+        assert_eq!(url.query_params(), vec![]);
+
+        let url = Url::try_from("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
+        assert_eq!(
+            url.query_params(),
+            vec![
+                Param::new("param1", "value1"),
+                Param::new("param2", ""),
+                Param::new("param3", "a=b"),
+                Param::new("param4", "1,2,3"),
+            ]
+        );
     }
 }
