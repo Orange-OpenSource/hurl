@@ -45,6 +45,16 @@ HTTP 200
 header "Location" not exists
 `Followed redirect POST!`
 
+
+GET http://localhost:8000/follow-redirect/relative/foo
+[Options]
+location: true
+HTTP 200
+[Asserts]
+url == "http://localhost:8000/follow-redirect/bar"
+`Followed relative redirect!`
+
+
 # Do not forward authorization header by default to a different host
 GET http://localhost:8000/follow-redirect-basic-auth
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
@@ -54,6 +64,7 @@ HTTP 200
 [Asserts]
 header "Location" not exists
 `Followed redirect Basic Auth!`
+
 
 # Forward authorization header to a different host explicitly
 GET http://localhost:8000/follow-redirect-basic-auth-trusted

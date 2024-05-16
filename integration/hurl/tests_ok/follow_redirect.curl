@@ -1,3 +1,4 @@
 curl --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect'
 curl --data '' --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect'
+curl --location 'http://localhost:8000/follow-redirect/relative/foo'
 curl --data '' --location 'http://localhost:8000/follow-redirect-308'

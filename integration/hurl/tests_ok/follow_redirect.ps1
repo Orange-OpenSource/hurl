@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/follow_redirect.hurl --location --verbose
+hurl --location --verbose tests_ok/follow_redirect.hurl

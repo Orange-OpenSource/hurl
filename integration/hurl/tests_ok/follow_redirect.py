@@ -59,3 +59,13 @@ def follow_redirect_basic_auth_trusted():
 def followed_redirect_basic_auth_trusted():
     assert request.headers["Authorization"] == "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ="
     return "Followed redirect Basic Auth!"
+
+
+@app.route("/follow-redirect/relative/foo")
+def follow_redirect_relative():
+    return redirect("../bar")
+
+
+@app.route("/follow-redirect/bar")
+def followed_redirect_bar():
+    return "Followed relative redirect!"
