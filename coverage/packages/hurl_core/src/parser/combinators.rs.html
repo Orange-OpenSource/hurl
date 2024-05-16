@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Err(e) =&gt; Err(Error::new(e.pos, true, e.inner)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Err(e) =&gt; Err(ParseError::new(e.pos, true, e.kind)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -821,7 +821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Err(e) =&gt; Err(Error::new(e.pos, false, e.inner)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Err(e) =&gt; Err(ParseError::new(e.pos, false, e.kind)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Err(Error { pos, inner, .. }) =&gt; Err(Error::new(pos, false, inner)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Err(ParseError { pos, kind, .. }) =&gt; Err(ParseError::new(pos, false, kind)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1909,7 +1909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Err(Error {</pre>
+                <pre class="has-background-white py-0 px-2">            Err(ParseError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2075,7 +2075,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

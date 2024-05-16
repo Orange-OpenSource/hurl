@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::runner::{EntryResult, Error, HurlResult, Input, RunnerError};</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2661,7 +2661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                errors: vec![Error::new(</pre>
+                <pre class="has-background-white py-0 px-2">                errors: vec![RunnerError::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    RunnerError::AssertStatus {</pre>
+                <pre class="has-background-white py-0 px-2">                    RunnerErrorKind::AssertStatus {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3061,7 +3061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                errors: vec![Error::new(</pre>
+                <pre class="has-background-white py-0 px-2">                errors: vec![RunnerError::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    RunnerError::HttpConnection(&quot;(6) Could not resolve host: unknown&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                    RunnerErrorKind::HttpConnection(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3109,7 +3109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    false,</pre>
+                <pre class="has-background-white py-0 px-2">                        &quot;(6) Could not resolve host: unknown&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3125,7 +3125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )],</pre>
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3141,7 +3141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                time_in_ms: 0,</pre>
+                <pre class="has-background-white py-0 px-2">                    false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3157,7 +3157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                compressed: false,</pre>
+                <pre class="has-background-white py-0 px-2">                )],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3173,7 +3173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">                time_in_ms: 0,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3189,7 +3189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            time_in_ms: 230,</pre>
+                <pre class="has-background-white py-0 px-2">                compressed: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3205,7 +3205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            success: true,</pre>
+                <pre class="has-background-white py-0 px-2">            }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3221,7 +3221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            cookies: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">            time_in_ms: 230,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3237,7 +3237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            timestamp: 1,</pre>
+                <pre class="has-background-white py-0 px-2">            success: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3253,7 +3253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            cookies: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3269,7 +3269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let tc = Testcase::from(&amp;res, content, &amp;filename);</pre>
+                <pre class="has-background-white py-0 px-2">            timestamp: 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3285,7 +3285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        testcases.push(tc);</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3301,7 +3301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let tc = Testcase::from(&amp;res, content, &amp;filename);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3317,7 +3317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let suite = create_testsuite(&amp;testcases);</pre>
+                <pre class="has-background-white py-0 px-2">        testcases.push(tc);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3333,7 +3333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::new(suite);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3349,7 +3349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let suite = create_testsuite(&amp;testcases);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            doc.to_string().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::new(suite);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3381,7 +3381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;utf-8\&quot;?&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3397,7 +3397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;testsuite tests=\&quot;3\&quot; errors=\&quot;1\&quot; failures=\&quot;1\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            doc.to_string().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3413,7 +3413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot; &#x2F;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;utf-8\&quot;?&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3429,7 +3429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;testsuite tests=\&quot;3\&quot; errors=\&quot;1\&quot; failures=\&quot;1\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3445,7 +3445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &lt;failure&gt;Assert status code\n  \</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot; &#x2F;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3461,7 +3461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    --&amp;gt; -:2:10\n   \</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3477,7 +3477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                      |\n   \</pre>
+                <pre class="has-background-white py-0 px-2">                    &lt;failure&gt;Assert status code\n  \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3493,7 +3493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                      | GET http:&#x2F;&#x2F;localhost:8000&#x2F;not_found\n \</pre>
+                <pre class="has-background-white py-0 px-2">                    --&amp;gt; -:2:10\n   \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3509,7 +3509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    2 | HTTP&#x2F;1.0 200\n   \</pre>
+                <pre class="has-background-white py-0 px-2">                      |\n   \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3525,7 +3525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                      |          ^^^ actual value is &amp;lt;404&amp;gt;\n   \</pre>
+                <pre class="has-background-white py-0 px-2">                      | GET http:&#x2F;&#x2F;localhost:8000&#x2F;not_found\n \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3541,7 +3541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                      |\</pre>
+                <pre class="has-background-white py-0 px-2">                    2 | HTTP&#x2F;1.0 200\n   \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3557,7 +3557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &lt;&#x2F;failure&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                      |          ^^^ actual value is &amp;lt;404&amp;gt;\n   \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3573,7 +3573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;&#x2F;testcase&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                      |\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3589,7 +3589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                    &lt;&#x2F;failure&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3605,7 +3605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &lt;error&gt;HTTP connection\n  --&amp;gt; -:1:5\n   |\n 1 | GET http:&#x2F;&#x2F;localhost:8000&#x2F;not_found\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;&#x2F;testcase&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3621,7 +3621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &lt;&#x2F;error&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;testcase id=\&quot;-\&quot; name=\&quot;-\&quot; time=\&quot;0.230\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3637,7 +3637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;&#x2F;testcase&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                    &lt;error&gt;HTTP connection\n  --&amp;gt; -:1:5\n   |\n 1 | GET http:&#x2F;&#x2F;localhost:8000&#x2F;not_found\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3653,7 +3653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;testsuite&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">                    &lt;&#x2F;error&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3669,7 +3669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;&#x2F;testcase&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3685,7 +3685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;testsuite&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3701,13 +3701,45 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="230"
+                role="cell">
+                <a href="#230">230</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="231"
+                role="cell">
+                <a href="#231">231</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

@@ -485,7 +485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::{Error, Number, Output, RunnerError, RunnerOptions, Value};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::{Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;RunnerOptions, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;RunnerOptions, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4309,7 +4309,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Verbosity&gt;, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Verbosity&gt;, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4853,7 +4853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;bool, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;bool, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4949,7 +4949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let inner = RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-success-light py-0 px-2">                let kind = RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5029,7 +5029,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-success-light py-0 px-2">                Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5173,7 +5173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;u64, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;u64, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5269,7 +5269,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    let inner = RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let kind = RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5349,7 +5349,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5445,7 +5445,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let inner = RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let kind = RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5525,7 +5525,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5669,7 +5669,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Retry, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Retry, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5861,7 +5861,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    let inner = RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let kind = RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5941,7 +5941,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6005,7 +6005,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let inner = RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let kind = RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6085,7 +6085,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6229,7 +6229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Value, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Value, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6629,7 +6629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::runner::RunnerError;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::runner::RunnerErrorKind;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7509,7 +7509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7525,7 +7525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RunnerError::TemplateVariableNotDefined {</pre>
+                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::TemplateVariableNotDefined {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7685,7 +7685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7701,7 +7701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RunnerError::TemplateVariableInvalidType {</pre>
+                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::TemplateVariableInvalidType {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8059,7 +8059,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

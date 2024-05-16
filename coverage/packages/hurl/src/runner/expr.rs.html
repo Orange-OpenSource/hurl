@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::error::{Error, RunnerError};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::error::{RunnerError, RunnerErrorKind};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; [`Value`] on success or an [`Error`] .</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; [`Value`] on success or an [`RunnerError`] .</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn eval_expr(expr: &amp;Expr, variables: &amp;HashMap&lt;String, Value&gt;) -&gt; Result&lt;Value, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn eval_expr(expr: &amp;Expr, variables: &amp;HashMap&lt;String, Value&gt;) -&gt; Result&lt;Value, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let inner = RunnerError::TemplateVariableNotDefined {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let kind = RunnerErrorKind::TemplateVariableNotDefined {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Err(Error::new(expr.variable.source_info, inner, false))</pre>
+                <pre class="has-background-success-light py-0 px-2">        Err(RunnerError::new(expr.variable.source_info, kind, false))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -619,7 +619,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

@@ -949,7 +949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        _ =&gt; return Err(Error::new(reader.state.pos, true, ParseError::Xml)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        _ =&gt; return Err(ParseError::new(reader.state.pos, true, ParseErrorKind::Xml)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                return Err(Error::new(prev_pos, false, ParseError::Xml));</pre>
+                <pre class="has-background-success-light py-0 px-2">                return Err(ParseError::new(prev_pos, false, ParseErrorKind::Xml));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3621,7 +3621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::Xml);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.kind, ParseErrorKind::Xml);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3717,7 +3717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::Xml);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.kind, ParseErrorKind::Xml);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::Xml);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.kind, ParseErrorKind::Xml);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4005,7 +4005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::Xml);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.kind, ParseErrorKind::Xml);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4181,7 +4181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::Xml);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.kind, ParseErrorKind::Xml);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7275,7 +7275,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            let inner = error::ParseError::Expecting {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            let kind = error::ParseErrorKind::Expecting {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            return Err(error::Error::new(</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(error::ParseError::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                inner,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4901,7 +4901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4917,7 +4917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error::ParseError::Expecting {</pre>
+                <pre class="has-background-white py-0 px-2">            error::ParseErrorKind::Expecting {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5339,7 +5339,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>

@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub type ParseResult&lt;T&gt; = Result&lt;T, Error&gt;;</pre>
+                <pre class="has-background-white py-0 px-2">pub type ParseResult&lt;T&gt; = Result&lt;T, ParseError&gt;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::error::{Error, JsonErrorVariant, ParseError};</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::error::{JsonErrorVariant, ParseError, ParseErrorKind};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -987,7 +987,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-05-15 08:09</p>
+                <p class="heading">Date: 2024-05-16 08:08</p>
             </div>
         </footer>
     </body>
