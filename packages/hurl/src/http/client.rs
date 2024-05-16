@@ -114,8 +114,7 @@ impl Client {
         let mut redirect_count = 0;
         loop {
             let call = self.execute(&request_spec, options, logger)?;
-            let base_url = call.request.base_url()?;
-            let redirect_url = self.get_follow_location(&call.response, &base_url);
+            let redirect_url = self.get_follow_location(&call.request, &call.response)?;
             let status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
@@ -140,7 +139,7 @@ impl Client {
             };
             request_spec = RequestSpec {
                 method: redirect_method,
-                url: redirect_url,
+                url: redirect_url.to_string(),
                 headers,
                 ..Default::default()
             };
@@ -684,15 +683,20 @@ impl Client {
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
     /// 3. a header Location
-    fn get_follow_location(&mut self, response: &Response, base_url: &str) -> Option<String> {
+    fn get_follow_location(
+        &mut self,
+        request: &Request,
+        response: &Response,
+    ) -> Result<Option<Url>, HttpError> {
         let response_code = response.status;
         if !(300..400).contains(&response_code) {
-            return None;
+            return Ok(None);
         }
-        response
-            .headers
-            .get(LOCATION)
-            .map(|h| get_redirect_url(&h.value, base_url))
+        let Some(location) = response.headers.get(LOCATION) else {
+            return Ok(None);
+        };
+        let url = request.url.join(&location.value)?;
+        Ok(Some(url))
     }
 
     /// Returns cookie storage.
@@ -773,15 +777,6 @@ impl Client {
 
         arguments.push(url);
         arguments.join(" ")
-    }
-}
-
-/// Returns the redirect url.
-fn get_redirect_url(location: &str, base_url: &str) -> String {
-    if location.starts_with('/') {
-        format!("{base_url}{location}")
-    } else {
-        location.to_string()
     }
 }
 
@@ -1012,18 +1007,6 @@ mod tests {
         assert!(match_cookie(&cookie, "http://example.com/toto"));
         assert!(match_cookie(&cookie, "http://sub.example.com/toto"));
         assert!(!match_cookie(&cookie, "http://example.com/tata"));
-    }
-
-    #[test]
-    fn test_redirect_url() {
-        assert_eq!(
-            get_redirect_url("http://localhost:8000/redirected", "http://localhost:8000"),
-            "http://localhost:8000/redirected".to_string()
-        );
-        assert_eq!(
-            get_redirect_url("/redirected", "http://localhost:8000"),
-            "http://localhost:8000/redirected".to_string()
-        );
     }
 
     #[test]

@@ -20,7 +20,6 @@ use std::fmt;
 use crate::http::core::*;
 use crate::http::header::{HeaderVec, COOKIE};
 use crate::http::url::Url;
-use crate::http::HttpError;
 
 /// Represents a runtime HTTP request.
 /// This is a real request, that has been executed by our HTTP client.
@@ -90,11 +89,6 @@ impl Request {
             .iter()
             .flat_map(|h| parse_cookies(h.value.as_str().trim()))
             .collect()
-    }
-
-    /// Returns the base url http(s)://host(:port)
-    pub fn base_url(&self) -> Result<String, HttpError> {
-        self.url.base_url()
     }
 }
 
@@ -197,43 +191,6 @@ mod tests {
                 name: "cookie1".to_string(),
                 value: "value1".to_string(),
             },
-        );
-    }
-
-    #[test]
-    fn test_base_url() {
-        assert_eq!(
-            Request::new(
-                "",
-                Url::try_from("http://localhost").unwrap(),
-                HeaderVec::new(),
-                vec![]
-            )
-            .base_url()
-            .unwrap(),
-            "http://localhost".to_string()
-        );
-        assert_eq!(
-            Request::new(
-                "",
-                Url::try_from("http://localhost:8000/redirect-relative").unwrap(),
-                HeaderVec::new(),
-                vec![]
-            )
-            .base_url()
-            .unwrap(),
-            "http://localhost:8000".to_string()
-        );
-        assert_eq!(
-            Request::new(
-                "",
-                Url::try_from("https://localhost:8000").unwrap(),
-                HeaderVec::new(),
-                vec![]
-            )
-            .base_url()
-            .unwrap(),
-            "https://localhost:8000".to_string()
         );
     }
 }

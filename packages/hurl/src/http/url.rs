@@ -34,29 +34,19 @@ impl Url {
             .collect()
     }
 
-    /// TODO: Temporary method, will be deleted soon
-    pub fn base_url(&self) -> Result<String, HttpError> {
-        let scheme = self.inner.scheme();
-        if scheme != "http" && scheme != "https" {
-            return Err(HttpError::InvalidUrl(
-                self.inner.to_string(),
-                "Missing protocol http or https".to_string(),
-            ));
-        }
-        let host = match self.inner.host() {
-            Some(host) => host,
-            None => {
+    /// Parse a string `input` as an URL, with this URL as the base URL.
+    pub fn join(&self, input: &str) -> Result<Url, HttpError> {
+        let new_inner = self.inner.join(input);
+        let new_inner = match new_inner {
+            Ok(u) => u,
+            Err(_) => {
                 return Err(HttpError::InvalidUrl(
                     self.inner.to_string(),
-                    "Can not extract host".to_string(),
+                    format!("Can not use relative path '{input}'"),
                 ))
             }
         };
-        let port = match self.inner.port() {
-            Some(port) => format!(":{port}"),
-            None => String::new(),
-        };
-        Ok(format!("{scheme}://{host}{port}"))
+        Url::try_from(new_inner.to_string().as_str())
     }
 }
 
@@ -120,5 +110,33 @@ mod tests {
                 Param::new("param4", "1,2,3"),
             ]
         );
+    }
+
+    #[test]
+    fn test_join() {
+        let base = Url::try_from("http://example.net/foo/index.html").unwrap();
+
+        // Test join with absolute
+        assert_eq!(
+            base.join("http://bar.com/redirected").unwrap(),
+            Url::try_from("http://bar.com/redirected").unwrap()
+        );
+
+        // Test join with relative
+        assert_eq!(
+            base.join("/redirected").unwrap(),
+            Url::try_from("http://example.net/redirected").unwrap()
+        );
+
+        assert_eq!(
+            base.join("../bar/index.html").unwrap(),
+            Url::try_from("http://example.net/bar/index.html").unwrap()
+        );
+
+        // Scheme relative URL
+        assert_eq!(
+            base.join("//example.org/baz/index.html").unwrap(),
+            Url::try_from("http://example.org/baz/index.html").unwrap()
+        )
     }
 }
