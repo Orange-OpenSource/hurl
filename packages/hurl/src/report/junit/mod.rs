@@ -132,6 +132,7 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
 
 #[cfg(test)]
 mod tests {
+    use crate::http::HttpError;
     use hurl_core::ast::{Pos, SourceInfo};
 
     use crate::report::junit::xml::XmlDocument;
@@ -188,9 +189,10 @@ mod tests {
                 asserts: vec![],
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
-                    RunnerErrorKind::HttpConnection(
-                        "(6) Could not resolve host: unknown".to_string(),
-                    ),
+                    RunnerErrorKind::Http(HttpError::Libcurl {
+                        code: 6,
+                        description: "Could not resolve host: unknown".to_string(),
+                    }),
                     false,
                 )],
                 time_in_ms: 0,

@@ -21,6 +21,7 @@ use crate::http::{Call, Cookie};
 use crate::runner::error::RunnerError;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
+use crate::runner::RunnerErrorKind;
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 
@@ -191,7 +192,11 @@ impl EntryResult {
             let bytes = match response.uncompress_body() {
                 Ok(bytes) => bytes,
                 Err(e) => {
-                    return Err(RunnerError::new(source_info, e.into(), false));
+                    return Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        false,
+                    ));
                 }
             };
             output.write(&bytes, stdout, Some(context_dir))

@@ -19,10 +19,9 @@ use std::cmp::min;
 use std::io::IsTerminal;
 
 use colored::Colorize;
-use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::output::Error;
-use crate::runner::{HurlResult, Output, RunnerError};
+use crate::runner::{HurlResult, Output};
 use crate::util::term::{Stderr, Stdout};
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
@@ -58,12 +57,7 @@ pub fn write_last_body(
         let mut bytes = match response.uncompress_body() {
             Ok(b) => b,
             Err(e) => {
-                // FIXME: we convert to a runner::Error to be able to use fixme!
-                // We may pass a [`SourceInfo`] as a parameter of this method to make
-                // a more accurate error
-                let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-                let error = RunnerError::new(source_info, e.into(), false);
-                return Err(error.into());
+                return Err(Error::new(&e.message()));
             }
         };
         output.append(&mut bytes);

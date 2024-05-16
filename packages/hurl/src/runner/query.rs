@@ -119,7 +119,11 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
     // Can return a string if encoding is known and utf8.
     match response.text() {
         Ok(s) => Ok(Some(Value::String(s))),
-        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(
+            query_source_info,
+            RunnerErrorKind::Http(inner),
+            false,
+        )),
     }
 }
 
@@ -133,7 +137,11 @@ fn eval_query_xpath(
         Ok(xml) => {
             filter::eval_xpath_string(&xml, expr, variables, query_source_info, response.is_html())
         }
-        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(
+            query_source_info,
+            RunnerErrorKind::Http(inner),
+            false,
+        )),
     }
 }
 
@@ -145,7 +153,11 @@ fn eval_query_jsonpath(
 ) -> QueryResult {
     match response.text() {
         Ok(json) => filter::eval_jsonpath_string(&json, expr, variables, query_source_info),
-        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(
+            query_source_info,
+            RunnerErrorKind::Http(inner),
+            false,
+        )),
     }
 }
 
@@ -157,7 +169,13 @@ fn eval_query_regex(
 ) -> QueryResult {
     let s = match response.text() {
         Ok(v) => v,
-        Err(inner) => return Err(RunnerError::new(query_source_info, inner.into(), false)),
+        Err(inner) => {
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::Http(inner),
+                false,
+            ))
+        }
     };
     let re = match regex {
         RegexValue::Template(t) => {
@@ -202,7 +220,11 @@ fn eval_query_duration(response: &http::Response) -> QueryResult {
 fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
-        Err(inner) => Err(RunnerError::new(query_source_info, inner.into(), false)),
+        Err(inner) => Err(RunnerError::new(
+            query_source_info,
+            RunnerErrorKind::Http(inner),
+            false,
+        )),
     }
 }
 
@@ -210,7 +232,11 @@ fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(RunnerError::new(query_source_info, inner.into(), false));
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::Http(inner),
+                false,
+            ));
         }
     };
     let mut hasher = sha2::Sha256::new();
@@ -224,7 +250,11 @@ fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> Q
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(RunnerError::new(query_source_info, inner.into(), false));
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::Http(inner),
+                false,
+            ));
         }
     };
     let bytes = md5::compute(bytes).to_vec();
@@ -319,7 +349,7 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::http::HeaderVec;
+    use crate::http::{HeaderVec, HttpError};
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
 
@@ -831,9 +861,9 @@ pub mod tests {
         );
         assert_eq!(
             error.kind,
-            RunnerErrorKind::InvalidDecoding {
+            RunnerErrorKind::Http(HttpError::InvalidDecoding {
                 charset: "utf-8".to_string()
-            }
+            })
         );
     }
 
@@ -850,9 +880,9 @@ pub mod tests {
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
-            RunnerErrorKind::InvalidDecoding {
+            RunnerErrorKind::Http(HttpError::InvalidDecoding {
                 charset: "utf-8".to_string()
-            }
+            })
         );
     }
 

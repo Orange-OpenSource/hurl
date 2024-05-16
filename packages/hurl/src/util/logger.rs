@@ -546,6 +546,7 @@ fn split_lines(text: &str) -> Vec<&str> {
 #[cfg(test)]
 pub mod tests {
 
+    use crate::http::HttpError;
     use hurl_core::ast::{Pos, SourceInfo};
     use hurl_core::parser::{ParseError, ParseErrorKind};
 
@@ -556,8 +557,10 @@ pub mod tests {
     fn test_error_timeout() {
         let content = "GET http://unknown";
         let filename = "test.hurl";
-        let kind =
-            RunnerErrorKind::HttpConnection("(6) Could not resolve host: unknown".to_string());
+        let kind = RunnerErrorKind::Http(HttpError::Libcurl {
+            code: 6,
+            description: "Could not resolve host: unknown".to_string(),
+        });
         let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
         let error = RunnerError::new(error_source_info, kind, true);

@@ -26,7 +26,7 @@ use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::value::Value;
-use crate::runner::{request, response, CaptureResult};
+use crate::runner::{request, response, CaptureResult, RunnerErrorKind};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
@@ -88,7 +88,8 @@ pub fn run(
             let start = entry.request.url.source_info.start;
             let end = entry.request.url.source_info.end;
             let error_source_info = SourceInfo::new(start, end);
-            let error = RunnerError::new(error_source_info, http_error.into(), false);
+            let error =
+                RunnerError::new(error_source_info, RunnerErrorKind::Http(http_error), false);
             return EntryResult {
                 entry_index,
                 source_info,

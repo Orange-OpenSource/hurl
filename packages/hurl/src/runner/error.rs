@@ -21,7 +21,7 @@ use std::path::PathBuf;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::DisplaySourceError;
 
-use crate::http::{HttpError, RequestedHttpVersion};
+use crate::http::HttpError;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of
@@ -64,7 +64,6 @@ pub enum RunnerErrorKind {
     AssertVersion {
         actual: String,
     },
-    CouldNotUncompressResponse(String),
     /// I/O read error on `path`.
     FileReadAccess {
         path: PathBuf,
@@ -78,18 +77,11 @@ pub enum RunnerErrorKind {
     FilterInvalidEncoding(String),
     FilterInvalidInput(String),
     FilterMissingInput,
-    HttpConnection(String),
+    Http(HttpError),
     InvalidJson {
         value: String,
     },
-    InvalidCharset {
-        charset: String,
-    },
-    InvalidDecoding {
-        charset: String,
-    },
     InvalidRegex,
-    InvalidUrl(String, String),
     NoQueryResult,
     QueryHeaderNotFound,
     QueryInvalidJsonpathExpression {
@@ -106,9 +98,6 @@ pub enum RunnerErrorKind {
         value: String,
         expecting: String,
     },
-    TooManyRedirect,
-    UnsupportedContentEncoding(String),
-    UnsupportedHttpVersion(RequestedHttpVersion),
     UnrenderableVariable {
         name: String,
         value: String,
@@ -132,19 +121,16 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::AssertHeaderValueError { .. } => "Assert header value".to_string(),
             RunnerErrorKind::AssertStatus { .. } => "Assert status code".to_string(),
             RunnerErrorKind::AssertVersion { .. } => "Assert HTTP version".to_string(),
-            RunnerErrorKind::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
+
             RunnerErrorKind::FileReadAccess { .. } => "File read access".to_string(),
             RunnerErrorKind::FileWriteAccess { .. } => "File write access".to_string(),
             RunnerErrorKind::FilterDecode { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidEncoding { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidInput { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterMissingInput => "Filter error".to_string(),
-            RunnerErrorKind::HttpConnection { .. } => "HTTP connection".to_string(),
-            RunnerErrorKind::InvalidCharset { .. } => "Invalid charset".to_string(),
-            RunnerErrorKind::InvalidDecoding { .. } => "Invalid decoding".to_string(),
+            RunnerErrorKind::Http(http_error) => http_error.description(),
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
-            RunnerErrorKind::InvalidUrl(..) => "Invalid URL".to_string(),
             RunnerErrorKind::NoQueryResult => "No query result".to_string(),
             RunnerErrorKind::QueryHeaderNotFound => "Header not found".to_string(),
             RunnerErrorKind::QueryInvalidJson => "Invalid JSON".to_string(),
@@ -157,13 +143,10 @@ impl DisplaySourceError for RunnerError {
                 "Invalid variable type".to_string()
             }
             RunnerErrorKind::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
-            RunnerErrorKind::TooManyRedirect => "HTTP connection".to_string(),
             RunnerErrorKind::UnauthorizedFileAccess { .. } => {
                 "Unauthorized file access".to_string()
             }
             RunnerErrorKind::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
-            RunnerErrorKind::UnsupportedContentEncoding(..) => "Decompression error".to_string(),
-            RunnerErrorKind::UnsupportedHttpVersion(..) => "Unsupported HTTP version".to_string(),
         }
     }
 
@@ -223,22 +206,7 @@ impl DisplaySourceError for RunnerError {
                     message.to_string()
                 }
             }
-            RunnerErrorKind::CouldNotUncompressResponse(algorithm) => {
-                let message = &format!("could not uncompress response with {algorithm}");
 
-                // only add carets if source_info is set
-                // TODO: add additional attribute in the error to be more explicit?
-                let message = if self.source_info.start.line == 0 {
-                    message.to_string()
-                } else {
-                    hurl_core::error::add_carets(message, self.source_info, content)
-                };
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
             RunnerErrorKind::FileReadAccess { path } => {
                 let message = &format!("file {} can not be read", path.to_string_lossy());
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
@@ -287,30 +255,14 @@ impl DisplaySourceError for RunnerError {
                     message.to_string()
                 }
             }
-            RunnerErrorKind::HttpConnection(message) => {
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+            RunnerErrorKind::Http(http_error) => {
+                let message = http_error.message();
+                let message = hurl_core::error::add_carets(&message, self.source_info, content);
+
                 if color {
                     message.red().bold().to_string()
                 } else {
-                    message.to_string()
-                }
-            }
-            RunnerErrorKind::InvalidCharset { charset } => {
-                let message = &format!("the charset '{charset}' is not valid");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
-            RunnerErrorKind::InvalidDecoding { charset } => {
-                let message = &format!("the body can not be decoded with charset '{charset}'");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
+                    message
                 }
             }
             RunnerErrorKind::InvalidJson { value } => {
@@ -324,15 +276,6 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::InvalidRegex => {
                 let message = "regex expression is not valid";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
-            RunnerErrorKind::InvalidUrl(url, reason) => {
-                let message = &format!("invalid URL <{url}> ({reason})");
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
                 if color {
                     message.red().bold().to_string()
@@ -414,15 +357,6 @@ impl DisplaySourceError for RunnerError {
                     message.to_string()
                 }
             }
-            RunnerErrorKind::TooManyRedirect => {
-                let message = "too many redirect";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
             RunnerErrorKind::UnauthorizedFileAccess { path } => {
                 let message = &format!(
                     "unauthorized access to file {}, check --file-root option",
@@ -437,24 +371,6 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::UnrenderableVariable { name, value } => {
                 let message = &format!("variable <{name}> with value {value} can not be rendered");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
-            RunnerErrorKind::UnsupportedContentEncoding(algorithm) => {
-                let message = &format!("compression {algorithm} is not supported");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
-            }
-            RunnerErrorKind::UnsupportedHttpVersion(version) => {
-                let message = &format!("{version} is not supported, check --version");
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
                 if color {
                     message.red().bold().to_string()
@@ -483,40 +399,4 @@ fn color_red_multiline_string(s: &str) -> String {
 /// Splits this `text` to a list of LF/CRLF separated lines.
 fn split_lines(text: &str) -> Vec<&str> {
     regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
-}
-
-impl From<HttpError> for RunnerErrorKind {
-    /// Converts a HttpError to a RunnerError.
-    fn from(item: HttpError) -> Self {
-        match item {
-            HttpError::CouldNotParseResponse => {
-                RunnerErrorKind::HttpConnection("could not parse Response".to_string())
-            }
-            HttpError::CouldNotUncompressResponse { description } => {
-                RunnerErrorKind::CouldNotUncompressResponse(description)
-            }
-            HttpError::InvalidCharset { charset } => RunnerErrorKind::InvalidCharset { charset },
-            HttpError::InvalidDecoding { charset } => RunnerErrorKind::InvalidDecoding { charset },
-            HttpError::InvalidUrl(url, reason) => RunnerErrorKind::InvalidUrl(url, reason),
-            HttpError::Libcurl { code, description } => {
-                RunnerErrorKind::HttpConnection(format!("({code}) {description}"))
-            }
-            HttpError::LibcurlUnknownOption {
-                option,
-                minimum_version,
-            } => RunnerErrorKind::HttpConnection(format!(
-                "Option {option} requires libcurl version {minimum_version} or higher"
-            )),
-            HttpError::StatuslineIsMissing => {
-                RunnerErrorKind::HttpConnection("status line is missing".to_string())
-            }
-            HttpError::TooManyRedirect => RunnerErrorKind::TooManyRedirect,
-            HttpError::UnsupportedContentEncoding { description } => {
-                RunnerErrorKind::UnsupportedContentEncoding(description)
-            }
-            HttpError::UnsupportedHttpVersion(version) => {
-                RunnerErrorKind::UnsupportedHttpVersion(version)
-            }
-        }
-    }
 }

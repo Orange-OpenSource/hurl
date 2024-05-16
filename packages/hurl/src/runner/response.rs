@@ -171,7 +171,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -189,7 +193,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -210,7 +218,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -231,7 +243,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -254,7 +270,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -280,7 +300,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
@@ -304,7 +328,11 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
                     };
-                    Err(RunnerError::new(source_info, e.into(), true))
+                    Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::Http(e),
+                        true,
+                    ))
                 }
             };
             AssertResult::Body {
