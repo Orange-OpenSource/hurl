@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+%:
+    dh $@
+
+override_dh_clean:
+    dh_clean
+    rm -rf vendor target
+    cargo clean
+    cargo vendor | head -n -1 > .cargo/config
+    tar pcfJ vendor.tar.xz vendor
+    rm -rf vendor
+
+override_dh_auto_build:
+    tar pxf vendor.tar.xz
+    mkdir -p .cargo
+    cp debian/cargo.config .cargo/config
+    tar pxf vendor.tar.xz
+    cargo build --release --frozen --verbose --package hurl
+
