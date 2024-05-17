@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -57,7 +57,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -106,7 +106,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -191,7 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -236,7 +236,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -286,7 +286,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -334,7 +334,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -388,7 +388,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
       with:
         ref: ${{ inputs.branch }}
     - name: Manage vcpkg cache

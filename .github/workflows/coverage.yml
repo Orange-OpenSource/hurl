@@ -16,7 +16,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.4
+      uses: actions/checkout@v4.1.6
 
     - name: Environment
       run: bin/environment.sh
