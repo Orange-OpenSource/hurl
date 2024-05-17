@@ -71,7 +71,7 @@ fn eval_query_status(response: &http::Response) -> QueryResult {
 }
 
 fn eval_query_url(response: &http::Response) -> QueryResult {
-    Ok(Some(Value::String(response.url.clone())))
+    Ok(Some(Value::String(response.url.to_string())))
 }
 
 fn eval_query_header(
@@ -349,11 +349,23 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::http::{HeaderVec, HttpError};
+    use crate::http::{HeaderVec, HttpError, HttpVersion, Url};
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
+
+    fn default_response() -> http::Response {
+        http::Response {
+            version: HttpVersion::Http10,
+            status: 200,
+            headers: HeaderVec::new(),
+            body: vec![],
+            duration: Default::default(),
+            url: Url::parse("http://localhost").unwrap(),
+            certificate: None,
+        }
+    }
 
     pub fn xpath_invalid_query() -> Query {
         // xpath ???
@@ -642,7 +654,7 @@ pub mod tests {
 
         let response = http::Response {
             headers,
-            ..Default::default()
+            ..default_response()
         };
 
         // cookie "LSID"
@@ -872,7 +884,7 @@ pub mod tests {
         let variables = HashMap::new();
         let http_response = http::Response {
             body: vec![200],
-            ..Default::default()
+            ..default_response()
         };
         let error = eval_query(&xpath_users(), &variables, &http_response)
             .err()
@@ -1024,7 +1036,7 @@ pub mod tests {
         let variables = HashMap::new();
         let http_response = http::Response {
             body: String::into_bytes(String::from("xxx")),
-            ..Default::default()
+            ..default_response()
         };
         let error = eval_query(&jsonpath_success(), &variables, &http_response)
             .err()
@@ -1038,7 +1050,7 @@ pub mod tests {
         let variables = HashMap::new();
         let http_response = http::Response {
             body: String::into_bytes(String::from("{}")),
-            ..Default::default()
+            ..default_response()
         };
         //assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));
         assert_eq!(
@@ -1123,7 +1135,7 @@ pub mod tests {
                 &variables,
                 &http::Response {
                     body: vec![0xff],
-                    ..Default::default()
+                    ..default_response()
                 }
             )
             .unwrap()
@@ -1138,7 +1150,7 @@ pub mod tests {
     fn test_query_certificate() {
         assert!(eval_query_certificate(
             &http::Response {
-                ..Default::default()
+                ..default_response()
             },
             CertificateAttributeName::Subject
         )
@@ -1154,7 +1166,7 @@ pub mod tests {
                         expire_date: Default::default(),
                         serial_number: String::new()
                     }),
-                    ..Default::default()
+                    ..default_response()
                 },
                 CertificateAttributeName::Subject
             )

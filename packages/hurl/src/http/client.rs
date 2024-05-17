@@ -283,7 +283,7 @@ impl Client {
         let stop_dt = start_dt + duration;
         let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
 
-        let url = Url::try_from(url.as_str())?;
+        let url = Url::parse(&url)?;
         let request = Request::new(
             &method.to_string(),
             url.clone(),
@@ -296,7 +296,7 @@ impl Client {
             headers,
             response_body,
             duration,
-            &url.to_string(),
+            url,
             certificate,
         );
 

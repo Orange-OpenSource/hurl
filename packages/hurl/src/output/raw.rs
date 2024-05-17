@@ -123,6 +123,18 @@ mod tests {
     use crate::util::term::{Stderr, Stdout, WriteMode};
     use hurl_core::ast::{Pos, SourceInfo};
 
+    fn default_response() -> Response {
+        Response {
+            version: HttpVersion::Http10,
+            status: 200,
+            headers: HeaderVec::new(),
+            body: vec![],
+            duration: Default::default(),
+            url: Url::parse("http://localhost").unwrap(),
+            certificate: None,
+        }
+    }
+
     fn hurl_result_json() -> HurlResult {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("x-foo", "xxx"));
@@ -138,12 +150,12 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://foo.com").unwrap(),
+                            url: Url::parse("https://foo.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
                         },
-                        response: Default::default(),
+                        response: default_response(),
                         timings: Default::default(),
                     }],
                     captures: vec![],
@@ -157,12 +169,12 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://bar.com").unwrap(),
+                            url: Url::parse("https://bar.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
                         },
-                        response: Default::default(),
+                        response: default_response(),
                         timings: Default::default(),
                     }],
                     captures: vec![],
@@ -176,7 +188,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://baz.com").unwrap(),
+                            url: Url::parse("https://baz.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -187,7 +199,7 @@ mod tests {
                             headers,
                             body: b"{\"say\": \"Hello World!\"}".into(),
                             duration: Default::default(),
-                            url: String::new(),
+                            url: Url::parse("https://baz.com").unwrap(),
                             certificate: None,
                         },
                         timings: Default::default(),

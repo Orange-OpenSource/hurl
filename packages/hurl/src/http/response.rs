@@ -19,7 +19,7 @@ use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
-use crate::http::HeaderVec;
+use crate::http::{HeaderVec, Url};
 
 /// Represents a runtime HTTP response.
 /// This is a real response, that has been executed by our HTTP client.
@@ -30,23 +30,9 @@ pub struct Response {
     pub headers: HeaderVec,
     pub body: Vec<u8>,
     pub duration: Duration,
-    pub url: String,
+    pub url: Url,
     /// The end-user certificate, in the response certificate chain
     pub certificate: Option<Certificate>,
-}
-
-impl Default for Response {
-    fn default() -> Self {
-        Response {
-            version: HttpVersion::Http10,
-            status: 200,
-            headers: HeaderVec::new(),
-            body: vec![],
-            duration: Default::default(),
-            url: String::new(),
-            certificate: None,
-        }
-    }
 }
 
 impl Response {
@@ -57,7 +43,7 @@ impl Response {
         headers: HeaderVec,
         body: Vec<u8>,
         duration: Duration,
-        url: &str,
+        url: Url,
         certificate: Option<Certificate>,
     ) -> Self {
         Response {
@@ -66,7 +52,7 @@ impl Response {
             headers,
             body,
             duration,
-            url: url.to_string(),
+            url,
             certificate,
         }
     }
@@ -103,10 +89,14 @@ mod tests {
     fn get_header_values() {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Content-Length", "12"));
-
         let response = Response {
+            version: HttpVersion::Http10,
+            status: 200,
             headers,
-            ..Default::default()
+            body: vec![],
+            duration: Default::default(),
+            url: Url::parse("http://localhost").unwrap(),
+            certificate: None,
         };
         assert_eq!(response.headers.values("Content-Length"), vec!["12"]);
         assert!(response.headers.values("Unknown").is_empty());

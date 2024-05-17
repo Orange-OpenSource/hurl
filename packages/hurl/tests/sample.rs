@@ -52,7 +52,7 @@ fn simple_sample() {
     fn check_request(request: &Request) {
         assert_eq!(
             request.url,
-            Url::try_from("http://localhost:8000/hello").unwrap()
+            Url::parse("http://localhost:8000/hello").unwrap()
         );
         assert_eq!(request.method, "GET");
         let header_names = request
@@ -82,7 +82,10 @@ fn simple_sample() {
         assert!(header_names.contains(&"Server".to_string())); // There are two 'Server' HTTP headers
         assert_eq!(response.body.len(), 12);
         assert!(response.duration < Duration::from_secs(1));
-        assert_eq!(response.url, "http://localhost:8000/hello");
+        assert_eq!(
+            response.url,
+            Url::parse("http://localhost:8000/hello").unwrap()
+        );
         assert!(response.certificate.is_none());
     }
 

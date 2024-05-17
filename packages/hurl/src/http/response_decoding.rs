@@ -157,7 +157,19 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::http::{Header, HeaderVec, Response};
+    use crate::http::{Header, HeaderVec, HttpVersion, Response, Url};
+
+    fn default_response() -> Response {
+        Response {
+            version: HttpVersion::Http10,
+            status: 200,
+            headers: HeaderVec::new(),
+            body: vec![],
+            duration: Default::default(),
+            url: Url::parse("http://localhost").unwrap(),
+            certificate: None,
+        }
+    }
 
     #[test]
     fn test_parse_content_encoding() {
@@ -175,7 +187,7 @@ pub mod tests {
 
     #[test]
     fn test_content_encoding() {
-        let response = Response::default();
+        let response = default_response();
         assert_eq!(response.headers.content_encoding().unwrap(), vec![]);
 
         let mut headers = HeaderVec::new();
@@ -183,7 +195,7 @@ pub mod tests {
 
         let response = Response {
             headers,
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(
             response.headers.content_encoding().err().unwrap(),
@@ -197,7 +209,7 @@ pub mod tests {
 
         let response = Response {
             headers,
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(
             response.headers.content_encoding().unwrap(),
@@ -211,7 +223,7 @@ pub mod tests {
         headers.push(Header::new("Content-Encoding", "br, identity"));
         let response = Response {
             headers,
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(
             response.headers.content_encoding().unwrap(),
@@ -230,7 +242,7 @@ pub mod tests {
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
             ],
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
@@ -242,13 +254,13 @@ pub mod tests {
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
             ],
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
         let response = Response {
             body: b"Hello World!".to_vec(),
-            ..Default::default()
+            ..default_response()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
     }
@@ -301,7 +313,7 @@ pub mod tests {
     fn hello_response() -> Response {
         Response {
             body: b"Hello World!".to_vec(),
-            ..Default::default()
+            ..default_response()
         }
     }
 
@@ -312,7 +324,7 @@ pub mod tests {
         Response {
             headers,
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
-            ..Default::default()
+            ..default_response()
         }
     }
 
@@ -326,7 +338,7 @@ pub mod tests {
         Response {
             headers,
             body: vec![0x63, 0x61, 0x66, 0xe9],
-            ..Default::default()
+            ..default_response()
         }
     }
 
@@ -390,7 +402,7 @@ pub mod tests {
             Response {
                 headers,
                 body: b"Hello World!".to_vec(),
-                ..Default::default()
+                ..default_response()
             }
             .headers
             .character_encoding()
@@ -407,7 +419,7 @@ pub mod tests {
         assert_eq!(
             Response {
                 body: vec![0x63, 0x61, 0x66, 0xe9],
-                ..Default::default()
+                ..default_response()
             }
             .text()
             .err()
@@ -427,7 +439,7 @@ pub mod tests {
             Response {
                 headers,
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
-                ..Default::default()
+                ..default_response()
             }
             .text()
             .unwrap(),
