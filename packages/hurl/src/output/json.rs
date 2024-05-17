@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::output::error::Error;
 use crate::runner::{HurlResult, Input, Output};
 use crate::util::term::Stdout;
+use std::io;
 
 /// Writes the `hurl_result` JSON representation to the file `filename_out`.
 ///
@@ -30,17 +30,14 @@ pub fn write_json(
     filename_in: &Input,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
-) -> Result<(), Error> {
-    let json_result = match hurl_result.to_json(content, filename_in, None) {
-        Ok(res) => res,
-        Err(err) => return Err(Error::new(&err.to_string())),
-    };
+) -> Result<(), io::Error> {
+    let json_result = hurl_result.to_json(content, filename_in, None)?;
     let serialized = serde_json::to_string(&json_result).unwrap();
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
     match filename_out {
-        Some(out) => out.write(&bytes, stdout, None)?,
-        None => Output::Stdout.write(&bytes, stdout, None)?,
+        Some(out) => out.write(&bytes, stdout)?,
+        None => Output::Stdout.write(&bytes, stdout)?,
     }
     Ok(())
 }

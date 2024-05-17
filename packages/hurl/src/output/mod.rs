@@ -27,6 +27,6 @@ mod error;
 mod json;
 mod raw;
 
-pub use self::error::Error;
+pub use self::error::OutputError;
 pub use self::json::write_json;
 pub use self::raw::write_last_body;

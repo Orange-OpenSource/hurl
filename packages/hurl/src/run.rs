@@ -24,7 +24,7 @@ use crate::{cli, HurlRun};
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::{HurlResult, Input};
+use hurl::runner::{HurlResult, Input, Output};
 use hurl::util::term::{Stderr, Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 
@@ -122,7 +122,13 @@ fn print_output(
             stdout,
         );
         if let Err(e) = result {
-            return Err(CliError::Runtime(e.to_string()));
+            let filename = if let Some(Output::File(filename)) = &options.output {
+                filename.display().to_string()
+            } else {
+                "stdout".to_string()
+            };
+            let message = format!("{filename} can not be written ({})", e);
+            return Err(CliError::Runtime(message));
         }
     }
     Ok(())

@@ -20,21 +20,21 @@ use hurl_core::error::DisplaySourceError;
 use std::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error(String);
+pub struct OutputError(String);
 
-impl Error {
-    pub fn new(message: &str) -> Error {
-        Error(message.to_string())
+impl OutputError {
+    pub fn new(message: &str) -> OutputError {
+        OutputError(message.to_string())
     }
 }
 
-impl From<RunnerError> for Error {
+impl From<RunnerError> for OutputError {
     fn from(error: RunnerError) -> Self {
-        Error::new(&error.fixme(&[], false))
+        OutputError::new(&error.fixme(&[], false))
     }
 }
 
-impl fmt::Display for Error {
+impl fmt::Display for OutputError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
     }

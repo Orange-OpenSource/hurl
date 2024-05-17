@@ -20,7 +20,7 @@ use std::io::IsTerminal;
 
 use colored::Colorize;
 
-use crate::output::Error;
+use crate::output::OutputError;
 use crate::runner::{HurlResult, Output};
 use crate::util::term::{Stderr, Stdout};
 
@@ -35,7 +35,7 @@ pub fn write_last_body(
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
     stderr: &mut Stderr,
-) -> Result<(), Error> {
+) -> Result<(), OutputError> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
         return Ok(());
@@ -57,7 +57,7 @@ pub fn write_last_body(
         let mut bytes = match response.uncompress_body() {
             Ok(b) => b,
             Err(e) => {
-                return Err(Error::new(&e.message()));
+                return Err(OutputError::new(&e.message()));
             }
         };
         output.append(&mut bytes);
@@ -80,11 +80,20 @@ pub fn write_last_body(
                 };
                 stderr.eprintln(&message);
                 // We don't want to have any additional error message.
-                return Err(Error::new(""));
+                return Err(OutputError::new(""));
             }
-            Output::Stdout.write(&output, stdout, None)?;
+            Output::Stdout
+                .write(&output, stdout)
+                .map_err(|e| OutputError::new(&e.to_string()))?;
         }
-        Some(out) => out.write(&output, stdout, None)?,
+        Some(out) => out.write(&output, stdout).map_err(|e| {
+            let filename = if let Output::File(filename) = out {
+                filename.display().to_string()
+            } else {
+                "stdout".to_string()
+            };
+            OutputError::new(&format!("{filename} can not be written ({})", e))
+        })?,
     }
     Ok(())
 }

@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-use std::fmt;
 use std::fs::File;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::{fmt, io};
 
 use crate::runner::{RunnerError, RunnerErrorKind};
 use crate::util::path::ContextDir;
@@ -57,14 +57,30 @@ impl Output {
     /// Writes these `bytes` to the output.
     ///
     /// If output is a standard output variant, `stdout` is used to write the bytes.
-    /// If output is a file variant, an optional `context_dir` can be used to check authorized
-    /// write access.
-    pub fn write(
+    pub fn write(&self, bytes: &[u8], stdout: &mut Stdout) -> Result<(), io::Error> {
+        match self {
+            Output::Stdout => stdout.write_all(bytes)?,
+            Output::File(filename) => {
+                // If we have a context dir, we check if we can write to this filename and compute
+                // the new filename given this context dir.
+                let mut file = File::create(filename)?;
+                file.write_all(bytes)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Writes these `bytes` to the output.
+    ///
+    /// If output is a standard output variant, `stdout` is used to write the bytes.
+    /// If output is a file variant, `context_dir` is used to check authorized write access.
+    pub fn write_with_context_dir(
         &self,
         bytes: &[u8],
         stdout: &mut Stdout,
-        context_dir: Option<&ContextDir>,
+        context_dir: &ContextDir,
     ) -> Result<(), RunnerError> {
+        // TODO: Check if write method above can be reused
         match self {
             Output::Stdout => match stdout.write_all(bytes) {
                 Ok(_) => Ok(()),
@@ -74,17 +90,11 @@ impl Output {
                 }
             },
             Output::File(filename) => {
-                // If we have a context dir, we check if we can write to this filename and compute
-                // the new filename given this context dir.
-                let filename = match context_dir {
-                    None => filename.clone(),
-                    Some(context_dir) => {
-                        if !context_dir.is_access_allowed(filename) {
-                            return Err(RunnerError::new_unauthorized_file_access(filename));
-                        }
-                        context_dir.resolved_path(filename)
-                    }
-                };
+                if !context_dir.is_access_allowed(filename) {
+                    return Err(RunnerError::new_unauthorized_file_access(filename));
+                }
+                // we check if we can write to this filename and compute the new filename given this context dir.
+                let filename = context_dir.resolved_path(filename);
                 let mut file = match File::create(&filename) {
                     Ok(file) => file,
                     Err(e) => {
