@@ -18,11 +18,11 @@
 use std::cmp::min;
 use std::io::IsTerminal;
 
-use colored::Colorize;
+use crate::output::error::OutputErrorKind;
 
 use crate::output::OutputError;
 use crate::runner::{HurlResult, Output};
-use crate::util::term::{Stderr, Stdout};
+use crate::util::term::Stdout;
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
@@ -34,7 +34,6 @@ pub fn write_last_body(
     color: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
-    stderr: &mut Stderr,
 ) -> Result<(), OutputError> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
@@ -57,7 +56,9 @@ pub fn write_last_body(
         let mut bytes = match response.uncompress_body() {
             Ok(b) => b,
             Err(e) => {
-                return Err(OutputError::new(&e.message()));
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Http(e);
+                return Err(OutputError::new(source_info, kind));
             }
         };
         output.append(&mut bytes);
@@ -72,19 +73,15 @@ pub fn write_last_body(
     match filename_out {
         None => {
             if std::io::stdout().is_terminal() && is_binary(&output) {
-                let message = "Binary output can mess up your terminal. Use \"--output -\" to tell Hurl to output it to your terminal anyway, or consider \"--output\" to save to a file.";
-                let message = if color {
-                    format!("{}: {}", "warning".yellow().bold(), message.bold())
-                } else {
-                    format!("warning: {message}")
-                };
-                stderr.eprintln(&message);
-                // We don't want to have any additional error message.
-                return Err(OutputError::new(""));
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Binary;
+                return Err(OutputError::new(source_info, kind));
             }
-            Output::Stdout
-                .write(&output, stdout)
-                .map_err(|e| OutputError::new(&e.to_string()))?;
+            Output::Stdout.write(&output, stdout).map_err(|e| {
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Io(e.to_string());
+                OutputError::new(source_info, kind)
+            })?;
         }
         Some(out) => out.write(&output, stdout).map_err(|e| {
             let filename = if let Output::File(filename) = out {
@@ -92,7 +89,9 @@ pub fn write_last_body(
             } else {
                 "stdout".to_string()
             };
-            OutputError::new(&format!("{filename} can not be written ({})", e))
+            let source_info = last_entry.source_info;
+            let kind = OutputErrorKind::Io(format!("{filename} can not be written ({})", e));
+            OutputError::new(source_info, kind)
         })?,
     }
     Ok(())
@@ -120,7 +119,7 @@ mod tests {
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
-    use crate::util::term::{Stderr, Stdout, WriteMode};
+    use crate::util::term::{Stdout, WriteMode};
     use hurl_core::ast::{Pos, SourceInfo};
 
     fn default_response() -> Response {
@@ -225,17 +224,8 @@ mod tests {
         let color = false;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
-        let mut stderr = Stderr::new(WriteMode::Buffered);
 
-        write_last_body(
-            &result,
-            include_header,
-            color,
-            output.as_ref(),
-            &mut stdout,
-            &mut stderr,
-        )
-        .unwrap();
+        write_last_body(&result, include_header, color, output.as_ref(), &mut stdout).unwrap();
         let stdout = String::from_utf8(stdout.buffer().to_vec()).unwrap();
         assert_eq!(
             stdout,

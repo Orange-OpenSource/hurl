@@ -394,7 +394,7 @@ impl Stderr {
 ///   |          ^^^ actual value is <404>
 ///   |
 /// ```
-pub(crate) fn error_string<E: DisplaySourceError>(
+pub fn error_string<E: DisplaySourceError>(
     filename: &str,
     content: &str,
     error: &E,

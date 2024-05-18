@@ -24,6 +24,7 @@ use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::WorkerMessage;
 use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
+use crate::util::logger;
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
@@ -212,7 +213,7 @@ impl ParallelRunner {
                     }
 
                     // Then, we print job output on standard output.
-                    self.print_output(&msg.result, &mut stdout, &mut stderr)?;
+                    self.print_output(&msg.result, &mut stdout)?;
 
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
@@ -258,12 +259,7 @@ impl ParallelRunner {
 
     /// Prints a job `result` to standard output `stdout`, either as a raw HTTP response (last
     /// body of the run), or in a structured JSON way.
-    fn print_output(
-        &self,
-        result: &JobResult,
-        stdout: &mut Stdout,
-        stderr: &mut Stderr,
-    ) -> Result<(), JobError> {
+    fn print_output(&self, result: &JobResult, stdout: &mut Stdout) -> Result<(), JobError> {
         let job = &result.job;
         let content = &result.content;
         let hurl_result = &result.hurl_result;
@@ -282,10 +278,15 @@ impl ParallelRunner {
                         color,
                         filename_out,
                         stdout,
-                        stderr,
                     );
                     if let Err(e) = result {
-                        return Err(JobError::Runtime(e.to_string()));
+                        return Err(JobError::Runtime(logger::error_string(
+                            &filename_in.to_string(),
+                            content,
+                            &e,
+                            None,
+                            color,
+                        )));
                     }
                 }
             }
