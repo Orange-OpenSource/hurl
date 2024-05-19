@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+//! Access controlled path.
 use std::path::{Component, Path, PathBuf};
 
 /// Represents the directories used to run a Hurl file.

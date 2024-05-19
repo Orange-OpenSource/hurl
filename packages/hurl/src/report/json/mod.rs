@@ -15,6 +15,22 @@
  * limitations under the License.
  *
  */
+//! JSON report.
+//!
+//! The JSON report is organised as follows:
+//!
+//! - `index.json`: list of each file of a run exported to JSON
+//! - `store/foo_response.{json,xml,html}`: an HTTP response referenced in `index.json`
+//!
+//! ```text
+//! report
+//! ├── index.json
+//! └── store
+//!     ├── 1fe9d647-5689-4130-b4ea-dc120c2536ba_response.html
+//!     ├── 35f49c69-15f9-43df-a672-a1ff5f68c935_response.json
+//!     ...
+//!     └── ce7f1326-2e2a-46e9-befd-ee0d85084814_response.json
+//! ```
 use crate::runner::{HurlResult, Input};
 use std::fs::File;
 use std::io;

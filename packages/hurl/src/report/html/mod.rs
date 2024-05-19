@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-
-//! HTML report
+//! HTML report.
 mod nav;
 mod report;
 mod run;

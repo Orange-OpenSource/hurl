@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+//! Common utilities like log, path helpers and standard output/error wrapper.
 pub use bar::progress_bar;
 mod bar;
 pub mod logger;

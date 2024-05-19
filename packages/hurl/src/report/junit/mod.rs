@@ -16,7 +16,7 @@
  *
  */
 
-//! XML JUnit report
+//! XML JUnit report.
 //!
 //! The link below seems the most "official" spec
 //! <https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format>

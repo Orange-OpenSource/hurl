@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+//! Log utilities.
 use std::cmp::max;
 
 use colored::*;
