@@ -1,3 +1,22 @@
+[5.0.0 (TO_BE_RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.0)
+========================================================================================================================
+
+Thanks to
+[@linkdd](https://github.com/linkdd),
+[@nkback](https://github.com/nkback),
+
+Enhancements:
+
+* Run tests in parallel. [#2753](https://github.com/Orange-OpenSource/hurl/issues/2753)
+* Add support for importing curl url option [#2750](https://github.com/Orange-OpenSource/hurl/issues/2750)
+* Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
+
+
+Bugs Fixed:
+
+* Fix url when following redirection for certain location header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
+
+
 [4.3.0 (2024-04-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
 ========================================================================================================================
 
