@@ -29,7 +29,7 @@ use hurl::report::{html, junit, tap};
 use hurl::runner;
 use hurl::runner::{HurlResult, Input};
 
-use crate::cli::options::CliOptionsError;
+use crate::cli::options::{CliOptions, CliOptionsError};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -97,29 +97,9 @@ fn main() {
         Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
     };
 
-    if let Some(filename) = opts.junit_file {
-        base_logger.debug(&format!("Writing JUnit report to {}", filename.display()));
-        let result = create_junit_report(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
-
-    if let Some(filename) = opts.tap_file {
-        base_logger.debug(&format!("Writing TAP report to {}", filename.display()));
-        let result = create_tap_report(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
-
-    if let Some(dir) = opts.html_dir {
-        base_logger.debug(&format!("Writing HTML report to {}", dir.display()));
-        let result = create_html_report(&runs, &dir);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
-
-    if let Some(filename) = opts.cookie_output_file {
-        base_logger.debug(&format!("Writing cookies to {}", filename.display()));
-        let result = create_cookies_file(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
+    // Write HTML, JUnit, TAP reports on disk.
+    let ret = export_results(&runs, &opts, &base_logger);
+    unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
 
     if opts.test {
         let duration = start.elapsed().as_millis();
@@ -158,6 +138,31 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
         logger.error(message);
     }
     process::exit(code);
+}
+
+/// Writes `runs` results on file, in HTML, TAP, JUnit or Cookie file format.
+fn export_results(
+    runs: &[HurlRun],
+    opts: &CliOptions,
+    logger: &BaseLogger,
+) -> Result<(), CliError> {
+    if let Some(filename) = &opts.junit_file {
+        logger.debug(&format!("Writing JUnit report to {}", filename.display()));
+        create_junit_report(runs, filename)?;
+    }
+    if let Some(filename) = &opts.tap_file {
+        logger.debug(&format!("Writing TAP report to {}", filename.display()));
+        create_tap_report(runs, filename)?;
+    }
+    if let Some(dir) = &opts.html_dir {
+        logger.debug(&format!("Writing HTML report to {}", dir.display()));
+        create_html_report(runs, dir)?;
+    }
+    if let Some(filename) = &opts.cookie_output_file {
+        logger.debug(&format!("Writing cookies to {}", filename.display()));
+        create_cookies_file(runs, filename)?;
+    }
+    Ok(())
 }
 
 /// Create a JUnit report for this run.
