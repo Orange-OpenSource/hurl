@@ -16,6 +16,7 @@
  *
  */
 
+use regex::Regex;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
@@ -23,7 +24,7 @@ use std::path::Path;
 use super::Testcase;
 use crate::report::Error;
 
-// https://testanything.org/tap-version-13-specification.html
+/// See <https://testanything.org/tap-version-13-specification.html>
 const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";
 
 /// Creates/Append a Tap report from a list of `testcases`
@@ -101,38 +102,12 @@ fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, Error> {
         if header.eq_ignore_ascii_case(TAP_REPORT_VERSION_MARKER) {
             header = lines.remove(0);
         }
-
-        let header_tokens = header.split("..").collect::<Vec<&str>>();
-        match header_tokens.first() {
-            None => {
-                return Err(Error {
-                    message: format!("Invalid TAP Header <{header}>"),
-                });
-            }
-            Some(value) => match value.parse::<usize>() {
-                Ok(value) => value,
-                Err(_) => {
-                    return Err(Error {
-                        message: format!("Invalid TAP Header <{header}>"),
-                    })
-                }
-            },
-        };
-        match header_tokens.get(1) {
-            None => {
-                return Err(Error {
-                    message: format!("Invalid TAP Header <{header}>"),
-                });
-            }
-            Some(value) => match value.parse::<usize>() {
-                Ok(value) => value,
-                Err(_) => {
-                    return Err(Error {
-                        message: format!("Invalid TAP Header <{header}>"),
-                    })
-                }
-            },
-        };
+        let re = Regex::new(r"^1\.\.\d+.*$").unwrap();
+        if !re.is_match(header) {
+            return Err(Error {
+                message: format!("Invalid TAP Header <{header}>"),
+            });
+        }
         for line in lines {
             let line = line.trim();
             if !line.is_empty() {
@@ -201,5 +176,49 @@ not ok 3 - tests_ok/test.3.hurl
                 }
             ]
         );
+
+        let s = r#"TAP version 13
+1..5 # TAP header can have comments
+ok 1 - test.1.hurl
+ok 2 - test.2.hurl
+not ok 3 - test.3.hurl
+not ok 4 - test.4.hurl
+ok 5 - test.5.hurl
+"#;
+        assert_eq!(
+            parse_tap_report(s).unwrap(),
+            vec![
+                Testcase {
+                    description: "test.1.hurl".to_string(),
+                    success: true
+                },
+                Testcase {
+                    description: "test.2.hurl".to_string(),
+                    success: true
+                },
+                Testcase {
+                    description: "test.3.hurl".to_string(),
+                    success: false
+                },
+                Testcase {
+                    description: "test.4.hurl".to_string(),
+                    success: false
+                },
+                Testcase {
+                    description: "test.5.hurl".to_string(),
+                    success: true
+                }
+            ]
+        );
+    }
+
+    #[test]
+    fn test_parse_error() {
+        let s = r#"Dummy header
+ok 1 - test.1.hurl
+ok 2 - test.2.hurl
+not ok 3 - test.3.hurl
+"#;
+        assert!(parse_tap_report(s).is_err())
     }
 }
