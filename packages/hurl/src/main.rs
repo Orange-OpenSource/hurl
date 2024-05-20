@@ -97,12 +97,14 @@ fn main() {
         Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
     };
 
+    // Compute duration of the test here to not take reports writings into acccount.
+    let duration = start.elapsed().as_millis();
+
     // Write HTML, JUnit, TAP reports on disk.
     let ret = export_results(&runs, &opts, &base_logger);
     unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
 
     if opts.test {
-        let duration = start.elapsed().as_millis();
         let summary = get_summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
