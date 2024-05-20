@@ -31,6 +31,7 @@ def followed_redirect():
 
 @app.route("/followed-redirect-post", methods=["POST"])
 def followed_redirect_post():
+    assert request.headers["Accept"] == "text/plain"
     return "Followed redirect POST!"
 
 
@@ -41,6 +42,7 @@ def follow_redirect_308():
 
 @app.route("/follow-redirect-basic-auth")
 def follow_redirect_basic_auth():
+    assert "Authorization" in request.headers
     return redirect("http://127.0.0.1:8000/followed-redirect-basic-auth")
 
 
@@ -68,4 +70,5 @@ def follow_redirect_relative():
 
 @app.route("/follow-redirect/bar")
 def followed_redirect_bar():
+    assert request.headers["Accept"] == "text/plain"
     return "Followed relative redirect!"

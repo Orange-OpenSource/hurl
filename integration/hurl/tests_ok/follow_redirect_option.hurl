@@ -38,6 +38,7 @@ header "Location" not exists
 
 
 POST http://localhost:8000/follow-redirect-308
+Accept: text/plain
 [Options]
 location: true
 HTTP 200
@@ -47,6 +48,7 @@ header "Location" not exists
 
 
 GET http://localhost:8000/follow-redirect/relative/foo
+Accept: text/plain
 [Options]
 location: true
 HTTP 200
