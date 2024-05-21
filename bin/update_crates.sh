@@ -139,7 +139,7 @@ main() {
         echo -e "\n--------------------------------------------------------"
         echo -e "### Crates updates for *Cargo.lock*\n"
         cargo update --color always -vv 2>&1 |
-            (grep -Ev "crates.io index|Removing|^#" || true) |
+            (grep -Ev "crates.io index|Removing|Unchanged|^#" || true) |
                 tr -s ' ' |
                     sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
                         sed "s/ Updating //g" |
