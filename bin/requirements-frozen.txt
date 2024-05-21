@@ -14,8 +14,8 @@ mypy==1.8.0
 mypy-extensions==1.0.0
 packaging==24.0
 pathspec==0.12.1
-platformdirs==4.2.1
-requests==2.31.0
+platformdirs==4.2.2
+requests==2.32.0
 soupsieve==2.5
 typing_extensions==4.11.0
 urllib3==2.2.1
