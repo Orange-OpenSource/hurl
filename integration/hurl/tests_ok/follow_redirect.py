@@ -43,13 +43,22 @@ def follow_redirect_308():
 @app.route("/follow-redirect-basic-auth")
 def follow_redirect_basic_auth():
     assert "Authorization" in request.headers
-    return redirect("http://127.0.0.1:8000/followed-redirect-basic-auth")
+    change_host = request.args.get("change_host") == "true"
+    if change_host:
+        return redirect("http://127.0.0.1:8000/followed-redirect-basic-auth")
+    else:
+        return redirect("http://localhost:8000/followed-redirect-basic-auth")
 
 
 @app.route("/followed-redirect-basic-auth")
 def followed_redirect_basic_auth():
-    assert "Authorization" not in request.headers
-    return "Followed redirect Basic Auth!"
+    # When host changes, authorization should be filtered
+    if request.headers["Host"] == "localhost:8000":
+        assert "Authorization" in request.headers
+        return "Followed redirect with Authorization header!"
+    else:
+        assert "Authorization" not in request.headers
+        return "Followed redirect without Authorization header!"
 
 
 @app.route("/follow-redirect-basic-auth-trusted")

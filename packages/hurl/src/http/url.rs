@@ -50,6 +50,13 @@ impl Url {
             .collect()
     }
 
+    pub fn host(&self) -> String {
+        self.inner
+            .host()
+            .expect("HTTP and HTTPS URL must have a domain")
+            .to_string()
+    }
+
     /// Parse a string `input` as an URL, with this URL as the base URL.
     pub fn join(&self, input: &str) -> Result<Url, HttpError> {
         let new_inner = self.inner.join(input);

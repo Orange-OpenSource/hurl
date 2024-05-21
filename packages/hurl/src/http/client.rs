@@ -115,7 +115,8 @@ impl Client {
         let mut redirect_count = 0;
         loop {
             let call = self.execute(&request_spec, &options, logger)?;
-            let redirect_url = self.get_follow_location(&call.request, &call.response)?;
+            let request_url = call.request.url.clone();
+            let redirect_url = self.get_follow_location(&request_url, &call.response)?;
             let status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
@@ -132,16 +133,13 @@ impl Client {
                 }
             }
             let redirect_method = get_redirect_method(status, request_spec.method);
+            let mut headers = request_spec.headers;
+
             // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
-            // to trust the redirected host.
-            // FIXME: we should filter only if we're changing host
-            let headers = if options.follow_location_trusted {
-                request_spec.headers
-            } else {
-                request_spec.headers.retain(|h| !h.name_eq(AUTHORIZATION));
-                request_spec.headers
-            };
-            if options.user.is_some() && !options.follow_location_trusted {
+            // to trust the redirected host with `--location-trusted`.
+            let host_changed = request_url.host() != redirect_url.host();
+            if host_changed && !options.follow_location_trusted {
+                headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 options.user = None;
             }
             request_spec = RequestSpec {
@@ -692,7 +690,7 @@ impl Client {
     /// 3. a header Location
     fn get_follow_location(
         &mut self,
-        request: &Request,
+        request_url: &Url,
         response: &Response,
     ) -> Result<Option<Url>, HttpError> {
         let response_code = response.status;
@@ -702,7 +700,7 @@ impl Client {
         let Some(location) = response.headers.get(LOCATION) else {
             return Ok(None);
         };
-        let url = request.url.join(&location.value)?;
+        let url = request_url.join(&location.value)?;
         Ok(Some(url))
     }
 

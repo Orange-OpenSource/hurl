@@ -57,29 +57,52 @@ url == "http://localhost:8000/follow-redirect/bar"
 `Followed relative redirect!`
 
 
-# Do not forward authorization header by default to a different host
-GET http://localhost:8000/follow-redirect-basic-auth
+# Do not forward `Authorization` header to a different host
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location: true
 HTTP 200
 [Asserts]
 header "Location" not exists
-`Followed redirect Basic Auth!`
+`Followed redirect without Authorization header!`
 
 
-# Another kinds of user authentication:
-GET http://localhost:8000/follow-redirect-basic-auth
+# Same has previous but the host doesn't change during redirection.
+# Back checks will insure that `Authorization` is forwarded.
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
+Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+[Options]
+location: true
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect with Authorization header!`
+
+
+# Another kinds of user authentication with `--user` in `[Options]` section:
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 [Options]
 location: true
 user: bob@email.com:secret
 HTTP 200
 [Asserts]
 header "Location" not exists
-`Followed redirect Basic Auth!`
+`Followed redirect without Authorization header!`
 
 
-GET http://localhost:8000/follow-redirect-basic-auth
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
+[Options]
+location: true
+user: bob@email.com:secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect with Authorization header!`
+
+
+# Another kinds of user authentication with `[BasicAuth]` section:
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 [Options]
 location: true
 [BasicAuth]
@@ -87,7 +110,18 @@ bob@email.com: secret
 HTTP 200
 [Asserts]
 header "Location" not exists
-`Followed redirect Basic Auth!`
+`Followed redirect without Authorization header!`
+
+
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
+[Options]
+location: true
+[BasicAuth]
+bob@email.com: secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect with Authorization header!`
 
 
 # Forward authorization header to a different host explicitly
