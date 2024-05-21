@@ -37,13 +37,31 @@ url == "http://localhost:8000/follow-redirect/bar"
 # Do not forward authorization header by default to a different host
 GET http://localhost:8000/follow-redirect-basic-auth
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
-# FIXME: Authorization header can also be set via --user
-#[Options]
-#user: bob@email.com:secret
 HTTP 200
 [Asserts]
 header "Location" not exists
 `Followed redirect Basic Auth!`
+
+
+# Another kinds of user authentication:
+GET http://localhost:8000/follow-redirect-basic-auth
+[Options]
+user: bob@email.com:secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect Basic Auth!`
+
+
+GET http://localhost:8000/follow-redirect-basic-auth
+[BasicAuth]
+bob@email.com: secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect Basic Auth!`
+
+
 
 
 POST http://localhost:8000/follow-redirect-308

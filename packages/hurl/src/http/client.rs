@@ -107,13 +107,14 @@ impl Client {
         let mut calls = vec![];
 
         let mut request_spec = request_spec.clone();
+        let mut options = options.clone();
 
-        // Unfortunately, follow-location feature from libcurl can not be used
-        // libcurl returns a single list of headers for the 2 responses
-        // Hurl needs to keep everything.
+        // Unfortunately, follow-location feature from libcurl can not be used as libcurl returns a
+        // single list of headers for the 2 responses and Hurl needs to keep every header of every
+        // response.
         let mut redirect_count = 0;
         loop {
-            let call = self.execute(&request_spec, options, logger)?;
+            let call = self.execute(&request_spec, &options, logger)?;
             let redirect_url = self.get_follow_location(&call.request, &call.response)?;
             let status = call.response.status;
             calls.push(call);
@@ -131,12 +132,18 @@ impl Client {
                 }
             }
             let redirect_method = get_redirect_method(status, request_spec.method);
+            // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
+            // to trust the redirected host.
+            // FIXME: we should filter only if we're changing host
             let headers = if options.follow_location_trusted {
                 request_spec.headers
             } else {
                 request_spec.headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 request_spec.headers
             };
+            if options.user.is_some() && !options.follow_location_trusted {
+                options.user = None;
+            }
             request_spec = RequestSpec {
                 method: redirect_method,
                 url: redirect_url.to_string(),

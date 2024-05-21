@@ -2,4 +2,6 @@ curl --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redi
 curl --data '' --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect'
 curl --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect/relative/foo'
 curl --header 'Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=' --location 'http://localhost:8000/follow-redirect-basic-auth'
+curl --location --user 'bob@email.com:secret' 'http://localhost:8000/follow-redirect-basic-auth'
+curl --header 'Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=' --location 'http://localhost:8000/follow-redirect-basic-auth'
 curl --data '' --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect-308'

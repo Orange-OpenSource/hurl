@@ -68,6 +68,28 @@ header "Location" not exists
 `Followed redirect Basic Auth!`
 
 
+# Another kinds of user authentication:
+GET http://localhost:8000/follow-redirect-basic-auth
+[Options]
+location: true
+user: bob@email.com:secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect Basic Auth!`
+
+
+GET http://localhost:8000/follow-redirect-basic-auth
+[Options]
+location: true
+[BasicAuth]
+bob@email.com: secret
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect Basic Auth!`
+
+
 # Forward authorization header to a different host explicitly
 GET http://localhost:8000/follow-redirect-basic-auth-trusted
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
