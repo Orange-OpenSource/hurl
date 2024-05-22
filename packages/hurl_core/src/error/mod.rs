@@ -16,6 +16,8 @@
  *
  */
 use crate::ast::SourceInfo;
+use colored::Colorize;
+use std::cmp::max;
 
 pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
@@ -52,8 +54,170 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
     s
 }
 
+/// Returns the string representation of an `error`, given `lines` of content and a `filename`.
+///
+/// The source information where the error occurred can be retrieved in `error`; optionally,
+/// `entry_src_info` is the optional source information for the entry where the error happened.
+/// If `colored` is true, the string use ANSI escape codes to add color and improve the readability
+/// of the representation.
+///
+/// Example:
+///
+/// ```text
+/// Assert status code
+///  --> test.hurl:2:10
+///   |
+/// 2 | HTTP/1.0 200
+///   |          ^^^ actual value is <404>
+///   |
+/// ```
+pub fn error_string<E: DisplaySourceError>(
+    filename: &str,
+    content: &str,
+    error: &E,
+    entry_src_info: Option<SourceInfo>,
+    colored: bool,
+) -> String {
+    let mut text = String::new();
+    let lines = split_lines(content);
+    let entry_line = entry_src_info.map(|e| e.start.line);
+    let error_line = error.source_info().start.line;
+    let error_column = error.source_info().start.column;
+    // The number of digits of the lines count.
+    let loc_max_width = max(lines.len().to_string().len(), 2);
+    let separator = "|";
+
+    let spaces = " ".repeat(loc_max_width);
+    let prefix = format!("{spaces} {separator}");
+    let prefix = if colored {
+        prefix.blue().bold().to_string()
+    } else {
+        prefix.to_string()
+    };
+
+    let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
+    let prefix_with_number = if colored {
+        prefix_with_number.blue().bold().to_string()
+    } else {
+        prefix_with_number.to_string()
+    };
+
+    // 1. First line is the description, ex. `Assert status code`.
+    let description = if colored {
+        error.description().bold().to_string()
+    } else {
+        error.description()
+    };
+    text.push_str(&description);
+    text.push('\n');
+
+    // 2. Second line is the filename info, ex. ` --> test.hurl:2:10`
+    let arrow = "-->";
+    let arrow = if colored {
+        arrow.blue().bold().to_string()
+    } else {
+        arrow.to_string()
+    };
+    let line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
+    text.push_str(&line);
+
+    // 3. Appends additional empty line
+    text.push('\n');
+    text.push_str(&prefix);
+
+    // 4. Appends the optional entry line.
+    if let Some(entry_line) = entry_line {
+        if entry_line != error_line {
+            let line = lines.get(entry_line - 1).unwrap();
+            let line = line.replace('\t', "    ");
+            let line = if colored {
+                line.bright_black().to_string()
+            } else {
+                line.to_string()
+            };
+            text.push('\n');
+            text.push_str(&prefix);
+            text.push(' ');
+            text.push_str(&line);
+        }
+        if error_line - entry_line > 1 {
+            text.push('\n');
+            text.push_str(&prefix);
+            let dots = " ...";
+            let dots = if colored {
+                dots.bright_black().to_string()
+            } else {
+                dots.to_string()
+            };
+            text.push_str(&dots);
+        }
+    }
+
+    // 5. Appends the error message (one or more lines)
+    // with the line number '|' prefix
+    let message = get_message(error, &lines, colored);
+    for (i, line) in split_lines(&message).iter().enumerate() {
+        text.push('\n');
+        text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
+        text.push_str(line);
+    }
+
+    // 6. Appends additional empty line
+    if !message.ends_with('\n') {
+        text.push('\n');
+        text.push_str(&prefix);
+    }
+
+    text
+}
+
+/// Return the constructed message for the error
+///
+/// It may include:
+/// - source line
+/// - column position and number of characters (with one or more carets)
+///
+/// Examples:
+///
+/// GET abc
+///     ^ expecting http://, https:// or {{
+///
+/// HTTP/1.0 200
+///          ^^^ actual value is <404>
+///
+/// jsonpath "$.count" >= 5
+///   actual:   int <2>
+///   expected: greater than int <5>
+///
+/// {
+///    "name": "John",
+///-   "age": 27
+///+   "age": 28
+/// }
+///
+pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bool) -> String {
+    let mut text = String::new();
+
+    if error.show_source_line() {
+        let line = lines.get(error.source_info().start.line - 1).unwrap();
+        let line = line.replace('\t', "    ");
+        text.push(' ');
+        text.push_str(&line);
+        text.push('\n');
+    }
+    let fixme = error.fixme(lines, colored);
+    let lines = split_lines(&fixme);
+    for (i, line) in lines.iter().enumerate() {
+        if i > 0 {
+            text.push('\n');
+        }
+        text.push_str(line);
+    }
+    text
+}
+
 /// Splits this `text` to a list of LF/CRLF separated lines.
-fn split_lines(text: &str) -> Vec<&str> {
+pub fn split_lines(text: &str) -> Vec<&str> {
     regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
 
@@ -118,6 +282,68 @@ mod tests {
         assert_eq!(
             get_carets("Content-Length:\t200", 17, 3),
             "                    ^^^ ".to_string()
+        );
+    }
+
+    #[test]
+    fn test_diff_error() {
+        let content = r#"GET http://localhost:8000/failed/multiline/json
+HTTP 200
+```
+{
+  "name": "John",
+  "age": 27
+}
+```
+"#;
+        let filename = "test.hurl";
+        struct E;
+        impl DisplaySourceError for E {
+            fn source_info(&self) -> SourceInfo {
+                SourceInfo::new(Pos::new(4, 1), Pos::new(4, 0))
+            }
+
+            fn description(&self) -> String {
+                "Assert body value".to_string()
+            }
+
+            fn fixme(&self, _lines: &[&str], _color: bool) -> String {
+                r#" {
+   "name": "John",
+-  "age": 27
++  "age": 28
+ }
+"#
+                .to_string()
+            }
+
+            fn show_source_line(&self) -> bool {
+                false
+            }
+        }
+        let error = E;
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            r#" {
+   "name": "John",
+-  "age": 27
++  "age": 28
+ }
+"#
+        );
+
+        assert_eq!(
+            error_string(filename, content, &error, None, false),
+            r#"Assert body value
+  --> test.hurl:4:1
+   |
+ 4 | {
+   |   "name": "John",
+   |-  "age": 27
+   |+  "age": 28
+   | }
+   |"#
         );
     }
 }

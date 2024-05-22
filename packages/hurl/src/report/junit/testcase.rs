@@ -17,7 +17,7 @@
  */
 use crate::report::junit::xml::Element;
 use crate::runner::{HurlResult, Input};
-use crate::util::logger;
+use hurl_core::error::error_string;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -38,7 +38,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for (error, entry_src_info) in hurl_result.errors() {
-            let message = logger::error_string(&name, content, error, Some(entry_src_info), false);
+            let message = error_string(&name, content, error, Some(entry_src_info), false);
             if error.assert {
                 failures.push(message);
             } else {

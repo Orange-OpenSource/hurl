@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use hurl_core::error::error_string;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
@@ -24,7 +25,6 @@ use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::WorkerMessage;
 use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
-use crate::util::logger;
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
@@ -280,7 +280,7 @@ impl ParallelRunner {
                         stdout,
                     );
                     if let Err(e) = result {
-                        return Err(JobError::Runtime(logger::error_string(
+                        return Err(JobError::Runtime(error_string(
                             &filename_in.to_string(),
                             content,
                             &e,

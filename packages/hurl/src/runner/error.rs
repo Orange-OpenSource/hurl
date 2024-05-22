@@ -400,3 +400,182 @@ fn color_red_multiline_string(s: &str) -> String {
 fn split_lines(text: &str) -> Vec<&str> {
     regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use crate::http::HttpError;
+    use crate::runner::{RunnerError, RunnerErrorKind};
+    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::error::{error_string, get_message};
+
+    #[test]
+    fn test_error_timeout() {
+        let content = "GET http://unknown";
+        let filename = "test.hurl";
+        let kind = RunnerErrorKind::Http(HttpError::Libcurl {
+            code: 6,
+            description: "Could not resolve host: unknown".to_string(),
+        });
+        let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
+        let error = RunnerError::new(error_source_info, kind, true);
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
+        );
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"HTTP connection
+  --> test.hurl:1:5
+   |
+ 1 | GET http://unknown
+   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
+   |"#
+        );
+    }
+
+    #[test]
+    fn test_assert_error_status() {
+        let content = r#"GET http://unknown
+HTTP/1.0 200
+"#;
+        let filename = "test.hurl";
+        let kind = RunnerErrorKind::AssertStatus {
+            actual: "404".to_string(),
+        };
+        let error_source_info = SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
+        let error = RunnerError::new(error_source_info, kind, true);
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " HTTP/1.0 200\n          ^^^ actual value is <404>"
+        );
+        colored::control::set_override(true);
+        assert_eq!(
+            get_message(&error, &split_lines(content), true),
+            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m"
+        );
+
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"Assert status code
+  --> test.hurl:2:10
+   |
+   | GET http://unknown
+ 2 | HTTP/1.0 200
+   |          ^^^ actual value is <404>
+   |"#
+        );
+    }
+
+    #[test]
+    fn test_invalid_xpath_expression() {
+        let content = r#"GET http://example.com
+HTTP/1.0 200
+[Asserts]
+xpath "strong(//head/title)" == "Hello"
+"#;
+        let filename = "test.hurl";
+        let error_source_info = SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 22));
+        let error = RunnerError::new(
+            error_source_info,
+            RunnerErrorKind::QueryInvalidXpathEval,
+            true,
+        );
+        assert_eq!(
+        get_message(&error, &split_lines(content), false),
+        " xpath \"strong(//head/title)\" == \"Hello\"\n       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid"
+    );
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"Invalid XPath expression
+  --> test.hurl:4:7
+   |
+   | GET http://example.com
+   | ...
+ 4 | xpath "strong(//head/title)" == "Hello"
+   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
+   |"#
+        );
+    }
+
+    #[test]
+    fn test_assert_error_jsonpath() {
+        let content = r#"GET http://api
+HTTP/1.0 200
+[Asserts]
+jsonpath "$.count" >= 5
+"#;
+        let filename = "test.hurl";
+        let error_source_info = SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14));
+        let error = RunnerError {
+            source_info: error_source_info,
+            kind: RunnerErrorKind::AssertFailure {
+                actual: "int <2>".to_string(),
+                expected: "greater than int <5>".to_string(),
+                type_mismatch: false,
+            },
+            assert: true,
+        };
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            r#" jsonpath "$.count" >= 5
+   actual:   int <2>
+   expected: greater than int <5>"#
+        );
+
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"Assert failure
+  --> test.hurl:4:0
+   |
+   | GET http://api
+   | ...
+ 4 | jsonpath "$.count" >= 5
+   |   actual:   int <2>
+   |   expected: greater than int <5>
+   |"#
+        );
+    }
+
+    #[test]
+    fn test_assert_error_newline() {
+        let content = r#"GET http://localhost
+HTTP/1.0 200
+```<p>Hello</p>
+```
+"#;
+        let filename = "test.hurl";
+        let kind = RunnerErrorKind::AssertBodyValueError {
+            actual: "<p>Hello</p>\n\n".to_string(),
+            expected: "<p>Hello</p>\n".to_string(),
+        };
+        let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
+        let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
+        let error = RunnerError::new(error_source_info, kind, true);
+
+        assert_eq!(
+            get_message(&error, &split_lines(content), false),
+            " ```<p>Hello</p>\n    ^ actual value is <<p>Hello</p>\n\n      >"
+        );
+        assert_eq!(
+            error_string(filename, content, &error, Some(entry_source_info), false),
+            r#"Assert body value
+  --> test.hurl:3:4
+   |
+   | GET http://localhost
+   | ...
+ 3 | ```<p>Hello</p>
+   |    ^ actual value is <<p>Hello</p>
+   |
+   |      >
+   |"#
+        );
+    }
+}

@@ -17,7 +17,7 @@
  */
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
-use crate::util::logger;
+use hurl_core::error::error_string;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -83,7 +83,7 @@ fn error_to_html(
 ) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
-    let message = logger::error_string(filename, content, error, Some(error.source_info), false);
+    let message = error_string(filename, content, error, Some(error.source_info), false);
     let message = html_escape(&message);
     // We override the first part of the error string to add an anchor to
     // the error context.

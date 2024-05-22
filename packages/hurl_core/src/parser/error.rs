@@ -311,6 +311,7 @@ fn levenshtein_distance(s1: &str, s2: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::error::error_string;
 
     #[test]
     fn test_levenshtein() {
@@ -334,5 +335,25 @@ mod tests {
             Some("Asserts".to_string())
         );
         assert_eq!(suggestion(&valid_values, "asser"), None);
+    }
+
+    #[test]
+    fn test_parsing_error() {
+        let content = "GET abc";
+        let filename = "test.hurl";
+        let error = ParseError {
+            pos: Pos::new(1, 5),
+            recoverable: false,
+            kind: ParseErrorKind::UrlInvalidStart,
+        };
+        assert_eq!(
+            error_string(filename, content, &error, None, false),
+            r#"Parsing URL
+  --> test.hurl:1:5
+   |
+ 1 | GET abc
+   |     ^ expecting http://, https:// or {{
+   |"#
+        );
     }
 }

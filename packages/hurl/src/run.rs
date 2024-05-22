@@ -25,9 +25,9 @@ use crate::{cli, HurlRun};
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::{HurlResult, Input, Output};
-use hurl::util::logger;
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
+use hurl_core::error::error_string;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -101,7 +101,7 @@ fn print_output(
             stdout,
         );
         if let Err(e) = result {
-            return Err(CliError::Runtime(logger::error_string(
+            return Err(CliError::Runtime(error_string(
                 &filename.to_string(),
                 content,
                 &e,

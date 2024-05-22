@@ -17,6 +17,7 @@
  */
 use chrono::{DateTime, SecondsFormat, Utc};
 use hurl_core::ast::SourceInfo;
+use hurl_core::error::error_string;
 use serde_json::Number;
 use std::fs::File;
 use std::io;
@@ -29,7 +30,6 @@ use crate::http::{
     ResponseCookie, Timings,
 };
 use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, Input};
-use crate::util::logger;
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.
@@ -386,7 +386,7 @@ impl AssertResult {
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.error() {
-            let message = logger::error_string(
+            let message = error_string(
                 &filename.to_string(),
                 content,
                 &err,
