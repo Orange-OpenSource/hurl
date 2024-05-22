@@ -7,14 +7,16 @@ Thanks to
 
 Enhancements:
 
-* Run tests in parallel. [#2753](https://github.com/Orange-OpenSource/hurl/issues/2753)
+* Run tests in parallel [#2753](https://github.com/Orange-OpenSource/hurl/issues/2753)
 * Add support for importing curl url option [#2750](https://github.com/Orange-OpenSource/hurl/issues/2750)
 * Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
 
 
 Bugs Fixed:
 
-* Fix url when following redirection for certain location header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
+* Do not filter 'Authorization' header if host doesn't change while following redirect [#2823](https://github.com/Orange-OpenSource/hurl/issues/2823)
+* Fix sending Authorization header from --user when following redirect [#2812](https://github.com/Orange-OpenSource/hurl/issues/2812)
+* Fix url when following redirect for certain location header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
 
 
 [4.3.0 (2024-04-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
