@@ -217,7 +217,13 @@ impl DisplaySourceError for RunnerError {
                 }
             }
             RunnerErrorKind::FileWriteAccess { path, error } => {
-                format!("{} can not be written ({error})", path.to_string_lossy())
+                let message = &format!("{} can not be written ({error})", path.to_string_lossy());
+                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                if color {
+                    message.red().bold().to_string()
+                } else {
+                    message.to_string()
+                }
             }
             RunnerErrorKind::FilterDecode(encoding) => {
                 let message = &format!("value can not be decoded with <{encoding}> encoding");

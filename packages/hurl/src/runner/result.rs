@@ -199,9 +199,9 @@ impl EntryResult {
                     ));
                 }
             };
-            output.write_with_context_dir(&bytes, stdout, context_dir)
+            output.write_with_context_dir(&bytes, stdout, context_dir, source_info)
         } else {
-            output.write_with_context_dir(&response.body, stdout, context_dir)
+            output.write_with_context_dir(&response.body, stdout, context_dir, source_info)
         }
     }
 }

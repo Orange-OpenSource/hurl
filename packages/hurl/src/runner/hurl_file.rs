@@ -202,7 +202,7 @@ pub fn run_entries(
 
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
-        let entry_result = match &options {
+        let mut entry_result = match &options {
             Err(error) => EntryResult {
                 entry_index,
                 source_info: entry.source_info(),
@@ -239,7 +239,7 @@ pub fn run_entries(
         };
 
         // Check if we need to retry.
-        let has_error = !entry_result.errors.is_empty();
+        let mut has_error = !entry_result.errors.is_empty();
         let (retry_opts, retry_interval) = match &options {
             Ok(options) => (options.retry, options.retry_interval),
             Err(_) => (runner_options.retry, runner_options.retry_interval),
@@ -260,10 +260,8 @@ pub fn run_entries(
         }
 
         // We logs eventual errors, only if we're not retrying the current entry...
+        // The retry does not take into account a possible output Error
         let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
-        if has_error {
-            log_errors(&entry_result, content, retry, logger);
-        }
 
         // When --output is overridden on a request level, we output the HTTP response only if the
         // call has succeeded.
@@ -273,11 +271,6 @@ pub fn run_entries(
         }) = options
         {
             if !has_error {
-                // TODO: make output write and access error as part of entry result errors.
-                // For the moment, we deal the --output request failure as a simple warning and not
-                // an error. If we want to treat it as an error, we've to add it to the current
-                // `entry_result` errors, and optionally deals with retry if we can't write to the
-                // specified path.
                 let source_info = entry.source_info();
                 if let Err(error) = entry_result.write_response(
                     &output,
@@ -285,9 +278,14 @@ pub fn run_entries(
                     stdout,
                     source_info,
                 ) {
-                    logger.warning(&error.fixme(&[], logger.color));
+                    entry_result.errors.push(error);
+                    has_error = true;
                 }
             }
+        }
+
+        if has_error {
+            log_errors(&entry_result, content, retry, logger);
         }
         entries_result.push(entry_result);
 

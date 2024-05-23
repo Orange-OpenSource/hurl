@@ -59,7 +59,13 @@
 [1;34m    |[0m[1;31m      ^^^^^^^^^^^^^ file undefined.txt can not be read[0m
 [1;34m    |[0m
 
-[1;33mwarning[0m: [1mtests_failed~~~output can not be written (~~~)[0m
+[1;31merror[0m: [1mFile write access[0m
+   [1;34m-->[0m tests_failed/runner_errors.hurl:38:1
+[1;34m    |[0m
+[1;34m 38 |[0m GET http://localhost:8000/runner_errors
+[1;34m    |[0m[1;31m ^ tests_failed~undefined~output can not be written (~~~)[0m
+[1;34m    |[0m
+
 [1;31merror[0m: [1mFilter error[0m
    [1;34m-->[0m tests_failed/runner_errors.hurl:46:5
 [1;34m    |[0m

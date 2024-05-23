@@ -59,7 +59,13 @@ error: File read access
     |      ^^^^^^^^^^^^^ file undefined.txt can not be read
     |
 
-warning: tests_failed~~~output can not be written (~~~)
+error: File write access
+   --> tests_failed/runner_errors.hurl:38:1
+    |
+ 38 | GET http://localhost:8000/runner_errors
+    | ^ tests_failed~undefined~output can not be written (~~~)
+    |
+
 error: Filter error
    --> tests_failed/runner_errors.hurl:46:5
     |
