@@ -60,10 +60,12 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFile write access[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:38:1
+   [1;34m-->[0m tests_failed/runner_errors.hurl:40:9
 [1;34m    |[0m
-[1;34m 38 |[0m GET http://localhost:8000/runner_errors
-[1;34m    |[0m[1;31m ^ tests_failed~undefined~output can not be written (~~~)[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m 40 |[0m output: undefined/output
+[1;34m    |[0m[1;31m         ^^^^^^^^^^^^^^^^ tests_failed~undefined~output can not be written (~~~)[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m

@@ -1,7 +1,9 @@
 error: Unauthorized file access
-  --> tests_failed/output_unauthorized.hurl:1:1
+  --> tests_failed/output_unauthorized.hurl:4:9
    |
- 1 | GET http://localhost:8000/hello
-   | ^ unauthorized access to file ../build/output1, check --file-root option
+   | GET http://localhost:8000/hello
+   | ...
+ 4 | output: ../build/output2
+   |         ^^^^^^^^^^^^^^^^ unauthorized access to file ../build/output2, check --file-root option
    |
 

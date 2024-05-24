@@ -21,7 +21,9 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
-use hurl_core::ast::{Body, Bytes, Entry, MultilineString, Request, Response, Retry};
+use hurl_core::ast::{
+    Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, Retry, SourceInfo,
+};
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
 
@@ -271,7 +273,7 @@ pub fn run_entries(
         }) = options
         {
             if !has_error {
-                let source_info = entry.source_info();
+                let source_info = get_output_source_info(entry);
                 if let Err(error) = entry_result.write_response(
                     &output,
                     &runner_options.context_dir,
@@ -328,6 +330,17 @@ pub fn run_entries(
         cookies,
         timestamp,
     }
+}
+
+/// Use source_info from output option if this option has been defined
+fn get_output_source_info(entry: &Entry) -> SourceInfo {
+    let mut source_info = entry.source_info();
+    for option_entry in entry.request.options() {
+        if let OptionKind::Output(value) = option_entry.kind {
+            source_info = value.source_info;
+        }
+    }
+    source_info
 }
 
 /// Returns `true` if all the entries results are successful, `false` otherwise.
