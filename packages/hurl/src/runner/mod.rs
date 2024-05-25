@@ -34,6 +34,7 @@ pub use self::value::Value;
 mod assert;
 mod body;
 mod capture;
+mod diff;
 mod entry;
 mod error;
 mod event;

@@ -43,6 +43,7 @@ xml-rs = { version = "0.8.20" }
 lazy_static = "1.4.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.8.0", features = ["v4" , "fast-rng"] }
+similar = "2.5.0"
 
 [target.'cfg(unix)'.dependencies]
 termion = "4.0.0"
