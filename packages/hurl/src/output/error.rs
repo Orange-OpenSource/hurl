@@ -19,7 +19,8 @@
 use crate::http::HttpError;
 use colored::Colorize;
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::DisplaySourceError;
+use hurl_core::error::{get_message, split_lines, DisplaySourceError};
+use std::cmp::max;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OutputError {
@@ -54,8 +55,8 @@ impl DisplaySourceError for OutputError {
         }
     }
 
-    fn fixme(&self, content: &[&str], color: bool) -> String {
-        match &self.kind {
+    fn fixme(&self, content: &[&str], color: bool) -> (String, usize) {
+        let message = match &self.kind {
             OutputErrorKind::Http(http_error) => {
                 let message = http_error.message();
                 let message = hurl_core::error::add_carets(&message, self.source_info, content);
@@ -84,10 +85,44 @@ impl DisplaySourceError for OutputError {
                     message.to_string()
                 }
             }
-        }
+        };
+        (message, 0)
     }
 
     fn show_source_line(&self) -> bool {
         true
+    }
+
+    fn info(&self, content: &[&str], color: bool) -> String {
+        let error_line = self.source_info().start.line;
+        // The number of digits of the lines count.
+        let loc_max_width = max(content.len().to_string().len(), 2);
+        let separator = "|";
+
+        let spaces = " ".repeat(loc_max_width);
+        let prefix = format!("{spaces} {separator}");
+        let prefix = if color {
+            prefix.blue().bold().to_string()
+        } else {
+            prefix.to_string()
+        };
+
+        let (message, offset) = get_message(self, content, color);
+
+        let error_line = error_line + offset;
+        let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
+        let prefix_with_number = if color {
+            prefix_with_number.blue().bold().to_string()
+        } else {
+            prefix_with_number.to_string()
+        };
+
+        let mut text = String::new();
+        for (i, line) in split_lines(&message).iter().enumerate() {
+            text.push('\n');
+            text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
+            text.push_str(line);
+        }
+        text
     }
 }

@@ -16,12 +16,15 @@
  *
  */
 use colored::Colorize;
+use std::cmp::max;
 use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::DisplaySourceError;
+use hurl_core::error::{get_message, DisplaySourceError};
 
 use crate::http::HttpError;
+use crate::runner::diff;
+//use crate::runner::diff;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of
@@ -150,11 +153,15 @@ impl DisplaySourceError for RunnerError {
         }
     }
 
-    fn fixme(&self, content: &[&str], color: bool) -> String {
-        match &self.kind {
-            RunnerErrorKind::AssertBodyValueError { actual, .. } => {
-                let message = &format!("actual value is <{actual}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+    fn fixme(&self, content: &[&str], color: bool) -> (String, usize) {
+        let mut offset = 0;
+        let message = match &self.kind {
+            RunnerErrorKind::AssertBodyValueError { actual, expected } => {
+                //let message = &format!("actual value is <{actual}>");
+
+                //let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let (message, diff_offset) = diff::diff(expected, actual, color);
+                offset = diff_offset;
                 if color {
                     color_red_multiline_string(&message)
                 } else {
@@ -384,11 +391,45 @@ impl DisplaySourceError for RunnerError {
                     message.to_string()
                 }
             }
-        }
+        };
+        (message, offset)
     }
 
     fn show_source_line(&self) -> bool {
-        true
+        !matches!(self.kind, RunnerErrorKind::AssertBodyValueError { .. })
+    }
+
+    fn info(&self, content: &[&str], color: bool) -> String {
+        let error_line = self.source_info().start.line;
+        // The number of digits of the lines count.
+        let loc_max_width = max(content.len().to_string().len(), 2);
+        let separator = "|";
+
+        let spaces = " ".repeat(loc_max_width);
+        let prefix = format!("{spaces} {separator}");
+        let prefix = if color {
+            prefix.blue().bold().to_string()
+        } else {
+            prefix.to_string()
+        };
+
+        let (message, offset) = get_message(self, content, color);
+
+        let error_line = error_line + offset;
+        let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
+        let prefix_with_number = if color {
+            prefix_with_number.blue().bold().to_string()
+        } else {
+            prefix_with_number.to_string()
+        };
+
+        let mut text = String::new();
+        for (i, line) in split_lines(&message).iter().enumerate() {
+            text.push('\n');
+            text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
+            text.push_str(line);
+        }
+        text
     }
 }
 
@@ -428,7 +469,7 @@ mod tests {
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
         let error = RunnerError::new(error_source_info, kind, true);
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            get_message(&error, &split_lines(content), false).0,
             " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
         );
         assert_eq!(
@@ -456,12 +497,12 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            get_message(&error, &split_lines(content), false).0,
             " HTTP/1.0 200\n          ^^^ actual value is <404>"
         );
         colored::control::set_override(true);
         assert_eq!(
-            get_message(&error, &split_lines(content), true),
+            get_message(&error, &split_lines(content), true).0,
             " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m"
         );
 
@@ -493,7 +534,7 @@ xpath "strong(//head/title)" == "Hello"
             true,
         );
         assert_eq!(
-        get_message(&error, &split_lines(content), false),
+        get_message(&error, &split_lines(content), false).0,
         " xpath \"strong(//head/title)\" == \"Hello\"\n       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid"
     );
         assert_eq!(
@@ -530,7 +571,7 @@ jsonpath "$.count" >= 5
         };
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            get_message(&error, &split_lines(content), false).0,
             r#" jsonpath "$.count" >= 5
    actual:   int <2>
    expected: greater than int <5>"#
@@ -567,8 +608,8 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
-            " ```<p>Hello</p>\n    ^ actual value is <<p>Hello</p>\n\n      >"
+            get_message(&error, &split_lines(content), false).0,
+            " <p>Hello</p>\n+\n"
         );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
@@ -577,10 +618,9 @@ HTTP/1.0 200
    |
    | GET http://localhost
    | ...
- 3 | ```<p>Hello</p>
-   |    ^ actual value is <<p>Hello</p>
+ 4 | <p>Hello</p>
+   |+
    |
-   |      >
    |"#
         );
     }

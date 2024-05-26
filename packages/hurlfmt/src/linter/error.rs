@@ -37,15 +37,20 @@ impl DisplaySourceError for linter::Error {
         }
     }
 
-    fn fixme(&self, _lines: &[&str], _color: bool) -> String {
-        match self.inner {
+    fn fixme(&self, _lines: &[&str], _color: bool) -> (String, usize) {
+        let message = match self.inner {
             LinterError::UnnecessarySpace => "Remove space".to_string(),
             LinterError::UnnecessaryJsonEncoding => "Use Simple String".to_string(),
             LinterError::OneSpace => "Use only one space".to_string(),
-        }
+        };
+        (message, 0)
     }
 
     fn show_source_line(&self) -> bool {
         true
+    }
+
+    fn info(&self, _content: &[&str], _color: bool) -> String {
+        todo!()
     }
 }

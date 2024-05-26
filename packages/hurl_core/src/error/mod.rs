@@ -22,8 +22,12 @@ use std::cmp::max;
 pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
-    fn fixme(&self, content: &[&str], color: bool) -> String;
+
+    /// return fixme message and line offset in the source error
+    fn fixme(&self, content: &[&str], color: bool) -> (String, usize);
     fn show_source_line(&self) -> bool;
+
+    fn info(&self, content: &[&str], color: bool) -> String;
 }
 
 /// Show column position with carets
@@ -95,13 +99,6 @@ pub fn error_string<E: DisplaySourceError>(
         prefix.to_string()
     };
 
-    let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
-    let prefix_with_number = if colored {
-        prefix_with_number.blue().bold().to_string()
-    } else {
-        prefix_with_number.to_string()
-    };
-
     // 1. First line is the description, ex. `Assert status code`.
     let description = if colored {
         error.description().bold().to_string()
@@ -155,15 +152,27 @@ pub fn error_string<E: DisplaySourceError>(
 
     // 5. Appends the error message (one or more lines)
     // with the line number '|' prefix
-    let message = get_message(error, &lines, colored);
+    /*
+    let (message, offset) = get_message(error, &lines, colored);
+
+    let error_line = error_line + offset;
+    let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
+    let prefix_with_number = if colored {
+        prefix_with_number.blue().bold().to_string()
+    } else {
+        prefix_with_number.to_string()
+    };
+
     for (i, line) in split_lines(&message).iter().enumerate() {
         text.push('\n');
         text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
         text.push_str(line);
     }
+    */
+    text.push_str(&error.info(&lines, colored));
 
     // 6. Appends additional empty line
-    if !message.ends_with('\n') {
+    if !text.ends_with('\n') {
         text.push('\n');
         text.push_str(&prefix);
     }
@@ -195,7 +204,11 @@ pub fn error_string<E: DisplaySourceError>(
 ///+   "age": 28
 /// }
 ///
-pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bool) -> String {
+pub fn get_message<E: DisplaySourceError>(
+    error: &E,
+    lines: &[&str],
+    colored: bool,
+) -> (String, usize) {
     let mut text = String::new();
 
     if error.show_source_line() {
@@ -205,7 +218,7 @@ pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bo
         text.push_str(&line);
         text.push('\n');
     }
-    let fixme = error.fixme(lines, colored);
+    let (fixme, offset) = error.fixme(lines, colored);
     let lines = split_lines(&fixme);
     for (i, line) in lines.iter().enumerate() {
         if i > 0 {
@@ -213,7 +226,7 @@ pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bo
         }
         text.push_str(line);
     }
-    text
+    (text, offset)
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -307,14 +320,15 @@ HTTP 200
                 "Assert body value".to_string()
             }
 
-            fn fixme(&self, _lines: &[&str], _color: bool) -> String {
-                r#" {
+            fn fixme(&self, _lines: &[&str], _color: bool) -> (String, usize) {
+                let message = r#" {
    "name": "John",
 -  "age": 27
 +  "age": 28
  }
 "#
-                .to_string()
+                .to_string();
+                (message, 0)
             }
 
             fn show_source_line(&self) -> bool {
@@ -324,7 +338,7 @@ HTTP 200
         let error = E;
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            get_message(&error, &split_lines(content), false).0,
             r#" {
    "name": "John",
 -  "age": 27

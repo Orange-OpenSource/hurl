@@ -3,35 +3,14 @@
 [1;34m   |[0m
 [1;34m   |[0m [90mGET http://localhost:8000/error/multiline[0m
 [1;34m   |[0m[90m ...[0m
-[1;34m 4 |[0m {
-[1;34m   |[0m[1;31m ^ actual value is <{[0m
-[1;34m   |[0m[1;31m     "first_name": "John",[0m
-[1;34m   |[0m[1;31m     "last_name": "Smith",[0m
-[1;34m   |[0m[1;31m     "is_alive": true,[0m
-[1;34m   |[0m[1;31m     "age": 28,[0m
-[1;34m   |[0m[1;31m     "address": {[0m
-[1;34m   |[0m[1;31m       "street_address": "21 2nd Street",[0m
-[1;34m   |[0m[1;31m       "city": "New York",[0m
-[1;34m   |[0m[1;31m       "state": "NY",[0m
-[1;34m   |[0m[1;31m       "postal_code": "10021-3100"[0m
-[1;34m   |[0m[1;31m     },[0m
-[1;34m   |[0m[1;31m     "phone_numbers": [[0m
-[1;34m   |[0m[1;31m       {[0m
-[1;34m   |[0m[1;31m         "type": "home",[0m
-[1;34m   |[0m[1;31m         "number": "212 555-1234"[0m
-[1;34m   |[0m[1;31m       },[0m
-[1;34m   |[0m[1;31m       {[0m
-[1;34m   |[0m[1;31m         "type": "office",[0m
-[1;34m   |[0m[1;31m         "number": "646 555-4567"[0m
-[1;34m   |[0m[1;31m       }[0m
-[1;34m   |[0m[1;31m     ],[0m
-[1;34m   |[0m[1;31m     "children": [[0m
-[1;34m   |[0m[1;31m       "Catherine",[0m
-[1;34m   |[0m[1;31m       "Thomas",[0m
-[1;34m   |[0m[1;31m       "Trevor"[0m
-[1;34m   |[0m[1;31m     ],[0m
-[1;34m   |[0m[1;31m     "spouse": null[0m
-[1;34m   |[0m[1;31m   }[0m
-[1;34m   |[0m[1;31m   >[0m
+[1;34m 5 |[0m[1;31m   "first_name": "John",[0m
+[1;34m   |[0m[1;31m   "last_name": "Smith",[0m
+[1;34m   |[0m[1;31m   "is_alive": true,[0m
+[1;34m   |[0m[1;31m[31m-  "age": 27,[0m
+[1;34m   |[0m[1;31m[0m[1;31m[32m+  "age": 28,[0m
+[1;34m   |[0m[1;31m[0m[1;31m   "address": {[0m
+[1;34m   |[0m[1;31m     "street_address": "21 2nd Street",[0m
+[1;34m   |[0m[1;31m     "city": "New York",[0m
+[1;34m   |[0m[1;31m[0m
 [1;34m   |[0m
 
