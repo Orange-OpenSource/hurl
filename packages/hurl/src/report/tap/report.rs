@@ -28,17 +28,17 @@ use crate::report::ReportError;
 const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";
 
 /// Creates/Append a Tap report from a list of `testcases`
-pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), ReportError> {
-    let mut testcases = vec![];
+pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
+    let mut all_testcases = vec![];
 
     let existing_testcases = parse_tap_file(filename)?;
     for testcase in existing_testcases.iter() {
-        testcases.push(testcase);
+        all_testcases.push(testcase);
     }
-    for testcase in new_testcases {
-        testcases.push(testcase);
+    for testcase in testcases {
+        all_testcases.push(testcase);
     }
-    write_tap_file(filename, &testcases)
+    write_tap_file(filename, &all_testcases)
 }
 
 /// Creates a Tap from a list of `testcases`.
@@ -90,21 +90,20 @@ fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Report
 
 /// Parse Tap report file
 fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, ReportError> {
-    if filename.exists() {
-        let s = match std::fs::read_to_string(filename) {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(ReportError::from_error(
-                    e,
-                    filename,
-                    "Issue reading TAP report",
-                ))
-            }
-        };
-        parse_tap_report(&s)
-    } else {
-        Ok(vec![])
+    if !filename.exists() {
+        return Ok(vec![]);
     }
+    let s = match std::fs::read_to_string(filename) {
+        Ok(s) => s,
+        Err(e) => {
+            return Err(ReportError::from_error(
+                e,
+                filename,
+                "Issue reading TAP report",
+            ))
+        }
+    };
+    parse_tap_report(&s)
 }
 
 /// Parse Tap report

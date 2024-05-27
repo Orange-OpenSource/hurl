@@ -18,7 +18,7 @@
 use chrono::SecondsFormat;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::error_string;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io;
 use std::io::Write;
@@ -48,10 +48,17 @@ impl HurlResult {
         let value = serde_json::to_value(result).unwrap();
         Ok(value)
     }
+
+    /// Checks if a JSON value can be deserialized to a `HurlResult` instance.
+    /// This method can be used to check if the schema of the `value` is conform to
+    /// a `HurlResult`.
+    pub fn is_deserializable(value: &serde_json::Value) -> bool {
+        serde_json::from_value::<HurlResultJson>(value.clone()).is_ok()
+    }
 }
 
 /// These structures represent the JSON schema used to serialize an [`HurlResult`] to JSON.
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct HurlResultJson {
     filename: String,
     entries: Vec<EntryResultJson>,
@@ -60,7 +67,7 @@ struct HurlResultJson {
     cookies: Vec<CookieJson>,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct EntryResultJson {
     index: usize,
     line: usize,
@@ -70,7 +77,7 @@ struct EntryResultJson {
     time: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct CookieJson {
     domain: String,
     include_subdomain: String,
@@ -81,20 +88,20 @@ struct CookieJson {
     value: String,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct CallJson {
     request: RequestJson,
     response: ResponseJson,
     timings: TimingsJson,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct CaptureJson {
     name: String,
     value: serde_json::Value,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct AssertJson {
     success: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -102,7 +109,7 @@ struct AssertJson {
     line: usize,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct RequestJson {
     method: String,
     url: String,
@@ -112,7 +119,7 @@ struct RequestJson {
     query_string: Vec<ParamJson>,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct ResponseJson {
     #[serde(rename = "httpVersion")]
     http_version: String,
@@ -125,7 +132,7 @@ struct ResponseJson {
     body: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct TimingsJson {
     begin_call: String,
     end_call: String,
@@ -137,25 +144,25 @@ struct TimingsJson {
     total: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct HeaderJson {
     name: String,
     value: String,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct RequestCookieJson {
     name: String,
     value: String,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct ParamJson {
     name: String,
     value: String,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct ResponseCookieJson {
     name: String,
     value: String,
@@ -176,7 +183,7 @@ struct ResponseCookieJson {
     same_site: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct CertificateJson {
     subject: String,
     issuer: String,
@@ -324,8 +331,24 @@ impl ResponseJson {
             .map(CertificateJson::from_certificate);
         let body = match response_dir {
             Some(response_dir) => {
-                let path = write_response(response, response_dir)?;
-                Some(path.display().to_string())
+                // FIXME: we save the filename and the parent dir: this feature is used in the
+                // context of the JSON report where the response are stored:
+                //
+                // ```
+                // response_dir
+                // ├── report.json
+                // └── store
+                //     ├── 1fe9d647-5689-4130-b4ea-dc120c2536ba_response.html
+                //     ├── 35f49c69-15f9-43df-a672-a1ff5f68c935_response.json
+                //     ...
+                //     └── ce7f1326-2e2a-46e9-befd-ee0d85084814_response.json
+                // ```
+                // we want the `body` field to reference the relative path of a response compared
+                // to `report.json`.
+                let file = write_response(response, response_dir)?;
+                let parent = response_dir.components().last().unwrap();
+                let parent: &Path = parent.as_ref();
+                Some(format!("{}/{}", parent.display(), file.display()))
             }
             None => None,
         };

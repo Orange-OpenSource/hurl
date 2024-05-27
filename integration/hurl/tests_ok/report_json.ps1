@@ -10,4 +10,4 @@ hurl --test --report-json build/report/json tests_ok/test.1.hurl tests_ok/test.2
 hurl --test --report-json build/report/json tests_ok/test.3.hurl
 $ErrorActionPreference = 'Stop'
 
-Write-Host (Get-Content build/report/json/index.json -Raw) -NoNewLine
+Write-Host (Get-Content build/report/json/report.json -Raw) -NoNewLine

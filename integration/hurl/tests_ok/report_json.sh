@@ -8,4 +8,4 @@ hurl --test --report-json build/report/json tests_ok/test.1.hurl tests_ok/test.2
 hurl --test --report-json build/report/json tests_ok/test.3.hurl
 set -Eeuo pipefail
 
-cat build/report/json/index.json
+cat build/report/json/report.json

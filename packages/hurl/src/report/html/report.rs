@@ -117,6 +117,9 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     "#,
     )
     .unwrap();
+    // TODO: if the existing HTML report is not valid, we consider that there is no
+    // existing report to append, without displaying any error or warning. Maybe a better option
+    // would be to raise an error here and ask the user to explicitly deal with this error.
     re.captures_iter(html)
         .map(|cap| {
             let filename = cap["filename"].to_string();

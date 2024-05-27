@@ -219,7 +219,7 @@ fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError>
         .map(|r| json::Testcase::new(&r.hurl_result, &r.content, &r.filename))
         .collect::<Vec<_>>();
 
-    let index_path = dir_path.join("index.json");
+    let index_path = dir_path.join("report.json");
     json::write_report(&index_path, &testcases, &store_path)?;
     Ok(())
 }
