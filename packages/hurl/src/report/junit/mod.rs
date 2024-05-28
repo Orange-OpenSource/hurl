@@ -70,11 +70,12 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
     let mut root = if filename.exists() {
         let file = match File::open(filename) {
             Ok(s) => s,
-            Err(why) => {
-                return Err(ReportError::from_string(&format!(
-                    "Issue reading {} to string to {why:?}",
-                    filename.display(),
-                )));
+            Err(e) => {
+                return Err(ReportError::from_error(
+                    e,
+                    filename,
+                    "Issue reading JUnit report",
+                ))
             }
         };
         let doc = XmlDocument::parse(file).unwrap();
@@ -90,9 +91,11 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(ReportError::from_string(&format!(
-                "Failed to produce JUnit report: {e:?}"
-            )));
+            return Err(ReportError::from_error(
+                e,
+                filename,
+                "Issue writing JUnit report",
+            ))
         }
     };
     match doc.write(file) {
