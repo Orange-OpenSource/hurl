@@ -22,13 +22,13 @@ use std::io::Write;
 use std::path::Path;
 
 use super::Testcase;
-use crate::report::Error;
+use crate::report::ReportError;
 
 /// See <https://testanything.org/tap-version-13-specification.html>
 const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";
 
 /// Creates/Append a Tap report from a list of `testcases`
-pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), Error> {
+pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), ReportError> {
     let mut testcases = vec![];
 
     let existing_testcases = parse_tap_file(filename)?;
@@ -42,13 +42,13 @@ pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), E
 }
 
 /// Creates a Tap from a list of `testcases`.
-fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Error> {
+fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), ReportError> {
     let mut file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(Error {
-                message: format!("Failed to produce TAP report: {e:?}"),
-            });
+            return Err(ReportError::new(&format!(
+                "Failed to produce TAP report: {e:?}"
+            )));
         }
     };
     let start = 1;
@@ -65,25 +65,23 @@ fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Error>
     }
     match file.write_all(s.as_bytes()) {
         Ok(_) => Ok(()),
-        Err(e) => Err(Error {
-            message: format!("Failed to write TAP report: {e:?}"),
-        }),
+        Err(e) => Err(ReportError::new(&format!(
+            "Failed to write TAP report: {e:?}"
+        ))),
     }
 }
 
 /// Parse Tap report file
-fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, Error> {
+fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, ReportError> {
     if filename.exists() {
         let s = match std::fs::read_to_string(filename) {
             Ok(s) => s,
             Err(why) => {
-                return Err(Error {
-                    message: format!(
-                        "Issue reading {} to string to {:?}",
-                        filename.display(),
-                        why
-                    ),
-                });
+                return Err(ReportError::new(&format!(
+                    "Issue reading {} to string to {:?}",
+                    filename.display(),
+                    why
+                )));
             }
         };
         parse_tap_report(&s)
@@ -93,7 +91,7 @@ fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, Error> {
 }
 
 /// Parse Tap report
-fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, Error> {
+fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, ReportError> {
     let mut testcases = vec![];
     let mut lines: Vec<&str> = s.lines().collect::<Vec<&str>>();
     if !lines.is_empty() {
@@ -104,9 +102,7 @@ fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, Error> {
         }
         let re = Regex::new(r"^1\.\.\d+.*$").unwrap();
         if !re.is_match(header) {
-            return Err(Error {
-                message: format!("Invalid TAP Header <{header}>"),
-            });
+            return Err(ReportError::new(&format!("Invalid TAP Header <{header}>")));
         }
         for line in lines {
             let line = line.trim();

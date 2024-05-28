@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::report::Error;
+use crate::report::ReportError;
 use crate::runner::{HurlResult, Input};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -38,7 +38,7 @@ impl Testcase {
     /// Creates an Tap &lt;testcase&gt; from a TAP line
     /// ok 1 - this is the first test
     /// nok 2 - this is the second test
-    pub(crate) fn parse(line: &str) -> Result<Testcase, Error> {
+    pub(crate) fn parse(line: &str) -> Result<Testcase, ReportError> {
         let mut line = line;
         let success = if line.starts_with("ok") {
             line = &line[2..];
@@ -47,22 +47,22 @@ impl Testcase {
             line = &line[6..];
             false
         } else {
-            return Err(Error {
-                message: format!("Invalid TAP line <{line}> - must start with ok or nok"),
-            });
+            return Err(ReportError::new(&format!(
+                "Invalid TAP line <{line}> - must start with ok or nok"
+            )));
         };
 
         let description = match line.find('-') {
             None => {
-                return Err(Error {
-                    message: format!("Invalid TAP line <{line}> - missing '-' separator"),
-                })
+                return Err(ReportError::new(&format!(
+                    "Invalid TAP line <{line}> - missing '-' separator"
+                )));
             }
             Some(index) => {
                 if line.split_at(index).0.trim().parse::<usize>().is_err() {
-                    return Err(Error {
-                        message: format!("Invalid TAP line <{line}> - missing test number"),
-                    });
+                    return Err(ReportError::new(&format!(
+                        "Invalid TAP line <{line}> - missing test number"
+                    )));
                 }
                 line.split_at(index).1[1..].trim().to_string()
             }
@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn parse_tap_test_line() {
         assert_eq!(
-            Testcase::parse("toto").err().unwrap().message,
+            Testcase::parse("toto").err().unwrap().to_string(),
             "Invalid TAP line <toto> - must start with ok or nok".to_string()
         );
 

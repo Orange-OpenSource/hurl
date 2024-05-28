@@ -62,22 +62,19 @@ use std::path::Path;
 pub use testcase::Testcase;
 
 use crate::report::junit::xml::{Element, XmlDocument};
-use crate::report::Error;
+use crate::report::ReportError;
 
 /// Creates a JUnit from a list of `testcases`.
-pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Error> {
+pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
     // If there is an existing JUnit report, we parses it to insert a new testsuite.
     let mut root = if filename.exists() {
         let file = match File::open(filename) {
             Ok(s) => s,
             Err(why) => {
-                return Err(Error {
-                    message: format!(
-                        "Issue reading {} to string to {:?}",
-                        filename.display(),
-                        why
-                    ),
-                });
+                return Err(ReportError::new(&format!(
+                    "Issue reading {} to string to {why:?}",
+                    filename.display(),
+                )));
             }
         };
         let doc = XmlDocument::parse(file).unwrap();
@@ -93,16 +90,16 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Error
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(Error {
-                message: format!("Failed to produce JUnit report: {e:?}"),
-            });
+            return Err(ReportError::new(&format!(
+                "Failed to produce JUnit report: {e:?}"
+            )));
         }
     };
     match doc.write(file) {
         Ok(_) => Ok(()),
-        Err(e) => Err(Error {
-            message: format!("Failed to produce Junit report: {e:?}"),
-        }),
+        Err(e) => Err(ReportError::new(&format!(
+            "Failed to produce Junit report: {e:?}"
+        ))),
     }
 }
 

@@ -64,7 +64,7 @@ impl Testcase {
         content: &str,
         entries: &[EntryResult],
         dir: &Path,
-    ) -> Result<(), crate::report::Error> {
+    ) -> Result<(), crate::report::ReportError> {
         // We parse the content as we'll reuse the AST to construct the HTML source file, and
         // the waterfall.
         // TODO: for the moment, we can only have parseable file.
