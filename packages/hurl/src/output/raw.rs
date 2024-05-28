@@ -121,6 +121,7 @@ mod tests {
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
     use hurl_core::ast::{Pos, SourceInfo};
+    use std::str::FromStr;
 
     fn default_response() -> Response {
         Response {
@@ -129,7 +130,7 @@ mod tests {
             headers: HeaderVec::new(),
             body: vec![],
             duration: Default::default(),
-            url: Url::parse("http://localhost").unwrap(),
+            url: Url::from_str("http://localhost").unwrap(),
             certificate: None,
         }
     }
@@ -149,7 +150,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::parse("https://foo.com").unwrap(),
+                            url: Url::from_str("https://foo.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -168,7 +169,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::parse("https://bar.com").unwrap(),
+                            url: Url::from_str("https://bar.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -187,7 +188,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::parse("https://baz.com").unwrap(),
+                            url: Url::from_str("https://baz.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -198,7 +199,7 @@ mod tests {
                             headers,
                             body: b"{\"say\": \"Hello World!\"}".into(),
                             duration: Default::default(),
-                            url: Url::parse("https://baz.com").unwrap(),
+                            url: Url::from_str("https://baz.com").unwrap(),
                             certificate: None,
                         },
                         timings: Default::default(),

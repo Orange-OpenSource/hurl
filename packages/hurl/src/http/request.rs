@@ -122,13 +122,13 @@ mod tests {
         headers.push(Header::new("Accept", "*/*"));
         headers.push(Header::new("User-Agent", "hurl/1.0"));
         headers.push(Header::new("content-type", "application/json"));
-        let url = Url::parse("http://localhost:8000/hello").unwrap();
+        let url = "http://localhost:8000/hello".parse().unwrap();
 
         Request::new("GET", url, headers, vec![])
     }
 
     fn query_string_request() -> Request {
-        let url = Url::parse("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
+        let url = "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".parse().unwrap();
 
         Request::new("GET", url, HeaderVec::new(), vec![])
     }
@@ -136,7 +136,7 @@ mod tests {
     fn cookies_request() -> Request {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Cookie", "cookie1=value1; cookie2=value2"));
-        let url = Url::parse("http://localhost:8000/cookies").unwrap();
+        let url = "http://localhost:8000/cookies".parse().unwrap();
         Request::new("GET", url, headers, vec![])
     }
 

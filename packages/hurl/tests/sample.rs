@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::str::FromStr;
 use std::time::Duration;
 
 use hurl::http::{Call, HttpVersion, Request, Response, Url};
@@ -52,7 +53,7 @@ fn simple_sample() {
     fn check_request(request: &Request) {
         assert_eq!(
             request.url,
-            Url::parse("http://localhost:8000/hello").unwrap()
+            Url::from_str("http://localhost:8000/hello").unwrap()
         );
         assert_eq!(request.method, "GET");
         let header_names = request
@@ -84,7 +85,7 @@ fn simple_sample() {
         assert!(response.duration < Duration::from_secs(1));
         assert_eq!(
             response.url,
-            Url::parse("http://localhost:8000/hello").unwrap()
+            Url::from_str("http://localhost:8000/hello").unwrap()
         );
         assert!(response.certificate.is_none());
     }

@@ -18,6 +18,7 @@
 use crate::http::{
     Header, HeaderVec, HttpVersion, Method, Param, RequestCookie, RequestSpec, Response, Url,
 };
+use std::str::FromStr;
 
 /// Some Request Response to be used by tests
 
@@ -28,7 +29,7 @@ fn default_response() -> Response {
         headers: HeaderVec::new(),
         body: vec![],
         duration: Default::default(),
-        url: Url::parse("http://localhost").unwrap(),
+        url: Url::from_str("http://localhost").unwrap(),
         certificate: None,
     }
 }

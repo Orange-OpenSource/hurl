@@ -17,6 +17,7 @@
  */
 use crate::http::{HttpError, Param};
 use std::fmt;
+use std::str::FromStr;
 
 /// A parsed URL.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -26,22 +27,6 @@ pub struct Url {
 }
 
 impl Url {
-    /// Parses an absolute URL from a string.
-    pub fn parse(value: &str) -> Result<Url, HttpError> {
-        let inner = match url::Url::parse(value) {
-            Ok(url) => url,
-            Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
-        };
-        let scheme = inner.scheme();
-        if scheme != "http" && scheme != "https" {
-            return Err(HttpError::InvalidUrl(
-                value.to_string(),
-                "Missing protocol http or https".to_string(),
-            ));
-        }
-        Ok(Url { inner })
-    }
-
     /// Returns a list of query parameters (values are URL decoded).
     pub fn query_params(&self) -> Vec<Param> {
         self.inner
@@ -69,7 +54,27 @@ impl Url {
                 ))
             }
         };
-        Url::parse(new_inner.as_str())
+        new_inner.as_str().parse()
+    }
+}
+
+impl FromStr for Url {
+    type Err = HttpError;
+
+    /// Parses an absolute URL from a string.
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        let inner = match url::Url::parse(value) {
+            Ok(url) => url,
+            Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
+        };
+        let scheme = inner.scheme();
+        if scheme != "http" && scheme != "https" {
+            return Err(HttpError::InvalidUrl(
+                value.to_string(),
+                "Missing protocol http or https".to_string(),
+            ));
+        }
+        Ok(Url { inner })
     }
 }
 
@@ -83,6 +88,7 @@ impl fmt::Display for Url {
 mod tests {
     use super::Url;
     use crate::http::Param;
+    use std::str::FromStr;
 
     #[test]
     fn parse_url_ok() {
@@ -94,16 +100,16 @@ mod tests {
             "https://localhost:8000",
         ];
         for url in urls {
-            assert!(Url::parse(url).is_ok());
+            assert!(Url::from_str(url).is_ok());
         }
     }
 
     #[test]
     fn query_params() {
-        let url = Url::parse("http://localhost:8000/hello").unwrap();
+        let url: Url = "http://localhost:8000/hello".parse().unwrap();
         assert_eq!(url.query_params(), vec![]);
 
-        let url = Url::parse("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
+        let url: Url = "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".parse().unwrap();
         assert_eq!(
             url.query_params(),
             vec![
@@ -117,29 +123,29 @@ mod tests {
 
     #[test]
     fn test_join() {
-        let base = Url::parse("http://example.net/foo/index.html").unwrap();
+        let base: Url = "http://example.net/foo/index.html".parse().unwrap();
 
         // Test join with absolute
         assert_eq!(
             base.join("http://bar.com/redirected").unwrap(),
-            Url::parse("http://bar.com/redirected").unwrap()
+            "http://bar.com/redirected".parse().unwrap()
         );
 
         // Test join with relative
         assert_eq!(
             base.join("/redirected").unwrap(),
-            Url::parse("http://example.net/redirected").unwrap()
+            "http://example.net/redirected".parse().unwrap()
         );
 
         assert_eq!(
             base.join("../bar/index.html").unwrap(),
-            Url::parse("http://example.net/bar/index.html").unwrap()
+            "http://example.net/bar/index.html".parse().unwrap()
         );
 
         // Scheme relative URL
         assert_eq!(
             base.join("//example.org/baz/index.html").unwrap(),
-            Url::parse("http://example.org/baz/index.html").unwrap()
+            "http://example.org/baz/index.html".parse().unwrap()
         )
     }
 }

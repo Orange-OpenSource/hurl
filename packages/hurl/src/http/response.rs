@@ -95,7 +95,7 @@ mod tests {
             headers,
             body: vec![],
             duration: Default::default(),
-            url: Url::parse("http://localhost").unwrap(),
+            url: "http://localhost".parse().unwrap(),
             certificate: None,
         };
         assert_eq!(response.headers.values("Content-Length"), vec!["12"]);

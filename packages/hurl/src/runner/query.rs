@@ -349,7 +349,7 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::http::{HeaderVec, HttpError, HttpVersion, Url};
+    use crate::http::{HeaderVec, HttpError, HttpVersion};
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
 
@@ -362,7 +362,7 @@ pub mod tests {
             headers: HeaderVec::new(),
             body: vec![],
             duration: Default::default(),
-            url: Url::parse("http://localhost").unwrap(),
+            url: "http://localhost".parse().unwrap(),
             certificate: None,
         }
     }

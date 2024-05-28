@@ -157,7 +157,7 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::http::{Header, HeaderVec, HttpVersion, Response, Url};
+    use crate::http::{Header, HeaderVec, HttpVersion, Response};
 
     fn default_response() -> Response {
         Response {
@@ -166,7 +166,7 @@ pub mod tests {
             headers: HeaderVec::new(),
             body: vec![],
             duration: Default::default(),
-            url: Url::parse("http://localhost").unwrap(),
+            url: "http://localhost".parse().unwrap(),
             certificate: None,
         }
     }
