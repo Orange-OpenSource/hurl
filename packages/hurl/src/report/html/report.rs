@@ -38,11 +38,21 @@ pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Repor
 
     let file_path = index_path;
     let mut file = match std::fs::File::create(&file_path) {
-        Err(err) => return Err(ReportError::from_error(err, &file_path, "Issue writing")),
+        Err(err) => {
+            return Err(ReportError::from_error(
+                err,
+                &file_path,
+                "Issue writing HTML report",
+            ))
+        }
         Ok(file) => file,
     };
     if let Err(err) = file.write_all(s.as_bytes()) {
-        return Err(ReportError::from_error(err, &file_path, "Issue writing"));
+        return Err(ReportError::from_error(
+            err,
+            &file_path,
+            "Issue writing HTML report",
+        ));
     }
     Ok(())
 }
@@ -77,7 +87,13 @@ fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, ReportError> {
     if path.exists() {
         let s = match std::fs::read_to_string(path) {
             Ok(s) => s,
-            Err(e) => return Err(ReportError::from_error(e, path, "Issue reading")),
+            Err(e) => {
+                return Err(ReportError::from_error(
+                    e,
+                    path,
+                    "Issue reading HTML report",
+                ))
+            }
         };
         Ok(parse_html_report(&s))
     } else {

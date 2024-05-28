@@ -71,7 +71,7 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
         let file = match File::open(filename) {
             Ok(s) => s,
             Err(why) => {
-                return Err(ReportError::new(&format!(
+                return Err(ReportError::from_string(&format!(
                     "Issue reading {} to string to {why:?}",
                     filename.display(),
                 )));
@@ -90,14 +90,14 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(ReportError::new(&format!(
+            return Err(ReportError::from_string(&format!(
                 "Failed to produce JUnit report: {e:?}"
             )));
         }
     };
     match doc.write(file) {
         Ok(_) => Ok(()),
-        Err(e) => Err(ReportError::new(&format!(
+        Err(e) => Err(ReportError::from_string(&format!(
             "Failed to produce Junit report: {e:?}"
         ))),
     }

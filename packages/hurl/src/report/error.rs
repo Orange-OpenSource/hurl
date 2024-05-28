@@ -30,10 +30,11 @@ pub enum ReportError {
 
 impl ReportError {
     /// Creates a new error instance.
-    pub fn new(message: &str) -> Self {
+    pub fn from_string(message: &str) -> Self {
         ReportError::Message(message.to_string())
     }
 
+    /// Creates a new error instance.
     pub fn from_error(error: io::Error, file: &Path, message: &str) -> Self {
         ReportError::IO {
             inner: error,
@@ -58,6 +59,6 @@ impl fmt::Display for ReportError {
 
 impl From<io::Error> for ReportError {
     fn from(e: io::Error) -> Self {
-        ReportError::new(&e.to_string())
+        ReportError::from_string(&e.to_string())
     }
 }

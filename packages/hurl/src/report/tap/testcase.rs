@@ -47,20 +47,20 @@ impl Testcase {
             line = &line[6..];
             false
         } else {
-            return Err(ReportError::new(&format!(
+            return Err(ReportError::from_string(&format!(
                 "Invalid TAP line <{line}> - must start with ok or nok"
             )));
         };
 
         let description = match line.find('-') {
             None => {
-                return Err(ReportError::new(&format!(
+                return Err(ReportError::from_string(&format!(
                     "Invalid TAP line <{line}> - missing '-' separator"
                 )));
             }
             Some(index) => {
                 if line.split_at(index).0.trim().parse::<usize>().is_err() {
-                    return Err(ReportError::new(&format!(
+                    return Err(ReportError::from_string(&format!(
                         "Invalid TAP line <{line}> - missing test number"
                     )));
                 }
