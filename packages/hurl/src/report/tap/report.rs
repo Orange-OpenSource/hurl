@@ -43,6 +43,19 @@ pub fn write_report(filename: &Path, new_testcases: &[Testcase]) -> Result<(), R
 
 /// Creates a Tap from a list of `testcases`.
 fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), ReportError> {
+    // We ensure that parent folder is created.
+    if let Some(parent) = filename.parent() {
+        match std::fs::create_dir_all(parent) {
+            Ok(_) => {}
+            Err(err) => {
+                return Err(ReportError::from_error(
+                    err,
+                    filename,
+                    "Issue writing TAP report",
+                ))
+            }
+        }
+    }
     let mut file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
