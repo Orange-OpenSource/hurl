@@ -1338,6 +1338,7 @@ $ sudo pkg install hurl
 ```
 
 ### Windows
+Windows requires the [Visual C++ Redistributable Package] to be installed manually, as this is not included in the installer.
 
 #### Zip File
 
@@ -1490,6 +1491,7 @@ Please follow the [contrib on Windows section].
 [`--json` option]: https://hurl.dev/docs/manual.html#json
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
+[Visual C++ Redistributable Package]: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version
 [install]: https://www.rust-lang.org/tools/install
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
