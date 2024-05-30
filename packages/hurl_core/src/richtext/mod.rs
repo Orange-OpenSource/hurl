@@ -17,11 +17,14 @@
  */
 
 use colored::Colorize;
+use std::fmt;
+use std::fmt::Formatter;
 
 /// An String with color and style
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(unused)]
 struct RichText<'a> {
+    format: Format,
     tokens: Vec<Token<'a>>,
 }
 
@@ -50,8 +53,11 @@ enum Color {
 
 #[allow(unused)]
 impl<'a> RichText<'a> {
-    pub fn new() -> RichText<'a> {
-        RichText { tokens: vec![] }
+    pub fn new(format: Format) -> RichText<'a> {
+        RichText {
+            format,
+            tokens: vec![],
+        }
     }
 
     pub fn add_token(&mut self, content: &'a str, fg: Option<Color>, bold: bool) {
@@ -68,13 +74,17 @@ impl<'a> RichText<'a> {
         self.add_token(content, Some(Color::Red), false);
         self
     }
+}
 
-    pub fn to_string(&self, format: Format) -> String {
-        self.tokens
+impl fmt::Display for RichText<'_> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let string = self
+            .tokens
             .iter()
-            .map(|token| token.to_string(format))
+            .map(|token| token.to_string(self.format))
             .collect::<Vec<String>>()
-            .join("")
+            .join("");
+        write!(f, "{string}")
     }
 }
 
@@ -83,6 +93,7 @@ impl<'a> Token<'a> {
         Token { content, fg, bold }
     }
 
+    // FIXME: same as [`RichText`] we could implement instead `fmt::Display` instead.
     pub fn to_string(&self, format: Format) -> String {
         match format {
             Format::Plain => self.plain(),
@@ -117,11 +128,16 @@ mod tests {
     #[test]
     fn test_hello() {
         colored::control::set_override(true);
-        let message = RichText::new().text("Hello ").red("Bob").text("!");
-        assert_eq!(message.to_string(Format::Plain), "Hello Bob!");
-        assert_eq!(
-            message.to_string(Format::Ansi),
-            "Hello \u{1b}[31mBob\u{1b}[0m!"
-        );
+        let message = RichText::new(Format::Plain)
+            .text("Hello ")
+            .red("Bob")
+            .text("!");
+        assert_eq!(message.to_string(), "Hello Bob!");
+
+        let message = RichText::new(Format::Ansi)
+            .text("Hello ")
+            .red("Bob")
+            .text("!");
+        assert_eq!(message.to_string(), "Hello \u{1b}[31mBob\u{1b}[0m!");
     }
 }
