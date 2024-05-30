@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 use colored::Colorize;
 
-/// An String with color and style
-#[derive(Clone, Debug, PartialEq, Eq)]
+/// A String with color and style
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[allow(unused)]
-struct RichText<'a> {
+pub struct RichText<'a> {
     tokens: Vec<Token<'a>>,
 }
 
@@ -42,7 +41,7 @@ struct Token<'a> {
 
 #[allow(unused)]
 #[derive(Clone, Debug, PartialEq, Eq)]
-enum Color {
+pub enum Color {
     Red,
     Green,
     Blue,
@@ -54,18 +53,29 @@ impl<'a> RichText<'a> {
         RichText { tokens: vec![] }
     }
 
-    pub fn add_token(&mut self, content: &'a str, fg: Option<Color>, bold: bool) {
+    pub fn rich(mut self, content: &'a str, fg: Option<Color>, bold: bool) -> RichText {
         let token = Token::new(content, fg, bold);
         self.tokens.push(token);
-    }
-
-    pub fn text(mut self, content: &'a str) -> RichText {
-        self.add_token(content, None, false);
         self
     }
 
-    pub fn red(mut self, content: &'a str) -> RichText {
-        self.add_token(content, Some(Color::Red), false);
+    pub fn text(mut self, content: &'a str) -> RichText {
+        let token = Token::new(content, None, false);
+        self.tokens.push(token);
+        self
+    }
+
+    pub fn red(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Red);
+        };
+        self
+    }
+
+    pub fn bold(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.bold = true;
+        };
         self
     }
 
@@ -98,12 +108,29 @@ impl<'a> Token<'a> {
         let mut s = self.content.to_string();
         if let Some(color) = &self.fg {
             s = match color {
-                Color::Red => s.red().to_string(),
-                Color::Green => s.green().to_string(),
-                Color::Blue => s.blue().to_string(),
+                Color::Red => {
+                    if self.bold {
+                        s.red().bold().to_string()
+                    } else {
+                        s.red().to_string()
+                    }
+                }
+                Color::Green => {
+                    if self.bold {
+                        s.green().bold().to_string()
+                    } else {
+                        s.green().to_string()
+                    }
+                }
+                Color::Blue => {
+                    if self.bold {
+                        s.blue().bold().to_string()
+                    } else {
+                        s.blue().to_string()
+                    }
+                }
             };
-        }
-        if self.bold {
+        } else if self.bold {
             s = s.bold().to_string();
         }
         s
@@ -117,11 +144,35 @@ mod tests {
     #[test]
     fn test_hello() {
         colored::control::set_override(true);
-        let message = RichText::new().text("Hello ").red("Bob").text("!");
+        let message = RichText::new().text("Hello ").text("Bob").red().text("!");
         assert_eq!(message.to_string(Format::Plain), "Hello Bob!");
         assert_eq!(
             message.to_string(Format::Ansi),
             "Hello \u{1b}[31mBob\u{1b}[0m!"
+        );
+    }
+
+    #[test]
+    fn compare_with_colored() {
+        assert_eq!(
+            "foo".red().bold().to_string(),
+            RichText::new()
+                .text("foo")
+                .red()
+                .bold()
+                .to_string(Format::Ansi),
+        );
+
+        assert_eq!(
+            "foo".red().bold().to_string(),
+            RichText::new()
+                .rich("foo", Some(Color::Red), true)
+                .to_string(Format::Ansi),
+        );
+
+        assert_eq!(
+            "bar".bold().to_string(),
+            RichText::new().text("bar").bold().to_string(Format::Ansi),
         );
     }
 }
