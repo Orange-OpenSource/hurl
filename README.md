@@ -1338,6 +1338,7 @@ $ sudo pkg install hurl
 ```
 
 ### Windows
+
 Windows requires the [Visual C++ Redistributable Package] to be installed manually, as this is not included in the installer.
 
 #### Zip File
