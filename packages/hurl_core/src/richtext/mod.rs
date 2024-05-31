@@ -40,11 +40,12 @@ struct Token<'a> {
 }
 
 #[allow(unused)]
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Color {
-    Red,
-    Green,
     Blue,
+    Green,
+    Red,
+    Yellow,
 }
 
 #[allow(unused)]
@@ -68,6 +69,27 @@ impl<'a> RichText<'a> {
     pub fn red(mut self) -> RichText<'a> {
         if let Some(token) = self.tokens.last_mut() {
             token.fg = Some(Color::Red);
+        };
+        self
+    }
+
+    pub fn green(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Green);
+        };
+        self
+    }
+
+    pub fn blue(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Blue);
+        };
+        self
+    }
+
+    pub fn yellow(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Yellow);
         };
         self
     }
@@ -108,11 +130,11 @@ impl<'a> Token<'a> {
         let mut s = self.content.to_string();
         if let Some(color) = &self.fg {
             s = match color {
-                Color::Red => {
+                Color::Blue => {
                     if self.bold {
-                        s.red().bold().to_string()
+                        s.blue().bold().to_string()
                     } else {
-                        s.red().to_string()
+                        s.blue().to_string()
                     }
                 }
                 Color::Green => {
@@ -122,11 +144,18 @@ impl<'a> Token<'a> {
                         s.green().to_string()
                     }
                 }
-                Color::Blue => {
+                Color::Red => {
                     if self.bold {
-                        s.blue().bold().to_string()
+                        s.red().bold().to_string()
                     } else {
-                        s.blue().to_string()
+                        s.red().to_string()
+                    }
+                }
+                Color::Yellow => {
+                    if self.bold {
+                        s.yellow().bold().to_string()
+                    } else {
+                        s.yellow().to_string()
                     }
                 }
             };
@@ -153,7 +182,9 @@ mod tests {
     }
 
     #[test]
-    fn compare_with_colored() {
+    fn compare_with_crate_colored() {
+        // These tests are used to check regression against the [colored crate](https://crates.io/crates/colored).
+        // A short-term objective is to remove the colored crates to manage ansi colors.
         assert_eq!(
             "foo".red().bold().to_string(),
             RichText::new()
@@ -162,14 +193,12 @@ mod tests {
                 .bold()
                 .to_string(Format::Ansi),
         );
-
         assert_eq!(
             "foo".red().bold().to_string(),
             RichText::new()
                 .rich("foo", Some(Color::Red), true)
                 .to_string(Format::Ansi),
         );
-
         assert_eq!(
             "bar".bold().to_string(),
             RichText::new().text("bar").bold().to_string(Format::Ansi),
