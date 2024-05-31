@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-pub mod ast;
-pub mod error;
-pub mod format;
-pub mod parser;
-pub mod text;
+mod style;
+mod styledstring;
+
+pub use style::*;
+pub use styledstring::*;

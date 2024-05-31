@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
+
+use crate::text::style::{Color, Style};
 use colored::Colorize;
 
-/// A String with color and style
+/// A String with style
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[allow(unused)]
-pub struct RichText<'a> {
+pub struct StyledString<'a> {
     tokens: Vec<Token<'a>>,
 }
 
@@ -35,70 +37,24 @@ pub enum Format {
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Token<'a> {
     content: &'a str,
-    fg: Option<Color>,
-    bold: bool,
+    style: Style,
 }
 
 #[allow(unused)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Color {
-    Blue,
-    Green,
-    Red,
-    Yellow,
-}
-
-#[allow(unused)]
-impl<'a> RichText<'a> {
-    pub fn new() -> RichText<'a> {
-        RichText { tokens: vec![] }
+impl<'a> StyledString<'a> {
+    pub fn new() -> StyledString<'a> {
+        StyledString { tokens: vec![] }
     }
 
-    pub fn rich(mut self, content: &'a str, fg: Option<Color>, bold: bool) -> RichText {
-        let token = Token::new(content, fg, bold);
+    pub fn push(&mut self, content: &'a str) {
+        let style = Style::new();
+        let token = Token::new(content, style);
         self.tokens.push(token);
-        self
     }
 
-    pub fn text(mut self, content: &'a str) -> RichText {
-        let token = Token::new(content, None, false);
+    pub fn push_with(&mut self, content: &'a str, style: Style) {
+        let token = Token::new(content, style);
         self.tokens.push(token);
-        self
-    }
-
-    pub fn red(mut self) -> RichText<'a> {
-        if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Red);
-        };
-        self
-    }
-
-    pub fn green(mut self) -> RichText<'a> {
-        if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Green);
-        };
-        self
-    }
-
-    pub fn blue(mut self) -> RichText<'a> {
-        if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Blue);
-        };
-        self
-    }
-
-    pub fn yellow(mut self) -> RichText<'a> {
-        if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Yellow);
-        };
-        self
-    }
-
-    pub fn bold(mut self) -> RichText<'a> {
-        if let Some(token) = self.tokens.last_mut() {
-            token.bold = true;
-        };
-        self
     }
 
     pub fn to_string(&self, format: Format) -> String {
@@ -111,8 +67,8 @@ impl<'a> RichText<'a> {
 }
 
 impl<'a> Token<'a> {
-    pub fn new(content: &'a str, fg: Option<Color>, bold: bool) -> Token {
-        Token { content, fg, bold }
+    pub fn new(content: &'a str, style: Style) -> Token {
+        Token { content, style }
     }
 
     pub fn to_string(&self, format: Format) -> String {
@@ -128,38 +84,38 @@ impl<'a> Token<'a> {
 
     fn ansi(&self) -> String {
         let mut s = self.content.to_string();
-        if let Some(color) = &self.fg {
+        if let Some(color) = &self.style.fg {
             s = match color {
                 Color::Blue => {
-                    if self.bold {
+                    if self.style.bold {
                         s.blue().bold().to_string()
                     } else {
                         s.blue().to_string()
                     }
                 }
                 Color::Green => {
-                    if self.bold {
+                    if self.style.bold {
                         s.green().bold().to_string()
                     } else {
                         s.green().to_string()
                     }
                 }
                 Color::Red => {
-                    if self.bold {
+                    if self.style.bold {
                         s.red().bold().to_string()
                     } else {
                         s.red().to_string()
                     }
                 }
                 Color::Yellow => {
-                    if self.bold {
+                    if self.style.bold {
                         s.yellow().bold().to_string()
                     } else {
                         s.yellow().to_string()
                     }
                 }
             };
-        } else if self.bold {
+        } else if self.style.bold {
             s = s.bold().to_string();
         }
         s
@@ -173,7 +129,10 @@ mod tests {
     #[test]
     fn test_hello() {
         colored::control::set_override(true);
-        let message = RichText::new().text("Hello ").text("Bob").red().text("!");
+        let mut message = StyledString::new();
+        message.push("Hello ");
+        message.push_with("Bob", Style::new().red());
+        message.push("!");
         assert_eq!(message.to_string(Format::Plain), "Hello Bob!");
         assert_eq!(
             message.to_string(Format::Ansi),
@@ -185,23 +144,15 @@ mod tests {
     fn compare_with_crate_colored() {
         // These tests are used to check regression against the [colored crate](https://crates.io/crates/colored).
         // A short-term objective is to remove the colored crates to manage ansi colors.
+        let mut message = StyledString::new();
+        message.push_with("foo", Style::new().red().bold());
         assert_eq!(
             "foo".red().bold().to_string(),
-            RichText::new()
-                .text("foo")
-                .red()
-                .bold()
-                .to_string(Format::Ansi),
+            message.to_string(Format::Ansi),
         );
-        assert_eq!(
-            "foo".red().bold().to_string(),
-            RichText::new()
-                .rich("foo", Some(Color::Red), true)
-                .to_string(Format::Ansi),
-        );
-        assert_eq!(
-            "bar".bold().to_string(),
-            RichText::new().text("bar").bold().to_string(Format::Ansi),
-        );
+
+        let mut message = StyledString::new();
+        message.push_with("bar", Style::new().bold());
+        assert_eq!("bar".bold().to_string(), message.to_string(Format::Ansi),);
     }
 }
