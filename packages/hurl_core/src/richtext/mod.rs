@@ -43,7 +43,9 @@ struct Token<'a> {
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Color {
     Blue,
+    Cyan,
     Green,
+    Purple,
     Red,
     Yellow,
 }
@@ -66,9 +68,16 @@ impl<'a> RichText<'a> {
         self
     }
 
-    pub fn red(mut self) -> RichText<'a> {
+    pub fn blue(mut self) -> RichText<'a> {
         if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Red);
+            token.fg = Some(Color::Blue);
+        };
+        self
+    }
+
+    pub fn cyan(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Cyan);
         };
         self
     }
@@ -80,9 +89,16 @@ impl<'a> RichText<'a> {
         self
     }
 
-    pub fn blue(mut self) -> RichText<'a> {
+    pub fn purple(mut self) -> RichText<'a> {
         if let Some(token) = self.tokens.last_mut() {
-            token.fg = Some(Color::Blue);
+            token.fg = Some(Color::Purple);
+        };
+        self
+    }
+
+    pub fn red(mut self) -> RichText<'a> {
+        if let Some(token) = self.tokens.last_mut() {
+            token.fg = Some(Color::Red);
         };
         self
     }
@@ -137,11 +153,25 @@ impl<'a> Token<'a> {
                         s.blue().to_string()
                     }
                 }
+                Color::Cyan => {
+                    if self.bold {
+                        s.cyan().bold().to_string()
+                    } else {
+                        s.cyan().to_string()
+                    }
+                }
                 Color::Green => {
                     if self.bold {
                         s.green().bold().to_string()
                     } else {
                         s.green().to_string()
+                    }
+                }
+                Color::Purple => {
+                    if self.bold {
+                        s.purple().bold().to_string()
+                    } else {
+                        s.purple().to_string()
                     }
                 }
                 Color::Red => {

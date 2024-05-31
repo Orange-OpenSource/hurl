@@ -16,10 +16,9 @@
  *
  */
 //! Log utilities.
-
-use colored::*;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{error_string, split_lines, DisplaySourceError};
+use hurl_core::richtext::{Format, RichText};
 
 use crate::runner::Value;
 use crate::util::term::Stderr;
@@ -183,6 +182,14 @@ impl Logger {
         }
     }
 
+    fn format(&self) -> Format {
+        if self.color {
+            Format::Ansi
+        } else {
+            Format::Plain
+        }
+    }
+
     pub fn info(&mut self, message: &str) {
         self.stderr.eprintln(message);
     }
@@ -191,37 +198,28 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "*".blue().bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, message);
-        } else {
-            self.stderr.eprintln_prefix("*", message);
-        }
+        let fmt = self.format();
+        let prefix = RichText::new().text("*").blue().bold().to_string(fmt);
+        self.stderr.eprintln_prefix(&prefix, message);
     }
 
     pub fn debug_important(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "*".blue().bold().to_string();
-            let message = message.bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, &message);
-        } else {
-            self.stderr.eprintln_prefix("*", message);
-        }
+        let fmt = self.format();
+        let prefix = RichText::new().text("*").blue().bold().to_string(fmt);
+        let message = RichText::new().text(message).bold().to_string(fmt);
+        self.stderr.eprintln_prefix(&prefix, &message);
     }
 
     pub fn debug_curl(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "**".blue().bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, message);
-        } else {
-            self.stderr.eprintln_prefix("**", message);
-        }
+        let fmt = self.format();
+        let prefix = RichText::new().text("**").blue().bold().to_string(fmt);
+        self.stderr.eprintln_prefix(&prefix, message);
     }
 
     pub fn debug_error<E: DisplaySourceError>(
@@ -247,13 +245,17 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
+        let fmt = self.format();
+
         for (name, value) in headers {
-            if self.color {
-                self.stderr
-                    .eprintln(&format!("< {}: {}", name.cyan().bold(), value));
-            } else {
-                self.stderr.eprintln(&format!("< {}: {}", name, value));
-            }
+            let message = RichText::new()
+                .text("< ")
+                .text(name)
+                .cyan()
+                .bold()
+                .text(&format!(": {value}"))
+                .to_string(fmt);
+            self.stderr.eprintln(&message);
         }
         self.stderr.eprintln("<");
     }
@@ -262,13 +264,17 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
+        let fmt = self.format();
+
         for (name, value) in headers {
-            if self.color {
-                self.stderr
-                    .eprintln(&format!("> {}: {}", name.cyan().bold(), value));
-            } else {
-                self.stderr.eprintln(&format!("> {}: {}", name, value));
-            }
+            let message = RichText::new()
+                .text("> ")
+                .text(name)
+                .cyan()
+                .bold()
+                .text(&format!(": {value}"))
+                .to_string(fmt);
+            self.stderr.eprintln(&message);
         }
         self.stderr.eprintln(">");
     }
@@ -277,32 +283,40 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!("< {}", line.green().bold()));
-        } else {
-            self.stderr.eprintln(&format!("< {line}"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("< ")
+            .text(line)
+            .green()
+            .bold()
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn warning(&mut self, message: &str) {
-        if self.color {
-            self.stderr.eprintln(&format!(
-                "{}: {}",
-                "warning".yellow().bold(),
-                message.bold()
-            ));
-        } else {
-            self.stderr.eprintln(&format!("warning: {message}"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("warning")
+            .yellow()
+            .bold()
+            .text(": ")
+            .text(message)
+            .bold()
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn error(&mut self, message: &str) {
-        if self.color {
-            self.stderr
-                .eprintln(&format!("{}: {}", "error".red().bold(), message.bold()));
-        } else {
-            self.stderr.eprintln(&format!("error: {message}"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("error")
+            .red()
+            .bold()
+            .text(": ")
+            .text(message)
+            .bold()
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
@@ -327,38 +341,47 @@ impl Logger {
     }
 
     fn error_rich(&mut self, message: &str) {
-        if self.color {
-            self.stderr
-                .eprintln(&format!("{}: {message}\n", "error".red().bold()));
-        } else {
-            self.stderr.eprintln(&format!("error: {message}\n"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("error")
+            .red()
+            .bold()
+            .text(": ")
+            .text(message)
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn debug_method_version_out(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!("> {}", line.purple().bold()));
-        } else {
-            self.stderr.eprintln(&format!("> {line}"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("> ")
+            .text(line)
+            .purple()
+            .bold()
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn capture(&mut self, name: &str, value: &Value) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!(
-                "{} {}: {value}",
-                "*".blue().bold(),
-                name.yellow().bold()
-            ));
-        } else {
-            self.stderr.eprintln(&format!("* {name}: {value}"));
-        }
+        let fmt = self.format();
+        let message = RichText::new()
+            .text("*")
+            .blue()
+            .bold()
+            .text(" ")
+            .text(name)
+            .yellow()
+            .bold()
+            .text(&format!(": {value}"))
+            .to_string(fmt);
+        self.stderr.eprintln(&message);
     }
 
     pub fn stderr(&self) -> &Stderr {
