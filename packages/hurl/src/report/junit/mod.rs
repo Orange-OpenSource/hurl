@@ -66,7 +66,21 @@ use crate::report::ReportError;
 
 /// Creates a JUnit from a list of `testcases`.
 pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
-    // If there is an existing JUnit report, we parses it to insert a new testsuite.
+    // We ensure that parent folder is created.
+    if let Some(parent) = filename.parent() {
+        match std::fs::create_dir_all(parent) {
+            Ok(_) => {}
+            Err(err) => {
+                return Err(ReportError::from_error(
+                    err,
+                    filename,
+                    "Issue writing Junit report",
+                ))
+            }
+        }
+    }
+
+    // If there is an existing JUnit report, we parse it to insert a new testsuite.
     let mut root = if filename.exists() {
         let file = match File::open(filename) {
             Ok(s) => s,
