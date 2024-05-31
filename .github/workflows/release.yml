@@ -374,6 +374,13 @@ jobs:
             fi
           echo "::endgroup::"
 
+      - name: Check sha256 for published packages
+        run: |
+          .github/workflows/bin/check_release_assets_sha.sh \
+              --release ${{ needs.set-context.outputs.release_version }} \
+              --github-repo "${{ github.repository }}" \
+              --github-token $GITHUB_TOKEN
+
       - name: Create new pull request
         run: |
           GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
