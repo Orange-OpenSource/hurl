@@ -93,11 +93,25 @@ impl<'a> Token<'a> {
                         s.blue().to_string()
                     }
                 }
+                Color::Cyan => {
+                    if self.style.bold {
+                        s.cyan().bold().to_string()
+                    } else {
+                        s.cyan().to_string()
+                    }
+                }
                 Color::Green => {
                     if self.style.bold {
                         s.green().bold().to_string()
                     } else {
                         s.green().to_string()
+                    }
+                }
+                Color::Purple => {
+                    if self.style.bold {
+                        s.purple().bold().to_string()
+                    } else {
+                        s.purple().to_string()
                     }
                 }
                 Color::Red => {

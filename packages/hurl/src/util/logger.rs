@@ -17,9 +17,9 @@
  */
 //! Log utilities.
 
-use colored::*;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{error_string, split_lines, DisplaySourceError};
+use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
 use crate::util::term::Stderr;
@@ -183,6 +183,14 @@ impl Logger {
         }
     }
 
+    fn format(&self) -> Format {
+        if self.color {
+            Format::Ansi
+        } else {
+            Format::Plain
+        }
+    }
+
     pub fn info(&mut self, message: &str) {
         self.stderr.eprintln(message);
     }
@@ -191,37 +199,42 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "*".blue().bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, message);
-        } else {
-            self.stderr.eprintln_prefix("*", message);
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("*", Style::new().blue().bold());
+        if !message.is_empty() {
+            s.push(" ");
+            s.push(message);
         }
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn debug_important(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "*".blue().bold().to_string();
-            let message = message.bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, &message);
-        } else {
-            self.stderr.eprintln_prefix("*", message);
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("*", Style::new().blue().bold());
+        if !message.is_empty() {
+            s.push(" ");
+            s.push_with(message, Style::new().bold());
         }
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn debug_curl(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            let prefix = "**".blue().bold().to_string();
-            self.stderr.eprintln_prefix(&prefix, message);
-        } else {
-            self.stderr.eprintln_prefix("**", message);
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("**", Style::new().blue().bold());
+        if !message.is_empty() {
+            s.push(" ");
+            s.push(message);
         }
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn debug_error<E: DisplaySourceError>(
@@ -247,13 +260,15 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
+        let fmt = self.format();
+
         for (name, value) in headers {
-            if self.color {
-                self.stderr
-                    .eprintln(&format!("< {}: {}", name.cyan().bold(), value));
-            } else {
-                self.stderr.eprintln(&format!("< {}: {}", name, value));
-            }
+            let mut s = StyledString::new();
+            s.push("< ");
+            s.push_with(name, Style::new().cyan().bold());
+            s.push(": ");
+            s.push(value);
+            self.stderr.eprintln(&s.to_string(fmt));
         }
         self.stderr.eprintln("<");
     }
@@ -262,13 +277,15 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
+        let fmt = self.format();
+
         for (name, value) in headers {
-            if self.color {
-                self.stderr
-                    .eprintln(&format!("> {}: {}", name.cyan().bold(), value));
-            } else {
-                self.stderr.eprintln(&format!("> {}: {}", name, value));
-            }
+            let mut s = StyledString::new();
+            s.push("> ");
+            s.push_with(name, Style::new().cyan().bold());
+            s.push(": ");
+            s.push(value);
+            self.stderr.eprintln(&s.to_string(fmt));
         }
         self.stderr.eprintln(">");
     }
@@ -277,32 +294,29 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!("< {}", line.green().bold()));
-        } else {
-            self.stderr.eprintln(&format!("< {line}"));
-        }
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push("< ");
+        s.push_with(line, Style::new().green().bold());
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn warning(&mut self, message: &str) {
-        if self.color {
-            self.stderr.eprintln(&format!(
-                "{}: {}",
-                "warning".yellow().bold(),
-                message.bold()
-            ));
-        } else {
-            self.stderr.eprintln(&format!("warning: {message}"));
-        }
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("warning", Style::new().yellow().bold());
+        s.push(": ");
+        s.push_with(message, Style::new().bold());
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn error(&mut self, message: &str) {
-        if self.color {
-            self.stderr
-                .eprintln(&format!("{}: {}", "error".red().bold(), message.bold()));
-        } else {
-            self.stderr.eprintln(&format!("error: {message}"));
-        }
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push_with(message, Style::new().bold());
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
@@ -327,51 +341,42 @@ impl Logger {
     }
 
     fn error_rich(&mut self, message: &str) {
-        if self.color {
-            self.stderr
-                .eprintln(&format!("{}: {message}\n", "error".red().bold()));
-        } else {
-            self.stderr.eprintln(&format!("error: {message}\n"));
-        }
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push(message);
+        s.push("\n");
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn debug_method_version_out(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!("> {}", line.purple().bold()));
-        } else {
-            self.stderr.eprintln(&format!("> {line}"));
-        }
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push("> ");
+        s.push_with(line, Style::new().purple().bold());
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn capture(&mut self, name: &str, value: &Value) {
         if self.verbosity.is_none() {
             return;
         }
-        if self.color {
-            self.stderr.eprintln(&format!(
-                "{} {}: {value}",
-                "*".blue().bold(),
-                name.yellow().bold()
-            ));
-        } else {
-            self.stderr.eprintln(&format!("* {name}: {value}"));
-        }
+        let value = value.to_string();
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("*", Style::new().blue().bold());
+        s.push(" ");
+        s.push_with(name, Style::new().yellow().bold());
+        s.push(": ");
+        s.push(&value);
+        self.stderr.eprintln(&s.to_string(fmt));
     }
 
     pub fn stderr(&self) -> &Stderr {
         &self.stderr
-    }
-}
-
-impl Stderr {
-    fn eprintln_prefix(&mut self, prefix: &str, message: &str) {
-        if message.is_empty() {
-            self.eprintln(prefix);
-        } else {
-            self.eprintln(&format!("{prefix} {message}"));
-        }
     }
 }

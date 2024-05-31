@@ -27,7 +27,9 @@ pub struct Style {
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Color {
     Blue,
+    Cyan,
     Green,
+    Purple,
     Red,
     Yellow,
 }
@@ -39,8 +41,13 @@ impl Style {
         Style { fg, bold }
     }
 
-    pub fn red(mut self) -> Style {
-        self.fg = Some(Color::Red);
+    pub fn blue(mut self) -> Style {
+        self.fg = Some(Color::Blue);
+        self
+    }
+
+    pub fn cyan(mut self) -> Style {
+        self.fg = Some(Color::Cyan);
         self
     }
 
@@ -49,8 +56,13 @@ impl Style {
         self
     }
 
-    pub fn blue(mut self) -> Style {
-        self.fg = Some(Color::Blue);
+    pub fn purple(mut self) -> Style {
+        self.fg = Some(Color::Purple);
+        self
+    }
+
+    pub fn red(mut self) -> Style {
+        self.fg = Some(Color::Red);
         self
     }
 
