@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
-
 use base64::engine::general_purpose;
 use base64::Engine;
 use std::str::FromStr;
 
 use crate::runner::{Number, Value};
 
+/// Serializes a [`Value`] to JSON, used in captures serialization.
+///
+/// Natural JSON types are used to represent captures: if a [`Value::List`] is captured,
+/// the serialized data will be a JSON list.
 impl Value {
     pub fn to_json(&self) -> serde_json::Value {
         match self {
@@ -41,6 +44,7 @@ impl Value {
                 serde_json::Value::Object(map)
             }
             Value::Nodeset(size) => {
+                // TODO: explain why we do this for nodeset.
                 let mut map = serde_json::Map::new();
                 let size = *size as i64;
                 map.insert(

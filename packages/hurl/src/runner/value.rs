@@ -24,16 +24,27 @@ use crate::runner::Number;
 /// Values are used by queries, captures, asserts and predicates.
 #[derive(Clone, Debug)]
 pub enum Value {
+    /// A boolean value.
     Bool(bool),
+    /// A buffer of bytes.
     Bytes(Vec<u8>),
+    /// A date.
     Date(chrono::DateTime<chrono::Utc>),
+    /// A list of [`Value`].
     List(Vec<Value>),
+    /// A structure to represents node of object (returned from XPath queries).
     Nodeset(usize),
+    /// The null type.
     Null,
+    /// A number, can be a float, a 64-bit integer or any precision integer.
     Number(Number),
+    /// A structure to represents objects (returned from JSONPath queries).
     Object(Vec<(String, Value)>),
+    /// A regular expression.
     Regex(regex::Regex),
+    /// A string.
     String(String),
+    /// The unit type.
     Unit,
 }
 

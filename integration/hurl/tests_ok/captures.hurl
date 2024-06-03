@@ -9,6 +9,7 @@ param3: header "header2" regex /Hello (.*)!/
 data1: body
 data2: variable "data1"
 [Asserts]
+header "header1" == "{{param1}}"
 variable "param1" == "value1"
 variable "param2" == "Bob"
 variable "param3" == "Bob"
