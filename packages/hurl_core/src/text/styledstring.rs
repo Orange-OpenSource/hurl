@@ -22,8 +22,8 @@ use colored::Colorize;
 /// A String with style
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[allow(unused)]
-pub struct StyledString<'a> {
-    tokens: Vec<Token<'a>>,
+pub struct StyledString {
+    tokens: Vec<Token>,
 }
 
 #[allow(unused)]
@@ -35,24 +35,24 @@ pub enum Format {
 
 #[allow(unused)]
 #[derive(Clone, Debug, PartialEq, Eq)]
-struct Token<'a> {
-    content: &'a str,
+struct Token {
+    content: String,
     style: Style,
 }
 
 #[allow(unused)]
-impl<'a> StyledString<'a> {
-    pub fn new() -> StyledString<'a> {
+impl StyledString {
+    pub fn new() -> StyledString {
         StyledString { tokens: vec![] }
     }
 
-    pub fn push(&mut self, content: &'a str) {
+    pub fn push(&mut self, content: &str) {
         let style = Style::new();
         let token = Token::new(content, style);
         self.tokens.push(token);
     }
 
-    pub fn push_with(&mut self, content: &'a str, style: Style) {
+    pub fn push_with(&mut self, content: &str, style: Style) {
         let token = Token::new(content, style);
         self.tokens.push(token);
     }
@@ -65,7 +65,7 @@ impl<'a> StyledString<'a> {
             .join("")
     }
 
-    pub fn append(&mut self, other: StyledString<'a>) {
+    pub fn append(&mut self, other: StyledString) {
         for token in other.tokens {
             self.tokens.push(token);
         }
@@ -88,15 +88,14 @@ impl<'a> StyledString<'a> {
                 }
             }
         }
-
         items.push(item);
-
         items
     }
 }
 
-impl<'a> Token<'a> {
-    pub fn new(content: &'a str, style: Style) -> Token {
+impl Token {
+    pub fn new(content: &str, style: Style) -> Token {
+        let content = content.to_string();
         Token { content, style }
     }
 
