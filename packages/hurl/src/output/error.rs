@@ -17,9 +17,9 @@
  */
 
 use crate::http::HttpError;
-use colored::Colorize;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::DisplaySourceError;
+use hurl_core::text::{Style, StyledString};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OutputError {
@@ -54,35 +54,22 @@ impl DisplaySourceError for OutputError {
         }
     }
 
-    fn fixme(&self, content: &[&str], color: bool) -> String {
+    fn fixme(&self, content: &[&str]) -> StyledString {
         match &self.kind {
             OutputErrorKind::Http(http_error) => {
                 let message = http_error.message();
                 let message = hurl_core::error::add_carets(&message, self.source_info, content);
-
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message
-                }
+                color_red(&message)
             }
             OutputErrorKind::Binary => {
                 let message = "Binary output can mess up your terminal. Use \"--output -\" to tell Hurl to output it to your terminal anyway, or consider \"--output\" to save to a file.";
 
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
+                color_red(&message)
             }
             OutputErrorKind::Io(message) => {
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
-                if color {
-                    message.red().bold().to_string()
-                } else {
-                    message.to_string()
-                }
+                color_red(&message)
             }
         }
     }
@@ -90,4 +77,10 @@ impl DisplaySourceError for OutputError {
     fn show_source_line(&self) -> bool {
         true
     }
+}
+
+fn color_red(message: &str) -> StyledString {
+    let mut s = StyledString::new();
+    s.push_with(message, Style::new().red().bold());
+    s
 }

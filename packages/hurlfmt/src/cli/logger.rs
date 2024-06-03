@@ -21,6 +21,7 @@ use crate::linter;
 use colored::*;
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
+use hurl_core::text::Format;
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
     move |message| log_verbose(verbose, message)
@@ -101,6 +102,7 @@ fn log_error(
     } else {
         error_type.red().bold().to_string()
     };
+    let format = if color { Format::Ansi } else { Format::Plain };
     eprintln!("{}: {}", error_type, error.description());
 
     if let Some(filename) = filename {
@@ -131,17 +133,15 @@ fn log_error(
     // specific case for assert errors
     let lines = lines.iter().map(|s| s.as_str()).collect::<Vec<&str>>();
     if error.source_info().start.column == 0 {
-        let fix_me = &error.fixme(&lines, color);
-        let fixme_lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(fix_me)
-            .collect();
+        let fix_me = &error.fixme(&lines);
+        let fixme_lines = fix_me.split('\n');
+
         // edd an empty line at the end?
         for line in fixme_lines {
             eprintln!(
                 "{} |   {fixme}",
                 " ".repeat(line_number_size).as_str(),
-                fixme = line,
+                fixme = line.to_string(format),
             );
         }
     } else {
@@ -162,7 +162,7 @@ fn log_error(
             " ".repeat(line_number_size).as_str(),
             " ".repeat(error.source_info().start.column - 1 + tab_shift * 3),
             "^".repeat(if width > 1 { width } else { 1 }),
-            fixme = error.fixme(&lines, color).as_str(),
+            fixme = error.fixme(&lines).to_string(format),
         );
     }
 

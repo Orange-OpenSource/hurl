@@ -17,7 +17,7 @@
  */
 use crate::ast::{Pos, SourceInfo};
 use crate::error::DisplaySourceError;
-use colored::Colorize;
+use crate::text::{Style, StyledString};
 use std::cmp;
 
 /// Represents a parser error.
@@ -135,7 +135,7 @@ impl DisplaySourceError for ParseError {
         }
     }
 
-    fn fixme(&self, content: &[&str], color: bool) -> String {
+    fn fixme(&self, content: &[&str]) -> StyledString {
         let message = match &self.kind {
             ParseErrorKind::DuplicateSection => "the section is already defined".to_string(),
             ParseErrorKind::EscapeChar => "the escaping sequence is not valid".to_string(),
@@ -246,11 +246,9 @@ impl DisplaySourceError for ParseError {
         };
 
         let message = crate::error::add_carets(&message, self.source_info(), content);
-        if color {
-            message.red().bold().to_string()
-        } else {
-            message.to_string()
-        }
+        let mut s = StyledString::new();
+        s.push_with(&message, Style::new().red().bold());
+        s
     }
 
     fn show_source_line(&self) -> bool {

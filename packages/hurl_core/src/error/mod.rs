@@ -16,13 +16,14 @@
  *
  */
 use crate::ast::SourceInfo;
+use crate::text::{Format, StyledString};
 use colored::Colorize;
 use std::cmp::max;
 
 pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
-    fn fixme(&self, content: &[&str], color: bool) -> String;
+    fn fixme(&self, content: &[&str]) -> StyledString;
     fn show_source_line(&self) -> bool;
 }
 
@@ -196,24 +197,31 @@ pub fn error_string<E: DisplaySourceError>(
 /// }
 ///
 pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bool) -> String {
-    let mut text = String::new();
+    let mut text = StyledString::new();
 
     if error.show_source_line() {
         let line = lines.get(error.source_info().start.line - 1).unwrap();
         let line = line.replace('\t', "    ");
-        text.push(' ');
-        text.push_str(&line);
-        text.push('\n');
+
+        text.push(" ");
+
+        text.push(&line);
+
+        text.push("\n");
     }
-    let fixme = error.fixme(lines, colored);
-    let lines = split_lines(&fixme);
+    let fixme = error.fixme(lines);
+    let lines = fixme.split('\n');
     for (i, line) in lines.iter().enumerate() {
         if i > 0 {
-            text.push('\n');
+            text.push("\n");
         }
-        text.push_str(line);
+        text.append(line.clone());
     }
-    text
+    if colored {
+        text.to_string(Format::Ansi)
+    } else {
+        text.to_string(Format::Plain)
+    }
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -245,6 +253,7 @@ fn get_carets(line_raw: &str, error_column: usize, width: usize) -> String {
 mod tests {
     use super::*;
     use crate::ast::Pos;
+    use crate::text::Style;
 
     #[test]
     fn test_add_carets() {
@@ -307,14 +316,14 @@ HTTP 200
                 "Assert body value".to_string()
             }
 
-            fn fixme(&self, _lines: &[&str], _color: bool) -> String {
-                r#" {
-   "name": "John",
--  "age": 27
-+  "age": 28
- }
-"#
-                .to_string()
+            fn fixme(&self, _lines: &[&str]) -> StyledString {
+                let mut diff = StyledString::new();
+                diff.push(" {\n   \"name\": \"John\",\n");
+                diff.push_with("-  \"age\": 27", Style::new().red());
+                diff.push("\n");
+                diff.push_with("+  \"age\": 28", Style::new().green());
+                diff.push("\n }\n");
+                diff
             }
 
             fn show_source_line(&self) -> bool {
@@ -323,6 +332,7 @@ HTTP 200
         }
         let error = E;
 
+        colored::control::set_override(true);
         assert_eq!(
             get_message(&error, &split_lines(content), false),
             r#" {
@@ -331,6 +341,10 @@ HTTP 200
 +  "age": 28
  }
 "#
+        );
+        assert_eq!(
+            get_message(&error, &split_lines(content), true),
+            " {\n   \"name\": \"John\",\n\u{1b}[31m-  \"age\": 27\u{1b}[0m\n\u{1b}[32m+  \"age\": 28\u{1b}[0m\n }\n"
         );
 
         assert_eq!(
