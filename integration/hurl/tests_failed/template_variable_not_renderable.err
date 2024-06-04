@@ -22,6 +22,6 @@ error: Unrenderable variable
    | GET http://localhost:8000/undefined
    | ...
 22 | nodeset: {{nodeset}}
-   |            ^^^^^^^ variable <nodeset> with value Nodeset1 can not be rendered
+   |            ^^^^^^^ variable <nodeset> with value Nodeset(size=1) can not be rendered
    |
 

@@ -80,7 +80,7 @@ impl fmt::Display for Value {
                 let values: Vec<String> = values.iter().map(|e| e.to_string()).collect();
                 format!("[{}]", values.join(","))
             }
-            Value::Nodeset(x) => format!("Nodeset{x:?}"),
+            Value::Nodeset(x) => format!("Nodeset(size={x})"),
             Value::Null => "null".to_string(),
             Value::Object(_) => "Object()".to_string(),
             Value::Regex(x) => {

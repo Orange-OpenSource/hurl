@@ -23,6 +23,14 @@ param2: {{param2}}
 HTTP 200
 
 
+GET http://localhost:8000/captures-xml
+HTTP 200
+[Captures]
+a_node_set: xpath "//p"
+[Asserts]
+variable "a_node_set" count == 2
+
+
 GET http://localhost:8000/captures-json
 HTTP 200
 [Captures]
@@ -33,6 +41,9 @@ an_integer: jsonpath "$['an_integer']"
 a_float: jsonpath "$['a_float']"
 a_bool: jsonpath "$['a_bool']"
 a_string: jsonpath "$['a_string']"
+a_date_like_string: jsonpath "$['a_date_like_string']"
+a_date: variable "a_date_like_string" toDate "%Y-%m-%dT%H:%M:%S%.fZ"
+some_bytes: bytes
 all: jsonpath "$"
 [Asserts]
 variable "a_null" exists
@@ -44,5 +55,8 @@ variable "a_bool" == {{a_bool}}
 variable "a_string" == {{a_string}}
 variable "a_string" == "{{a_string}}"
 variable "a_list" == {{a_list}}
+variable "a_date_like_string" == "2012-04-23T18:25:43.511Z"
+variable "some_bytes" startsWith hex,7b22615f6e756c6c223a6e;
+
 
 
