@@ -179,8 +179,7 @@ struct ResponseCookieJson {
 #[derive(Serialize)]
 struct CertificateJson {
     subject: String,
-    // FIXME: should be issuer
-    issue: String,
+    issuer: String,
     start_date: String,
     expire_date: String,
     serial_number: String,
@@ -407,7 +406,7 @@ impl CertificateJson {
     fn from_certificate(c: &Certificate) -> Self {
         CertificateJson {
             subject: c.subject.clone(),
-            issue: c.issuer.to_string(),
+            issuer: c.issuer.to_string(),
             start_date: c.start_date.to_string(),
             expire_date: c.expire_date.to_string(),
             serial_number: c.serial_number.to_string(),
