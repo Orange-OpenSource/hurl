@@ -18,6 +18,25 @@ def captures_check():
     return ""
 
 
+@app.route("/captures-cookie")
+def captures_cookie():
+    resp = make_response()
+    resp.set_cookie(
+        "foo",
+        "value1",
+        domain="localhost",
+        path="/bar",
+        httponly=True,
+        # Can't use secure attributes here because secure cookie are not
+        # stored in cookie storage by curl for version < 7.79
+        # See <https://github.com/curl/curl/issues/6733>
+        # secure=True,
+        expires="Thu, 13 Jan 2078 22:23:01 GMT",
+        max_age=2592000,
+    )
+    return resp
+
+
 @app.route("/captures-xml")
 def captures_xml():
     return (

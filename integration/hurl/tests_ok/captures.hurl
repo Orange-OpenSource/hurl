@@ -31,6 +31,31 @@ a_node_set: xpath "//p"
 variable "a_node_set" count == 2
 
 
+GET http://localhost:8000/captures-cookie
+HTTP 200
+[Captures]
+a_cookie_value_attr: cookie "foo"
+a_cookie_path_attr: cookie "foo[Path]"
+a_cookie_expires_attr: cookie "foo[Expires]"
+a_cookie_domain_attr: cookie "foo[Domain]"
+a_cookie_max_age_attr: cookie "foo[Max-Age]"
+a_cookie_http_only_attr: cookie "foo[HttpOnly]"
+[Asserts]
+variable "a_cookie_value_attr" == "value1"
+variable "a_cookie_value_attr" == {{a_cookie_value_attr}}
+variable "a_cookie_path_attr" == "/bar"
+variable "a_cookie_path_attr" == {{a_cookie_path_attr}}
+variable "a_cookie_expires_attr" format "%Y-%m-%dT%H:%M:%S%.fZ" == "2078-01-13T22:23:01Z"
+# FIXME: the next assert should pass
+# variable "a_cookie_expires_attr" == {{a_cookie_expires_attr}}
+variable "a_cookie_domain_attr" == "localhost"
+variable "a_cookie_domain_attr" == {{a_cookie_domain_attr}}
+variable "a_cookie_max_age_attr" == 2592000
+variable "a_cookie_max_age_attr" == {{a_cookie_max_age_attr}}
+variable "a_cookie_http_only_attr" exists
+
+
+
 GET http://localhost:8000/captures-json
 HTTP 200
 [Captures]
