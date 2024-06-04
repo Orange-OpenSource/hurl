@@ -38,6 +38,7 @@ an_object: jsonpath "$['an_object']"
 a_list: jsonpath "$['a_list']"
 a_null: jsonpath "$['a_null']"
 an_integer: jsonpath "$['an_integer']"
+a_big_integer: jsonpath "$['a_big_integer']"
 a_float: jsonpath "$['a_float']"
 a_bool: jsonpath "$['a_bool']"
 a_string: jsonpath "$['a_string']"
@@ -50,6 +51,7 @@ variable "a_null" exists
 variable "undefined" not exists
 variable "a_null" == {{a_null}}
 variable "an_integer" == {{an_integer}}
+variable "a_big_integer" == {{a_big_integer}}
 variable "a_float" == {{a_float}}
 variable "a_bool" == {{a_bool}}
 variable "a_string" == {{a_string}}
