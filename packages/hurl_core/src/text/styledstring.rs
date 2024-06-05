@@ -47,13 +47,22 @@ impl StyledString {
     }
 
     pub fn push(&mut self, content: &str) {
-        let style = Style::new();
-        let token = Token::new(content, style);
-        self.tokens.push(token);
+        self.push_with(content, Style::new());
     }
 
     pub fn push_with(&mut self, content: &str, style: Style) {
         let token = Token::new(content, style);
+        self.push_token(token);
+    }
+
+    fn push_token(&mut self, token: Token) {
+        // Concatenate content to last token if it has the same style
+        if let Some(last) = self.tokens.last_mut() {
+            if last.style == token.style {
+                last.content.push_str(&token.content);
+                return;
+            }
+        }
         self.tokens.push(token);
     }
 
@@ -67,7 +76,7 @@ impl StyledString {
 
     pub fn append(&mut self, other: StyledString) {
         for token in other.tokens {
-            self.tokens.push(token);
+            self.push_token(token);
         }
     }
 
@@ -179,6 +188,35 @@ mod tests {
         assert_eq!(
             message.to_string(Format::Ansi),
             "Hello \u{1b}[31mBob\u{1b}[0m!"
+        );
+    }
+
+    #[test]
+    fn test_push() {
+        let mut message = StyledString::new();
+        message.push("Hello");
+        message.push(" ");
+        message.push_with("Bob", Style::new().red());
+        message.push("!");
+
+        assert_eq!(
+            message,
+            StyledString {
+                tokens: vec![
+                    Token {
+                        content: "Hello ".to_string(),
+                        style: Style::new()
+                    },
+                    Token {
+                        content: "Bob".to_string(),
+                        style: Style::new().red()
+                    },
+                    Token {
+                        content: "!".to_string(),
+                        style: Style::new()
+                    },
+                ],
+            }
         );
     }
 
