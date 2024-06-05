@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-use colored::*;
+
+use hurl_core::text::{Style, StyledString};
 use similar::{ChangeTag, TextDiff};
 
 #[allow(dead_code)]
-pub fn diff(expected: &str, actual: &str, color: bool) -> String {
+pub fn diff(expected: &str, actual: &str) -> StyledString {
     let text_diff = TextDiff::from_lines(expected, actual);
     let unified_diff = text_diff.unified_diff();
 
-    let mut s = String::new();
+    let mut s = StyledString::new();
     for hunk in unified_diff.iter_hunks() {
         for change in hunk.iter_changes() {
             let sign = match change.tag() {
@@ -31,26 +32,22 @@ pub fn diff(expected: &str, actual: &str, color: bool) -> String {
                 ChangeTag::Insert => "+",
                 ChangeTag::Equal => " ",
             };
-
-            let mut line = format!("{}{}", sign, change);
-            if color {
-                line = match change.tag() {
-                    ChangeTag::Delete => line.red().to_string(),
-                    ChangeTag::Insert => line.green().to_string(),
-                    ChangeTag::Equal => line.clone(),
-                };
-            }
-
-            s.push_str(line.as_str());
+            let line = format!("{}{}", sign, change);
+            let style = match change.tag() {
+                ChangeTag::Delete => Style::new().red(),
+                ChangeTag::Insert => Style::new().green(),
+                ChangeTag::Equal => Style::new(),
+            };
+            s.push_with(&line, style);
         }
     }
-
-    s.to_string()
+    s
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use hurl_core::text::{Format, Style, StyledString};
 
     #[test]
     fn test_diff_json_strings() {
@@ -114,7 +111,33 @@ mod tests {
 }
 "#;
 
-        let diff_output = r#"   "first_name": "John",
+        let mut diff_output = StyledString::new();
+        diff_output.push(
+            r#"   "first_name": "John",
+   "last_name": "Smith",
+   "is_alive": true,
+"#,
+        );
+        diff_output.push_with(
+            r#"-  "age": 27,
+"#,
+            Style::new().red(),
+        );
+        diff_output.push_with(
+            r#"+  "age": 28,
+"#,
+            Style::new().green(),
+        );
+        diff_output.push(
+            r#"   "address": {
+     "street_address": "21 2nd Street",
+     "city": "New York",
+"#,
+        );
+
+        assert_eq!(diff(old, new), diff_output);
+
+        let diff_output_plain = r#"   "first_name": "John",
    "last_name": "Smith",
    "is_alive": true,
 -  "age": 27,
@@ -123,10 +146,10 @@ mod tests {
      "street_address": "21 2nd Street",
      "city": "New York",
 "#;
-        assert_eq!(diff(old, new, false), diff_output);
+        assert_eq!(diff(old, new).to_string(Format::Plain), diff_output_plain);
 
-        control::set_override(true);
-        let diff_colored_output = "   \"first_name\": \"John\",\n   \"last_name\": \"Smith\",\n   \"is_alive\": true,\n\u{1b}[31m-  \"age\": 27,\n\u{1b}[0m\u{1b}[32m+  \"age\": 28,\n\u{1b}[0m   \"address\": {\n     \"street_address\": \"21 2nd Street\",\n     \"city\": \"New York\",\n";
-        assert_eq!(diff(old, new, true), diff_colored_output);
+        colored::control::set_override(true);
+        let diff_output_colored = "   \"first_name\": \"John\",\n   \"last_name\": \"Smith\",\n   \"is_alive\": true,\n\u{1b}[31m-  \"age\": 27,\n\u{1b}[0m\u{1b}[32m+  \"age\": 28,\n\u{1b}[0m   \"address\": {\n     \"street_address\": \"21 2nd Street\",\n     \"city\": \"New York\",\n";
+        assert_eq!(diff(old, new).to_string(Format::Ansi), diff_output_colored);
     }
 }
