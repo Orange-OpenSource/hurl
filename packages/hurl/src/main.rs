@@ -17,6 +17,7 @@
  */
 mod cli;
 mod run;
+mod test;
 
 use std::io::prelude::*;
 use std::path::Path;
@@ -105,7 +106,7 @@ fn main() {
     unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
 
     if opts.test {
-        let summary = get_summary(&runs, duration);
+        let summary = test::get_summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
 
@@ -280,79 +281,4 @@ fn create_cookies_file(runs: &[HurlRun], filename: &Path) -> Result<(), CliError
         )));
     }
     Ok(())
-}
-
-/// Returns the text summary of this Hurl runs.
-fn get_summary(runs: &[HurlRun], duration: u128) -> String {
-    let total = runs.len();
-    let success = runs.iter().filter(|r| r.hurl_result.success).count();
-    let success_percent = 100.0 * success as f32 / total as f32;
-    let failed = total - success;
-    let failed_percent = 100.0 * failed as f32 / total as f32;
-    format!(
-        "--------------------------------------------------------------------------------\n\
-             Executed files:  {total}\n\
-             Succeeded files: {success} ({success_percent:.1}%)\n\
-             Failed files:    {failed} ({failed_percent:.1}%)\n\
-             Duration:        {duration} ms\n"
-    )
-}
-
-#[cfg(test)]
-pub mod tests {
-    use hurl::runner::EntryResult;
-    use hurl_core::ast::{Pos, SourceInfo};
-
-    use super::*;
-
-    #[test]
-    fn create_run_summary() {
-        fn new_run(success: bool, entries_count: usize) -> HurlRun {
-            let dummy_entry = EntryResult {
-                entry_index: 0,
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
-                errors: vec![],
-                time_in_ms: 0,
-                compressed: false,
-            };
-            HurlRun {
-                content: String::new(),
-                filename: Input::new(""),
-                hurl_result: HurlResult {
-                    entries: vec![dummy_entry; entries_count],
-                    time_in_ms: 0,
-                    success,
-                    cookies: vec![],
-                    timestamp: 1,
-                },
-            }
-        }
-
-        let runs = vec![new_run(true, 10), new_run(true, 20), new_run(true, 4)];
-        let duration = 128;
-        let summary = get_summary(&runs, duration);
-        assert_eq!(
-            summary,
-            "--------------------------------------------------------------------------------\n\
-             Executed files:  3\n\
-             Succeeded files: 3 (100.0%)\n\
-             Failed files:    0 (0.0%)\n\
-             Duration:        128 ms\n"
-        );
-
-        let runs = vec![new_run(true, 10), new_run(false, 10), new_run(true, 40)];
-        let duration = 200;
-        let summary = get_summary(&runs, duration);
-        assert_eq!(
-            summary,
-            "--------------------------------------------------------------------------------\n\
-            Executed files:  3\n\
-            Succeeded files: 2 (66.7%)\n\
-            Failed files:    1 (33.3%)\n\
-            Duration:        200 ms\n"
-        );
-    }
 }
