@@ -84,7 +84,7 @@
             "headers": [
               {
                 "name": "Server",
-                "value": "Werkzeug/~~~"
+                "value": "Werkzeug/~~~ Python/~~~"
               },
               {
                 "name": "Date",
