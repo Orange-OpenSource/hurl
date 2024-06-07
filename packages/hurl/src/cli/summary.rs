@@ -20,7 +20,7 @@ use crate::HurlRun;
 /// Returns the text summary of this Hurl `runs`.
 ///
 /// This is used in `--test`mode.
-pub fn get_summary(runs: &[HurlRun], duration: u128) -> String {
+pub fn summary(runs: &[HurlRun], duration: u128) -> String {
     let total_files = runs.len();
     let total_requests = requests_count(runs);
     let success_files = runs.iter().filter(|r| r.hurl_result.success).count();
@@ -82,9 +82,9 @@ pub mod tests {
 
         let runs = vec![new_run(true, 10), new_run(true, 20), new_run(true, 4)];
         let duration = 128;
-        let summary = get_summary(&runs, duration);
+        let s = summary(&runs, duration);
         assert_eq!(
-            summary,
+            s,
             "--------------------------------------------------------------------------------\n\
              Executed files:    3\n\
              Executed requests: 0\n\
@@ -95,9 +95,9 @@ pub mod tests {
 
         let runs = vec![new_run(true, 10), new_run(false, 10), new_run(true, 40)];
         let duration = 200;
-        let summary = get_summary(&runs, duration);
+        let s = summary(&runs, duration);
         assert_eq!(
-            summary,
+            s,
             "--------------------------------------------------------------------------------\n\
             Executed files:    3\n\
             Executed requests: 0\n\

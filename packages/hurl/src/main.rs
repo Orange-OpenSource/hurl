@@ -17,7 +17,6 @@
  */
 mod cli;
 mod run;
-mod test;
 
 use std::io::prelude::*;
 use std::path::Path;
@@ -106,7 +105,7 @@ fn main() {
     unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
 
     if opts.test {
-        let summary = test::get_summary(&runs, duration);
+        let summary = cli::summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
 
