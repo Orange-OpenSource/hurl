@@ -98,7 +98,7 @@ fn main() {
     };
 
     // Compute duration of the test here to not take reports writings into acccount.
-    let duration = start.elapsed().as_millis();
+    let duration = start.elapsed();
 
     // Write HTML, JUnit, TAP reports on disk.
     let ret = export_results(&runs, &opts, &base_logger);
