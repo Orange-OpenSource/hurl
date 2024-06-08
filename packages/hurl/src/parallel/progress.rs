@@ -77,7 +77,7 @@ impl ParProgress {
         &mut self,
         workers: &[(Worker, WorkerState)],
         completed: usize,
-        count: usize,
+        count: Option<usize>,
         stderr: &mut Stderr,
     ) {
         if !matches!(self.mode, Mode::TestWithProgress) {
@@ -199,7 +199,7 @@ impl Throttle {
 }
 
 /// Returns a progress string, given a list of `workers`, a number of `completed` jobs and the
-/// total number of jobs.
+/// total number of jobs. `count` is the optional total number of files to execute.
 ///
 /// `max_running_displayed` is used to limit the number of running progress bar. If more jobs are
 /// running, a label "...x more" is displayed.
@@ -207,7 +207,7 @@ impl Throttle {
 fn build_progress(
     workers: &[(Worker, WorkerState)],
     completed: usize,
-    count: usize,
+    count: Option<usize>,
     max_running_displayed: usize,
     color: bool,
 ) -> Option<String> {
@@ -245,8 +245,13 @@ fn build_progress(
 
     // Construct all the progress strings
     let mut all_progress = String::new();
-    let percent = (completed as f64 * 100.0 / count as f64) as usize;
-    let progress = format!("Executed files: {completed}/{count} ({percent}%)\n");
+    let progress = match count {
+        Some(count) => {
+            let percent = (completed as f64 * 100.0 / count as f64) as usize;
+            format!("Executed files: {completed}/{count} ({percent}%)\n")
+        }
+        None => format!("Executed files: {completed}\n"),
+    };
     all_progress.push_str(&progress);
 
     for (_, state) in &workers {
@@ -340,7 +345,7 @@ mod tests {
         let (w0, w1, w2, w3, w4) = new_workers();
         let jobs = new_jobs();
         let completed = 75;
-        let total = 100;
+        let total = Some(100);
         let max_displayed = 3;
 
         let mut workers = vec![

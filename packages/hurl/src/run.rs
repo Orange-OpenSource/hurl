@@ -18,7 +18,7 @@
 use std::cmp::min;
 use std::path::Path;
 
-use crate::cli::options::CliOptions;
+use crate::cli::options::{CliOptions, Repeat};
 use crate::cli::CliError;
 use crate::{cli, HurlRun};
 
@@ -140,11 +140,20 @@ pub fn run_par(
     options: &CliOptions,
     workers_count: usize,
 ) -> Result<Vec<HurlRun>, CliError> {
-    let workers_count = min(files.len(), workers_count);
+    // We're going to use the right numbers of workers. We don't need to use more workers than there
+    // are input files (repeat option act as if we we dealing with a multiplied number of files)
+    let workers_count = match options.repeat {
+        Some(Repeat::Count(n)) => min(files.len() * n, workers_count),
+        Some(Repeat::Forever) => workers_count,
+        None => min(files.len(), workers_count),
+    };
     let variables = &options.variables;
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);
+    let repeat = options
+        .repeat
+        .map_or(Default::default(), parallel::runner::Repeat::from);
 
     let jobs = files
         .iter()
@@ -159,6 +168,7 @@ pub fn run_par(
     let mut runner = ParallelRunner::new(
         workers_count,
         output_type,
+        repeat,
         options.test,
         options.progress_bar,
         options.color,
@@ -187,6 +197,15 @@ impl cli::OutputType {
             },
             cli::OutputType::Json => parallel::runner::OutputType::Json,
             cli::OutputType::NoOutput => parallel::runner::OutputType::NoOutput,
+        }
+    }
+}
+
+impl From<Repeat> for parallel::runner::Repeat {
+    fn from(value: Repeat) -> Self {
+        match value {
+            Repeat::Count(n) => parallel::runner::Repeat::Count(n),
+            Repeat::Forever => parallel::runner::Repeat::Forever,
         }
     }
 }

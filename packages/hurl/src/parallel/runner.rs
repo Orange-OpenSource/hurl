@@ -21,7 +21,7 @@ use std::sync::{mpsc, Arc, Mutex};
 
 use crate::output;
 use crate::parallel::error::JobError;
-use crate::parallel::job::{Job, JobResult};
+use crate::parallel::job::{Job, JobQueue, JobResult};
 use crate::parallel::message::WorkerMessage;
 use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
@@ -51,6 +51,8 @@ pub struct ParallelRunner {
     progress: ParProgress,
     /// Output type for each completed job on standard output.
     output_type: OutputType,
+    /// Repeat mode for the runner: infinite or finite.
+    repeat: Repeat,
 }
 
 /// Represents a worker's state.
@@ -76,6 +78,21 @@ pub enum OutputType {
     NoOutput,
 }
 
+/// Repeat mode: infinite of finite.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Repeat {
+    /// Runner repeats runs a finite number of times.
+    Count(usize),
+    /// Runner loops forever.
+    Forever,
+}
+
+impl Default for Repeat {
+    fn default() -> Self {
+        Repeat::Count(1)
+    }
+}
+
 const MAX_RUNNING_DISPLAYED: usize = 8;
 
 impl ParallelRunner {
@@ -91,14 +108,18 @@ impl ParallelRunner {
     /// When a job is completed, depending on `output_type`, it can be outputted to standard output:
     /// whether as a raw response body bytes, or in a structured JSON output.
     ///
+    /// The runner can repeat running a list of jobs. For instance, when repeating two times the job
+    /// sequence (`a`, `b`, `c`), runner will act as if it runs (`a`, `b`, `c`).
+    ///
     /// If `test` mode is `true` the runner is run in "test" mode, reporting the success or failure
     /// of each file on standard error. Additionally to the test mode, a `progress_bar` designed for
-    /// parallel run progression can be use.
+    /// parallel run progression can be used.
     ///
     /// `color` determines if color if used in standard error.
     pub fn new(
         workers_count: usize,
         output_type: OutputType,
+        repeat: Repeat,
         test: bool,
         progress_bar: bool,
         color: bool,
@@ -129,6 +150,7 @@ impl ParallelRunner {
             rx: rx_in,
             progress,
             output_type,
+            repeat,
         }
     }
 
@@ -145,13 +167,13 @@ impl ParallelRunner {
         let mut stderr = Stderr::new(WriteMode::Immediate);
 
         // Create the jobs queue:
-        let jobs_count = jobs.len();
-        let mut jobs = jobs.iter();
+        let mut queue = JobQueue::new(jobs, self.repeat);
+        let jobs_count = queue.jobs_count();
 
         // Initiate the runner, fill our workers:
         self.workers.iter().for_each(|_| {
-            if let Some(job) = jobs.next() {
-                _ = self.tx.send(job.clone());
+            if let Some(job) = queue.next() {
+                _ = self.tx.send(job);
             }
         });
 
@@ -233,15 +255,17 @@ impl ParallelRunner {
                     self.progress.force_next_update();
 
                     // We run the next job to process:
-                    let job = jobs.next();
+                    let job = queue.next();
                     match job {
                         Some(job) => {
-                            _ = self.tx.send(job.clone());
+                            _ = self.tx.send(job);
                         }
                         None => {
                             // If we have received all the job results, we can stop the run.
-                            if results.len() == jobs_count {
-                                break;
+                            if let Some(jobs_count) = jobs_count {
+                                if results.len() == jobs_count {
+                                    break;
+                                }
                             }
                         }
                     }

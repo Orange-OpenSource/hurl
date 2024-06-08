@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::parallel::runner::Repeat;
 use std::collections::HashMap;
 
 use crate::runner::{HurlResult, Input, RunnerOptions, Value};
@@ -71,6 +72,80 @@ impl JobResult {
             job,
             content,
             hurl_result,
+        }
+    }
+}
+
+/// A job queue to manage a queue of [`Job`].
+///
+/// The job queue implements [`Iterator`] trait, and can return a new job to use each time its
+/// `next` method is called. This queue can repeat its input sequence a certain number of times, or
+/// can loop forever.
+pub struct JobQueue<'a> {
+    /// The input jobs list.
+    jobs: &'a [Job],
+    /// Current index of the job, referencing the input job list.
+    index: usize,
+    /// Repeat mode of this queue (finite or infinite).
+    repeat: Repeat,
+    /// Current index of the repeat.
+    repeat_index: usize,
+}
+
+impl<'a> JobQueue<'a> {
+    /// Create a new queue, with a list of `jobs` and a `repeat` mode.
+    pub fn new(jobs: &'a [Job], repeat: Repeat) -> Self {
+        JobQueue {
+            jobs,
+            index: 0,
+            repeat,
+            repeat_index: 0,
+        }
+    }
+
+    /// Returns the effective number of jobs.
+    ///
+    /// If queue is created in loop forever mode ([`Repeat::Forever`]), returns `None`.
+    pub fn jobs_count(&self) -> Option<usize> {
+        match self.repeat {
+            Repeat::Count(n) => Some(self.jobs.len() * n),
+            Repeat::Forever => None,
+        }
+    }
+
+    /// Returns a new job at the given `index`.
+    fn job_at(&self, index: usize) -> Job {
+        let mut job = self.jobs[index].clone();
+        // When we're repeating a sequence, we clone an original job and give it a proper
+        // sequence number relative to the current `repeat_index`.
+        job.seq = self.jobs[index].seq + (self.jobs.len() * self.repeat_index);
+        job
+    }
+}
+
+impl Iterator for JobQueue<'_> {
+    type Item = Job;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.jobs.len() {
+            match self.repeat {
+                Repeat::Count(n) => {
+                    self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
+                    if self.repeat_index >= n {
+                        None
+                    } else {
+                        self.index = 1;
+                        Some(self.job_at(0))
+                    }
+                }
+                Repeat::Forever => {
+                    self.index = 1;
+                    Some(self.job_at(0))
+                }
+            }
+        } else {
+            self.index += 1;
+            Some(self.job_at(self.index - 1))
         }
     }
 }
