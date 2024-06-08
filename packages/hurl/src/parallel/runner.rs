@@ -144,13 +144,13 @@ impl ParallelRunner {
         let mut stdout = Stdout::new(WriteMode::Immediate);
         let mut stderr = Stderr::new(WriteMode::Immediate);
 
-        // Create the jobs queue (last item is the first job to run):
+        // Create the jobs queue:
         let jobs_count = jobs.len();
-        let mut jobs = jobs.iter().rev().collect::<Vec<_>>();
+        let mut jobs = jobs.iter();
 
-        // Initiate the runner, fill our workers
+        // Initiate the runner, fill our workers:
         self.workers.iter().for_each(|_| {
-            if let Some(job) = jobs.pop() {
+            if let Some(job) = jobs.next() {
                 _ = self.tx.send(job.clone());
             }
         });
@@ -233,7 +233,7 @@ impl ParallelRunner {
                     self.progress.force_next_update();
 
                     // We run the next job to process:
-                    let job = jobs.pop();
+                    let job = jobs.next();
                     match job {
                         Some(job) => {
                             _ = self.tx.send(job.clone());
