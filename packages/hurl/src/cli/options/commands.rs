@@ -395,6 +395,16 @@ pub fn proxy() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn repeat() -> clap::Arg {
+    clap::Arg::new("repeat")
+        .long("repeat")
+        .value_name("NUM")
+        .value_parser(clap::value_parser!(i32).range(-1..))
+        .allow_hyphen_values(true)
+        .help("Repeat the input files sequence NUM times, -1 for infinite loop")
+        .num_args(1)
+}
+
 pub fn report_html() -> clap::Arg {
     clap::Arg::new("report_html")
         .long("report-html")

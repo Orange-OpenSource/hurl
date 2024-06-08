@@ -27,7 +27,7 @@ use hurl::runner::{Input, Value};
 use hurl_core::ast::Retry;
 
 use super::variables::{parse as parse_variable, parse_value};
-use super::CliOptionsError;
+use super::{CliOptionsError, Repeat};
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 
@@ -332,6 +332,14 @@ pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
 
 pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "proxy")
+}
+
+pub fn repeat(arg_matches: &ArgMatches) -> Option<Repeat> {
+    match get::<i32>(arg_matches, "repeat") {
+        Some(-1) => Some(Repeat::Forever),
+        Some(n) => Some(Repeat::Count(n as usize)),
+        None => None,
+    }
 }
 
 pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {

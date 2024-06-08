@@ -95,6 +95,8 @@ Options:
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>
           Use proxy on given PROTOCOL/HOST/PORT
+      --repeat <NUM>
+          Repeat the input files sequence NUM times, -1 for infinite loop
       --report-html <DIR>
           Generate HTML report to DIR
       --report-json <DIR>

@@ -59,6 +59,7 @@ _hurl() {
     '--parallel[Run files in parallel (default in test mode)]' \
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
+    '--repeat[Repeat the input files sequence NUM times, -1 for infinite loop]: :' \
     '--report-html[Generate HTML report to DIR]: :' \
     '--report-json[Generate JSON report to DIR]: :' \
     '--report-junit[Write a JUnit XML report to FILE]: :_files' \

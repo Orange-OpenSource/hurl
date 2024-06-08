@@ -80,6 +80,7 @@ pub struct CliOptions {
     pub path_as_is: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
+    pub repeat: Option<Repeat>,
     pub resolves: Vec<String>,
     pub retry: Retry,
     pub retry_interval: Duration,
@@ -96,12 +97,23 @@ pub struct CliOptions {
     pub very_verbose: bool,
 }
 
+/// Error format: long or rich.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
     Short,
     Long,
 }
 
+impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
+    fn from(value: ErrorFormat) -> Self {
+        match value {
+            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
+            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
+        }
+    }
+}
+
+/// Requested HTTP version.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum HttpVersion {
     V10,
@@ -121,6 +133,7 @@ impl From<HttpVersion> for RequestedHttpVersion {
     }
 }
 
+/// IP protocol used.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum IpResolve {
     IpV4,
@@ -136,13 +149,11 @@ impl From<IpResolve> for http::IpResolve {
     }
 }
 
-impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
-    fn from(value: ErrorFormat) -> Self {
-        match value {
-            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
-            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
-        }
-    }
+/// Repeat mode: infinite of finite.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Repeat {
+    Count(usize),
+    Forever,
 }
 
 fn get_version() -> String {
@@ -206,6 +217,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::parallel())
         .arg(commands::path_as_is())
         .arg(commands::proxy())
+        .arg(commands::repeat())
         .arg(commands::report_html())
         .arg(commands::report_json())
         .arg(commands::report_junit())
@@ -281,6 +293,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
+    let repeat = matches::repeat(arg_matches);
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches);
@@ -336,6 +349,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         proxy,
         output,
         output_type,
+        repeat,
         resolves,
         retry,
         retry_interval,

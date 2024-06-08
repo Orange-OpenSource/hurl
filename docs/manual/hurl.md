@@ -401,6 +401,13 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 Use the specified proxy.
 
+### --repeat <NUM> {#repeat}
+
+Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
+times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
+
+This is a cli-only option.
+
 ### --report-html <DIR> {#report-html}
 
 Generate HTML report in DIR.
