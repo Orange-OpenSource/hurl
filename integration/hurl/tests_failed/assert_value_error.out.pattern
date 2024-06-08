@@ -72,7 +72,7 @@
               },
               {
                 "name": "User-Agent",
-                "value": "hurl/~~~"
+                "value": "hurl/<<<.*?>>>"
               }
             ],
             "method": "GET",
@@ -84,11 +84,11 @@
             "headers": [
               {
                 "name": "Server",
-                "value": "Werkzeug/~~~"
+                "value": "Werkzeug/<<<.*?>>>"
               },
               {
                 "name": "Date",
-                "value": "~~~"
+                "value": "<<<.*?>>>"
               },
               {
                 "name": "Content-Type",
@@ -111,24 +111,24 @@
             "status": 200
           },
           "timings": {
-            "app_connect": ~~~,
-            "begin_call": "~~~",
-            "connect": ~~~,
-            "end_call": "~~~",
-            "name_lookup": ~~~,
-            "pre_transfer": ~~~,
-            "start_transfer": ~~~,
-            "total": ~~~
+            "app_connect": <<<.*?>>>,
+            "begin_call": "<<<.*?>>>",
+            "connect": <<<.*?>>>,
+            "end_call": "<<<.*?>>>",
+            "name_lookup": <<<.*?>>>,
+            "pre_transfer": <<<.*?>>>,
+            "start_transfer": <<<.*?>>>,
+            "total": <<<.*?>>>
           }
         }
       ],
       "captures": [],
       "index": 1,
       "line": 1,
-      "time": ~~~
+      "time": <<<.*?>>>
     }
   ],
   "filename": "tests_failed/assert_value_error.hurl",
   "success": false,
-  "time": ~~~
+  "time": <<<.*?>>>
 }

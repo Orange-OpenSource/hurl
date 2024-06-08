@@ -188,13 +188,50 @@ def test_stderr_pattern(f, result):
             sys.exit(1)
 
 
-def parse_pattern(s: str) -> str:
-    """Transform a stderr pattern to a regex"""
-    # Escape regex metacharacters
-    for c in ["\\", ".", "(", ")", "[", "]", "^", "$", "*", "+", "?", "|"]:
-        s = s.replace(c, "\\" + c)
+def escape_regex_metacharacters(s) -> str:
+    """escape all regex metacharacters in a string"""
+    escaped_s = ""
+    for c in s:
+        escaped_s += escape_regex_metacharacter(c)
+    return escaped_s
 
-    s = re.sub("~+", ".*", s)
+
+def escape_regex_metacharacter(c) -> str:
+    """escape regex metacharacter"""
+    if c in [
+        "\\",
+        "/",
+        ".",
+        "{",
+        "}",
+        "(",
+        ")",
+        "[",
+        "]",
+        "^",
+        "$",
+        "*",
+        "+",
+        "?",
+        "|",
+    ]:
+        return "\\" + c
+    return c
+
+
+def parse_pattern(s: str) -> str:
+    """Create a standard regex string from the custom pattern file"""
+
+    # Split string into alternating tokens: escaping regex metacharacters and no escaping
+    # The first token must always be escaped
+    tokens = re.split("<<<([^>]+)>>>", s)
+    s = ""
+    for i, token in enumerate(tokens):
+        if i % 2 == 0:
+            s += escape_regex_metacharacters(token)
+        else:
+            s += token
+
     s = "^" + s + "$"
     return s
 

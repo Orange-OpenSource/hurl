@@ -12,13 +12,13 @@
 > GET /delay-init HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: ~~~
-< Date: ~~~
+< Server: <<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -44,13 +44,13 @@
 > GET /delay HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: ~~~
-< Date: ~~~
+< Server: <<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server

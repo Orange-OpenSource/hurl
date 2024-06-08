@@ -16,17 +16,17 @@
 > GET /very-verbose/redirect HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 0
-* Response: (received 205 bytes in ~~~ ms)
+* Response: (received 205 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 205
 < Location: /very-verbose/redirected
@@ -47,14 +47,14 @@
 * </html>
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
@@ -64,17 +64,17 @@
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 1
-* Response: (received 11 bytes in ~~~ ms)
+* Response: (received 11 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 11
 < Server: Flask Server
@@ -84,14 +84,14 @@
 * Redirected.
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -110,17 +110,17 @@
 > GET /very-verbose/encoding/latin1 HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 2
-* Response: (received 4 bytes in ~~~ ms)
+* Response: (received 4 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=ISO-8859-1
 < Content-Length: 4
 < Server: Flask Server
@@ -130,14 +130,14 @@
 * café
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -159,7 +159,7 @@
 > Accept: */*
 > Accept-Encoding: brotli
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 37
 >
 * Request body:
@@ -170,11 +170,11 @@
 ** We are completely uploaded and fine
 ** Mark bundle as not supporting multiuse
 ** Closing connection 3
-* Response: (received 17 bytes in ~~~ ms)
+* Response: (received 17 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 17
 < Content-Encoding: br
@@ -185,14 +185,14 @@
 * Hello World!
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -211,17 +211,17 @@
 > GET /very-verbose/cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 4
-* Response: (received 25992 bytes in ~~~ ms)
+* Response: (received 25992 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: image/jpeg
 < Content-Length: 25992
 < Server: Flask Server
@@ -231,14 +231,14 @@
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -251,7 +251,7 @@
 * cat: file,cat.jpg; image/jpeg
 *
 * Request can be run with the following curl command:
-* curl --form 'cat=@tests_ok~cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
+* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...
@@ -259,20 +259,20 @@
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
-> Content-Length: 265~~
-> Content-Type: multipart/form-data; boundary=~~~~~
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 265<<<.*?>>>
+> Content-Type: multipart/form-data; boundary=<<<.*?>>><<<.*?>>>
 >
 * Request body:
-* Bytes <~~~~~...>
+* Bytes <<<<.*?>>><<<.*?>>>...>
 ** We are completely uploaded and fine
 ** Mark bundle as not supporting multiuse
 ** Closing connection 5
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -282,14 +282,14 @@
 *
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 6
@@ -310,17 +310,17 @@
 > Host: localhost:8000
 > Accept: */*
 > x-foo: bar
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 6
-* Response: (received 4 bytes in ~~~ ms)
+* Response: (received 4 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 4
 < Server: Flask Server
@@ -330,12 +330,12 @@
 * Done
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *

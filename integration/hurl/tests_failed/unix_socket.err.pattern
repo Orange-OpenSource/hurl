@@ -2,6 +2,6 @@ error: HTTP connection
   --> tests_ok/unix_socket.hurl:1:5
    |
  1 | GET http://example/hello
-   |     ^^^^^^^^^^^^^^^^^^^^ (7) ~~~
+   |     ^^^^^^^^^^^^^^^^^^^^ (7) <<<.*?>>>
    |
 

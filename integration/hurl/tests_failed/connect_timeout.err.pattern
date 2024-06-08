@@ -2,6 +2,6 @@ error: HTTP connection
   --> tests_failed/connect_timeout.hurl:1:5
    |
  1 | GET http://10.0.0.0
-   |     ^^^^^^^^^^^^^^^ (~~) ~~~
+   |     ^^^^^^^^^^^^^^^ (<<<.*?>>>) <<<.*?>>>
    |
 

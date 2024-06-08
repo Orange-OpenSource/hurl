@@ -1,6 +1,6 @@
 HTTP/1.1 200
-Server: Werkzeug/~~~ Python/~~
-Date: ~~~
+Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+Date: <<<.*?>>>
 Content-Type: text/html; charset=utf-8
 Content-Length: 45
 Server: Flask Server
@@ -38,8 +38,8 @@ error: Assert failure
    |
 
 HTTP/1.1 200
-Server: Werkzeug/~~~ Python/~~~
-Date: ~~~
+Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+Date: <<<.*?>>>
 Content-Type: application/json
 Content-Length: 115
 Server: Flask Server
@@ -58,8 +58,8 @@ error: Assert failure
    |
 
 HTTP/1.1 200
-Server: Werkzeug/~~~ Python/~~~
-Date: ~~~
+Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+Date: <<<.*?>>>
 Content-Type: application/problem+json
 Content-Length: 258
 Server: Flask Server

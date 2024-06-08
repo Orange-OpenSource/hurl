@@ -12,13 +12,13 @@
 > GET /inline-script HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 28 bytes in ~~~ ms)
+* Response: (received 28 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 28
 < Server: Flask Server

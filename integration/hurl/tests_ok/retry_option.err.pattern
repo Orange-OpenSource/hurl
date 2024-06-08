@@ -12,20 +12,20 @@
 > POST /jobs HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in ~~~ ms)
+* Response: (received 60 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 201 CREATED
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
 < Connection: close
 <
 * Captures:
-* job_id: ~~~
+* job_id: <<<.*?>>>
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -37,21 +37,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in ~~~ ms)
+* Response: (received 60 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
@@ -79,21 +79,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in ~~~ ms)
+* Response: (received 60 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
@@ -121,21 +121,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in ~~~ ms)
+* Response: (received 60 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
@@ -163,21 +163,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in ~~~ ms)
+* Response: (received 60 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
@@ -205,21 +205,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 62 bytes in ~~~ ms)
+* Response: (received 62 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 62
 < Server: Flask Server
@@ -232,21 +232,21 @@
 * Cookie store:
 *
 * Request:
-* DELETE http://localhost:8000/jobs/~~~
+* DELETE http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl --request DELETE 'http://localhost:8000/jobs/~~~'
+* curl --request DELETE 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> DELETE /jobs/~~~ HTTP/1.1
+> DELETE /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Server: Flask Server
 < Content-Length: 0
@@ -259,21 +259,21 @@
 * Cookie store:
 *
 * Request:
-* GET http://localhost:8000/jobs/~~~
+* GET http://localhost:8000/jobs/<<<.*?>>>
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/jobs/~~~'
+* curl 'http://localhost:8000/jobs/<<<.*?>>>'
 *
-> GET /jobs/~~~ HTTP/1.1
+> GET /jobs/<<<.*?>>> HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 42 bytes in ~~~ ms)
+* Response: (received 42 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: application/json
 < Content-Length: 42
 < Server: Flask Server

@@ -13,14 +13,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -42,14 +42,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 37
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -72,14 +72,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 37
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -101,14 +101,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 66
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -131,14 +131,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -161,14 +161,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/vnd.api+json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -191,14 +191,14 @@
 > Host: localhost:8000
 > Accept: */*
 > content-type: application/vnd.api+json
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -224,14 +224,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/x-www-form-urlencoded
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 32
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -256,15 +256,15 @@
 > POST /content-type-multipart HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
-> Content-Length: ~~~
-> Content-Type: multipart/form-data; boundary=~~~
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: <<<.*?>>>
+> Content-Type: multipart/form-data; boundary=<<<.*?>>>
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -286,14 +286,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/xml
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 133
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -315,14 +315,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/xml
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 134
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
@@ -345,14 +345,14 @@
 > Host: localhost:8000
 > Accept: */*
 > Content-Type: application/xml
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 > Content-Length: 134
 >
-* Response: (received 0 bytes in ~~~ ms)
+* Response: (received 0 bytes in <<<.*?>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
