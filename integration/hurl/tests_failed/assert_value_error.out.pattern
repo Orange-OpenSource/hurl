@@ -125,10 +125,10 @@
       "captures": [],
       "index": 1,
       "line": 1,
-      "time": <<<.*?>>>
+      "time": <<<\d+>>>
     }
   ],
   "filename": "tests_failed/assert_value_error.hurl",
   "success": false,
-  "time": <<<.*?>>>
+  "time": <<<\d+>>>
 }
