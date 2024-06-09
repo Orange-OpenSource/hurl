@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &#x2F;&#x2F; Create the jobs queue (last item is the first job to run):</pre>
+                <pre class="has-background-success-light py-0 px-2">        &#x2F;&#x2F; Create the jobs queue:</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut jobs = jobs.iter().rev().collect::&lt;Vec&lt;_&gt;&gt;();</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut jobs = jobs.iter();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &#x2F;&#x2F; Initiate the runner, fill our workers</pre>
+                <pre class="has-background-success-light py-0 px-2">        &#x2F;&#x2F; Initiate the runner, fill our workers:</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if let Some(job) = jobs.pop() {</pre>
+                <pre class="has-background-success-light py-0 px-2">            if let Some(job) = jobs.next() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let job = jobs.pop();</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let job = jobs.next();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4128,8 +4128,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="7193">
-                7193
+                role="cell" aria-label="7385">
+                7385
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4907,7 +4907,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-06-08 08:08</p>
+                <p class="heading">Date: 2024-06-09 08:08</p>
             </div>
         </footer>
     </body>
