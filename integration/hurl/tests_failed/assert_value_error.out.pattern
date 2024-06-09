@@ -111,13 +111,13 @@
             "status": 200
           },
           "timings": {
-            "app_connect": <<<.*?>>>,
+            "app_connect": <<<\d+>>>,
             "begin_call": "<<<.*?>>>",
-            "connect": <<<.*?>>>,
+            "connect": <<<\d+>>>,
             "end_call": "<<<.*?>>>",
-            "name_lookup": <<<.*?>>>,
-            "pre_transfer": <<<.*?>>>,
-            "start_transfer": <<<.*?>>>,
+            "name_lookup": <<<\d+>>>,
+            "pre_transfer": <<<\d+>>>,
+            "start_transfer": <<<\d+>>>,
             "total": <<<.*?>>>
           }
         }
