@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 28 bytes in <<<.*?>>> ms)
+* Response: (received 28 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

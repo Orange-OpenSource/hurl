@@ -22,7 +22,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 0
-* Response: (received 205 bytes in <<<.*?>>> ms)
+* Response: (received 205 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -70,7 +70,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 1
-* Response: (received 11 bytes in <<<.*?>>> ms)
+* Response: (received 11 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -116,7 +116,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 2
-* Response: (received 4 bytes in <<<.*?>>> ms)
+* Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -170,7 +170,7 @@
 ** We are completely uploaded and fine
 ** Mark bundle as not supporting multiuse
 ** Closing connection 3
-* Response: (received 17 bytes in <<<.*?>>> ms)
+* Response: (received 17 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -217,7 +217,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 4
-* Response: (received 25992 bytes in <<<.*?>>> ms)
+* Response: (received 25992 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -268,7 +268,7 @@
 ** We are completely uploaded and fine
 ** Mark bundle as not supporting multiuse
 ** Closing connection 5
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -316,7 +316,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 6
-* Response: (received 4 bytes in <<<.*?>>> ms)
+* Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

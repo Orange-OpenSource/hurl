@@ -22,7 +22,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<.*?>>> ms)
+* Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>
@@ -56,7 +56,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<.*?>>> ms)
+* Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>
@@ -90,7 +90,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<.*?>>> ms)
+* Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>
@@ -124,7 +124,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<.*?>>> ms)
+* Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>

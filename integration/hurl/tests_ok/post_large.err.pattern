@@ -17,7 +17,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 15728640
 >
-* Response: (received 8 bytes in <<<.*?>>> ms)
+* Response: (received 8 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

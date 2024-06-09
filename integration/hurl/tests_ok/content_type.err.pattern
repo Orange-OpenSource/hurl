@@ -16,7 +16,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -45,7 +45,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 37
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -75,7 +75,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 37
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -104,7 +104,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 66
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -134,7 +134,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -164,7 +164,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -194,7 +194,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 36
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -227,7 +227,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 32
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -260,7 +260,7 @@
 > Content-Length: <<<.*?>>>
 > Content-Type: multipart/form-data; boundary=<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -289,7 +289,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 133
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -318,7 +318,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 134
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -348,7 +348,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 134
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

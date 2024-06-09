@@ -16,7 +16,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<.*?>>> ms)
+* Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 201 CREATED
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -45,7 +45,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<.*?>>> ms)
+* Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -83,7 +83,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<.*?>>> ms)
+* Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -121,7 +121,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<.*?>>> ms)
+* Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -159,7 +159,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<.*?>>> ms)
+* Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -197,7 +197,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 62 bytes in <<<.*?>>> ms)
+* Response: (received 62 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -224,7 +224,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -251,7 +251,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 42 bytes in <<<.*?>>> ms)
+* Response: (received 42 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

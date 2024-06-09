@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>
@@ -46,7 +46,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<.*?>>> ms)
+* Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: <<<.*?>>>

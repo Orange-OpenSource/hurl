@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<.*?>>> ms)
+* Response: (received 1 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -48,7 +48,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<.*?>>> ms)
+* Response: (received 1 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -78,7 +78,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<.*?>>> ms)
+* Response: (received 1 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -105,7 +105,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<.*?>>> ms)
+* Response: (received 1 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>

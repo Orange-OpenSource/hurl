@@ -17,7 +17,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in <<<.*?>>> ms)
+* Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -54,7 +54,7 @@
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 3
-* Response: (received 12 bytes in <<<.*?>>> ms)
+* Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
