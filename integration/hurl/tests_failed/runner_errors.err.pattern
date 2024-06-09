@@ -65,7 +65,7 @@ error: File write access
     | GET http://localhost:8000/runner_errors
     | ...
  40 | output: undefined/output
-    |         ^^^^^^^^^^^^^^^^ tests_failed<<<.*?>>>undefined<<<.*?>>>output can not be written (<<<.*?>>>)
+    |         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)
     |
 
 error: Filter error

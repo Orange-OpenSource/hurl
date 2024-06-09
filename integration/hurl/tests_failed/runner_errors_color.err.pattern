@@ -65,7 +65,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m 40 |[0m output: undefined/output
-[1;34m    |[0m[1;31m         ^^^^^^^^^^^^^^^^ tests_failed<<<.*?>>>undefined<<<.*?>>>output can not be written (<<<.*?>>>)[0m
+[1;34m    |[0m[1;31m         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
