@@ -1,6 +1,6 @@
 Hurl, run and test HTTP requests with plain text
 
-Usage: hurl<<<.*?>>> [OPTIONS] [FILES]...
+Usage: hurl<<<(\.exe)?>>> [OPTIONS] [FILES]...
 
 Arguments:
   [FILES]...  Set the input file to use
@@ -66,7 +66,7 @@ Options:
           Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
           IPv4
       --jobs <NUM>
-          (Experimental) Maximum number of parallel jobs
+          Maximum number of parallel jobs
       --json
           Output each Hurl file result to JSON
       --max-filesize <BYTES>
@@ -90,7 +90,7 @@ Options:
   -o, --output <FILE>
           Write to FILE instead of stdout
       --parallel
-          (Experimental) Run files in parallel
+          Run files in parallel (default in test mode)
       --path-as-is
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>
@@ -112,7 +112,7 @@ Options:
       --ssl-no-revoke
           (Windows) Tell Hurl to disable certificate revocation checks
       --test
-          Activate test mode
+          Activate test mode (use parallel execution)
       --to-entry <ENTRY_NUMBER>
           Execute Hurl file to ENTRY_NUMBER (starting at 1)
       --unix-socket <PATH>

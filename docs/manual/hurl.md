@@ -297,7 +297,7 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 
 ### --jobs <NUM> {#jobs}
 
-(Experimental) Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
 current amount of CPUs.
 
 See also [`--parallel`](#parallel).
@@ -385,9 +385,9 @@ Write output to FILE instead of stdout.
 
 ### --parallel {#parallel}
 
-(Experimental) Run files in parallel.
+Run files in parallel.
 
-Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential.
+Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#test) mode.
 
 See also [`--jobs`](#jobs).
 
@@ -454,6 +454,10 @@ This is a cli-only option.
 ### --test {#test}
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
+
+In test mode, files are executed in parallel. To run test in a sequential way use `--job 1`.
+
+See also [`--jobs`](#jobs).
 
 This is a cli-only option.
 

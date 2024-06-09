@@ -269,7 +269,7 @@ pub fn jobs() -> clap::Arg {
         .long("jobs")
         .value_name("NUM")
         .value_parser(clap::value_parser!(u32).range(1..))
-        .help("(Experimental) Maximum number of parallel jobs")
+        .help("Maximum number of parallel jobs")
         .num_args(1)
 }
 
@@ -375,7 +375,7 @@ pub fn output() -> clap::Arg {
 pub fn parallel() -> clap::Arg {
     clap::Arg::new("parallel")
         .long("parallel")
-        .help("(Experimental) Run files in parallel")
+        .help("Run files in parallel (default in test mode)")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -467,7 +467,7 @@ pub fn ssl_no_revoke() -> clap::Arg {
 pub fn test() -> clap::Arg {
     clap::Arg::new("test")
         .long("test")
-        .help("Activate test mode")
+        .help("Activate test mode (use parallel execution)")
         .action(clap::ArgAction::SetTrue)
 }
 
