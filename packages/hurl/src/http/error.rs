@@ -38,7 +38,6 @@ pub enum HttpError {
         option: String,
         minimum_version: String,
     },
-    StatuslineIsMissing,
     TooManyRedirect,
     UnsupportedContentEncoding {
         description: String,
@@ -65,7 +64,6 @@ impl HttpError {
             HttpError::InvalidUrl(..) => "Invalid URL".to_string(),
             HttpError::Libcurl { .. } => "HTTP connection".to_string(),
             HttpError::LibcurlUnknownOption { .. } => "HTTP connection".to_string(),
-            HttpError::StatuslineIsMissing => "HTTP connection".to_string(),
             HttpError::TooManyRedirect => "HTTP connection".to_string(),
             HttpError::UnsupportedContentEncoding { .. } => "Decompression error".to_string(),
             HttpError::UnsupportedHttpVersion(_) => "Unsupported HTTP version".to_string(),
@@ -92,7 +90,6 @@ impl HttpError {
                 option,
                 minimum_version,
             } => format!("Option {option} requires libcurl version {minimum_version} or higher"),
-            HttpError::StatuslineIsMissing => "status line is missing".to_string(),
             HttpError::TooManyRedirect => "too many redirect".to_string(),
             HttpError::UnsupportedHttpVersion(version) => {
                 format!("{version} is not supported, check --version").to_string()

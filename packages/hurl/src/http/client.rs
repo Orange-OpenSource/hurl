@@ -268,8 +268,8 @@ impl Client {
         let status = self.handle.response_code()?;
         // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {
-            None => return Err(HttpError::StatuslineIsMissing),
             Some(status_line) => self.parse_response_version(status_line)?,
+            None => return Err(HttpError::CouldNotParseResponse),
         };
         let headers = self.parse_response_headers(&response_headers);
         let length = response_body.len();
