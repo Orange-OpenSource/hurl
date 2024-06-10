@@ -156,6 +156,12 @@ pub enum Repeat {
     Forever,
 }
 
+impl Default for Repeat {
+    fn default() -> Self {
+        Repeat::Count(1)
+    }
+}
+
 fn get_version() -> String {
     let libcurl_version = http::libcurl_version_info();
     format!(

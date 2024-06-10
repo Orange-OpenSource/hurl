@@ -128,9 +128,9 @@ impl Iterator for JobQueue<'_> {
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.index >= self.jobs.len() {
+            self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
             match self.repeat {
                 Repeat::Count(n) => {
-                    self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
                     if self.repeat_index >= n {
                         None
                     } else {
@@ -147,5 +147,63 @@ impl Iterator for JobQueue<'_> {
             self.index += 1;
             Some(self.job_at(self.index - 1))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::parallel::job::{Job, JobQueue};
+    use crate::parallel::runner::Repeat;
+    use crate::runner::{Input, RunnerOptionsBuilder};
+    use crate::util::logger::LoggerOptionsBuilder;
+    use std::collections::HashMap;
+
+    fn new_job(file: &str, index: usize) -> Job {
+        let variables = HashMap::new();
+        let runner_options = RunnerOptionsBuilder::default().build();
+        let logger_options = LoggerOptionsBuilder::default().build();
+        Job::new(
+            &Input::new(file),
+            index,
+            &runner_options,
+            &variables,
+            &logger_options,
+        )
+    }
+
+    #[test]
+    fn job_queue_is_finite() {
+        let jobs = [
+            new_job("a.hurl", 0),
+            new_job("b.hurl", 1),
+            new_job("c.hurl", 2),
+        ];
+
+        let mut queue = JobQueue::new(&jobs, Repeat::Count(2));
+
+        assert_eq!(queue.next(), Some(new_job("a.hurl", 0)));
+        assert_eq!(queue.next(), Some(new_job("b.hurl", 1)));
+        assert_eq!(queue.next(), Some(new_job("c.hurl", 2)));
+        assert_eq!(queue.next(), Some(new_job("a.hurl", 3)));
+        assert_eq!(queue.next(), Some(new_job("b.hurl", 4)));
+        assert_eq!(queue.next(), Some(new_job("c.hurl", 5)));
+        assert_eq!(queue.next(), None);
+
+        assert_eq!(queue.jobs_count(), Some(6));
+    }
+
+    #[test]
+    fn input_queue_is_infinite() {
+        let jobs = [new_job("foo.hurl", 0)];
+
+        let mut queue = JobQueue::new(&jobs, Repeat::Forever);
+        assert_eq!(queue.next(), Some(new_job("foo.hurl", 0)));
+        assert_eq!(queue.next(), Some(new_job("foo.hurl", 1)));
+        assert_eq!(queue.next(), Some(new_job("foo.hurl", 2)));
+        assert_eq!(queue.next(), Some(new_job("foo.hurl", 3)));
+        assert_eq!(queue.next(), Some(new_job("foo.hurl", 4)));
+        // etc...
+
+        assert_eq!(queue.jobs_count(), None);
     }
 }

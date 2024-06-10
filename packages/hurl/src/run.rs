@@ -39,7 +39,10 @@ pub fn run_seq(
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];
 
-    for filename in files.iter() {
+    let repeat = options.repeat.unwrap_or_default();
+    let queue = InputQueue::new(files, repeat);
+
+    for filename in queue {
         let content = filename.read_to_string();
         let content = match content {
             Ok(c) => c,
@@ -49,8 +52,8 @@ pub fn run_seq(
             }
         };
         let variables = &options.variables;
-        let runner_options = options.to_runner_options(filename, current_dir);
-        let logger_options = options.to_logger_options(filename);
+        let runner_options = options.to_runner_options(&filename, current_dir);
+        let logger_options = options.to_logger_options(&filename);
 
         // Run our Hurl file now, we can only fail if there is a parsing error.
         // The parsing error is displayed in the `execute` call, that's why we gobble the error
@@ -64,7 +67,7 @@ pub fn run_seq(
         // representation of the full Hurl result.
         // In sequential run, we use an immediate (non-buffered) standard output.
         let mut stdout = Stdout::new(WriteMode::Immediate);
-        print_output(&hurl_result, &content, filename, options, &mut stdout)?;
+        print_output(&hurl_result, &content, &filename, options, &mut stdout)?;
 
         let run = HurlRun {
             content,
@@ -206,5 +209,105 @@ impl From<Repeat> for parallel::runner::Repeat {
             Repeat::Count(n) => parallel::runner::Repeat::Count(n),
             Repeat::Forever => parallel::runner::Repeat::Forever,
         }
+    }
+}
+
+/// An input queue to manage a queue of [`Input`].
+///
+/// The queue implements [`Iterator`] trait, and can return a new input to use each time its
+/// `next` method is called. This queue can repeat its input sequence a certain number of times, or
+/// can loop forever.
+pub struct InputQueue<'a> {
+    /// The input list.
+    inputs: &'a [Input],
+    /// Current index of the input, referencing the input list.
+    index: usize,
+    /// Repeat mode of this queue (finite or infinite).
+    repeat: Repeat,
+    /// Current index of the repeat.
+    repeat_index: usize,
+}
+
+impl<'a> InputQueue<'a> {
+    /// Create a new queue, with a list of `inputs` and a `repeat` mode.
+    pub fn new(inputs: &'a [Input], repeat: Repeat) -> Self {
+        InputQueue {
+            inputs,
+            index: 0,
+            repeat,
+            repeat_index: 0,
+        }
+    }
+
+    /// Returns a new input at the given `index`.
+    fn input_at(&self, index: usize) -> Input {
+        self.inputs[index].clone()
+    }
+}
+
+impl Iterator for InputQueue<'_> {
+    type Item = Input;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.inputs.len() {
+            self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
+            match self.repeat {
+                Repeat::Count(n) => {
+                    if self.repeat_index >= n {
+                        None
+                    } else {
+                        self.index = 1;
+                        Some(self.input_at(0))
+                    }
+                }
+                Repeat::Forever => {
+                    self.index = 1;
+                    Some(self.input_at(0))
+                }
+            }
+        } else {
+            self.index += 1;
+            Some(self.input_at(self.index - 1))
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::cli::options::Repeat;
+    use crate::run::InputQueue;
+    use hurl::runner::Input;
+
+    #[test]
+    fn input_queue_is_finite() {
+        let files = [Input::new("a"), Input::new("b"), Input::new("c")];
+
+        let mut queue = InputQueue::new(&files, Repeat::Count(4));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("b")));
+        assert_eq!(queue.next(), Some(Input::new("c")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("b")));
+        assert_eq!(queue.next(), Some(Input::new("c")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("b")));
+        assert_eq!(queue.next(), Some(Input::new("c")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("b")));
+        assert_eq!(queue.next(), Some(Input::new("c")));
+        assert_eq!(queue.next(), None);
+    }
+
+    #[test]
+    fn input_queue_is_infinite() {
+        let files = [Input::new("a")];
+
+        let mut queue = InputQueue::new(&files, Repeat::Forever);
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        assert_eq!(queue.next(), Some(Input::new("a")));
+        // etc...
     }
 }
