@@ -482,22 +482,13 @@ impl CliOptions {
             .build()
     }
 
-    pub fn to_logger_options(
-        &self,
-        filename: &Input,
-        current_file: usize,
-        total_files: usize,
-    ) -> LoggerOptions {
+    pub fn to_logger_options(&self, filename: &Input) -> LoggerOptions {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())
             .filename(&filename.to_string())
             .verbosity(verbosity)
-            .test(self.test)
-            .progress_bar(self.progress_bar)
-            .current_file(current_file)
-            .total_files(total_files)
             .build()
     }
 }

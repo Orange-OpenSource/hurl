@@ -39,7 +39,7 @@ pub fn run_seq(
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];
 
-    for (current, filename) in files.iter().enumerate() {
+    for filename in files.iter() {
         let content = filename.read_to_string();
         let content = match content {
             Ok(c) => c,
@@ -48,10 +48,9 @@ pub fn run_seq(
                 return Err(error);
             }
         };
-        let total = files.len();
         let variables = &options.variables;
         let runner_options = options.to_runner_options(filename, current_dir);
-        let logger_options = options.to_logger_options(filename, current, total);
+        let logger_options = options.to_logger_options(filename);
 
         // Run our Hurl file now, we can only fail if there is a parsing error.
         // The parsing error is displayed in the `execute` call, that's why we gobble the error
@@ -160,7 +159,7 @@ pub fn run_par(
         .enumerate()
         .map(|(seq, input)| {
             let runner_options = options.to_runner_options(input, current_dir);
-            let logger_options = options.to_logger_options(input, seq, files.len());
+            let logger_options = options.to_logger_options(input);
             Job::new(input, seq, &runner_options, variables, &logger_options)
         })
         .collect::<Vec<_>>();

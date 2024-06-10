@@ -116,7 +116,7 @@ impl Worker {
                 &job.runner_options,
                 &job.variables,
                 &mut stdout,
-                &progress,
+                Some(&progress),
                 &mut logger,
             );
 
@@ -152,7 +152,7 @@ impl WorkerProgress {
 }
 
 impl EventListener for WorkerProgress {
-    fn on_running(&self, entry_index: usize, entry_count: usize, _stderr: &mut Stderr) {
+    fn on_running(&self, entry_index: usize, entry_count: usize) {
         let msg = RunningMsg::new(self.worker_id, &self.job, entry_index, entry_count);
         _ = self.tx.send(WorkerMessage::Running(msg));
     }

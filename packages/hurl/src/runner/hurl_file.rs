@@ -29,7 +29,6 @@ use hurl_core::parser;
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
-use crate::runner::progress::{Mode, SeqProgress};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
@@ -92,24 +91,6 @@ pub fn run(
     // each entry).
     let mut logger = Logger::new(logger_options, stderr);
 
-    // Create a progress bar for the sequential run, progress will be report in the main thread,
-    // as soon as an entry is executed.
-    let filename = &logger_options.filename;
-    let current_file = logger_options.current_file;
-    let total_files = logger_options.total_files;
-    let test = logger_options.test;
-    let color = logger_options.color;
-    let progress_bar = logger_options.progress_bar;
-    let progress = SeqProgress::new(
-        filename,
-        current_file,
-        total_files,
-        Mode::new(test, progress_bar),
-        color,
-    );
-
-    progress.print_test_start(&mut logger.stderr);
-
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
     let hurl_file = match hurl_file {
@@ -127,15 +108,14 @@ pub fn run(
         runner_options,
         variables,
         &mut stdout,
-        &progress,
+        None,
         &mut logger,
     );
 
     if result.success && result.entries.last().is_none() {
+        let filename = &logger_options.filename;
         logger.warning(&format!("No entry have been executed for file {filename}"));
     }
-
-    progress.print_test_completed(&result, &mut logger.stderr);
 
     Ok(result)
 }
@@ -152,7 +132,7 @@ pub fn run_entries(
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     stdout: &mut Stdout,
-    listener: &dyn EventListener,
+    listener: Option<&dyn EventListener>,
     logger: &mut Logger,
 ) -> HurlResult {
     let mut http_client = Client::new();
@@ -200,7 +180,9 @@ pub fn run_entries(
 
         warn_deprecated(entry, logger);
 
-        listener.on_running(entry_index - 1, n, &mut logger.stderr);
+        if let Some(listener) = listener {
+            listener.on_running(entry_index - 1, n);
+        }
 
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);

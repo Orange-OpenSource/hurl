@@ -62,15 +62,6 @@ pub struct LoggerOptions {
     pub(crate) error_format: ErrorFormat,
     pub(crate) filename: String,
     pub(crate) verbosity: Option<Verbosity>,
-
-    // For --test reporting, will be cleaned later
-    pub(crate) test: bool,
-    pub(crate) progress_bar: bool,
-
-    /// 0-based index of the running file in the total list files
-    pub(crate) current_file: usize,
-    /// Total number of files of this run
-    pub(crate) total_files: usize,
 }
 
 pub struct LoggerOptionsBuilder {
@@ -78,11 +69,6 @@ pub struct LoggerOptionsBuilder {
     error_format: ErrorFormat,
     filename: String,
     verbosity: Option<Verbosity>,
-
-    test: bool,
-    progress_bar: bool,
-    current_file: usize,
-    total_files: usize,
 }
 
 impl LoggerOptionsBuilder {
@@ -111,33 +97,9 @@ impl LoggerOptionsBuilder {
         self
     }
 
-    /// Sets test mode.
-    pub fn test(&mut self, test: bool) -> &mut Self {
-        self.test = test;
-        self
-    }
-
-    /// Sets progress bar.
-    pub fn progress_bar(&mut self, progress_bar: bool) -> &mut Self {
-        self.progress_bar = progress_bar;
-        self
-    }
-
     /// Sets filename.
     pub fn filename(&mut self, filename: &str) -> &mut Self {
         self.filename = filename.to_string();
-        self
-    }
-
-    /// Set the 0-based index of the running file in the total list files.
-    pub fn current_file(&mut self, current: usize) -> &mut Self {
-        self.current_file = current;
-        self
-    }
-
-    /// Set total number of files of this run.
-    pub fn total_files(&mut self, total: usize) -> &mut Self {
-        self.total_files = total;
         self
     }
 
@@ -148,10 +110,6 @@ impl LoggerOptionsBuilder {
             error_format: self.error_format,
             filename: self.filename.clone(),
             verbosity: self.verbosity,
-            test: self.test,
-            progress_bar: self.progress_bar,
-            current_file: self.current_file,
-            total_files: self.total_files,
         }
     }
 }
@@ -162,11 +120,7 @@ impl Default for LoggerOptionsBuilder {
             color: false,
             error_format: ErrorFormat::Short,
             filename: String::new(),
-            test: false,
-            progress_bar: false,
             verbosity: None,
-            current_file: 0,
-            total_files: 0,
         }
     }
 }
