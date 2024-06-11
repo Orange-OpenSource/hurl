@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/cookies.hurl --variable name=Bruce --verbose
+hurl --variable name=Bruce tests_ok/cookies.hurl

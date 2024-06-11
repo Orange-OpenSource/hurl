@@ -24,7 +24,11 @@ HTTP 200
 GET http://localhost:8000/cookies/set-session-cookie2-valueA
 HTTP 200
 [Asserts]
+cookie "cookie1" not exists
 cookie "cookie2" == "valueA"
+cookie "cookie2[Path]" == "/"
+# See https://github.com/Orange-OpenSource/hurl/issues/2870
+#cookie "cookie2[Expires]" not exists
 
 
 GET http://localhost:8000/cookies/assert-that-cookie2-is-valueA
