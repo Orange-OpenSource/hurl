@@ -20,7 +20,7 @@ vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "6.0.0"
 chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
-clap = { version = "4.5.6", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.5.7", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.46"
 curl-sys = "0.4.72"
@@ -38,7 +38,7 @@ regex = "1.10.5"
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = { version = "1.0.117", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
-url = "2.5.0"
+url = "2.5.1"
 xml-rs = { version = "0.8.20" }
 lazy_static = "1.4.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
