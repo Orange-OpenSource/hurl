@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""Check Rust direct and transitive dependencies licenses.
+
+This script checks that there is no dependencies with unauthorized license (GPL like).
+
+Examples:
+    $ python3 bin/check/license.py
+"""
 from typing import List, Tuple
 
 import json
@@ -19,6 +26,7 @@ def is_authorized(license: str) -> bool:
         "MPL-2.0",
         "BSD-2-Clause",
         "BSD-3-Clause",
+        "Unicode-3.0",
     ]:
         if l in license:
             return True
