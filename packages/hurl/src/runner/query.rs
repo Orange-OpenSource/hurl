@@ -288,10 +288,13 @@ fn eval_cookie_attribute_name(
     match cookie_attribute_name {
         CookieAttributeName::Value(_) => Some(Value::String(cookie.value)),
         CookieAttributeName::Expires(_) => {
-            let s = cookie.expires().unwrap();
-            match chrono::DateTime::parse_from_rfc2822(s.as_str()) {
-                Ok(v) => Some(Value::Date(v.with_timezone(&chrono::Utc))),
-                Err(_) => todo!(),
+            if let Some(s) = cookie.expires() {
+                match chrono::DateTime::parse_from_rfc2822(s.as_str()) {
+                    Ok(v) => Some(Value::Date(v.with_timezone(&chrono::Utc))),
+                    Err(_) => todo!(),
+                }
+            } else {
+                None
             }
         }
         CookieAttributeName::MaxAge(_) => {
