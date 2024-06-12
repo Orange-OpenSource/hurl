@@ -727,6 +727,12 @@ fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
             expected: expected_display,
             type_mismatch: false,
         },
+        (Value::Date(value1), Value::Date(value2)) => AssertResult {
+            success: value1 == value2,
+            actual: actual_display,
+            expected: expected_display,
+            type_mismatch: false,
+        },
         // FIXME: why case (UNIT UNIT) is not treated?
         (Value::Unit, _) => AssertResult {
             success: false,
@@ -779,6 +785,12 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
             type_mismatch: false,
         },
         (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual_display,
+            expected: expected_display,
+            type_mismatch: false,
+        },
+        (Value::Date(value1), Value::Date(value2)) => AssertResult {
             success: value1 != value2,
             actual: actual_display,
             expected: expected_display,
