@@ -90,6 +90,18 @@ impl ToJson for Request {
         if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
+
+        // Request comments (can be used to check custom commands)
+        let comments: Vec<_> = self
+            .line_terminators
+            .iter()
+            .filter_map(|l| l.comment.as_ref())
+            .collect();
+        if !comments.is_empty() {
+            let comments = comments.iter().map(|c| c.to_json()).collect();
+            attributes.push(("comments".to_string(), JValue::List(comments)));
+        }
+
         JValue::Object(attributes)
     }
 }
@@ -736,6 +748,12 @@ impl ToJson for FilterValue {
 impl ToJson for Expr {
     fn to_json(&self) -> JValue {
         JValue::String(format!("{{{{{}}}}}", self))
+    }
+}
+
+impl ToJson for Comment {
+    fn to_json(&self) -> JValue {
+        JValue::String(self.value.to_string())
     }
 }
 
