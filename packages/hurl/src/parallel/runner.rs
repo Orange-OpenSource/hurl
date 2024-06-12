@@ -177,13 +177,17 @@ impl ParallelRunner {
             }
         });
 
+        // When dumped HTTP responses, we truncate existing output file on first save, then append
+        // it on subsequent write.
+        let mut append = false;
+
         // Start the message pump:
         let mut results = vec![];
         for msg in self.rx.iter() {
             match msg {
-                // If we any error (either a [`WorkerMessage::IOError`] or a [`WorkerMessage::ParsingError`]
-                // we don't take any more jobs and exit form the methods in error. This is the
-                // same behaviour than when we run sequentially a list of Hurl files.
+                // If we have any error (either a [`WorkerMessage::IOError`] or a [`WorkerMessage::ParsingError`]
+                // we don't take any more jobs and exit from the methods in error. This is the same
+                // behaviour as when we run sequentially a list of Hurl files.
                 WorkerMessage::IOError(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
@@ -221,7 +225,8 @@ impl ParallelRunner {
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
                 // Contrary to when we receive a running message, we clear the progress bar no
-                // matter what the frequency is.
+                // matter what the frequency is, to get a "correct" and up-to-date display on any
+                // test completion.
                 WorkerMessage::Completed(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
@@ -234,8 +239,10 @@ impl ParallelRunner {
                         stderr.eprint(msg.stderr.buffer());
                     }
 
-                    // Then, we print job output on standard output.
-                    self.print_output(&msg.result, &mut stdout)?;
+                    // Then, we print job output on standard output (the first response truncates
+                    // exiting file, subsequent response appends bytes).
+                    self.print_output(&msg.result, &mut stdout, append)?;
+                    append = true;
 
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
@@ -283,7 +290,13 @@ impl ParallelRunner {
 
     /// Prints a job `result` to standard output `stdout`, either as a raw HTTP response (last
     /// body of the run), or in a structured JSON way.
-    fn print_output(&self, result: &JobResult, stdout: &mut Stdout) -> Result<(), JobError> {
+    /// If `append` is true, any existing file will be appended instead of being truncated.
+    fn print_output(
+        &self,
+        result: &JobResult,
+        stdout: &mut Stdout,
+        append: bool,
+    ) -> Result<(), JobError> {
         let job = &result.job;
         let content = &result.content;
         let hurl_result = &result.hurl_result;
@@ -302,6 +315,7 @@ impl ParallelRunner {
                         color,
                         filename_out,
                         stdout,
+                        append,
                     );
                     if let Err(e) = result {
                         return Err(JobError::Runtime(error_string(
@@ -315,8 +329,14 @@ impl ParallelRunner {
                 }
             }
             OutputType::Json => {
-                let result =
-                    output::write_json(hurl_result, content, filename_in, filename_out, stdout);
+                let result = output::write_json(
+                    hurl_result,
+                    content,
+                    filename_in,
+                    filename_out,
+                    stdout,
+                    append,
+                );
                 if let Err(e) = result {
                     return Err(JobError::Runtime(e.to_string()));
                 }

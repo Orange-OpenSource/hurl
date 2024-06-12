@@ -42,6 +42,10 @@ pub fn run_seq(
     let repeat = options.repeat.unwrap_or_default();
     let queue = InputQueue::new(files, repeat);
 
+    // When dumped HTTP responses, we truncate existing output file on first save, then append
+    // it on subsequent write.
+    let mut append = false;
+
     for filename in queue {
         let content = filename.read_to_string();
         let content = match content {
@@ -66,8 +70,18 @@ pub fn run_seq(
         // We can output the result, either the last raw body response or a structured JSON
         // representation of the full Hurl result.
         // In sequential run, we use an immediate (non-buffered) standard output.
+        // When we output to a file, the first time we truncate the output file, and we append it
+        // for subsequent writes.
         let mut stdout = Stdout::new(WriteMode::Immediate);
-        print_output(&hurl_result, &content, &filename, options, &mut stdout)?;
+        print_output(
+            &hurl_result,
+            &content,
+            &filename,
+            options,
+            &mut stdout,
+            append,
+        )?;
+        append = true;
 
         let run = HurlRun {
             content,
@@ -80,27 +94,32 @@ pub fn run_seq(
     Ok(runs)
 }
 
-/// Prints a `hurl_result` to standard output `stdout`, either as a raw HTTP response (last
-/// body of the run), or in a structured JSON way.
+/// Prints a `hurl_result` either as a raw HTTP response (last body of the run), or in a structured
+/// JSON way.
 ///
-/// `content` (the source string), `filename` (the source file) are used in JSON output.
+/// If options contains an output file, the result is dumped to this file, or `stdout` is used. If
+/// `append` is true, any existing file will be appended instead of being truncated. `content` (the
+/// source string), `filename` (the source file) are used in JSON output (for errors and asserts
+/// construction).
 fn print_output(
     hurl_result: &HurlResult,
     content: &str,
     filename: &Input,
     options: &CliOptions,
     stdout: &mut Stdout,
+    append: bool,
 ) -> Result<(), CliError> {
-    let output_body = hurl_result.success
+    let output_last_body = hurl_result.success
         && !options.interactive
         && matches!(options.output_type, cli::OutputType::ResponseBody);
-    if output_body {
+    if output_last_body {
         let result = output::write_last_body(
             hurl_result,
             options.include,
             options.color,
             options.output.as_ref(),
             stdout,
+            append,
         );
         if let Err(e) = result {
             return Err(CliError::Runtime(error_string(
@@ -119,6 +138,7 @@ fn print_output(
             filename,
             options.output.as_ref(),
             stdout,
+            append,
         );
         if let Err(e) = result {
             let filename = if let Some(Output::File(filename)) = &options.output {
@@ -143,7 +163,7 @@ pub fn run_par(
     workers_count: usize,
 ) -> Result<Vec<HurlRun>, CliError> {
     // We're going to use the right numbers of workers. We don't need to use more workers than there
-    // are input files (repeat option act as if we we dealing with a multiplied number of files)
+    // are input files (repeat option act as if we're dealing with a multiplied number of files)
     let workers_count = match options.repeat {
         Some(Repeat::Count(n)) => min(files.len() * n, workers_count),
         Some(Repeat::Forever) => workers_count,

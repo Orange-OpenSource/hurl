@@ -26,7 +26,8 @@ use crate::util::term::Stdout;
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
-/// If `filename_out` is `None`, standard output is used. If `include_headers` is true, the last
+/// If `filename_out` is `None`, standard output is used. If `append` is true, any existing file will
+/// be appended instead of being truncated. If `include_headers` is true, the last
 /// HTTP response headers are written before the body response.
 pub fn write_last_body(
     hurl_result: &HurlResult,
@@ -34,6 +35,7 @@ pub fn write_last_body(
     color: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
+    append: bool,
 ) -> Result<(), OutputError> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
@@ -67,7 +69,7 @@ pub fn write_last_body(
         output.extend(bytes);
     }
     // We replicate curl's checks for binary output: a warning is displayed when user hasn't
-    // use `--output` option and the response is considered as a binary content. If user has used
+    // used `--output` option and the response is considered as a binary content. If user has used
     // `--output` whether to save to a file, or to redirect output to standard output (`--output -`)
     // we don't display any warning.
     match filename_out {
@@ -77,13 +79,13 @@ pub fn write_last_body(
                 let kind = OutputErrorKind::Binary;
                 return Err(OutputError::new(source_info, kind));
             }
-            Output::Stdout.write(&output, stdout).map_err(|e| {
+            Output::Stdout.write(&output, stdout, append).map_err(|e| {
                 let source_info = last_entry.source_info;
                 let kind = OutputErrorKind::Io(e.to_string());
                 OutputError::new(source_info, kind)
             })?;
         }
-        Some(out) => out.write(&output, stdout).map_err(|e| {
+        Some(out) => out.write(&output, stdout, append).map_err(|e| {
             let filename = if let Output::File(filename) = out {
                 filename.display().to_string()
             } else {
@@ -226,7 +228,15 @@ mod tests {
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
 
-        write_last_body(&result, include_header, color, output.as_ref(), &mut stdout).unwrap();
+        write_last_body(
+            &result,
+            include_header,
+            color,
+            output.as_ref(),
+            &mut stdout,
+            true,
+        )
+        .unwrap();
         let stdout = String::from_utf8(stdout.buffer().to_vec()).unwrap();
         assert_eq!(
             stdout,
