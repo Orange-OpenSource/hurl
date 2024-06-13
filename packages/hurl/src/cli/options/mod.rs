@@ -241,15 +241,20 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::variables_file())
         .arg(commands::verbose())
         .arg(commands::very_verbose());
-
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
-    let opts = parse_matches(&arg_matches)?;
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if opts.input_files.is_empty() {
+    if !matches::has_input_files(&arg_matches) {
         let help = command.render_help().to_string();
         return Err(CliOptionsError::NoInput(help));
+    }
+
+    let opts = parse_matches(&arg_matches)?;
+    if opts.input_files.is_empty() {
+        return Err(CliOptionsError::Error(
+            "No input files provided".to_string(),
+        ));
     }
 
     if opts.cookie_output_file.is_some() && opts.input_files.len() > 1 {

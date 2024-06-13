@@ -20,7 +20,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, IsTerminal};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
-use std::{env, io};
+use std::{env, fs, io};
 
 use clap::ArgMatches;
 use hurl::runner::{Input, Value};
@@ -158,7 +158,7 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsE
     if let Some(dir) = get::<String>(arg_matches, "report_html") {
         let path = Path::new(&dir);
         if !path.exists() {
-            match std::fs::create_dir_all(path) {
+            match fs::create_dir_all(path) {
                 Err(_) => Err(CliOptionsError::Error(format!(
                     "HTML dir {} can not be created",
                     path.display()
@@ -200,16 +200,29 @@ pub fn include(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "include")
 }
 
+/// Returns true if we have at least one input files.
+/// The input file can be a file, the standard input, or a glob (evn a glob returns empty results).
+pub fn has_input_files(arg_matches: &ArgMatches) -> bool {
+    get_strings(arg_matches, "input_files").is_some()
+        || get_strings(arg_matches, "glob").is_some()
+        || !io::stdin().is_terminal()
+}
+
 /// Returns the input files from the positional arguments and the glob options
 pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
         for filename in &filenames {
-            let file = Input::new(filename);
-            if !file.exists() {
-                return Err(CliOptionsError::InvalidInputFile(PathBuf::from(filename)));
+            let filename = Path::new(filename);
+            if !filename.exists() {
+                return Err(CliOptionsError::InvalidInputFile(filename.to_path_buf()));
             }
-            files.push(file);
+            if filename.is_file() {
+                let file = Input::from(filename);
+                files.push(file);
+            } else if filename.is_dir() {
+                walks_hurl_files(filename, &mut files)?;
+            }
         }
     }
     for filename in glob_files(arg_matches)? {
@@ -219,6 +232,25 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsErr
         files.push(Input::Stdin);
     }
     Ok(files)
+}
+
+/// Walks recursively a directory from `dir` and push Hurl files to `files`.
+fn walks_hurl_files(dir: &Path, files: &mut Vec<Input>) -> Result<(), CliOptionsError> {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return Err(CliOptionsError::InvalidInputFile(dir.to_path_buf()));
+    };
+    for entry in entries {
+        let Ok(entry) = entry else {
+            return Err(CliOptionsError::InvalidInputFile(dir.to_path_buf()));
+        };
+        let path = entry.path();
+        if path.is_dir() {
+            walks_hurl_files(&path, files)?;
+        } else if entry.path().extension() == Some("hurl".as_ref()) {
+            files.push(Input::from(entry.path()));
+        }
+    }
+    Ok(())
 }
 
 pub fn insecure(arg_matches: &ArgMatches) -> bool {
@@ -258,7 +290,7 @@ pub fn json_report_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliO
     if let Some(dir) = get::<String>(arg_matches, "report_json") {
         let path = Path::new(&dir);
         if !path.exists() {
-            match std::fs::create_dir_all(path) {
+            match fs::create_dir_all(path) {
                 Err(_) => Err(CliOptionsError::Error(format!(
                     "JSON dir {} can not be created",
                     path.display()
