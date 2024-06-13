@@ -1210,9 +1210,9 @@ dependencies = [
 
 [[package]]
 name = "termion"
-version = "4.0.1"
+version = "4.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fac5a0183fdbbba781c1842674936c38823c7e8940c493ffb1a94e289bfcfefd"
+checksum = "1ccce68e518d1173e80876edd54760b60b792750d0cab6444a79101c6ea03848"
 dependencies = [
  "libc",
  "libredox",

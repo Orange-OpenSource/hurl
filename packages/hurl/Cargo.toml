@@ -46,7 +46,7 @@ uuid = { version = "1.8.0", features = ["v4" , "fast-rng"] }
 similar = "2.5.0"
 
 [target.'cfg(unix)'.dependencies]
-termion = "4.0.1"
+termion = "4.0.2"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
