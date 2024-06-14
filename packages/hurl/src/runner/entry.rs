@@ -224,7 +224,6 @@ impl ClientOptions {
             no_proxy: runner_options.no_proxy.clone(),
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
-            retry: runner_options.retry,
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
             unix_socket: runner_options.unix_socket.clone(),

@@ -17,8 +17,6 @@
  */
 use std::time::Duration;
 
-use hurl_core::ast::Retry;
-
 use crate::http::request::RequestedHttpVersion;
 use crate::http::IpResolve;
 
@@ -46,7 +44,6 @@ pub struct ClientOptions {
     pub path_as_is: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
-    pub retry: Retry,
     pub ssl_no_revoke: bool,
     pub timeout: Duration,
     pub unix_socket: Option<String>,
@@ -87,7 +84,6 @@ impl Default for ClientOptions {
             path_as_is: false,
             proxy: None,
             resolves: vec![],
-            retry: Retry::None,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             unix_socket: None,
@@ -242,7 +238,6 @@ mod tests {
                     "foo.com:80:192.168.0.1".to_string(),
                     "bar.com:443:127.0.0.1".to_string(),
                 ],
-                retry: Retry::None,
                 ssl_no_revoke: false,
                 timeout: Duration::from_secs(10),
                 unix_socket: Some("/var/run/example.sock".to_string()),
