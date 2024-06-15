@@ -143,9 +143,9 @@ The color is necessary here to see the additional whitespace.
 We could also add a cli option to show explicitly "invisible characters".
 
 
-### Display more or less context lines before first change
+## Display more or less context lines before first change
 
-## Change at line 1
+### Change at line 1
 
 Standard unified diff
 
@@ -173,7 +173,7 @@ error: Assert body value
 ```
 
 
-## Change at line 2
+### Change at line 2
 
 
 Standard unified diff
@@ -203,7 +203,7 @@ error: Assert body value
 ```
 
 
-## Change at line 3
+### Change at line 3
 
 Standard unified diff
 
@@ -235,7 +235,70 @@ error: Assert body value
 ```
 
 
-### Display several diff Hunks
+
+## Deletion
+
+
+Standard unified diff
+
+```
+@@ -1,6 +1,5 @@
+ {
+   "first_name": "John",
+-  "last_name": "Smith",
+   "is_alive": true,
+   "age": 27,
+   "address": {
+```
+
+Hurl Output
+
+```
+error: Assert body value
+  --> test.hurl:6:1
+   |
+   | GET http://localhost:8000/test
+   | {
+   |   "first_name": "John",
+6  |-  "last_name": "Smith",
+   |   "is_alive": true,
+   |   "age": 27,
+   |   "address": {
+```
+
+
+## Addition
+
+Standard unified diff
+
+```
+@@ -1,5 +1,6 @@
+ {
+   "first_name": "John",
++  "middle_name": "Bob",
+   "last_name": "Smith",
+   "is_alive": true,
+   "age": 27,
+```
+
+Hurl Output
+
+```
+error: Assert body value
+  --> test.hurl:5:1
+   |
+   | GET http://localhost:8000/test
+   | {
+5  |   "first_name": "John",
+   |+  "middle_name": "Bob",
+   |   "last_name": "Smith",
+   |   "is_alive": true,
+   |   "age": 27,
+   |   "address": {
+```
+
+
+## Display several diff Hunks
 
 
 Standard Unified Diff
