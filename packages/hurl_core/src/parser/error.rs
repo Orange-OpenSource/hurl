@@ -251,8 +251,11 @@ impl DisplaySourceError for ParseError {
         s
     }
 
-    fn show_source_line(&self) -> bool {
-        true
+    fn message(&self, content: &[&str]) -> StyledString {
+        let mut text = StyledString::new();
+        crate::error::add_source_line(&mut text, content, self.source_info().start.line);
+        text.append(self.fixme(content));
+        text
     }
 }
 

@@ -49,7 +49,10 @@ impl DisplaySourceError for linter::Error {
         s
     }
 
-    fn show_source_line(&self) -> bool {
-        true
+    fn message(&self, content: &[&str]) -> StyledString {
+        let mut text = StyledString::new();
+        hurl_core::error::add_source_line(&mut text, content, self.source_info().start.line);
+        text.append(self.fixme(content));
+        text
     }
 }

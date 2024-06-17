@@ -290,8 +290,11 @@ impl DisplaySourceError for RunnerError {
         }
     }
 
-    fn show_source_line(&self) -> bool {
-        true
+    fn message(&self, content: &[&str]) -> StyledString {
+        let mut text = StyledString::new();
+        hurl_core::error::add_source_line(&mut text, content, self.source_info().start.line);
+        text.append(self.fixme(content));
+        text
     }
 }
 
@@ -313,7 +316,8 @@ mod tests {
     use crate::http::HttpError;
     use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::{Pos, SourceInfo};
-    use hurl_core::error::{error_string, get_message, split_lines};
+    use hurl_core::error::{error_string, split_lines, DisplaySourceError};
+    use hurl_core::text::Format;
 
     #[test]
     fn test_error_timeout() {
@@ -327,7 +331,9 @@ mod tests {
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
         let error = RunnerError::new(error_source_info, kind, true);
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            error
+                .message(&split_lines(content))
+                .to_string(Format::Plain),
             " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
         );
         assert_eq!(
@@ -355,13 +361,15 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            error
+                .message(&split_lines(content))
+                .to_string(Format::Plain),
             " HTTP/1.0 200\n          ^^^ actual value is <404>"
         );
         colored::control::set_override(true);
         assert_eq!(
-            get_message(&error, &split_lines(content), true),
-            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m"
+            error.message(&split_lines(content)).to_string(Format::Ansi),
+            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m",
         );
 
         assert_eq!(
@@ -392,7 +400,7 @@ xpath "strong(//head/title)" == "Hello"
             true,
         );
         assert_eq!(
-        get_message(&error, &split_lines(content), false),
+        &error.message( &split_lines(content)).to_string(Format::Plain),
         " xpath \"strong(//head/title)\" == \"Hello\"\n       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid"
     );
         assert_eq!(
@@ -429,7 +437,9 @@ jsonpath "$.count" >= 5
         };
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            error
+                .message(&split_lines(content))
+                .to_string(Format::Plain),
             r#" jsonpath "$.count" >= 5
    actual:   int <2>
    expected: greater than int <5>"#
@@ -466,7 +476,9 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            error
+                .message(&split_lines(content))
+                .to_string(Format::Plain),
             " ```<p>Hello</p>\n    ^ actual value is <<p>Hello</p>\n\n      >"
         );
         assert_eq!(

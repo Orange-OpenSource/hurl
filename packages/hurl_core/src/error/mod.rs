@@ -24,7 +24,32 @@ pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
     fn description(&self) -> String;
     fn fixme(&self, content: &[&str]) -> StyledString;
-    fn show_source_line(&self) -> bool;
+
+    /// Return the constructed message for the error
+    ///
+    /// It may include:
+    /// - source line
+    /// - column position and number of characters (with one or more carets)
+    ///
+    /// Examples:
+    ///
+    /// GET abc
+    ///     ^ expecting http://, https:// or {{
+    ///
+    /// HTTP/1.0 200
+    ///          ^^^ actual value is <404>
+    ///
+    /// jsonpath "$.count" >= 5
+    ///   actual:   int <2>
+    ///   expected: greater than int <5>
+    ///
+    /// {
+    ///    "name": "John",
+    ///-   "age": 27
+    ///+   "age": 28
+    /// }
+    ///
+    fn message(&self, content: &[&str]) -> StyledString;
 }
 
 /// Show column position with carets
@@ -156,7 +181,13 @@ pub fn error_string<E: DisplaySourceError>(
 
     // 5. Appends the error message (one or more lines)
     // with the line number '|' prefix
-    let message = get_message(error, &lines, colored);
+    let message = error.message(&lines);
+    let message = if colored {
+        message.to_string(Format::Ansi)
+    } else {
+        message.to_string(Format::Plain)
+    };
+
     for (i, line) in split_lines(&message).iter().enumerate() {
         text.push('\n');
         text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
@@ -170,58 +201,6 @@ pub fn error_string<E: DisplaySourceError>(
     }
 
     text
-}
-
-/// Return the constructed message for the error
-///
-/// It may include:
-/// - source line
-/// - column position and number of characters (with one or more carets)
-///
-/// Examples:
-///
-/// GET abc
-///     ^ expecting http://, https:// or {{
-///
-/// HTTP/1.0 200
-///          ^^^ actual value is <404>
-///
-/// jsonpath "$.count" >= 5
-///   actual:   int <2>
-///   expected: greater than int <5>
-///
-/// {
-///    "name": "John",
-///-   "age": 27
-///+   "age": 28
-/// }
-///
-pub fn get_message<E: DisplaySourceError>(error: &E, lines: &[&str], colored: bool) -> String {
-    let mut text = StyledString::new();
-
-    if error.show_source_line() {
-        let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let line = line.replace('\t', "    ");
-
-        text.push(" ");
-
-        text.push(&line);
-
-        text.push("\n");
-    }
-    let fixme = error.fixme(lines);
-    let lines = fixme.split('\n');
-    for (i, line) in lines.iter().enumerate() {
-        if i > 0 {
-            text.push("\n");
-        }
-        text.append(line.clone());
-    }
-    if colored {
-        text.to_string(Format::Ansi)
-    } else {
-        text.to_string(Format::Plain)
-    }
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -247,6 +226,14 @@ fn get_carets(line_raw: &str, error_column: usize, width: usize) -> String {
     prefix.push_str("^".repeat(width).as_str());
     prefix.push(' ');
     prefix
+}
+
+pub fn add_source_line(text: &mut StyledString, content: &[&str], line: usize) {
+    let line = content.get(line - 1).unwrap();
+    let line = line.replace('\t', "    ");
+    text.push(" ");
+    text.push(&line);
+    text.push("\n");
 }
 
 #[cfg(test)]
@@ -325,16 +312,17 @@ HTTP 200
                 diff.push("\n }\n");
                 diff
             }
-
-            fn show_source_line(&self) -> bool {
-                false
+            fn message(&self, lines: &[&str]) -> StyledString {
+                self.fixme(lines)
             }
         }
         let error = E;
 
         colored::control::set_override(true);
         assert_eq!(
-            get_message(&error, &split_lines(content), false),
+            error
+                .message(&split_lines(content))
+                .to_string(Format::Plain),
             r#" {
    "name": "John",
 -  "age": 27
@@ -343,7 +331,7 @@ HTTP 200
 "#
         );
         assert_eq!(
-            get_message(&error, &split_lines(content), true),
+            error.message(&split_lines(content)).to_string(Format::Ansi),
             " {\n   \"name\": \"John\",\n\u{1b}[31m-  \"age\": 27\u{1b}[0m\n\u{1b}[32m+  \"age\": 28\u{1b}[0m\n }\n"
         );
 
