@@ -46,8 +46,7 @@ variable "a_cookie_value_attr" == {{a_cookie_value_attr}}
 variable "a_cookie_path_attr" == "/bar"
 variable "a_cookie_path_attr" == {{a_cookie_path_attr}}
 variable "a_cookie_expires_attr" format "%Y-%m-%dT%H:%M:%S%.fZ" == "2078-01-13T22:23:01Z"
-# FIXME: the next assert should pass
-# variable "a_cookie_expires_attr" == {{a_cookie_expires_attr}}
+variable "a_cookie_expires_attr" == {{a_cookie_expires_attr}}
 variable "a_cookie_domain_attr" == "localhost"
 variable "a_cookie_domain_attr" == {{a_cookie_domain_attr}}
 variable "a_cookie_max_age_attr" == 2592000
