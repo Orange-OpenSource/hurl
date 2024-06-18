@@ -215,7 +215,7 @@ This is a cli-only option.
 
 ### --delay <MILLISECONDS> {#delay}
 
-Sets delay before each request.
+Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
 
 ### --error-format <FORMAT> {#error-format}
 

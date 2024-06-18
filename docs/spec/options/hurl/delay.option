@@ -5,4 +5,4 @@ value_default: 0
 value_parser: clap::value_parser!(u64)
 help: Sets delay before each request
 ---
-Sets delay before each request.
+Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
