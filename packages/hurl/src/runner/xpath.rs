@@ -73,7 +73,7 @@ pub fn eval_html(html: &str, expr: &str) -> Result<Value, XpathError> {
 /// - <https://github.com/Orange-OpenSource/hurl/issues/1535>
 /// These two functions should be removed when the issue is fixed in libxml crate.
 fn try_usize_to_i32(value: usize) -> Result<i32, XmlParseError> {
-    if cfg!(target_pointer_width = "16") || (value < i32::max_value() as usize) {
+    if cfg!(target_pointer_width = "16") || (value < i32::MAX as usize) {
         // Cannot safely use our value comparison, but the conversion if always safe.
         // Or, if the value can be safely represented as a 32-bit signed integer.
         Ok(value as i32)

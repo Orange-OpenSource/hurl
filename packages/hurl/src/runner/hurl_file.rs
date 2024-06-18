@@ -140,7 +140,6 @@ pub fn run_entries(
     let mut variables = variables.clone();
     let mut entry_index = runner_options.from_entry.unwrap_or(1);
     let n = runner_options.to_entry.unwrap_or(entries.len());
-    let mut retry_count = 1;
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
@@ -151,6 +150,7 @@ pub fn run_entries(
     // The `entry_index` is not always incremented of each loop tick: an entry can be retried upon
     // errors for instance. Each entry is executed with options that are computed from the global
     // runner options and the "overridden" request options.
+    // See <docs/spec/runner/run_cycle.md>
     loop {
         if entry_index > n {
             break;
@@ -173,119 +173,73 @@ pub fn run_entries(
             logger.verbosity = entry_verbosity;
         }
 
-        logger.debug_important(
-            "------------------------------------------------------------------------------",
-        );
-        logger.debug_important(&format!("Executing entry {entry_index}"));
+        log_run_entry(entry_index, logger);
 
         warn_deprecated(entry, logger);
 
+        // We can report the progression of the run for --test mode.
         if let Some(listener) = listener {
             listener.on_running(entry_index - 1, n);
         }
 
-        // The real execution of the entry happens here, with the overridden entry options.
+        // The real execution of the entry happens here, first: we compute the overridden request
+        // options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
-        let mut entry_result = match &options {
-            Err(error) => EntryResult {
+        if let Err(error) = &options {
+            // If we have error evaluating request options, we consider it as a non retryable error
+            // and either break the runner or go to the next entries.
+            let entry_result = EntryResult {
                 entry_index,
                 source_info: entry.source_info(),
                 errors: vec![error.clone()],
                 ..Default::default()
-            },
-            Ok(options) => {
-                if options.skip {
-                    logger.debug("");
-                    logger.debug_important(&format!("Entry {entry_index} has been skipped"));
-                    entry_index += 1;
-                    continue;
-                }
-
-                let delay = options.delay;
-                let delay_ms = delay.as_millis();
-                if delay_ms > 0 {
-                    logger.debug("");
-                    logger.debug_important(&format!(
-                        "Delay entry {entry_index} (x{retry_count} by {delay_ms} ms)"
-                    ));
-                    thread::sleep(delay);
-                };
-
-                entry::run(
-                    entry,
-                    entry_index,
-                    &mut http_client,
-                    &mut variables,
-                    options,
-                    logger,
-                )
-            }
-        };
-
-        // Check if we need to retry.
-        let mut has_error = !entry_result.errors.is_empty();
-        let (retry_opts, retry_interval) = match &options {
-            Ok(options) => (options.retry, options.retry_interval),
-            Err(_) => (runner_options.retry, runner_options.retry_interval),
-        };
-        // The retry threshold can only reached with a finite positive number of retries
-        let retry_max_reached = if let Retry::Finite(r) = retry_opts {
-            retry_count > r
-        } else {
-            false
-        };
-        // If `retry_max_reached` is true, we print now a warning, before displaying any assert
-        // error so any potential error is the last thing displayed to the user.
-        // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
-        // we first log the error and a potential warning about retrying.
-        if retry_max_reached {
-            logger.debug_important("Retry max count reached, no more retry");
-            logger.debug("");
-        }
-
-        // We logs eventual errors, only if we're not retrying the current entry...
-        // The retry does not take into account a possible output Error
-        let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
-
-        // When --output is overridden on a request level, we output the HTTP response only if the
-        // call has succeeded.
-        if let Ok(RunnerOptions {
-            output: Some(output),
-            ..
-        }) = options
-        {
-            if !has_error {
-                let source_info = get_output_source_info(entry);
-                if let Err(error) = entry_result.write_response(
-                    &output,
-                    &runner_options.context_dir,
-                    stdout,
-                    source_info,
-                ) {
-                    entry_result.errors.push(error);
-                    has_error = true;
-                }
+            };
+            log_errors(&entry_result, content, false, logger);
+            entries_result.push(entry_result);
+            if runner_options.continue_on_error {
+                entry_index += 1;
+                continue;
+            } else {
+                break;
             }
         }
 
-        if has_error {
-            log_errors(&entry_result, content, retry, logger);
-        }
-        entries_result.push(entry_result);
+        let options = options.unwrap();
 
-        if retry {
-            let delay = retry_interval.as_millis();
+        // Should we skip?
+        if options.skip {
             logger.debug("");
-            logger.debug_important(&format!(
-                "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
-            ));
-            retry_count += 1;
-            // If we retry the entry, we do not want to display a 'blank' progress bar during the
-            // sleep delay. During the pause, we artificially show the previously erased progress
-            // line.
-            thread::sleep(retry_interval);
+            logger.debug_important(&format!("Entry {entry_index} has been skipped"));
+            entry_index += 1;
             continue;
         }
+
+        // Should we delay?
+        let delay = options.delay;
+        let delay_ms = delay.as_millis();
+        if delay_ms > 0 {
+            logger.debug("");
+            logger.debug_important(&format!("Delay entry {entry_index} (pause {delay_ms} ms)"));
+            thread::sleep(delay);
+        };
+
+        // Loop for executing HTTP run requests, with optional retry. Only "HTTP" errors in options
+        // are taken into account for retry (errors while computing entry options and output error
+        // are not retried).
+        let results = run_request(
+            entry,
+            entry_index,
+            content,
+            &mut http_client,
+            &options,
+            &mut variables,
+            stdout,
+            logger,
+        );
+
+        let has_error = results.last().map_or(false, |r| !r.errors.is_empty());
+
+        entries_result.extend(results);
 
         if let Some(post_entry) = runner_options.post_entry {
             let exit = post_entry();
@@ -299,7 +253,6 @@ pub fn run_entries(
 
         // We pass to the next entry
         entry_index += 1;
-        retry_count = 1;
     }
 
     let time_in_ms = start.elapsed().as_millis();
@@ -312,6 +265,90 @@ pub fn run_entries(
         cookies,
         timestamp,
     }
+}
+
+/// Runs an HTTP request and optional retry it until there are no HTTP errors. Returns a list of
+/// [`EntryResult`].
+#[allow(clippy::too_many_arguments)]
+fn run_request(
+    entry: &Entry,
+    entry_index: usize,
+    content: &str,
+    http_client: &mut Client,
+    options: &RunnerOptions,
+    variables: &mut HashMap<String, Value>,
+    stdout: &mut Stdout,
+    logger: &mut Logger,
+) -> Vec<EntryResult> {
+    let mut results = vec![];
+    let mut retry_count = 1;
+
+    loop {
+        let mut result = entry::run(entry, entry_index, http_client, variables, options, logger);
+
+        // Check if we need to retry.
+        let mut has_error = !result.errors.is_empty();
+
+        // The retry threshold can only be reached with a finite positive number of retries
+        let retry_max_reached = if let Retry::Finite(r) = options.retry {
+            retry_count > r
+        } else {
+            false
+        };
+        // If `retry_max_reached` is true, we print now a warning, before displaying any assert
+        // error so any potential error is the last thing displayed to the user.
+        // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
+        // we first log the error and a potential warning about retrying.
+        if retry_max_reached {
+            logger.debug_important("Retry max count reached, no more retry");
+            logger.debug("");
+        }
+
+        // We log eventual errors, only if we're not retrying the current entry...
+        // The retry does not take into account a possible output Error
+        let retry = !matches!(options.retry, Retry::None) && !retry_max_reached && has_error;
+
+        // When --output is overridden on a request level, we output the HTTP response only if the
+        // call has succeeded. Output errors are not taken into account for retrying requests.
+        if let Some(output) = &options.output {
+            if !has_error {
+                let source_info = get_output_source_info(entry);
+                if let Err(error) =
+                    result.write_response(output, &options.context_dir, stdout, source_info)
+                {
+                    result.errors.push(error);
+                    has_error = true;
+                }
+            }
+        }
+
+        if has_error {
+            log_errors(&result, content, retry, logger);
+        }
+        results.push(result);
+
+        // No retry, we leave the HTTP run requests loop.
+        if !retry {
+            break;
+        }
+
+        let delay = options.retry_interval.as_millis();
+        logger.debug("");
+        logger.debug_important(&format!(
+            "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
+        ));
+        retry_count += 1;
+        // If we retry the entry, we do not want to display a 'blank' progress bar during the
+        // sleep delay. During the pause, we artificially show the previously erased progress
+        // line.
+        thread::sleep(options.retry_interval);
+
+        // TODO: We keep this log because we don't want to change stderr with the changes
+        // introduced by <https://github.com/Orange-OpenSource/hurl/issues/1973>
+        log_run_entry(entry_index, logger);
+    }
+
+    results
 }
 
 /// Use source_info from output option if this option has been defined
@@ -507,6 +544,14 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &m
         .errors
         .iter()
         .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));
+}
+
+/// Logs the header indicating the begin of the entry run.
+fn log_run_entry(entry_index: usize, logger: &mut Logger) {
+    logger.debug_important(
+        "------------------------------------------------------------------------------",
+    );
+    logger.debug_important(&format!("Executing entry {entry_index}"));
 }
 
 #[cfg(test)]

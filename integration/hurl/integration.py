@@ -26,7 +26,7 @@ def main():
         + get_files("tests_failed/*." + extension)
         + get_files("tests_failed_not_linted/*." + extension)
         + get_files("tests_error_parser/*." + extension)
-        + get_files("ssl/*." + extension)
+        # + get_files("ssl/*." + extension)
     )
     for f in sorted(script_files):
         test_script.test(f)

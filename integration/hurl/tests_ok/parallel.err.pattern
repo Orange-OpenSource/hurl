@@ -7,7 +7,7 @@
 * Entry options:
 * delay: 5000
 *
-* Delay entry 1 (x1 by 5000 ms)
+* Delay entry 1 (pause 5000 ms)
 *
 * Cookie store:
 *
@@ -41,7 +41,7 @@
 * Entry options:
 * delay: 5000
 *
-* Delay entry 1 (x1 by 5000 ms)
+* Delay entry 1 (pause 5000 ms)
 *
 * Cookie store:
 *
@@ -75,7 +75,7 @@
 * Entry options:
 * delay: 5000
 *
-* Delay entry 1 (x1 by 5000 ms)
+* Delay entry 1 (pause 5000 ms)
 *
 * Cookie store:
 *
@@ -109,7 +109,7 @@
 * Entry options:
 * delay: 5000
 *
-* Delay entry 1 (x1 by 5000 ms)
+* Delay entry 1 (pause 5000 ms)
 *
 * Cookie store:
 *

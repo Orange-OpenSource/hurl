@@ -142,7 +142,10 @@ def test_stderr(f, result):
     actual = ignore_lines(decode_string(result.stderr))
     if actual != expected:
         print(">>> error in stderr")
-        print(f"actual:   <{actual}>\nexpected: <{expected}>")
+        print("actual:")
+        print(actual)
+        print("expected:")
+        print(expected)
         sys.exit(1)
 
 

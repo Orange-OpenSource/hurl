@@ -42,10 +42,6 @@
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
-* Entry options:
-* retry: 2
-* retry-interval: 0
-*
 * Cookie store:
 *
 * Request:
@@ -82,10 +78,6 @@
 * Retry entry 1 (x2 pause 0 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
-*
-* Entry options:
-* retry: 2
-* retry-interval: 0
 *
 * Cookie store:
 *

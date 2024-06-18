@@ -41,12 +41,12 @@ pub fn get_entry_options(
     // When used globally (on the command line), `--output` writes the last successful request
     // to `output` file. We don't want to output every entry's response, so we initialise
     // output to `None`.
-    let mut runner_options = RunnerOptions {
+    let mut entry_options = RunnerOptions {
         output: None,
         ..runner_options
     };
     if !has_options(entry) {
-        return Ok(runner_options);
+        return Ok(entry_options);
     }
 
     logger.debug("");
@@ -58,31 +58,31 @@ pub fn get_entry_options(
                 match &option.kind {
                     OptionKind::AwsSigV4(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.aws_sigv4 = Some(value);
+                        entry_options.aws_sigv4 = Some(value);
                     }
                     OptionKind::CaCertificate(filename) => {
                         let value = eval_template(filename, variables)?;
-                        runner_options.cacert_file = Some(value);
+                        entry_options.cacert_file = Some(value);
                     }
                     OptionKind::ClientCert(filename) => {
                         let value = eval_template(filename, variables)?;
-                        runner_options.client_cert_file = Some(value);
+                        entry_options.client_cert_file = Some(value);
                     }
                     OptionKind::ClientKey(filename) => {
                         let value = eval_template(filename, variables)?;
-                        runner_options.client_key_file = Some(value);
+                        entry_options.client_key_file = Some(value);
                     }
                     OptionKind::Compressed(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.compressed = value;
+                        entry_options.compressed = value;
                     }
                     OptionKind::ConnectTo(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.connects_to.push(value);
+                        entry_options.connects_to.push(value);
                     }
                     OptionKind::Delay(value) => {
                         let value = eval_natural_option(value, variables)?;
-                        runner_options.delay = Duration::from_millis(value);
+                        entry_options.delay = Duration::from_millis(value);
                     }
                     // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
                     // through a flag. In an `[Options]` section, the signification of such a flag is:
@@ -111,51 +111,51 @@ pub fn get_entry_options(
                     OptionKind::Http10(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
-                            runner_options.http_version = RequestedHttpVersion::Http10;
+                            entry_options.http_version = RequestedHttpVersion::Http10;
                         }
                     }
                     OptionKind::Http11(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
-                            runner_options.http_version = RequestedHttpVersion::Http11;
+                            entry_options.http_version = RequestedHttpVersion::Http11;
                         } else {
-                            runner_options.http_version = RequestedHttpVersion::Http10;
+                            entry_options.http_version = RequestedHttpVersion::Http10;
                         }
                     }
                     OptionKind::Http2(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
-                            runner_options.http_version = RequestedHttpVersion::Http2;
+                            entry_options.http_version = RequestedHttpVersion::Http2;
                         } else {
-                            runner_options.http_version = RequestedHttpVersion::Http11;
+                            entry_options.http_version = RequestedHttpVersion::Http11;
                         }
                     }
                     OptionKind::Http3(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
-                            runner_options.http_version = RequestedHttpVersion::Http3;
+                            entry_options.http_version = RequestedHttpVersion::Http3;
                         } else {
-                            runner_options.http_version = RequestedHttpVersion::Http2;
+                            entry_options.http_version = RequestedHttpVersion::Http2;
                         }
                     }
                     OptionKind::FollowLocation(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.follow_location = value;
+                        entry_options.follow_location = value;
                     }
                     OptionKind::FollowLocationTrusted(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
-                            runner_options.follow_location = true;
+                            entry_options.follow_location = true;
                         }
-                        runner_options.follow_location_trusted = value;
+                        entry_options.follow_location_trusted = value;
                     }
                     OptionKind::Insecure(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.insecure = value;
+                        entry_options.insecure = value;
                     }
                     OptionKind::IpV4(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.ip_resolve = if value {
+                        entry_options.ip_resolve = if value {
                             IpResolve::IpV4
                         } else {
                             IpResolve::IpV6
@@ -163,7 +163,7 @@ pub fn get_entry_options(
                     }
                     OptionKind::IpV6(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.ip_resolve = if value {
+                        entry_options.ip_resolve = if value {
                             IpResolve::IpV6
                         } else {
                             IpResolve::IpV4
@@ -171,56 +171,56 @@ pub fn get_entry_options(
                     }
                     OptionKind::MaxRedirect(value) => {
                         let value = eval_natural_option(value, variables)?;
-                        runner_options.max_redirect = Some(value as usize);
+                        entry_options.max_redirect = Some(value as usize);
                     }
                     OptionKind::NetRc(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.netrc = value;
+                        entry_options.netrc = value;
                     }
                     OptionKind::NetRcFile(value) => {
                         let filename = eval_template(value, variables)?;
-                        runner_options.netrc_file = Some(filename);
+                        entry_options.netrc_file = Some(filename);
                     }
                     OptionKind::NetRcOptional(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.netrc_optional = value;
+                        entry_options.netrc_optional = value;
                     }
                     OptionKind::Output(output) => {
                         let filename = eval_template(output, variables)?;
                         let output = Output::new(&filename);
-                        runner_options.output = Some(output);
+                        entry_options.output = Some(output);
                     }
                     OptionKind::PathAsIs(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.path_as_is = value;
+                        entry_options.path_as_is = value;
                     }
                     OptionKind::Proxy(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.proxy = Some(value);
+                        entry_options.proxy = Some(value);
                     }
                     OptionKind::Resolve(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.resolves.push(value);
+                        entry_options.resolves.push(value);
                     }
                     OptionKind::Retry(value) => {
                         let value = eval_retry_option(value, variables)?;
-                        runner_options.retry = value;
+                        entry_options.retry = value;
                     }
                     OptionKind::RetryInterval(value) => {
                         let value = eval_natural_option(value, variables)?;
-                        runner_options.retry_interval = Duration::from_millis(value);
+                        entry_options.retry_interval = Duration::from_millis(value);
                     }
                     OptionKind::Skip(value) => {
                         let value = eval_boolean_option(value, variables)?;
-                        runner_options.skip = value;
+                        entry_options.skip = value;
                     }
                     OptionKind::UnixSocket(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.unix_socket = Some(value);
+                        entry_options.unix_socket = Some(value);
                     }
                     OptionKind::User(value) => {
                         let value = eval_template(value, variables)?;
-                        runner_options.user = Some(value);
+                        entry_options.user = Some(value);
                     }
                     OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
@@ -240,7 +240,7 @@ pub fn get_entry_options(
             }
         }
     }
-    Ok(runner_options)
+    Ok(entry_options)
 }
 
 /// Logs an entry option.

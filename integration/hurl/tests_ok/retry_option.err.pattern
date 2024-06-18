@@ -72,10 +72,6 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
-* Entry options:
-* retry: 10
-* retry-interval: 100
-*
 * Cookie store:
 *
 * Request:
@@ -113,10 +109,6 @@
 * Retry entry 2 (x2 pause 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
-*
-* Entry options:
-* retry: 10
-* retry-interval: 100
 *
 * Cookie store:
 *
@@ -156,10 +148,6 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
-* Entry options:
-* retry: 10
-* retry-interval: 100
-*
 * Cookie store:
 *
 * Request:
@@ -197,10 +185,6 @@
 * Retry entry 2 (x4 pause 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
-*
-* Entry options:
-* retry: 10
-* retry-interval: 100
 *
 * Cookie store:
 *
