@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::error::error_string;
+use hurl_core::typing::Repeat;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
@@ -76,21 +77,6 @@ pub enum OutputType {
     Json,
     /// Nothing is outputted on standard output when a Hurl file run is completed.
     NoOutput,
-}
-
-/// Repeat mode: infinite of finite.
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Repeat {
-    /// Runner repeats runs a finite number of times.
-    Count(usize),
-    /// Runner loops forever.
-    Forever,
-}
-
-impl Default for Repeat {
-    fn default() -> Self {
-        Repeat::Count(1)
-    }
 }
 
 const MAX_RUNNING_DISPLAYED: usize = 8;

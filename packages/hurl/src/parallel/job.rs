@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::parallel::runner::Repeat;
+use hurl_core::typing::Repeat;
 use std::collections::HashMap;
 
 use crate::runner::{HurlResult, Input, RunnerOptions, Value};
@@ -153,9 +153,9 @@ impl Iterator for JobQueue<'_> {
 #[cfg(test)]
 mod tests {
     use crate::parallel::job::{Job, JobQueue};
-    use crate::parallel::runner::Repeat;
     use crate::runner::{Input, RunnerOptionsBuilder};
     use crate::util::logger::LoggerOptionsBuilder;
+    use hurl_core::typing::Repeat;
     use std::collections::HashMap;
 
     fn new_job(file: &str, index: usize) -> Job {

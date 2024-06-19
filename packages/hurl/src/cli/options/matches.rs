@@ -24,10 +24,10 @@ use std::{env, fs, io};
 
 use clap::ArgMatches;
 use hurl::runner::{Input, Value};
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 use super::variables::{parse as parse_variable, parse_value};
-use super::{CliOptionsError, Repeat};
+use super::CliOptionsError;
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 

@@ -36,7 +36,7 @@ use hurl_core::ast::Entry;
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -147,19 +147,6 @@ impl From<IpResolve> for http::IpResolve {
             IpResolve::IpV4 => http::IpResolve::IpV4,
             IpResolve::IpV6 => http::IpResolve::IpV6,
         }
-    }
-}
-
-/// Repeat mode: infinite of finite.
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Repeat {
-    Count(usize),
-    Forever,
-}
-
-impl Default for Repeat {
-    fn default() -> Self {
-        Repeat::Count(1)
     }
 }
 

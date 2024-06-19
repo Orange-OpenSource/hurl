@@ -18,7 +18,7 @@
 use std::cmp::min;
 use std::path::Path;
 
-use crate::cli::options::{CliOptions, Repeat};
+use crate::cli::options::CliOptions;
 use crate::cli::CliError;
 use crate::{cli, HurlRun};
 
@@ -28,6 +28,7 @@ use hurl::runner::{HurlResult, Input, Output};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::error_string;
+use hurl_core::typing::Repeat;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -173,9 +174,6 @@ pub fn run_par(
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);
-    let repeat = options
-        .repeat
-        .map_or(Default::default(), parallel::runner::Repeat::from);
 
     let jobs = files
         .iter()
@@ -190,7 +188,7 @@ pub fn run_par(
     let mut runner = ParallelRunner::new(
         workers_count,
         output_type,
-        repeat,
+        options.repeat.unwrap_or_default(),
         options.test,
         options.progress_bar,
         options.color,
@@ -219,15 +217,6 @@ impl cli::OutputType {
             },
             cli::OutputType::Json => parallel::runner::OutputType::Json,
             cli::OutputType::NoOutput => parallel::runner::OutputType::NoOutput,
-        }
-    }
-}
-
-impl From<Repeat> for parallel::runner::Repeat {
-    fn from(value: Repeat) -> Self {
-        match value {
-            Repeat::Count(n) => parallel::runner::Repeat::Count(n),
-            Repeat::Forever => parallel::runner::Repeat::Forever,
         }
     }
 }
@@ -294,9 +283,9 @@ impl Iterator for InputQueue<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::cli::options::Repeat;
     use crate::run::InputQueue;
     use hurl::runner::Input;
+    use hurl_core::typing::Repeat;
 
     #[test]
     fn input_queue_is_finite() {

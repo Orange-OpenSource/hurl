@@ -15,10 +15,25 @@
  * limitations under the License.
  *
  */
-
+//! Hurl common types.
 use core::fmt;
 
-/// Represents a retry operation, either finite or infinite.
+/// Represents a repeat operation, either finite or infinite.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Repeat {
+    Count(usize),
+    Forever,
+}
+
+impl Default for Repeat {
+    fn default() -> Self {
+        Repeat::Count(1)
+    }
+}
+
+/// Represents a retry operation (when an operation has failed), either finite or infinite.
+/// Contrary to [`Repeat`], [`Retry`] has a notion of retry only on operation failure, while
+/// [`Repeat`] is unconditional.
 #[derive(Clone, Debug, PartialEq, Eq, Copy)]
 pub enum Retry {
     Finite(usize),
