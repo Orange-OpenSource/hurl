@@ -102,7 +102,7 @@ jobs:
           run: |
             set -e
             echo "::group::Install Prerequisites"
-              bin/install_prerequisites_docker_ubuntu.sh
+              bin/install_prerequisites_ubuntu.sh
               sudo apt-get install -y g++-aarch64-linux-gnu libc6-dev-arm64-cross
               ./bin/export_cross_compile_env.sh
             echo "::endgroup::"

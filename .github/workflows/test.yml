@@ -200,7 +200,7 @@ jobs:
         run: |
           set -e
           echo "::group::Install Prerequisites"
-            bin/install_prerequisites_docker_fedora.sh
+            bin/install_prerequisites_fedora.sh
           echo "::endgroup::"
           echo "::group::Install python3 venv"
             bin/install_python3_venv.sh
