@@ -179,7 +179,7 @@ jobs:
         run: |
           set -e
           echo "::group::Install system prerequisites"
-            bin/install_prerequisites_docker_archlinux.sh
+            bin/install_prerequisites_archlinux.sh
           echo "::endgroup::"
           echo "::group::Install python3 venv"
             bin/install_python3_venv.sh
