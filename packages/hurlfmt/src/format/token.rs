@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::ast::*;
+use hurl_core::typing::Retry;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -945,7 +946,6 @@ impl Tokenizable for RetryOption {
 impl Tokenizable for Retry {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            Retry::None => vec![Token::Number("0".to_string())],
             Retry::Finite(n) => vec![Token::Number(n.to_string())],
             Retry::Infinite => vec![Token::Number("-1".to_string())],
         }

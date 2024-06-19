@@ -18,6 +18,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
+use hurl_core::typing::Retry;
 
 use super::serialize_json::*;
 
@@ -363,7 +364,6 @@ impl ToJson for RetryOption {
 impl ToJson for Retry {
     fn to_json(&self) -> JValue {
         match self {
-            Retry::None => JValue::Number("0".to_string()),
             Retry::Finite(value) => JValue::Number(value.to_string()),
             Retry::Infinite => JValue::Number("-1".to_string()),
         }

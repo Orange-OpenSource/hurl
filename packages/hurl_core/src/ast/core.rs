@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::json;
+use crate::typing::Retry;
 
 ///
 /// Hurl AST
@@ -914,11 +915,4 @@ pub enum FilterValue {
         space0: Whitespace,
         expr: Template,
     },
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Copy)]
-pub enum Retry {
-    None,
-    Finite(usize),
-    Infinite,
 }

@@ -450,7 +450,6 @@ pub fn retry() -> clap::Arg {
     clap::Arg::new("retry")
         .long("retry")
         .value_name("NUM")
-        .default_value("0")
         .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
         .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")

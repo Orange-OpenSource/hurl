@@ -15,9 +15,22 @@
  * limitations under the License.
  *
  */
-pub mod ast;
-pub mod error;
-pub mod format;
-pub mod parser;
-pub mod text;
-pub mod typing;
+
+use core::fmt;
+
+/// Represents a retry operation, either finite or infinite.
+#[derive(Clone, Debug, PartialEq, Eq, Copy)]
+pub enum Retry {
+    Finite(usize),
+    Infinite,
+}
+
+impl fmt::Display for Retry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let value = match self {
+            Retry::Finite(n) => *n as i32,
+            Retry::Infinite => -1,
+        };
+        write!(f, "{}", value)
+    }
+}

@@ -24,7 +24,7 @@ use std::{env, fs, io};
 
 use clap::ArgMatches;
 use hurl::runner::{Input, Value};
-use hurl_core::ast::Retry;
+use hurl_core::typing::Retry;
 
 use super::variables::{parse as parse_variable, parse_value};
 use super::{CliOptionsError, Repeat};
@@ -378,11 +378,11 @@ pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
     get_strings(arg_matches, "resolve").unwrap_or_default()
 }
 
-pub fn retry(arg_matches: &ArgMatches) -> Retry {
-    match get::<i32>(arg_matches, "retry").unwrap() {
-        -1 => Retry::Infinite,
-        0 => Retry::None,
-        r => Retry::Finite(r as usize),
+pub fn retry(arg_matches: &ArgMatches) -> Option<Retry> {
+    match get::<i32>(arg_matches, "retry") {
+        Some(-1) => Some(Retry::Infinite),
+        Some(r) => Some(Retry::Finite(r as usize)),
+        None => None,
     }
 }
 

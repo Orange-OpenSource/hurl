@@ -17,7 +17,8 @@
  */
 use std::time::Duration;
 
-use hurl_core::ast::{Entry, Retry};
+use hurl_core::ast::Entry;
+use hurl_core::typing::Retry;
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;
@@ -54,7 +55,7 @@ pub struct RunnerOptionsBuilder {
     pre_entry: Option<fn(Entry) -> bool>,
     proxy: Option<String>,
     resolves: Vec<String>,
-    retry: Retry,
+    retry: Option<Retry>,
     retry_interval: Duration,
     skip: bool,
     ssl_no_revoke: bool,
@@ -98,7 +99,7 @@ impl Default for RunnerOptionsBuilder {
             pre_entry: None,
             proxy: None,
             resolves: vec![],
-            retry: Retry::None,
+            retry: None,
             retry_interval: Duration::from_millis(1000),
             skip: false,
             ssl_no_revoke: false,
@@ -327,7 +328,7 @@ impl RunnerOptionsBuilder {
     /// Sets maximum number of retries.
     ///
     /// Default is 0.
-    pub fn retry(&mut self, retry: Retry) -> &mut Self {
+    pub fn retry(&mut self, retry: Option<Retry>) -> &mut Self {
         self.retry = retry;
         self
     }
@@ -461,7 +462,7 @@ pub struct RunnerOptions {
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,
     pub(crate) proxy: Option<String>,
     pub(crate) resolves: Vec<String>,
-    pub(crate) retry: Retry,
+    pub(crate) retry: Option<Retry>,
     pub(crate) retry_interval: Duration,
     pub(crate) skip: bool,
     pub(crate) ssl_no_revoke: bool,
