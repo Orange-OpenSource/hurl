@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/delay.hurl --delay 1000 --verbose
+hurl --delay 1000 tests_ok/delay.hurl
