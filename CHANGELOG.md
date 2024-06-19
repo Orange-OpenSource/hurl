@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@lambrospetrou](https://github.com/lambrospetrou),
 [@OverkillGuy](https://github.com/OverkillGuy),
 [@DenuxPlays](https://github.com/DenuxPlays),
 [@linkdd](https://github.com/linkdd),
@@ -10,6 +11,7 @@ Thanks to
 Enhancements:
 
 * Create intermediary directories if necessary when producing TAP report [#2860](https://github.com/Orange-OpenSource/hurl/issues/2860)
+* Expose request comments in --out json (hurlfmt) [#2850](https://github.com/Orange-OpenSource/hurl/issues/2850)
 * Create intermediary directories if necessary when producing JUnit report [#2842](https://github.com/Orange-OpenSource/hurl/issues/2842)
 * Add global requests count in test summary [#2832](https://github.com/Orange-OpenSource/hurl/issues/2832)
 * Replace output warnings by errors [#2815](https://github.com/Orange-OpenSource/hurl/issues/2815)
@@ -17,11 +19,16 @@ Enhancements:
 * Add support for importing curl url option in hurlfmt [#2750](https://github.com/Orange-OpenSource/hurl/issues/2750)
 * Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
 * Add repeat option to repeat a sequence of Hurl file [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
+* Add repeat option per request [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
+* Apply delay only once per entry, no matter how many retry [#1973](https://github.com/Orange-OpenSource/hurl/issues/1973)
+* Accept directory as Hurl arguments for processing file [#1446](https://github.com/Orange-OpenSource/hurl/issues/1446)
 
 
 Bugs Fixed:
 
+* Truncate file then append it when dumping response with --output. [#2886](https://github.com/Orange-OpenSource/hurl/issues/2886)
 * Fix crash with --json option when capturing 'HttpOnly' and 'Secure' cookie attribute [#2871](https://github.com/Orange-OpenSource/hurl/issues/2871)
+* Fix crash when capturing 'Expires' cookie attribute [#2870](https://github.com/Orange-OpenSource/hurl/issues/2870)
 * Do not filter 'Authorization' header if host doesn't change while following redirect [#2823](https://github.com/Orange-OpenSource/hurl/issues/2823)
 * Fix sending 'Authorization' header from --user when following redirect [#2812](https://github.com/Orange-OpenSource/hurl/issues/2812)
 * Fix URL when following redirect for certain 'Location' header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
