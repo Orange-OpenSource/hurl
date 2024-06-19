@@ -1,9 +1,0 @@
-# Bench Suite
-
-# Start Server
-python server.py
-
-# Run Bench Suite
-./run.sh
-
-
