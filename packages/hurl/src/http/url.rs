@@ -146,6 +146,6 @@ mod tests {
         assert_eq!(
             base.join("//example.org/baz/index.html").unwrap(),
             "http://example.org/baz/index.html".parse().unwrap()
-        )
+        );
     }
 }

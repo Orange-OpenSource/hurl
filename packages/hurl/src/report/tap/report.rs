@@ -233,6 +233,6 @@ ok 1 - test.1.hurl
 ok 2 - test.2.hurl
 not ok 3 - test.3.hurl
 "#;
-        assert!(parse_tap_report(s).is_err())
+        assert!(parse_tap_report(s).is_err());
     }
 }
