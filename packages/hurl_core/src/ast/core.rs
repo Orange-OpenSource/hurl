@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::json;
-use crate::typing::Retry;
+use crate::typing::{Repeat, Retry};
 
 ///
 /// Hurl AST
@@ -737,6 +737,7 @@ pub enum OptionKind {
     Output(Template),
     PathAsIs(BooleanOption),
     Proxy(Template),
+    Repeat(RepeatOption),
     Resolve(Template),
     Retry(RetryOption),
     RetryInterval(NaturalOption),
@@ -774,6 +775,7 @@ impl OptionKind {
             OptionKind::Output(_) => "output",
             OptionKind::PathAsIs(_) => "path-as-is",
             OptionKind::Proxy(_) => "proxy",
+            OptionKind::Repeat(_) => "repeat",
             OptionKind::Resolve(_) => "resolve",
             OptionKind::Retry(_) => "retry",
             OptionKind::RetryInterval(_) => "retry-interval",
@@ -811,6 +813,7 @@ impl OptionKind {
             OptionKind::Output(filename) => filename.to_string(),
             OptionKind::PathAsIs(value) => value.to_string(),
             OptionKind::Proxy(value) => value.to_string(),
+            OptionKind::Repeat(value) => value.to_string(),
             OptionKind::Resolve(value) => value.to_string(),
             OptionKind::Retry(value) => value.to_string(),
             OptionKind::RetryInterval(value) => value.to_string(),
@@ -835,6 +838,12 @@ pub enum BooleanOption {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum NaturalOption {
     Literal(u64),
+    Expression(Expr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum RepeatOption {
+    Literal(Repeat),
     Expression(Expr),
 }
 

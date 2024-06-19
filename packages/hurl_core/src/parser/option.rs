@@ -23,7 +23,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
-use crate::typing::Retry;
+use crate::typing::{Repeat, Retry};
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -62,6 +62,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
         "proxy" => option_proxy(reader)?,
+        "repeat" => option_repeat(reader)?,
         "resolve" => option_resolve(reader)?,
         "retry" => option_retry(reader)?,
         "retry-interval" => option_retry_interval(reader)?,
@@ -206,6 +207,11 @@ fn option_proxy(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::Proxy(value))
 }
 
+fn option_repeat(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = repeat_option(reader)?;
+    Ok(OptionKind::Repeat(value))
+}
+
 fn option_resolve(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = unquoted_template(reader)?;
     Ok(OptionKind::Resolve(value))
@@ -249,6 +255,21 @@ fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::VeryVerbose(value))
+}
+
+fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
+    let pos = reader.state.pos;
+    let value = nonrecover(integer, reader)?;
+    if value == -1 {
+        Ok(Repeat::Forever)
+    } else if value >= 0 {
+        Ok(Repeat::Count(value as usize))
+    } else {
+        let kind = ParseErrorKind::Expecting {
+            value: "Expecting a repeat value".to_string(),
+        };
+        Err(ParseError::new(pos, false, kind))
+    }
 }
 
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
@@ -296,6 +317,23 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
                 ParseError::new(e.pos, false, kind)
             })?;
             Ok(NaturalOption::Expression(exp))
+        }
+    }
+}
+
+fn repeat_option(reader: &mut Reader) -> ParseResult<RepeatOption> {
+    let start = reader.state;
+    match repeat(reader) {
+        Ok(v) => Ok(RepeatOption::Literal(v)),
+        Err(_) => {
+            reader.state = start;
+            let exp = expr::parse(reader).map_err(|e| {
+                let kind = ParseErrorKind::Expecting {
+                    value: "integer".to_string(),
+                };
+                ParseError::new(e.pos, false, kind)
+            })?;
+            Ok(RepeatOption::Expression(exp))
         }
     }
 }

@@ -26,7 +26,7 @@ use hurl_core::ast::{
 };
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
@@ -140,6 +140,7 @@ pub fn run_entries(
     let mut entries_result = vec![];
     let mut variables = variables.clone();
     let mut entry_index = runner_options.from_entry.unwrap_or(1);
+    let mut repeat_count = 0;
     let n = runner_options.to_entry.unwrap_or(entries.len());
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
@@ -215,6 +216,14 @@ pub fn run_entries(
             continue;
         }
 
+        // Repeat 0 is equivalent to skip.
+        if options.repeat == Some(Repeat::Count(0)) {
+            logger.debug("");
+            logger.debug_important(&format!("Entry {entry_index} is skipped (repeat 0 times)"));
+            entry_index += 1;
+            continue;
+        }
+
         // Should we delay?
         let delay = options.delay;
         let delay_ms = delay.as_millis();
@@ -252,8 +261,27 @@ pub fn run_entries(
             break;
         }
 
-        // We pass to the next entry
-        entry_index += 1;
+        // We pass to the next entry if the repeat count is reached.
+        repeat_count += 1;
+        match options.repeat {
+            None => {
+                repeat_count = 0;
+                entry_index += 1;
+            }
+            Some(Repeat::Count(n)) => {
+                if repeat_count >= n {
+                    repeat_count = 0;
+                    entry_index += 1;
+                } else {
+                    logger.debug_important(&format!(
+                        "Repeat entry {entry_index} (x{repeat_count}/{n})"
+                    ));
+                }
+            }
+            Some(Repeat::Forever) => {
+                logger.debug_important(&format!("Repeat entry {entry_index} (x{repeat_count})"));
+            }
+        }
     }
 
     let time_in_ms = start.elapsed().as_millis();

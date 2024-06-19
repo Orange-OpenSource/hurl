@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::ast::*;
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -903,6 +903,7 @@ impl Tokenizable for OptionKind {
             OptionKind::Output(filename) => filename.tokenize(),
             OptionKind::PathAsIs(value) => value.tokenize(),
             OptionKind::Proxy(value) => value.tokenize(),
+            OptionKind::Repeat(value) => value.tokenize(),
             OptionKind::Resolve(value) => value.tokenize(),
             OptionKind::Retry(value) => value.tokenize(),
             OptionKind::RetryInterval(value) => value.tokenize(),
@@ -930,6 +931,24 @@ impl Tokenizable for NaturalOption {
         match self {
             NaturalOption::Literal(value) => vec![Token::Number(value.to_string())],
             NaturalOption::Expression(expr) => expr.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for RepeatOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            RepeatOption::Literal(retry) => retry.tokenize(),
+            RepeatOption::Expression(expr) => expr.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for Repeat {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            Repeat::Count(n) => vec![Token::Number(n.to_string())],
+            Repeat::Forever => vec![Token::Number("-1".to_string())],
         }
     }
 }

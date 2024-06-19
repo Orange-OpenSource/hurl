@@ -18,7 +18,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 use super::serialize_json::*;
 
@@ -316,6 +316,7 @@ impl ToJson for EntryOption {
             OptionKind::Output(filename) => JValue::String(filename.to_string()),
             OptionKind::PathAsIs(value) => value.to_json(),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
+            OptionKind::Repeat(value) => value.to_json(),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),
             OptionKind::Retry(value) => value.to_json(),
             OptionKind::RetryInterval(value) => value.to_json(),
@@ -352,6 +353,24 @@ impl ToJson for NaturalOption {
     }
 }
 
+impl ToJson for RepeatOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            RepeatOption::Literal(value) => value.to_json(),
+            RepeatOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
+
+impl ToJson for Repeat {
+    fn to_json(&self) -> JValue {
+        match self {
+            Repeat::Count(n) => JValue::Number(n.to_string()),
+            Repeat::Forever => JValue::Number("-1".to_string()),
+        }
+    }
+}
+
 impl ToJson for RetryOption {
     fn to_json(&self) -> JValue {
         match self {
@@ -364,7 +383,7 @@ impl ToJson for RetryOption {
 impl ToJson for Retry {
     fn to_json(&self) -> JValue {
         match self {
-            Retry::Finite(value) => JValue::Number(value.to_string()),
+            Retry::Finite(n) => JValue::Number(n.to_string()),
             Retry::Infinite => JValue::Number("-1".to_string()),
         }
     }

@@ -18,7 +18,7 @@
 use std::time::Duration;
 
 use hurl_core::ast::Entry;
-use hurl_core::typing::Retry;
+use hurl_core::typing::{Repeat, Retry};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;
@@ -54,6 +54,7 @@ pub struct RunnerOptionsBuilder {
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(Entry) -> bool>,
     proxy: Option<String>,
+    repeat: Option<Repeat>,
     resolves: Vec<String>,
     retry: Option<Retry>,
     retry_interval: Duration,
@@ -98,6 +99,7 @@ impl Default for RunnerOptionsBuilder {
             post_entry: None,
             pre_entry: None,
             proxy: None,
+            repeat: None,
             resolves: vec![],
             retry: None,
             retry_interval: Duration::from_millis(1000),
@@ -319,6 +321,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Set the number of repetition for a given entry.
+    pub fn repeat(&mut self, repeat: Option<Repeat>) -> &mut Self {
+        self.repeat = repeat;
+        self
+    }
+
     /// Provides a custom address for a specific host and port pair.
     pub fn resolves(&mut self, resolves: &[String]) -> &mut Self {
         self.resolves = resolves.to_vec();
@@ -416,6 +424,7 @@ impl RunnerOptionsBuilder {
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
+            repeat: self.repeat,
             resolves: self.resolves.clone(),
             retry: self.retry,
             retry_interval: self.retry_interval,
@@ -461,6 +470,7 @@ pub struct RunnerOptions {
     pub(crate) post_entry: Option<fn() -> bool>,
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,
     pub(crate) proxy: Option<String>,
+    pub(crate) repeat: Option<Repeat>,
     pub(crate) resolves: Vec<String>,
     pub(crate) retry: Option<Retry>,
     pub(crate) retry_interval: Duration,

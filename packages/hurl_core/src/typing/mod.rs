@@ -31,6 +31,15 @@ impl Default for Repeat {
     }
 }
 
+impl fmt::Display for Repeat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let value = match self {
+            Repeat::Count(n) => *n as i64,
+            Repeat::Forever => -1,
+        };
+        write!(f, "{}", value)
+    }
+}
 /// Represents a retry operation (when an operation has failed), either finite or infinite.
 /// Contrary to [`Repeat`], [`Retry`] has a notion of retry only on operation failure, while
 /// [`Repeat`] is unconditional.
@@ -43,7 +52,7 @@ pub enum Retry {
 impl fmt::Display for Retry {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let value = match self {
-            Retry::Finite(n) => *n as i32,
+            Retry::Finite(n) => *n as i64,
             Retry::Infinite => -1,
         };
         write!(f, "{}", value)
