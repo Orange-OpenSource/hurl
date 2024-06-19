@@ -18,6 +18,7 @@
 use std::fmt::Display;
 
 use crate::ast::*;
+use crate::typing::Retry;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
@@ -262,7 +263,6 @@ impl HtmlFormatter {
         match retry {
             Retry::Finite(n) => self.fmt_number(n),
             Retry::Infinite => self.fmt_number(-1),
-            Retry::None => self.fmt_number(0),
         };
     }
 

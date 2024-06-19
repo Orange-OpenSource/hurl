@@ -22,10 +22,11 @@ use std::time::Instant;
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::{
-    Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, Retry, SourceInfo,
+    Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, SourceInfo,
 };
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
+use hurl_core::typing::Retry;
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
@@ -290,7 +291,7 @@ fn run_request(
         let mut has_error = !result.errors.is_empty();
 
         // The retry threshold can only be reached with a finite positive number of retries
-        let retry_max_reached = if let Retry::Finite(r) = options.retry {
+        let retry_max_reached = if let Some(Retry::Finite(r)) = options.retry {
             retry_count > r
         } else {
             false
@@ -306,7 +307,7 @@ fn run_request(
 
         // We log eventual errors, only if we're not retrying the current entry...
         // The retry does not take into account a possible output Error
-        let retry = !matches!(options.retry, Retry::None) && !retry_max_reached && has_error;
+        let retry = options.retry.is_some() && !retry_max_reached && has_error;
 
         // When --output is overridden on a request level, we output the HTTP response only if the
         // call has succeeded. Output errors are not taken into account for retrying requests.
@@ -484,7 +485,11 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
     }
 
     if options.retry != default_options.retry {
-        non_default_options.push(("retry", options.retry.to_string()));
+        let value = match options.retry {
+            Some(retry) => retry.to_string(),
+            None => "none".to_string(),
+        };
+        non_default_options.push(("retry", value));
     }
 
     if options.unix_socket != default_options.unix_socket {

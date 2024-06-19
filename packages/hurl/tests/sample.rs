@@ -24,7 +24,6 @@ use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
-use hurl_core::ast::Retry;
 
 #[test]
 fn simple_sample() {
@@ -117,7 +116,7 @@ fn simple_sample() {
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
-        .retry(Retry::None)
+        .retry(None)
         .retry_interval(Duration::from_secs(1))
         .timeout(Duration::from_secs(300))
         .to_entry(None)

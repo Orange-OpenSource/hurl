@@ -23,6 +23,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
+use crate::typing::Retry;
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -255,9 +256,7 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
     let value = nonrecover(integer, reader)?;
     if value == -1 {
         Ok(Retry::Infinite)
-    } else if value == 0 {
-        Ok(Retry::None)
-    } else if value > 0 {
+    } else if value >= 0 {
         Ok(Retry::Finite(value as usize))
     } else {
         let kind = ParseErrorKind::Expecting {

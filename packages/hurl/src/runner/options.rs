@@ -20,8 +20,9 @@ use std::time::Duration;
 
 use hurl_core::ast::{
     BooleanOption, Entry, EntryOption, Float, NaturalOption, Number as AstNumber, OptionKind,
-    Retry, RetryOption, SectionValue, VariableDefinition, VariableValue,
+    RetryOption, SectionValue, VariableDefinition, VariableValue,
 };
+use hurl_core::typing::Retry;
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
@@ -204,7 +205,7 @@ pub fn get_entry_options(
                     }
                     OptionKind::Retry(value) => {
                         let value = eval_retry_option(value, variables)?;
-                        entry_options.retry = value;
+                        entry_options.retry = Some(value);
                     }
                     OptionKind::RetryInterval(value) => {
                         let value = eval_natural_option(value, variables)?;
@@ -356,9 +357,7 @@ fn eval_retry_option(
             Value::Number(Number::Integer(value)) => {
                 if value == -1 {
                     Ok(Retry::Infinite)
-                } else if value == 0 {
-                    Ok(Retry::None)
-                } else if value > 0 {
+                } else if value >= 0 {
                     Ok(Retry::Finite(value as usize))
                 } else {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {

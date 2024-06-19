@@ -108,7 +108,7 @@ Options:
       --resolve <HOST:PORT:ADDR>
           Provide a custom address for a specific HOST and PORT pair
       --retry <NUM>
-          Maximum number of retries, 0 for no retries, -1 for unlimited retries [default: 0]
+          Maximum number of retries, 0 for no retries, -1 for unlimited retries
       --retry-interval <MILLISECONDS>
           Interval in milliseconds before a retry [default: 1000]
       --ssl-no-revoke

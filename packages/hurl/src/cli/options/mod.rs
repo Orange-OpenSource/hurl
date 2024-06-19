@@ -31,11 +31,12 @@ use hurl::http::RequestedHttpVersion;
 use hurl::runner::{Input, Output};
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
-use hurl_core::ast::{Entry, Retry};
+use hurl_core::ast::Entry;
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
+use hurl_core::typing::Retry;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -82,7 +83,7 @@ pub struct CliOptions {
     pub proxy: Option<String>,
     pub repeat: Option<Repeat>,
     pub resolves: Vec<String>,
-    pub retry: Retry,
+    pub retry: Option<Retry>,
     pub retry_interval: Duration,
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,
