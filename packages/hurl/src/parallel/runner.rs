@@ -224,6 +224,12 @@ impl ParallelRunner {
                     if !msg.stderr.buffer().is_empty() {
                         stderr.eprint(msg.stderr.buffer());
                     }
+                    if !msg.stdout.buffer().is_empty() {
+                        let ret = stdout.write_all(msg.stdout.buffer());
+                        if ret.is_err() {
+                            return Err(JobError::IO("Issue writing to stdout".to_string()));
+                        }
+                    }
 
                     // Then, we print job output on standard output (the first response truncates
                     // exiting file, subsequent response appends bytes).

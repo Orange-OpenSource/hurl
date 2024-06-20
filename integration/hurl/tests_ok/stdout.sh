@@ -1,5 +1,5 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl --verbose tests_ok/stdout.hurl
+hurl --verbose --output - tests_ok/stdout.hurl
 
 
