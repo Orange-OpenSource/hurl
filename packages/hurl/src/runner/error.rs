@@ -294,7 +294,9 @@ impl DisplaySourceError for RunnerError {
         let mut text = StyledString::new();
         hurl_core::error::add_source_line(&mut text, content, self.source_info().start.line);
         text.append(self.fixme(content));
-        text
+
+        let error_line = self.source_info().start.line;
+        hurl_core::error::add_line_info_prefix(&text, content, error_line)
     }
 }
 
@@ -334,7 +336,7 @@ mod tests {
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            " GET http://unknown\n     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown"
+            "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
@@ -364,12 +366,12 @@ HTTP/1.0 200
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            " HTTP/1.0 200\n          ^^^ actual value is <404>"
+            "\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |"
         );
         colored::control::set_override(true);
         assert_eq!(
             error.message(&split_lines(content)).to_string(Format::Ansi),
-            " HTTP/1.0 200\n\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m",
+            "\n\u{1b}[1;34m 2 |\u{1b}[0m HTTP/1.0 200\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m"
         );
 
         assert_eq!(
@@ -401,7 +403,7 @@ xpath "strong(//head/title)" == "Hello"
         );
         assert_eq!(
         &error.message( &split_lines(content)).to_string(Format::Plain),
-        " xpath \"strong(//head/title)\" == \"Hello\"\n       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid"
+        "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
     );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),
@@ -440,9 +442,11 @@ jsonpath "$.count" >= 5
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            r#" jsonpath "$.count" >= 5
-   actual:   int <2>
-   expected: greater than int <5>"#
+            r#"
+ 4 | jsonpath "$.count" >= 5
+   |   actual:   int <2>
+   |   expected: greater than int <5>
+   |"#
         );
 
         assert_eq!(
@@ -479,7 +483,7 @@ HTTP/1.0 200
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            " ```<p>Hello</p>\n    ^ actual value is <<p>Hello</p>\n\n      >"
+            "\n 3 | ```<p>Hello</p>\n   |    ^ actual value is <<p>Hello</p>\n   |\n   |      >\n   |"
         );
         assert_eq!(
             error_string(filename, content, &error, Some(entry_source_info), false),

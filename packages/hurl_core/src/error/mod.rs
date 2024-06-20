@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::SourceInfo;
-use crate::text::{Format, StyledString};
+use crate::text::{Format, Style, StyledString};
 use colored::Colorize;
 use std::cmp::max;
 
@@ -121,13 +121,6 @@ pub fn error_string<E: DisplaySourceError>(
         prefix.to_string()
     };
 
-    let prefix_with_number = format!("{error_line:>loc_max_width$} {separator}");
-    let prefix_with_number = if colored {
-        prefix_with_number.blue().bold().to_string()
-    } else {
-        prefix_with_number.to_string()
-    };
-
     // 1. First line is the description, ex. `Assert status code`.
     let description = if colored {
         error.description().bold().to_string()
@@ -180,7 +173,6 @@ pub fn error_string<E: DisplaySourceError>(
     }
 
     // 5. Appends the error message (one or more lines)
-    // with the line number '|' prefix
     let message = error.message(&lines);
     let message = if colored {
         message.to_string(Format::Ansi)
@@ -188,19 +180,55 @@ pub fn error_string<E: DisplaySourceError>(
         message.to_string(Format::Plain)
     };
 
-    for (i, line) in split_lines(&message).iter().enumerate() {
-        text.push('\n');
-        text.push_str(if i == 0 { &prefix_with_number } else { &prefix });
-        text.push_str(line);
-    }
-
-    // 6. Appends additional empty line
-    if !message.ends_with('\n') {
-        text.push('\n');
-        text.push_str(&prefix);
-    }
+    text.push_str(&message);
 
     text
+}
+
+pub fn add_line_info_prefix(
+    text: &StyledString,
+    content: &[&str],
+    error_line: usize,
+) -> StyledString {
+    let text = text.clone();
+    //dd_source_line(&mut text, content, error_line);
+
+    //        eprintln!("text={:#?}", text);
+    let separator = "|";
+
+    let loc_max_width = max(content.len().to_string().len(), 2);
+    let spaces = " ".repeat(loc_max_width);
+    let mut prefix = StyledString::new();
+    prefix.push_with(
+        format!("{spaces} {separator}").as_str(),
+        Style::new().blue().bold(),
+    );
+    let mut prefix_with_number = StyledString::new();
+    prefix_with_number.push_with(
+        format!("{error_line:>loc_max_width$} {separator}").as_str(),
+        Style::new().blue().bold(),
+    );
+
+    let mut text2 = StyledString::new();
+    for (i, line) in text.split('\n').iter().enumerate() {
+        text2.push("\n");
+        text2.append(if i == 0 {
+            prefix_with_number.clone()
+        } else {
+            prefix.clone()
+        });
+        text2.append(line.clone());
+    }
+
+    //eprintln!(">>> text2 {:#?}", text2);
+    //  Appends additional empty line
+    if !text2.ends_with("|") {
+        text2.push("\n");
+        text2.append(prefix.clone());
+    }
+    //  eprintln!(">>> text2 {:#?}", text2);
+
+    text2
 }
 
 /// Splits this `text` to a list of LF/CRLF separated lines.
@@ -313,7 +341,8 @@ HTTP 200
                 diff
             }
             fn message(&self, lines: &[&str]) -> StyledString {
-                self.fixme(lines)
+                let s = self.fixme(lines);
+                add_line_info_prefix(&s, &[], 4)
             }
         }
         let error = E;
@@ -323,16 +352,17 @@ HTTP 200
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            r#" {
-   "name": "John",
--  "age": 27
-+  "age": 28
- }
-"#
+            r#"
+ 4 | {
+   |   "name": "John",
+   |-  "age": 27
+   |+  "age": 28
+   | }
+   |"#
         );
         assert_eq!(
             error.message(&split_lines(content)).to_string(Format::Ansi),
-            " {\n   \"name\": \"John\",\n\u{1b}[31m-  \"age\": 27\u{1b}[0m\n\u{1b}[32m+  \"age\": 28\u{1b}[0m\n }\n"
+            "\n\u{1b}[1;34m 4 |\u{1b}[0m {\n\u{1b}[1;34m   |\u{1b}[0m   \"name\": \"John\",\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[31m-  \"age\": 27\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[32m+  \"age\": 28\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m }\n\u{1b}[1;34m   |\u{1b}[0m"
         );
 
         assert_eq!(

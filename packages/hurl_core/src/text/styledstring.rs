@@ -100,6 +100,10 @@ impl StyledString {
         items.push(item);
         items
     }
+
+    pub fn ends_with(&self, value: &str) -> bool {
+        self.to_string(Format::Plain).ends_with(value)
+    }
 }
 
 impl Token {
@@ -274,6 +278,14 @@ mod tests {
         item2.push("2");
         let item3 = StyledString::new();
         assert_eq!(line.split(','), vec![item0, item1, item2, item3]);
+    }
+
+    #[test]
+    fn test_ends_with() {
+        let mut line = StyledString::new();
+        line.push("Hello,Hi,");
+        assert!(line.ends_with(","));
+        assert!(!line.ends_with("\n"));
     }
 
     #[test]
