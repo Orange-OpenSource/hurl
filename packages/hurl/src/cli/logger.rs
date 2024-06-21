@@ -15,20 +15,21 @@
  * limitations under the License.
  *
  */
-use colored::Colorize;
+use hurl_core::text::{Format, Style, StyledString};
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 pub struct BaseLogger {
-    /// Uses ANSI color codes or not.
-    pub color: bool,
+    /// Format of the messaeg in the terminal: ANSI or plain.
+    format: Format,
     /// Prints debug message or not.
-    pub verbose: bool,
+    verbose: bool,
 }
 
 impl BaseLogger {
     /// Creates a new base logger using `color` and `verbose`.
     pub fn new(color: bool, verbose: bool) -> BaseLogger {
-        BaseLogger { color, verbose }
+        let format = if color { Format::Ansi } else { Format::Plain };
+        BaseLogger { format, verbose }
     }
 
     /// Prints an informational `message` on standard error.
@@ -41,19 +42,20 @@ impl BaseLogger {
         if !self.verbose {
             return;
         }
-        if self.color {
-            eprintln!("{} {message}", "*".blue().bold());
-        } else {
-            eprintln!("* {message}");
+        let mut s = StyledString::new();
+        s.push_with("*", Style::new().blue().bold());
+        if !message.is_empty() {
+            s.push(&format!(" {message}"));
         }
+        eprintln!("{}", s.to_string(self.format));
     }
 
     /// Prints an error `message` on standard error.
     pub fn error(&self, message: &str) {
-        if self.color {
-            eprintln!("{}: {}", "error".red().bold(), message.bold());
-        } else {
-            eprintln!("error: {message}");
-        }
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push_with(message, Style::new().bold());
+        eprintln!("{}", s.to_string(self.format));
     }
 }
