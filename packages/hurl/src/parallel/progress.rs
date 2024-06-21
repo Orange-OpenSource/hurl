@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-use colored::Colorize;
+use hurl_core::text::{Format, Style, StyledString};
 use std::time::{Duration, Instant};
 
 use crate::parallel::job::JobResult;
 use crate::parallel::runner::WorkerState;
 use crate::parallel::worker::Worker;
-use crate::util;
 use crate::util::term::Stderr;
 
 /// A progress reporter to display advancement of parallel runs execution in test mode.
@@ -30,8 +29,8 @@ pub struct ParProgress {
     max_running_displayed: usize,
     /// Mode of the progress reporter
     mode: Mode,
-    /// The standard error uses color or not.
-    color: bool,
+    /// The standard error format for message: ANSI or plain.
+    format: Format,
     /// Save last progress bar refresh to limits flickering.
     throttle: Throttle,
 }
@@ -54,10 +53,11 @@ const FIRST_THROTTLE: Duration = Duration::from_millis(16);
 impl ParProgress {
     /// Creates a new instance.
     pub fn new(max_running_displayed: usize, mode: Mode, color: bool) -> Self {
+        let format = if color { Format::Ansi } else { Format::Plain };
         ParProgress {
             max_running_displayed,
             mode,
-            color,
+            format,
             throttle: Throttle::new(UPDATE_INTERVAL, FIRST_THROTTLE),
         }
     }
@@ -90,7 +90,7 @@ impl ParProgress {
             completed,
             count,
             self.max_running_displayed,
-            self.color,
+            self.format,
         ) else {
             return;
         };
@@ -110,23 +110,19 @@ impl ParProgress {
             .flat_map(|r| &r.calls)
             .count();
         let duration = result.hurl_result.time_in_ms;
-        let message = if self.color {
-            let state = if result.hurl_result.success {
-                "Success".green().bold()
-            } else {
-                "Failure".red().bold()
-            };
-            let filename = result.job.filename.to_string().bold();
-            format!("{filename}: {state} ({count} request(s) in {duration} ms)")
+        let filename = result.job.filename.to_string();
+
+        let mut message = StyledString::new();
+        message.push_with(&filename, Style::new().bold());
+        message.push(": ");
+        if result.hurl_result.success {
+            message.push_with("Success", Style::new().green().bold());
         } else {
-            let state = if result.hurl_result.success {
-                "Success"
-            } else {
-                "Failure"
-            };
-            let filename = &result.job.filename;
-            format!("{filename}: {state} ({count} request(s) in {duration} ms)")
+            message.push_with("Failure", Style::new().red().bold());
         };
+        message.push(&format!(" ({count} request(s) in {duration} ms)"));
+
+        let message = message.to_string(self.format);
         stderr.eprintln(&message);
     }
 
@@ -209,7 +205,7 @@ fn build_progress(
     completed: usize,
     count: Option<usize>,
     max_running_displayed: usize,
-    color: bool,
+    format: Format,
 ) -> Option<String> {
     // Select the running workers to be displayed
     let mut workers = workers
@@ -264,16 +260,18 @@ fn build_progress(
             let entry_index = entry_index + 1; // entry index display is 1-based
             let requests = format!("{entry_index}/{entry_count}");
             let padding = " ".repeat(max_width - requests.len());
-            let bar = util::progress_bar(entry_index, *entry_count);
-            let progress = if color {
-                format!(
-                    "{bar}{padding} {}: {}\n",
-                    job.filename.to_string().bold(),
-                    "Running".cyan().bold()
-                )
-            } else {
-                format!("{bar}{padding} {}: Running\n", job.filename)
-            };
+            let bar = progress_bar(entry_index, *entry_count);
+
+            let mut progress = StyledString::new();
+            progress.push(&bar);
+            progress.push(&padding);
+            progress.push(" ");
+            progress.push_with(&job.filename.to_string(), Style::new().bold());
+            progress.push(": ");
+            progress.push_with("Running", Style::new().cyan().bold());
+            progress.push("\n");
+
+            let progress = progress.to_string(format);
             all_progress.push_str(&progress);
         }
     }
@@ -285,14 +283,30 @@ fn build_progress(
     Some(all_progress)
 }
 
+/// Returns the progress bar of a single operation with the 1-based current `index`.
+fn progress_bar(index: usize, count: usize) -> String {
+    const WIDTH: usize = 24;
+    // We report the number of items already processed.
+    let progress = (index - 1) as f64 / count as f64;
+    let col = (progress * WIDTH as f64) as usize;
+    let completed = if col > 0 {
+        "=".repeat(col)
+    } else {
+        String::new()
+    };
+    let void = " ".repeat(WIDTH - col - 1);
+    format!("[{completed}>{void}] {index}/{count}")
+}
+
 #[cfg(test)]
 mod tests {
     use crate::parallel::job::Job;
-    use crate::parallel::progress::build_progress;
+    use crate::parallel::progress::{build_progress, progress_bar};
     use crate::parallel::runner::WorkerState;
     use crate::parallel::worker::{Worker, WorkerId};
     use crate::runner::{Input, RunnerOptionsBuilder};
     use crate::util::logger::LoggerOptionsBuilder;
+    use hurl_core::text::Format;
     use std::collections::HashMap;
     use std::sync::{mpsc, Arc, Mutex};
 
@@ -356,7 +370,7 @@ mod tests {
             (w4, WorkerState::Idle),
         ];
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert!(progress.is_none());
 
         workers[0].1 = new_running_state(&jobs[0], 0, 10);
@@ -365,7 +379,7 @@ mod tests {
         workers[3].1 = new_running_state(&jobs[3], 0, 7);
         workers[4].1 = new_running_state(&jobs[4], 0, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert_eq!(
             progress.unwrap(),
             "\
@@ -383,7 +397,7 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = new_running_state(&jobs[3], 3, 7);
         workers[4].1 = new_running_state(&jobs[4], 1, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert_eq!(
             progress.unwrap(),
             "\
@@ -401,7 +415,7 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = new_running_state(&jobs[3], 5, 7);
         workers[4].1 = new_running_state(&jobs[4], 2, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert_eq!(
             progress.unwrap(),
             "\
@@ -419,7 +433,7 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = WorkerState::Idle;
         workers[4].1 = new_running_state(&jobs[4], 3, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert_eq!(
             progress.unwrap(),
             "\
@@ -435,7 +449,7 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = WorkerState::Idle;
         workers[4].1 = WorkerState::Idle;
 
-        let progress = build_progress(&workers, completed, total, max_displayed, false);
+        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
         assert_eq!(
             progress.unwrap(),
             "\
@@ -443,5 +457,25 @@ Executed files: 75/100 (75%)\n\
 [====================>   ] 6/6 f.hurl: Running\n\
 "
         );
+    }
+
+    #[rustfmt::skip]
+    #[test]
+    fn test_progress_bar() {
+        // Progress strings with 20 entries:
+        assert_eq!(progress_bar(1, 20),  "[>                       ] 1/20");
+        assert_eq!(progress_bar(2, 20),  "[=>                      ] 2/20");
+        assert_eq!(progress_bar(5, 20),  "[====>                   ] 5/20");
+        assert_eq!(progress_bar(10, 20), "[==========>             ] 10/20");
+        assert_eq!(progress_bar(15, 20), "[================>       ] 15/20");
+        assert_eq!(progress_bar(20, 20), "[======================> ] 20/20");
+
+        // Progress strings with 3 entries:
+        assert_eq!(progress_bar(1, 3), "[>                       ] 1/3");
+        assert_eq!(progress_bar(2, 3), "[========>               ] 2/3");
+        assert_eq!(progress_bar(3, 3), "[================>       ] 3/3");
+
+        // Progress strings with 1 entries:
+        assert_eq!(progress_bar(1, 1), "[>                       ] 1/1");
     }
 }
