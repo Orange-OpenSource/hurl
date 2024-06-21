@@ -16,7 +16,7 @@
  *
  */
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
 #[allow(unused)]
 pub struct Style {
     pub fg: Option<Color>,

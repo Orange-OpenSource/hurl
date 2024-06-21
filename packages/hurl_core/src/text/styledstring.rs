@@ -87,13 +87,13 @@ impl StyledString {
             let mut substrings = token.content.split(delimiter).collect::<Vec<&str>>();
             let first = substrings.remove(0);
             if !first.is_empty() {
-                item.push_with(first, token.style.clone());
+                item.push_with(first, token.style);
             }
             for substring in substrings {
                 items.push(item);
                 item = StyledString::new();
                 if !substring.is_empty() {
-                    item.push_with(substring, token.style.clone());
+                    item.push_with(substring, token.style);
                 }
             }
         }
@@ -103,6 +103,53 @@ impl StyledString {
 
     pub fn ends_with(&self, value: &str) -> bool {
         self.to_string(Format::Plain).ends_with(value)
+    }
+
+    /// Returns the length of visible chars.
+    pub fn len(&self) -> usize {
+        self.tokens.iter().fold(0, |acc, t| acc + t.content.len())
+    }
+
+    /// Checks if this string is empty.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Add newlines so each lines of this string has a maximum of `max_width` chars.
+    pub fn wrap(&self, max_width: usize) -> StyledString {
+        let mut string = StyledString::new();
+        let mut width = 0;
+
+        for token in &self.tokens {
+            let mut chunck = String::new();
+            let mut it = token.content.chars().peekable();
+
+            // Iterate over each chars of the current token, splitting the current
+            // token if necessary
+            while let Some(c) = it.next() {
+                chunck.push(c);
+                width += 1;
+
+                if width >= max_width {
+                    let token = Token::new(&chunck, token.style);
+                    string.push_token(token);
+                    if it.peek().is_some() {
+                        // New lines are always plain
+                        let nl = Token::new("\n", Style::new());
+                        string.push_token(nl);
+                    }
+                    chunck = String::new();
+                    width = 0;
+                }
+            }
+
+            // Append the last chunck
+            if !chunck.is_empty() {
+                let token = Token::new(&chunck, token.style);
+                string.push_token(token);
+            }
+        }
+        string
     }
 }
 
@@ -302,5 +349,58 @@ mod tests {
         let mut message = StyledString::new();
         message.push_with("bar", Style::new().bold());
         assert_eq!("bar".bold().to_string(), message.to_string(Format::Ansi),);
+    }
+
+    #[test]
+    fn wrap_single_plain_token() {
+        let mut line = StyledString::new();
+        line.push("aaaabbbbcccc");
+
+        let mut wrapped = StyledString::new();
+        wrapped.push("aaaa\nbbbb\ncccc");
+
+        assert_eq!(line.wrap(4), wrapped);
+        assert_eq!(line.len(), 12);
+        assert_eq!(line.wrap(4).len(), 14);
+    }
+
+    #[test]
+    fn wrap_single_styled_token() {
+        let mut line = StyledString::new();
+        line.push_with("aaaabbbbcccc", Style::new().blue());
+
+        let mut wrapped = StyledString::new();
+        wrapped.push_with("aaaa", Style::new().blue());
+        wrapped.push("\n");
+        wrapped.push_with("bbbb", Style::new().blue());
+        wrapped.push("\n");
+        wrapped.push_with("cccc", Style::new().blue());
+
+        assert_eq!(line.wrap(4), wrapped);
+        assert_eq!(line.len(), 12);
+        assert_eq!(line.wrap(4).len(), 14);
+    }
+
+    #[test]
+    fn wrap_multi_styled_token() {
+        let mut line = StyledString::new();
+        line.push_with("aaa", Style::new().blue());
+        line.push_with("ab", Style::new().green());
+        line.push_with("bbbccc", Style::new().yellow());
+        line.push_with("cee", Style::new().purple());
+
+        let mut wrapped = StyledString::new();
+        wrapped.push_with("aaa", Style::new().blue());
+        wrapped.push_with("a", Style::new().green());
+        wrapped.push("\n");
+        wrapped.push_with("b", Style::new().green());
+        wrapped.push_with("bbb", Style::new().yellow());
+        wrapped.push("\n");
+        wrapped.push_with("ccc", Style::new().yellow());
+        wrapped.push_with("c", Style::new().purple());
+        wrapped.push("\n");
+        wrapped.push_with("ee", Style::new().purple());
+
+        assert_eq!(line.wrap(4), wrapped);
     }
 }
