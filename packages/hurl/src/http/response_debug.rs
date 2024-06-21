@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-
-use colored::Colorize;
+use hurl_core::text::{Format, Style, StyledString};
 
 use crate::http::{debug, mimetype, Response};
 use crate::util::logger::Logger;
@@ -48,22 +47,19 @@ impl Response {
 
     /// Returns status, version and HTTP headers from this HTTP response.
     pub fn get_status_line_headers(&self, color: bool) -> String {
-        let mut str = String::new();
-        let status_line = format!("{} {}\n", self.version, self.status);
-        let status_line = if color {
-            format!("{}", status_line.green().bold())
-        } else {
-            status_line
-        };
-        str.push_str(&status_line);
-        for header in self.headers.iter() {
-            let header_line = if color {
-                format!("{}: {}\n", header.name.cyan().bold(), header.value)
-            } else {
-                format!("{}: {}\n", header.name, header.value)
-            };
-            str.push_str(&header_line);
+        let mut s = StyledString::new();
+        s.push_with(
+            &format!("{} {}\n", self.version, self.status),
+            Style::new().green().bold(),
+        );
+        for header in &self.headers {
+            s.push_with(&header.name, Style::new().cyan().bold());
+            s.push(&format!(": {}\n", header.value));
         }
-        str
+        if color {
+            s.to_string(Format::Ansi)
+        } else {
+            s.to_string(Format::Plain)
+        }
     }
 }
