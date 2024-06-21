@@ -17,7 +17,7 @@
  */
 use chrono::SecondsFormat;
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::error_string;
+use hurl_core::error::{error_string, OutputFormat};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io;
@@ -459,7 +459,7 @@ impl AssertJson {
                 content,
                 &err,
                 Some(entry_src_info),
-                false,
+                OutputFormat::Json,
             )
         });
         AssertJson {

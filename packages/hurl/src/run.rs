@@ -27,7 +27,7 @@ use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::{HurlResult, Input, Output};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
-use hurl_core::error::error_string;
+use hurl_core::error::{error_string, OutputFormat};
 use hurl_core::typing::Repeat;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
@@ -128,7 +128,7 @@ fn print_output(
                 content,
                 &e,
                 None,
-                options.color,
+                OutputFormat::Terminal(options.color),
             )));
         }
     }

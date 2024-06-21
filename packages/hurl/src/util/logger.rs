@@ -18,7 +18,7 @@
 //! Log utilities.
 
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::{error_string, split_lines, DisplaySourceError};
+use hurl_core::error::{error_string, split_lines, DisplaySourceError, OutputFormat};
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
@@ -205,7 +205,7 @@ impl Logger {
             content,
             error,
             Some(entry_src_info),
-            self.color,
+            OutputFormat::Terminal(self.color),
         );
         split_lines(&message).iter().for_each(|l| self.debug(l));
     }
@@ -274,7 +274,13 @@ impl Logger {
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
-        let message = error_string(&self.filename, content, error, None, self.color);
+        let message = error_string(
+            &self.filename,
+            content,
+            error,
+            None,
+            OutputFormat::Terminal(self.color),
+        );
         self.error_rich(&message);
     }
 
@@ -289,7 +295,7 @@ impl Logger {
             content,
             error,
             Some(entry_src_info),
-            self.color,
+            OutputFormat::Terminal(self.color),
         );
         self.error_rich(&message);
     }

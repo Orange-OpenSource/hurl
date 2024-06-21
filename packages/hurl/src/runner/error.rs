@@ -318,7 +318,7 @@ mod tests {
     use crate::http::HttpError;
     use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::{Pos, SourceInfo};
-    use hurl_core::error::{error_string, split_lines, DisplaySourceError};
+    use hurl_core::error::{error_string, split_lines, DisplaySourceError, OutputFormat};
     use hurl_core::text::Format;
 
     #[test]
@@ -339,7 +339,13 @@ mod tests {
             "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
         assert_eq!(
-            error_string(filename, content, &error, Some(entry_source_info), false),
+            error_string(
+                filename,
+                content,
+                &error,
+                Some(entry_source_info),
+                OutputFormat::Terminal(false)
+            ),
             r#"HTTP connection
   --> test.hurl:1:5
    |
@@ -375,7 +381,13 @@ HTTP/1.0 200
         );
 
         assert_eq!(
-            error_string(filename, content, &error, Some(entry_source_info), false),
+            error_string(
+                filename,
+                content,
+                &error,
+                Some(entry_source_info),
+                OutputFormat::Terminal(false)
+            ),
             r#"Assert status code
   --> test.hurl:2:10
    |
@@ -406,7 +418,13 @@ xpath "strong(//head/title)" == "Hello"
         "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
     );
         assert_eq!(
-            error_string(filename, content, &error, Some(entry_source_info), false),
+            error_string(
+                filename,
+                content,
+                &error,
+                Some(entry_source_info),
+                OutputFormat::Terminal(false)
+            ),
             r#"Invalid XPath expression
   --> test.hurl:4:7
    |
@@ -450,7 +468,13 @@ jsonpath "$.count" >= 5
         );
 
         assert_eq!(
-            error_string(filename, content, &error, Some(entry_source_info), false),
+            error_string(
+                filename,
+                content,
+                &error,
+                Some(entry_source_info),
+                OutputFormat::Terminal(false)
+            ),
             r#"Assert failure
   --> test.hurl:4:0
    |
@@ -486,7 +510,13 @@ HTTP/1.0 200
             "\n 3 | ```<p>Hello</p>\n   |    ^ actual value is <<p>Hello</p>\n   |\n   |      >\n   |"
         );
         assert_eq!(
-            error_string(filename, content, &error, Some(entry_source_info), false),
+            error_string(
+                filename,
+                content,
+                &error,
+                Some(entry_source_info),
+                OutputFormat::Terminal(false)
+            ),
             r#"Assert body value
   --> test.hurl:3:4
    |

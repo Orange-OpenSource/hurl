@@ -80,6 +80,13 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
     s
 }
 
+/// Format used by error_string
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum OutputFormat {
+    Terminal(bool), // Replace \r\n by \n
+    Json,
+}
+
 /// Returns the string representation of an `error`, given `lines` of content and a `filename`.
 ///
 /// The source information where the error occurred can be retrieved in `error`; optionally,
@@ -102,7 +109,7 @@ pub fn error_string<E: DisplaySourceError>(
     content: &str,
     error: &E,
     entry_src_info: Option<SourceInfo>,
-    colored: bool,
+    format: OutputFormat,
 ) -> String {
     let mut text = String::new();
     let lines = split_lines(content);
@@ -112,6 +119,7 @@ pub fn error_string<E: DisplaySourceError>(
     // The number of digits of the lines count.
     let loc_max_width = max(lines.len().to_string().len(), 2);
     let separator = "|";
+    let colored = format == OutputFormat::Terminal(true);
 
     let spaces = " ".repeat(loc_max_width);
     let prefix = format!("{spaces} {separator}");
@@ -182,7 +190,10 @@ pub fn error_string<E: DisplaySourceError>(
 
     text.push_str(&message);
 
-    text
+    match format {
+        OutputFormat::Terminal(_) => text.replace("\r\n", "\n"), // CRLF must be replaced by LF in the terminal
+        OutputFormat::Json => text,
+    }
 }
 
 pub fn add_line_info_prefix(
@@ -366,7 +377,13 @@ HTTP 200
         );
 
         assert_eq!(
-            error_string(filename, content, &error, None, false),
+            error_string(
+                filename,
+                content,
+                &error,
+                None,
+                OutputFormat::Terminal(false)
+            ),
             r#"Assert body value
   --> test.hurl:4:1
    |

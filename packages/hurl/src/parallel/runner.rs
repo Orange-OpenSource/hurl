@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::error::error_string;
+use hurl_core::error::{error_string, OutputFormat};
 use hurl_core::typing::Repeat;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
@@ -315,7 +315,7 @@ impl ParallelRunner {
                             content,
                             &e,
                             None,
-                            color,
+                            OutputFormat::Terminal(color),
                         )));
                     }
                 }
