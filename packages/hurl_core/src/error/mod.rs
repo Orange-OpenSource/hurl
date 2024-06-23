@@ -17,7 +17,6 @@
  */
 use crate::ast::SourceInfo;
 use crate::text::{Format, Style, StyledString};
-use colored::Colorize;
 use std::cmp::max;
 
 pub trait DisplaySourceError {
@@ -49,7 +48,65 @@ pub trait DisplaySourceError {
     ///+   "age": 28
     /// }
     ///
-    fn message(&self, content: &[&str]) -> StyledString;
+    fn message(&self, content: &[&str]) -> StyledString {
+        let mut text = StyledString::new();
+        add_source_line(&mut text, content, self.source_info().start.line);
+        text.append(self.fixme(content));
+
+        let error_line = self.source_info().start.line;
+        add_line_info_prefix(&text, content, error_line)
+    }
+
+    /// Returns the string representation of an `error`, given `lines` of content and a `filename`.
+    ///
+    /// The source information where the error occurred can be retrieved in `error`; optionally,
+    /// `entry_src_info` is the optional source information for the entry where the error happened.
+    /// If `colored` is true, the string use ANSI escape codes to add color and improve the readability
+    /// of the representation.
+    ///
+    /// Example:
+    ///
+    /// ```text
+    /// Assert status code
+    ///  --> test.hurl:2:10
+    ///   |
+    /// 2 | HTTP/1.0 200
+    ///   |          ^^^ actual value is <404>
+    ///   |
+    /// ```
+    fn to_string(
+        &self,
+        filename: &str,
+        content: &str,
+        entry_src_info: Option<SourceInfo>,
+        format: OutputFormat,
+    ) -> String {
+        let mut text = StyledString::new();
+        let lines = split_lines(content);
+
+        let error_line = self.source_info().start.line;
+        let error_column = self.source_info().start.column;
+        // The number of digits of the lines count.
+        let loc_max_width = max(lines.len().to_string().len(), 2);
+        let separator = "|";
+
+        let spaces = " ".repeat(loc_max_width);
+        let mut prefix = StyledString::new();
+        prefix.push_with(&format!("{spaces} {separator}"), Style::new().blue().bold());
+        text.push_with(&self.description(), Style::new().bold());
+        text.push("\n");
+
+        add_filename_with_sourceinfo(&mut text, &spaces, filename, error_line, error_column);
+        text.append(prefix.clone());
+
+        let entry_line = entry_src_info.map(|e| e.start.line);
+        if let Some(entry_line) = entry_line {
+            add_entry_line(&mut text, &lines, error_line, entry_line, &prefix);
+        }
+
+        text.append(self.message(&lines));
+        format_error_message(&text, format)
+    }
 }
 
 /// Show column position with carets
@@ -80,120 +137,11 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
     s
 }
 
-/// Format used by error_string
+/// Format used by to_string
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OutputFormat {
     Terminal(bool), // Replace \r\n by \n
     Json,
-}
-
-/// Returns the string representation of an `error`, given `lines` of content and a `filename`.
-///
-/// The source information where the error occurred can be retrieved in `error`; optionally,
-/// `entry_src_info` is the optional source information for the entry where the error happened.
-/// If `colored` is true, the string use ANSI escape codes to add color and improve the readability
-/// of the representation.
-///
-/// Example:
-///
-/// ```text
-/// Assert status code
-///  --> test.hurl:2:10
-///   |
-/// 2 | HTTP/1.0 200
-///   |          ^^^ actual value is <404>
-///   |
-/// ```
-pub fn error_string<E: DisplaySourceError>(
-    filename: &str,
-    content: &str,
-    error: &E,
-    entry_src_info: Option<SourceInfo>,
-    format: OutputFormat,
-) -> String {
-    let mut text = String::new();
-    let lines = split_lines(content);
-    let entry_line = entry_src_info.map(|e| e.start.line);
-    let error_line = error.source_info().start.line;
-    let error_column = error.source_info().start.column;
-    // The number of digits of the lines count.
-    let loc_max_width = max(lines.len().to_string().len(), 2);
-    let separator = "|";
-    let colored = format == OutputFormat::Terminal(true);
-
-    let spaces = " ".repeat(loc_max_width);
-    let prefix = format!("{spaces} {separator}");
-    let prefix = if colored {
-        prefix.blue().bold().to_string()
-    } else {
-        prefix.to_string()
-    };
-
-    // 1. First line is the description, ex. `Assert status code`.
-    let description = if colored {
-        error.description().bold().to_string()
-    } else {
-        error.description()
-    };
-    text.push_str(&description);
-    text.push('\n');
-
-    // 2. Second line is the filename info, ex. ` --> test.hurl:2:10`
-    let arrow = "-->";
-    let arrow = if colored {
-        arrow.blue().bold().to_string()
-    } else {
-        arrow.to_string()
-    };
-    let line = format!("{spaces}{arrow} {filename}:{error_line}:{error_column}");
-    text.push_str(&line);
-
-    // 3. Appends additional empty line
-    text.push('\n');
-    text.push_str(&prefix);
-
-    // 4. Appends the optional entry line.
-    if let Some(entry_line) = entry_line {
-        if entry_line != error_line {
-            let line = lines.get(entry_line - 1).unwrap();
-            let line = line.replace('\t', "    ");
-            let line = if colored {
-                line.bright_black().to_string()
-            } else {
-                line.to_string()
-            };
-            text.push('\n');
-            text.push_str(&prefix);
-            text.push(' ');
-            text.push_str(&line);
-        }
-        if error_line - entry_line > 1 {
-            text.push('\n');
-            text.push_str(&prefix);
-            let dots = " ...";
-            let dots = if colored {
-                dots.bright_black().to_string()
-            } else {
-                dots.to_string()
-            };
-            text.push_str(&dots);
-        }
-    }
-
-    // 5. Appends the error message (one or more lines)
-    let message = error.message(&lines);
-    let message = if colored {
-        message.to_string(Format::Ansi)
-    } else {
-        message.to_string(Format::Plain)
-    };
-
-    text.push_str(&message);
-
-    match format {
-        OutputFormat::Terminal(_) => text.replace("\r\n", "\n"), // CRLF must be replaced by LF in the terminal
-        OutputFormat::Json => text,
-    }
 }
 
 pub fn add_line_info_prefix(
@@ -202,9 +150,6 @@ pub fn add_line_info_prefix(
     error_line: usize,
 ) -> StyledString {
     let text = text.clone();
-    //dd_source_line(&mut text, content, error_line);
-
-    //        eprintln!("text={:#?}", text);
     let separator = "|";
 
     let loc_max_width = max(content.len().to_string().len(), 2);
@@ -231,13 +176,11 @@ pub fn add_line_info_prefix(
         text2.append(line.clone());
     }
 
-    //eprintln!(">>> text2 {:#?}", text2);
     //  Appends additional empty line
     if !text2.ends_with("|") {
         text2.push("\n");
         text2.append(prefix.clone());
     }
-    //  eprintln!(">>> text2 {:#?}", text2);
 
     text2
 }
@@ -275,11 +218,62 @@ pub fn add_source_line(text: &mut StyledString, content: &[&str], line: usize) {
     text.push("\n");
 }
 
+pub fn add_filename_with_sourceinfo(
+    text: &mut StyledString,
+    spaces: &str,
+    filename: &str,
+    error_line: usize,
+    error_column: usize,
+) {
+    text.push(spaces);
+    text.push_with("-->", Style::new().blue().bold());
+    text.push(format!(" {filename}:{error_line}:{error_column}").as_str());
+    text.push("\n");
+}
+
+pub fn add_entry_line(
+    text: &mut StyledString,
+    lines: &[&str],
+    error_line: usize,
+    entry_line: usize,
+    prefix: &StyledString,
+) {
+    if entry_line != error_line {
+        let line = lines.get(entry_line - 1).unwrap();
+        let line = line.replace('\t', "    ");
+        text.push("\n");
+        text.append(prefix.clone());
+        text.push(" ");
+        text.push_with(&line, Style::new().bright_black());
+    }
+    if error_line - entry_line > 1 {
+        text.push("\n");
+        text.append(prefix.clone());
+        text.push_with(" ...", Style::new().bright_black());
+    }
+}
+
+pub fn format_error_message(message: &StyledString, format: OutputFormat) -> String {
+    let colored = format == OutputFormat::Terminal(true);
+    let message = if colored {
+        message.to_string(Format::Ansi)
+    } else {
+        message.to_string(Format::Plain)
+    };
+
+    match format {
+        OutputFormat::Terminal(_) => {
+            message.replace("\r\n", "\n") // CRLF must be replaced by LF in the terminal
+        }
+        OutputFormat::Json => message,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::reader::Pos;
-    use crate::text::Style;
+    use crate::text::{Format, Style};
 
     #[test]
     fn test_add_carets() {
@@ -377,13 +371,7 @@ HTTP 200
         );
 
         assert_eq!(
-            error_string(
-                filename,
-                content,
-                &error,
-                None,
-                OutputFormat::Terminal(false)
-            ),
+            error.to_string(filename, content, None, OutputFormat::Terminal(false)),
             r#"Assert body value
   --> test.hurl:4:1
    |

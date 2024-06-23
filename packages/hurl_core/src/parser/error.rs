@@ -252,15 +252,6 @@ impl DisplaySourceError for ParseError {
         s.push_with(&message, Style::new().red().bold());
         s
     }
-
-    fn message(&self, content: &[&str]) -> StyledString {
-        let mut text = StyledString::new();
-        crate::error::add_source_line(&mut text, content, self.source_info().start.line);
-        text.append(self.fixme(content));
-
-        let error_line = self.source_info().start.line;
-        crate::error::add_line_info_prefix(&text, content, error_line)
-    }
 }
 
 fn did_you_mean(valid_values: &[&str], actual: &str, default: &str) -> String {
@@ -316,7 +307,7 @@ fn levenshtein_distance(s1: &str, s2: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::error::{error_string, OutputFormat};
+    use crate::error::OutputFormat;
 
     #[test]
     fn test_levenshtein() {
@@ -352,13 +343,7 @@ mod tests {
             kind: ParseErrorKind::UrlInvalidStart,
         };
         assert_eq!(
-            error_string(
-                filename,
-                content,
-                &error,
-                None,
-                OutputFormat::Terminal(false)
-            ),
+            error.to_string(filename, content, None, OutputFormat::Terminal(false)),
             r#"Parsing URL
   --> test.hurl:1:5
    |

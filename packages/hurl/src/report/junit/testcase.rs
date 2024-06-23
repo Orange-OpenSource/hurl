@@ -17,7 +17,7 @@
  */
 use crate::report::junit::xml::Element;
 use crate::runner::{HurlResult, Input};
-use hurl_core::error::{error_string, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -38,12 +38,11 @@ impl Testcase {
         let mut errors = vec![];
 
         for (error, entry_src_info) in hurl_result.errors() {
-            let message = error_string(
+            let message = error.to_string(
                 &name,
                 content,
-                error,
                 Some(entry_src_info),
-                OutputFormat::Json,
+                OutputFormat::Terminal(false),
             );
             if error.assert {
                 failures.push(message);

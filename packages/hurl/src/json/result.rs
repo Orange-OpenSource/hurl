@@ -17,7 +17,7 @@
  */
 use chrono::SecondsFormat;
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::{error_string, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io;
@@ -452,10 +452,9 @@ impl AssertJson {
         entry_src_info: SourceInfo,
     ) -> Self {
         let message = a.error().map(|err| {
-            error_string(
+            err.to_string(
                 &filename.to_string(),
                 content,
-                &err,
                 Some(entry_src_info),
                 OutputFormat::Json,
             )

@@ -181,6 +181,13 @@ impl Token {
                         s.blue().to_string()
                     }
                 }
+                Color::BrightBlack => {
+                    if self.style.bold {
+                        s.bright_black().bold().to_string()
+                    } else {
+                        s.bright_black().to_string()
+                    }
+                }
                 Color::Cyan => {
                     if self.style.bold {
                         s.cyan().bold().to_string()

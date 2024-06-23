@@ -18,7 +18,7 @@
 //! Log utilities.
 
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::{error_string, split_lines, DisplaySourceError, OutputFormat};
+use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
@@ -200,10 +200,9 @@ impl Logger {
         if self.verbosity.is_none() {
             return;
         }
-        let message = error_string(
+        let message = error.to_string(
             &self.filename,
             content,
-            error,
             Some(entry_src_info),
             OutputFormat::Terminal(self.color),
         );
@@ -274,10 +273,9 @@ impl Logger {
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
-        let message = error_string(
+        let message = error.to_string(
             &self.filename,
             content,
-            error,
             None,
             OutputFormat::Terminal(self.color),
         );
@@ -290,10 +288,9 @@ impl Logger {
         error: &E,
         entry_src_info: SourceInfo,
     ) {
-        let message = error_string(
+        let message = error.to_string(
             &self.filename,
             content,
-            error,
             Some(entry_src_info),
             OutputFormat::Terminal(self.color),
         );

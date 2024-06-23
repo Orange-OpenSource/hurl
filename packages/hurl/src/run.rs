@@ -27,7 +27,7 @@ use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::{HurlResult, Input, Output};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
-use hurl_core::error::{error_string, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::typing::Repeat;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
@@ -123,10 +123,9 @@ fn print_output(
             append,
         );
         if let Err(e) = result {
-            return Err(CliError::Runtime(error_string(
+            return Err(CliError::Runtime(e.to_string(
                 &filename.to_string(),
                 content,
-                &e,
                 None,
                 OutputFormat::Terminal(options.color),
             )));

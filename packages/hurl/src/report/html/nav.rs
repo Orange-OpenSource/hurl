@@ -17,7 +17,7 @@
  */
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
-use hurl_core::error::{error_string, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -83,10 +83,9 @@ fn error_to_html(
 ) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
-    let message = error_string(
+    let message = error.to_string(
         filename,
         content,
-        error,
         Some(error.source_info),
         OutputFormat::Terminal(false),
     );

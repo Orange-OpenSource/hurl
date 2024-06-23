@@ -289,15 +289,6 @@ impl DisplaySourceError for RunnerError {
             }
         }
     }
-
-    fn message(&self, content: &[&str]) -> StyledString {
-        let mut text = StyledString::new();
-        hurl_core::error::add_source_line(&mut text, content, self.source_info().start.line);
-        text.append(self.fixme(content));
-
-        let error_line = self.source_info().start.line;
-        hurl_core::error::add_line_info_prefix(&text, content, error_line)
-    }
 }
 
 /// Color each line separately
@@ -318,7 +309,7 @@ mod tests {
     use crate::http::HttpError;
     use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::SourceInfo;
-    use hurl_core::error::{error_string, split_lines, DisplaySourceError, OutputFormat};
+    use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
     use hurl_core::reader::Pos;
     use hurl_core::text::Format;
 
@@ -340,10 +331,9 @@ mod tests {
             "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
         assert_eq!(
-            error_string(
+            error.to_string(
                 filename,
                 content,
-                &error,
                 Some(entry_source_info),
                 OutputFormat::Terminal(false)
             ),
@@ -382,10 +372,9 @@ HTTP/1.0 200
         );
 
         assert_eq!(
-            error_string(
+            error.to_string(
                 filename,
                 content,
-                &error,
                 Some(entry_source_info),
                 OutputFormat::Terminal(false)
             ),
@@ -419,10 +408,9 @@ xpath "strong(//head/title)" == "Hello"
         "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
     );
         assert_eq!(
-            error_string(
+            error.to_string(
                 filename,
                 content,
-                &error,
                 Some(entry_source_info),
                 OutputFormat::Terminal(false)
             ),
@@ -469,10 +457,9 @@ jsonpath "$.count" >= 5
         );
 
         assert_eq!(
-            error_string(
+            error.to_string(
                 filename,
                 content,
-                &error,
                 Some(entry_source_info),
                 OutputFormat::Terminal(false)
             ),
@@ -511,10 +498,9 @@ HTTP/1.0 200
             "\n 3 | ```<p>Hello</p>\n   |    ^ actual value is <<p>Hello</p>\n   |\n   |      >\n   |"
         );
         assert_eq!(
-            error_string(
+            error.to_string(
                 filename,
                 content,
-                &error,
                 Some(entry_source_info),
                 OutputFormat::Terminal(false)
             ),

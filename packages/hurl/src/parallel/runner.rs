@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::error::{error_string, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::typing::Repeat;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
@@ -312,10 +312,9 @@ impl ParallelRunner {
                         append,
                     );
                     if let Err(e) = result {
-                        return Err(JobError::Runtime(error_string(
+                        return Err(JobError::Runtime(e.to_string(
                             &filename_in.to_string(),
                             content,
-                            &e,
                             None,
                             OutputFormat::Terminal(color),
                         )));

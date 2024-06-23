@@ -27,6 +27,7 @@ pub struct Style {
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Color {
     Blue,
+    BrightBlack,
     Cyan,
     Green,
     Purple,
@@ -43,6 +44,11 @@ impl Style {
 
     pub fn blue(mut self) -> Style {
         self.fg = Some(Color::Blue);
+        self
+    }
+
+    pub fn bright_black(mut self) -> Style {
+        self.fg = Some(Color::BrightBlack);
         self
     }
 
