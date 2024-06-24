@@ -174,6 +174,7 @@ pub fn run_par(
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);
+    let max_width = terminal_size::terminal_size().map(|(w, _)| w.0 as usize);
 
     let jobs = files
         .iter()
@@ -192,6 +193,7 @@ pub fn run_par(
         options.test,
         options.progress_bar,
         options.color,
+        max_width,
     );
     let results = runner.run(&jobs)?;
     let results = results.into_iter().map(HurlRun::from).collect();

@@ -95,11 +95,12 @@ impl ParallelRunner {
     /// whether as a raw response body bytes, or in a structured JSON output.
     ///
     /// The runner can repeat running a list of jobs. For instance, when repeating two times the job
-    /// sequence (`a`, `b`, `c`), runner will act as if it runs (`a`, `b`, `c`).
+    /// sequence (`a`, `b`, `c`), runner will act as if it runs (`a`, `b`, `c`, `a`, `b`, `c`).
     ///
     /// If `test` mode is `true` the runner is run in "test" mode, reporting the success or failure
-    /// of each file on standard error. Additionally to the test mode, a `progress_bar` designed for
-    /// parallel run progression can be used.
+    /// of each file on standard error. In addition to the test mode, a `progress_bar` designed for
+    /// parallel run progression can be used. When the progress bar is displayed, it's wrapped with
+    /// new lines at width `max_width`.
     ///
     /// `color` determines if color if used in standard error.
     pub fn new(
@@ -109,6 +110,7 @@ impl ParallelRunner {
         test: bool,
         progress_bar: bool,
         color: bool,
+        max_width: Option<usize>,
     ) -> Self {
         // Worker are running on theirs own thread, while parallel runner is running in the main
         // thread.
@@ -128,7 +130,7 @@ impl ParallelRunner {
             .collect::<Vec<_>>();
 
         let mode = Mode::new(test, progress_bar);
-        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color);
+        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color, max_width);
 
         ParallelRunner {
             workers,

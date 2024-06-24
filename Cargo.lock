@@ -527,6 +527,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "similar",
+ "terminal_size",
  "termion",
  "url",
  "uuid",

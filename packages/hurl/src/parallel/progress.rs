@@ -31,6 +31,8 @@ pub struct ParProgress {
     mode: Mode,
     /// The standard error format for message: ANSI or plain.
     format: Format,
+    /// The maximum width of the progress string, in chars.
+    max_width: Option<usize>,
     /// Save last progress bar refresh to limits flickering.
     throttle: Throttle,
 }
@@ -52,12 +54,18 @@ const FIRST_THROTTLE: Duration = Duration::from_millis(16);
 
 impl ParProgress {
     /// Creates a new instance.
-    pub fn new(max_running_displayed: usize, mode: Mode, color: bool) -> Self {
+    pub fn new(
+        max_running_displayed: usize,
+        mode: Mode,
+        color: bool,
+        max_width: Option<usize>,
+    ) -> Self {
         let format = if color { Format::Ansi } else { Format::Plain };
         ParProgress {
             max_running_displayed,
             mode,
             format,
+            max_width,
             throttle: Throttle::new(UPDATE_INTERVAL, FIRST_THROTTLE),
         }
     }
@@ -91,6 +99,7 @@ impl ParProgress {
             count,
             self.max_running_displayed,
             self.format,
+            self.max_width,
         ) else {
             return;
         };
@@ -199,13 +208,15 @@ impl Throttle {
 ///
 /// `max_running_displayed` is used to limit the number of running progress bar. If more jobs are
 /// running, a label "...x more" is displayed.
-/// `color` is `true` when the returned progress string uses color.
+/// `format` is the format of the progress string (ANSI or plain).
+/// The progress string is wrapped with new lines at width `max_width`.
 fn build_progress(
     workers: &[(Worker, WorkerState)],
     completed: usize,
     count: Option<usize>,
     max_running_displayed: usize,
     format: Format,
+    max_width: Option<usize>,
 ) -> Option<String> {
     // Select the running workers to be displayed
     let mut workers = workers
@@ -237,7 +248,7 @@ fn build_progress(
         })
         .max()
         .unwrap();
-    let max_width = 2 * (((max as f64).log10() as usize) + 1) + 1;
+    let max_completed_width = 2 * (((max as f64).log10() as usize) + 1) + 1;
 
     // Construct all the progress strings
     let mut all_progress = String::new();
@@ -248,6 +259,8 @@ fn build_progress(
         }
         None => format!("Executed files: {completed}\n"),
     };
+    // We don't wrap this string for the moment, there is low chance to overlap the maximum width
+    // of the terminal.
     all_progress.push_str(&progress);
 
     for (_, state) in &workers {
@@ -259,7 +272,7 @@ fn build_progress(
         {
             let entry_index = entry_index + 1; // entry index display is 1-based
             let requests = format!("{entry_index}/{entry_count}");
-            let padding = " ".repeat(max_width - requests.len());
+            let padding = " ".repeat(max_completed_width - requests.len());
             let bar = progress_bar(entry_index, *entry_count);
 
             let mut progress = StyledString::new();
@@ -270,6 +283,13 @@ fn build_progress(
             progress.push(": ");
             progress.push_with("Running", Style::new().cyan().bold());
             progress.push("\n");
+
+            // We wrap the progress string with new lines if necessary
+            if let Some(max_width) = max_width {
+                if progress.len() >= max_width {
+                    progress = progress.wrap(max_width);
+                }
+            }
 
             let progress = progress.to_string(format);
             all_progress.push_str(&progress);
@@ -370,7 +390,14 @@ mod tests {
             (w4, WorkerState::Idle),
         ];
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert!(progress.is_none());
 
         workers[0].1 = new_running_state(&jobs[0], 0, 10);
@@ -379,7 +406,14 @@ mod tests {
         workers[3].1 = new_running_state(&jobs[3], 0, 7);
         workers[4].1 = new_running_state(&jobs[4], 0, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert_eq!(
             progress.unwrap(),
             "\
@@ -397,7 +431,14 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = new_running_state(&jobs[3], 3, 7);
         workers[4].1 = new_running_state(&jobs[4], 1, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert_eq!(
             progress.unwrap(),
             "\
@@ -415,7 +456,14 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = new_running_state(&jobs[3], 5, 7);
         workers[4].1 = new_running_state(&jobs[4], 2, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert_eq!(
             progress.unwrap(),
             "\
@@ -433,7 +481,14 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = WorkerState::Idle;
         workers[4].1 = new_running_state(&jobs[4], 3, 4);
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert_eq!(
             progress.unwrap(),
             "\
@@ -449,7 +504,14 @@ Executed files: 75/100 (75%)\n\
         workers[3].1 = WorkerState::Idle;
         workers[4].1 = WorkerState::Idle;
 
-        let progress = build_progress(&workers, completed, total, max_displayed, Format::Plain);
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
         assert_eq!(
             progress.unwrap(),
             "\
@@ -475,7 +537,7 @@ Executed files: 75/100 (75%)\n\
         assert_eq!(progress_bar(2, 3), "[========>               ] 2/3");
         assert_eq!(progress_bar(3, 3), "[================>       ] 3/3");
 
-        // Progress strings with 1 entries:
+        // Progress strings with 1 entry:
         assert_eq!(progress_bar(1, 1), "[>                       ] 1/1");
     }
 }
