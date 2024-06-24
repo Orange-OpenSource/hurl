@@ -1,4 +1,4 @@
-curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "&secret\\\\\'<>",\n    "age": 30,\n    "strict": true,\n    "spacing": "\\n",\n    "g_clef": "\\uD834\\uDD1E",\n    "items": [true, "true", 1],\n    "variable": "\\\\"\n}' 'http://localhost:8000/post-json'
+curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "&secret\\\\\'<>",\n    "age": 30,\n    "strict": true,\n    "spacing": "\\n",\n    "g_clef": "\\uD834\\uDD1E",\n    "items": [true, "true", 1],\n    "variable": "\\\\",\n    "": "empty"\n}' 'http://localhost:8000/post-json'
 curl --header 'Content-Type: application/json' --data '[1,2,3]' 'http://localhost:8000/post-json-array'
 curl --header 'Content-Type: application/json' --data '[]' 'http://localhost:8000/post-json-array-empty'
 curl --header 'Content-Type: application/json' --data '"Hello"' 'http://localhost:8000/post-json-string'

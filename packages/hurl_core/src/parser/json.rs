@@ -363,14 +363,8 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn key(reader: &mut Reader) -> ParseResult<Template> {
-    let save = reader.state;
     let name = string_template(reader).map_err(|e| e.non_recoverable())?;
-    if name.elements.is_empty() {
-        let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
-        Err(ParseError::new(save.pos, false, kind))
-    } else {
-        Ok(name)
-    }
+    Ok(name)
 }
 
 fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
