@@ -1,0 +1,8 @@
+error: unexpected argument '--toto' found
+
+  tip: a similar argument exists: '--to-entry'
+
+Usage: hurl<<<(\.exe)?>>> --to-entry <ENTRY_NUMBER> [FILES]...
+
+For more information, try '--help'.
+

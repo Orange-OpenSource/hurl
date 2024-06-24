@@ -40,7 +40,7 @@ pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOption
                 Ok(Some(filename))
             } else {
                 Err(CliOptionsError::Error(format!(
-                    "input file {} does not exist",
+                    "Input file {} does not exist",
                     path.display()
                 )))
             }

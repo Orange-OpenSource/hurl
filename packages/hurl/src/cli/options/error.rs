@@ -31,7 +31,13 @@ impl From<clap::Error> for CliOptionsError {
         match error.kind() {
             clap::error::ErrorKind::DisplayVersion => CliOptionsError::Info(error.to_string()),
             clap::error::ErrorKind::DisplayHelp => CliOptionsError::Info(error.to_string()),
-            _ => CliOptionsError::Error(error.to_string()),
+            _ => {
+                // Other clap errors are prefixed with "error ", we strip this prefix as we want to
+                // have our own error prefix.
+                let message = error.to_string();
+                let message = message.strip_prefix("error: ").unwrap_or(&message);
+                CliOptionsError::Error(message.to_string())
+            }
         }
     }
 }
