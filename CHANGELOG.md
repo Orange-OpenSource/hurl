@@ -4,6 +4,7 @@
 Thanks to
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@OverkillGuy](https://github.com/OverkillGuy),
+[@badboy](https://github.com/badboy),
 [@DenuxPlays](https://github.com/DenuxPlays),
 [@linkdd](https://github.com/linkdd),
 [@nkback](https://github.com/nkback),
@@ -26,9 +27,11 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix error displayed in double with bad option. [#2920](https://github.com/Orange-OpenSource/hurl/issues/2920)
 * Truncate file then append it when dumping response with --output. [#2886](https://github.com/Orange-OpenSource/hurl/issues/2886)
 * Fix crash with --json option when capturing 'HttpOnly' and 'Secure' cookie attribute [#2871](https://github.com/Orange-OpenSource/hurl/issues/2871)
 * Fix crash when capturing 'Expires' cookie attribute [#2870](https://github.com/Orange-OpenSource/hurl/issues/2870)
+* Fix empty JSON key parsing [#2836](https://github.com/Orange-OpenSource/hurl/issues/2836)
 * Do not filter 'Authorization' header if host doesn't change while following redirect [#2823](https://github.com/Orange-OpenSource/hurl/issues/2823)
 * Fix sending 'Authorization' header from --user when following redirect [#2812](https://github.com/Orange-OpenSource/hurl/issues/2812)
 * Fix URL when following redirect for certain 'Location' header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
