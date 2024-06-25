@@ -214,7 +214,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m137 |[0m verbose: {{verbose}}
-[1;34m    |[0m[1;31m            ^^^^^^^ expecting boolean, actual value is <1>[0m
+[1;34m    |[0m[1;31m            ^^^^^^^ expecting boolean, actual value is integer <1>[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUndefined variable[0m

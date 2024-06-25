@@ -265,7 +265,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::TemplateVariableInvalidType {
                 value, expecting, ..
             } => {
-                let message = &format!("expecting {expecting}, actual value is <{value}>");
+                let message = &format!("expecting {expecting}, actual value is {value}");
                 let message = hurl_core::error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

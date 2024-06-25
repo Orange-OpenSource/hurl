@@ -214,7 +214,7 @@ error: Invalid variable type
     | GET http://localhost:8000/runner_errors
     | ...
 137 | verbose: {{verbose}}
-    |            ^^^^^^^ expecting boolean, actual value is <1>
+    |            ^^^^^^^ expecting boolean, actual value is integer <1>
     |
 
 error: Undefined variable

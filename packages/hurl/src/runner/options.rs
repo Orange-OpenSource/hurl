@@ -311,7 +311,7 @@ fn eval_boolean_option(
             v => {
                 let kind = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
-                    value: v.to_string(),
+                    value: v.format(),
                     expecting: "boolean".to_string(),
                 };
                 Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -331,7 +331,7 @@ fn eval_natural_option(
                 if value < 0 {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
-                        value: value.to_string(),
+                        value: format!("integer <{value}>"),
                         expecting: "positive integer".to_string(),
                     };
                     Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -342,7 +342,7 @@ fn eval_natural_option(
             v => {
                 let kind = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
-                    value: v.to_string(),
+                    value: v.format(),
                     expecting: "positive integer".to_string(),
                 };
                 Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -367,7 +367,7 @@ fn eval_repeat_option(
                 } else {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
-                        value: value.to_string(),
+                        value: format!("integer <{value}>"),
                         expecting: "integer".to_string(),
                     };
                     Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -376,7 +376,7 @@ fn eval_repeat_option(
             v => {
                 let kind = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
-                    value: v.to_string(),
+                    value: v.format(),
                     expecting: "integer".to_string(),
                 };
                 Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -401,7 +401,7 @@ fn eval_retry_option(
                 } else {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
-                        value: value.to_string(),
+                        value: format!("integer <{value}>"),
                         expecting: "integer".to_string(),
                     };
                     Err(RunnerError::new(expr.variable.source_info, kind, false))
@@ -516,7 +516,7 @@ mod tests {
             error.kind,
             RunnerErrorKind::TemplateVariableInvalidType {
                 name: "verbose".to_string(),
-                value: "10".to_string(),
+                value: "integer <10>".to_string(),
                 expecting: "boolean".to_string()
             }
         );

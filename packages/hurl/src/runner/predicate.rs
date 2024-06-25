@@ -137,7 +137,7 @@ impl Number {
 }
 
 impl Value {
-    fn expected(&self) -> String {
+    pub(crate) fn format(&self) -> String {
         match self {
             Value::Bool(value) => format!("bool <{value}>"),
             Value::Bytes(values) => format!("list of size {}", values.len()),
@@ -182,23 +182,23 @@ fn expected_no_value(
     match &predicate_func_value {
         PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(value.expected())
+            Ok(value.format())
         }
         PredicateFuncValue::GreaterThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than <{}>", value.expected()))
+            Ok(format!("greater than <{}>", value.format()))
         }
         PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than or equals to <{}>", value.expected()))
+            Ok(format!("greater than or equals to <{}>", value.format()))
         }
         PredicateFuncValue::LessThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than <{}>", value.expected()))
+            Ok(format!("less than <{}>", value.format()))
         }
         PredicateFuncValue::LessThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than or equals to <{}>", value.expected()))
+            Ok(format!("less than or equals to <{}>", value.format()))
         }
         PredicateFuncValue::StartWith {
             value: expected, ..
@@ -220,7 +220,7 @@ fn expected_no_value(
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("include {}", value.expected()))
+            Ok(format!("include {}", value.format()))
         }
         PredicateFuncValue::Match {
             value: expected, ..
