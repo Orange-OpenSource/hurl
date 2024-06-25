@@ -115,13 +115,11 @@ struct RequestJson {
     url: String,
     headers: Vec<HeaderJson>,
     cookies: Vec<RequestCookieJson>,
-    #[serde(rename = "queryString")]
     query_string: Vec<ParamJson>,
 }
 
 #[derive(Deserialize, Serialize)]
 struct ResponseJson {
-    #[serde(rename = "httpVersion")]
     http_version: String,
     status: u32,
     headers: Vec<HeaderJson>,
