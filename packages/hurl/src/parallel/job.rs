@@ -81,9 +81,9 @@ impl JobResult {
 /// The job queue implements [`Iterator`] trait, and can return a new job to use each time its
 /// `next` method is called. This queue can repeat its input sequence a certain number of times, or
 /// can loop forever.
-pub struct JobQueue<'a> {
+pub struct JobQueue<'job> {
     /// The input jobs list.
-    jobs: &'a [Job],
+    jobs: &'job [Job],
     /// Current index of the job, referencing the input job list.
     index: usize,
     /// Repeat mode of this queue (finite or infinite).
@@ -92,9 +92,9 @@ pub struct JobQueue<'a> {
     repeat_index: usize,
 }
 
-impl<'a> JobQueue<'a> {
+impl<'job> JobQueue<'job> {
     /// Create a new queue, with a list of `jobs` and a `repeat` mode.
-    pub fn new(jobs: &'a [Job], repeat: Repeat) -> Self {
+    pub fn new(jobs: &'job [Job], repeat: Repeat) -> Self {
         JobQueue {
             jobs,
             index: 0,

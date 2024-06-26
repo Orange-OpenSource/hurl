@@ -228,9 +228,9 @@ impl cli::OutputType {
 /// The queue implements [`Iterator`] trait, and can return a new input to use each time its
 /// `next` method is called. This queue can repeat its input sequence a certain number of times, or
 /// can loop forever.
-pub struct InputQueue<'a> {
+pub struct InputQueue<'input> {
     /// The input list.
-    inputs: &'a [Input],
+    inputs: &'input [Input],
     /// Current index of the input, referencing the input list.
     index: usize,
     /// Repeat mode of this queue (finite or infinite).
@@ -239,9 +239,9 @@ pub struct InputQueue<'a> {
     repeat_index: usize,
 }
 
-impl<'a> InputQueue<'a> {
+impl<'input> InputQueue<'input> {
     /// Create a new queue, with a list of `inputs` and a `repeat` mode.
-    pub fn new(inputs: &'a [Input], repeat: Repeat) -> Self {
+    pub fn new(inputs: &'input [Input], repeat: Repeat) -> Self {
         InputQueue {
             inputs,
             index: 0,
