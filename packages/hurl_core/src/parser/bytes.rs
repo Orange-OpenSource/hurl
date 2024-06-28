@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::choice;
 use crate::parser::json::parse as parse_json;
 use crate::parser::multiline::multiline_string;
 use crate::parser::primitives::*;

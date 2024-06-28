@@ -16,7 +16,6 @@
  *
  */
 pub type ParseResult<T> = Result<T, ParseError>;
-pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
 
 pub fn parse_hurl_file(s: &str) -> ParseResult<HurlFile> {
     let mut reader = Reader::new(s);
@@ -34,7 +33,6 @@ use crate::reader::Reader;
 
 mod base64;
 mod bytes;
-mod combinators;
 mod cookiepath;
 mod error;
 mod expr;

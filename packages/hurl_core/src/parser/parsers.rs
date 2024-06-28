@@ -17,8 +17,8 @@
  */
 use crate::ast::VersionValue::VersionAny;
 use crate::ast::*;
+use crate::combinator::{optional, zero_or_more};
 use crate::parser::bytes::*;
-use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::number::natural;
 use crate::parser::primitives::*;

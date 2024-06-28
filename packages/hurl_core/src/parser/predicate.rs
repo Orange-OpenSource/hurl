@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::choice;
 use crate::parser::error::*;
 use crate::parser::predicate_value::predicate_value;
 use crate::parser::primitives::*;

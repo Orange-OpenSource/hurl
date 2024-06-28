@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{choice, ParseError as ParseErrorTrait};
 use crate::parser::cookiepath::cookiepath;
 use crate::parser::primitives::*;
 use crate::parser::string::*;
@@ -68,7 +68,7 @@ fn url_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn header_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("header", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let name = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(QueryValue::Header { space0, name })
 }
 
@@ -98,7 +98,7 @@ fn body_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn xpath_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(QueryValue::Xpath { space0, expr })
 }
 
@@ -107,7 +107,7 @@ fn jsonpath_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     let space0 = one_or_more_spaces(reader)?;
     //let expr = jsonpath_expr(reader)?;
     //  let start = reader.state.pos.clone();
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     //    let end = reader.state.pos.clone();
     //    let expr = Template {
     //        elements: template.elements.iter().map(|e| match e {
@@ -155,7 +155,7 @@ pub fn regex_value(reader: &mut Reader) -> ParseResult<RegexValue> {
 fn variable_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("variable", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let name = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(QueryValue::Variable { space0, name })
 }
 

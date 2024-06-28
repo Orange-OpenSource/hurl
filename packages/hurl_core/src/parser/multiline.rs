@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{choice, optional, zero_or_more};
 use crate::parser::json::object_value;
 use crate::parser::primitives::*;
 use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};

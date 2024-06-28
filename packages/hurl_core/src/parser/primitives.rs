@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::error::*;
 use crate::parser::string::*;
 use crate::parser::{base64, filename, key_string, ParseResult};

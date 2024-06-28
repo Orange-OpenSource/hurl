@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::optional;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::string::*;

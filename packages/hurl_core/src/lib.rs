@@ -16,6 +16,7 @@
  *
  */
 pub mod ast;
+pub mod combinator;
 pub mod error;
 pub mod format;
 pub mod parser;

@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::choice;
 use crate::parser::multiline::multiline_string;
 use crate::parser::number::number;
 use crate::parser::primitives::*;

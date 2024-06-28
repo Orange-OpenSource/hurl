@@ -80,16 +80,6 @@ impl ParseError {
             kind,
         }
     }
-
-    /// Makes a recoverable error.
-    pub fn recoverable(&self) -> ParseError {
-        ParseError::new(self.pos, true, self.kind.clone())
-    }
-
-    /// Makes a non recoverable error.
-    pub fn non_recoverable(&self) -> ParseError {
-        ParseError::new(self.pos, false, self.kind.clone())
-    }
 }
 
 impl DisplaySourceError for ParseError {
@@ -251,6 +241,26 @@ impl DisplaySourceError for ParseError {
         let mut s = StyledString::new();
         s.push_with(&message, Style::new().red().bold());
         s
+    }
+}
+
+impl crate::combinator::ParseError for ParseError {
+    fn is_recoverable(&self) -> bool {
+        self.recoverable
+    }
+
+    fn to_recoverable(self) -> Self {
+        ParseError {
+            recoverable: true,
+            ..self
+        }
+    }
+
+    fn to_non_recoverable(self) -> Self {
+        ParseError {
+            recoverable: false,
+            ..self
+        }
     }
 }
 

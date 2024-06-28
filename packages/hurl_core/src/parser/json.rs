@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
-use crate::parser::combinators::*;
+use crate::combinator::{choice, non_recover, ParseError as ParseErrorTrait};
 use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::template::*;
@@ -203,10 +203,10 @@ fn cp_surrogate_pair(cp1: u32, cp2: u32) -> Option<u32> {
 }
 
 fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
-    let digit1 = nonrecover(hex_digit, reader)?;
-    let digit2 = nonrecover(hex_digit, reader)?;
-    let digit3 = nonrecover(hex_digit, reader)?;
-    let digit4 = nonrecover(hex_digit, reader)?;
+    let digit1 = non_recover(hex_digit, reader)?;
+    let digit2 = non_recover(hex_digit, reader)?;
+    let digit3 = non_recover(hex_digit, reader)?;
+    let digit4 = non_recover(hex_digit, reader)?;
     let value = digit1 * (16 * 16 * 16) + digit2 * (16 * 16) + digit3 * 16 + digit4;
     Ok(value)
 }
@@ -363,7 +363,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn key(reader: &mut Reader) -> ParseResult<Template> {
-    let name = string_template(reader).map_err(|e| e.non_recoverable())?;
+    let name = string_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(name)
 }
 

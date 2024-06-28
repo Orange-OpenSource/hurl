@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::error::*;
 use crate::parser::filter::filters;
 use crate::parser::predicate::predicate;

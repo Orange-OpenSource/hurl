@@ -15,16 +15,34 @@
  * limitations under the License.
  *
  */
-use crate::parser::error::*;
-use crate::parser::{ParseFunc, ParseResult};
 use crate::reader::Reader;
 
-pub fn optional<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Option<T>> {
+/// Represent a parser error. This type of error ca be recoverable or not and
+/// implements conversion to recoverable / non-recoverable instance.
+pub trait ParseError {
+    /// Is this error recoverable or not?
+    fn is_recoverable(&self) -> bool;
+
+    /// Transforms this error to a recoverable one.
+    fn to_recoverable(self) -> Self;
+
+    /// Transforms this error to a non-recoverable one.
+    fn to_non_recoverable(self) -> Self;
+}
+
+/// A parser func.
+pub type ParseFunc<T, E> = fn(&mut Reader) -> Result<T, E>;
+
+/// Try to consume one instances of the provided parser.
+pub fn optional<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<Option<T>, E>
+where
+    E: ParseError,
+{
     let start = reader.state;
     match f(reader) {
         Ok(r) => Ok(Some(r)),
         Err(e) => {
-            if e.recoverable {
+            if e.is_recoverable() {
                 reader.state = start;
                 Ok(None)
             } else {
@@ -34,26 +52,34 @@ pub fn optional<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Option<T
     }
 }
 
-pub fn recover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
-    // make an error recoverable
-    // but does not reset cursor
+/// Makes an error recoverable but does not reset cursor.
+pub fn recover<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<T, E>
+where
+    E: ParseError,
+{
     match f(reader) {
         Ok(r) => Ok(r),
-        Err(e) => Err(ParseError::new(e.pos, true, e.kind)),
+        Err(e) => Err(e.to_recoverable()),
     }
 }
 
-pub fn nonrecover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
+/// Makes an error non recoverable.
+pub fn non_recover<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<T, E>
+where
+    E: ParseError,
+{
     match f(reader) {
         Ok(r) => Ok(r),
-        Err(e) => Err(ParseError::new(e.pos, false, e.kind)),
+        Err(e) => Err(e.to_non_recoverable()),
     }
 }
 
-pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
-    let _start = reader.state;
-
-    let mut v: Vec<T> = Vec::new();
+/// Consumes zero or more instances of the provided parser.
+pub fn zero_or_more<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<Vec<T>, E>
+where
+    E: ParseError,
+{
+    let mut v = Vec::new();
     loop {
         let initial_state = reader.state;
         if reader.is_eof() {
@@ -65,7 +91,7 @@ pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<
                 v.push(r);
             }
             Err(e) => {
-                return if e.recoverable {
+                return if e.is_recoverable() {
                     reader.state.pos = initial_state.pos;
                     reader.state.cursor = initial_state.cursor;
                     Ok(v)
@@ -77,8 +103,11 @@ pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<
     }
 }
 
-pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
-    let _initial_state = reader.state;
+/// Consumes one or more instances of the provided parser.
+pub fn one_or_more<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<Vec<T>, E>
+where
+    E: ParseError,
+{
     match f(reader) {
         Ok(first) => {
             let mut v = vec![first];
@@ -89,7 +118,7 @@ pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T
                         v.push(r);
                     }
                     Err(e) => {
-                        return if e.recoverable {
+                        return if e.is_recoverable() {
                             reader.state.pos = initial_state.pos;
                             reader.state.cursor = initial_state.cursor;
                             Ok(v)
@@ -101,27 +130,28 @@ pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T
             }
         }
         // if zero occurrence => should fail?
-        Err(ParseError { pos, kind, .. }) => Err(ParseError::new(pos, false, kind)),
+        Err(e) => Err(e.to_non_recoverable()),
     }
 }
 
-/// Tries to apply the list of parser functions `fs` until one of them succeeds.
-/// Typically this should be recoverable
-pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
+/// Tries to apply the list of parser until one of them succeeds.
+/// Typically, this should be recoverable
+pub fn choice<T, E>(fs: &[ParseFunc<T, E>], reader: &mut Reader) -> Result<T, E>
+where
+    E: ParseError,
+{
     for (pos, f) in fs.iter().enumerate() {
         let start = reader.state;
         if pos == fs.len() - 1 {
             return f(reader);
         }
         match f(reader) {
-            Err(ParseError {
-                recoverable: true, ..
-            }) => {
+            Err(err) if err.is_recoverable() => {
                 reader.state = start;
                 continue;
             }
             x => return x,
         }
     }
-    panic!("You can't call choice with an empty vector of choice")
+    unreachable!("You can't call choice with an empty vector of choice")
 }

@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{choice, non_recover};
 use crate::parser::error::*;
 use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::*;
@@ -108,7 +108,7 @@ fn option_cert(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Compressed(value))
 }
 
@@ -123,47 +123,47 @@ fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::FollowLocation(value))
 }
 
 fn option_follow_location_trusted(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::FollowLocationTrusted(value))
 }
 
 fn option_http_10(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Http10(value))
 }
 
 fn option_http_11(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Http11(value))
 }
 
 fn option_http_2(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Http2(value))
 }
 
 fn option_http_3(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Http3(value))
 }
 
 fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Insecure(value))
 }
 
 fn option_ipv4(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::IpV4(value))
 }
 
 fn option_ipv6(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::IpV6(value))
 }
 
@@ -173,12 +173,12 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(natural_option, reader)?;
+    let value = non_recover(natural_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
 }
 
 fn option_netrc(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::NetRc(value))
 }
 
@@ -188,7 +188,7 @@ fn option_netrc_file(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_netrc_optional(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::NetRcOptional(value))
 }
 
@@ -198,7 +198,7 @@ fn option_output(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_path_as_is(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::PathAsIs(value))
 }
 
@@ -223,12 +223,12 @@ fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(natural_option, reader)?;
+    let value = non_recover(natural_option, reader)?;
     Ok(OptionKind::RetryInterval(value))
 }
 
 fn option_skip(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Skip(value))
 }
 
@@ -248,18 +248,18 @@ fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Verbose(value))
 }
 
 fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean_option, reader)?;
+    let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::VeryVerbose(value))
 }
 
 fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
     let pos = reader.state.pos;
-    let value = nonrecover(integer, reader)?;
+    let value = non_recover(integer, reader)?;
     if value == -1 {
         Ok(Repeat::Forever)
     } else if value >= 0 {
@@ -274,7 +274,7 @@ fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
 
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
     let pos = reader.state.pos;
-    let value = nonrecover(integer, reader)?;
+    let value = non_recover(integer, reader)?;
     if value == -1 {
         Ok(Retry::Infinite)
     } else if value >= 0 {

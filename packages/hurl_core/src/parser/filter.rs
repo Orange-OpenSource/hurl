@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::{Filter, FilterValue, SourceInfo, Whitespace};
-use crate::parser::combinators::choice;
+use crate::combinator::{choice, ParseError as ParseErrorTrait};
 use crate::parser::number::natural;
 use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
@@ -131,7 +131,7 @@ fn html_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn jsonpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("jsonpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::JsonPath { space0, expr })
 }
 
@@ -154,7 +154,7 @@ fn replace_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     let space0 = one_or_more_spaces(reader)?;
     let old_value = regex_value(reader)?;
     let space1 = one_or_more_spaces(reader)?;
-    let new_value = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let new_value = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::Replace {
         space0,
         old_value,
@@ -166,7 +166,7 @@ fn replace_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn split_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("split", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let sep = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let sep = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::Split { space0, sep })
 }
 
@@ -200,7 +200,7 @@ fn url_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::XPath { space0, expr })
 }
 
