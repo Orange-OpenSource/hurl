@@ -23,7 +23,7 @@ chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
 clap = { version = "4.5.7", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.46"
-curl-sys = "0.4.72"
+curl-sys = "0.4.73"
 encoding = "0.2.33"
 float-cmp = "0.9.0"
 glob = "0.3.1"
