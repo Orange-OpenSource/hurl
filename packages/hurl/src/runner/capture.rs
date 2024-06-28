@@ -45,7 +45,11 @@ pub fn eval_capture(
             ));
         }
         Some(value) => {
-            let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
+            let filters = capture
+                .filters
+                .iter()
+                .map(|(_, f)| f.clone())
+                .collect::<Vec<_>>();
             match eval_filters(&filters, &value, variables, false)? {
                 None => {
                     return Err(RunnerError::new(

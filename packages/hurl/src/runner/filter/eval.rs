@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 
 use hurl_core::ast::{Filter, FilterValue};
@@ -45,7 +44,7 @@ use super::count::eval_count;
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
-    filters: &Vec<Filter>,
+    filters: &[Filter],
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
@@ -65,6 +64,7 @@ pub fn eval_filters(
     Ok(value)
 }
 
+/// Evaluates a `filter` with an input `value`, given a set of `variables`.
 pub fn eval_filter(
     filter: &Filter,
     value: &Value,
@@ -117,6 +117,7 @@ pub fn eval_filter(
         }
     }
 }
+
 #[cfg(test)]
 pub mod tests {
     use crate::runner::filter::eval::eval_filters;
@@ -130,7 +131,7 @@ pub mod tests {
 
         assert_eq!(
             eval_filters(
-                &vec![Filter {
+                &[Filter {
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
                     value: FilterValue::Count,
                 }],
