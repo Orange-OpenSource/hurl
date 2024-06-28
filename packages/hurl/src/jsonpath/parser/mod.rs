@@ -17,13 +17,7 @@
  */
 
 use error::ParseError;
-use reader::Reader;
-
-#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Pos {
-    pub line: usize,
-    pub column: usize,
-}
+use hurl_core::reader::Reader;
 
 pub type ParseResult<T> = Result<T, ParseError>;
 pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
@@ -34,4 +28,3 @@ mod combinators;
 mod error;
 mod parse;
 mod primitives;
-mod reader;

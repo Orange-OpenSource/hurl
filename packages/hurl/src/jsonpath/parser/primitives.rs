@@ -17,7 +17,8 @@
  */
 use super::super::ast::*;
 use super::error::{ParseError, ParseErrorKind};
-use super::{ParseResult, Reader};
+use super::ParseResult;
+use hurl_core::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
     let start = reader.state;
@@ -204,8 +205,8 @@ pub fn whitespace(reader: &mut Reader) {
 
 #[cfg(test)]
 mod tests {
-    use super::super::Pos;
     use super::*;
+    use hurl_core::ast::Pos;
 
     #[test]
     fn test_natural() {

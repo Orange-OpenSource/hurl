@@ -16,8 +16,8 @@
  *
  */
 use super::error::*;
-use super::reader::Reader;
 use super::{ParseFunc, ParseResult};
+use hurl_core::reader::Reader;
 
 pub fn zero_or_more<T>(f: ParseFunc<T>, p: &mut Reader) -> ParseResult<Vec<T>> {
     let _start = p.state;
