@@ -59,7 +59,12 @@ pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
 }
 
 pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
-    let sign = if reader.try_literal("-") { -1 } else { 1 };
+    let sign = if reader.peek() == Some('-') {
+        _ = reader.read();
+        -1
+    } else {
+        1
+    };
     let nat = natural(reader)?;
     Ok(sign * (nat as i64))
 }
@@ -67,7 +72,8 @@ pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
 pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     let int = integer(reader)?;
 
-    let decimal = if reader.try_literal(".") {
+    let decimal = if reader.peek() == Some('.') {
+        _ = reader.read();
         if reader.is_eof() {
             return Err(Error {
                 pos: reader.state.pos,

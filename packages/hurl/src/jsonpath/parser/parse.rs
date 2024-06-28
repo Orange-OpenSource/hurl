@@ -176,7 +176,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
 }
 
 fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
-    if !reader.try_literal(".") {
+    if reader.peek() != Some('.') {
         return Err(Error {
             pos: reader.state.pos,
             recoverable: true,
@@ -185,6 +185,7 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
             },
         });
     };
+    _ = reader.read();
 
     let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if s.is_empty() {

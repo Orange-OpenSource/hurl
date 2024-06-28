@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::cmp::min;
-
 use super::Pos;
 
 /// Represents a JSONPath reader.
@@ -66,20 +64,6 @@ impl Reader {
             }
         }
     }
-
-    /// Returns `count` chars from the buffer advancing the internal state.
-    /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
-    pub fn read_n(&mut self, count: usize) -> String {
-        let mut s = String::new();
-        for _ in 0..count {
-            match self.read() {
-                None => {}
-                Some(c) => s.push(c),
-            }
-        }
-        s
-    }
-
     /// Returns chars from the buffer while `predicate` is true, advancing the internal state.
     pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {
         let mut s = String::new();
@@ -101,23 +85,6 @@ impl Reader {
     pub fn peek(&mut self) -> Option<char> {
         self.buffer.get(self.state.cursor).copied()
     }
-
-    /// Returns the `count` char from the buffer without advancing the internal state.
-    /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
-    pub fn peek_n(&self, count: usize) -> String {
-        let start = self.state.cursor;
-        let end = min(start + count, self.buffer.len());
-        self.buffer[start..end].iter().collect()
-    }
-
-    pub fn try_literal(&mut self, value: &str) -> bool {
-        if self.peek_n(value.len()) == value {
-            self.read_n(value.len());
-            true
-        } else {
-            false
-        }
-    }
 }
 
 fn is_combining_character(c: char) -> bool {
@@ -133,7 +100,6 @@ mod tests {
         let mut reader = Reader::new("hi");
         assert_eq!(reader.state.cursor, 0);
         assert!(!reader.is_eof());
-        assert_eq!(reader.peek_n(2), "hi".to_string());
 
         assert_eq!(reader.read().unwrap(), 'h');
         assert_eq!(reader.state.cursor, 1);
@@ -142,16 +108,5 @@ mod tests {
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
-    }
-
-    #[test]
-    fn test_try_predicate() {
-        let mut reader = Reader::new("hi");
-        assert!(reader.try_literal("hi"));
-        assert_eq!(reader.state.cursor, 2);
-
-        let mut reader = Reader::new("hello");
-        assert!(!reader.try_literal("hi"));
-        assert_eq!(reader.state.cursor, 0);
     }
 }
