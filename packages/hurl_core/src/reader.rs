@@ -21,7 +21,7 @@ use std::cmp::min;
 ///
 /// The `Reader` implements methods to read a stream of text. A reader manages
 /// an internal `state` which is the position of the current cursor within the reader's buffer.
-/// Methods like [`Reader::read`], [`Reader::read_while`], [`Reader::read_while_escaping`]
+/// Methods like [`Reader::read`], [`Reader::read_while`]
 /// do advance the internal reader's`state`. Other methods, like [`Reader::peek`], [`Reader::peek_n`]
 /// allows to get the next chars in the buffer without modifying the current reader state.
 ///
@@ -128,37 +128,13 @@ impl Reader {
         }
     }
 
-    // only support escaped spaces for now
-    pub fn read_while_escaping(&mut self, predicate: fn(&char) -> bool) -> String {
-        let mut s = String::new();
-        let mut escaped = false;
-        loop {
-            match self.peek() {
-                None => return s,
-                Some(c) => {
-                    if escaped && c == ' ' {
-                        escaped = false;
-                        s.push(self.read().unwrap());
-                    } else if c == '\\' {
-                        escaped = true;
-                        let _backslash = self.read().unwrap();
-                    } else if predicate(&c) {
-                        s.push(self.read().unwrap());
-                    } else {
-                        return s;
-                    }
-                }
-            }
-        }
-    }
-
     /// Returns the next char from the buffer without advancing the internal state.
-    pub fn peek(&mut self) -> Option<char> {
+    pub fn peek(&self) -> Option<char> {
         self.buffer.get(self.state.cursor).copied()
     }
 
     /// Returns the next char ignoring whitespace without advancing the internal state.
-    pub fn peek_ignoring_whitespace(&mut self) -> Option<char> {
+    pub fn peek_ignoring_whitespace(&self) -> Option<char> {
         let mut i = self.state.cursor;
         loop {
             if let Some(c) = self.buffer.get(i).copied() {
