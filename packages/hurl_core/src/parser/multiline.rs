@@ -19,8 +19,8 @@ use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::json::object_value;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
+use crate::reader::Reader;
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;

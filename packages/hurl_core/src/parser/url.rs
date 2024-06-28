@@ -18,8 +18,8 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::{expr, ParseResult};
+use crate::reader::Reader;
 
 pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     // Must be neither JSON-encoded nor empty.

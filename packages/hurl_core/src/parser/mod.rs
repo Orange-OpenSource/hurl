@@ -28,9 +28,9 @@ pub use self::json::{
     boolean_value as parse_json_boolean, null_value as parse_json_null,
     number_value as parse_json_number, parse as parse_json,
 };
-pub use self::reader::Reader;
 pub use self::template::templatize;
 use crate::ast::HurlFile;
+use crate::reader::Reader;
 
 mod base64;
 mod bytes;
@@ -51,7 +51,6 @@ mod predicate;
 mod predicate_value;
 mod primitives;
 mod query;
-mod reader;
 mod sections;
 mod string;
 mod template;

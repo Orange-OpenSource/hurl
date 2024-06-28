@@ -18,7 +18,8 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
-use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
+use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number};
+use hurl_core::reader::Reader;
 
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::render_expression;

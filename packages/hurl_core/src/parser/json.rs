@@ -19,9 +19,9 @@ use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, Pos, SourceInfo,
 use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::*;
 use crate::parser::template::*;
 use crate::parser::{expr, ParseResult};
+use crate::reader::Reader;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(

@@ -20,9 +20,9 @@ use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
+use crate::reader::Reader;
 use crate::typing::{Repeat, Retry};
 
 /// Parse an option in an `[Options]` section.

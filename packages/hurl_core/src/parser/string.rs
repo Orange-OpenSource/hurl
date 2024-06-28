@@ -19,8 +19,8 @@ use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::{template, ParseResult};
+use crate::reader::Reader;
 
 /// Steps:
 /// 1- parse String until end of stream, end of line

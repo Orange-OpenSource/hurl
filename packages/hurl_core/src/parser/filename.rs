@@ -18,9 +18,9 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::try_literal;
-use crate::parser::reader::Reader;
 use crate::parser::template::template;
 use crate::parser::{string, ParseResult};
+use crate::reader::Reader;
 
 /// Parse a filename.
 ///

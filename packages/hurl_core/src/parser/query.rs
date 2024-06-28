@@ -19,9 +19,9 @@ use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::cookiepath::cookiepath;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
+use crate::reader::Reader;
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
     let start = reader.state.pos;

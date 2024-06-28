@@ -19,9 +19,9 @@ use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
     let start = reader.state.pos;

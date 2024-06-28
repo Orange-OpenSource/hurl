@@ -29,7 +29,7 @@ use crate::ast::Pos;
 ///
 /// # Example
 /// ```
-///  use hurl_core::parser::Reader;
+///  use hurl_core::reader::Reader;
 ///
 ///  let mut reader = Reader::new("hi");
 ///  let state = reader.state.cursor; // cursor is 0
@@ -166,15 +166,6 @@ impl Reader {
         self.buffer[start..end].iter().collect()
     }
 
-    pub fn try_literal(&mut self, value: &str) -> bool {
-        if self.peek_n(value.len()) == value {
-            self.read_n(value.len());
-            true
-        } else {
-            false
-        }
-    }
-
     pub fn peek_back(&self, start: usize) -> String {
         let end = self.state.cursor;
         self.buffer[start..end].iter().collect()
@@ -203,16 +194,5 @@ mod tests {
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
-    }
-
-    #[test]
-    fn test_try_predicate() {
-        let mut reader = Reader::new("hi");
-        assert!(reader.try_literal("hi"));
-        assert_eq!(reader.state.cursor, 2);
-
-        let mut reader = Reader::new("hello");
-        assert!(!reader.try_literal("hi"));
-        assert_eq!(reader.state.cursor, 0);
     }
 }

@@ -18,8 +18,8 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
     try_literal("{{", reader)?;

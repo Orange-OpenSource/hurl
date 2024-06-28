@@ -17,8 +17,8 @@
  */
 use crate::ast::{Expr, Pos, SourceInfo, TemplateElement};
 use crate::parser::primitives::{literal, try_literal};
-use crate::parser::reader::*;
 use crate::parser::{error, expr, ParseResult};
+use crate::reader::{Reader, ReaderState};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,

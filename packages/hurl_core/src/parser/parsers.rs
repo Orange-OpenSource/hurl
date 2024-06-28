@@ -22,10 +22,10 @@ use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::number::natural;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::sections::*;
 use crate::parser::url::url;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
     let entries = zero_or_more(entry, reader)?;

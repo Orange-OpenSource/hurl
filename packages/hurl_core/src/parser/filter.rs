@@ -21,7 +21,8 @@ use crate::parser::number::natural;
 use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
 use crate::parser::string::quoted_template;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, Reader};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
+use crate::reader::Reader;
 
 pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];

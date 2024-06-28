@@ -23,8 +23,8 @@ use libxml::bindings::{
 };
 
 use crate::parser::error::*;
-use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 /// Parses a text buffer until a valid XML has been found.
 /// We're using a SAX XML parser because we need to stop the parsing at the byte position where
@@ -49,8 +49,8 @@ use crate::parser::ParseResult;
 pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     // We test if our first character is a start of an XML text.
     // If not, we return immediately a recoverable error.
-    // Otherwise, we start parsing the supposedly XML buffer. Any
-    // subsequent error will be a non recoverable error.
+    // Otherwise, we start parsing the supposed XML buffer. Any subsequent error will be a
+    // non-recoverable error.
     let c = reader.peek();
     match c {
         Some('<') => {}

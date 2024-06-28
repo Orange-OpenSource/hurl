@@ -18,9 +18,8 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::try_literal;
-use crate::parser::reader::Reader;
-
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let start = reader.state;

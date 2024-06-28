@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use super::reader::Reader;
+use crate::reader::Reader;
 
 /// <https://en.wikipedia.org/wiki/Base64>
 /// Test padding/no-padding

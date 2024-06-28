@@ -22,9 +22,9 @@ use crate::parser::filter::filters;
 use crate::parser::predicate::predicate;
 use crate::parser::primitives::*;
 use crate::parser::query::query;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{filename, key_string, option, ParseResult};
+use crate::reader::Reader;
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;

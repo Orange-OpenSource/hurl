@@ -20,8 +20,8 @@ use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::predicate_value::predicate_value;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     let (not, space0) = predicate_not(reader);

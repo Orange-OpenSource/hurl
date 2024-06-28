@@ -40,7 +40,7 @@ fn test_echo() {
 }
 
 fn parse_json(content: String) -> Result<JsonValue, ParseError> {
-    let mut reader = hurl_core::parser::Reader::new(content.as_str());
+    let mut reader = hurl_core::reader::Reader::new(content.as_str());
     hurl_core::parser::parse_json(&mut reader)
 }
 

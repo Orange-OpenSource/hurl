@@ -16,8 +16,8 @@
  *
  */
 use crate::parser::error::*;
-use crate::parser::reader::Reader;
 use crate::parser::{ParseFunc, ParseResult};
+use crate::reader::Reader;
 
 pub fn optional<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Option<T>> {
     let start = reader.state;

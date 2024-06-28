@@ -20,9 +20,9 @@ use crate::parser::combinators::*;
 use crate::parser::multiline::multiline_string;
 use crate::parser::number::number;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, ParseError, ParseErrorKind, ParseResult};
+use crate::reader::Reader;
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(

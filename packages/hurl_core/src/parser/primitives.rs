@@ -18,9 +18,9 @@
 use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{base64, filename, key_string, ParseResult};
+use crate::reader::Reader;
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state;
