@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::Pos;
+
+use hurl_core::reader::Pos;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParseError {

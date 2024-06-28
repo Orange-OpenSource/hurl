@@ -444,7 +444,7 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_space() {

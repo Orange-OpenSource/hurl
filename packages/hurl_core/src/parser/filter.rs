@@ -207,8 +207,8 @@ fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
     use crate::parser::ParseErrorKind;
+    use crate::reader::Pos;
 
     #[test]
     fn test_count() {

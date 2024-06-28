@@ -48,10 +48,10 @@ pub fn eval_url_encode(
 
 #[cfg(test)]
 pub mod tests {
-
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
     use std::collections::HashMap;
 
     #[test]

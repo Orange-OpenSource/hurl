@@ -290,6 +290,7 @@ impl PredicateFuncValue {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     fn whitespace() -> Whitespace {
         Whitespace {

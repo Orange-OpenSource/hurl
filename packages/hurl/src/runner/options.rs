@@ -444,7 +444,8 @@ fn eval_number(number: &AstNumber) -> Value {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, Pos, SourceInfo, Variable, Whitespace};
+    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
+    use hurl_core::reader::Pos;
 
     use super::*;
     use crate::runner::RunnerErrorKind;

@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::json;
+use crate::reader::Pos;
 use crate::typing::{Repeat, Retry};
 
 ///
@@ -664,18 +665,6 @@ impl PartialEq for Regex {
     }
 }
 impl Eq for Regex {}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Pos {
-    pub line: usize,
-    pub column: usize,
-}
-
-impl Pos {
-    pub fn new(line: usize, column: usize) -> Pos {
-        Pos { line, column }
-    }
-}
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct SourceInfo {

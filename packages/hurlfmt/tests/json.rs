@@ -20,7 +20,7 @@ use std::fs;
 
 use hurl_core::ast::*;
 use hurl_core::parser::parse_json;
-use hurl_core::reader::Reader;
+use hurl_core::reader::{Pos, Reader};
 use hurlfmt::format::{Token, Tokenizable};
 use proptest::prelude::prop::test_runner::TestRunner;
 use proptest::prelude::*;

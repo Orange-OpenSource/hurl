@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, Pos, SourceInfo, Template};
+use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
 use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::template::*;
 use crate::parser::{expr, ParseResult};
-use crate::reader::Reader;
+use crate::reader::{Pos, Reader};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(

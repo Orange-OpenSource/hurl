@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Pos, SourceInfo};
-use crate::error::DisplaySourceError;
-use crate::text::{Style, StyledString};
 use std::cmp;
+
+use crate::ast::SourceInfo;
+use crate::error::DisplaySourceError;
+use crate::reader::Pos;
+use crate::text::{Style, StyledString};
 
 /// Represents a parser error.
 #[derive(Clone, Debug, PartialEq, Eq)]

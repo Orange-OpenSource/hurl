@@ -39,7 +39,8 @@ pub fn eval_count(
 #[cfg(test)]
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
     use std::collections::HashMap;
 
     use super::*;

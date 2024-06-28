@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Pos, SourceInfo};
+use hurl_core::ast::SourceInfo;
+use hurl_core::reader::Pos;
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::RunnerError;

@@ -19,6 +19,7 @@ use std::cmp::Ordering;
 use std::collections::HashMap;
 
 use hurl_core::ast::*;
+use hurl_core::reader::Pos;
 
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};

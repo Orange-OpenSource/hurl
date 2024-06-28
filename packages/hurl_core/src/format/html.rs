@@ -916,6 +916,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_multiline_string() {

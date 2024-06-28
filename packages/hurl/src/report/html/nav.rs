@@ -109,7 +109,8 @@ fn html_escape(text: &str) -> String {
 mod tests {
     use crate::report::html::nav::error_to_html;
     use crate::runner::{RunnerError, RunnerErrorKind};
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     #[test]
     fn test_error_html() {

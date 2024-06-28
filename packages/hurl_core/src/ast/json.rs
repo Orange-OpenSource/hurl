@@ -216,7 +216,8 @@ impl TemplateElement {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Pos, SourceInfo, TemplateElement, Variable, Whitespace};
+    use crate::ast::{SourceInfo, TemplateElement, Variable, Whitespace};
+    use crate::reader::Pos;
 
     #[test]
     fn test_to_string() {

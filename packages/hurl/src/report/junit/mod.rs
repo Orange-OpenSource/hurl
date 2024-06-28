@@ -147,7 +147,8 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
 #[cfg(test)]
 mod tests {
     use crate::http::HttpError;
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};

@@ -263,6 +263,7 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_multiline_string_text() {

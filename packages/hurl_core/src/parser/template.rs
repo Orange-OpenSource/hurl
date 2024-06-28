@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Expr, Pos, SourceInfo, TemplateElement};
+use crate::ast::{Expr, SourceInfo, TemplateElement};
 use crate::parser::primitives::{literal, try_literal};
 use crate::parser::{error, expr, ParseResult};
-use crate::reader::{Reader, ReaderState};
+use crate::reader::{Pos, Reader, ReaderState};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,

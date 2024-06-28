@@ -17,8 +17,6 @@
  */
 use std::cmp::min;
 
-use crate::ast::Pos;
-
 /// Represents a text reader.
 ///
 /// The `Reader` implements methods to read a stream of text. A reader manages
@@ -41,6 +39,22 @@ use crate::ast::Pos;
 pub struct Reader {
     pub buffer: Vec<char>,
     pub state: ReaderState,
+}
+
+/// Represents a line and column position in a reader.
+///
+/// Index are 1-based.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub struct Pos {
+    pub line: usize,
+    pub column: usize,
+}
+
+impl Pos {
+    /// Creates a new position.
+    pub fn new(line: usize, column: usize) -> Pos {
+        Pos { line, column }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

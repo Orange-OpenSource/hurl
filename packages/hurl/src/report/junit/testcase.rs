@@ -91,7 +91,8 @@ impl Testcase {
 #[cfg(test)]
 mod test {
     use crate::http::HttpError;
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;

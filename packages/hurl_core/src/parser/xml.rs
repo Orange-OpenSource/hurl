@@ -214,7 +214,7 @@ unsafe extern "C" fn on_end_element(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn parse_xml_brute_force_errors() {

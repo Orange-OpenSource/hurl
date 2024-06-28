@@ -354,7 +354,8 @@ impl Value {
 pub mod tests {
     use crate::http::{HeaderVec, HttpError, HttpVersion};
     use hex_literal::hex;
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use super::*;
 

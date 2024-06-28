@@ -77,6 +77,7 @@ fn string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
 mod tests {
     use super::super::error::*;
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_bytes_json() {

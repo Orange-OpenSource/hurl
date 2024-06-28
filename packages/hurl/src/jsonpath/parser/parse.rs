@@ -277,7 +277,7 @@ fn equal_string_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::Pos;
+    use hurl_core::reader::Pos;
     // tests from https://cburgmer.github.io/json-path-comparison
     use super::*;
 

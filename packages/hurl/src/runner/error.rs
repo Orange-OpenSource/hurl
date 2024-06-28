@@ -317,8 +317,9 @@ fn color_red_multiline_string(s: &str) -> StyledString {
 mod tests {
     use crate::http::HttpError;
     use crate::runner::{RunnerError, RunnerErrorKind};
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
     use hurl_core::error::{error_string, split_lines, DisplaySourceError, OutputFormat};
+    use hurl_core::reader::Pos;
     use hurl_core::text::Format;
 
     #[test]

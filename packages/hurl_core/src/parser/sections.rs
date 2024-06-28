@@ -24,7 +24,7 @@ use crate::parser::primitives::*;
 use crate::parser::query::query;
 use crate::parser::string::*;
 use crate::parser::{filename, key_string, option, ParseResult};
-use crate::reader::Reader;
+use crate::reader::{Pos, Reader};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;
@@ -320,7 +320,6 @@ fn assert(reader: &mut Reader) -> ParseResult<Assert> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
 
     #[test]
     fn test_section_name() {

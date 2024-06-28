@@ -60,9 +60,10 @@ mod tests {
     use std::collections::HashMap;
 
     use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, Pos, SourceInfo,
+        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, SourceInfo,
         Template, TemplateElement, Whitespace,
     };
+    use hurl_core::reader::Pos;
 
     use crate::runner::multiline::eval_multiline;
 

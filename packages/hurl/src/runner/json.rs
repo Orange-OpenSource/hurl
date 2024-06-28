@@ -178,6 +178,7 @@ fn encode_json_char(c: char) -> String {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::*;
+    use hurl_core::reader::Pos;
 
     use super::super::error::RunnerErrorKind;
     use super::*;

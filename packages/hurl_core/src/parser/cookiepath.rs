@@ -69,7 +69,8 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttribute
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Pos, SourceInfo};
+    use crate::ast::SourceInfo;
+    use crate::reader::Pos;
 
     #[test]
     fn test_cookiepath_simple() {

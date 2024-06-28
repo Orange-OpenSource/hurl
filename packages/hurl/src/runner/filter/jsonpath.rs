@@ -77,9 +77,8 @@ pub fn eval_jsonpath_string(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{
-        Filter, FilterValue, Pos, SourceInfo, Template, TemplateElement, Whitespace,
-    };
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
     use std::collections::HashMap;
 
     use crate::runner::filter::eval::eval_filter;

@@ -122,7 +122,8 @@ mod tests {
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
     use std::str::FromStr;
 
     fn default_response() -> Response {

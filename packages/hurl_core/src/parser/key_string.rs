@@ -151,8 +151,8 @@ fn key_string_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_key_string() {

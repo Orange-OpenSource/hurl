@@ -129,6 +129,7 @@ fn url_prefix_valid(reader: &mut Reader) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_url() {

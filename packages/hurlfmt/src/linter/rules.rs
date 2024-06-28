@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::ast::*;
+use hurl_core::reader::Pos;
 
 use crate::linter::core::{Error, LinterError};
 

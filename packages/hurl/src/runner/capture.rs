@@ -71,7 +71,8 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use self::super::super::query;
     use super::*;

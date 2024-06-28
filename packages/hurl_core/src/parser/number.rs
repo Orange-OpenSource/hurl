@@ -125,7 +125,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_natural() {

@@ -93,6 +93,7 @@ impl Value {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use super::*;
     use crate::runner::Number;

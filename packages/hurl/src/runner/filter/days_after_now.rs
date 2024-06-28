@@ -44,7 +44,8 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use chrono::offset::Utc;
     use chrono::Duration;
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
     use std::collections::HashMap;
 
     use super::*;

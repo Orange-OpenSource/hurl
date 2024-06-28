@@ -167,6 +167,7 @@ fn eval_method(method: &Method) -> http::Method {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use super::super::error::RunnerErrorKind;
     use super::*;

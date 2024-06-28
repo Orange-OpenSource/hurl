@@ -418,7 +418,7 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_option_insecure() {

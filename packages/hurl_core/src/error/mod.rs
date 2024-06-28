@@ -278,7 +278,7 @@ pub fn add_source_line(text: &mut StyledString, content: &[&str], line: usize) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
     use crate::text::Style;
 
     #[test]

@@ -51,8 +51,9 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
     use hurl_core::ast::{
-        Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
+        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
+    use hurl_core::reader::Pos;
     use std::collections::HashMap;
 
     #[test]

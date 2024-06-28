@@ -206,7 +206,7 @@ pub fn whitespace(reader: &mut Reader) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use hurl_core::ast::Pos;
+    use hurl_core::reader::Pos;
 
     #[test]
     fn test_natural() {

@@ -382,7 +382,7 @@ fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_predicate_not() {

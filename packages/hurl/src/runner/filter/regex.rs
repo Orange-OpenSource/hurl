@@ -53,8 +53,10 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{RunnerErrorKind, Value};
     use hurl_core::ast::{
-        Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
+        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
+    use hurl_core::reader::Pos;
+
     #[test]
     fn eval_filter_regex() {
         // regex "Hello (.*)!"

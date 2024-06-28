@@ -150,7 +150,7 @@ fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_filename() {

@@ -195,6 +195,7 @@ fn body(reader: &mut Reader) -> ParseResult<Body> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_hurl_file() {
