@@ -17,12 +17,12 @@
  */
 use super::super::ast::*;
 use super::combinators::*;
-use super::error::{Error, ParseError};
+use super::error::{ParseError, ParseErrorKind};
 use super::primitives::*;
 use super::reader::Reader;
 use super::ParseResult;
 
-pub fn parse(s: &str) -> Result<Query, Error> {
+pub fn parse(s: &str) -> Result<Query, ParseError> {
     let mut reader = Reader::new(s);
     query(&mut reader)
 }
@@ -32,13 +32,9 @@ fn query(reader: &mut Reader) -> ParseResult<Query> {
 
     let selectors = zero_or_more(selector, reader)?;
     if !reader.is_eof() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "eof".to_string(),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("eof".to_string());
+        let error = ParseError::new(reader.state.pos, false, kind);
+        return Err(error);
     }
     Ok(Query { selectors })
 }
@@ -60,17 +56,14 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
     )
 }
 
-fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, ParseError> {
     let initial_state = reader.state;
     try_left_bracket(reader)?;
     let mut indexes = vec![];
     let i = match natural(reader) {
         Err(e) => {
-            return Err(Error {
-                pos: e.pos,
-                recoverable: true,
-                inner: e.inner,
-            })
+            let error = ParseError::new(e.pos, true, e.kind);
+            return Err(error);
         }
         Ok(v) => v,
     };
@@ -80,11 +73,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
         if try_literal(",", reader).is_ok() {
             let i = match natural(reader) {
                 Err(e) => {
-                    return Err(Error {
-                        pos: e.pos,
-                        recoverable: true,
-                        inner: e.inner,
-                    })
+                    return Err(ParseError::new(e.pos, true, e.kind));
                 }
                 Ok(v) => v,
             };
@@ -98,11 +87,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     // TODO: combine array index, indices and slice in the same function
     if let Err(e) = try_literal("]", reader) {
         reader.state = initial_state;
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: true,
-            inner: e.inner,
-        });
+        return Err(ParseError::new(reader.state.pos, true, e.kind));
     }
     let selector = if indexes.len() == 1 {
         Selector::ArrayIndex(*indexes.first().unwrap())
@@ -112,14 +97,14 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     Ok(selector)
 }
 
-fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_left_bracket(reader)?;
     try_literal("*", reader)?;
     literal("]", reader)?;
     Ok(Selector::ArrayWildcard)
 }
 
-fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_array_slice(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_left_bracket(reader)?;
     let state = reader.state;
     let start = match integer(reader) {
@@ -130,13 +115,9 @@ fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
         Ok(v) => Some(v),
     };
     if try_literal(":", reader).is_err() {
-        return Err(Error {
-            pos: state.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: ":".to_string(),
-            },
-        });
+        let kind = ParseErrorKind::Expecting(":".to_string());
+        let error = ParseError::new(state.pos, true, kind);
+        return Err(error);
     };
     let state = reader.state;
     let end = match integer(reader) {
@@ -150,7 +131,7 @@ fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
     Ok(Selector::ArraySlice(Slice { start, end }))
 }
 
-fn selector_filter(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_filter(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_left_bracket(reader)?;
     try_literal("?(", reader)?;
     let pred = predicate(reader)?;
@@ -158,16 +139,14 @@ fn selector_filter(reader: &mut Reader) -> Result<Selector, Error> {
     Ok(Selector::Filter(pred))
 }
 
-fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_left_bracket(reader)?;
     match string_value(reader) {
-        Err(_) => Err(Error {
-            pos: reader.state.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: "value string".to_string(),
-            },
-        }),
+        Err(_) => {
+            let kind = ParseErrorKind::Expecting("value string".to_string());
+            let error = ParseError::new(reader.state.pos, true, kind);
+            Err(error)
+        }
         Ok(v) => {
             literal("]", reader)?;
             Ok(Selector::NameChild(v))
@@ -175,48 +154,40 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
     }
 }
 
-fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_object_key(reader: &mut Reader) -> Result<Selector, ParseError> {
     if reader.peek() != Some('.') {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: "[ or .".to_string(),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("[ or .".to_string());
+        let error = ParseError::new(reader.state.pos, true, kind);
+        return Err(error);
     };
     _ = reader.read();
 
     let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if s.is_empty() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "empty value".to_string(),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("empty value".to_string());
+        let error = ParseError::new(reader.state.pos, false, kind);
+        return Err(error);
     }
     Ok(Selector::NameChild(s))
 }
 
-fn selector_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_wildcard(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_literal(".*", reader)?;
     Ok(Selector::Wildcard)
 }
 
-fn selector_recursive_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_recursive_wildcard(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_literal("..*", reader)?;
     Ok(Selector::RecursiveWildcard)
 }
 
-fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_literal("..", reader)?;
     let k = key_name(reader)?;
     Ok(Selector::RecursiveKey(k))
 }
 
-fn try_left_bracket(reader: &mut Reader) -> Result<(), Error> {
+fn try_left_bracket(reader: &mut Reader) -> Result<(), ParseError> {
     let start = reader.state;
     if literal(".[", reader).is_err() {
         reader.state = start;

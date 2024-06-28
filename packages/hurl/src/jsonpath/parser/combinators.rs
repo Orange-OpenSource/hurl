@@ -55,7 +55,7 @@ pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
             return f(reader);
         }
         match f(reader) {
-            Err(Error {
+            Err(ParseError {
                 recoverable: true, ..
             }) => {
                 reader.state = start;

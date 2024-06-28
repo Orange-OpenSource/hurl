@@ -18,13 +18,23 @@
 use super::Pos;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error {
+pub struct ParseError {
     pub pos: Pos,
     pub recoverable: bool,
-    pub inner: ParseError,
+    pub kind: ParseErrorKind,
+}
+
+impl ParseError {
+    pub fn new(pos: Pos, recoverable: bool, kind: ParseErrorKind) -> Self {
+        ParseError {
+            pos,
+            recoverable,
+            kind,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ParseError {
-    Expecting { value: String },
+pub enum ParseErrorKind {
+    Expecting(String),
 }

@@ -16,7 +16,7 @@
  *
  */
 
-use error::Error;
+use error::ParseError;
 use reader::Reader;
 
 #[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -25,7 +25,7 @@ pub struct Pos {
     pub column: usize,
 }
 
-pub type ParseResult<T> = Result<T, Error>;
+pub type ParseResult<T> = Result<T, ParseError>;
 pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
 
 pub use self::parse::parse;
