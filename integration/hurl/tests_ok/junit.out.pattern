@@ -5,4 +5,11 @@
    | ...
  8 | `Goodbye World!`
    | ^^^^^^^^^^^^^^^^ actual value is &lt;Hello World!&gt;
-   |</failure></testcase></testsuite><testsuite tests="1" errors="0" failures="0"><testcase id="tests_ok/test.3.hurl" name="tests_ok/test.3.hurl" time="<<<.*?>>>" /></testsuite></testsuites>
+   |</failure></testcase></testsuite><testsuite tests="1" errors="0" failures="0"><testcase id="tests_ok/test.3.hurl" name="tests_ok/test.3.hurl" time="<<<.*?>>>" /></testsuite><testsuite tests="1" errors="0" failures="1"><testcase id="tests_ok/test.4.hurl" name="tests_ok/test.4.hurl" time="<<<.*?>>>"><failure>Assert body value
+  --&gt; tests_ok/test.4.hurl:3:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | `Hello\tWorld!`
+   | ^^^^^^^^^^^^^^^ actual value is &lt;Hello World!&gt;
+   |</failure></testcase></testsuite></testsuites>

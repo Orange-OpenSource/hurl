@@ -9,6 +9,8 @@ $ErrorActionPreference = 'Continue'
 # We use --jobs 1 to force the standard error order to be test1 then test2.
 hurl --test --jobs 1 --report-junit build/junit/result.xml tests_ok/test.1.hurl tests_ok/test.2.hurl
 hurl --test --report-junit build/junit/result.xml tests_ok/test.3.hurl
+# TBC: using || true versus $ErrorActionPreference = 'Continue'
+hurl --test --report-junit build/junit/result.xml tests_ok/test.4.hurl || true
 $ErrorActionPreference = 'Stop'
 
 Write-Host (Get-Content build/junit/result.xml -Raw) -NoNewLine

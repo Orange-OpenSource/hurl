@@ -10,10 +10,20 @@ error: Assert body value
 
 tests_ok<<<.*?>>>test.2.hurl: Failure (2 request(s) in <<<\d+>>> ms)
 tests_ok<<<.*?>>>test.3.hurl: Success (1 request(s) in <<<\d+>>> ms)
+error: Assert body value
+  --> tests_ok<<<.*?>>>test.4.hurl:3:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | `Hello\tWorld!`
+   | ^^^^^^^^^^^^^^^ actual value is <Hello World!>
+   |
+
+tests_ok<<<.*?>>>test.4.hurl: Failure (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
-Executed files:    3
-Executed requests: 4 (<<<.*?>>>/s)
-Succeeded files:   2 (66.7%)
-Failed files:      1 (33.3%)
+Executed files:    4
+Executed requests: 5 (<<<.*?>>>/s)
+Succeeded files:   2 (50.0%)
+Failed files:      2 (50.0%)
 Duration:          <<<\d+>>> ms
 
