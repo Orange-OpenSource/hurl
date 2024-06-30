@@ -15,16 +15,8 @@
  * limitations under the License.
  *
  */
-
-use error::ParseError;
-use hurl_core::reader::Reader;
-
-pub type ParseResult<T> = Result<T, ParseError>;
-pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
-
 pub use self::parse::parse;
 
-mod combinators;
 mod error;
 mod parse;
 mod primitives;

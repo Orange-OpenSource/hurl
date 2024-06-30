@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-use super::super::ast::*;
-use super::error::{ParseError, ParseErrorKind};
-use super::ParseResult;
+use crate::jsonpath::ast::Number;
+use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<usize> {

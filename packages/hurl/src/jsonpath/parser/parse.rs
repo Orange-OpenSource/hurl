@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-use super::super::ast::*;
-use super::combinators::*;
-use super::error::{ParseError, ParseErrorKind};
-use super::primitives::*;
-use super::ParseResult;
+use crate::jsonpath::ast::{Predicate, PredicateFunc, Query, Selector, Slice};
+use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
+use crate::jsonpath::parser::primitives::{
+    integer, key_name, key_path, literal, natural, number, string_value, try_literal, whitespace,
+};
+use hurl_core::combinator::{choice, zero_or_more};
 use hurl_core::reader::Reader;
 
 pub fn parse(s: &str) -> Result<Query, ParseError> {
@@ -277,6 +278,7 @@ fn equal_string_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc
 
 #[cfg(test)]
 mod tests {
+    use crate::jsonpath::ast::Number;
     use hurl_core::reader::Pos;
     // tests from https://cburgmer.github.io/json-path-comparison
     use super::*;
