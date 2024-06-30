@@ -24,7 +24,7 @@ use crate::reader::Reader;
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;
-    let save = reader.state;
+    let save = reader.cursor;
 
     match choice(&[json_text, xml_text, graphql, plain_text], reader) {
         Ok(multi) => Ok(multi),
@@ -46,7 +46,7 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
             if let ParseErrorKind::GraphQlVariables = err.kind {
                 return Err(err);
             }
-            reader.state = save;
+            reader.cursor = save;
             let value = oneline_string_value(reader)?;
             Ok(MultilineString::OneLineText(value))
         }
@@ -82,13 +82,13 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
 
     let mut chars = vec![];
 
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos;
+        let pos = reader.cursor.pos;
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
         if c == '\n' {
-            let end = reader.state.pos;
+            let end = reader.cursor.pos;
             let variables = optional(graphql_variables, reader)?;
             match variables {
                 None => continue,
@@ -117,7 +117,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
             }
         }
     }
-    let end = reader.state.pos;
+    let end = reader.cursor.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
@@ -141,14 +141,14 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
 }
 
 fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor;
     match reader.read() {
         None => Err(ParseError::new(start.pos, true, ParseErrorKind::Space)),
         Some(c) => {
             if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
                 Ok(Whitespace {
                     value: c.to_string(),
-                    source_info: SourceInfo::new(start.pos, reader.state.pos),
+                    source_info: SourceInfo::new(start.pos, reader.cursor.pos),
                 })
             } else {
                 Err(ParseError::new(start.pos, true, ParseErrorKind::Space))
@@ -158,13 +158,13 @@ fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor;
     match zero_or_more(whitespace, reader) {
         Ok(v) => {
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::new(start.pos, reader.state.pos),
+                source_info: SourceInfo::new(start.pos, reader.cursor.pos),
             })
         }
         Err(e) => Err(e),
@@ -174,7 +174,7 @@ fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
 fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
     try_literal("variables", reader)?;
     let space = zero_or_more_spaces(reader)?;
-    let start = reader.state;
+    let start = reader.cursor;
     let object = object_value(reader);
     let value = match object {
         Ok(obj) => obj,
@@ -208,13 +208,13 @@ fn plain_text(reader: &mut Reader) -> ParseResult<MultilineString> {
 fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos;
+        let pos = reader.cursor.pos;
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
     }
-    let end = reader.state.pos;
+    let end = reader.cursor.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
@@ -234,16 +234,16 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
 fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos;
+        let pos = reader.cursor.pos;
         let c = reader.read().unwrap();
         if c == '\n' {
             return Err(ParseError::new(start, false, ParseErrorKind::Multiline));
         }
         chars.push((c, c.to_string(), pos));
     }
-    let end = reader.state.pos;
+    let end = reader.cursor.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
@@ -606,7 +606,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
         );
-        assert_eq!(reader.state.cursor, 3);
+        assert_eq!(reader.cursor.offset, 3);
 
         let mut reader = Reader::new("hello```");
         assert_eq!(
@@ -620,7 +620,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.state.cursor, 8);
+        assert_eq!(reader.cursor.offset, 8);
     }
 
     #[test]

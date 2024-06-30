@@ -54,7 +54,13 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     let c = reader.peek();
     match c {
         Some('<') => {}
-        _ => return Err(ParseError::new(reader.state.pos, true, ParseErrorKind::Xml)),
+        _ => {
+            return Err(ParseError::new(
+                reader.cursor.pos,
+                true,
+                ParseErrorKind::Xml,
+            ))
+        }
     }
 
     let mut buf = String::new();
@@ -75,7 +81,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
         );
 
         // We keep track of the previous char reader position, to accurately  raise eventual error.
-        let mut prev_pos = reader.state.pos;
+        let mut prev_pos = reader.cursor.pos;
 
         while let Some(c) = reader.read() {
             buf.push(c);
@@ -101,7 +107,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             {
                 break;
             }
-            prev_pos = reader.state.pos;
+            prev_pos = reader.cursor.pos;
         }
 
         xmlFreeParserCtxt(context);
@@ -266,14 +272,14 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.state.cursor, 23);
+        assert_eq!(reader.cursor.offset, 23);
 
         let mut reader = Reader::new("<users><user /></users>xx");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.state.cursor, 23);
+        assert_eq!(reader.cursor.offset, 23);
         assert_eq!(reader.peek_n(2), String::from("xx"));
 
         let mut reader = Reader::new("<?xml version=\"1.0\"?><users/>xxx");
@@ -281,7 +287,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<?xml version=\"1.0\"?><users/>")
         );
-        assert_eq!(reader.state.cursor, 29);
+        assert_eq!(reader.cursor.offset, 29);
     }
 
     #[test]
@@ -300,25 +306,25 @@ mod tests {
         let output = xml;
         let mut reader = Reader::new(input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor.offset, 520);
 
         // A XML with data padding
         let input = format!("{xml} xx xx xx xx");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor.offset, 520);
 
         // Two consecutive XML
         let input = format!("{xml}{xml}");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor.offset, 520);
 
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor.offset, 520);
     }
 
     #[test]
@@ -447,6 +453,6 @@ mod tests {
         let chunk = format!("{xml}\nHTTP 200");
         let mut reader = Reader::new(&chunk);
         assert_eq!(parse(&mut reader).unwrap(), String::from(xml),);
-        assert_eq!(reader.state.cursor, 4411);
+        assert_eq!(reader.cursor.offset, 4411);
     }
 }

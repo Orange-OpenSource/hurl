@@ -29,7 +29,7 @@ use crate::typing::{Repeat, Retry};
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     // We accept '_' even if there is no option name with this character. We do this to be able to
     // enter the parsing of the option name and to have better error description (ex: 'max-redirs'
     // vs 'max_redirs').
@@ -258,7 +258,7 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
-    let pos = reader.state.pos;
+    let pos = reader.cursor.pos;
     let value = non_recover(integer, reader)?;
     if value == -1 {
         Ok(Repeat::Forever)
@@ -273,7 +273,7 @@ fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
 }
 
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
-    let pos = reader.state.pos;
+    let pos = reader.cursor.pos;
     let value = non_recover(integer, reader)?;
     if value == -1 {
         Ok(Retry::Infinite)
@@ -288,11 +288,11 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
 }
 
 fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
-    let start = reader.state;
+    let start = reader.cursor;
     match boolean(reader) {
         Ok(v) => Ok(BooleanOption::Literal(v)),
         Err(_) => {
-            reader.state = start;
+            reader.cursor = start;
             let exp = expr::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "true|false".to_string(),
@@ -305,11 +305,11 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
 }
 
 fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
-    let start = reader.state;
+    let start = reader.cursor;
     match natural(reader) {
         Ok(v) => Ok(NaturalOption::Literal(v)),
         Err(_) => {
-            reader.state = start;
+            reader.cursor = start;
             let exp = expr::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer".to_string(),
@@ -322,11 +322,11 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
 }
 
 fn repeat_option(reader: &mut Reader) -> ParseResult<RepeatOption> {
-    let start = reader.state;
+    let start = reader.cursor;
     match repeat(reader) {
         Ok(v) => Ok(RepeatOption::Literal(v)),
         Err(_) => {
-            reader.state = start;
+            reader.cursor = start;
             let exp = expr::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer".to_string(),
@@ -339,11 +339,11 @@ fn repeat_option(reader: &mut Reader) -> ParseResult<RepeatOption> {
 }
 
 fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
-    let start = reader.state;
+    let start = reader.cursor;
     match retry(reader) {
         Ok(v) => Ok(RetryOption::Literal(v)),
         Err(_) => {
-            reader.state = start;
+            reader.cursor = start;
             let exp = expr::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer".to_string(),
@@ -370,7 +370,7 @@ fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state;
+    let start = reader.cursor;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
         let kind = ParseErrorKind::Expecting {

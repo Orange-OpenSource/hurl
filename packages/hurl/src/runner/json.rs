@@ -71,15 +71,15 @@ pub fn eval_json_value(
             // The String can only be null, a bool, a number
             // It will be easier when your variables value have a type
             let mut reader = Reader::new(s.as_str());
-            let start = reader.state;
+            let start = reader.cursor;
             if parse_json_number(&mut reader).is_ok() {
                 return Ok(s);
             }
-            reader.state = start;
+            reader.cursor = start;
             if parse_json_boolean(&mut reader).is_ok() {
                 return Ok(s);
             }
-            reader.state = start;
+            reader.cursor = start;
             if parse_json_null(&mut reader).is_ok() {
                 return Ok(s);
             }

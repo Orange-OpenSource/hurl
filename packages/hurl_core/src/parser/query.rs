@@ -24,9 +24,9 @@ use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     let value = query_value(reader)?;
-    let end = reader.state.pos;
+    let end = reader.cursor.pos;
     Ok(Query {
         source_info: SourceInfo { start, end },
         value,
@@ -75,13 +75,13 @@ fn header_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn cookie_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("cookie", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     let s = quoted_oneline_string(reader)?;
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
 
     let mut cookiepath_reader = Reader::new(s.as_str());
-    cookiepath_reader.state.pos = Pos {
+    cookiepath_reader.cursor.pos = Pos {
         line: start.line,
         column: start.column + 1,
     };
@@ -205,7 +205,7 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
         let value =
             "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
         let kind = ParseErrorKind::Expecting { value };
-        let pos = reader.state.pos;
+        let pos = reader.cursor.pos;
         Err(ParseError::new(pos, false, kind))
     }
 }
@@ -294,7 +294,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.state.cursor, 20);
+        assert_eq!(reader.cursor.offset, 20);
 
         // todo test with escape sequence
         //let mut reader = Reader::init("cookie \"cookie\u{31}\"");
@@ -401,6 +401,6 @@ mod tests {
                 }
             )]
         );
-        assert_eq!(reader.state.cursor, 14);
+        assert_eq!(reader.cursor.offset, 14);
     }
 }

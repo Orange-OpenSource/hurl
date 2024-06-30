@@ -27,7 +27,7 @@ use crate::reader::Reader;
 pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];
     loop {
-        let save = reader.state;
+        let save = reader.cursor;
         let space = zero_or_more_spaces(reader)?;
         if space.value.is_empty() {
             break;
@@ -38,7 +38,7 @@ pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
             }
             Err(e) => {
                 if e.recoverable {
-                    reader.state = save;
+                    reader.cursor = save;
                     break;
                 } else {
                     return Err(e);
@@ -50,7 +50,7 @@ pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
 }
 
 pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
-    let start = reader.state.pos;
+    let start = reader.cursor.pos;
     let value = choice(
         &[
             count_filter,
@@ -84,7 +84,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             e
         }
     })?;
-    let end = reader.state.pos;
+    let end = reader.cursor.pos;
     let source_info = SourceInfo { start, end };
     Ok(Filter { source_info, value })
 }

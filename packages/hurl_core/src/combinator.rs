@@ -38,12 +38,12 @@ pub fn optional<T, E>(f: ParseFunc<T, E>, reader: &mut Reader) -> Result<Option<
 where
     E: ParseError,
 {
-    let start = reader.state;
+    let start = reader.cursor;
     match f(reader) {
         Ok(r) => Ok(Some(r)),
         Err(e) => {
             if e.is_recoverable() {
-                reader.state = start;
+                reader.cursor = start;
                 Ok(None)
             } else {
                 Err(e)
@@ -81,7 +81,7 @@ where
 {
     let mut v = Vec::new();
     loop {
-        let initial_state = reader.state;
+        let initial_state = reader.cursor;
         if reader.is_eof() {
             return Ok(v);
         }
@@ -92,8 +92,8 @@ where
             }
             Err(e) => {
                 return if e.is_recoverable() {
-                    reader.state.pos = initial_state.pos;
-                    reader.state.cursor = initial_state.cursor;
+                    reader.cursor.pos = initial_state.pos;
+                    reader.cursor.offset = initial_state.offset;
                     Ok(v)
                 } else {
                     Err(e)
@@ -112,15 +112,15 @@ where
         Ok(first) => {
             let mut v = vec![first];
             loop {
-                let initial_state = reader.state;
+                let initial_state = reader.cursor;
                 match f(reader) {
                     Ok(r) => {
                         v.push(r);
                     }
                     Err(e) => {
                         return if e.is_recoverable() {
-                            reader.state.pos = initial_state.pos;
-                            reader.state.cursor = initial_state.cursor;
+                            reader.cursor.pos = initial_state.pos;
+                            reader.cursor.offset = initial_state.offset;
                             Ok(v)
                         } else {
                             Err(e)
@@ -141,13 +141,13 @@ where
     E: ParseError,
 {
     for (pos, f) in fs.iter().enumerate() {
-        let start = reader.state;
+        let start = reader.cursor;
         if pos == fs.len() - 1 {
             return f(reader);
         }
         match f(reader) {
             Err(err) if err.is_recoverable() => {
-                reader.state = start;
+                reader.cursor = start;
                 continue;
             }
             x => return x,

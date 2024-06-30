@@ -51,7 +51,7 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
-    let start = reader.state;
+    let start = reader.cursor;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
         return Err(ParseError::new(
@@ -62,7 +62,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
     }
     Ok(Variable {
         name,
-        source_info: SourceInfo::new(start.pos, reader.state.pos),
+        source_info: SourceInfo::new(start.pos, reader.cursor.pos),
     })
 }
 

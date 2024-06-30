@@ -30,7 +30,7 @@ use std::cmp::min;
 ///  use hurl_core::reader::Reader;
 ///
 ///  let mut reader = Reader::new("hi");
-///  let state = reader.state.cursor; // cursor is 0
+///  let state = reader.cursor.offset; // cursor is 0
 ///  let eof = reader.is_eof();
 ///  let val = reader.peek_n(2); // val = "hi"
 ///  let val = reader.read().unwrap(); // val = 'h'
@@ -38,7 +38,7 @@ use std::cmp::min;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
     pub buffer: Vec<char>,
-    pub state: ReaderState,
+    pub cursor: Cursor,
 }
 
 /// Represents a line and column position in a reader.
@@ -58,8 +58,8 @@ impl Pos {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct ReaderState {
-    pub cursor: usize,
+pub struct Cursor {
+    pub offset: usize,
     pub pos: Pos,
 }
 
@@ -68,8 +68,8 @@ impl Reader {
     pub fn new(s: &str) -> Reader {
         Reader {
             buffer: s.chars().collect(),
-            state: ReaderState {
-                cursor: 0,
+            cursor: Cursor {
+                offset: 0,
                 pos: Pos { line: 1, column: 1 },
             },
         }
@@ -77,21 +77,21 @@ impl Reader {
 
     /// Returns true if the reader has read all the buffer, false otherwise.
     pub fn is_eof(&self) -> bool {
-        self.state.cursor == self.buffer.len()
+        self.cursor.offset == self.buffer.len()
     }
 
     /// Returns the next char from the buffer advancing the internal state.
     pub fn read(&mut self) -> Option<char> {
-        match self.buffer.get(self.state.cursor) {
+        match self.buffer.get(self.cursor.offset) {
             None => None,
             Some(c) => {
-                self.state.cursor += 1;
+                self.cursor.offset += 1;
                 if !is_combining_character(*c) {
-                    self.state.pos.column += 1;
+                    self.cursor.pos.column += 1;
                 }
                 if *c == '\n' {
-                    self.state.pos.column = 1;
-                    self.state.pos.line += 1;
+                    self.cursor.pos.column = 1;
+                    self.cursor.pos.line += 1;
                 }
                 Some(*c)
             }
@@ -130,12 +130,12 @@ impl Reader {
 
     /// Returns the next char from the buffer without advancing the internal state.
     pub fn peek(&self) -> Option<char> {
-        self.buffer.get(self.state.cursor).copied()
+        self.buffer.get(self.cursor.offset).copied()
     }
 
     /// Returns the next char ignoring whitespace without advancing the internal state.
     pub fn peek_ignoring_whitespace(&self) -> Option<char> {
-        let mut i = self.state.cursor;
+        let mut i = self.cursor.offset;
         loop {
             if let Some(c) = self.buffer.get(i).copied() {
                 if c != ' ' && c != '\t' && c != '\n' && c != '\r' {
@@ -151,7 +151,7 @@ impl Reader {
     /// Reads a string of `count` char without advancing the internal state.
     /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
-        let start = self.state.cursor;
+        let start = self.cursor.offset;
         let end = min(start + count, self.buffer.len());
         self.buffer[start..end].iter().collect()
     }
@@ -159,7 +159,7 @@ impl Reader {
     /// Reads a string backward from a `start` position to the current position (excluded), without
     /// resetting the internal state.
     pub fn peek_back(&self, start: usize) -> String {
-        let end = self.state.cursor;
+        let end = self.cursor.offset;
         self.buffer[start..end].iter().collect()
     }
 }
@@ -175,15 +175,15 @@ mod tests {
     #[test]
     fn basic_reader() {
         let mut reader = Reader::new("hi");
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor.offset, 0);
         assert!(!reader.is_eof());
         assert_eq!(reader.peek_n(2), "hi".to_string());
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor.offset, 0);
 
         assert_eq!(reader.read().unwrap(), 'h');
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor.offset, 1);
         assert_eq!(reader.peek().unwrap(), 'i');
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor.offset, 1);
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
@@ -205,16 +205,16 @@ mod tests {
     fn read_while() {
         let mut reader = Reader::new("123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.state.cursor, 9);
+        assert_eq!(reader.cursor.offset, 9);
         assert!(reader.is_eof());
 
         let mut reader = Reader::new("123456789abcde");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.state.cursor, 9);
+        assert_eq!(reader.cursor.offset, 9);
         assert!(!reader.is_eof());
 
         let mut reader = Reader::new("abcde123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "");
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor.offset, 0);
     }
 }
