@@ -148,14 +148,16 @@ impl Reader {
         }
     }
 
-    /// Returns the `count` char from the buffer without advancing the internal state.
-    /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
+    /// Reads a string of `count` char without advancing the internal state.
+    /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
         let start = self.state.cursor;
         let end = min(start + count, self.buffer.len());
         self.buffer[start..end].iter().collect()
     }
 
+    /// Reads a string backward from a `start` position to the current position (excluded), without
+    /// resetting the internal state.
     pub fn peek_back(&self, start: usize) -> String {
         let end = self.state.cursor;
         self.buffer[start..end].iter().collect()
@@ -171,11 +173,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_reader() {
+    fn basic_reader() {
         let mut reader = Reader::new("hi");
         assert_eq!(reader.state.cursor, 0);
         assert!(!reader.is_eof());
         assert_eq!(reader.peek_n(2), "hi".to_string());
+        assert_eq!(reader.state.cursor, 0);
 
         assert_eq!(reader.read().unwrap(), 'h');
         assert_eq!(reader.state.cursor, 1);
@@ -184,5 +187,34 @@ mod tests {
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
+    }
+
+    #[test]
+    fn peek_back() {
+        let mut reader = Reader::new("abcdefgh");
+        assert_eq!(reader.read(), Some('a'));
+        assert_eq!(reader.read(), Some('b'));
+        assert_eq!(reader.read(), Some('c'));
+        assert_eq!(reader.read(), Some('d'));
+        assert_eq!(reader.read(), Some('e'));
+        assert_eq!(reader.peek(), Some('f'));
+        assert_eq!(reader.peek_back(3), "de");
+    }
+
+    #[test]
+    fn read_while() {
+        let mut reader = Reader::new("123456789");
+        assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
+        assert_eq!(reader.state.cursor, 9);
+        assert!(reader.is_eof());
+
+        let mut reader = Reader::new("123456789abcde");
+        assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
+        assert_eq!(reader.state.cursor, 9);
+        assert!(!reader.is_eof());
+
+        let mut reader = Reader::new("abcde123456789");
+        assert_eq!(reader.read_while(|c| c.is_numeric()), "");
+        assert_eq!(reader.state.cursor, 0);
     }
 }
