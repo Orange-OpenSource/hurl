@@ -18,7 +18,7 @@
 use crate::ast::{Expr, SourceInfo, TemplateElement};
 use crate::parser::primitives::{literal, try_literal};
 use crate::parser::{error, expr, ParseResult};
-use crate::reader::{Cursor, Pos, Reader};
+use crate::reader::{Pos, Reader};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,
@@ -90,11 +90,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
 
             State::FirstCloseBracket => {
                 if s.as_str() == "}" {
-                    let mut reader = Reader::new(encoded.as_str());
-                    reader.cursor = Cursor {
-                        offset: 0,
-                        pos: expression_start.unwrap(),
-                    };
+                    let mut reader = Reader::with_pos(encoded.as_str(), expression_start.unwrap());
                     let expression = expr::parse2(&mut reader)?;
                     elements.push(TemplateElement::Expression(expression));
                     value = String::new();

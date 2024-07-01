@@ -24,11 +24,11 @@ use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
-    let start = reader.cursor.pos;
+    let start = reader.cursor();
     let value = query_value(reader)?;
-    let end = reader.cursor.pos;
+    let end = reader.cursor();
     Ok(Query {
-        source_info: SourceInfo { start, end },
+        source_info: SourceInfo::new(start.pos, end.pos),
         value,
     })
 }
@@ -77,13 +77,13 @@ fn cookie_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     let space0 = one_or_more_spaces(reader)?;
 
     // Read the whole value of the coookie path and parse it with a specialized reader.
-    let start = reader.cursor.pos;
+    let start = reader.cursor();
     let s = quoted_oneline_string(reader)?;
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
 
     // We will parse the cookiepath value without `"`.
-    let pos = Pos::new(start.line, start.column + 1);
+    let pos = Pos::new(start.pos.line, start.pos.column + 1);
     let mut cookiepath_reader = Reader::with_pos(s.as_str(), pos);
     let expr = cookiepath(&mut cookiepath_reader)?;
 
@@ -205,8 +205,8 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
         let value =
             "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
         let kind = ParseErrorKind::Expecting { value };
-        let pos = reader.cursor.pos;
-        Err(ParseError::new(pos, false, kind))
+        let cur = reader.cursor();
+        Err(ParseError::new(cur.pos, false, kind))
     }
 }
 
@@ -295,7 +295,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor.offset, 20);
+        assert_eq!(reader.cursor().offset, 20);
 
         // todo test with escape sequence
         //let mut reader = Reader::init("cookie \"cookie\u{31}\"");
@@ -402,6 +402,6 @@ mod tests {
                 }
             )]
         );
-        assert_eq!(reader.cursor.offset, 14);
+        assert_eq!(reader.cursor().offset, 14);
     }
 }

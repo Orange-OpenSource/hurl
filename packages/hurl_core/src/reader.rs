@@ -15,43 +15,43 @@
  * limitations under the License.
  *
  */
-use std::cmp::min;
+//! Represents a text reader.
 
-/// Represents a text reader.
-///
 /// The `Reader` implements methods to read a stream of text. A reader manages
-/// an internal `cursor`: the position of the current read index within the reader's buffer.
-/// Methods like [`Reader::read`], [`Reader::read_while`]
-/// do advance the internal reader's `cursor`. Other methods, like [`Reader::peek`], [`Reader::peek_n`]
-/// allows to get the next chars in the buffer without modifying the current reader cursor.
+/// an internal `cursor` : it's the current read index position within the reader's internal buffer.
+///
+/// Methods like [`Reader::read`], [`Reader::read_while`] do advance the internal reader's `cursor`.
+/// Other methods, like [`Reader::peek`], [`Reader::peek_n`] allows to get the next chars in the
+/// buffer without modifying the current reader cursor.
 ///
 /// The cursor is composed of an offset, which is always related to the reader internal buffer.
-/// Along the buffer offset, a position `[Pos]` is updated each time a char is read. This position
-/// is the column and row index in the buffer document. In most of the case, the position is
-/// initialize to the first char, but a reader instance can be create using `[Reader::with_pos]`
-/// which set a given started position. This can be useful when a reader is instantiated as a
-/// "sub reader" of a given reader, and we want to reported position relatively to the main reader
-/// (for errors but also for constructed structures).
+/// Along the buffer offset, a position [`Pos`] is updated each time a char is read. This position
+/// corresponds to the column and row index in the buffer document. In most of the case, the
+/// position is initialized to the first char, but a reader instance can be created using
+/// [`Reader::with_pos`] to set a given started position. This can be useful when a reader
+/// is instantiated as a "sub reader" of a given reader, and we want to report position relatively
+/// to the main reader (for errors but also for constructed structures).
 ///
 /// # Example
 /// ```
 ///  use hurl_core::reader::Reader;
 ///
 ///  let mut reader = Reader::new("hi");
-///  let state = reader.cursor.offset; // cursor is 0
-///  let eof = reader.is_eof();
-///  let val = reader.peek_n(2); // val = "hi"
-///  let val = reader.read().unwrap(); // val = 'h'
+///  assert_eq!(reader.cursor().offset, 0);
+///  assert!(!reader.is_eof());
+///  assert_eq!(reader.peek_n(2), "hi".to_string());
+///  assert_eq!(reader.read(), Some('h'));
+///  assert_eq!(reader.cursor().offset, 1);
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
-    pub buffer: Vec<char>,
-    pub cursor: Cursor,
+    buffer: Vec<char>,
+    cursor: Cursor,
 }
 
 /// Represents a line and column position in a reader.
 ///
-/// Index are 1-based.
+/// Indices are 1-based.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Pos {
     pub line: usize,
@@ -65,6 +65,12 @@ impl Pos {
     }
 }
 
+/// A position in a text buffer.
+///
+/// The position has two components: a char `offset` in the internal buffer of the reader, and
+/// a column-row oriented position `pos`, used for human display. `pos` is usually initialized to
+/// the first char of the buffer but it can also be set with a position inside another reader. This
+/// allows the report of error of a sub-reader, relative to a parent reader.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Cursor {
     pub offset: usize,
@@ -73,7 +79,7 @@ pub struct Cursor {
 
 impl Reader {
     /// Creates a new reader, position of the index is at the first char.
-    pub fn new(s: &str) -> Reader {
+    pub fn new(s: &str) -> Self {
         Reader {
             buffer: s.chars().collect(),
             cursor: Cursor {
@@ -87,11 +93,21 @@ impl Reader {
     /// structures and error to be referenced from this position.
     ///
     /// Note: the `buffer` offset is still initialized to 0.
-    pub fn with_pos(s: &str, pos: Pos) -> Reader {
+    pub fn with_pos(s: &str, pos: Pos) -> Self {
         Reader {
             buffer: s.chars().collect(),
             cursor: Cursor { offset: 0, pos },
         }
+    }
+
+    /// Returns the current position of the read index.
+    pub fn cursor(&self) -> Cursor {
+        self.cursor
+    }
+
+    /// Position the read index to a new position.
+    pub fn seek(&mut self, to: Cursor) {
+        self.cursor = to;
     }
 
     /// Returns true if the reader has read all the buffer, false otherwise.
@@ -171,7 +187,7 @@ impl Reader {
     /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
         let start = self.cursor.offset;
-        let end = min(start + count, self.buffer.len());
+        let end = (start + count).min(self.buffer.len());
         self.buffer[start..end].iter().collect()
     }
 
@@ -194,15 +210,15 @@ mod tests {
     #[test]
     fn basic_reader() {
         let mut reader = Reader::new("hi");
-        assert_eq!(reader.cursor.offset, 0);
+        assert_eq!(reader.cursor().offset, 0);
         assert!(!reader.is_eof());
         assert_eq!(reader.peek_n(2), "hi".to_string());
-        assert_eq!(reader.cursor.offset, 0);
+        assert_eq!(reader.cursor().offset, 0);
 
         assert_eq!(reader.read().unwrap(), 'h');
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
         assert_eq!(reader.peek().unwrap(), 'i');
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
@@ -224,17 +240,17 @@ mod tests {
     fn read_while() {
         let mut reader = Reader::new("123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor.offset, 9);
+        assert_eq!(reader.cursor().offset, 9);
         assert!(reader.is_eof());
 
         let mut reader = Reader::new("123456789abcde");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor.offset, 9);
+        assert_eq!(reader.cursor().offset, 9);
         assert!(!reader.is_eof());
 
         let mut reader = Reader::new("abcde123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "");
-        assert_eq!(reader.cursor.offset, 0);
+        assert_eq!(reader.cursor().offset, 0);
     }
 
     #[test]
@@ -244,7 +260,7 @@ mod tests {
         _ = main_reader.read();
         _ = main_reader.read();
 
-        let pos = main_reader.cursor.pos;
+        let pos = main_reader.cursor().pos;
         let s = main_reader.read_while(|_| true);
         let mut sub_reader = Reader::with_pos(&s, pos);
         assert_eq!(

@@ -34,7 +34,7 @@ fn query(reader: &mut Reader) -> ParseResult<Query> {
     let selectors = zero_or_more(selector, reader)?;
     if !reader.is_eof() {
         let kind = ParseErrorKind::Expecting("eof".to_string());
-        let error = ParseError::new(reader.cursor.pos, false, kind);
+        let error = ParseError::new(reader.cursor().pos, false, kind);
         return Err(error);
     }
     Ok(Query { selectors })
@@ -58,7 +58,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, ParseError> {
-    let initial_state = reader.cursor;
+    let initial_state = reader.cursor();
     try_left_bracket(reader)?;
     let mut indexes = vec![];
     let i = match natural(reader) {
@@ -70,7 +70,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     };
     indexes.push(i);
     loop {
-        let state = reader.cursor;
+        let start = reader.cursor();
         if try_literal(",", reader).is_ok() {
             let i = match natural(reader) {
                 Err(e) => {
@@ -80,15 +80,15 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
             };
             indexes.push(i);
         } else {
-            reader.cursor = state;
+            reader.seek(start);
             break;
         }
     }
     // you will have a ':' for a slice
     // TODO: combine array index, indices and slice in the same function
     if let Err(e) = try_literal("]", reader) {
-        reader.cursor = initial_state;
-        return Err(ParseError::new(reader.cursor.pos, true, e.kind));
+        reader.seek(initial_state);
+        return Err(ParseError::new(reader.cursor().pos, true, e.kind));
     }
     let selector = if indexes.len() == 1 {
         Selector::ArrayIndex(*indexes.first().unwrap())
@@ -107,23 +107,23 @@ fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, ParseError> 
 
 fn selector_array_slice(reader: &mut Reader) -> Result<Selector, ParseError> {
     try_left_bracket(reader)?;
-    let state = reader.cursor;
+    let save = reader.cursor();
     let start = match integer(reader) {
         Err(_) => {
-            reader.cursor = state;
+            reader.seek(save);
             None
         }
         Ok(v) => Some(v),
     };
     if try_literal(":", reader).is_err() {
         let kind = ParseErrorKind::Expecting(":".to_string());
-        let error = ParseError::new(state.pos, true, kind);
+        let error = ParseError::new(save.pos, true, kind);
         return Err(error);
     };
-    let state = reader.cursor;
+    let save = reader.cursor();
     let end = match integer(reader) {
         Err(_) => {
-            reader.cursor = state;
+            reader.seek(save);
             None
         }
         Ok(v) => Some(v),
@@ -145,7 +145,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, ParseErr
     match string_value(reader) {
         Err(_) => {
             let kind = ParseErrorKind::Expecting("value string".to_string());
-            let error = ParseError::new(reader.cursor.pos, true, kind);
+            let error = ParseError::new(reader.cursor().pos, true, kind);
             Err(error)
         }
         Ok(v) => {
@@ -158,7 +158,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, ParseErr
 fn selector_object_key(reader: &mut Reader) -> Result<Selector, ParseError> {
     if reader.peek() != Some('.') {
         let kind = ParseErrorKind::Expecting("[ or .".to_string());
-        let error = ParseError::new(reader.cursor.pos, true, kind);
+        let error = ParseError::new(reader.cursor().pos, true, kind);
         return Err(error);
     };
     _ = reader.read();
@@ -166,7 +166,7 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, ParseError> {
     let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if s.is_empty() {
         let kind = ParseErrorKind::Expecting("empty value".to_string());
-        let error = ParseError::new(reader.cursor.pos, false, kind);
+        let error = ParseError::new(reader.cursor().pos, false, kind);
         return Err(error);
     }
     Ok(Selector::NameChild(s))
@@ -189,9 +189,9 @@ fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, ParseError> {
 }
 
 fn try_left_bracket(reader: &mut Reader) -> Result<(), ParseError> {
-    let start = reader.cursor;
+    let start = reader.cursor();
     if literal(".[", reader).is_err() {
-        reader.cursor = start;
+        reader.seek(start);
         try_literal("[", reader)?;
     }
     Ok(())
@@ -209,11 +209,11 @@ fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     // @.key>=value   GreaterThanOrEqual(Key, Value)
     literal("@.", reader)?; // assume key value for the time being
     let key = key_path(reader)?;
-    let state = reader.cursor;
+    let save = reader.cursor();
     let func = match predicate_func(reader) {
         Ok(f) => f,
         Err(_) => {
-            reader.cursor = state;
+            reader.seek(save);
             PredicateFunc::KeyExist
         }
     };
@@ -291,11 +291,11 @@ mod tests {
 
         let mut reader = Reader::new("[xxx");
         assert!(try_left_bracket(&mut reader).is_ok());
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new(".[xxx");
         assert!(try_left_bracket(&mut reader).is_ok());
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
     }
 
     #[test]
@@ -372,7 +372,7 @@ mod tests {
                 func: PredicateFunc::KeyExist,
             })
         );
-        assert_eq!(reader.cursor.offset, 11);
+        assert_eq!(reader.cursor().offset, 11);
 
         // Filter equal on string with single quotes
         let mut reader = Reader::new("[?(@.key=='value')]");
@@ -383,7 +383,7 @@ mod tests {
                 func: PredicateFunc::EqualString("value".to_string()),
             })
         );
-        assert_eq!(reader.cursor.offset, 19);
+        assert_eq!(reader.cursor().offset, 19);
         let mut reader = Reader::new(".[?(@.key=='value')]");
         assert_eq!(
             selector(&mut reader).unwrap(),
@@ -392,7 +392,7 @@ mod tests {
                 func: PredicateFunc::EqualString("value".to_string()),
             })
         );
-        assert_eq!(reader.cursor.offset, 20);
+        assert_eq!(reader.cursor().offset, 20);
 
         let mut reader = Reader::new("[?(@.price<10)]");
         assert_eq!(
@@ -405,7 +405,7 @@ mod tests {
                 }),
             })
         );
-        assert_eq!(reader.cursor.offset, 15);
+        assert_eq!(reader.cursor().offset, 15);
     }
 
     #[test]
@@ -415,40 +415,40 @@ mod tests {
             selector(&mut reader).unwrap(),
             Selector::RecursiveKey("book".to_string())
         );
-        assert_eq!(reader.cursor.offset, 6);
+        assert_eq!(reader.cursor().offset, 6);
     }
 
     #[test]
     pub fn test_selector_array_index() {
         let mut reader = Reader::new("[2]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("[0,1]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArrayIndices(vec![0, 1])
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
 
         // you don't need to keep the exact string
         // this is not part of the AST
         let mut reader = Reader::new(".[2]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
     }
 
     #[test]
     pub fn test_selector_wildcard() {
         let mut reader = Reader::new("[*]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard);
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         // you don't need to keep the exact string
         // this is not part of the AST
         let mut reader = Reader::new(".[*]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard);
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
     }
 
     #[test]
@@ -461,7 +461,7 @@ mod tests {
                 end: None
             })
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
 
         let mut reader = Reader::new("[-1:]");
         assert_eq!(
@@ -471,7 +471,7 @@ mod tests {
                 end: None
             })
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
 
         let mut reader = Reader::new("[:2]");
         assert_eq!(
@@ -481,7 +481,7 @@ mod tests {
                 end: Some(2)
             })
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
     }
 
     #[test]
@@ -491,21 +491,21 @@ mod tests {
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
-        assert_eq!(reader.cursor.offset, 7);
+        assert_eq!(reader.cursor().offset, 7);
 
         let mut reader = Reader::new(".['key']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
-        assert_eq!(reader.cursor.offset, 8);
+        assert_eq!(reader.cursor().offset, 8);
 
         let mut reader = Reader::new("['key1']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key1".to_string())
         );
-        assert_eq!(reader.cursor.offset, 8);
+        assert_eq!(reader.cursor().offset, 8);
     }
 
     #[test]
@@ -515,14 +515,14 @@ mod tests {
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
 
         let mut reader = Reader::new(".key1");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key1".to_string())
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
     }
 
     #[test]
@@ -583,7 +583,7 @@ mod tests {
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::Equal(Number { int: 2, decimal: 0 })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("==2.1");
         assert_eq!(
@@ -593,7 +593,7 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             })
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
 
         let mut reader = Reader::new("== 2.1 ");
         assert_eq!(
@@ -603,41 +603,41 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             })
         );
-        assert_eq!(reader.cursor.offset, 7);
+        assert_eq!(reader.cursor().offset, 7);
 
         let mut reader = Reader::new("=='hello'");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::EqualString("hello".to_string())
         );
-        assert_eq!(reader.cursor.offset, 9);
+        assert_eq!(reader.cursor().offset, 9);
 
         let mut reader = Reader::new(">5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::GreaterThan(Number { int: 5, decimal: 0 })
         );
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
 
         let mut reader = Reader::new(">=5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::GreaterThanOrEqual(Number { int: 5, decimal: 0 })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("<5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::LessThan(Number { int: 5, decimal: 0 })
         );
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
 
         let mut reader = Reader::new("<=5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::LessThanOrEqual(Number { int: 5, decimal: 0 })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
     }
 }

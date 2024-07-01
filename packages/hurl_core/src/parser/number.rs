@@ -22,7 +22,7 @@ use crate::parser::ParseResult;
 use crate::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
-    let start = reader.cursor;
+    let start = reader.cursor();
 
     if reader.is_eof() {
         let kind = ParseErrorKind::Expecting {
@@ -38,7 +38,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
         return Err(ParseError::new(start.pos, true, kind));
     }
 
-    let save = reader.cursor;
+    let save = reader.cursor();
     let s = reader.read_while(|c| c.is_ascii_digit());
 
     // if the first digit is zero, you should not have any more digits
@@ -69,7 +69,7 @@ pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
 }
 
 pub fn number(reader: &mut Reader) -> ParseResult<Number> {
-    let start = reader.cursor;
+    let start = reader.cursor();
     let sign = match try_literal("-", reader) {
         Err(_) => "",
         Ok(_) => "-",
@@ -79,11 +79,11 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         let kind = ParseErrorKind::Expecting {
             value: "number".to_string(),
         };
-        return Err(ParseError::new(reader.cursor.pos, true, kind));
+        return Err(ParseError::new(reader.cursor().pos, true, kind));
 
         // if the first digit is zero, you should not have any more digits
     } else if integer_digits.len() > 1 && integer_digits.starts_with('0') {
-        let save = reader.cursor;
+        let save = reader.cursor();
         let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
@@ -92,7 +92,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 
     // Float
     if try_literal(".", reader).is_ok() {
-        let save = reader.cursor;
+        let save = reader.cursor();
         let decimal_digits = reader.read_while(|c| c.is_ascii_digit());
         if decimal_digits.is_empty() {
             let kind = ParseErrorKind::Expecting {
@@ -131,11 +131,11 @@ mod tests {
     fn test_natural() {
         let mut reader = Reader::new("0");
         assert_eq!(natural(&mut reader).unwrap(), 0);
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(natural(&mut reader).unwrap(), 10);
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
     }
 
     #[test]
@@ -178,23 +178,23 @@ mod tests {
     fn test_integer() {
         let mut reader = Reader::new("0");
         assert_eq!(integer(&mut reader).unwrap(), 0);
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new("-1");
         assert_eq!(integer(&mut reader).unwrap(), -1);
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
 
         let mut reader = Reader::new("0");
         assert_eq!(number(&mut reader).unwrap(), Number::Integer(0));
-        assert_eq!(reader.cursor.offset, 1);
+        assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(number(&mut reader).unwrap(), Number::Integer(10));
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
 
         let mut reader = Reader::new("-10x");
         assert_eq!(number(&mut reader).unwrap(), Number::Integer(-10));
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
     }
 
     #[test]
@@ -207,7 +207,7 @@ mod tests {
                 encoded: "1.0".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
@@ -217,7 +217,7 @@ mod tests {
                 encoded: "-1.0".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
@@ -227,7 +227,7 @@ mod tests {
                 encoded: "1.1".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
@@ -237,7 +237,7 @@ mod tests {
                 encoded: "1.100".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
@@ -247,7 +247,7 @@ mod tests {
                 encoded: "1.01".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
@@ -257,7 +257,7 @@ mod tests {
                 encoded: "1.010".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
 
         // provide more digits than necessary
         let mut reader = Reader::new("-0.3333333333333333333");
@@ -268,7 +268,7 @@ mod tests {
                 encoded: "-0.3333333333333333333".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 22);
+        assert_eq!(reader.cursor().offset, 22);
 
         let mut reader = Reader::new("1000000000000000000000.5");
         assert_eq!(
@@ -278,7 +278,7 @@ mod tests {
                 encoded: "1000000000000000000000.5".to_string()
             })
         );
-        assert_eq!(reader.cursor.offset, 24);
+        assert_eq!(reader.cursor().offset, 24);
     }
 
     #[test]

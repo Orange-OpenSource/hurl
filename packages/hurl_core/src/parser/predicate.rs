@@ -35,7 +35,7 @@ pub fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
 
 // can not fail
 fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
-    let save = reader.cursor;
+    let save = reader.cursor();
     let no_whitespace = Whitespace {
         value: String::new(),
         source_info: SourceInfo {
@@ -47,7 +47,7 @@ fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
         match one_or_more_spaces(reader) {
             Ok(space) => (true, space),
             Err(_) => {
-                reader.cursor = save;
+                reader.seek(save);
                 (false, no_whitespace)
             }
         }
@@ -57,17 +57,17 @@ fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
 }
 
 fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
-    let start = reader.cursor.pos;
+    let start = reader.cursor();
     let value = predicate_func_value(reader)?;
-    let end = reader.cursor.pos;
+    let end = reader.cursor();
     Ok(PredicateFunc {
-        source_info: SourceInfo { start, end },
+        source_info: SourceInfo::new(start.pos, end.pos),
         value,
     })
 }
 
 fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let start = reader.cursor;
+    let start = reader.cursor();
     match choice(
         &[
             equal_predicate,
@@ -164,7 +164,7 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     } else {
         one_or_more_spaces(reader)?
     };
-    let start = reader.cursor;
+    let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::GreaterThan {
@@ -191,7 +191,7 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncV
     } else {
         one_or_more_spaces(reader)?
     };
-    let start = reader.cursor;
+    let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::GreaterThanOrEqual {
@@ -218,7 +218,7 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     } else {
         one_or_more_spaces(reader)?
     };
-    let start = reader.cursor;
+    let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::LessThan {
@@ -245,7 +245,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValu
     } else {
         one_or_more_spaces(reader)?
     };
-    let start = reader.cursor;
+    let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::LessThanOrEqual {
@@ -265,7 +265,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValu
 fn start_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("startsWith", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let save = reader.cursor;
+    let save = reader.cursor();
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
         return Err(ParseError::new(
@@ -280,7 +280,7 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
 fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("endsWith", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let save = reader.cursor;
+    let save = reader.cursor();
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
         return Err(ParseError::new(
@@ -295,7 +295,7 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn contain_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("contains", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let save = reader.cursor;
+    let save = reader.cursor();
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
         return Err(ParseError::new(
@@ -317,7 +317,7 @@ fn include_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn match_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("matches", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let save = reader.cursor;
+    let save = reader.cursor();
     let value = predicate_value(reader)?;
     if !matches!(value, PredicateValue::String(_)) && !matches!(value, PredicateValue::Regex(_)) {
         return Err(ParseError::new(
@@ -397,7 +397,7 @@ mod tests {
                 }
             )
         );
-        assert_eq!(reader.cursor.pos, Pos { line: 1, column: 1 });
+        assert_eq!(reader.cursor().pos, Pos { line: 1, column: 1 });
 
         let mut reader = Reader::new("not XX");
         assert_eq!(
@@ -410,7 +410,7 @@ mod tests {
                 }
             )
         );
-        assert_eq!(reader.cursor.pos, Pos { line: 1, column: 5 });
+        assert_eq!(reader.cursor().pos, Pos { line: 1, column: 5 });
     }
 
     #[test]

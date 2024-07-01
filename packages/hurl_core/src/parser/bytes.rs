@@ -105,7 +105,7 @@ mod tests {
                 ],
             })
         );
-        assert_eq!(reader.cursor.offset, 7);
+        assert_eq!(reader.cursor().offset, 7);
 
         let mut reader = Reader::new("{ } ");
         assert_eq!(
@@ -115,14 +115,14 @@ mod tests {
                 elements: vec![],
             })
         );
-        assert_eq!(reader.cursor.offset, 3);
+        assert_eq!(reader.cursor().offset, 3);
 
         let mut reader = Reader::new("true");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Boolean(true))
         );
-        assert_eq!(reader.cursor.offset, 4);
+        assert_eq!(reader.cursor().offset, 4);
 
         let mut reader = Reader::new("\"\" x");
         assert_eq!(
@@ -133,7 +133,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
             }))
         );
-        assert_eq!(reader.cursor.offset, 2);
+        assert_eq!(reader.cursor().offset, 2);
     }
 
     #[test]
@@ -202,6 +202,6 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
             })
         );
-        assert_eq!(reader.cursor.offset, 5);
+        assert_eq!(reader.cursor().offset, 5);
     }
 }

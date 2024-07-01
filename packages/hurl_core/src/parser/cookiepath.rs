@@ -24,7 +24,7 @@ use crate::parser::ParseResult;
 use crate::reader::Reader;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
-    let start = reader.cursor.pos;
+    let start = reader.cursor().pos;
 
     // We create a specialized reader for the templated, error and created structures are
     // relative tho the main reader.
@@ -49,7 +49,7 @@ fn cookiepath_attribute(reader: &mut Reader) -> ParseResult<CookieAttribute> {
 }
 
 fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttributeName> {
-    let start = reader.cursor.pos;
+    let start = reader.cursor().pos;
     let s = reader.read_while(|c| c.is_alphabetic() || *c == '-');
     match s.to_lowercase().as_str() {
         "value" => Ok(CookieAttributeName::Value(s)),
@@ -91,7 +91,7 @@ mod tests {
                 attribute: None,
             }
         );
-        assert_eq!(reader.cursor.offset, 7);
+        assert_eq!(reader.cursor().offset, 7);
     }
 
     #[test]
@@ -121,7 +121,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor.offset, 15);
+        assert_eq!(reader.cursor().offset, 15);
     }
 
     #[test]
@@ -161,7 +161,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor.offset, 16);
+        assert_eq!(reader.cursor().offset, 16);
     }
 
     #[test]
@@ -206,14 +206,14 @@ mod tests {
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("Domain".to_string())
         );
-        assert_eq!(reader.cursor.offset, 6);
+        assert_eq!(reader.cursor().offset, 6);
 
         let mut reader = Reader::new("domain");
         assert_eq!(
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("domain".to_string())
         );
-        assert_eq!(reader.cursor.offset, 6);
+        assert_eq!(reader.cursor().offset, 6);
 
         let mut reader = Reader::new("unknown");
         let error = cookiepath_attribute_name(&mut reader).err().unwrap();
