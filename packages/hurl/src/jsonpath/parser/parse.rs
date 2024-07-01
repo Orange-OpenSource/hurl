@@ -163,7 +163,7 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, ParseError> {
     };
     _ = reader.read();
 
-    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
+    let s = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
     if s.is_empty() {
         let kind = ParseErrorKind::Expecting("empty value".to_string());
         let error = ParseError::new(reader.cursor().pos, false, kind);

@@ -136,7 +136,7 @@ pub fn key_name(reader: &mut Reader) -> Result<String, ParseError> {
             return Err(error);
         }
     };
-    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
+    let s = reader.read_while(|c| c.is_alphanumeric() || c == '_');
     whitespace(reader);
     Ok(format!("{first_char}{s}"))
 }

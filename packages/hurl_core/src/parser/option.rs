@@ -34,7 +34,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     // enter the parsing of the option name and to have better error description (ex: 'max-redirs'
     // vs 'max_redirs').
     let option =
-        reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.' || *c == '_');
+        reader.read_while(|c| c.is_ascii_alphanumeric() || c == '-' || c == '.' || c == '_');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -371,7 +371,7 @@ fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
 
 fn variable_name(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.cursor();
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
+    let name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
     if name.is_empty() {
         let kind = ParseErrorKind::Expecting {
             value: "variable name".to_string(),

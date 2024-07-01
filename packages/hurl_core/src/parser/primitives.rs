@@ -261,7 +261,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
             ParseErrorKind::OddNumberOfHexDigits,
         ));
     }
-    let encoded = reader.peek_back(start.offset);
+    let encoded = reader.read_from(start.offset);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
 

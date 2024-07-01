@@ -75,7 +75,7 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
 // (decoding escape sequence)
 pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<String> {
     literal("\"", reader)?;
-    let s = reader.read_while(|c| *c != '"' && *c != '\n');
+    let s = reader.read_while(|c| c != '"' && c != '\n');
     literal("\"", reader)?;
     Ok(s)
 }
@@ -156,7 +156,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
 fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String)> {
     let start = reader.cursor();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.peek_back(start.offset))),
+        Ok(c) => Ok((c, reader.read_from(start.offset))),
         Err(e) => {
             if e.recoverable {
                 reader.seek(start);
@@ -176,7 +176,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
                             };
                             Err(ParseError::new(start.pos, true, kind))
                         } else {
-                            Ok((c, reader.peek_back(start.offset)))
+                            Ok((c, reader.read_from(start.offset)))
                         }
                     }
                 }

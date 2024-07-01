@@ -102,7 +102,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         }
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
-                let encoded = reader.peek_back(start.offset);
+                let encoded = reader.read_from(start.offset);
                 Ok(Number::Float(Float { value, encoded }))
             }
             Err(_) => {

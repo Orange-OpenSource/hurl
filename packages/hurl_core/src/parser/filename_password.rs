@@ -46,7 +46,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let encoded = reader.peek_back(start.offset);
+                    let encoded = reader.read_from(start.offset);
                     let element = TemplateElement::String { value, encoded };
                     elements.push(element);
                 } else {

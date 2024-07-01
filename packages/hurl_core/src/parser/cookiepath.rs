@@ -28,7 +28,7 @@ pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
 
     // We create a specialized reader for the templated, error and created structures are
     // relative tho the main reader.
-    let s = reader.read_while(|c| *c != '[');
+    let s = reader.read_while(|c| c != '[');
     let mut template_reader = Reader::with_pos(s.as_str(), start);
     let name = unquoted_template(&mut template_reader)?;
     let attribute = optional(cookiepath_attribute, reader)?;
@@ -50,7 +50,7 @@ fn cookiepath_attribute(reader: &mut Reader) -> ParseResult<CookieAttribute> {
 
 fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttributeName> {
     let start = reader.cursor().pos;
-    let s = reader.read_while(|c| c.is_alphabetic() || *c == '-');
+    let s = reader.read_while(|c| c.is_alphabetic() || c == '-');
     match s.to_lowercase().as_str() {
         "value" => Ok(CookieAttributeName::Value(s)),
         "expires" => Ok(CookieAttributeName::Expires(s)),
@@ -180,7 +180,7 @@ mod tests {
 
         // Check that errors are well reported with a buffer that have already read data.
         let mut reader = Reader::new("xxxx{{cookie[Domain]");
-        _ = reader.read_while(|&c| c == 'x');
+        _ = reader.read_while(|c| c == 'x');
 
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(

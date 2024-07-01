@@ -45,7 +45,7 @@
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
-    buffer: Vec<char>,
+    buf: Vec<char>,
     cursor: Cursor,
 }
 
@@ -81,7 +81,7 @@ impl Reader {
     /// Creates a new reader, position of the index is at the first char.
     pub fn new(s: &str) -> Self {
         Reader {
-            buffer: s.chars().collect(),
+            buf: s.chars().collect(),
             cursor: Cursor {
                 offset: 0,
                 pos: Pos { line: 1, column: 1 },
@@ -95,7 +95,7 @@ impl Reader {
     /// Note: the `buffer` offset is still initialized to 0.
     pub fn with_pos(s: &str, pos: Pos) -> Self {
         Reader {
-            buffer: s.chars().collect(),
+            buf: s.chars().collect(),
             cursor: Cursor { offset: 0, pos },
         }
     }
@@ -112,12 +112,12 @@ impl Reader {
 
     /// Returns true if the reader has read all the buffer, false otherwise.
     pub fn is_eof(&self) -> bool {
-        self.cursor.offset == self.buffer.len()
+        self.cursor.offset == self.buf.len()
     }
 
     /// Returns the next char from the buffer advancing the internal state.
     pub fn read(&mut self) -> Option<char> {
-        match self.buffer.get(self.cursor.offset) {
+        match self.buf.get(self.cursor.offset) {
             None => None,
             Some(c) => {
                 self.cursor.offset += 1;
@@ -147,14 +147,15 @@ impl Reader {
     }
 
     /// Returns chars from the buffer while `predicate` is true, advancing the internal state.
-    pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {
+    pub fn read_while(&mut self, predicate: fn(char) -> bool) -> String {
         let mut s = String::new();
         loop {
             match self.peek() {
                 None => return s,
                 Some(c) => {
-                    if predicate(&c) {
-                        s.push(self.read().unwrap());
+                    if predicate(c) {
+                        _ = self.read();
+                        s.push(c);
                     } else {
                         return s;
                     }
@@ -163,39 +164,38 @@ impl Reader {
         }
     }
 
-    /// Returns the next char from the buffer without advancing the internal state.
-    pub fn peek(&self) -> Option<char> {
-        self.buffer.get(self.cursor.offset).copied()
+    /// Reads a string from a `start` position to the current position (excluded).
+    ///
+    /// This method doesn't modify the read index since we're reading "backwards" to the current
+    /// read index.
+    pub fn read_from(&self, start: usize) -> String {
+        let end = self.cursor.offset;
+        self.buf[start..end].iter().collect()
     }
 
-    /// Returns the next char ignoring whitespace without advancing the internal state.
-    pub fn peek_ignoring_whitespace(&self) -> Option<char> {
+    /// Peeks the next char from the buffer without advancing the internal state.
+    pub fn peek(&self) -> Option<char> {
+        self.buf.get(self.cursor.offset).copied()
+    }
+
+    /// Peeks the next char that meet a `predicate`.
+    pub fn peek_if(&self, predicate: fn(char) -> bool) -> Option<char> {
         let mut i = self.cursor.offset;
         loop {
-            if let Some(c) = self.buffer.get(i).copied() {
-                if c != ' ' && c != '\t' && c != '\n' && c != '\r' {
-                    return Some(c);
-                }
-            } else {
-                return None;
+            let &c = self.buf.get(i)?;
+            if predicate(c) {
+                return Some(c);
             }
             i += 1;
         }
     }
 
-    /// Reads a string of `count` char without advancing the internal state.
+    /// Peeks a string of `count` char without advancing the internal state.
     /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
         let start = self.cursor.offset;
-        let end = (start + count).min(self.buffer.len());
-        self.buffer[start..end].iter().collect()
-    }
-
-    /// Reads a string backward from a `start` position to the current position (excluded), without
-    /// resetting the internal state.
-    pub fn peek_back(&self, start: usize) -> String {
-        let end = self.cursor.offset;
-        self.buffer[start..end].iter().collect()
+        let end = (start + count).min(self.buf.len());
+        self.buf[start..end].iter().collect()
     }
 }
 
@@ -233,7 +233,7 @@ mod tests {
         assert_eq!(reader.read(), Some('d'));
         assert_eq!(reader.read(), Some('e'));
         assert_eq!(reader.peek(), Some('f'));
-        assert_eq!(reader.peek_back(3), "de");
+        assert_eq!(reader.read_from(3), "de");
     }
 
     #[test]
@@ -279,5 +279,17 @@ mod tests {
                 pos: Pos::new(1, 5)
             }
         );
+    }
+
+    #[test]
+    fn peek_ignoring_whitespace() {
+        fn is_whitespace(c: char) -> bool {
+            c == ' ' || c == '\t'
+        }
+        let reader = Reader::new("\t\t\tabc");
+        assert_eq!(reader.peek_if(|c| !is_whitespace(c)), Some('a'));
+
+        let reader = Reader::new("foo");
+        assert_eq!(reader.peek_if(|c| !is_whitespace(c)), Some('f'));
     }
 }

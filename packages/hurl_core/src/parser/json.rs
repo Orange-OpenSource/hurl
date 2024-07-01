@@ -110,7 +110,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<Template> {
 fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
     let start = reader.cursor();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.peek_back(start.offset), start.pos)),
+        Ok(c) => Ok((c, reader.read_from(start.offset), start.pos)),
         Err(e) => {
             if e.recoverable {
                 reader.seek(start);
@@ -128,7 +128,7 @@ fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
                             };
                             Err(ParseError::new(start.pos, true, kind))
                         } else {
-                            Ok((c, reader.peek_back(start.offset), start.pos))
+                            Ok((c, reader.read_from(start.offset), start.pos))
                         }
                     }
                 }
@@ -299,7 +299,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             literal(",", reader)?;
             // If there is one more comma, e.g. [1, 2,], it's better to report to the user because
             // this occurrence is common.
-            if reader.peek_ignoring_whitespace() == Some(']') {
+            if reader.peek_if(|c| !is_whitespace(c)) == Some(']') {
                 let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
                 return Err(ParseError::new(save.pos, false, kind));
             }
@@ -346,7 +346,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             literal(",", reader)?;
             // If there is one more comma, e.g. {"a": "b",}, it's better to report to the user
             // because this occurrence is common.
-            if reader.peek_ignoring_whitespace() == Some('}') {
+            if reader.peek_if(|c| !is_whitespace(c)) == Some('}') {
                 let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
                 return Err(ParseError::new(save.pos, false, kind));
             }
@@ -396,8 +396,12 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     })
 }
 
+fn is_whitespace(c: char) -> bool {
+    c == ' ' || c == '\t' || c == '\n' || c == '\r'
+}
+
 fn whitespace(reader: &mut Reader) -> String {
-    reader.read_while(|c| *c == ' ' || *c == '\t' || *c == '\n' || *c == '\r')
+    reader.read_while(is_whitespace)
 }
 
 #[cfg(test)]
