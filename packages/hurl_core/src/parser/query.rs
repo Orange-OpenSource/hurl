@@ -75,16 +75,16 @@ fn header_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn cookie_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("cookie", reader)?;
     let space0 = one_or_more_spaces(reader)?;
+
+    // Read the whole value of the coookie path and parse it with a specialized reader.
     let start = reader.cursor.pos;
     let s = quoted_oneline_string(reader)?;
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
 
-    let mut cookiepath_reader = Reader::new(s.as_str());
-    cookiepath_reader.cursor.pos = Pos {
-        line: start.line,
-        column: start.column + 1,
-    };
+    // We will parse the cookiepath value without `"`.
+    let pos = Pos::new(start.line, start.column + 1);
+    let mut cookiepath_reader = Reader::with_pos(s.as_str(), pos);
     let expr = cookiepath(&mut cookiepath_reader)?;
 
     Ok(QueryValue::Cookie { space0, expr })
@@ -214,6 +214,7 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
 mod tests {
     use super::*;
     use crate::parser::filter::filters;
+    use crate::reader::Pos;
 
     #[test]
     fn test_query() {

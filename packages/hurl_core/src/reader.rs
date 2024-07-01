@@ -20,10 +20,18 @@ use std::cmp::min;
 /// Represents a text reader.
 ///
 /// The `Reader` implements methods to read a stream of text. A reader manages
-/// an internal `state` which is the position of the current cursor within the reader's buffer.
+/// an internal `cursor`: the position of the current read index within the reader's buffer.
 /// Methods like [`Reader::read`], [`Reader::read_while`]
-/// do advance the internal reader's`state`. Other methods, like [`Reader::peek`], [`Reader::peek_n`]
-/// allows to get the next chars in the buffer without modifying the current reader state.
+/// do advance the internal reader's `cursor`. Other methods, like [`Reader::peek`], [`Reader::peek_n`]
+/// allows to get the next chars in the buffer without modifying the current reader cursor.
+///
+/// The cursor is composed of an offset, which is always related to the reader internal buffer.
+/// Along the buffer offset, a position `[Pos]` is updated each time a char is read. This position
+/// is the column and row index in the buffer document. In most of the case, the position is
+/// initialize to the first char, but a reader instance can be create using `[Reader::with_pos]`
+/// which set a given started position. This can be useful when a reader is instantiated as a
+/// "sub reader" of a given reader, and we want to reported position relatively to the main reader
+/// (for errors but also for constructed structures).
 ///
 /// # Example
 /// ```
@@ -64,7 +72,7 @@ pub struct Cursor {
 }
 
 impl Reader {
-    /// Creates a new reader.
+    /// Creates a new reader, position of the index is at the first char.
     pub fn new(s: &str) -> Reader {
         Reader {
             buffer: s.chars().collect(),
@@ -72,6 +80,17 @@ impl Reader {
                 offset: 0,
                 pos: Pos { line: 1, column: 1 },
             },
+        }
+    }
+
+    /// Creates a new reader, `pos` is position of the index: this allow to report created
+    /// structures and error to be referenced from this position.
+    ///
+    /// Note: the `buffer` offset is still initialized to 0.
+    pub fn with_pos(s: &str, pos: Pos) -> Reader {
+        Reader {
+            buffer: s.chars().collect(),
+            cursor: Cursor { offset: 0, pos },
         }
     }
 
@@ -216,5 +235,33 @@ mod tests {
         let mut reader = Reader::new("abcde123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "");
         assert_eq!(reader.cursor.offset, 0);
+    }
+
+    #[test]
+    fn reader_create_with_from_pos() {
+        let mut main_reader = Reader::new("aaabb");
+        _ = main_reader.read();
+        _ = main_reader.read();
+        _ = main_reader.read();
+
+        let pos = main_reader.cursor.pos;
+        let s = main_reader.read_while(|_| true);
+        let mut sub_reader = Reader::with_pos(&s, pos);
+        assert_eq!(
+            sub_reader.cursor,
+            Cursor {
+                offset: 0,
+                pos: Pos::new(1, 4)
+            }
+        );
+
+        _ = sub_reader.read();
+        assert_eq!(
+            sub_reader.cursor,
+            Cursor {
+                offset: 1,
+                pos: Pos::new(1, 5)
+            }
+        );
     }
 }
