@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-warning">
-                <abbr title="28 / 33">84.85 %</abbr></p>
+                <abbr title="21 / 26">80.77 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="6 / 6">100 %</abbr></p>
+                <abbr title="5 / 5">100 %</abbr></p>
         </div>
     </div>
 
@@ -1253,7 +1253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1263,13 +1263,13 @@
                 <a href="#77">77</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn message(&amp;self, content: &amp;[&amp;str]) -&gt; StyledString {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1285,7 +1285,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut text = StyledString::new();</pre>
+                <pre class="has-background-success-light py-0 px-2">fn color_red(message: &amp;str) -&gt; StyledString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1301,7 +1301,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        hurl_core::error::add_source_line(&amp;mut text, content, self.source_info().start.line);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut s = StyledString::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1317,7 +1317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        text.append(self.fixme(content));</pre>
+                <pre class="has-background-success-light py-0 px-2">    s.push_with(message, Style::new().red().bold());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1333,7 +1333,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    s</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1341,150 +1341,6 @@
                 id="82"
                 role="cell">
                 <a href="#82">82</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let error_line = self.source_info().start.line;</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="83"
-                role="cell">
-                <a href="#83">83</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        hurl_core::error::add_line_info_prefix(&amp;text, content, error_line)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="84"
-                role="cell">
-                <a href="#84">84</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="85"
-                role="cell">
-                <a href="#85">85</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="86"
-                role="cell">
-                <a href="#86">86</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="87"
-                role="cell">
-                <a href="#87">87</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn color_red(message: &amp;str) -&gt; StyledString {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="88"
-                role="cell">
-                <a href="#88">88</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut s = StyledString::new();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="89"
-                role="cell">
-                <a href="#89">89</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    s.push_with(message, Style::new().red().bold());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="90"
-                role="cell">
-                <a href="#90">90</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    s</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="91"
-                role="cell">
-                <a href="#91">91</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1499,7 +1355,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-06-30 08:09</p>
+                <p class="heading">Date: 2024-07-01 08:10</p>
             </div>
         </footer>
     </body>

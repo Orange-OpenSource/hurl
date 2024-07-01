@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="225 / 238">94.54 %</abbr></p>
+                <abbr title="224 / 237">94.51 %</abbr></p>
         </div>
     </div>
 
@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::error::{error_string, OutputFormat};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::error::{DisplaySourceError, OutputFormat};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7317,7 +7317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            error_string(</pre>
+                <pre class="has-background-success-light py-0 px-2">            err.to_string(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7365,7 +7365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                &amp;err,</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(entry_src_info),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7381,7 +7381,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(entry_src_info),</pre>
+                <pre class="has-background-success-light py-0 px-2">                OutputFormat::Json,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7397,7 +7397,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                OutputFormat::Json,</pre>
+                <pre class="has-background-success-light py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7408,12 +7408,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="66">
-                66
+                role="cell" aria-label="664">
+                664
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            )</pre>
+                <pre class="has-background-success-light py-0 px-2">        });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7424,12 +7424,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="664">
-                664
+                role="cell" aria-label="642">
+                642
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        });</pre>
+                <pre class="has-background-success-light py-0 px-2">        AssertJson {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7445,7 +7445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        AssertJson {</pre>
+                <pre class="has-background-success-light py-0 px-2">            success: a.error().is_none(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7461,7 +7461,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            success: a.error().is_none(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            message,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7477,7 +7477,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            message,</pre>
+                <pre class="has-background-success-light py-0 px-2">            line: a.line(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7487,13 +7487,13 @@
                 <a href="#466">466</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="642">
-                642
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            line: a.line(),</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7509,7 +7509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7525,7 +7525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7541,7 +7541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7557,7 +7557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Write the HTTP `response` body to directory `dir`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7567,13 +7567,13 @@
                 <a href="#471">471</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Write the HTTP `response` body to directory `dir`.</pre>
+                <pre class="has-background-success-light py-0 px-2">fn write_response(response: &amp;Response, dir: &amp;Path) -&gt; Result&lt;PathBuf, io::Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7589,7 +7589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn write_response(response: &amp;Response, dir: &amp;Path) -&gt; Result&lt;PathBuf, io::Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let extension = if response.is_json() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7597,22 +7597,6 @@
                 id="473"
                 role="cell">
                 <a href="#473">473</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let extension = if response.is_json() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="474"
-                role="cell">
-                <a href="#474">474</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7626,9 +7610,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="475"
+                id="474"
                 role="cell">
-                <a href="#475">475</a>
+                <a href="#474">474</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7642,9 +7626,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="476"
+                id="475"
                 role="cell">
-                <a href="#476">476</a>
+                <a href="#475">475</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7654,6 +7638,22 @@
             <div class="column has-background-danger-light p-0"
                  role="cell">
                 <pre class="has-background-danger-light py-0 px-2">        Some(&quot;xml&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="476"
+                role="cell">
+                <a href="#476">476</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    } else if response.is_html() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7669,7 +7669,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    } else if response.is_html() {</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(&quot;html&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7677,22 +7677,6 @@
                 id="478"
                 role="cell">
                 <a href="#478">478</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(&quot;html&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="479"
-                role="cell">
-                <a href="#479">479</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7706,9 +7690,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="480"
+                id="479"
                 role="cell">
-                <a href="#480">480</a>
+                <a href="#479">479</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7722,9 +7706,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="481"
+                id="480"
                 role="cell">
-                <a href="#481">481</a>
+                <a href="#480">480</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7734,6 +7718,22 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">    };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="481"
+                role="cell">
+                <a href="#481">481</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let id = Uuid::new_v4();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7749,7 +7749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let id = Uuid::new_v4();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let relative_path = format!(&quot;{id}_response&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7765,7 +7765,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let relative_path = format!(&quot;{id}_response&quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let relative_path = Path::new(&amp;relative_path);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7781,7 +7781,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let relative_path = Path::new(&amp;relative_path);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let relative_path = match extension {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7797,7 +7797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let relative_path = match extension {</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(ext) =&gt; relative_path.with_extension(ext),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7805,22 +7805,6 @@
                 id="486"
                 role="cell">
                 <a href="#486">486</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(ext) =&gt; relative_path.with_extension(ext),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="487"
-                role="cell">
-                <a href="#487">487</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7834,9 +7818,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="488"
+                id="487"
                 role="cell">
-                <a href="#488">488</a>
+                <a href="#487">487</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7846,6 +7830,22 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">    };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="488"
+                role="cell">
+                <a href="#488">488</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let path = dir.join(relative_path.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7861,7 +7861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let path = dir.join(relative_path.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut file = File::create(path)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7877,7 +7877,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut file = File::create(path)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    file.write_all(&amp;response.body)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7893,7 +7893,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    file.write_all(&amp;response.body)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(relative_path)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7901,22 +7901,6 @@
                 id="492"
                 role="cell">
                 <a href="#492">492</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(relative_path)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="493"
-                role="cell">
-                <a href="#493">493</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7931,7 +7915,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-06-30 08:09</p>
+                <p class="heading">Date: 2024-07-01 08:10</p>
             </div>
         </footer>
     </body>
