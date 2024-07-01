@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::parser::combinators::*;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::combinator::{choice, non_recover};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -549,7 +549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.pos;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        reader.read_while(|c| c.is_ascii_alphanumeric() || *c == &#x27;-&#x27; || *c == &#x27;.&#x27; || *c == &#x27;_&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">        reader.read_while(|c| c.is_ascii_alphanumeric() || c == &#x27;-&#x27; || c == &#x27;.&#x27; || c == &#x27;_&#x27;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1269,7 +1269,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                start,</pre>
+                <pre class="has-background-success-light py-0 px-2">                start.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1813,7 +1813,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2133,7 +2133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2213,7 +2213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2533,7 +2533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2613,7 +2613,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(natural_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(natural_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2933,7 +2933,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3253,7 +3253,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3653,7 +3653,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(natural_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(natural_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3733,7 +3733,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4053,7 +4053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4133,7 +4133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(boolean_option, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(boolean_option, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4213,7 +4213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let pos = reader.state.pos;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4229,7 +4229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(integer, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(integer, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4373,7 +4373,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Err(ParseError::new(pos, false, kind))</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Err(ParseError::new(start.pos, false, kind))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4453,7 +4453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let pos = reader.state.pos;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4469,7 +4469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = nonrecover(integer, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = non_recover(integer, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4613,7 +4613,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Err(ParseError::new(pos, false, kind))</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Err(ParseError::new(start.pos, false, kind))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4693,7 +4693,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4757,7 +4757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            reader.state = start;</pre>
+                <pre class="has-background-success-light py-0 px-2">            reader.seek(start);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4965,7 +4965,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5029,7 +5029,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            reader.state = start;</pre>
+                <pre class="has-background-success-light py-0 px-2">            reader.seek(start);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5237,7 +5237,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5301,7 +5301,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            reader.state = start;</pre>
+                <pre class="has-background-success-light py-0 px-2">            reader.seek(start);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5509,7 +5509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5573,7 +5573,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            reader.state = start;</pre>
+                <pre class="has-background-success-light py-0 px-2">            reader.seek(start);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6005,7 +6005,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.cursor();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6021,7 +6021,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let name = reader.read_while(|c| c.is_alphanumeric() || *c == &#x27;_&#x27; || *c == &#x27;-&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let name = reader.read_while(|c| c.is_alphanumeric() || c == &#x27;_&#x27; || c == &#x27;-&#x27;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10763,7 +10763,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-01 08:10</p>
+                <p class="heading">Date: 2024-07-01 19:54</p>
             </div>
         </footer>
     </body>
