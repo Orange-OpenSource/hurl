@@ -140,8 +140,8 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
 /// Format used by to_string
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OutputFormat {
+    Plain,
     Terminal(bool), // Replace \r\n by \n
-    Json,
 }
 
 pub fn add_line_info_prefix(
@@ -265,7 +265,7 @@ pub fn format_error_message(message: &StyledString, format: OutputFormat) -> Str
         OutputFormat::Terminal(_) => {
             message.replace("\r\n", "\n") // CRLF must be replaced by LF in the terminal
         }
-        OutputFormat::Json => message,
+        OutputFormat::Plain => message,
     }
 }
 

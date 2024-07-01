@@ -456,7 +456,7 @@ impl AssertJson {
                 &filename.to_string(),
                 content,
                 Some(entry_src_info),
-                OutputFormat::Json,
+                OutputFormat::Plain,
             )
         });
         AssertJson {
