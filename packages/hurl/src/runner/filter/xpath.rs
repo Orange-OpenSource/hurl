@@ -20,7 +20,8 @@ use std::collections::HashMap;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{xpath, RunnerError, RunnerErrorKind, Value};
+use crate::runner::xpath::{Document, Format, XPathError};
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_xpath(
     value: &Value,
@@ -50,33 +51,26 @@ pub fn eval_xpath_string(
     is_html: bool,
 ) -> Result<Option<Value>, RunnerError> {
     let expr = eval_template(expr_template, variables)?;
-    let result = if is_html {
-        xpath::eval_html(xml, &expr)
-    } else {
-        xpath::eval_xml(xml, &expr)
+    let format = if is_html { Format::Html } else { Format::Xml };
+
+    let Ok(doc) = Document::parse(xml, format) else {
+        return Err(RunnerError::new(
+            source_info,
+            RunnerErrorKind::QueryInvalidXml,
+            false,
+        ));
     };
+
+    let result = doc.eval_xpath(&expr);
     match result {
         Ok(value) => Ok(Some(value)),
-        Err(xpath::XpathError::InvalidXml) => Err(RunnerError::new(
-            source_info,
-            RunnerErrorKind::QueryInvalidXml,
-            false,
-        )),
-        Err(xpath::XpathError::InvalidHtml) => Err(RunnerError::new(
-            source_info,
-            RunnerErrorKind::QueryInvalidXml,
-            false,
-        )),
-        Err(xpath::XpathError::Eval) => Err(RunnerError::new(
+        Err(XPathError::Eval) => Err(RunnerError::new(
             expr_template.source_info,
             RunnerErrorKind::QueryInvalidXpathEval,
             false,
         )),
-        Err(xpath::XpathError::Unsupported) => {
+        Err(XPathError::Unsupported) => {
             panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproduce this usecase myself
         }
     }
 }
-
-#[cfg(test)]
-pub mod tests {}
