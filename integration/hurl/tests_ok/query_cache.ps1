@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl tests_ok/querystring_params.hurl
+hurl --no-output tests_ok/query_cache.hurl
