@@ -8,6 +8,7 @@ Thanks to
 [@DenuxPlays](https://github.com/DenuxPlays),
 [@linkdd](https://github.com/linkdd),
 [@nkback](https://github.com/nkback),
+[@claytonneal](https://github.com/claytonneal),
 
 Enhancements:
 
@@ -16,12 +17,14 @@ Enhancements:
 * Create intermediary directories if necessary when producing JUnit report [#2842](https://github.com/Orange-OpenSource/hurl/issues/2842)
 * Add global requests count in test summary [#2832](https://github.com/Orange-OpenSource/hurl/issues/2832)
 * Replace output warnings by errors [#2815](https://github.com/Orange-OpenSource/hurl/issues/2815)
+* Fix inconsistent case for fields queryString and httpVersion in --json [#2804](https://github.com/Orange-OpenSource/hurl/issues/2804)
 * Run tests in parallel [#2753](https://github.com/Orange-OpenSource/hurl/issues/2753)
 * Add support for importing curl url option in hurlfmt [#2750](https://github.com/Orange-OpenSource/hurl/issues/2750)
 * Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
 * Add repeat option to repeat a sequence of Hurl file [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
 * Add repeat option per request [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
 * Apply delay only once per entry, no matter how many retry [#1973](https://github.com/Orange-OpenSource/hurl/issues/1973)
+* Add toFloat filter [#1732](https://github.com/Orange-OpenSource/hurl/issues/1732)
 * Accept directory as Hurl arguments for processing file [#1446](https://github.com/Orange-OpenSource/hurl/issues/1446)
 
 
