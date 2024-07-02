@@ -33,7 +33,7 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
     let mut end = start;
     loop {
         let pos = reader.cursor().pos;
-        match any_char(vec!['#'], reader) {
+        match any_char(&['#'], reader) {
             Err(e) => {
                 if e.recoverable {
                     break;
@@ -88,7 +88,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
     loop {
         let pos = reader.cursor().pos;
         let save = reader.cursor();
-        match any_char(vec!['"'], reader) {
+        match any_char(&['"'], reader) {
             Err(e) => {
                 if e.recoverable {
                     reader.seek(save);
@@ -125,7 +125,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     loop {
         let pos = reader.cursor().pos;
         let save = reader.cursor();
-        match any_char(vec!['`', '\n'], reader) {
+        match any_char(&['`', '\n'], reader) {
             Err(e) => {
                 if e.recoverable {
                     reader.seek(save);
@@ -153,7 +153,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     })
 }
 
-fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String)> {
+fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)> {
     let start = reader.cursor();
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.read_from(start.offset))),
@@ -510,31 +510,22 @@ mod tests {
     #[test]
     fn test_any_char() {
         let mut reader = Reader::new("a");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            ('a', "a".to_string())
-        );
+        assert_eq!(any_char(&[], &mut reader).unwrap(), ('a', "a".to_string()));
         assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new(" ");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            (' ', " ".to_string())
-        );
+        assert_eq!(any_char(&[], &mut reader).unwrap(), (' ', " ".to_string()));
         assert_eq!(reader.cursor().offset, 1);
 
         let mut reader = Reader::new("\\t");
         assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
+            any_char(&[], &mut reader).unwrap(),
             ('\t', "\\t".to_string())
         );
         assert_eq!(reader.cursor().offset, 2);
 
         let mut reader = Reader::new("#");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            ('#', "#".to_string())
-        );
+        assert_eq!(any_char(&[], &mut reader).unwrap(), ('#', "#".to_string()));
         assert_eq!(reader.cursor().offset, 1);
     }
 
@@ -542,7 +533,7 @@ mod tests {
     fn test_any_char_quote() {
         let mut reader = Reader::new("\\\"");
         assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
+            any_char(&[], &mut reader).unwrap(),
             ('"', "\\\"".to_string())
         );
         assert_eq!(reader.cursor().offset, 2);
@@ -551,17 +542,17 @@ mod tests {
     #[test]
     fn test_any_char_error() {
         let mut reader = Reader::new("");
-        let error = any_char(vec![], &mut reader).err().unwrap();
+        let error = any_char(&[], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("#");
-        let error = any_char(vec!['#'], &mut reader).err().unwrap();
+        let error = any_char(&['#'], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("\t");
-        let error = any_char(vec![], &mut reader).err().unwrap();
+        let error = any_char(&[], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
     }
