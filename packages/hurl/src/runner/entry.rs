@@ -46,6 +46,8 @@ pub fn run(
     let compressed = runner_options.compressed;
     let source_info = entry.source_info();
     let context_dir = &runner_options.context_dir;
+
+    // Evaluates our source requests given our set of variables
     let http_request = match request::eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
         Err(error) => {
@@ -100,9 +102,10 @@ pub fn run(
         }
     };
 
-    // We runs capture and asserts on the last HTTP request/response chains.
+    // Now, we can compute capture and asserts on the last HTTP request/response chains.
     let call = calls.last().unwrap();
     let http_response = &call.response;
+
     // `time_in_ms` represent the network time of calls, not including assert processing.
     let time_in_ms = calls
         .iter()

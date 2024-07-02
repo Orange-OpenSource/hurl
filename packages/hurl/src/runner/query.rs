@@ -28,52 +28,55 @@ use crate::runner::{filter, Number, Value};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
-/// Evaluates this `query` and returns a [`QueryResult`], using the HTTP response `http_response` and `variables`.
+/// Evaluates this `query` and returns a [`QueryResult`], using the HTTP `response` and `variables`.
 pub fn eval_query(
     query: &Query,
     variables: &HashMap<String, Value>,
-    http_response: &http::Response,
+    response: &http::Response,
 ) -> QueryResult {
     match query.value.clone() {
-        QueryValue::Status => eval_query_status(http_response),
-        QueryValue::Url => eval_query_url(http_response),
-        QueryValue::Header { name, .. } => eval_query_header(http_response, &name, variables),
+        QueryValue::Status => eval_query_status(response),
+        QueryValue::Url => eval_query_url(response),
+        QueryValue::Header { name, .. } => eval_query_header(response, &name, variables),
         QueryValue::Cookie {
             expr: CookiePath { name, attribute },
             ..
-        } => eval_query_cookie(http_response, &name, &attribute, variables),
-        QueryValue::Body => eval_query_body(http_response, query.source_info),
+        } => eval_query_cookie(response, &name, &attribute, variables),
+        QueryValue::Body => eval_query_body(response, query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            eval_query_xpath(http_response, &expr, variables, query.source_info)
+            eval_query_xpath(response, &expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(http_response, &expr, variables, query.source_info)
+            eval_query_jsonpath(response, &expr, variables, query.source_info)
         }
         QueryValue::Regex { value, .. } => {
-            eval_query_regex(http_response, &value, variables, query.source_info)
+            eval_query_regex(response, &value, variables, query.source_info)
         }
         QueryValue::Variable { name, .. } => eval_query_variable(&name, variables),
-        QueryValue::Duration => eval_query_duration(http_response),
-        QueryValue::Bytes => eval_query_bytes(http_response, query.source_info),
-        QueryValue::Sha256 => eval_query_sha256(http_response, query.source_info),
-        QueryValue::Md5 => eval_query_md5(http_response, query.source_info),
+        QueryValue::Duration => eval_query_duration(response),
+        QueryValue::Bytes => eval_query_bytes(response, query.source_info),
+        QueryValue::Sha256 => eval_query_sha256(response, query.source_info),
+        QueryValue::Md5 => eval_query_md5(response, query.source_info),
         QueryValue::Certificate {
             attribute_name: field,
             ..
-        } => eval_query_certificate(http_response, field),
+        } => eval_query_certificate(response, field),
     }
 }
 
+/// Evaluates the response status code using the HTTP `response`.
 fn eval_query_status(response: &http::Response) -> QueryResult {
     Ok(Some(Value::Number(Number::Integer(i64::from(
         response.status,
     )))))
 }
 
+/// Evaluates the final URL of the HTTP `response`.
 fn eval_query_url(response: &http::Response) -> QueryResult {
     Ok(Some(Value::String(response.url.to_string())))
 }
 
+/// Evaluates a response query header `name`, on the HTTP `response` given a set of `variables`.
 fn eval_query_header(
     response: &http::Response,
     name: &Template,
@@ -95,6 +98,7 @@ fn eval_query_header(
     }
 }
 
+/// Evaluates a cookie query `name` with optional attributes, on the HTTP `response` given a set of `variables`.
 fn eval_query_cookie(
     response: &http::Response,
     name: &Template,
@@ -115,6 +119,9 @@ fn eval_query_cookie(
     }
 }
 
+/// Evaluates the HTTP `response` body as text.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     // Can return a string if encoding is known and utf8.
     match response.text() {
@@ -127,6 +134,9 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
     }
 }
 
+/// Evaluates a XPath expression on the HTTP `response` body, given a set of `variables`.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_xpath(
     response: &http::Response,
     expr: &Template,
@@ -145,6 +155,9 @@ fn eval_query_xpath(
     }
 }
 
+/// Evaluates a JSONPath expression on the HTTP `response` body, given a set of `variables`.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_jsonpath(
     response: &http::Response,
     expr: &Template,
@@ -161,6 +174,9 @@ fn eval_query_jsonpath(
     }
 }
 
+/// Evaluates a regex query on the HTTP `response` body, given a set of `variables`.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_regex(
     response: &http::Response,
     regex: &RegexValue,
@@ -202,6 +218,7 @@ fn eval_query_regex(
     }
 }
 
+/// Evaluates a variable, given a set of `variables`.
 fn eval_query_variable(name: &Template, variables: &HashMap<String, Value>) -> QueryResult {
     let name = eval_template(name, variables)?;
     if let Some(value) = variables.get(name.as_str()) {
@@ -211,12 +228,17 @@ fn eval_query_variable(name: &Template, variables: &HashMap<String, Value>) -> Q
     }
 }
 
+/// Evaluates the effective duration of the HTTP `response` (only transfer time, assert and captures
+/// are not taken into account).
 fn eval_query_duration(response: &http::Response) -> QueryResult {
     Ok(Some(Value::Number(Number::Integer(
         response.duration.as_millis() as i64,
     ))))
 }
 
+/// Evaluates the HTTP `response` body as bytes.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
@@ -228,6 +250,9 @@ fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) ->
     }
 }
 
+/// Evaluates the SHA-256 hash of the HTTP `response` body bytes.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
@@ -246,6 +271,9 @@ fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -
     Ok(Some(bytes))
 }
 
+/// Evaluates the MD-5 hash of the HTTP `response` body bytes.
+///
+/// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
@@ -261,6 +289,7 @@ fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> Q
     Ok(Some(Value::Bytes(bytes)))
 }
 
+/// Evaluates the SSL certificate attribute, of the HTTP `response`.
 fn eval_query_certificate(
     response: &http::Response,
     certificate_attribute: CertificateAttributeName,
