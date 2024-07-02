@@ -1,5 +1,5 @@
 # With a streaming endpoint,
-# Hurl is hanging without outputing anything
+# Hurl is hanging without outputting anything
 #
 # curl outputs when it received data
 # $ curl http://localhost:8000/streaming

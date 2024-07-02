@@ -54,7 +54,7 @@ jobs:
       - name: Init bot branch name
         run: |
           base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g" | tr '/' '-')
-          echo "BOT_UPDATE_VERSION_BRANCHE_NAME=bot/update-branch-version-${base}" | tee -a $GITHUB_ENV
+          echo "BOT_UPDATE_VERSION_BRANCH_NAME=bot/update-branch-version-${base}" | tee -a $GITHUB_ENV
 
       - name: Update version
         run: |
@@ -102,13 +102,13 @@ jobs:
 
       - name: Push commits
         run: |
-          git checkout -b "${BOT_UPDATE_VERSION_BRANCHE_NAME}"
+          git checkout -b "${BOT_UPDATE_VERSION_BRANCH_NAME}"
           git commit -am "Update hurl version to ${{ inputs.new_version }}"
-          git push --set-upstream origin "${BOT_UPDATE_VERSION_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
+          git push --set-upstream origin "${BOT_UPDATE_VERSION_BRANCH_NAME}" && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ commits pushed to ${BOT_UPDATE_VERSION_BRANCHE_NAME} branch."
+            echo "  - ✅ commits pushed to ${BOT_UPDATE_VERSION_BRANCH_NAME} branch."
           else
-            echo "  - ❌ A problem occurs when attempting to push create release commits to ${BOT_UPDATE_VERSION_BRANCHE_NAME} branch."
+            echo "  - ❌ A problem occurs when attempting to push create release commits to ${BOT_UPDATE_VERSION_BRANCH_NAME} branch."
             exit 1
           fi
 
@@ -118,9 +118,9 @@ jobs:
           GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           git fetch
           base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g")
-          gh pr create --fill --label bot --base "${base}"  --head "${BOT_UPDATE_VERSION_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?
+          gh pr create --fill --label bot --base "${base}"  --head "${BOT_UPDATE_VERSION_BRANCH_NAME}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
-            NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_VERSION_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+            NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_VERSION_BRANCH_NAME}" --state "open" --json number --jq .[].number)
             echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
             echo "pr_number=${NEW_PR_NUMBER}" | tee -a $GITHUB_OUTPUT
           else

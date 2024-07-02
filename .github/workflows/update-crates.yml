@@ -13,7 +13,7 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
-      BOT_UPDATE_BRANCHE_NAME: "bot/update-crates"
+      BOT_UPDATE_BRANCH_NAME: "bot/update-crates"
     name: update-crates
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
 
       - name: Get actual pull request id
         run: |
-          ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+          ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCH_NAME}" --state "open" --json number --jq .[].number)
           ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER:-0}
           echo "ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER}" | tee -a "${GITHUB_ENV}"
           if [ ${ACTUAL_PR_NUMBER} -eq 0 ] ; then
@@ -79,20 +79,20 @@ jobs:
       - name: Push updates to branch
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-          git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
+          git checkout -b "${BOT_UPDATE_BRANCH_NAME}"
           git commit -am "Update crates"
-          git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
+          git push --set-upstream origin "${BOT_UPDATE_BRANCH_NAME}" && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ push crates update to ${BOT_UPDATE_BRANCHE_NAME} succeeds."
+            echo "  - ✅ push crates update to ${BOT_UPDATE_BRANCH_NAME} succeeds."
           else
-            echo "  - ❌ A problem occurs when attempting to push crates update to origin/${BOT_UPDATE_BRANCHE_NAME}."
+            echo "  - ❌ A problem occurs when attempting to push crates update to origin/${BOT_UPDATE_BRANCH_NAME}."
             exit 1
           fi
-          branch_exists=$(git ls-remote | (grep -c "${BOT_UPDATE_BRANCHE_NAME}" || true))
+          branch_exists=$(git ls-remote | (grep -c "${BOT_UPDATE_BRANCH_NAME}" || true))
           if [ ${branch_exists} -eq 1 ] ; then
-            echo "  - ✅ The origin/${BOT_UPDATE_BRANCHE_NAME} now branch exists on remote."
+            echo "  - ✅ The origin/${BOT_UPDATE_BRANCH_NAME} now branch exists on remote."
           else
-            echo "  - ❌ Git push command succeeds but origin/${BOT_UPDATE_BRANCHE_NAME} still does not exist on remote."
+            echo "  - ❌ Git push command succeeds but origin/${BOT_UPDATE_BRANCH_NAME} still does not exist on remote."
             exit 1
           fi
 
@@ -100,9 +100,9 @@ jobs:
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
           GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
-          gh pr create --fill --base master --head "${BOT_UPDATE_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?
+          gh pr create --fill --base master --head "${BOT_UPDATE_BRANCH_NAME}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
-            NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+            NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCH_NAME}" --state "open" --json number --jq .[].number)
             echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
           else
             echo "  - ❌ A problem occurs when attempting to create new pull request."

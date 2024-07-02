@@ -201,7 +201,7 @@ pub fn include(arg_matches: &ArgMatches) -> bool {
 }
 
 /// Returns true if we have at least one input files.
-/// The input file can be a file, the standard input, or a glob (evn a glob returns empty results).
+/// The input file can be a file, the standard input, or a glob (even a glob returns empty results).
 pub fn has_input_files(arg_matches: &ArgMatches) -> bool {
     get_strings(arg_matches, "input_files").is_some()
         || get_strings(arg_matches, "glob").is_some()

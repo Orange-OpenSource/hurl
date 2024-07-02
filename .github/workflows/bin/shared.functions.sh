@@ -101,7 +101,7 @@ function github_get_latest_release(){
             log_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
             return 1
         else
-            latest=$(echo "$result" | grep Lates | cut --field 3)
+            latest=$(echo "$result" | grep Latest | cut --field 3)
             if [[ -z $latest ]] ; then
                 log_error "Latest version" "Action $project_path does not have any release tagged as latest, please check this repo"
                 exit 1
