@@ -143,7 +143,7 @@ pub fn eval_asserts(
     }
 
     // Then, checks all the explicit asserts.
-    for assert in &response.asserts() {
+    for assert in response.asserts() {
         let assert_result =
             assert::eval_explicit_assert(assert, variables, http_response, context_dir);
         asserts.push(assert_result);
@@ -351,7 +351,7 @@ pub fn eval_captures(
     variables: &mut HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
-    for capture in &response.captures() {
+    for capture in response.captures() {
         let capture_result = capture::eval_capture(capture, variables, http_response)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.

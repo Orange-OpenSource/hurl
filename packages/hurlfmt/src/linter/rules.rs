@@ -279,7 +279,7 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
             attribute_name: field,
             ..
         } => QueryValue::Certificate {
-            attribute_name: field.clone(),
+            attribute_name: *field,
             space0: one_whitespace(),
         },
     }

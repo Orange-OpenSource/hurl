@@ -34,25 +34,25 @@ pub fn eval_query(
     variables: &HashMap<String, Value>,
     response: &http::Response,
 ) -> QueryResult {
-    match query.value.clone() {
+    match &query.value {
         QueryValue::Status => eval_query_status(response),
         QueryValue::Url => eval_query_url(response),
-        QueryValue::Header { name, .. } => eval_query_header(response, &name, variables),
+        QueryValue::Header { name, .. } => eval_query_header(response, name, variables),
         QueryValue::Cookie {
             expr: CookiePath { name, attribute },
             ..
-        } => eval_query_cookie(response, &name, &attribute, variables),
+        } => eval_query_cookie(response, name, attribute, variables),
         QueryValue::Body => eval_query_body(response, query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            eval_query_xpath(response, &expr, variables, query.source_info)
+            eval_query_xpath(response, expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(response, &expr, variables, query.source_info)
+            eval_query_jsonpath(response, expr, variables, query.source_info)
         }
         QueryValue::Regex { value, .. } => {
-            eval_query_regex(response, &value, variables, query.source_info)
+            eval_query_regex(response, value, variables, query.source_info)
         }
-        QueryValue::Variable { name, .. } => eval_query_variable(&name, variables),
+        QueryValue::Variable { name, .. } => eval_query_variable(name, variables),
         QueryValue::Duration => eval_query_duration(response),
         QueryValue::Bytes => eval_query_bytes(response, query.source_info),
         QueryValue::Sha256 => eval_query_sha256(response, query.source_info),
@@ -60,7 +60,7 @@ pub fn eval_query(
         QueryValue::Certificate {
             attribute_name: field,
             ..
-        } => eval_query_certificate(response, field),
+        } => eval_query_certificate(response, *field),
     }
 }
 
