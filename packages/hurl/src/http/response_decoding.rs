@@ -67,12 +67,17 @@ impl ContentEncoding {
 impl Response {
     /// Returns response body as text.
     pub fn text(&self) -> Result<String, HttpError> {
-        let encoding = self.headers.character_encoding()?;
-        let body = &self.uncompress_body()?;
-        match encoding.decode(body, DecoderTrap::Strict) {
+        let content_encodings = self.headers.content_encoding()?;
+        let body = if content_encodings.is_empty() {
+            &self.body
+        } else {
+            &self.uncompress_body()?
+        };
+        let character_encoding = self.headers.character_encoding()?;
+        match character_encoding.decode(body, DecoderTrap::Strict) {
             Ok(s) => Ok(s),
             Err(_) => Err(HttpError::InvalidDecoding {
-                charset: encoding.name().to_string(),
+                charset: character_encoding.name().to_string(),
             }),
         }
     }
