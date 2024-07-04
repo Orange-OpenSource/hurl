@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
+use std::cmp::max;
 use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
+use hurl_core::error;
 use hurl_core::error::DisplaySourceError;
 use hurl_core::text::{Style, StyledString};
 
 use crate::http::HttpError;
+use crate::runner::diff::DiffHunk;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of
@@ -46,6 +49,10 @@ impl RunnerError {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum RunnerErrorKind {
+    AssertBodyDiffError {
+        body_source_info: SourceInfo,
+        hunks: Vec<DiffHunk>,
+    },
     AssertBodyValueError {
         actual: String,
         expected: String,
@@ -116,6 +123,7 @@ impl DisplaySourceError for RunnerError {
 
     fn description(&self) -> String {
         match &self.kind {
+            RunnerErrorKind::AssertBodyDiffError { .. } => "Assert body value".to_string(),
             RunnerErrorKind::AssertBodyValueError { .. } => "Assert body value".to_string(),
             RunnerErrorKind::AssertFailure { .. } => "Assert failure".to_string(),
             RunnerErrorKind::AssertHeaderValueError { .. } => "Assert header value".to_string(),
@@ -152,9 +160,16 @@ impl DisplaySourceError for RunnerError {
 
     fn fixme(&self, content: &[&str]) -> StyledString {
         match &self.kind {
+            RunnerErrorKind::AssertBodyDiffError { hunks, .. } => {
+                let mut message = StyledString::new();
+                for hunk in &hunks[..1] {
+                    message.append(hunk.content.clone());
+                }
+                message
+            }
             RunnerErrorKind::AssertBodyValueError { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::AssertFailure {
@@ -173,105 +188,105 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::AssertHeaderValueError { actual } => {
                 let message = &format!("actual value is <{actual}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::AssertStatus { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::AssertVersion { actual, .. } => {
                 let message = &format!("actual value is <{actual}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
 
             RunnerErrorKind::FileReadAccess { path } => {
                 let message = &format!("file {} can not be read", path.to_string_lossy());
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FileWriteAccess { path, error } => {
                 let message = &format!("{} can not be written ({error})", path.to_string_lossy());
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FilterDecode(encoding) => {
                 let message = &format!("value can not be decoded with <{encoding}> encoding");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FilterInvalidEncoding(encoding) => {
                 let message = &format!("<{encoding}> encoding is not supported");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FilterInvalidInput(message) => {
                 let message = &format!("invalid filter input: {message}");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FilterMissingInput => {
                 let message = "missing value to apply filter";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::Http(http_error) => {
                 let message = http_error.message();
-                let message = hurl_core::error::add_carets(&message, self.source_info, content);
+                let message = error::add_carets(&message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::InvalidJson { value } => {
                 let message = &format!("actual value is <{value}>");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::InvalidRegex => {
                 let message = "regex expression is not valid";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::NoQueryResult => {
                 let message = "The query didn't return any result";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryHeaderNotFound => {
                 let message = "this header has not been found in the response";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidJson => {
                 let message = "the HTTP response is not a valid JSON";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidJsonpathExpression { value } => {
                 let message = &format!("the JSONPath expression '{value}' is not valid");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidXml => {
                 let message = "the HTTP response is not a valid XML";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidXpathEval => {
                 let message = "the XPath expression is not valid";
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::TemplateVariableInvalidType {
                 value, expecting, ..
             } => {
                 let message = &format!("expecting {expecting}, actual value is {value}");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::TemplateVariableNotDefined { name } => {
                 let message = &format!("you must set the variable {name}");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::UnauthorizedFileAccess { path } => {
@@ -279,14 +294,43 @@ impl DisplaySourceError for RunnerError {
                     "unauthorized access to file {}, check --file-root option",
                     path.to_string_lossy()
                 );
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::UnrenderableVariable { name, value } => {
                 let message = &format!("variable <{name}> with value {value} can not be rendered");
-                let message = hurl_core::error::add_carets(message, self.source_info, content);
+                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
+        }
+    }
+
+    fn message(&self, content: &[&str]) -> StyledString {
+        let mut text = StyledString::new();
+        if let RunnerErrorKind::AssertBodyDiffError {
+            hunks,
+            body_source_info,
+        } = &self.kind
+        {
+            let loc_max_width = max(content.len().to_string().len(), 2);
+
+            // Only process first hunk for the time-being
+            // TODO: Process all the hunks
+            for hunk in &hunks[..1] {
+                text.push("\n");
+                text.append(hunk_string(
+                    hunk,
+                    body_source_info.start.line,
+                    loc_max_width,
+                ));
+            }
+            text
+        } else {
+            error::add_source_line(&mut text, content, self.source_info().start.line);
+            text.append(self.fixme(content));
+
+            let error_line = self.source_info().start.line;
+            error::add_line_info_prefix(&text, content, error_line)
         }
     }
 }
@@ -304,9 +348,42 @@ fn color_red_multiline_string(s: &str) -> StyledString {
     s
 }
 
+fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> StyledString {
+    let mut s = StyledString::new();
+    let lines = hunk.content.split('\n');
+
+    let separator = "|";
+    let spaces = " ".repeat(loc_max_width);
+    let mut prefix = StyledString::new();
+    prefix.push_with(
+        format!("{spaces} {separator}").as_str(),
+        Style::new().blue().bold(),
+    );
+    let mut prefix_with_number = StyledString::new();
+    let error_line = source_line + hunk.source_line;
+    prefix_with_number.push_with(
+        format!("{error_line:>loc_max_width$} {separator}").as_str(),
+        Style::new().blue().bold(),
+    );
+
+    for (i, line) in lines.iter().enumerate() {
+        if i > 0 {
+            s.push("\n");
+        }
+        if i == (hunk.source_line - hunk.start) {
+            s.append(prefix_with_number.clone());
+        } else {
+            s.append(prefix.clone());
+        }
+        s.append(line.clone());
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use crate::http::HttpError;
+    use crate::runner::diff::diff;
     use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::SourceInfo;
     use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
@@ -479,15 +556,16 @@ jsonpath "$.count" >= 5
     fn test_assert_error_newline() {
         let content = r#"GET http://localhost
 HTTP/1.0 200
-```<p>Hello</p>
+```
+<p>Hello</p>
 ```
 "#;
         let filename = "test.hurl";
-        let kind = RunnerErrorKind::AssertBodyValueError {
-            actual: "<p>Hello</p>\n\n".to_string(),
-            expected: "<p>Hello</p>\n".to_string(),
+        let kind = RunnerErrorKind::AssertBodyDiffError {
+            hunks: diff("<p>Hello</p>\n", "<p>Hello</p>\n\n"),
+            body_source_info: SourceInfo::new(Pos::new(4, 1), Pos::new(4, 1)),
         };
-        let error_source_info = SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1));
+        let error_source_info = SourceInfo::new(Pos::new(4, 1), Pos::new(4, 1));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20));
         let error = RunnerError::new(error_source_info, kind, true);
 
@@ -495,7 +573,7 @@ HTTP/1.0 200
             error
                 .message(&split_lines(content))
                 .to_string(Format::Plain),
-            "\n 3 | ```<p>Hello</p>\n   |    ^ actual value is <<p>Hello</p>\n   |\n   |      >\n   |"
+            "\n 4 | <p>Hello</p>\n   |+\n   |"
         );
         assert_eq!(
             error.to_string(
@@ -505,14 +583,12 @@ HTTP/1.0 200
                 OutputFormat::Terminal(false)
             ),
             r#"Assert body value
-  --> test.hurl:3:4
+  --> test.hurl:4:1
    |
    | GET http://localhost
    | ...
- 3 | ```<p>Hello</p>
-   |    ^ actual value is <<p>Hello</p>
-   |
-   |      >
+ 4 | <p>Hello</p>
+   |+
    |"#
         );
     }

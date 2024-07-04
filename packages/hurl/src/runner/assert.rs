@@ -18,9 +18,11 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::*;
+use hurl_core::reader::Pos;
 
 use crate::http;
 use crate::runner::cache::BodyCache;
+use crate::runner::diff::diff;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
@@ -90,6 +92,24 @@ impl AssertResult {
                     Ok(actual) => {
                         if actual == expected {
                             None
+                        } else if use_diff(expected, actual) {
+                            let actual = actual.to_string();
+                            let expected = expected.to_string();
+                            let hunks = diff(&expected, &actual);
+                            let source_line = hunks
+                                .clone()
+                                .first()
+                                .expect("at least a diff hunk")
+                                .source_line;
+                            let kind = RunnerErrorKind::AssertBodyDiffError {
+                                hunks,
+                                body_source_info: *source_info,
+                            };
+                            let diff_source_info = SourceInfo::new(
+                                Pos::new(source_info.start.line + source_line, 1),
+                                Pos::new(source_info.start.line + source_line, 1),
+                            );
+                            Some(RunnerError::new(diff_source_info, kind, false))
                         } else {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
@@ -115,6 +135,14 @@ impl AssertResult {
             AssertResult::Body { source_info, .. } => source_info.start.line,
             AssertResult::Explicit { source_info, .. } => source_info.start.line,
         }
+    }
+}
+
+fn use_diff(expected: &Value, actual: &Value) -> bool {
+    if let (Value::String(expected), Value::String(actual)) = (actual, expected) {
+        expected.contains('\n') || actual.contains('\n')
+    } else {
+        false
     }
 }
 
@@ -254,5 +282,18 @@ pub mod tests {
                 predicate_result: Some(Ok(())),
             }
         );
+    }
+
+    #[test]
+    pub fn test_use_diff() {
+        assert!(!use_diff(&Value::Bool(true), &Value::Bool(false)));
+        assert!(!use_diff(
+            &Value::String("a".to_string()),
+            &Value::String("b".to_string())
+        ));
+        assert!(use_diff(
+            &Value::String("a\n".to_string()),
+            &Value::String("b".to_string())
+        ));
     }
 }

@@ -246,6 +246,7 @@ pub fn add_entry_line(
         text.push(" ");
         text.push_with(&line, Style::new().bright_black());
     }
+
     if error_line - entry_line > 1 {
         text.push("\n");
         text.append(prefix.clone());

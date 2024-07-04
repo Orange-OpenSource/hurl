@@ -21,9 +21,9 @@ use similar::{ChangeTag, DiffOp, DiffTag, TextDiff};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DiffHunk {
-    content: StyledString,
-    start: usize,       // 0-based
-    source_line: usize, // 0-based
+    pub content: StyledString,
+    pub start: usize,       // 0-based
+    pub source_line: usize, // 0-based
 }
 
 #[allow(dead_code)]
@@ -583,5 +583,19 @@ mod tests {
         assert_eq!(second_hunk.content, expected_diff_output);
         assert_eq!(second_hunk.start, 21);
         assert_eq!(second_hunk.source_line, 24);
+    }
+
+    #[test]
+    fn test_diff_add_new_line() {
+        let hunks = diff("<p>Hello</p>\n", "<p>Hello</p>\n\n");
+        let first_hunk = hunks.first().unwrap().clone();
+
+        let mut expected_diff_output = StyledString::new();
+        expected_diff_output.push(" <p>Hello</p>\n");
+        expected_diff_output.push_with("+\n", Style::new().green());
+
+        assert_eq!(first_hunk.content, expected_diff_output);
+        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.source_line, 0);
     }
 }
