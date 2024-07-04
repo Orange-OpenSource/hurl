@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    match query.value.clone() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    match &amp;query.value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        QueryValue::Header { name, .. } =&gt; eval_query_header(response, &amp;name, variables),</pre>
+                <pre class="has-background-success-light py-0 px-2">        QueryValue::Header { name, .. } =&gt; eval_query_header(response, name, variables),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_query_cookie(response, &amp;name, &amp;attribute, variables),</pre>
+                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_query_cookie(response, name, attribute, variables),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_query_xpath(response, &amp;expr, variables, query.source_info)</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_query_xpath(response, expr, variables, query.source_info)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_query_jsonpath(response, &amp;expr, variables, query.source_info)</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_query_jsonpath(response, expr, variables, query.source_info)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -885,7 +885,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_query_regex(response, &amp;value, variables, query.source_info)</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_query_regex(response, value, variables, query.source_info)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -917,7 +917,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        QueryValue::Variable { name, .. } =&gt; eval_query_variable(&amp;name, variables),</pre>
+                <pre class="has-background-success-light py-0 px-2">        QueryValue::Variable { name, .. } =&gt; eval_query_variable(name, variables),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1045,7 +1045,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_query_certificate(response, field),</pre>
+                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_query_certificate(response, *field),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19419,7 +19419,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-03 08:09</p>
+                <p class="heading">Date: 2024-07-04 08:09</p>
             </div>
         </footer>
     </body>
