@@ -22,8 +22,10 @@ use regex::Regex;
 use sha2::Digest;
 
 use crate::http;
+use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::eval_template;
+use crate::runner::xpath::{Document, Format};
 use crate::runner::{filter, Number, Value};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
@@ -33,6 +35,7 @@ pub fn eval_query(
     query: &Query,
     variables: &HashMap<String, Value>,
     response: &http::Response,
+    cache: &mut BodyCache,
 ) -> QueryResult {
     match &query.value {
         QueryValue::Status => eval_query_status(response),
@@ -44,7 +47,7 @@ pub fn eval_query(
         } => eval_query_cookie(response, name, attribute, variables),
         QueryValue::Body => eval_query_body(response, query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            eval_query_xpath(response, expr, variables, query.source_info)
+            eval_query_xpath(response, cache, expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
             eval_query_jsonpath(response, expr, variables, query.source_info)
@@ -139,20 +142,53 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
 /// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_xpath(
     response: &http::Response,
+    cache: &mut BodyCache,
     expr: &Template,
     variables: &HashMap<String, Value>,
     query_source_info: SourceInfo,
 ) -> QueryResult {
-    match response.text() {
-        Ok(xml) => {
-            filter::eval_xpath_string(&xml, expr, variables, query_source_info, response.is_html())
+    let doc = match cache.xml() {
+        Some(d) => d,
+        None => parse_cache_xml(response, cache, query_source_info)?,
+    };
+    filter::eval_xpath_doc(doc, expr, variables)
+}
+
+/// Parse this HTTP `response` body to a structured XML document, and store the document to the
+/// response `cache`.
+///
+/// `query_source_info` is used for error reporting.
+fn parse_cache_xml<'cache>(
+    response: &http::Response,
+    cache: &'cache mut BodyCache,
+    query_source_info: SourceInfo,
+) -> Result<&'cache Document, RunnerError> {
+    // Get the response as text if possible
+    let text = match response.text() {
+        Ok(t) => t,
+        Err(e) => {
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::Http(e),
+                false,
+            ))
         }
-        Err(inner) => Err(RunnerError::new(
+    };
+    let format = if response.is_html() {
+        Format::Html
+    } else {
+        Format::Xml
+    };
+    let Ok(doc) = Document::parse(&text, format) else {
+        return Err(RunnerError::new(
             query_source_info,
-            RunnerErrorKind::Http(inner),
+            RunnerErrorKind::QueryInvalidXml,
             false,
-        )),
-    }
+        ));
+    };
+    // Everything is ok, we can put the response in the cache
+    cache.set_xml(doc);
+    Ok(cache.xml().unwrap())
 }
 
 /// Evaluates a JSONPath expression on the HTTP `response` body, given a set of `variables`.
@@ -601,6 +637,7 @@ pub mod tests {
     #[test]
     fn test_query_status() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
         assert_eq!(
             eval_query(
                 &Query {
@@ -609,6 +646,7 @@ pub mod tests {
                 },
                 &variables,
                 &http::hello_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -619,6 +657,8 @@ pub mod tests {
     #[test]
     fn test_header_not_found() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         // header Custom
         let query_header = Query {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -641,7 +681,13 @@ pub mod tests {
         //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
         //    assert_eq!(error.inner, RunnerError::QueryHeaderNotFound);
         assert_eq!(
-            eval_query(&query_header, &variables, &http::hello_http_response()).unwrap(),
+            eval_query(
+                &query_header,
+                &variables,
+                &http::hello_http_response(),
+                &mut cache
+            )
+            .unwrap(),
             None
         );
     }
@@ -650,6 +696,8 @@ pub mod tests {
     fn test_header() {
         // header Content-Type
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         let query_header = Query {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Header {
@@ -668,9 +716,14 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query_header, &variables, &http::hello_http_response())
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &query_header,
+                &variables,
+                &http::hello_http_response(),
+                &mut cache
+            )
+            .unwrap()
+            .unwrap(),
             Value::String(String::from("text/html; charset=utf-8"))
         );
     }
@@ -678,6 +731,8 @@ pub mod tests {
     #[test]
     fn test_query_cookie() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         let space = Whitespace {
             value: String::new(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -709,7 +764,9 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response).unwrap().unwrap(),
+            eval_query(&query, &variables, &response, &mut cache)
+                .unwrap()
+                .unwrap(),
             Value::String("DQAAAKEaem_vYg".to_string())
         );
 
@@ -736,7 +793,9 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response).unwrap().unwrap(),
+            eval_query(&query, &variables, &response, &mut cache)
+                .unwrap()
+                .unwrap(),
             Value::String("/accounts".to_string())
         );
 
@@ -763,7 +822,9 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response).unwrap().unwrap(),
+            eval_query(&query, &variables, &response, &mut cache)
+                .unwrap()
+                .unwrap(),
             Value::Unit
         );
 
@@ -789,7 +850,10 @@ pub mod tests {
                 },
             },
         };
-        assert_eq!(eval_query(&query, &variables, &response).unwrap(), None);
+        assert_eq!(
+            eval_query(&query, &variables, &response, &mut cache).unwrap(),
+            None
+        );
     }
 
     #[test]
@@ -877,6 +941,8 @@ pub mod tests {
     #[test]
     fn test_body() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
             eval_query(
                 &Query {
@@ -885,6 +951,7 @@ pub mod tests {
                 },
                 &variables,
                 &http::hello_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -897,6 +964,7 @@ pub mod tests {
             },
             &variables,
             &http::bytes_http_response(),
+            &mut cache,
         )
         .err()
         .unwrap();
@@ -915,11 +983,13 @@ pub mod tests {
     #[test]
     fn test_query_invalid_utf8() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         let http_response = http::Response {
             body: vec![200],
             ..default_response()
         };
-        let error = eval_query(&xpath_users(), &variables, &http_response)
+        let error = eval_query(&xpath_users(), &variables, &http_response, &mut cache)
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
@@ -934,6 +1004,8 @@ pub mod tests {
     #[test]
     fn test_query_xpath_error_eval() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         // xpath ^^^
         let query = Query {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -952,9 +1024,13 @@ pub mod tests {
                 },
             },
         };
-        let error = eval_query(&query, &variables, &http::xml_two_users_http_response())
-            .err()
-            .unwrap();
+        let error = eval_query(
+            &query,
+            &variables,
+            &http::xml_two_users_http_response(),
+            &mut cache,
+        )
+        .unwrap_err();
         assert_eq!(error.kind, RunnerErrorKind::QueryInvalidXpathEval);
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
     }
@@ -962,12 +1038,14 @@ pub mod tests {
     #[test]
     fn test_query_xpath() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
 
         assert_eq!(
             eval_query(
                 &xpath_users(),
                 &variables,
                 &http::xml_two_users_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -978,6 +1056,7 @@ pub mod tests {
                 &xpath_count_user_query(),
                 &variables,
                 &http::xml_two_users_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -1011,11 +1090,14 @@ pub mod tests {
     #[test]
     fn test_query_xpath_with_html() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
             eval_query(
                 &xpath_html_charset(),
                 &variables,
                 &http::html_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -1026,6 +1108,7 @@ pub mod tests {
     #[test]
     fn test_query_jsonpath_invalid_expression() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
 
         // jsonpath xxx
         let jsonpath_query = Query {
@@ -1046,9 +1129,13 @@ pub mod tests {
             },
         };
 
-        let error = eval_query(&jsonpath_query, &variables, &http::json_http_response())
-            .err()
-            .unwrap();
+        let error = eval_query(
+            &jsonpath_query,
+            &variables,
+            &http::json_http_response(),
+            &mut cache,
+        )
+        .unwrap_err();
         assert_eq!(
             error.source_info.start,
             Pos {
@@ -1067,11 +1154,12 @@ pub mod tests {
     #[test]
     fn test_query_invalid_json() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
         let http_response = http::Response {
             body: String::into_bytes(String::from("xxx")),
             ..default_response()
         };
-        let error = eval_query(&jsonpath_success(), &variables, &http_response)
+        let error = eval_query(&jsonpath_success(), &variables, &http_response, &mut cache)
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
@@ -1081,13 +1169,14 @@ pub mod tests {
     #[test]
     fn test_query_json_not_found() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         let http_response = http::Response {
             body: String::into_bytes(String::from("{}")),
             ..default_response()
         };
-        //assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));
         assert_eq!(
-            eval_query(&jsonpath_success(), &variables, &http_response).unwrap(),
+            eval_query(&jsonpath_success(), &variables, &http_response, &mut cache).unwrap(),
             None
         );
     }
@@ -1095,16 +1184,28 @@ pub mod tests {
     #[test]
     fn test_query_json() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
-            eval_query(&jsonpath_success(), &variables, &http::json_http_response())
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &jsonpath_success(),
+                &variables,
+                &http::json_http_response(),
+                &mut cache
+            )
+            .unwrap()
+            .unwrap(),
             Value::Bool(false)
         );
         assert_eq!(
-            eval_query(&jsonpath_errors(), &variables, &http::json_http_response())
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &jsonpath_errors(),
+                &variables,
+                &http::json_http_response(),
+                &mut cache
+            )
+            .unwrap()
+            .unwrap(),
             Value::List(vec![
                 Value::Object(vec![(
                     String::from("id"),
@@ -1121,16 +1222,28 @@ pub mod tests {
     #[test]
     fn test_query_regex() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
-            eval_query(&regex_name(), &variables, &http::hello_http_response())
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &regex_name(),
+                &variables,
+                &http::hello_http_response(),
+                &mut cache
+            )
+            .unwrap()
+            .unwrap(),
             Value::String("World".to_string())
         );
 
-        let error = eval_query(&regex_invalid(), &variables, &http::hello_http_response())
-            .err()
-            .unwrap();
+        let error = eval_query(
+            &regex_invalid(),
+            &variables,
+            &http::hello_http_response(),
+            &mut cache,
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             error.source_info,
             SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10))
@@ -1141,6 +1254,8 @@ pub mod tests {
     #[test]
     fn test_query_bytes() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
             eval_query(
                 &Query {
@@ -1149,6 +1264,7 @@ pub mod tests {
                 },
                 &variables,
                 &http::hello_http_response(),
+                &mut cache,
             )
             .unwrap()
             .unwrap(),
@@ -1159,6 +1275,8 @@ pub mod tests {
     #[test]
     fn test_query_sha256() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
             eval_query(
                 &Query {
@@ -1169,7 +1287,8 @@ pub mod tests {
                 &http::Response {
                     body: vec![0xff],
                     ..default_response()
-                }
+                },
+                &mut cache,
             )
             .unwrap()
             .unwrap(),

@@ -18,7 +18,7 @@
 
 pub use eval::eval_filters;
 pub use jsonpath::eval_jsonpath_string;
-pub use xpath::eval_xpath_string;
+pub use xpath::eval_xpath_doc;
 
 mod count;
 mod days_after_now;

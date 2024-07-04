@@ -20,6 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
+use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
@@ -119,13 +120,17 @@ impl AssertResult {
 
 /// Evaluates an explicit `assert`, given a set of `variables`, a HTTP response and a context
 /// directory `context_dir`.
+///
+/// The `cache` is used to store XML / JSON structured response data and avoid redundant parsing
+/// operation on the response.
 pub fn eval_explicit_assert(
     assert: &Assert,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
+    cache: &mut BodyCache,
     context_dir: &ContextDir,
 ) -> AssertResult {
-    let query_result = eval_query(&assert.query, variables, http_response);
+    let query_result = eval_query(&assert.query, variables, http_response, cache);
 
     let actual = if assert.filters.is_empty() {
         query_result
@@ -234,11 +239,13 @@ pub mod tests {
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let mut cache = BodyCache::new();
         assert_eq!(
             eval_explicit_assert(
                 &assert_count_user(),
                 &variables,
                 &xml_three_users_http_response(),
+                &mut cache,
                 &context_dir
             ),
             AssertResult::Explicit {

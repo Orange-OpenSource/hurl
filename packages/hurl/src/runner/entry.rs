@@ -22,6 +22,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::ClientOptions;
+use crate::runner::cache::BodyCache;
 use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
@@ -117,6 +118,7 @@ pub fn run(
     // 1. first, check implicit assert on status and version. If KO, test is failed
     // 2. then, we compute captures, we might need them in asserts
     // 3. finally, run the remaining asserts
+    let mut cache = BodyCache::new();
     let mut asserts = vec![];
 
     if !runner_options.ignore_asserts {
@@ -144,7 +146,7 @@ pub fn run(
     let captures = match &entry.response {
         None => vec![],
         Some(response_spec) => {
-            match response::eval_captures(response_spec, http_response, variables) {
+            match response::eval_captures(response_spec, http_response, &mut cache, variables) {
                 Ok(captures) => captures,
                 Err(e) => {
                     return EntryResult {
@@ -167,8 +169,13 @@ pub fn run(
     // Compute asserts
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut other_asserts =
-                response::eval_asserts(response_spec, variables, http_response, context_dir);
+            let mut other_asserts = response::eval_asserts(
+                response_spec,
+                variables,
+                http_response,
+                &mut cache,
+                context_dir,
+            );
             asserts.append(&mut other_asserts);
         }
     };

@@ -20,6 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
+use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::result::{AssertResult, CaptureResult};
 use crate::runner::{assert, body, capture, json, multiline, template, Value};
@@ -55,10 +56,14 @@ pub fn eval_version_status_asserts(
 ///
 /// Asserts on status and version and not run in this function, there are run with `eval_version_status_asserts`
 /// as they're semantically stronger.
+///
+/// The `cache` is used to store XML / JSON structured response data and avoid redundant parsing
+/// operation on the response.
 pub fn eval_asserts(
     response: &Response,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
+    cache: &mut BodyCache,
     context_dir: &ContextDir,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
@@ -145,7 +150,7 @@ pub fn eval_asserts(
     // Then, checks all the explicit asserts.
     for assert in response.asserts() {
         let assert_result =
-            assert::eval_explicit_assert(assert, variables, http_response, context_dir);
+            assert::eval_explicit_assert(assert, variables, http_response, cache, context_dir);
         asserts.push(assert_result);
     }
     asserts
@@ -348,11 +353,12 @@ fn eval_implicit_body_asserts(
 pub fn eval_captures(
     response: &Response,
     http_response: &http::Response,
+    cache: &mut BodyCache,
     variables: &mut HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
     for capture in response.captures() {
-        let capture_result = capture::eval_capture(capture, variables, http_response)?;
+        let capture_result = capture::eval_capture(capture, variables, http_response, cache)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.
         variables.insert(capture_result.name.clone(), capture_result.value.clone());
@@ -417,12 +423,15 @@ mod tests {
     #[test]
     pub fn test_eval_asserts() {
         let variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         let context_dir = ContextDir::default();
         assert_eq!(
             eval_asserts(
                 &user_response(),
                 &variables,
                 &http::xml_two_users_http_response(),
+                &mut cache,
                 &context_dir,
             ),
             vec![AssertResult::Explicit {
@@ -463,10 +472,13 @@ mod tests {
     #[test]
     pub fn test_eval_captures() {
         let mut variables = HashMap::new();
+        let mut cache = BodyCache::new();
+
         assert_eq!(
             eval_captures(
                 &user_response(),
                 &http::xml_two_users_http_response(),
+                &mut cache,
                 &mut variables,
             )
             .unwrap(),

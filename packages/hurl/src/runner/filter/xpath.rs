@@ -33,8 +33,14 @@ pub fn eval_xpath(
     match value {
         Value::String(xml) => {
             // The filter will use the HTML parser that should also work with XML input
-            let is_html = true;
-            eval_xpath_string(xml, expr, variables, source_info, is_html)
+            let Ok(doc) = Document::parse(xml, Format::Html) else {
+                return Err(RunnerError::new(
+                    source_info,
+                    RunnerErrorKind::QueryInvalidXml,
+                    false,
+                ));
+            };
+            eval_xpath_doc(&doc, expr, variables)
         }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v._type());
@@ -43,29 +49,17 @@ pub fn eval_xpath(
     }
 }
 
-pub fn eval_xpath_string(
-    xml: &str,
-    expr_template: &Template,
+pub fn eval_xpath_doc(
+    doc: &Document,
+    expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: SourceInfo,
-    is_html: bool,
 ) -> Result<Option<Value>, RunnerError> {
-    let expr = eval_template(expr_template, variables)?;
-    let format = if is_html { Format::Html } else { Format::Xml };
-
-    let Ok(doc) = Document::parse(xml, format) else {
-        return Err(RunnerError::new(
-            source_info,
-            RunnerErrorKind::QueryInvalidXml,
-            false,
-        ));
-    };
-
-    let result = doc.eval_xpath(&expr);
+    let expr_str = eval_template(expr, variables)?;
+    let result = doc.eval_xpath(&expr_str);
     match result {
         Ok(value) => Ok(Some(value)),
         Err(XPathError::Eval) => Err(RunnerError::new(
-            expr_template.source_info,
+            expr.source_info,
             RunnerErrorKind::QueryInvalidXpathEval,
             false,
         )),
