@@ -1,0 +1,89 @@
+error: Assert body value
+   --> tests_failed/diff.hurl:6:1
+    |
+    | GET http://localhost:8000/diff/change/line1
+    | ...
+  6 |-{
+    |+[
+    |   "first_name": "John",
+    |   "last_name": "Smith",
+    |   "is_alive": true,
+    |
+
+error: Assert body value
+   --> tests_failed/diff.hurl:40:1
+    |
+    | GET http://localhost:8000/diff/change/line2
+    | ...
+    | {
+ 40 |-  "first_name": "John",
+    |+  "first_name": "Bob",
+    |   "last_name": "Smith",
+    |   "is_alive": true,
+    |   "age": 27,
+    |
+
+error: Assert status code
+   --> tests_failed/diff.hurl:70:6
+    |
+    | GET http://localhost:8000/diff/change/line3
+ 70 | HTTP 200
+    |      ^^^ actual value is <404>
+    |
+
+error: Assert body value
+   --> tests_failed/diff.hurl:108:1
+    |
+    | GET http://localhost:8000/diff/change/line4
+    | ...
+    | {
+    |   "first_name": "John",
+    |   "last_name": "Smith",
+108 |-  "is_alive": true,
+    |+  "is_alive": false,
+    |   "age": 27,
+    |   "address": {
+    |     "street_address": "21 2nd Street",
+    |
+
+error: Assert body value
+   --> tests_failed/diff.hurl:142:1
+    |
+    | GET http://localhost:8000/diff/change/line5
+    | ...
+    |   "first_name": "John",
+    |   "last_name": "Smith",
+    |   "is_alive": true,
+142 |-  "age": 27,
+    |+  "age": 28,
+    |   "address": {
+    |     "street_address": "21 2nd Street",
+    |     "city": "New York",
+    |
+
+error: Assert body value
+   --> tests_failed/diff.hurl:174:1
+    |
+    | GET http://localhost:8000/diff/delete/line3
+    | ...
+    | {
+    |   "first_name": "John",
+174 |-  "last_name": "Smith",
+    |   "is_alive": true,
+    |   "age": 27,
+    |   "address": {
+    |
+
+error: Assert body value
+   --> tests_failed/diff.hurl:208:1
+    |
+    | GET http://localhost:8000/diff/add/line3
+    | ...
+    | {
+208 |   "first_name": "John",
+    |+  "middle_name": "Bob",
+    |   "last_name": "Smith",
+    |   "is_alive": true,
+    |   "age": 27,
+    |
+
