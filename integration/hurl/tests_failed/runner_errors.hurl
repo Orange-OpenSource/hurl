@@ -113,7 +113,7 @@ HTTP 200
 jsonpath "$.count" == 10
 
 # QueryInvalidJsonpathExpression
-GET http://localhost:8000/runner_errors
+GET http://localhost:8000/runner_errors/json-list
 HTTP 200
 [Asserts]
 jsonpath "xxx" == 10

@@ -184,7 +184,7 @@
 [1;31merror[0m: [1mInvalid JSONPath[0m
    [1;34m-->[0m tests_failed/runner_errors.hurl:119:10
 [1;34m    |[0m
-[1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors/json-list[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m119 |[0m jsonpath "xxx" == 10
 [1;34m    |[0m[1;31m          ^^^^^ the JSONPath expression 'xxx' is not valid[0m

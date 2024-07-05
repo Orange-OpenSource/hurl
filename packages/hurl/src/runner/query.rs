@@ -50,7 +50,7 @@ pub fn eval_query(
             eval_query_xpath(response, cache, expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(response, expr, variables, query.source_info)
+            eval_query_jsonpath(response, cache, expr, variables, query.source_info)
         }
         QueryValue::Regex { value, .. } => {
             eval_query_regex(response, value, variables, query.source_info)
@@ -196,18 +196,50 @@ fn parse_cache_xml<'cache>(
 /// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_jsonpath(
     response: &http::Response,
+    cache: &mut BodyCache,
     expr: &Template,
     variables: &HashMap<String, Value>,
     query_source_info: SourceInfo,
 ) -> QueryResult {
-    match response.text() {
-        Ok(json) => filter::eval_jsonpath_string(&json, expr, variables, query_source_info),
-        Err(inner) => Err(RunnerError::new(
-            query_source_info,
-            RunnerErrorKind::Http(inner),
-            false,
-        )),
-    }
+    let json = match cache.json() {
+        Some(j) => j,
+        None => parse_cache_json(response, cache, query_source_info)?,
+    };
+    filter::eval_jsonpath_json(json, expr, variables)
+}
+
+/// Parse this HTTP `response` body to JSON, and store the document to the response `cache`.
+///
+/// `query_source_info` is used for error reporting.
+fn parse_cache_json<'cache>(
+    response: &http::Response,
+    cache: &'cache mut BodyCache,
+    query_source_info: SourceInfo,
+) -> Result<&'cache serde_json::Value, RunnerError> {
+    // Get the response as text if possible
+    let text = match response.text() {
+        Ok(t) => t,
+        Err(e) => {
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::Http(e),
+                false,
+            ))
+        }
+    };
+    let json = match serde_json::from_str(&text) {
+        Err(_) => {
+            return Err(RunnerError::new(
+                query_source_info,
+                RunnerErrorKind::QueryInvalidJson,
+                false,
+            ));
+        }
+        Ok(v) => v,
+    };
+    // Everything is ok, we can put the response in the cache
+    cache.set_json(json);
+    Ok(cache.json().unwrap())
 }
 
 /// Evaluates a regex query on the HTTP `response` body, given a set of `variables`.

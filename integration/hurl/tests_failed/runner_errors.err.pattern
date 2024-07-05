@@ -184,7 +184,7 @@ error: Invalid JSON
 error: Invalid JSONPath
    --> tests_failed/runner_errors.hurl:119:10
     |
-    | GET http://localhost:8000/runner_errors
+    | GET http://localhost:8000/runner_errors/json-list
     | ...
 119 | jsonpath "xxx" == 10
     |          ^^^^^ the JSONPath expression 'xxx' is not valid
