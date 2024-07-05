@@ -19,9 +19,9 @@ use std::path::PathBuf;
 
 use crate::linter;
 use colored::*;
-use hurl_core::error::DisplaySourceError;
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::parser;
-use hurl_core::text::Format;
+use hurl_core::text::{Format, Style, StyledString};
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
     move |message| log_verbose(verbose, message)
@@ -37,7 +37,13 @@ pub fn make_logger_parser_error(
     filename: Option<PathBuf>,
 ) -> impl Fn(&parser::ParseError, bool) {
     move |error: &parser::ParseError, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning);
+        let filename = match &filename {
+            None => "-".to_string(),
+            Some(value) => value.display().to_string(),
+        };
+        let content = lines.join("\n");
+        let message = error.to_string(&filename, &content, None, OutputFormat::Terminal(color));
+        eprintln!("{}: {}\n", get_prefix(warning, color), message);
     }
 }
 
@@ -47,8 +53,24 @@ pub fn make_logger_linter_error(
     filename: Option<PathBuf>,
 ) -> impl Fn(&linter::Error, bool) {
     move |error: &linter::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning);
+        let filename = match &filename {
+            None => "-".to_string(),
+            Some(value) => value.display().to_string(),
+        };
+        let content = lines.join("\n");
+        let message = error.to_string(&filename, &content, None, OutputFormat::Terminal(color));
+        eprintln!("{}: {}\n", get_prefix(warning, color), message);
     }
+}
+fn get_prefix(warning: bool, color: bool) -> String {
+    let mut message = StyledString::new();
+    if warning {
+        message.push_with("warning", Style::new().yellow().bold());
+    } else {
+        message.push_with("error", Style::new().red());
+    };
+    let fmt = if color { Format::Ansi } else { Format::Plain };
+    message.to_string(fmt)
 }
 
 pub fn log_info(message: &str) {
@@ -73,98 +95,4 @@ fn log_verbose(verbose: bool, message: &str) {
             eprintln!("* {message}");
         }
     }
-}
-
-fn log_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<PathBuf>,
-    error: &dyn DisplaySourceError,
-    warning: bool,
-) {
-    let line_number_size = if lines.len() < 100 {
-        2
-    } else if lines.len() < 1000 {
-        3
-    } else {
-        4
-    };
-
-    let error_type = if warning {
-        String::from("warning")
-    } else {
-        String::from("error")
-    };
-    let error_type = if !color {
-        error_type
-    } else if warning {
-        error_type.yellow().bold().to_string()
-    } else {
-        error_type.red().bold().to_string()
-    };
-    let format = if color { Format::Ansi } else { Format::Plain };
-    eprintln!("{}: {}", error_type, error.description());
-
-    if let Some(filename) = filename {
-        eprintln!(
-            "{}--> {}:{}:{}",
-            " ".repeat(line_number_size).as_str(),
-            filename.display(),
-            error.source_info().start.line,
-            error.source_info().start.column,
-        );
-    }
-    eprintln!("{} |", " ".repeat(line_number_size));
-
-    let line = lines.get(error.source_info().start.line - 1).unwrap();
-    let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
-    eprintln!(
-        "{line_number:>width$} |{line}",
-        line_number = error.source_info().start.line,
-        width = line_number_size,
-        line = if line.is_empty() {
-            line
-        } else {
-            format!(" {line}")
-        }
-    );
-
-    // TODO: to clean/Refacto
-    // specific case for assert errors
-    let lines = lines.iter().map(|s| s.as_str()).collect::<Vec<&str>>();
-    if error.source_info().start.column == 0 {
-        let fix_me = &error.fixme(&lines);
-        let fixme_lines = fix_me.split('\n');
-
-        // edd an empty line at the end?
-        for line in fixme_lines {
-            eprintln!(
-                "{} |   {fixme}",
-                " ".repeat(line_number_size).as_str(),
-                fixme = line.to_string(format),
-            );
-        }
-    } else {
-        let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let width = error.source_info().end.column - error.source_info().start.column;
-
-        let mut tab_shift = 0;
-        for (i, c) in line.chars().enumerate() {
-            if i >= error.source_info().start.column - 1 {
-                break;
-            };
-            if c == '\t' {
-                tab_shift += 1;
-            }
-        }
-        eprintln!(
-            "{} | {}{} {fixme}",
-            " ".repeat(line_number_size).as_str(),
-            " ".repeat(error.source_info().start.column - 1 + tab_shift * 3),
-            "^".repeat(if width > 1 { width } else { 1 }),
-            fixme = error.fixme(&lines).to_string(format),
-        );
-    }
-
-    eprintln!("{} |\n", " ".repeat(line_number_size));
 }

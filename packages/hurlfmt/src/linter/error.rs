@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::ast::SourceInfo;
+use hurl_core::error;
 use hurl_core::error::DisplaySourceError;
 use hurl_core::text::StyledString;
 
@@ -38,13 +39,14 @@ impl DisplaySourceError for linter::Error {
         }
     }
 
-    fn fixme(&self, _lines: &[&str]) -> StyledString {
+    fn fixme(&self, content: &[&str]) -> StyledString {
         let message = match self.inner {
             LinterError::UnnecessarySpace => "Remove space".to_string(),
             LinterError::UnnecessaryJsonEncoding => "Use Simple String".to_string(),
             LinterError::OneSpace => "Use only one space".to_string(),
         };
         let mut s = StyledString::new();
+        let message = error::add_carets(&message, self.source_info(), content);
         s.push(&message);
         s
     }
