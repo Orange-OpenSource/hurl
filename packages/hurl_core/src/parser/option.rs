@@ -346,7 +346,7 @@ fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
             reader.seek(start);
             let exp = expr::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
-                    value: "integer".to_string(),
+                    value: "integer >= -1".to_string(),
                 };
                 ParseError::new(e.pos, false, kind)
             })?;
@@ -588,7 +588,7 @@ mod tests {
         assert_eq!(
             error.kind,
             ParseErrorKind::Expecting {
-                value: "integer".to_string()
+                value: "integer >= -1".to_string()
             }
         );
     }

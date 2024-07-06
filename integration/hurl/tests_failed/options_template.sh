@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_failed/options_template.hurl
+
+hurl --continue-on-error tests_failed/options_template.hurl

@@ -5,3 +5,10 @@ error: HTTP connection
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect
    |
 
+error: HTTP connection
+  --> tests_failed/max_redirect_option.hurl:9:5
+   |
+ 9 | GET http://localhost:8000/redirect/7
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect
+   |
+

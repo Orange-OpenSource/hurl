@@ -320,6 +320,7 @@ fn eval_boolean_option(
     }
 }
 
+/// Evals a natural option value (>=0), given a set of `variables`.
 fn eval_natural_option(
     natural_value: &NaturalOption,
     variables: &HashMap<String, Value>,
@@ -402,7 +403,7 @@ fn eval_retry_option(
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
                         value: format!("integer <{value}>"),
-                        expecting: "integer".to_string(),
+                        expecting: "integer >= -1".to_string(),
                     };
                     Err(RunnerError::new(expr.variable.source_info, kind, false))
                 }

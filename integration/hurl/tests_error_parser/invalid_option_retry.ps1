@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --continue-on-error tests_failed/options_template.hurl
+hurl tests_error_parser/invalid_option_retry.hurl
