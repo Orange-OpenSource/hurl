@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::typing::Repeat;
+use hurl_core::typing::Count;
 use std::collections::HashMap;
 
 use crate::runner::{HurlResult, Input, RunnerOptions, Value};
@@ -87,14 +87,14 @@ pub struct JobQueue<'job> {
     /// Current index of the job, referencing the input job list.
     index: usize,
     /// Repeat mode of this queue (finite or infinite).
-    repeat: Repeat,
+    repeat: Count,
     /// Current index of the repeat.
     repeat_index: usize,
 }
 
 impl<'job> JobQueue<'job> {
     /// Create a new queue, with a list of `jobs` and a `repeat` mode.
-    pub fn new(jobs: &'job [Job], repeat: Repeat) -> Self {
+    pub fn new(jobs: &'job [Job], repeat: Count) -> Self {
         JobQueue {
             jobs,
             index: 0,
@@ -108,8 +108,8 @@ impl<'job> JobQueue<'job> {
     /// If queue is created in loop forever mode ([`Repeat::Forever`]), returns `None`.
     pub fn jobs_count(&self) -> Option<usize> {
         match self.repeat {
-            Repeat::Count(n) => Some(self.jobs.len() * n),
-            Repeat::Forever => None,
+            Count::Finite(n) => Some(self.jobs.len() * n),
+            Count::Infinite => None,
         }
     }
 
@@ -130,7 +130,7 @@ impl Iterator for JobQueue<'_> {
         if self.index >= self.jobs.len() {
             self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
             match self.repeat {
-                Repeat::Count(n) => {
+                Count::Finite(n) => {
                     if self.repeat_index >= n {
                         None
                     } else {
@@ -138,7 +138,7 @@ impl Iterator for JobQueue<'_> {
                         Some(self.job_at(0))
                     }
                 }
-                Repeat::Forever => {
+                Count::Infinite => {
                     self.index = 1;
                     Some(self.job_at(0))
                 }
@@ -155,7 +155,7 @@ mod tests {
     use crate::parallel::job::{Job, JobQueue};
     use crate::runner::{Input, RunnerOptionsBuilder};
     use crate::util::logger::LoggerOptionsBuilder;
-    use hurl_core::typing::Repeat;
+    use hurl_core::typing::Count;
     use std::collections::HashMap;
 
     fn new_job(file: &str, index: usize) -> Job {
@@ -179,7 +179,7 @@ mod tests {
             new_job("c.hurl", 2),
         ];
 
-        let mut queue = JobQueue::new(&jobs, Repeat::Count(2));
+        let mut queue = JobQueue::new(&jobs, Count::Finite(2));
 
         assert_eq!(queue.next(), Some(new_job("a.hurl", 0)));
         assert_eq!(queue.next(), Some(new_job("b.hurl", 1)));
@@ -196,7 +196,7 @@ mod tests {
     fn input_queue_is_infinite() {
         let jobs = [new_job("foo.hurl", 0)];
 
-        let mut queue = JobQueue::new(&jobs, Repeat::Forever);
+        let mut queue = JobQueue::new(&jobs, Count::Infinite);
         assert_eq!(queue.next(), Some(new_job("foo.hurl", 0)));
         assert_eq!(queue.next(), Some(new_job("foo.hurl", 1)));
         assert_eq!(queue.next(), Some(new_job("foo.hurl", 2)));

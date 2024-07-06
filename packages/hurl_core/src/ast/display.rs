@@ -187,20 +187,11 @@ impl fmt::Display for NaturalOption {
     }
 }
 
-impl fmt::Display for RepeatOption {
+impl fmt::Display for CountOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            RepeatOption::Literal(v) => write!(f, "{}", v),
-            RepeatOption::Expression(v) => write!(f, "{}", v),
-        }
-    }
-}
-
-impl fmt::Display for RetryOption {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            RetryOption::Literal(v) => write!(f, "{}", v),
-            RetryOption::Expression(v) => write!(f, "{}", v),
+            CountOption::Literal(v) => write!(f, "{}", v),
+            CountOption::Expression(v) => write!(f, "{}", v),
         }
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::typing::Repeat;
+use hurl_core::typing::Count;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
@@ -53,7 +53,7 @@ pub struct ParallelRunner {
     /// Output type for each completed job on standard output.
     output_type: OutputType,
     /// Repeat mode for the runner: infinite or finite.
-    repeat: Repeat,
+    repeat: Count,
 }
 
 /// Represents a worker's state.
@@ -106,7 +106,7 @@ impl ParallelRunner {
     pub fn new(
         workers_count: usize,
         output_type: OutputType,
-        repeat: Repeat,
+        repeat: Count,
         test: bool,
         progress_bar: bool,
         color: bool,

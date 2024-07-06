@@ -24,7 +24,7 @@ use std::{env, fs, io};
 
 use clap::ArgMatches;
 use hurl::runner::{Input, Value};
-use hurl_core::typing::{Repeat, Retry};
+use hurl_core::typing::Count;
 
 use super::variables::{parse as parse_variable, parse_value};
 use super::CliOptionsError;
@@ -366,10 +366,10 @@ pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "proxy")
 }
 
-pub fn repeat(arg_matches: &ArgMatches) -> Option<Repeat> {
+pub fn repeat(arg_matches: &ArgMatches) -> Option<Count> {
     match get::<i32>(arg_matches, "repeat") {
-        Some(-1) => Some(Repeat::Forever),
-        Some(n) => Some(Repeat::Count(n as usize)),
+        Some(-1) => Some(Count::Infinite),
+        Some(n) => Some(Count::Finite(n as usize)),
         None => None,
     }
 }
@@ -378,10 +378,10 @@ pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
     get_strings(arg_matches, "resolve").unwrap_or_default()
 }
 
-pub fn retry(arg_matches: &ArgMatches) -> Option<Retry> {
+pub fn retry(arg_matches: &ArgMatches) -> Option<Count> {
     match get::<i32>(arg_matches, "retry") {
-        Some(-1) => Some(Retry::Infinite),
-        Some(r) => Some(Retry::Finite(r as usize)),
+        Some(-1) => Some(Count::Infinite),
+        Some(r) => Some(Count::Finite(r as usize)),
         None => None,
     }
 }

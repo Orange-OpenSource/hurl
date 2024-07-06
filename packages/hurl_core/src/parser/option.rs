@@ -23,7 +23,7 @@ use crate::parser::primitives::*;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
 use crate::reader::Reader;
-use crate::typing::{Repeat, Retry};
+use crate::typing::Count;
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -208,7 +208,7 @@ fn option_proxy(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_repeat(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = repeat_option(reader)?;
+    let value = non_recover(count_option, reader)?;
     Ok(OptionKind::Repeat(value))
 }
 
@@ -218,7 +218,7 @@ fn option_resolve(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = retry_option(reader)?;
+    let value = non_recover(count_option, reader)?;
     Ok(OptionKind::Retry(value))
 }
 
@@ -257,31 +257,16 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::VeryVerbose(value))
 }
 
-fn repeat(reader: &mut Reader) -> ParseResult<Repeat> {
+fn count(reader: &mut Reader) -> ParseResult<Count> {
     let start = reader.cursor();
     let value = non_recover(integer, reader)?;
     if value == -1 {
-        Ok(Repeat::Forever)
+        Ok(Count::Infinite)
     } else if value >= 0 {
-        Ok(Repeat::Count(value as usize))
+        Ok(Count::Finite(value as usize))
     } else {
         let kind = ParseErrorKind::Expecting {
-            value: "Expecting a repeat value".to_string(),
-        };
-        Err(ParseError::new(start.pos, false, kind))
-    }
-}
-
-fn retry(reader: &mut Reader) -> ParseResult<Retry> {
-    let start = reader.cursor();
-    let value = non_recover(integer, reader)?;
-    if value == -1 {
-        Ok(Retry::Infinite)
-    } else if value >= 0 {
-        Ok(Retry::Finite(value as usize))
-    } else {
-        let kind = ParseErrorKind::Expecting {
-            value: "Expecting a retry value".to_string(),
+            value: "Expecting a count value".to_string(),
         };
         Err(ParseError::new(start.pos, false, kind))
     }
@@ -321,27 +306,10 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
     }
 }
 
-fn repeat_option(reader: &mut Reader) -> ParseResult<RepeatOption> {
+fn count_option(reader: &mut Reader) -> ParseResult<CountOption> {
     let start = reader.cursor();
-    match repeat(reader) {
-        Ok(v) => Ok(RepeatOption::Literal(v)),
-        Err(_) => {
-            reader.seek(start);
-            let exp = expr::parse(reader).map_err(|e| {
-                let kind = ParseErrorKind::Expecting {
-                    value: "integer".to_string(),
-                };
-                ParseError::new(e.pos, false, kind)
-            })?;
-            Ok(RepeatOption::Expression(exp))
-        }
-    }
-}
-
-fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
-    let start = reader.cursor();
-    match retry(reader) {
-        Ok(v) => Ok(RetryOption::Literal(v)),
+    match count(reader) {
+        Ok(v) => Ok(CountOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
             let exp = expr::parse(reader).map_err(|e| {
@@ -350,7 +318,7 @@ fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
                 };
                 ParseError::new(e.pos, false, kind)
             })?;
-            Ok(RetryOption::Expression(exp))
+            Ok(CountOption::Expression(exp))
         }
     }
 }

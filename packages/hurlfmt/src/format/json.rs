@@ -18,7 +18,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
-use hurl_core::typing::{Repeat, Retry};
+use hurl_core::typing::Count;
 
 use super::serialize_json::*;
 
@@ -353,38 +353,20 @@ impl ToJson for NaturalOption {
     }
 }
 
-impl ToJson for RepeatOption {
+impl ToJson for CountOption {
     fn to_json(&self) -> JValue {
         match self {
-            RepeatOption::Literal(value) => value.to_json(),
-            RepeatOption::Expression(expr) => expr.to_json(),
+            CountOption::Literal(value) => value.to_json(),
+            CountOption::Expression(expr) => expr.to_json(),
         }
     }
 }
 
-impl ToJson for Repeat {
+impl ToJson for Count {
     fn to_json(&self) -> JValue {
         match self {
-            Repeat::Count(n) => JValue::Number(n.to_string()),
-            Repeat::Forever => JValue::Number("-1".to_string()),
-        }
-    }
-}
-
-impl ToJson for RetryOption {
-    fn to_json(&self) -> JValue {
-        match self {
-            RetryOption::Literal(value) => value.to_json(),
-            RetryOption::Expression(expr) => expr.to_json(),
-        }
-    }
-}
-
-impl ToJson for Retry {
-    fn to_json(&self) -> JValue {
-        match self {
-            Retry::Finite(n) => JValue::Number(n.to_string()),
-            Retry::Infinite => JValue::Number("-1".to_string()),
+            Count::Finite(n) => JValue::Number(n.to_string()),
+            Count::Infinite => JValue::Number("-1".to_string()),
         }
     }
 }

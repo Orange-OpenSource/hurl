@@ -19,10 +19,10 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use hurl_core::ast::{
-    BooleanOption, Entry, EntryOption, Float, NaturalOption, Number as AstNumber, OptionKind,
-    RepeatOption, RetryOption, SectionValue, VariableDefinition, VariableValue,
+    BooleanOption, CountOption, Entry, EntryOption, Float, NaturalOption, Number as AstNumber,
+    OptionKind, SectionValue, VariableDefinition, VariableValue,
 };
-use hurl_core::typing::{Repeat, Retry};
+use hurl_core::typing::Count;
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
@@ -200,7 +200,7 @@ pub fn get_entry_options(
                         entry_options.proxy = Some(value);
                     }
                     OptionKind::Repeat(value) => {
-                        let value = eval_repeat_option(value, variables)?;
+                        let value = eval_count_option(value, variables)?;
                         entry_options.repeat = Some(value);
                     }
                     OptionKind::Resolve(value) => {
@@ -208,7 +208,7 @@ pub fn get_entry_options(
                         entry_options.resolves.push(value);
                     }
                     OptionKind::Retry(value) => {
-                        let value = eval_retry_option(value, variables)?;
+                        let value = eval_count_option(value, variables)?;
                         entry_options.retry = Some(value);
                     }
                     OptionKind::RetryInterval(value) => {
@@ -320,7 +320,6 @@ fn eval_boolean_option(
     }
 }
 
-/// Evals a natural option value (>=0), given a set of `variables`.
 fn eval_natural_option(
     natural_value: &NaturalOption,
     variables: &HashMap<String, Value>,
@@ -352,53 +351,18 @@ fn eval_natural_option(
     }
 }
 
-/// Render an AST repeat option with a `variables` set.
-fn eval_repeat_option(
-    repeat_option_value: &RepeatOption,
+fn eval_count_option(
+    count_value: &CountOption,
     variables: &HashMap<String, Value>,
-) -> Result<Repeat, RunnerError> {
-    match repeat_option_value {
-        RepeatOption::Literal(repeat) => Ok(*repeat),
-        RepeatOption::Expression(expr) => match eval_expression(expr, variables)? {
+) -> Result<Count, RunnerError> {
+    match count_value {
+        CountOption::Literal(repeat) => Ok(*repeat),
+        CountOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value == -1 {
-                    Ok(Repeat::Forever)
+                    Ok(Count::Infinite)
                 } else if value >= 0 {
-                    Ok(Repeat::Count(value as usize))
-                } else {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
-                        value: format!("integer <{value}>"),
-                        expecting: "integer".to_string(),
-                    };
-                    Err(RunnerError::new(expr.variable.source_info, kind, false))
-                }
-            }
-            v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
-                    value: v.format(),
-                    expecting: "integer".to_string(),
-                };
-                Err(RunnerError::new(expr.variable.source_info, kind, false))
-            }
-        },
-    }
-}
-
-/// Render an AST retry option with a `variables` set.
-fn eval_retry_option(
-    retry_option_value: &RetryOption,
-    variables: &HashMap<String, Value>,
-) -> Result<Retry, RunnerError> {
-    match retry_option_value {
-        RetryOption::Literal(retry) => Ok(*retry),
-        RetryOption::Expression(expr) => match eval_expression(expr, variables)? {
-            Value::Number(Number::Integer(value)) => {
-                if value == -1 {
-                    Ok(Retry::Infinite)
-                } else if value >= 0 {
-                    Ok(Retry::Finite(value as usize))
+                    Ok(Count::Finite(value as usize))
                 } else {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
@@ -411,7 +375,7 @@ fn eval_retry_option(
             v => {
                 let kind = RunnerErrorKind::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
-                    value: v.to_string(),
+                    value: v.format(),
                     expecting: "integer".to_string(),
                 };
                 Err(RunnerError::new(expr.variable.source_info, kind, false))

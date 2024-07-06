@@ -36,7 +36,7 @@ use hurl_core::ast::Entry;
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
-use hurl_core::typing::{Repeat, Retry};
+use hurl_core::typing::Count;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -81,9 +81,9 @@ pub struct CliOptions {
     pub path_as_is: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
-    pub repeat: Option<Repeat>,
+    pub repeat: Option<Count>,
     pub resolves: Vec<String>,
-    pub retry: Option<Retry>,
+    pub retry: Option<Count>,
     pub retry_interval: Duration,
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,

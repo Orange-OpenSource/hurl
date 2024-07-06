@@ -26,7 +26,7 @@ use hurl_core::ast::{
 };
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
-use hurl_core::typing::{Repeat, Retry};
+use hurl_core::typing::Count;
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
@@ -217,7 +217,7 @@ pub fn run_entries(
         }
 
         // Repeat 0 is equivalent to skip.
-        if options.repeat == Some(Repeat::Count(0)) {
+        if options.repeat == Some(Count::Finite(0)) {
             logger.debug("");
             logger.debug_important(&format!("Entry {entry_index} is skipped (repeat 0 times)"));
             entry_index += 1;
@@ -268,7 +268,7 @@ pub fn run_entries(
                 repeat_count = 0;
                 entry_index += 1;
             }
-            Some(Repeat::Count(n)) => {
+            Some(Count::Finite(n)) => {
                 if repeat_count >= n {
                     repeat_count = 0;
                     entry_index += 1;
@@ -278,7 +278,7 @@ pub fn run_entries(
                     ));
                 }
             }
-            Some(Repeat::Forever) => {
+            Some(Count::Infinite) => {
                 logger.debug_important(&format!("Repeat entry {entry_index} (x{repeat_count})"));
             }
         }
@@ -319,7 +319,7 @@ fn run_request(
         let mut has_error = !result.errors.is_empty();
 
         // The retry threshold can only be reached with a finite positive number of retries
-        let retry_max_reached = if let Some(Retry::Finite(r)) = options.retry {
+        let retry_max_reached = if let Some(Count::Finite(r)) = options.retry {
             retry_count > r
         } else {
             false

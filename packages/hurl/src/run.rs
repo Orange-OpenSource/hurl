@@ -28,7 +28,7 @@ use hurl::runner::{HurlResult, Input, Output};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::typing::Repeat;
+use hurl_core::typing::Count;
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -40,7 +40,7 @@ pub fn run_seq(
 ) -> Result<Vec<HurlRun>, CliError> {
     let mut runs = vec![];
 
-    let repeat = options.repeat.unwrap_or_default();
+    let repeat = options.repeat.unwrap_or(Count::Finite(1));
     let queue = InputQueue::new(files, repeat);
 
     // When dumped HTTP responses, we truncate existing output file on first save, then append
@@ -165,8 +165,8 @@ pub fn run_par(
     // We're going to use the right numbers of workers. We don't need to use more workers than there
     // are input files (repeat option act as if we're dealing with a multiplied number of files)
     let workers_count = match options.repeat {
-        Some(Repeat::Count(n)) => min(files.len() * n, workers_count),
-        Some(Repeat::Forever) => workers_count,
+        Some(Count::Finite(n)) => min(files.len() * n, workers_count),
+        Some(Count::Infinite) => workers_count,
         None => min(files.len(), workers_count),
     };
     let variables = &options.variables;
@@ -188,7 +188,7 @@ pub fn run_par(
     let mut runner = ParallelRunner::new(
         workers_count,
         output_type,
-        options.repeat.unwrap_or_default(),
+        options.repeat.unwrap_or(Count::Finite(1)),
         options.test,
         options.progress_bar,
         options.color,
@@ -233,14 +233,14 @@ pub struct InputQueue<'input> {
     /// Current index of the input, referencing the input list.
     index: usize,
     /// Repeat mode of this queue (finite or infinite).
-    repeat: Repeat,
+    repeat: Count,
     /// Current index of the repeat.
     repeat_index: usize,
 }
 
 impl<'input> InputQueue<'input> {
     /// Create a new queue, with a list of `inputs` and a `repeat` mode.
-    pub fn new(inputs: &'input [Input], repeat: Repeat) -> Self {
+    pub fn new(inputs: &'input [Input], repeat: Count) -> Self {
         InputQueue {
             inputs,
             index: 0,
@@ -262,7 +262,7 @@ impl Iterator for InputQueue<'_> {
         if self.index >= self.inputs.len() {
             self.repeat_index = self.repeat_index.checked_add(1).unwrap_or(0);
             match self.repeat {
-                Repeat::Count(n) => {
+                Count::Finite(n) => {
                     if self.repeat_index >= n {
                         None
                     } else {
@@ -270,7 +270,7 @@ impl Iterator for InputQueue<'_> {
                         Some(self.input_at(0))
                     }
                 }
-                Repeat::Forever => {
+                Count::Infinite => {
                     self.index = 1;
                     Some(self.input_at(0))
                 }
@@ -286,13 +286,13 @@ impl Iterator for InputQueue<'_> {
 mod tests {
     use crate::run::InputQueue;
     use hurl::runner::Input;
-    use hurl_core::typing::Repeat;
+    use hurl_core::typing::Count;
 
     #[test]
     fn input_queue_is_finite() {
         let files = [Input::new("a"), Input::new("b"), Input::new("c")];
 
-        let mut queue = InputQueue::new(&files, Repeat::Count(4));
+        let mut queue = InputQueue::new(&files, Count::Finite(4));
         assert_eq!(queue.next(), Some(Input::new("a")));
         assert_eq!(queue.next(), Some(Input::new("b")));
         assert_eq!(queue.next(), Some(Input::new("c")));
@@ -312,7 +312,7 @@ mod tests {
     fn input_queue_is_infinite() {
         let files = [Input::new("a")];
 
-        let mut queue = InputQueue::new(&files, Repeat::Forever);
+        let mut queue = InputQueue::new(&files, Count::Infinite);
         assert_eq!(queue.next(), Some(Input::new("a")));
         assert_eq!(queue.next(), Some(Input::new("a")));
         assert_eq!(queue.next(), Some(Input::new("a")));

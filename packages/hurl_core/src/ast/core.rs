@@ -17,7 +17,7 @@
  */
 use crate::ast::json;
 use crate::reader::Pos;
-use crate::typing::{Repeat, Retry};
+use crate::typing::Count;
 
 ///
 /// Hurl AST
@@ -726,9 +726,9 @@ pub enum OptionKind {
     Output(Template),
     PathAsIs(BooleanOption),
     Proxy(Template),
-    Repeat(RepeatOption),
+    Repeat(CountOption),
     Resolve(Template),
-    Retry(RetryOption),
+    Retry(CountOption),
     RetryInterval(NaturalOption),
     Skip(BooleanOption),
     UnixSocket(Template),
@@ -831,14 +831,8 @@ pub enum NaturalOption {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum RepeatOption {
-    Literal(Repeat),
-    Expression(Expr),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum RetryOption {
-    Literal(Retry),
+pub enum CountOption {
+    Literal(Count),
     Expression(Expr),
 }
 

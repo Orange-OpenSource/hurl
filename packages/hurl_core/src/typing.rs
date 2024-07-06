@@ -18,43 +18,22 @@
 //! Hurl common types.
 use core::fmt;
 
-/// Represents a repeat operation, either finite or infinite.
+/// Represents a count operation, either finite or infinite.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Repeat {
-    Count(usize),
-    Forever,
-}
-
-impl Default for Repeat {
-    fn default() -> Self {
-        Repeat::Count(1)
-    }
-}
-
-impl fmt::Display for Repeat {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let value = match self {
-            Repeat::Count(n) => *n as i64,
-            Repeat::Forever => -1,
-        };
-        write!(f, "{}", value)
-    }
-}
-/// Represents a retry operation (when an operation has failed), either finite or infinite.
-/// Contrary to [`Repeat`], [`Retry`] has a notion of retry only on operation failure, while
-/// [`Repeat`] is unconditional.
-#[derive(Clone, Debug, PartialEq, Eq, Copy)]
-pub enum Retry {
+pub enum Count {
     Finite(usize),
     Infinite,
 }
 
-impl fmt::Display for Retry {
+impl fmt::Display for Count {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let value = match self {
-            Retry::Finite(n) => *n as i64,
-            Retry::Infinite => -1,
-        };
-        write!(f, "{}", value)
+        match self {
+            Count::Finite(n) => {
+                write!(f, "{n}")
+            }
+            Count::Infinite => {
+                write!(f, "-1")
+            }
+        }
     }
 }

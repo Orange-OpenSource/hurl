@@ -31,7 +31,7 @@ error: Invalid variable type
    | GET http://localhost:8000/unused
    | ...
 29 | repeat: {{count}}
-   |           ^^^^^ expecting integer, actual value is integer <-2>
+   |           ^^^^^ expecting integer >= -1, actual value is integer <-2>
    |
 
 error: Invalid variable type
@@ -58,6 +58,6 @@ error: Invalid variable type
    | GET http://localhost:8000/unused
    | ...
 50 | retry: {{count}}
-   |          ^^^^^ expecting integer, actual value is foo
+   |          ^^^^^ expecting integer, actual value is string <foo>
    |
 
