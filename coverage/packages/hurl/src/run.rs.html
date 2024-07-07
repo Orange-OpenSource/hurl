@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Repeat;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let repeat = options.repeat.unwrap_or_default();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let repeat = options.repeat.unwrap_or(Count::Finite(1));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2725,7 +2725,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(Repeat::Count(n)) =&gt; min(files.len() * n, workers_count),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(Count::Finite(n)) =&gt; min(files.len() * n, workers_count),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2741,7 +2741,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Some(Repeat::Forever) =&gt; workers_count,</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Some(Count::Infinite) =&gt; workers_count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        options.repeat.unwrap_or_default(),</pre>
+                <pre class="has-background-success-light py-0 px-2">        options.repeat.unwrap_or(Count::Finite(1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    repeat: Repeat,</pre>
+                <pre class="has-background-white py-0 px-2">    repeat: Count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3925,7 +3925,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn new(inputs: &amp;&#x27;input [Input], repeat: Repeat) -&gt; Self {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn new(inputs: &amp;&#x27;input [Input], repeat: Count) -&gt; Self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4277,7 +4277,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Repeat::Count(n) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                Count::Finite(n) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4405,7 +4405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Repeat::Forever =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                Count::Infinite =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4661,7 +4661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::Repeat;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4757,7 +4757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Repeat::Count(4));</pre>
+                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Finite(4));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5077,7 +5077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Repeat::Forever);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Infinite);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5211,7 +5211,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-06 20:30</p>
+                <p class="heading">Date: 2024-07-07 08:08</p>
             </div>
         </footer>
     </body>

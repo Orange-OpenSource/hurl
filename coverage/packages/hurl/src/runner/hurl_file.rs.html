@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::{Repeat, Retry};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3557,7 +3557,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if options.repeat == Some(Repeat::Count(0)) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if options.repeat == Some(Count::Finite(0)) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4373,7 +4373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Some(Repeat::Count(n)) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            Some(Count::Finite(n)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4533,7 +4533,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Some(Repeat::Forever) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Some(Count::Infinite) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5189,7 +5189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let retry_max_reached = if let Some(Retry::Finite(r)) = options.retry {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let retry_max_reached = if let Some(Count::Finite(r)) = options.retry {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9883,7 +9883,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-06 20:30</p>
+                <p class="heading">Date: 2024-07-07 08:08</p>
             </div>
         </footer>
     </body>

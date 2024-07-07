@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::{Repeat, Retry};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5941,7 +5941,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn repeat(arg_matches: &amp;ArgMatches) -&gt; Option&lt;Repeat&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn repeat(arg_matches: &amp;ArgMatches) -&gt; Option&lt;Count&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5973,7 +5973,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Some(-1) =&gt; Some(Repeat::Forever),</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Some(-1) =&gt; Some(Count::Infinite),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5989,7 +5989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(n) =&gt; Some(Repeat::Count(n as usize)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(n) =&gt; Some(Count::Finite(n as usize)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6133,7 +6133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn retry(arg_matches: &amp;ArgMatches) -&gt; Option&lt;Retry&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn retry(arg_matches: &amp;ArgMatches) -&gt; Option&lt;Count&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6165,7 +6165,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Some(-1) =&gt; Some(Retry::Infinite),</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Some(-1) =&gt; Some(Count::Infinite),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6181,7 +6181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(r) =&gt; Some(Retry::Finite(r as usize)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(r) =&gt; Some(Count::Finite(r as usize)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8859,7 +8859,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-06 20:30</p>
+                <p class="heading">Date: 2024-07-07 08:08</p>
             </div>
         </footer>
     </body>

@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::typing::{Repeat, Retry};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11701,7 +11701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Repeat(RepeatOption),</pre>
+                <pre class="has-background-white py-0 px-2">    Repeat(CountOption),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11733,7 +11733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Retry(RetryOption),</pre>
+                <pre class="has-background-white py-0 px-2">    Retry(CountOption),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13381,7 +13381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum RepeatOption {</pre>
+                <pre class="has-background-white py-0 px-2">pub enum CountOption {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13397,7 +13397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Literal(Repeat),</pre>
+                <pre class="has-background-white py-0 px-2">    Literal(Count),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13477,7 +13477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum RetryOption {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct VariableDefinition {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13493,7 +13493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Literal(Retry),</pre>
+                <pre class="has-background-white py-0 px-2">    pub name: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13509,7 +13509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Expression(Expr),</pre>
+                <pre class="has-background-white py-0 px-2">    pub space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13525,7 +13525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    pub space1: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13541,7 +13541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    pub value: VariableValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13557,7 +13557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13573,7 +13573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct VariableDefinition {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13589,7 +13589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub name: String,</pre>
+                <pre class="has-background-white py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13605,7 +13605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">pub enum VariableValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13621,7 +13621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub space1: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    Null,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13637,7 +13637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: VariableValue,</pre>
+                <pre class="has-background-white py-0 px-2">    Bool(bool),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13653,7 +13653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    Number(Number),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13669,7 +13669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    String(Template),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13685,7 +13685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13701,7 +13701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum VariableValue {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13717,7 +13717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Null,</pre>
+                <pre class="has-background-white py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13733,7 +13733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Bool(bool),</pre>
+                <pre class="has-background-white py-0 px-2">pub struct Filter {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13749,7 +13749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Number(Number),</pre>
+                <pre class="has-background-white py-0 px-2">    pub source_info: SourceInfo,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13765,7 +13765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    String(Template),</pre>
+                <pre class="has-background-white py-0 px-2">    pub value: FilterValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13829,7 +13829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct Filter {</pre>
+                <pre class="has-background-white py-0 px-2">pub enum FilterValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13845,7 +13845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub source_info: SourceInfo,</pre>
+                <pre class="has-background-white py-0 px-2">    Count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13861,7 +13861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: FilterValue,</pre>
+                <pre class="has-background-white py-0 px-2">    DaysAfterNow,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13877,7 +13877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    DaysBeforeNow,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13893,7 +13893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    Decode {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13909,7 +13909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13925,7 +13925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum FilterValue {</pre>
+                <pre class="has-background-white py-0 px-2">        encoding: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13941,7 +13941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Count,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13957,7 +13957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    DaysAfterNow,</pre>
+                <pre class="has-background-white py-0 px-2">    Format {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13973,7 +13973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    DaysBeforeNow,</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13989,7 +13989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Decode {</pre>
+                <pre class="has-background-white py-0 px-2">        fmt: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14005,7 +14005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14021,7 +14021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        encoding: Template,</pre>
+                <pre class="has-background-white py-0 px-2">    HtmlEscape,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14037,7 +14037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    HtmlUnescape,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14053,7 +14053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Format {</pre>
+                <pre class="has-background-white py-0 px-2">    JsonPath {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14085,7 +14085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt: Template,</pre>
+                <pre class="has-background-white py-0 px-2">        expr: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14117,7 +14117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    HtmlEscape,</pre>
+                <pre class="has-background-white py-0 px-2">    Nth {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14133,7 +14133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    HtmlUnescape,</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14149,7 +14149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    JsonPath {</pre>
+                <pre class="has-background-white py-0 px-2">        n: u64,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14165,7 +14165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14181,7 +14181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expr: Template,</pre>
+                <pre class="has-background-white py-0 px-2">    Regex {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14197,7 +14197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14213,7 +14213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Nth {</pre>
+                <pre class="has-background-white py-0 px-2">        value: RegexValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14229,7 +14229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14245,7 +14245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        n: u64,</pre>
+                <pre class="has-background-white py-0 px-2">    Replace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14261,7 +14261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14277,7 +14277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Regex {</pre>
+                <pre class="has-background-white py-0 px-2">        old_value: RegexValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14293,7 +14293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">        space1: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14309,7 +14309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        value: RegexValue,</pre>
+                <pre class="has-background-white py-0 px-2">        new_value: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14341,7 +14341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Replace {</pre>
+                <pre class="has-background-white py-0 px-2">    Split {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14373,7 +14373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        old_value: RegexValue,</pre>
+                <pre class="has-background-white py-0 px-2">        sep: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14389,7 +14389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space1: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14405,7 +14405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        new_value: Template,</pre>
+                <pre class="has-background-white py-0 px-2">    ToDate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14421,7 +14421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14437,7 +14437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Split {</pre>
+                <pre class="has-background-white py-0 px-2">        fmt: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14453,7 +14453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14469,7 +14469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        sep: Template,</pre>
+                <pre class="has-background-white py-0 px-2">    ToFloat,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14485,7 +14485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    ToInt,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14501,7 +14501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    ToDate {</pre>
+                <pre class="has-background-white py-0 px-2">    UrlDecode,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14517,7 +14517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">    UrlEncode,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14533,7 +14533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt: Template,</pre>
+                <pre class="has-background-white py-0 px-2">    XPath {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14549,7 +14549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14565,7 +14565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    ToFloat,</pre>
+                <pre class="has-background-white py-0 px-2">        expr: Template,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14581,7 +14581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    ToInt,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14597,109 +14597,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    UrlDecode,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="911"
-                role="cell">
-                <a href="#911">911</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    UrlEncode,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="912"
-                role="cell">
-                <a href="#912">912</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    XPath {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="913"
-                role="cell">
-                <a href="#913">913</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        space0: Whitespace,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="914"
-                role="cell">
-                <a href="#914">914</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        expr: Template,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="915"
-                role="cell">
-                <a href="#915">915</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="916"
-                role="cell">
-                <a href="#916">916</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-06 20:30</p>
+                <p class="heading">Date: 2024-07-07 08:08</p>
             </div>
         </footer>
     </body>

@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="674 / 693">97.26 %</abbr></p>
+                <abbr title="666 / 685">97.23 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="74 / 79">93.67 %</abbr></p>
+                <abbr title="72 / 77">93.51 %</abbr></p>
         </div>
     </div>
 
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::{Repeat, Retry};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15045,7 +15045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for RepeatOption {</pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for CountOption {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15056,8 +15056,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15072,8 +15072,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15088,12 +15088,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="18">
+                18
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            RepeatOption::Literal(retry) =&gt; retry.tokenize(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            CountOption::Literal(retry) =&gt; retry.tokenize(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15104,12 +15104,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            RepeatOption::Expression(expr) =&gt; expr.tokenize(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            CountOption::Expression(expr) =&gt; expr.tokenize(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15189,7 +15189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for Repeat {</pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for Count {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15200,8 +15200,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="18">
+                18
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15216,8 +15216,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="18">
+                18
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15232,12 +15232,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="12">
+                12
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Repeat::Count(n) =&gt; vec![Token::Number(n.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">            Count::Finite(n) =&gt; vec![Token::Number(n.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15248,12 +15248,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Repeat::Forever =&gt; vec![Token::Number(&quot;-1&quot;.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">            Count::Infinite =&gt; vec![Token::Number(&quot;-1&quot;.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15333,7 +15333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for RetryOption {</pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for VariableDefinition {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15344,8 +15344,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15360,12 +15360,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut tokens: Vec&lt;Token&gt; = vec![Token::String(self.name.clone())];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15376,12 +15376,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            RetryOption::Literal(retry) =&gt; retry.tokenize(),</pre>
+                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15392,12 +15392,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            RetryOption::Expression(expr) =&gt; expr.tokenize(),</pre>
+                <pre class="has-background-success-light py-0 px-2">        tokens.push(Token::Keyword(&quot;=&quot;.to_string()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15407,13 +15407,13 @@
                 <a href="#961">961</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.space1.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15423,13 +15423,13 @@
                 <a href="#962">962</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15439,13 +15439,13 @@
                 <a href="#963">963</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15461,7 +15461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15477,7 +15477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for Retry {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15487,13 +15487,13 @@
                 <a href="#966">966</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15503,13 +15503,13 @@
                 <a href="#967">967</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for VariableValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15520,12 +15520,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Retry::Finite(n) =&gt; vec![Token::Number(n.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15536,12 +15536,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Retry::Infinite =&gt; vec![Token::Number(&quot;-1&quot;.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15551,13 +15551,13 @@
                 <a href="#970">970</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            VariableValue::Null =&gt; vec![Token::Keyword(&quot;null&quot;.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15567,13 +15567,13 @@
                 <a href="#971">971</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">            VariableValue::Bool(v) =&gt; vec![Token::Boolean(v.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15583,13 +15583,13 @@
                 <a href="#972">972</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">            VariableValue::Number(v) =&gt; vec![Token::Number(v.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15599,13 +15599,13 @@
                 <a href="#973">973</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">            VariableValue::String(v) =&gt; v.tokenize(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15621,7 +15621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for VariableDefinition {</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15629,118 +15629,6 @@
                 id="975"
                 role="cell">
                 <a href="#975">975</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="976"
-                role="cell">
-                <a href="#976">976</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut tokens: Vec&lt;Token&gt; = vec![Token::String(self.name.clone())];</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="977"
-                role="cell">
-                <a href="#977">977</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.space0.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="978"
-                role="cell">
-                <a href="#978">978</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        tokens.push(Token::Keyword(&quot;=&quot;.to_string()));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="979"
-                role="cell">
-                <a href="#979">979</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.space1.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="980"
-                role="cell">
-                <a href="#980">980</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        tokens.append(&amp;mut self.value.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="981"
-                role="cell">
-                <a href="#981">981</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        tokens</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="982"
-                role="cell">
-                <a href="#982">982</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15754,9 +15642,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="983"
+                id="976"
                 role="cell">
-                <a href="#983">983</a>
+                <a href="#976">976</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15770,9 +15658,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="984"
+                id="977"
                 role="cell">
-                <a href="#984">984</a>
+                <a href="#977">977</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15786,9 +15674,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="985"
+                id="978"
                 role="cell">
-                <a href="#985">985</a>
+                <a href="#978">978</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15797,7 +15685,119 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for VariableValue {</pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for Filter {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="979"
+                role="cell">
+                <a href="#979">979</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="90">
+                90
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="980"
+                role="cell">
+                <a href="#980">980</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="90">
+                90
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        match self.value.clone() {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="981"
+                role="cell">
+                <a href="#981">981</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Count =&gt; vec![Token::FilterType(String::from(&quot;count&quot;))],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="982"
+                role="cell">
+                <a href="#982">982</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::DaysAfterNow =&gt; vec![Token::FilterType(String::from(&quot;daysAfterNow&quot;))],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="983"
+                role="cell">
+                <a href="#983">983</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::DaysBeforeNow =&gt; vec![Token::FilterType(String::from(&quot;daysBeforeNow&quot;))],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="984"
+                role="cell">
+                <a href="#984">984</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="985"
+                role="cell">
+                <a href="#985">985</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;decode&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15808,12 +15808,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15824,12 +15824,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut encoding.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15840,12 +15840,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            VariableValue::Null =&gt; vec![Token::Keyword(&quot;null&quot;.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15855,13 +15855,13 @@
                 <a href="#989">989</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            VariableValue::Bool(v) =&gt; vec![Token::Boolean(v.to_string())],</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15872,12 +15872,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            VariableValue::Number(v) =&gt; vec![Token::Number(v.to_string())],</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15888,12 +15888,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            VariableValue::String(v) =&gt; v.tokenize(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;format&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15903,13 +15903,13 @@
                 <a href="#992">992</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15919,13 +15919,13 @@
                 <a href="#993">993</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15935,13 +15935,13 @@
                 <a href="#994">994</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15957,7 +15957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15967,13 +15967,13 @@
                 <a href="#996">996</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for Filter {</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::HtmlEscape =&gt; vec![Token::FilterType(String::from(&quot;htmlEscape&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15983,13 +15983,13 @@
                 <a href="#997">997</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="90">
-                90
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">            FilterValue::HtmlUnescape =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16000,12 +16000,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="90">
-                90
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self.value.clone() {</pre>
+                <pre class="has-background-success-light py-0 px-2">                vec![Token::FilterType(String::from(&quot;htmlUnescape&quot;))]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16015,13 +16015,13 @@
                 <a href="#999">999</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Count =&gt; vec![Token::FilterType(String::from(&quot;count&quot;))],</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16037,7 +16037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::DaysAfterNow =&gt; vec![Token::FilterType(String::from(&quot;daysAfterNow&quot;))],</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16048,12 +16048,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::DaysBeforeNow =&gt; vec![Token::FilterType(String::from(&quot;daysBeforeNow&quot;))],</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;jsonpath&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16064,12 +16064,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16080,12 +16080,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;decode&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16096,12 +16096,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16111,13 +16111,13 @@
                 <a href="#1005">1005</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut encoding.tokenize());</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16128,12 +16128,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Nth { space0, n } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16143,13 +16143,13 @@
                 <a href="#1007">1007</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;nth&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16160,12 +16160,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16176,12 +16176,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;format&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.push(Token::Number(n.to_string()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16192,12 +16192,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16207,13 +16207,13 @@
                 <a href="#1011">1011</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16224,12 +16224,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16239,13 +16239,13 @@
                 <a href="#1013">1013</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;regex&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16261,7 +16261,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::HtmlEscape =&gt; vec![Token::FilterType(String::from(&quot;htmlEscape&quot;))],</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16271,13 +16271,13 @@
                 <a href="#1015">1015</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            FilterValue::HtmlUnescape =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16293,7 +16293,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                vec![Token::FilterType(String::from(&quot;htmlUnescape&quot;))]</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16319,13 +16319,13 @@
                 <a href="#1018">1018</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">            FilterValue::Replace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16336,12 +16336,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;jsonpath&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">                space0,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16352,12 +16352,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16368,12 +16368,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                space1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16384,12 +16384,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">                new_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16399,13 +16399,13 @@
                 <a href="#1023">1023</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">            } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16416,12 +16416,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Nth { space0, n } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;replace&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16432,12 +16432,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;nth&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16448,12 +16448,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut old_value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16464,12 +16464,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.push(Token::Number(n.to_string()));</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space1.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16480,12 +16480,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut new_value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16495,13 +16495,13 @@
                 <a href="#1029">1029</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16511,13 +16511,13 @@
                 <a href="#1030">1030</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16533,7 +16533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;regex&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlEncode =&gt; vec![Token::FilterType(String::from(&quot;urlEncode&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16549,7 +16549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlDecode =&gt; vec![Token::FilterType(String::from(&quot;urlDecode&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16565,7 +16565,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut value.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16581,7 +16581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;split&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16591,13 +16591,13 @@
                 <a href="#1035">1035</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16607,13 +16607,13 @@
                 <a href="#1036">1036</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            FilterValue::Replace {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut sep.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16624,12 +16624,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                space0,</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16639,13 +16639,13 @@
                 <a href="#1038">1038</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                old_value,</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16656,12 +16656,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                space1,</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16672,12 +16672,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                new_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;toDate&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16688,12 +16688,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16704,12 +16704,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;replace&quot;))];</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16720,12 +16720,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16735,13 +16735,13 @@
                 <a href="#1044">1044</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut old_value.tokenize());</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16752,12 +16752,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space1.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToFloat =&gt; vec![Token::FilterType(String::from(&quot;toFloat&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16768,12 +16768,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut new_value.tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToInt =&gt; vec![Token::FilterType(String::from(&quot;toInt&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16784,12 +16784,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="3">
+                3
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16799,13 +16799,13 @@
                 <a href="#1048">1048</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;xpath&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16821,7 +16821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlEncode =&gt; vec![Token::FilterType(String::from(&quot;urlEncode&quot;))],</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16837,7 +16837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlDecode =&gt; vec![Token::FilterType(String::from(&quot;urlDecode&quot;))],</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16853,7 +16853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16863,13 +16863,13 @@
                 <a href="#1052">1052</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;split&quot;))];</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16877,294 +16877,6 @@
                 id="1053"
                 role="cell">
                 <a href="#1053">1053</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1054"
-                role="cell">
-                <a href="#1054">1054</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut sep.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1055"
-                role="cell">
-                <a href="#1055">1055</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1056"
-                role="cell">
-                <a href="#1056">1056</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1057"
-                role="cell">
-                <a href="#1057">1057</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1058"
-                role="cell">
-                <a href="#1058">1058</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;toDate&quot;))];</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1059"
-                role="cell">
-                <a href="#1059">1059</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1060"
-                role="cell">
-                <a href="#1060">1060</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1061"
-                role="cell">
-                <a href="#1061">1061</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1062"
-                role="cell">
-                <a href="#1062">1062</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1063"
-                role="cell">
-                <a href="#1063">1063</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToFloat =&gt; vec![Token::FilterType(String::from(&quot;toFloat&quot;))],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1064"
-                role="cell">
-                <a href="#1064">1064</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToInt =&gt; vec![Token::FilterType(String::from(&quot;toInt&quot;))],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1065"
-                role="cell">
-                <a href="#1065">1065</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1066"
-                role="cell">
-                <a href="#1066">1066</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;xpath&quot;))];</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1067"
-                role="cell">
-                <a href="#1067">1067</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1068"
-                role="cell">
-                <a href="#1068">1068</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1069"
-                role="cell">
-                <a href="#1069">1069</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1070"
-                role="cell">
-                <a href="#1070">1070</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1071"
-                role="cell">
-                <a href="#1071">1071</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -17178,9 +16890,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="1072"
+                id="1054"
                 role="cell">
-                <a href="#1072">1072</a>
+                <a href="#1054">1054</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -17194,9 +16906,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="1073"
+                id="1055"
                 role="cell">
-                <a href="#1073">1073</a>
+                <a href="#1055">1055</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -17211,7 +16923,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-06 20:30</p>
+                <p class="heading">Date: 2024-07-07 08:08</p>
             </div>
         </footer>
     </body>
