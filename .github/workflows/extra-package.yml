@@ -93,7 +93,7 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.0.0
+        uses: docker/setup-qemu-action@v3.1.0
       - name: Create package
         uses: addnab/docker-run-action@v3
         with:
@@ -129,7 +129,7 @@ jobs:
               bin/release/sha256sum.sh --write target/upload/hurl-$VERSION-aarch64-unknown-linux-gnu.tar.gz
             echo "::endgroup::"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4.3.4
         with:
           name: release-generic-linux-aarch64-artifacts
           path: target/upload/*
