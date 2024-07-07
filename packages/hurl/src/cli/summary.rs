@@ -75,7 +75,7 @@ pub mod tests {
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             };
             HurlRun {
@@ -83,7 +83,7 @@ pub mod tests {
                 filename: Input::new(""),
                 hurl_result: HurlResult {
                     entries: vec![dummy_entry; entries_count],
-                    time_in_ms: 0,
+                    duration: Duration::from_millis(0),
                     success,
                     cookies: vec![],
                     timestamp: 1,

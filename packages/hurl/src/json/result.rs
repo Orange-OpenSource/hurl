@@ -211,7 +211,7 @@ impl HurlResultJson {
             filename: filename.to_string(),
             entries,
             success: result.success,
-            time: result.time_in_ms as u64,
+            time: result.duration.as_millis() as u64,
             cookies,
         })
     }
@@ -245,7 +245,7 @@ impl EntryResultJson {
             calls,
             captures,
             asserts,
-            time: entry.time_in_ms as u64,
+            time: entry.transfer_duration.as_millis() as u64,
         })
     }
 }

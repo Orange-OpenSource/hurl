@@ -284,12 +284,12 @@ pub fn run_entries(
         }
     }
 
-    let time_in_ms = start.elapsed().as_millis();
+    let duration = start.elapsed();
     let cookies = http_client.get_cookie_storage();
     let success = is_success(&entries_result);
     HurlResult {
         entries: entries_result,
-        time_in_ms,
+        duration,
         success,
         cookies,
         timestamp,

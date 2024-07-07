@@ -33,7 +33,7 @@ impl Testcase {
     pub fn from(hurl_result: &HurlResult, content: &str, filename: &Input) -> Testcase {
         let id = filename.to_string();
         let name = filename.to_string();
-        let time_in_ms = hurl_result.time_in_ms;
+        let time_in_ms = hurl_result.duration.as_millis();
         let mut failures = vec![];
         let mut errors = vec![];
 
@@ -92,6 +92,7 @@ mod test {
     use crate::http::HttpError;
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
+    use std::time::Duration;
 
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
@@ -101,7 +102,7 @@ mod test {
     fn test_create_testcase_success() {
         let hurl_result = HurlResult {
             entries: vec![],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -137,10 +138,10 @@ HTTP/1.0 200
                     },
                     true,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -179,10 +180,10 @@ HTTP/1.0 200
                     }),
                     false,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,

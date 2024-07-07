@@ -34,7 +34,7 @@ fn simple_sample() {
         assert!(result.success);
         assert_eq!(result.cookies.len(), 0);
         assert_eq!(result.entries.len(), 1);
-        assert!(result.time_in_ms < 1000);
+        assert!(result.duration.as_millis() < 1000);
     }
 
     fn check_entry(entry: &EntryResult) {
@@ -43,7 +43,7 @@ fn simple_sample() {
         assert_eq!(entry.captures.len(), 1);
         assert_eq!(entry.asserts.len(), 3); // HTTP version + status code + implicit body
         assert_eq!(entry.errors.len(), 0);
-        assert!(entry.time_in_ms < 1000);
+        assert!(entry.transfer_duration.as_millis() < 1000);
         assert!(!entry.compressed);
     }
 

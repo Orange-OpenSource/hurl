@@ -16,7 +16,6 @@
  *
  */
 use std::collections::HashMap;
-use std::time::Duration;
 
 use hurl_core::ast::*;
 
@@ -107,12 +106,8 @@ pub fn run(
     let call = calls.last().unwrap();
     let http_response = &call.response;
 
-    // `time_in_ms` represent the network time of calls, not including assert processing.
-    let time_in_ms = calls
-        .iter()
-        .map(|call| call.timings.total)
-        .sum::<Duration>()
-        .as_millis();
+    // `transfer_duration` represent the network time of calls, not including assert processing.
+    let transfer_duration = calls.iter().map(|call| call.timings.total).sum();
 
     // We proceed asserts and captures in this order:
     // 1. first, check implicit assert on status and version. If KO, test is failed
@@ -136,7 +131,7 @@ pub fn run(
                     captures: vec![],
                     asserts,
                     errors,
-                    time_in_ms,
+                    transfer_duration,
                     compressed,
                 };
             }
@@ -156,7 +151,7 @@ pub fn run(
                         captures: vec![],
                         asserts,
                         errors: vec![e],
-                        time_in_ms,
+                        transfer_duration,
                         compressed,
                     };
                 }
@@ -189,7 +184,7 @@ pub fn run(
         captures,
         asserts,
         errors,
-        time_in_ms,
+        transfer_duration,
         compressed,
     }
 }

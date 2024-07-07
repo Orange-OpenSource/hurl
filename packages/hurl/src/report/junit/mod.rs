@@ -149,6 +149,7 @@ mod tests {
     use crate::http::HttpError;
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
+    use std::time::Duration;
 
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
@@ -162,7 +163,7 @@ mod tests {
         let mut testcases = vec![];
         let res = HurlResult {
             entries: vec![],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -184,10 +185,10 @@ mod tests {
                     },
                     true,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -210,10 +211,10 @@ mod tests {
                     }),
                     false,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,

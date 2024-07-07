@@ -17,6 +17,7 @@
  */
 use hurl_core::ast::SourceInfo;
 use hurl_core::reader::Pos;
+use std::time::Duration;
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::RunnerError;
@@ -31,8 +32,8 @@ use crate::util::term::Stdout;
 pub struct HurlResult {
     /// The entries result for this run.
     pub entries: Vec<EntryResult>,
-    /// Duration in milliseconds of the run.
-    pub time_in_ms: u128,
+    /// Total duration of the run, including asserts and results computation.
+    pub duration: Duration,
     /// `true` if the run is successful, `false` if there has been runtime or asserts errors.
     pub success: bool,
     /// The list of cookies at the end of the run.
@@ -84,7 +85,9 @@ pub struct EntryResult {
     pub asserts: Vec<AssertResult>,
     /// List of errors.
     pub errors: Vec<RunnerError>,
-    pub time_in_ms: u128,
+
+    /// Effective duration of all the HTTP transfers, excluding asserts and captures processing.
+    pub transfer_duration: Duration,
     /// The entry has been executed with `--compressed` option:
     /// server is requested to send compressed response, and the response should be uncompressed
     /// when outputted on stdout.
@@ -100,7 +103,7 @@ impl Default for EntryResult {
             captures: vec![],
             asserts: vec![],
             errors: vec![],
-            time_in_ms: 0,
+            transfer_duration: Duration::from_millis(0),
             compressed: false,
         }
     }

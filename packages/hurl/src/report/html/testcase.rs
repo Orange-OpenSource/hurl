@@ -46,7 +46,7 @@ impl Testcase {
         Testcase {
             id: id.to_string(),
             filename: filename.to_string(),
-            time_in_ms: hurl_result.time_in_ms,
+            time_in_ms: hurl_result.duration.as_millis(),
             success: hurl_result.success,
             errors,
             timestamp: hurl_result.timestamp,

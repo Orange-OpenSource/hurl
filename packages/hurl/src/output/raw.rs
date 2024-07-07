@@ -125,6 +125,7 @@ mod tests {
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
     use std::str::FromStr;
+    use std::time::Duration;
 
     fn default_response() -> Response {
         Response {
@@ -164,7 +165,7 @@ mod tests {
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
                 EntryResult {
@@ -183,7 +184,7 @@ mod tests {
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
                 EntryResult {
@@ -210,11 +211,11 @@ mod tests {
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
             ],
-            time_in_ms: 100,
+            duration: Duration::from_millis(100),
             success: true,
             cookies: vec![],
             timestamp: 0,

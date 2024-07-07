@@ -118,7 +118,7 @@ impl ParProgress {
             .iter()
             .flat_map(|r| &r.calls)
             .count();
-        let duration = result.hurl_result.time_in_ms;
+        let duration = result.hurl_result.duration.as_millis();
         let filename = result.job.filename.to_string();
 
         let mut message = StyledString::new();
