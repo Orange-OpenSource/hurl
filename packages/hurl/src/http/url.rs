@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::http::{HttpError, Param};
 use std::fmt;
 use std::str::FromStr;
+
+use crate::http::{HttpError, Param};
 
 /// A parsed URL.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -86,9 +87,10 @@ impl fmt::Display for Url {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::Url;
     use crate::http::Param;
-    use std::str::FromStr;
 
     #[test]
     fn parse_url_ok() {

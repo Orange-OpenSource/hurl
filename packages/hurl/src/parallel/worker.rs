@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use std::fmt;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
-use std::thread;
+use std::{fmt, thread};
 
 use hurl_core::parser;
 

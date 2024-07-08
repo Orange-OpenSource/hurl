@@ -16,10 +16,11 @@
  *
  */
 
-use regex::Regex;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+
+use regex::Regex;
 
 use super::Testcase;
 use crate::report::ReportError;

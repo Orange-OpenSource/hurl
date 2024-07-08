@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+
 use crate::report::junit::xml::Element;
 use crate::runner::{HurlResult, Input};
-use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -89,11 +90,12 @@ impl Testcase {
 
 #[cfg(test)]
 mod test {
-    use crate::http::HttpError;
-    use hurl_core::ast::SourceInfo;
-    use hurl_core::reader::Pos;
     use std::time::Duration;
 
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+
+    use crate::http::HttpError;
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
     use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};

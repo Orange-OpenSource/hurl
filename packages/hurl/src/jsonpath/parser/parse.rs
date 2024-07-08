@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
+use hurl_core::combinator::{choice, zero_or_more};
+use hurl_core::reader::Reader;
+
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Query, Selector, Slice};
 use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
 use crate::jsonpath::parser::primitives::{
     integer, key_name, key_path, literal, natural, number, string_value, try_literal, whitespace,
 };
-use hurl_core::combinator::{choice, zero_or_more};
-use hurl_core::reader::Reader;
 
 pub fn parse(s: &str) -> Result<Query, ParseError> {
     let mut reader = Reader::new(s);
@@ -278,10 +279,11 @@ fn equal_string_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc
 
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath::ast::Number;
     use hurl_core::reader::Pos;
+
     // tests from https://cburgmer.github.io/json-path-comparison
     use super::*;
+    use crate::jsonpath::ast::Number;
 
     #[test]
     pub fn test_try_left_bracket() {

@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::text::{Format, Style, StyledString};
 use std::time::{Duration, Instant};
+
+use hurl_core::text::{Format, Style, StyledString};
 
 use crate::parallel::job::JobResult;
 use crate::parallel::runner::WorkerState;
@@ -320,15 +321,17 @@ fn progress_bar(index: usize, count: usize) -> String {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+    use std::sync::{mpsc, Arc, Mutex};
+
+    use hurl_core::text::Format;
+
     use crate::parallel::job::Job;
     use crate::parallel::progress::{build_progress, progress_bar};
     use crate::parallel::runner::WorkerState;
     use crate::parallel::worker::{Worker, WorkerId};
     use crate::runner::{Input, RunnerOptionsBuilder};
     use crate::util::logger::LoggerOptionsBuilder;
-    use hurl_core::text::Format;
-    use std::collections::HashMap;
-    use std::sync::{mpsc, Arc, Mutex};
 
     fn new_workers() -> (Worker, Worker, Worker, Worker, Worker) {
         let (tx_out, _) = mpsc::channel();

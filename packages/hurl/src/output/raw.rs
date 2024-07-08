@@ -19,7 +19,6 @@ use std::cmp::min;
 use std::io::IsTerminal;
 
 use crate::output::error::OutputErrorKind;
-
 use crate::output::OutputError;
 use crate::runner::{HurlResult, Output};
 use crate::util::term::Stdout;
@@ -118,14 +117,16 @@ fn is_binary(bytes: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+    use std::time::Duration;
+
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
-    use hurl_core::ast::SourceInfo;
-    use hurl_core::reader::Pos;
-    use std::str::FromStr;
-    use std::time::Duration;
 
     fn default_response() -> Response {
         Response {

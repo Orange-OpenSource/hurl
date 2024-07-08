@@ -40,11 +40,13 @@ pub fn eval_html_escape(
 
 #[cfg(test)]
 pub mod tests {
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use std::collections::HashMap;
+
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
-    use std::collections::HashMap;
+
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::Value;
 
     #[test]
     pub fn eval_filter_html_escape() {

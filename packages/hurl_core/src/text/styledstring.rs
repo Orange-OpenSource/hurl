@@ -16,8 +16,9 @@
  *
  */
 
-use crate::text::style::{Color, Style};
 use colored::Colorize;
+
+use crate::text::style::{Color, Style};
 
 /// A String with style
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

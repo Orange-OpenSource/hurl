@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::io;
+
 use crate::runner::{HurlResult, Input, Output};
 use crate::util::term::Stdout;
-use std::io;
 
 /// Writes the `hurl_result` JSON representation to the file `filename_out`.
 ///

@@ -936,8 +936,9 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{AssertResult, *};
     use std::path::Path;
+
+    use super::{AssertResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {

@@ -17,7 +17,6 @@
  */
 
 use chrono::Utc;
-
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
@@ -41,14 +40,15 @@ pub fn eval_days_after_now(
 
 #[cfg(test)]
 pub mod tests {
-    use crate::runner::filter::eval::eval_filter;
+    use std::collections::HashMap;
+
     use chrono::offset::Utc;
     use chrono::Duration;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
-    use std::collections::HashMap;
 
     use super::*;
+    use crate::runner::filter::eval::eval_filter;
 
     #[test]
     pub fn eval_filter_days_after_before_now() {

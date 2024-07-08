@@ -46,11 +46,13 @@ pub fn eval_nth(
 
 #[cfg(test)]
 pub mod tests {
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
+    use std::collections::HashMap;
+
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace};
     use hurl_core::reader::Pos;
-    use std::collections::HashMap;
+
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
     #[test]
     pub fn eval_filter_nth() {

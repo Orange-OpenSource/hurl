@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::typing::Count;
 use std::collections::HashMap;
+
+use hurl_core::typing::Count;
 
 use crate::runner::{HurlResult, Input, RunnerOptions, Value};
 use crate::util::logger::LoggerOptions;
@@ -152,11 +153,13 @@ impl Iterator for JobQueue<'_> {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
+    use hurl_core::typing::Count;
+
     use crate::parallel::job::{Job, JobQueue};
     use crate::runner::{Input, RunnerOptionsBuilder};
     use crate::util::logger::LoggerOptionsBuilder;
-    use hurl_core::typing::Count;
-    use std::collections::HashMap;
 
     fn new_job(file: &str, index: usize) -> Job {
         let variables = HashMap::new();

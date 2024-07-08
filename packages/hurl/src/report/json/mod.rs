@@ -33,12 +33,13 @@
 //! ```
 mod deserialize;
 
-use crate::report::ReportError;
-use crate::runner::{HurlResult, Input};
 use std::fs::File;
 use std::io;
 use std::io::Write;
 use std::path::Path;
+
+use crate::report::ReportError;
+use crate::runner::{HurlResult, Input};
 
 /// Exports a list of [`Testcase`] to a JSON file `filename`.
 ///

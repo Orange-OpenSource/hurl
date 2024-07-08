@@ -18,10 +18,6 @@
 use std::cmp::min;
 use std::path::Path;
 
-use crate::cli::options::CliOptions;
-use crate::cli::CliError;
-use crate::{cli, HurlRun};
-
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::runner::{HurlResult, Input, Output};
@@ -29,6 +25,10 @@ use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::typing::Count;
+
+use crate::cli::options::CliOptions;
+use crate::cli::CliError;
+use crate::{cli, HurlRun};
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or
@@ -284,9 +284,10 @@ impl Iterator for InputQueue<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::run::InputQueue;
     use hurl::runner::Input;
     use hurl_core::typing::Count;
+
+    use crate::run::InputQueue;
 
     #[test]
     fn input_queue_is_finite() {

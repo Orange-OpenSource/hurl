@@ -17,7 +17,6 @@
  */
 
 use chrono::Utc;
-
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};

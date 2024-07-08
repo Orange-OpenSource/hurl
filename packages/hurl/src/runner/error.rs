@@ -382,13 +382,14 @@ fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> Sty
 
 #[cfg(test)]
 mod tests {
-    use crate::http::HttpError;
-    use crate::runner::diff::diff;
-    use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::SourceInfo;
     use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
     use hurl_core::reader::Pos;
     use hurl_core::text::Format;
+
+    use crate::http::HttpError;
+    use crate::runner::diff::diff;
+    use crate::runner::{RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_error_timeout() {

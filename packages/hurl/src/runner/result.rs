@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::time::Duration;
+
 use hurl_core::ast::SourceInfo;
 use hurl_core::reader::Pos;
-use std::time::Duration;
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::RunnerError;

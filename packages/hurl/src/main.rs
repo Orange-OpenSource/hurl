@@ -23,13 +23,13 @@ use std::path::Path;
 use std::time::Instant;
 use std::{env, process, thread};
 
-use crate::cli::{BaseLogger, CliError};
 use colored::control;
 use hurl::report::{html, json, junit, tap};
 use hurl::runner;
 use hurl::runner::{HurlResult, Input};
 
 use crate::cli::options::{CliOptions, CliOptionsError};
+use crate::cli::{BaseLogger, CliError};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;

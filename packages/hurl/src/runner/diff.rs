@@ -78,8 +78,9 @@ fn get_hunk_lines(ops: &[DiffOp]) -> (usize, usize) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use hurl_core::text::{Style, StyledString};
+
+    use super::*;
 
     fn old_string() -> String {
         r#"{

@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::typing::Count;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
+
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::typing::Count;
 
 use crate::output;
 use crate::parallel::error::JobError;

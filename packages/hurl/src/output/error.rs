@@ -16,10 +16,11 @@
  *
  */
 
-use crate::http::HttpError;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::DisplaySourceError;
 use hurl_core::text::{Style, StyledString};
+
+use crate::http::HttpError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OutputError {

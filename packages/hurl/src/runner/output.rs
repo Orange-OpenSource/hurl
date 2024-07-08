@@ -20,10 +20,11 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::{fmt, io};
 
+use hurl_core::ast::SourceInfo;
+
 use crate::runner::{RunnerError, RunnerErrorKind};
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
-use hurl_core::ast::SourceInfo;
 
 /// Represents the output of write operation: can be either a file or standard output.
 #[derive(Clone, Debug, PartialEq, Eq)]

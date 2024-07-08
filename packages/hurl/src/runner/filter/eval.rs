@@ -19,6 +19,7 @@ use std::collections::HashMap;
 
 use hurl_core::ast::{Filter, FilterValue};
 
+use super::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
 use crate::runner::filter::decode::eval_decode;
@@ -36,10 +37,7 @@ use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::xpath::eval_xpath;
-
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
-
-use super::count::eval_count;
 
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
@@ -120,11 +118,13 @@ pub fn eval_filter(
 
 #[cfg(test)]
 pub mod tests {
-    use crate::runner::filter::eval::eval_filters;
-    use crate::runner::{Number, Value};
+    use std::collections::HashMap;
+
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
-    use std::collections::HashMap;
+
+    use crate::runner::filter::eval::eval_filters;
+    use crate::runner::{Number, Value};
 
     #[test]
     pub fn test_filters() {

@@ -15,11 +15,13 @@
  * limitations under the License.
  *
  */
-use crate::report::ReportError;
-use crate::runner::HurlResult;
-use serde_json::{Error, Value};
 use std::fs;
 use std::path::Path;
+
+use serde_json::{Error, Value};
+
+use crate::report::ReportError;
+use crate::runner::HurlResult;
 
 impl From<Error> for ReportError {
     fn from(value: Error) -> Self {

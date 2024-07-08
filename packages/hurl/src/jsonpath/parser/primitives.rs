@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use hurl_core::reader::Reader;
+
 use crate::jsonpath::ast::Number;
 use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
-use hurl_core::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
     let start = reader.cursor();
@@ -204,8 +205,9 @@ pub fn whitespace(reader: &mut Reader) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use hurl_core::reader::Pos;
+
+    use super::*;
 
     #[test]
     fn test_natural() {

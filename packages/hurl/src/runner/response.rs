@@ -369,10 +369,11 @@ pub fn eval_captures(
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::reader::Pos;
+
     use self::super::super::{assert, capture};
     use super::*;
     use crate::runner::Number;
-    use hurl_core::reader::Pos;
 
     pub fn user_response() -> Response {
         let whitespace = Whitespace {

@@ -48,13 +48,15 @@ pub fn eval_replace(
 #[cfg(test)]
 pub mod tests {
 
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use std::collections::HashMap;
+
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-    use std::collections::HashMap;
+
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::Value;
 
     #[test]
     pub fn eval_filter_replace() {

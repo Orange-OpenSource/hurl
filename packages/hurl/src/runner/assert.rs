@@ -210,9 +210,10 @@ pub fn eval_explicit_assert(
 
 #[cfg(test)]
 pub mod tests {
+    use std::path::Path;
+
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
-    use std::path::Path;
 
     use super::super::query;
     use super::*;

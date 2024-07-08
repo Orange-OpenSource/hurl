@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::HurlRun;
 use std::time::Duration;
+
+use crate::HurlRun;
 
 /// Returns the text summary of this Hurl `runs`.
 ///

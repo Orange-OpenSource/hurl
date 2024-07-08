@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use std::str::FromStr;
+
 use crate::http::{
     Header, HeaderVec, HttpVersion, Method, Param, RequestCookie, RequestSpec, Response, Url,
 };
-use std::str::FromStr;
 
 /// Some Request Response to be used by tests
 

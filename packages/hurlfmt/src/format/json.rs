@@ -760,8 +760,9 @@ impl ToJson for Comment {
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use hurl_core::reader::Pos;
+
+    use super::*;
 
     fn whitespace() -> Whitespace {
         Whitespace {

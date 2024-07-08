@@ -17,11 +17,12 @@
  */
 use std::path::PathBuf;
 
-use crate::linter;
 use colored::*;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::parser;
 use hurl_core::text::{Format, Style, StyledString};
+
+use crate::linter;
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
     move |message| log_verbose(verbose, message)

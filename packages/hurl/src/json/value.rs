@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::str::FromStr;
+
 use base64::engine::general_purpose;
 use base64::Engine;
-use std::str::FromStr;
 
 use crate::runner::{Number, Value};
 

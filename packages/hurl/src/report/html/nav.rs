@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
-use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -106,10 +107,11 @@ fn html_escape(text: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::report::html::nav::error_to_html;
-    use crate::runner::{RunnerError, RunnerErrorKind};
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
+
+    use crate::report::html::nav::error_to_html;
+    use crate::runner::{RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_error_html() {

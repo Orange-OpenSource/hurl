@@ -26,17 +26,17 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use clap::ArgMatches;
+pub use error::CliOptionsError;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
 use hurl::runner::{Input, Output};
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
+use hurl_core::typing::Count;
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
-pub use error::CliOptionsError;
-use hurl_core::typing::Count;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]

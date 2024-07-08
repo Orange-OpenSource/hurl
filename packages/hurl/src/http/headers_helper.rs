@@ -16,10 +16,11 @@
  *
  */
 
+use encoding::EncodingRef;
+
 use crate::http::header::CONTENT_ENCODING;
 use crate::http::response_decoding::ContentEncoding;
 use crate::http::{mimetype, HeaderVec, HttpError, CONTENT_TYPE};
-use encoding::EncodingRef;
 
 impl HeaderVec {
     /// Returns optional Content-type header value.

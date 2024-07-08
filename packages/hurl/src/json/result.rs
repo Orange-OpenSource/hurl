@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-use chrono::SecondsFormat;
-use hurl_core::ast::SourceInfo;
-use hurl_core::error::{DisplaySourceError, OutputFormat};
-use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+
+use chrono::SecondsFormat;
+use hurl_core::ast::SourceInfo;
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::http::{

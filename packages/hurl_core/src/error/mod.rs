@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::cmp::max;
+
 use crate::ast::SourceInfo;
 use crate::text::{Format, Style, StyledString};
-use std::cmp::max;
 
 pub trait DisplaySourceError {
     fn source_info(&self) -> SourceInfo;
