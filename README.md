@@ -251,6 +251,7 @@ Table of Contents
       * [Building From Sources](#building-from-sources)
          * [Build on Linux](#build-on-linux)
             * [Debian based distributions](#debian-based-distributions)
+            * [Fedora based distributions](#fedora-based-distributions)
             * [Red Hat based distributions](#red-hat-based-distributions)
             * [Arch based distributions](#arch-based-distributions)
             * [Alpine based distributions](#alpine-based-distributions)
@@ -1382,7 +1383,7 @@ $ cargo install hurl
 $ conda install -c conda-forge hurl
 ```
 
-Hurl can also be installed with [`conda-forge`] powered package manager like [`pixi`]. 
+Hurl can also be installed with [`conda-forge`] powered package manager like [`pixi`].
 
 ### Docker
 
@@ -1404,11 +1405,16 @@ Hurl sources are available in [GitHub].
 
 Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
 
-
 #### Debian based distributions
 
 ```shell
 $ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+```
+
+#### Fedora based distributions
+
+```shell
+$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel
 ```
 
 #### Red Hat based distributions
@@ -1426,7 +1432,7 @@ $ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2
 #### Alpine based distributions
 
 ```shell
-$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev 
+$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev
 ```
 
 ### Build on macOS
