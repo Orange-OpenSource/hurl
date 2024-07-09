@@ -253,7 +253,7 @@ fn log_request(
 ) {
     logger.debug("");
     logger.debug_important("Cookie store:");
-    for cookie in &http_client.get_cookie_storage() {
+    for cookie in &http_client.cookie_storage() {
         logger.debug(&cookie.to_string());
     }
 

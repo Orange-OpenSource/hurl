@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
 use std::str;
 use std::str::FromStr;
 use std::time::Instant;
@@ -57,6 +58,8 @@ pub struct Client {
     /// HTTP version support
     http2: bool,
     http3: bool,
+    /// Certificates cache to get SSL certificates on reused libcurl connections.
+    certificates: HashMap<i64, Certificate>,
 }
 
 /// Represents the state of the HTTP client.
@@ -94,6 +97,7 @@ impl Client {
             state: ClientState::default(),
             http2: version.feature_http2(),
             http3: version.feature_http3(),
+            certificates: HashMap::new(),
         }
     }
 
@@ -116,7 +120,7 @@ impl Client {
         loop {
             let call = self.execute(&request_spec, &options, logger)?;
             let request_url = call.request.url.clone();
-            let redirect_url = self.get_follow_location(&request_url, &call.response)?;
+            let redirect_url = self.follow_location(&request_url, &call.response)?;
             let status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
@@ -132,7 +136,7 @@ impl Client {
                     return Err(HttpError::TooManyRedirect);
                 }
             }
-            let redirect_method = get_redirect_method(status, request_spec.method);
+            let redirect_method = redirect_method(status, request_spec.method);
             let mut headers = request_spec.headers;
 
             // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
@@ -273,17 +277,8 @@ impl Client {
         };
         let headers = self.parse_response_headers(&response_headers);
         let length = response_body.len();
-        let certificate = if let Some(cert_info) = easy_ext::get_certinfo(&self.handle)? {
-            match Certificate::try_from(cert_info) {
-                Ok(value) => Some(value),
-                Err(message) => {
-                    logger.error(&format!("can not parse certificate - {message}"));
-                    None
-                }
-            }
-        } else {
-            None
-        };
+
+        let certificate = self.cert_info(logger)?;
         let duration = start.elapsed();
         let stop_dt = start_dt + duration;
         let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
@@ -688,7 +683,7 @@ impl Client {
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
     /// 3. a header Location
-    fn get_follow_location(
+    fn follow_location(
         &mut self,
         request_url: &Url,
         response: &Response,
@@ -705,7 +700,7 @@ impl Client {
     }
 
     /// Returns cookie storage.
-    pub fn get_cookie_storage(&mut self) -> Vec<Cookie> {
+    pub fn cookie_storage(&mut self) -> Vec<Cookie> {
         let list = self.handle.cookies().unwrap();
         let mut cookies = vec![];
         for cookie in list.iter() {
@@ -752,7 +747,7 @@ impl Client {
         // after all the options
         let url = arguments.pop().unwrap();
 
-        let cookies = all_cookies(&self.get_cookie_storage(), request_spec);
+        let cookies = all_cookies(&self.cookie_storage(), request_spec);
         if !cookies.is_empty() {
             arguments.push("--cookie".to_string());
             arguments.push(format!(
@@ -783,10 +778,43 @@ impl Client {
         arguments.push(url);
         arguments.join(" ")
     }
+
+    /// Returns the SSL certificates information associated to this call.
+    ///
+    /// Certificate information are cached by libcurl handle connection id, in order to get
+    /// SSL information even if libcurl connection is reused (see <https://github.com/Orange-OpenSource/hurl/issues/3031>).
+    fn cert_info(&mut self, logger: &mut Logger) -> Result<Option<Certificate>, HttpError> {
+        if let Some(cert_info) = easy_ext::cert_info(&self.handle)? {
+            match Certificate::try_from(cert_info) {
+                Ok(value) => {
+                    // We try to get the connection id for the libcurl handle and cache the
+                    // certificate. Getting a connection id can fail on older libcurl version, we
+                    // don't cache the certificate in these cases.
+                    if let Ok(conn_id) = easy_ext::conn_id(&self.handle) {
+                        self.certificates.insert(conn_id, value.clone());
+                    }
+                    Ok(Some(value))
+                }
+                Err(message) => {
+                    logger.error(&format!("can not parse certificate - {message}"));
+                    Ok(None)
+                }
+            }
+        } else {
+            // We query the cache to see if we have a cached certificate for this connection;
+            // As libcurl 8.2.0+ exposes the connection id through `CURLINFO_CONN_ID`, we don't
+            // raise an error if we can't get a connection id (older version than 8.2.0), and return
+            // a `None` certificate.
+            match easy_ext::conn_id(&self.handle) {
+                Ok(conn_id) => Ok(self.certificates.get(&conn_id).cloned()),
+                Err(_) => Ok(None),
+            }
+        }
+    }
 }
 
 /// Returns the method used for redirecting a request/response with `response_status`.
-fn get_redirect_method(response_status: u32, original_method: Method) -> Method {
+fn redirect_method(response_status: u32, original_method: Method) -> Method {
     // This replicates curl's behavior
     match response_status {
         301..=303 => Method("GET".to_string()),
@@ -1037,7 +1065,7 @@ mod tests {
         ];
         for (status, original, redirected) in data {
             assert_eq!(
-                get_redirect_method(status, Method(original.to_string())),
+                redirect_method(status, Method(original.to_string())),
                 Method(redirected.to_string())
             );
         }
