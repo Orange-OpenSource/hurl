@@ -20,7 +20,7 @@ vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "6.0.0"
 chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
-clap = { version = "4.5.8", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.5.9", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.46"
 curl-sys = "0.4.73"
@@ -42,7 +42,7 @@ url = "2.5.2"
 xml-rs = { version = "0.8.20" }
 lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.9.1", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.10.0", features = ["v4" , "fast-rng"] }
 similar = "2.5.0"
 terminal_size = "0.3.0"
 
@@ -53,7 +53,7 @@ termion = "4.0.2"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.105"
+cc = "1.0.106"
 
 [lints]
 workspace = true
