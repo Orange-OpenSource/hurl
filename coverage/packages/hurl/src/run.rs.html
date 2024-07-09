@@ -373,7 +373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::cli::options::CliOptions;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl::parallel::job::{Job, JobResult};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::cli::CliError;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl::parallel::runner::ParallelRunner;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::{cli, HurlRun};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl::runner::{HurlResult, Input, Output};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use hurl::util::term::{Stdout, WriteMode};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::parallel::job::{Job, JobResult};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl::{output, parallel, runner};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::parallel::runner::ParallelRunner;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::error::{DisplaySourceError, OutputFormat};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::runner::{HurlResult, Input, Output};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -485,7 +485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::util::term::{Stdout, WriteMode};</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::{output, parallel, runner};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::cli::options::CliOptions;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::error::{DisplaySourceError, OutputFormat};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::cli::CliError;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::Count;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::{cli, HurlRun};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4629,7 +4629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::run::InputQueue;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl::runner::Input;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4645,7 +4645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl::runner::Input;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::Count;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4661,7 +4661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::Count;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4677,7 +4677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    use crate::run::InputQueue;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4693,7 +4693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4709,7 +4709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn input_queue_is_finite() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4725,7 +4725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let files = [Input::new(&quot;a&quot;), Input::new(&quot;b&quot;), Input::new(&quot;c&quot;)];</pre>
+                <pre class="has-background-white py-0 px-2">    fn input_queue_is_finite() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4741,7 +4741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let files = [Input::new(&quot;a&quot;), Input::new(&quot;b&quot;), Input::new(&quot;c&quot;)];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4757,7 +4757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Finite(4));</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4773,7 +4773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Finite(4));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4789,7 +4789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4805,7 +4805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4837,7 +4837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4853,7 +4853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4869,7 +4869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4885,7 +4885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4901,7 +4901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4917,7 +4917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4933,7 +4933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4949,7 +4949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;b&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4965,7 +4965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), None);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;c&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4981,7 +4981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), None);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4997,7 +4997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5013,7 +5013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5029,7 +5029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn input_queue_is_infinite() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5045,7 +5045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let files = [Input::new(&quot;a&quot;)];</pre>
+                <pre class="has-background-white py-0 px-2">    fn input_queue_is_infinite() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5061,7 +5061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let files = [Input::new(&quot;a&quot;)];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5077,7 +5077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Infinite);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5093,7 +5093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
+                <pre class="has-background-white py-0 px-2">        let mut queue = InputQueue::new(&amp;files, Count::Infinite);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5173,7 +5173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; etc...</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(queue.next(), Some(Input::new(&quot;a&quot;)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5189,7 +5189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; etc...</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5205,13 +5205,29 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="324"
+                role="cell">
+                <a href="#324">324</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-07-08 08:09</p>
+                <p class="heading">Date: 2024-07-09 08:09</p>
             </div>
         </footer>
     </body>
