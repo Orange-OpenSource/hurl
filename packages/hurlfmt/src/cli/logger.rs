@@ -18,7 +18,6 @@
 use std::path::PathBuf;
 
 use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::parser;
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::linter;
@@ -44,21 +43,29 @@ impl Logger {
         s.push_with(message, Style::new().bold());
         eprintln!("{}", s.to_string(self.format));
     }
-}
 
-pub fn make_logger_parser_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<PathBuf>,
-) -> impl Fn(&parser::ParseError, bool) {
-    move |error: &parser::ParseError, warning: bool| {
-        let filename = match &filename {
-            None => "-".to_string(),
-            Some(value) => value.display().to_string(),
-        };
-        let content = lines.join("\n");
-        let message = error.to_string(&filename, &content, None, OutputFormat::Terminal(color));
-        eprintln!("{}: {}\n", get_prefix(warning, color), message);
+    /// Display a Hurl parsing error.
+    pub fn error_parsing_rich<E: DisplaySourceError>(
+        &mut self,
+        content: &str,
+        filename: &str,
+        error: &E,
+    ) {
+        // FIXME: peut-être qu'on devrait faire rentrer le prefix `error:` qui est
+        // fournit par `self.error_rich` dans la méthode `error.to_string`
+        let message = error.to_string(
+            filename,
+            content,
+            None,
+            OutputFormat::Terminal(self.format == Format::Ansi),
+        );
+
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push(&message);
+        s.push("\n");
+        eprintln!("{}", s.to_string(self.format));
     }
 }
 

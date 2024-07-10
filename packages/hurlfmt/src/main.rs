@@ -46,16 +46,16 @@ fn main() {
         },
     };
 
-    let logger = Logger::new(opts.color);
-
+    let mut logger = Logger::new(opts.color);
     let mut output_all = String::new();
+
     for input_file in &opts.input_files {
         match cli::read_to_string(input_file) {
-            Ok(contents) => {
+            Ok(content) => {
                 // parse input
                 let input = match opts.input_format {
-                    InputFormat::Hurl => contents.to_string(),
-                    InputFormat::Curl => match curl::parse(&contents) {
+                    InputFormat::Hurl => content.to_string(),
+                    InputFormat::Curl => match curl::parse(&content) {
                         Ok(s) => s,
                         Err(e) => {
                             eprintln!("{}", e);
@@ -69,17 +69,12 @@ fn main() {
                     .split(&input)
                     .collect();
                 let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
-                let log_parser_error = cli::make_logger_parser_error(
-                    lines.clone(),
-                    opts.color,
-                    Some(input_path.clone()),
-                );
                 let log_linter_error =
                     cli::make_logger_linter_error(lines, opts.color, Some(input_path));
 
                 match parser::parse_hurl_file(&input) {
                     Err(e) => {
-                        log_parser_error(&e, false);
+                        logger.error_parsing_rich(&content, input_file, &e);
                         process::exit(EXIT_INVALID_INPUT);
                     }
                     Ok(hurl_file) => {

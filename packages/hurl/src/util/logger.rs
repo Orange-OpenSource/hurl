@@ -273,6 +273,8 @@ impl Logger {
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
+        // FIXME: peut-être qu'on devrait faire rentrer le prefix `error:` qui est
+        // fournit par `self.error_rich` dans la méthode `error.to_string`
         let message = error.to_string(
             &self.filename,
             content,
