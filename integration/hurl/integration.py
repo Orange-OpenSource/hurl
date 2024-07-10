@@ -31,7 +31,7 @@ def main():
     for f in sorted(script_files):
         test_script.test(f)
 
-    print("test integration hurl ok!")
+    print("Test integration hurl ok!")
 
 
 if __name__ == "__main__":

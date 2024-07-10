@@ -21,10 +21,12 @@ use std::process;
 
 use hurl_core::parser;
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
+use hurlfmt::cli::Logger;
 use hurlfmt::{cli, curl, format, linter};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR: i32 = 1;
+const EXIT_INVALID_INPUT: i32 = 2;
 
 /// Executes `hurlfmt` entry point.
 fn main() {
@@ -44,7 +46,8 @@ fn main() {
         },
     };
 
-    let log_error_message = cli::make_logger_error_message(opts.color);
+    let logger = Logger::new(opts.color);
+
     let mut output_all = String::new();
     for input_file in &opts.input_files {
         match cli::read_to_string(input_file) {
@@ -56,7 +59,7 @@ fn main() {
                         Ok(s) => s,
                         Err(e) => {
                             eprintln!("{}", e);
-                            process::exit(2);
+                            process::exit(EXIT_INVALID_INPUT);
                         }
                     },
                 };
@@ -77,7 +80,7 @@ fn main() {
                 match parser::parse_hurl_file(&input) {
                     Err(e) => {
                         log_parser_error(&e, false);
-                        process::exit(2);
+                        process::exit(EXIT_INVALID_INPUT);
                     }
                     Ok(hurl_file) => {
                         if opts.check {
@@ -107,11 +110,11 @@ fn main() {
                 }
             }
             Err(e) => {
-                log_error_message(
-                    false,
-                    format!("Input file {} can not be read - {}", input_file, e.message).as_str(),
-                );
-                process::exit(2);
+                logger.error(&format!(
+                    "Input file {} can not be read - {}",
+                    input_file, e.message
+                ));
+                process::exit(EXIT_INVALID_INPUT);
             }
         }
     }

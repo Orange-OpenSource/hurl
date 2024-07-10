@@ -19,7 +19,7 @@ use hurl_core::text::{Format, Style, StyledString};
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 pub struct BaseLogger {
-    /// Format of the messaeg in the terminal: ANSI or plain.
+    /// Format of the message in the terminal: ANSI or plain.
     format: Format,
     /// Prints debug message or not.
     verbose: bool,

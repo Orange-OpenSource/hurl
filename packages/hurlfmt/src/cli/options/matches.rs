@@ -95,7 +95,7 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError
                 files.push(filename);
             } else {
                 return Err(OptionsError::Error(format!(
-                    "hurl: cannot access '{}': No such file or directory",
+                    "error: Cannot access '{}': No such file or directory",
                     path.display()
                 )));
             }

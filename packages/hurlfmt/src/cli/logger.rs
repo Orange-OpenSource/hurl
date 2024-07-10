@@ -17,19 +17,33 @@
  */
 use std::path::PathBuf;
 
-use colored::*;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::parser;
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::linter;
 
-pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
-    move |message| log_verbose(verbose, message)
+/// A simple logger to log app related event (start, high levels error, etc...).
+pub struct Logger {
+    /// Format of the messaeg in the terminal: ANSI or plain.
+    format: Format,
 }
 
-pub fn make_logger_error_message(color: bool) -> impl Fn(bool, &str) {
-    move |warning, message| log_error_message(color, warning, message)
+impl Logger {
+    /// Creates a new logger using `color`.
+    pub fn new(color: bool) -> Self {
+        let format = if color { Format::Ansi } else { Format::Plain };
+        Logger { format }
+    }
+
+    /// Prints an error `message` on standard error.
+    pub fn error(&self, message: &str) {
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push_with(message, Style::new().bold());
+        eprintln!("{}", s.to_string(self.format));
+    }
 }
 
 pub fn make_logger_parser_error(
@@ -72,28 +86,4 @@ fn get_prefix(warning: bool, color: bool) -> String {
     };
     let fmt = if color { Format::Ansi } else { Format::Plain };
     message.to_string(fmt)
-}
-
-pub fn log_info(message: &str) {
-    eprintln!("{message}");
-}
-
-fn log_error_message(color: bool, warning: bool, message: &str) {
-    let log_type = match (color, warning) {
-        (false, true) => "warning".to_string(),
-        (false, false) => "error".to_string(),
-        (true, true) => "warning".yellow().bold().to_string(),
-        (true, false) => "error".red().bold().to_string(),
-    };
-    eprintln!("{log_type}: {message}");
-}
-
-fn log_verbose(verbose: bool, message: &str) {
-    if verbose {
-        if message.is_empty() {
-            eprintln!("*");
-        } else {
-            eprintln!("* {message}");
-        }
-    }
 }

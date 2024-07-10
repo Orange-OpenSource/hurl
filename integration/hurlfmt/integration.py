@@ -27,11 +27,13 @@ def main():
     [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
 
     extension = "ps1" if platform.system() == "Windows" else "sh"
-    script_files = get_files("tests_ok/*." + extension)
+    script_files = get_files("tests_ok/*." + extension) + get_files(
+        "tests_failed/*." + extension
+    )
     for f in sorted(script_files):
         test_script.test(f)
 
-    print("test integration hurl ok!")
+    print("Test integration hurlfmt ok!")
 
 
 if __name__ == "__main__":
