@@ -30,6 +30,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Get SSL certificates info on reused connections, from a cache [#3031](https://github.com/Orange-OpenSource/hurl/issues/3031)
 * Fix error displayed in double with bad option. [#2920](https://github.com/Orange-OpenSource/hurl/issues/2920)
 * Truncate file then append it when dumping response with --output. [#2886](https://github.com/Orange-OpenSource/hurl/issues/2886)
 * Fix crash with --json option when capturing 'HttpOnly' and 'Secure' cookie attribute [#2871](https://github.com/Orange-OpenSource/hurl/issues/2871)
