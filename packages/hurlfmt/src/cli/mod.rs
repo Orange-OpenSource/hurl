@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-
 pub use self::fs::read_to_string;
-pub use self::logger::{make_logger_linter_error, Logger};
+pub use self::logger::Logger;
 
 mod fs;
 mod logger;

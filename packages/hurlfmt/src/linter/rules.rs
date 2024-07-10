@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
+use crate::linter::{LinterError, LinterErrorKind};
 use hurl_core::ast::*;
 use hurl_core::reader::Pos;
 
-use crate::linter::core::{Error, LinterError};
-
 /// Returns lint errors for the `hurl_file`.
-pub fn check_hurl_file(hurl_file: &HurlFile) -> Vec<Error> {
+pub fn check_hurl_file(hurl_file: &HurlFile) -> Vec<LinterError> {
     hurl_file.entries.iter().flat_map(check_entry).collect()
 }
 
@@ -33,7 +32,7 @@ pub fn lint_hurl_file(hurl_file: &HurlFile) -> HurlFile {
     }
 }
 
-fn check_entry(entry: &Entry) -> Vec<Error> {
+fn check_entry(entry: &Entry) -> Vec<LinterError> {
     let mut errors = vec![];
     errors.append(&mut check_request(&entry.request));
     match &entry.response {
@@ -49,23 +48,24 @@ fn lint_entry(entry: &Entry) -> Entry {
     Entry { request, response }
 }
 
-fn check_request(request: &Request) -> Vec<Error> {
+fn check_request(request: &Request) -> Vec<LinterError> {
     let mut errors = vec![];
     if !request.space0.value.is_empty() {
-        errors.push(Error {
+        errors.push(LinterError {
             source_info: request.space0.source_info,
-            inner: LinterError::UnnecessarySpace,
+            kind: LinterErrorKind::UnnecessarySpace,
         });
     }
     if request.space1.value != " " {
-        errors.push(Error {
+        errors.push(LinterError {
             source_info: request.space1.source_info,
-            inner: LinterError::OneSpace,
+            kind: LinterErrorKind::OneSpace,
         });
     }
     for error in check_line_terminator(&request.line_terminator0) {
         errors.push(error);
     }
+    errors.extend(request.sections.iter().flat_map(check_section));
     errors
 }
 
@@ -97,14 +97,15 @@ fn lint_request(request: &Request) -> Request {
     }
 }
 
-fn check_response(response: &Response) -> Vec<Error> {
+fn check_response(response: &Response) -> Vec<LinterError> {
     let mut errors = vec![];
     if !response.space0.value.is_empty() {
-        errors.push(Error {
+        errors.push(LinterError {
             source_info: response.space0.source_info,
-            inner: LinterError::UnnecessarySpace,
+            kind: LinterErrorKind::UnnecessarySpace,
         });
     }
+    errors.extend(response.sections.iter().flat_map(check_section));
     errors
 }
 
@@ -132,6 +133,20 @@ fn lint_response(response: &Response) -> Response {
         body,
         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
+}
+
+fn check_section(section: &Section) -> Vec<LinterError> {
+    let mut errors = vec![];
+    if !section.space0.value.is_empty() {
+        errors.push(LinterError {
+            source_info: section.space0.source_info,
+            kind: LinterErrorKind::UnnecessarySpace,
+        });
+    }
+    for error in check_line_terminator(&section.line_terminator0) {
+        errors.push(error);
+    }
+    errors
 }
 
 fn lint_section(section: &Section) -> Section {
@@ -568,15 +583,15 @@ fn one_whitespace() -> Whitespace {
     }
 }
 
-fn check_line_terminator(line_terminator: &LineTerminator) -> Vec<Error> {
+fn check_line_terminator(line_terminator: &LineTerminator) -> Vec<LinterError> {
     let mut errors = vec![];
     match &line_terminator.comment {
         Some(_) => {}
         None => {
             if !line_terminator.space0.value.is_empty() {
-                errors.push(Error {
+                errors.push(LinterError {
                     source_info: line_terminator.space0.source_info,
-                    inner: LinterError::UnnecessarySpace,
+                    kind: LinterErrorKind::UnnecessarySpace,
                 });
             }
         }

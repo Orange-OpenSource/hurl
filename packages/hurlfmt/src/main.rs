@@ -27,6 +27,7 @@ use hurlfmt::{cli, curl, format, linter};
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR: i32 = 1;
 const EXIT_INVALID_INPUT: i32 = 2;
+const EXIT_LINT_ISSUE: i32 = 3;
 
 /// Executes `hurlfmt` entry point.
 fn main() {
@@ -46,7 +47,7 @@ fn main() {
         },
     };
 
-    let mut logger = Logger::new(opts.color);
+    let logger = Logger::new(opts.color);
     let mut output_all = String::new();
 
     for input_file in &opts.input_files {
@@ -63,26 +64,23 @@ fn main() {
                         }
                     },
                 };
-                let input_path = Path::new(input_file).to_path_buf();
-                let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-                    .unwrap()
-                    .split(&input)
-                    .collect();
-                let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
-                let log_linter_error =
-                    cli::make_logger_linter_error(lines, opts.color, Some(input_path));
 
                 match parser::parse_hurl_file(&input) {
                     Err(e) => {
-                        logger.error_parsing_rich(&content, input_file, &e);
+                        logger.error_parsing(&content, input_file, &e);
                         process::exit(EXIT_INVALID_INPUT);
                     }
                     Ok(hurl_file) => {
                         if opts.check {
-                            for e in linter::check_hurl_file(&hurl_file).iter() {
-                                log_linter_error(e, true);
+                            let lints = linter::check_hurl_file(&hurl_file);
+                            for e in lints.iter() {
+                                logger.warn_lint(&content, input_file, e);
                             }
-                            process::exit(1);
+                            if lints.is_empty() {
+                                process::exit(EXIT_OK);
+                            } else {
+                                process::exit(EXIT_LINT_ISSUE);
+                            }
                         } else {
                             let output = match opts.output_format {
                                 OutputFormat::Hurl => {
