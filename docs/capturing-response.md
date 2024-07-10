@@ -91,7 +91,7 @@ next_url: header "Location"
 
 ### URL capture
 
-Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section][options] or
 [`--location` option]). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
 
 ```hurl

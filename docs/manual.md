@@ -39,7 +39,6 @@ $ echo GET http://httpbin.org/get | hurl
     }
 ```
 
-
 Output goes to stdout by default. To have output go to a file, use the [`-o, --output`](#output) option:
 
 ```shell

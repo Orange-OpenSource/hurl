@@ -40,7 +40,8 @@ every entry of a given file will follow redirection:
 $ hurl --location foo.hurl
 ```
 
-You can use an [`[Options]` section][options] to use option only for a specified option. For instance, in this Hurl file:
+You can use an [`[Options]` section][options] to set option only for a specified request. For instance, in this Hurl file,
+the second entry will follow location (so we can test the status code to be 200 instead of 301).
 
 ```hurl
 GET https://google.fr
@@ -55,9 +56,7 @@ GET https://google.fr
 HTTP 301
 ```
 
-The second entry will follow location (so we can test the status code to be 200 instead of 301).
-
-You can use it to log a specific entry:
+You can use the `[Options]` section to log a specific entry:
 
 ```hurl
 # ... previous entries
@@ -118,7 +117,7 @@ under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section][a
 Retries can be set globally for every request (see [`--retry`] and [`--retry-interval`]), 
 or activated on a particular request with an [`[Options]` section][options].
 
-For example, in this Hurl file, first we create a new job, then we poll the new job until it's completed:
+For example, in this Hurl file, first we create a new job then we poll the new job until it's completed:
 
 ```hurl
 # Create a new job
@@ -139,12 +138,59 @@ HTTP 200
 jsonpath "$.state" == "COMPLETED"
 ```
 
+### Control flow
+
+In `[Options]` section, `skip` and `repeat` can be used to control flow of execution:
+
+- `skip: true/false` skip this request and execute the next one unconditionally,
+- `repeat: N` loop the request N times. If there are assert or runtime errors, the requests execution is stopped.
+
+```hurl
+# This request will be played exactly 3 times
+GET https://example.org/foo
+[Options]
+repeat: 3
+HTTP 200
+
+# This request is skipped
+GET https://example.org/foo
+[Options]
+skip: true
+HTTP 200
+```
+
+Additionally, a `delay` can be insert between requests, to add a delay before execution of a request.
+
+```hurl
+# A 5 s delayed request 
+GET https://example.org/foo
+[Options]
+delay: 5000
+HTTP 200
+```
+
+[`delay`] and [`repeat`] can also be used globally as command line options:
+
+```shell
+$ hurl --delay 500 --repeat 3 foo.hurl
+```
+
+
+
+For complete reference, below is a diagram for the executed entries.
+
+<div class="picture">
+    <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/run-cycle-light.svg" alt="Run cycle explanation"/>
+    <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/run-cycle-dark.svg" alt="Run cycle explanation"/>
+</div>
+
 
 [request]: /docs/request.md
 [response]: /docs/response.md
 [capture values]: /docs/capturing-response.md
 [add asserts to HTTP responses]: /docs/asserting-response.md
 [`--location`]: /docs/manual.md#location
+[`--location` option]: /docs/manual.md#location
 [`--location-trusted`]: /docs/manual.md#location-trusted
 [`--max-redirs`]: /docs/manual.md#max-redirs
 [Options]: /docs/manual.md#options
@@ -155,4 +201,6 @@ jsonpath "$.state" == "COMPLETED"
 [Asserts]: /docs/response.md#asserts
 [`--retry`]: /docs/manual.md#retry
 [`--retry-interval`]: /docs/manual.md#retry-interval
+[`delay`]: /docs/manual.md#retry 
+[`repeat`]: /docs/manual.md#repeat
 
