@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
+use hurl_core::input::Input;
+
 use crate::report::ReportError;
-use crate::runner::{HurlResult, Input};
+use crate::runner::HurlResult;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {

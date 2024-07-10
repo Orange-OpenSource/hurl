@@ -29,10 +29,11 @@ use clap::ArgMatches;
 pub use error::CliOptionsError;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
-use hurl::runner::{Input, Output};
+use hurl::runner::Output;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
+use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
 use crate::cli;

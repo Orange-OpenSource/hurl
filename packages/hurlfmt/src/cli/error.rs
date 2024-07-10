@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-pub use self::logger::Logger;
 
-pub mod error;
-mod logger;
-pub mod options;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CliError {
+    pub message: String,
+}

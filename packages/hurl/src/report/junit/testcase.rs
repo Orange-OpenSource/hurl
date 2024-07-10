@@ -16,9 +16,10 @@
  *
  */
 use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
 
 use crate::report::junit::xml::Element;
-use crate::runner::{HurlResult, Input};
+use crate::runner::HurlResult;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -93,12 +94,13 @@ mod test {
     use std::time::Duration;
 
     use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
     use crate::http::HttpError;
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
-    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};
+    use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_create_testcase_success() {

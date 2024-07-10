@@ -17,9 +17,10 @@
  */
 use std::collections::HashMap;
 
+use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
-use crate::runner::{HurlResult, Input, RunnerOptions, Value};
+use crate::runner::{HurlResult, RunnerOptions, Value};
 use crate::util::logger::LoggerOptions;
 
 /// Represents the job to run. A job instance groups the input data to execute, and has no methods
@@ -155,10 +156,11 @@ impl Iterator for JobQueue<'_> {
 mod tests {
     use std::collections::HashMap;
 
+    use hurl_core::input::Input;
     use hurl_core::typing::Count;
 
     use crate::parallel::job::{Job, JobQueue};
-    use crate::runner::{Input, RunnerOptionsBuilder};
+    use crate::runner::RunnerOptionsBuilder;
     use crate::util::logger::LoggerOptionsBuilder;
 
     fn new_job(file: &str, index: usize) -> Job {

@@ -23,6 +23,7 @@ use std::path::{Path, PathBuf};
 use chrono::SecondsFormat;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -30,7 +31,7 @@ use crate::http::{
     Call, Certificate, Cookie, Header, HttpVersion, Param, Request, RequestCookie, Response,
     ResponseCookie, Timings,
 };
-use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, Input};
+use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.

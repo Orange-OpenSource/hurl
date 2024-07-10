@@ -60,8 +60,9 @@ fn requests_count(runs: &[HurlRun]) -> usize {
 
 #[cfg(test)]
 pub mod tests {
-    use hurl::runner::{EntryResult, HurlResult, Input};
+    use hurl::runner::{EntryResult, HurlResult};
     use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
     use super::*;

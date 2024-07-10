@@ -16,9 +16,10 @@
  *
  */
 use std::io::{self, Write};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process;
 
+use hurl_core::input::Input;
 use hurl_core::parser;
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
@@ -51,64 +52,70 @@ fn main() {
     let mut output_all = String::new();
 
     for input_file in &opts.input_files {
-        match cli::read_to_string(input_file) {
-            Ok(content) => {
-                // parse input
-                let input = match opts.input_format {
-                    InputFormat::Hurl => content.to_string(),
-                    InputFormat::Curl => match curl::parse(&content) {
-                        Ok(s) => s,
-                        Err(e) => {
-                            eprintln!("{}", e);
-                            process::exit(EXIT_INVALID_INPUT);
-                        }
-                    },
-                };
+        let input_file = Input::new(input_file);
 
-                match parser::parse_hurl_file(&input) {
-                    Err(e) => {
-                        logger.error_parsing(&content, input_file, &e);
-                        process::exit(EXIT_INVALID_INPUT);
-                    }
-                    Ok(hurl_file) => {
-                        if opts.check {
-                            let lints = linter::check_hurl_file(&hurl_file);
-                            for e in lints.iter() {
-                                logger.warn_lint(&content, input_file, e);
-                            }
-                            if lints.is_empty() {
-                                process::exit(EXIT_OK);
-                            } else {
-                                process::exit(EXIT_LINT_ISSUE);
-                            }
-                        } else {
-                            let output = match opts.output_format {
-                                OutputFormat::Hurl => {
-                                    let hurl_file = linter::lint_hurl_file(&hurl_file);
-                                    format::format_text(hurl_file, opts.color)
-                                }
-                                OutputFormat::Json => format::format_json(&hurl_file),
-                                OutputFormat::Html => {
-                                    hurl_core::format::format_html(&hurl_file, opts.standalone)
-                                }
-                            };
-                            if opts.in_place {
-                                let output_file = Some(Path::new(input_file).to_path_buf());
-                                write_output(&output, output_file.clone());
-                            } else {
-                                output_all.push_str(&output);
-                            }
-                        }
-                    }
-                }
-            }
+        // Get content of the input
+        let content = match input_file.read_to_string() {
+            Ok(c) => c,
             Err(e) => {
                 logger.error(&format!(
-                    "Input file {} can not be read - {}",
-                    input_file, e.message
+                    "Input file {} can not be read - {e}",
+                    &input_file.to_string()
                 ));
                 process::exit(EXIT_INVALID_INPUT);
             }
+        };
+
+        // Parse input curl or Hurl file
+        let input = match opts.input_format {
+            InputFormat::Hurl => content.to_string(),
+            InputFormat::Curl => match curl::parse(&content) {
+                Ok(s) => s,
+                Err(e) => {
+                    logger.error(&e.to_string());
+                    process::exit(EXIT_INVALID_INPUT);
+                }
+            },
+        };
+
+        // Parse Hurl content
+        let hurl_file = match parser::parse_hurl_file(&input) {
+            Ok(h) => h,
+            Err(e) => {
+                logger.error_parsing(&content, &input_file, &e);
+                process::exit(EXIT_INVALID_INPUT);
+            }
+        };
+
+        // Only checks
+        if opts.check {
+            let lints = linter::check_hurl_file(&hurl_file);
+            for e in lints.iter() {
+                logger.warn_lint(&content, &input_file, e);
+            }
+            if lints.is_empty() {
+                process::exit(EXIT_OK);
+            } else {
+                process::exit(EXIT_LINT_ISSUE);
+            }
+        }
+
+        // Output files
+        let output = match opts.output_format {
+            OutputFormat::Hurl => {
+                let hurl_file = linter::lint_hurl_file(&hurl_file);
+                format::format_text(hurl_file, opts.color)
+            }
+            OutputFormat::Json => format::format_json(&hurl_file),
+            OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
+        };
+        if opts.in_place {
+            let Input::File(path) = input_file else {
+                unreachable!("--in-place and standard input have been filtered in args parsing")
+            };
+            write_output(&output, Some(path));
+        } else {
+            output_all.push_str(&output);
         }
     }
     if !opts.in_place {

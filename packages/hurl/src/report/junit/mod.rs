@@ -149,12 +149,13 @@ mod tests {
     use std::time::Duration;
 
     use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
     use crate::http::HttpError;
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
-    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};
+    use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
 
     #[test]
     fn create_junit_report() {

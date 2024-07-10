@@ -26,7 +26,8 @@ use std::{env, process, thread};
 use colored::control;
 use hurl::report::{html, json, junit, tap};
 use hurl::runner;
-use hurl::runner::{HurlResult, Input};
+use hurl::runner::HurlResult;
+use hurl_core::input::Input;
 
 use crate::cli::options::{CliOptions, CliOptionsError};
 use crate::cli::{BaseLogger, CliError};

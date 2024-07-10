@@ -20,10 +20,11 @@ use std::path::Path;
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::{HurlResult, Input, Output};
+use hurl::runner::{HurlResult, Output};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
 use crate::cli::options::CliOptions;
@@ -284,7 +285,7 @@ impl Iterator for InputQueue<'_> {
 
 #[cfg(test)]
 mod tests {
-    use hurl::runner::Input;
+    use hurl_core::input::Input;
     use hurl_core::typing::Count;
 
     use crate::run::InputQueue;

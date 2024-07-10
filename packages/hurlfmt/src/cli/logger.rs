@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
 use hurl_core::text::{Format, Style, StyledString};
 
 /// A simple logger to log app related event (start, high levels error, etc...).
@@ -41,11 +42,11 @@ impl Logger {
     }
 
     /// Displays a Hurl parsing error.
-    pub fn error_parsing<E: DisplaySourceError>(&self, content: &str, filename: &str, error: &E) {
+    pub fn error_parsing<E: DisplaySourceError>(&self, content: &str, file: &Input, error: &E) {
         // FIXME: peut-être qu'on devrait faire rentrer le prefix `error:` qui est
         // fournit par `self.error_rich` dans la méthode `error.to_string`
         let message = error.to_string(
-            filename,
+            &file.to_string(),
             content,
             None,
             OutputFormat::Terminal(self.format == Format::Ansi),
@@ -60,9 +61,9 @@ impl Logger {
     }
 
     /// Displays a lint warning.
-    pub fn warn_lint<E: DisplaySourceError>(&self, content: &str, filename: &str, error: &E) {
+    pub fn warn_lint<E: DisplaySourceError>(&self, content: &str, file: &Input, error: &E) {
         let message = error.to_string(
-            filename,
+            &file.to_string(),
             content,
             None,
             OutputFormat::Terminal(self.format == Format::Ansi),

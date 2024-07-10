@@ -23,11 +23,12 @@ use std::time::Duration;
 use std::{env, fs, io};
 
 use clap::ArgMatches;
-use hurl::runner::{Input, Value};
+use hurl::runner::Value;
+use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
-use super::variables::{parse as parse_variable, parse_value};
-use super::CliOptionsError;
+use crate::cli::options::variables::{parse as parse_variable, parse_value};
+use crate::cli::options::CliOptionsError;
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 

@@ -38,8 +38,10 @@ use std::io;
 use std::io::Write;
 use std::path::Path;
 
+use hurl_core::input::Input;
+
 use crate::report::ReportError;
-use crate::runner::{HurlResult, Input};
+use crate::runner::HurlResult;
 
 /// Exports a list of [`Testcase`] to a JSON file `filename`.
 ///

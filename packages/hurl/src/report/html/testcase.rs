@@ -19,10 +19,11 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
+use hurl_core::input::Input;
 use hurl_core::parser;
 use uuid::Uuid;
 
-use crate::runner::{EntryResult, HurlResult, Input, RunnerError};
+use crate::runner::{EntryResult, HurlResult, RunnerError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
