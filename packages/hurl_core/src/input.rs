@@ -61,14 +61,6 @@ impl Input {
         }
     }
 
-    /// Returns `true` if the path points at an existing entity.
-    pub fn exists(&self) -> bool {
-        match self {
-            Input::File(path) => path.exists(),
-            Input::Stdin => true,
-        }
-    }
-
     /// Reads the content of this input to a string, removing any BOM.
     pub fn read_to_string(&self) -> Result<String, io::Error> {
         match self {
