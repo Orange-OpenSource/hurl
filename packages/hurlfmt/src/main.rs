@@ -20,7 +20,7 @@ use std::path::PathBuf;
 use std::process;
 
 use hurl_core::input::Input;
-use hurl_core::parser;
+use hurl_core::{parser, text};
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
 use hurlfmt::{cli, curl, format, linter};
@@ -32,7 +32,7 @@ const EXIT_LINT_ISSUE: i32 = 3;
 
 /// Executes `hurlfmt` entry point.
 fn main() {
-    init_colored();
+    text::init_crate_colored();
 
     let opts = match cli::options::parse() {
         Ok(v) => v,
@@ -121,17 +121,6 @@ fn main() {
     if !opts.in_place {
         write_output(&output_all, opts.output_file);
     }
-}
-
-#[cfg(target_family = "unix")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-}
-
-#[cfg(target_family = "windows")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 fn write_output(content: &str, filename: Option<PathBuf>) {

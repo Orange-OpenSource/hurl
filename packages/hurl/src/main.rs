@@ -23,11 +23,11 @@ use std::path::Path;
 use std::time::Instant;
 use std::{env, process, thread};
 
-use colored::control;
 use hurl::report::{html, json, junit, tap};
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl_core::input::Input;
+use hurl_core::text;
 
 use crate::cli::options::{CliOptions, CliOptionsError};
 use crate::cli::{BaseLogger, CliError};
@@ -51,7 +51,7 @@ struct HurlRun {
 
 /// Executes Hurl entry point.
 fn main() {
-    init_colored();
+    text::init_crate_colored();
 
     let opts = match cli::options::parse() {
         Ok(v) => v,
@@ -111,17 +111,6 @@ fn main() {
     }
 
     process::exit(exit_code(&runs));
-}
-
-#[cfg(target_family = "unix")]
-fn init_colored() {
-    control::set_override(true);
-}
-
-#[cfg(target_family = "windows")]
-fn init_colored() {
-    control::set_override(true);
-    control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 /// Unwraps a `result` or exit with message.
