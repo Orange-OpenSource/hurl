@@ -13,7 +13,7 @@ error: Invalid variable type
    | GET http://localhost:8000/unused
    | ...
 15 | max-redirs: {{max_redirect}}
-   |               ^^^^^^^^^^^^ expecting positive integer, actual value is integer <-123>
+   |               ^^^^^^^^^^^^ expecting integer >= -1, actual value is integer <-123>
    |
 
 error: Invalid variable type
@@ -22,7 +22,7 @@ error: Invalid variable type
    | GET http://localhost:8000/unused
    | ...
 22 | max-redirs: {{max_redirect}}
-   |               ^^^^^^^^^^^^ expecting positive integer, actual value is string <abc>
+   |               ^^^^^^^^^^^^ expecting integer, actual value is string <abc>
    |
 
 error: Invalid variable type

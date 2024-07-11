@@ -276,10 +276,10 @@ pub fn junit_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
     get::<String>(arg_matches, "report_junit").map(PathBuf::from)
 }
 
-pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
+pub fn max_redirect(arg_matches: &ArgMatches) -> Count {
     match get::<i32>(arg_matches, "max_redirects").unwrap() {
-        -1 => None,
-        m => Some(m as usize),
+        -1 => Count::Infinite,
+        m => Count::Finite(m as usize),
     }
 }
 

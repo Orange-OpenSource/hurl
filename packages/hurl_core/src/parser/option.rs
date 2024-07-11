@@ -173,7 +173,7 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = non_recover(natural_option, reader)?;
+    let value = non_recover(count_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
 }
 

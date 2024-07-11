@@ -44,7 +44,7 @@ pub struct RunnerOptionsBuilder {
     insecure: bool,
     ip_resolve: IpResolve,
     max_filesize: Option<u64>,
-    max_redirect: Option<usize>,
+    max_redirect: Count,
     netrc: bool,
     netrc_file: Option<String>,
     netrc_optional: bool,
@@ -89,7 +89,7 @@ impl Default for RunnerOptionsBuilder {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
-            max_redirect: Some(50),
+            max_redirect: Count::Finite(50),
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -258,7 +258,7 @@ impl RunnerOptionsBuilder {
     /// Set maximum number of redirection-followings allowed
     ///
     /// By default, the limit is set to 50 redirections
-    pub fn max_redirect(&mut self, max_redirect: Option<usize>) -> &mut Self {
+    pub fn max_redirect(&mut self, max_redirect: Count) -> &mut Self {
         self.max_redirect = max_redirect;
         self
     }
@@ -460,7 +460,7 @@ pub struct RunnerOptions {
     pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
     pub(crate) max_filesize: Option<u64>,
-    pub(crate) max_redirect: Option<usize>,
+    pub(crate) max_redirect: Count,
     pub(crate) netrc: bool,
     pub(crate) netrc_file: Option<String>,
     pub(crate) netrc_optional: bool,

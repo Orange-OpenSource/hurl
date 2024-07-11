@@ -231,7 +231,7 @@ impl HtmlFormatter {
             OptionKind::Insecure(value) => self.fmt_bool_option(value),
             OptionKind::IpV4(value) => self.fmt_bool_option(value),
             OptionKind::IpV6(value) => self.fmt_bool_option(value),
-            OptionKind::MaxRedirect(value) => self.fmt_natural_option(value),
+            OptionKind::MaxRedirect(value) => self.fmt_count_option(value),
             OptionKind::NetRc(value) => self.fmt_bool_option(value),
             OptionKind::NetRcFile(filename) => self.fmt_filename(filename),
             OptionKind::NetRcOptional(value) => self.fmt_bool_option(value),

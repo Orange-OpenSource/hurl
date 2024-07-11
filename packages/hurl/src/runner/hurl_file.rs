@@ -501,9 +501,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
     }
 
     if options.max_redirect != default_options.max_redirect {
-        if let Some(n) = options.max_redirect {
-            non_default_options.push(("max redirect", n.to_string()));
-        }
+        non_default_options.push(("max redirect", options.max_redirect.to_string()));
     }
 
     if options.proxy != default_options.proxy {

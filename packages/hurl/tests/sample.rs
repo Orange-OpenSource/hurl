@@ -24,6 +24,7 @@ use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
+use hurl_core::typing::Count;
 
 #[test]
 fn simple_sample() {
@@ -111,7 +112,7 @@ fn simple_sample() {
         .follow_location(false)
         .ignore_asserts(false)
         .insecure(false)
-        .max_redirect(None)
+        .max_redirect(Count::Finite(10))
         .no_proxy(None)
         .post_entry(None)
         .pre_entry(None)

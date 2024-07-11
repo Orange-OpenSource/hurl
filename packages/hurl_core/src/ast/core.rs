@@ -719,7 +719,7 @@ pub enum OptionKind {
     IpV6(BooleanOption),
     FollowLocation(BooleanOption),
     FollowLocationTrusted(BooleanOption),
-    MaxRedirect(NaturalOption),
+    MaxRedirect(CountOption),
     NetRc(BooleanOption),
     NetRcFile(Template),
     NetRcOptional(BooleanOption),

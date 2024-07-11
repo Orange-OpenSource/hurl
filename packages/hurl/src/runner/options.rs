@@ -171,8 +171,8 @@ pub fn get_entry_options(
                         }
                     }
                     OptionKind::MaxRedirect(value) => {
-                        let value = eval_natural_option(value, variables)?;
-                        entry_options.max_redirect = Some(value as usize);
+                        let value = eval_count_option(value, variables)?;
+                        entry_options.max_redirect = value;
                     }
                     OptionKind::NetRc(value) => {
                         let value = eval_boolean_option(value, variables)?;

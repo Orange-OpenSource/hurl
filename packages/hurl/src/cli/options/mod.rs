@@ -71,7 +71,7 @@ pub struct CliOptions {
     pub json_report_dir: Option<PathBuf>,
     pub junit_file: Option<PathBuf>,
     pub max_filesize: Option<u64>,
-    pub max_redirect: Option<usize>,
+    pub max_redirect: Count,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,

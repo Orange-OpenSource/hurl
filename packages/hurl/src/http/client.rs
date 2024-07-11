@@ -27,6 +27,7 @@ use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Version};
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
+use hurl_core::typing::Count;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
@@ -131,11 +132,12 @@ impl Client {
             logger.debug(&format!("=> Redirect to {redirect_url}"));
             logger.debug("");
             redirect_count += 1;
-            if let Some(max_redirect) = options.max_redirect {
+            if let Count::Finite(max_redirect) = options.max_redirect {
                 if redirect_count > max_redirect {
                     return Err(HttpError::TooManyRedirect);
                 }
-            }
+            };
+
             let redirect_method = redirect_method(status, request_spec.method);
             let mut headers = request_spec.headers;
 
@@ -1148,7 +1150,7 @@ mod tests {
             compressed: true,
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
             insecure: true,
-            max_redirect: Some(10),
+            max_redirect: Count::Finite(10),
             path_as_is: true,
             proxy: Some("localhost:3128".to_string()),
             no_proxy: None,
