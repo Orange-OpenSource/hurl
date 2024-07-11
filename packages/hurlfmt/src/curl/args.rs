@@ -16,6 +16,8 @@
  *
  */
 
+use hurl_core::reader::Reader;
+
 /// Split a `str` into a vec of String params
 pub fn split(s: &str) -> Result<Vec<String>, String> {
     let mut params = vec![];
@@ -27,52 +29,27 @@ pub fn split(s: &str) -> Result<Vec<String>, String> {
 }
 
 struct Parser {
-    pub buffer: Vec<char>,
-    pub index: usize,
+    reader: Reader,
 }
 
 impl Parser {
     fn new(s: &str) -> Parser {
-        let buffer = s.chars().collect();
-        let index = 0;
-        Parser { buffer, index }
-    }
-
-    fn skip_spaces(&mut self) {
-        while self.peek() == Some(' ') {
-            self.read();
-        }
-    }
-
-    fn read(&mut self) -> Option<char> {
-        match self.buffer.get(self.index) {
-            None => None,
-            Some(c) => {
-                self.index += 1;
-                Some(*c)
-            }
-        }
-    }
-    fn peek(&mut self) -> Option<char> {
-        self.buffer.get(self.index).copied()
-    }
-
-    fn end_of_string(&self) -> bool {
-        self.index == self.buffer.len()
+        let reader = Reader::new(s);
+        Parser { reader }
     }
 
     fn delimiter(&mut self) -> Option<(char, bool)> {
-        if self.peek() == Some('\'') {
-            self.read();
+        if self.reader.peek() == Some('\'') {
+            _ = self.reader.read();
             Some(('\'', false))
-        } else if self.peek() == Some('$') {
-            let save = self.index;
-            self.read();
-            if self.peek() == Some('\'') {
-                self.read();
+        } else if self.reader.peek() == Some('$') {
+            let save = self.reader.cursor();
+            _ = self.reader.read();
+            if self.reader.peek() == Some('\'') {
+                _ = self.reader.read();
                 Some(('\'', true))
             } else {
-                self.index = save;
+                self.reader.seek(save);
                 None
             }
         } else {
@@ -80,21 +57,28 @@ impl Parser {
         }
     }
 
+    fn col(&self) -> usize {
+        self.reader.cursor().pos.column
+    }
+
     fn param(&mut self) -> Result<Option<String>, String> {
-        self.skip_spaces();
-        if self.end_of_string() {
+        _ = self.reader.read_while(|c| c == ' ');
+        if self.reader.is_eof() {
             return Ok(None);
         }
         let mut value = String::new();
         if let Some((delimiter, escaping)) = self.delimiter() {
-            while let Some(c1) = self.read() {
+            while let Some(c1) = self.reader.read() {
                 if c1 == '\\' && escaping {
-                    let c2 = match self.read() {
+                    let c2 = match self.reader.read() {
                         Some('n') => '\n',
                         Some('t') => '\t',
                         Some('r') => '\r',
                         Some(c) => c,
-                        _ => return Err(format!("Invalid escape at column {}", self.index + 1)),
+                        _ => {
+                            let col = self.col();
+                            return Err(format!("Invalid escape at column {col}"));
+                        }
                     };
                     value.push(c2);
                 } else if c1 == delimiter {
@@ -103,18 +87,17 @@ impl Parser {
                     value.push(c1);
                 }
             }
-            Err(format!(
-                "Missing delimiter {delimiter} at column {}",
-                self.index + 1
-            ))
+            let col = self.col();
+            Err(format!("Missing delimiter {delimiter} at column {col}"))
         } else {
             loop {
-                match self.read() {
+                match self.reader.read() {
                     Some('\\') => {
-                        if let Some(c) = self.read() {
+                        if let Some(c) = self.reader.read() {
                             value.push(c);
                         } else {
-                            return Err(format!("Invalid escape at column {}", self.index + 1));
+                            let col = self.col();
+                            return Err(format!("Invalid escape at column {col}"));
                         }
                     }
                     Some(' ') => return Ok(Some(value)),
@@ -158,37 +141,37 @@ mod test {
     fn test_param_without_quote() {
         let mut parser = Parser::new("value");
         assert_eq!(parser.param().unwrap().unwrap(), "value".to_string());
-        assert_eq!(parser.index, 5);
+        assert_eq!(parser.col(), 6);
 
         let mut parser = Parser::new(" value  ");
         assert_eq!(parser.param().unwrap().unwrap(), "value".to_string());
-        assert_eq!(parser.index, 7);
+        assert_eq!(parser.col(), 8);
     }
 
     #[test]
     fn test_param_with_quote() {
         let mut parser = Parser::new("'value'");
         assert_eq!(parser.param().unwrap().unwrap(), "value".to_string());
-        assert_eq!(parser.index, 7);
+        assert_eq!(parser.col(), 8);
 
         let mut parser = Parser::new(" 'value'  ");
         assert_eq!(parser.param().unwrap().unwrap(), "value".to_string());
-        assert_eq!(parser.index, 8);
+        assert_eq!(parser.col(), 9);
 
         let mut parser = Parser::new("'\\n'");
         assert_eq!(parser.param().unwrap().unwrap(), "\\n".to_string());
-        assert_eq!(parser.index, 4);
+        assert_eq!(parser.col(), 5);
     }
 
     #[test]
     fn test_dollar_prefix() {
         let mut parser = Parser::new("$'Test: \\''");
         assert_eq!(parser.param().unwrap().unwrap(), "Test: '".to_string());
-        assert_eq!(parser.index, 11);
+        assert_eq!(parser.col(), 12);
 
         let mut parser = Parser::new("$'\\n'");
         assert_eq!(parser.param().unwrap().unwrap(), "\n".to_string());
-        assert_eq!(parser.index, 5);
+        assert_eq!(parser.col(), 6);
     }
 
     #[test]
@@ -198,7 +181,7 @@ mod test {
             parser.param().err().unwrap(),
             "Missing delimiter ' at column 7".to_string()
         );
-        assert_eq!(parser.index, 6);
+        assert_eq!(parser.col(), 7);
     }
 
     #[test]
@@ -211,15 +194,15 @@ mod test {
     fn test_delimiter() {
         let mut parser = Parser::new("value");
         assert_eq!(parser.delimiter(), None);
-        assert_eq!(parser.index, 0);
+        assert_eq!(parser.col(), 1);
         let mut parser = Parser::new("'value'");
         assert_eq!(parser.delimiter().unwrap(), ('\'', false));
-        assert_eq!(parser.index, 1);
+        assert_eq!(parser.col(), 2);
         let mut parser = Parser::new("$'value'");
         assert_eq!(parser.delimiter().unwrap(), ('\'', true));
-        assert_eq!(parser.index, 2);
+        assert_eq!(parser.col(), 3);
         let mut parser = Parser::new("$value");
         assert_eq!(parser.delimiter(), None);
-        assert_eq!(parser.index, 0);
+        assert_eq!(parser.col(), 1);
     }
 }
