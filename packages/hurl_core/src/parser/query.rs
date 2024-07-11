@@ -295,7 +295,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor().offset, 20);
+        assert_eq!(reader.cursor().index, 20);
 
         // todo test with escape sequence
         //let mut reader = Reader::init("cookie \"cookie\u{31}\"");
@@ -402,6 +402,6 @@ mod tests {
                 }
             )]
         );
-        assert_eq!(reader.cursor().offset, 14);
+        assert_eq!(reader.cursor().index, 14);
     }
 }

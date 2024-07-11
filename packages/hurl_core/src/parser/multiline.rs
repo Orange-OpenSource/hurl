@@ -606,7 +606,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
         );
-        assert_eq!(reader.cursor().offset, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("hello```");
         assert_eq!(
@@ -620,7 +620,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.cursor().offset, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]

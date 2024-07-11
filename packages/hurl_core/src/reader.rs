@@ -37,11 +37,11 @@
 ///  use hurl_core::reader::Reader;
 ///
 ///  let mut reader = Reader::new("hi");
-///  assert_eq!(reader.cursor().offset, 0);
+///  assert_eq!(reader.cursor().index, 0);
 ///  assert!(!reader.is_eof());
 ///  assert_eq!(reader.peek_n(2), "hi".to_string());
 ///  assert_eq!(reader.read(), Some('h'));
-///  assert_eq!(reader.cursor().offset, 1);
+///  assert_eq!(reader.cursor().index, 1);
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
@@ -73,7 +73,7 @@ impl Pos {
 /// allows the report of error of a sub-reader, relative to a parent reader.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Cursor {
-    pub offset: usize,
+    pub index: usize,
     pub pos: Pos,
 }
 
@@ -83,7 +83,7 @@ impl Reader {
         Reader {
             buf: s.chars().collect(),
             cursor: Cursor {
-                offset: 0,
+                index: 0,
                 pos: Pos { line: 1, column: 1 },
             },
         }
@@ -96,7 +96,7 @@ impl Reader {
     pub fn with_pos(s: &str, pos: Pos) -> Self {
         Reader {
             buf: s.chars().collect(),
-            cursor: Cursor { offset: 0, pos },
+            cursor: Cursor { index: 0, pos },
         }
     }
 
@@ -112,15 +112,15 @@ impl Reader {
 
     /// Returns true if the reader has read all the buffer, false otherwise.
     pub fn is_eof(&self) -> bool {
-        self.cursor.offset == self.buf.len()
+        self.cursor.index == self.buf.len()
     }
 
     /// Returns the next char from the buffer advancing the internal state.
     pub fn read(&mut self) -> Option<char> {
-        match self.buf.get(self.cursor.offset) {
+        match self.buf.get(self.cursor.index) {
             None => None,
             Some(c) => {
-                self.cursor.offset += 1;
+                self.cursor.index += 1;
                 if !is_combining_character(*c) {
                     self.cursor.pos.column += 1;
                 }
@@ -169,18 +169,18 @@ impl Reader {
     /// This method doesn't modify the read index since we're reading "backwards" to the current
     /// read index.
     pub fn read_from(&self, start: usize) -> String {
-        let end = self.cursor.offset;
+        let end = self.cursor.index;
         self.buf[start..end].iter().collect()
     }
 
     /// Peeks the next char from the buffer without advancing the internal state.
     pub fn peek(&self) -> Option<char> {
-        self.buf.get(self.cursor.offset).copied()
+        self.buf.get(self.cursor.index).copied()
     }
 
     /// Peeks the next char that meet a `predicate`.
     pub fn peek_if(&self, predicate: fn(char) -> bool) -> Option<char> {
-        let mut i = self.cursor.offset;
+        let mut i = self.cursor.index;
         loop {
             let &c = self.buf.get(i)?;
             if predicate(c) {
@@ -193,7 +193,7 @@ impl Reader {
     /// Peeks a string of `count` char without advancing the internal state.
     /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
-        let start = self.cursor.offset;
+        let start = self.cursor.index;
         let end = (start + count).min(self.buf.len());
         self.buf[start..end].iter().collect()
     }
@@ -210,15 +210,15 @@ mod tests {
     #[test]
     fn basic_reader() {
         let mut reader = Reader::new("hi");
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
         assert!(!reader.is_eof());
         assert_eq!(reader.peek_n(2), "hi".to_string());
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         assert_eq!(reader.read().unwrap(), 'h');
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
         assert_eq!(reader.peek().unwrap(), 'i');
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
@@ -240,17 +240,17 @@ mod tests {
     fn read_while() {
         let mut reader = Reader::new("123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor().offset, 9);
+        assert_eq!(reader.cursor().index, 9);
         assert!(reader.is_eof());
 
         let mut reader = Reader::new("123456789abcde");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor().offset, 9);
+        assert_eq!(reader.cursor().index, 9);
         assert!(!reader.is_eof());
 
         let mut reader = Reader::new("abcde123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "");
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
     }
 
     #[test]
@@ -266,7 +266,7 @@ mod tests {
         assert_eq!(
             sub_reader.cursor,
             Cursor {
-                offset: 0,
+                index: 0,
                 pos: Pos::new(1, 4)
             }
         );
@@ -275,7 +275,7 @@ mod tests {
         assert_eq!(
             sub_reader.cursor,
             Cursor {
-                offset: 1,
+                index: 1,
                 pos: Pos::new(1, 5)
             }
         );

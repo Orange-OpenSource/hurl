@@ -548,21 +548,21 @@ mod tests {
             file_content_type(&mut reader).unwrap(),
             "text/html".to_string()
         );
-        assert_eq!(reader.cursor().offset, 9);
+        assert_eq!(reader.cursor().index, 9);
 
         let mut reader = Reader::new("text/plain; charset=us-ascii");
         assert_eq!(
             file_content_type(&mut reader).unwrap(),
             "text/plain; charset=us-ascii".to_string()
         );
-        assert_eq!(reader.cursor().offset, 28);
+        assert_eq!(reader.cursor().index, 28);
 
         let mut reader = Reader::new("text/html # comment");
         assert_eq!(
             file_content_type(&mut reader).unwrap(),
             "text/html".to_string()
         );
-        assert_eq!(reader.cursor().offset, 9);
+        assert_eq!(reader.cursor().index, 9);
     }
 
     #[test]
@@ -628,7 +628,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor().offset, 43);
+        assert_eq!(reader.cursor().index, 43);
     }
 
     #[test]

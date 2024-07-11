@@ -142,7 +142,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 17)),
             }
         );
-        assert_eq!(reader.cursor().offset, 16);
+        assert_eq!(reader.cursor().index, 16);
     }
 
     #[test]
@@ -161,7 +161,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 57)),
             }
         );
-        assert_eq!(reader.cursor().offset, 56);
+        assert_eq!(reader.cursor().index, 56);
     }
 
     #[test]
@@ -198,7 +198,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
-        assert_eq!(reader.cursor().offset, 18);
+        assert_eq!(reader.cursor().index, 18);
     }
 
     #[test]
@@ -219,7 +219,7 @@ mod tests {
             }
         );
         assert!(!error.recoverable);
-        assert_eq!(reader.cursor().offset, 14);
+        assert_eq!(reader.cursor().index, 14);
     }
 
     #[test]

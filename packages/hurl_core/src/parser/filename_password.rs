@@ -46,7 +46,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let encoded = reader.read_from(start.offset);
+                    let encoded = reader.read_from(start.index);
                     let element = TemplateElement::String { value, encoded };
                     elements.push(element);
                 } else {
@@ -171,6 +171,6 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
-        assert_eq!(reader.cursor().offset, 18);
+        assert_eq!(reader.cursor().index, 18);
     }
 }

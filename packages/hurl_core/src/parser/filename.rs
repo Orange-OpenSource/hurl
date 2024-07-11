@@ -45,7 +45,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let encoded = reader.read_from(start.offset);
+                    let encoded = reader.read_from(start.index);
                     let element = TemplateElement::String { value, encoded };
                     elements.push(element);
                 } else {
@@ -164,7 +164,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }
         );
-        assert_eq!(reader.cursor().offset, 13);
+        assert_eq!(reader.cursor().index, 13);
 
         let mut reader = Reader::new("data.bin");
         assert_eq!(
@@ -179,7 +179,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.cursor().offset, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -196,7 +196,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
-        assert_eq!(reader.cursor().offset, 18);
+        assert_eq!(reader.cursor().index, 18);
     }
 
     #[test]
@@ -213,7 +213,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11)),
             }
         );
-        assert_eq!(reader.cursor().offset, 10);
+        assert_eq!(reader.cursor().index, 10);
     }
 
     #[test]

@@ -261,7 +261,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
             ParseErrorKind::OddNumberOfHexDigits,
         ));
     }
-    let encoded = reader.read_from(start.offset);
+    let encoded = reader.read_from(start.index);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
 
@@ -380,7 +380,7 @@ pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     let space0 = zero_or_more_spaces(reader)?;
     let save_state = reader.cursor();
     let value = base64::parse(reader);
-    let count = reader.cursor().offset - save_state.offset;
+    let count = reader.cursor().index - save_state.index;
     reader.seek(save_state);
     let encoded = reader.read_n(count);
     let space1 = zero_or_more_spaces(reader)?;
@@ -447,7 +447,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = space(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("  ");
         assert_eq!(
@@ -457,7 +457,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             }),
         );
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -486,7 +486,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             })
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("xxx");
         assert_eq!(
@@ -496,7 +496,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             })
         );
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new(" xxx");
         assert_eq!(
@@ -506,7 +506,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             })
         );
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -537,7 +537,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 10)),
             })
         );
-        assert_eq!(reader.cursor().offset, 9);
+        assert_eq!(reader.cursor().index, 9);
 
         let mut reader = Reader::new("xxx");
         let error = comment(&mut reader).err().unwrap();
@@ -549,7 +549,7 @@ mod tests {
     fn test_literal() {
         let mut reader = Reader::new("hello");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -560,7 +560,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new("hi");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -571,7 +571,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("he");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -582,7 +582,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -728,7 +728,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor().offset, 14);
+        assert_eq!(reader.cursor().index, 14);
     }
 
     #[test]
@@ -737,13 +737,13 @@ mod tests {
         let error = key_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert!(error.recoverable);
-        assert_eq!(reader.cursor().offset, 5); // does not reset cursor
+        assert_eq!(reader.cursor().index, 5); // does not reset cursor
 
         let mut reader = Reader::new("GET http://google.fr");
         let error = key_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(error.recoverable);
-        assert_eq!(reader.cursor().offset, 5); // does not reset cursor
+        assert_eq!(reader.cursor().index, 5); // does not reset cursor
     }
 
     #[test]
@@ -1049,6 +1049,6 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor().offset, 15);
+        assert_eq!(reader.cursor().index, 15);
     }
 }

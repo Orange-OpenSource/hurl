@@ -156,7 +156,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
 fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)> {
     let start = reader.cursor();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.read_from(start.offset))),
+        Ok(c) => Ok((c, reader.read_from(start.index))),
         Err(e) => {
             if e.recoverable {
                 reader.seek(start);
@@ -176,7 +176,7 @@ fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)>
                             };
                             Err(ParseError::new(start.pos, true, kind))
                         } else {
-                            Ok((c, reader.read_from(start.offset)))
+                            Ok((c, reader.read_from(start.index)))
                         }
                     }
                 }
@@ -257,7 +257,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
         );
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
     }
 
     #[test]
@@ -274,7 +274,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             }
         );
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -291,7 +291,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
             }
         );
-        assert_eq!(reader.cursor().offset, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
@@ -308,7 +308,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
         );
-        assert_eq!(reader.cursor().offset, 4);
+        assert_eq!(reader.cursor().index, 4);
     }
 
     #[test]
@@ -345,7 +345,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
             }
         );
-        assert_eq!(reader.cursor().offset, 20);
+        assert_eq!(reader.cursor().index, 20);
     }
 
     #[test]
@@ -359,7 +359,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             }
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\"a#\"");
         assert_eq!(
@@ -373,7 +373,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
         );
-        assert_eq!(reader.cursor().offset, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("\"{0}\"");
         assert_eq!(
@@ -387,7 +387,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
     }
 
     #[test]
@@ -405,7 +405,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.cursor().offset, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -426,11 +426,11 @@ mod tests {
     fn test_quoted_string() {
         let mut reader = Reader::new("\"\"");
         assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "");
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\"Hello\"");
         assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "Hello");
-        assert_eq!(reader.cursor().offset, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
@@ -444,7 +444,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             }
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("`foo#`");
         assert_eq!(
@@ -458,7 +458,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
             }
         );
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("`{0}`");
         assert_eq!(
@@ -472,7 +472,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
     }
 
     #[test]
@@ -490,7 +490,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.cursor().offset, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -511,22 +511,22 @@ mod tests {
     fn test_any_char() {
         let mut reader = Reader::new("a");
         assert_eq!(any_char(&[], &mut reader).unwrap(), ('a', "a".to_string()));
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new(" ");
         assert_eq!(any_char(&[], &mut reader).unwrap(), (' ', " ".to_string()));
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("\\t");
         assert_eq!(
             any_char(&[], &mut reader).unwrap(),
             ('\t', "\\t".to_string())
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("#");
         assert_eq!(any_char(&[], &mut reader).unwrap(), ('#', "#".to_string()));
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -536,7 +536,7 @@ mod tests {
             any_char(&[], &mut reader).unwrap(),
             ('"', "\\\"".to_string())
         );
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -561,11 +561,11 @@ mod tests {
     fn test_escape_char() {
         let mut reader = Reader::new("\\n");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\\u{0a}");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("x");
         let error = escape_char(&mut reader).err().unwrap();
@@ -577,18 +577,18 @@ mod tests {
             }
         );
         assert!(error.recoverable);
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
     }
 
     #[test]
     fn test_unicode() {
         let mut reader = Reader::new("{000a}");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("{E9}");
         assert_eq!(unicode(&mut reader).unwrap(), 'é');
-        assert_eq!(reader.cursor().offset, 4);
+        assert_eq!(reader.cursor().index, 4);
     }
 
     #[test]
@@ -617,7 +617,7 @@ mod tests {
 
         let now = SystemTime::now();
         assert!(quoted_template(&mut reader).is_ok());
-        assert_eq!(reader.cursor().offset, 14);
+        assert_eq!(reader.cursor().index, 14);
         eprintln!("duration= {}", now.elapsed().unwrap().as_nanos());
     }
 }

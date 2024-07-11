@@ -213,15 +213,15 @@ mod tests {
     fn test_natural() {
         let mut reader = Reader::new("0");
         assert_eq!(natural(&mut reader).unwrap(), 0);
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("0.");
         assert_eq!(natural(&mut reader).unwrap(), 0);
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(natural(&mut reader).unwrap(), 10);
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -267,11 +267,11 @@ mod tests {
     fn test_number() {
         let mut reader = Reader::new("1");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
-        assert_eq!(reader.cursor().offset, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("1.0");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
-        assert_eq!(reader.cursor().offset, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
@@ -281,7 +281,7 @@ mod tests {
                 decimal: 0
             }
         );
-        assert_eq!(reader.cursor().offset, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
@@ -291,7 +291,7 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             }
         );
-        assert_eq!(reader.cursor().offset, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
@@ -301,7 +301,7 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             }
         );
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
@@ -311,7 +311,7 @@ mod tests {
                 decimal: 10_000_000_000_000_000
             }
         );
-        assert_eq!(reader.cursor().offset, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
@@ -321,7 +321,7 @@ mod tests {
                 decimal: 10_000_000_000_000_000
             }
         );
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("-0.333333333333333333");
         assert_eq!(
@@ -331,7 +331,7 @@ mod tests {
                 decimal: 333_333_333_333_333_333
             }
         );
-        assert_eq!(reader.cursor().offset, 21);
+        assert_eq!(reader.cursor().index, 21);
     }
 
     #[test]
@@ -417,28 +417,28 @@ mod tests {
     fn test_literal() {
         let mut reader = Reader::new("hello");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.cursor().offset, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("hello ");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
-        assert_eq!(reader.cursor().offset, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new("hi");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("he");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
-        assert_eq!(reader.cursor().offset, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 }

@@ -272,14 +272,14 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.cursor().offset, 23);
+        assert_eq!(reader.cursor().index, 23);
 
         let mut reader = Reader::new("<users><user /></users>xx");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.cursor().offset, 23);
+        assert_eq!(reader.cursor().index, 23);
         assert_eq!(reader.peek_n(2), String::from("xx"));
 
         let mut reader = Reader::new("<?xml version=\"1.0\"?><users/>xxx");
@@ -287,7 +287,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<?xml version=\"1.0\"?><users/>")
         );
-        assert_eq!(reader.cursor().offset, 29);
+        assert_eq!(reader.cursor().index, 29);
     }
 
     #[test]
@@ -306,25 +306,25 @@ mod tests {
         let output = xml;
         let mut reader = Reader::new(input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.cursor().offset, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         // A XML with data padding
         let input = format!("{xml} xx xx xx xx");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.cursor().offset, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         // Two consecutive XML
         let input = format!("{xml}{xml}");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.cursor().offset, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.cursor().offset, 520);
+        assert_eq!(reader.cursor().index, 520);
     }
 
     #[test]
@@ -453,6 +453,6 @@ mod tests {
         let chunk = format!("{xml}\nHTTP 200");
         let mut reader = Reader::new(&chunk);
         assert_eq!(parse(&mut reader).unwrap(), String::from(xml),);
-        assert_eq!(reader.cursor().offset, 4411);
+        assert_eq!(reader.cursor().index, 4411);
     }
 }

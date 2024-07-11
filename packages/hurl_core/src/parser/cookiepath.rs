@@ -91,7 +91,7 @@ mod tests {
                 attribute: None,
             }
         );
-        assert_eq!(reader.cursor().offset, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
@@ -121,7 +121,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor().offset, 15);
+        assert_eq!(reader.cursor().index, 15);
     }
 
     #[test]
@@ -161,7 +161,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor().offset, 16);
+        assert_eq!(reader.cursor().index, 16);
     }
 
     #[test]
@@ -206,14 +206,14 @@ mod tests {
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("Domain".to_string())
         );
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("domain");
         assert_eq!(
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("domain".to_string())
         );
-        assert_eq!(reader.cursor().offset, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("unknown");
         let error = cookiepath_attribute_name(&mut reader).err().unwrap();
