@@ -28,6 +28,9 @@ POST http://localhost:8000/oneline-string
 POST http://localhost:8000/oneline-base64
 base64,bGluZTEKbGluZTINCmxpbmUzCg==;
 
+POST http://localhost:8000/oneline-base64
+base64,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/==;
+
 POST http://localhost:8000/oneline-file
 file,data.bin;
 
