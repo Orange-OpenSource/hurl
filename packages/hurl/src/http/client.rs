@@ -362,7 +362,7 @@ impl Client {
         // way to get access to the outgoing headers.
         self.handle.verbose(true)?;
 
-        // We checks libcurl HTTP version support.
+        // We check libcurl HTTP version support.
         let http_version = options.http_version;
         if (http_version == RequestedHttpVersion::Http2 && !self.http2)
             || (http_version == RequestedHttpVersion::Http3 && !self.http3)
@@ -531,7 +531,7 @@ impl Client {
         // Workaround for libcurl issue #11664: When Hurl explicitly sets `Expect:` to remove the header,
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
-        // Therefore we only remove this header when not in aws_sigv4 mode.
+        // Therefore, we only remove this header when not in aws_sigv4 mode.
         if !request_spec.headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.

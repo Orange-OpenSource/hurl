@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --variable success=invalid tests_failed/body_json.hurl
+hurl --continue-on-error tests_failed/body_binary.hurl
