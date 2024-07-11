@@ -1,0 +1,79 @@
+[1;32mHTTP/1.1 200
+[0m[1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+[1;36mDate[0m: <<<.*?>>>
+[1;36mContent-Type[0m: text/html; charset=utf-8
+[1;36mContent-Length[0m: 45
+[1;36mServer[0m: Flask Server
+[1;36mConnection[0m: close
+
+<html><head><title>Test</title></head></html>
+
+[1;31merror[0m: [1mAssert header value[0m
+  [1;34m-->[0m tests_failed/error_format_long.hurl:7:15
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 7 |[0m Content-Type: text/html
+[1;34m   |[0m[1;31m               ^^^^^^^^^ actual value is <text/html; charset=utf-8>[0m
+[1;34m   |[0m
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long.hurl:9:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 9 |[0m xpath "string(//head/title)" == "Welcome!"
+[1;34m   |[0m[1;31m   actual:   string <Test>[0m
+[1;34m   |[0m[1;31m   expected: string <Welcome!>[0m
+[1;34m   |[0m
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long.hurl:11:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m11 |[0m xpath "//title" count == 2
+[1;34m   |[0m[1;31m   actual:   int <1>[0m
+[1;34m   |[0m[1;31m   expected: int <2>[0m
+[1;34m   |[0m
+
+[1;32mHTTP/1.1 200
+[0m[1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+[1;36mDate[0m: <<<.*?>>>
+[1;36mContent-Type[0m: application/json
+[1;36mContent-Length[0m: 115
+[1;36mServer[0m: Flask Server
+[1;36mConnection[0m: close
+
+{"books": [{"name": "Dune", "author": "Franck Herbert"}, {"name": "Les Mis\u00e9rables", "author": "Victor Hugo"}]}
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long.hurl:18:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/json[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m18 |[0m jsonpath "$.books" count == 12
+[1;34m   |[0m[1;31m   actual:   int <2>[0m
+[1;34m   |[0m[1;31m   expected: int <12>[0m
+[1;34m   |[0m
+
+[1;32mHTTP/1.1 200
+[0m[1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+[1;36mDate[0m: <<<.*?>>>
+[1;36mContent-Type[0m: application/problem+json
+[1;36mContent-Length[0m: 258
+[1;36mServer[0m: Flask Server
+[1;36mConnection[0m: close
+
+{"type": "https://example.com/probs/out-of-credit", "title": "You do not have enough credit.", "detail": "Your current balance is 30, but that costs 50.", "instance": "/account/12345/msgs/abc", "balance": 30, "accounts": ["/account/12345", "/account/67890"]}
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long.hurl:26:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/rfc-7807[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m26 |[0m jsonpath "$.title" == "You have enough credit."
+[1;34m   |[0m[1;31m   actual:   string <You do not have enough credit.>[0m
+[1;34m   |[0m[1;31m   expected: string <You have enough credit.>[0m
+[1;34m   |[0m
+
