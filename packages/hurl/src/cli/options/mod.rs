@@ -425,7 +425,7 @@ impl CliOptions {
             None
         };
         let pre_entry = if self.interactive {
-            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
+            Some(cli::interactive::pre_entry as fn(&Entry) -> bool)
         } else {
             None
         };

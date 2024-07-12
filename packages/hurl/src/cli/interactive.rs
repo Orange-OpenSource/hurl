@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::Entry;
 #[cfg(target_family = "unix")]
-use hurl_core::ast::{MultipartParam, Request, SectionValue};
+use hurl_core::ast::Request;
 #[cfg(target_family = "unix")]
 use {
     std::io::{stderr, stdin, Write},
@@ -26,18 +26,22 @@ use {
     termion::raw::IntoRawMode,
 };
 
+/// Interactively asks user to execute `entry` or quit.
 #[cfg(target_family = "unix")]
-pub fn pre_entry(entry: Entry) -> bool {
-    let stdin = stdin();
-    let mut stderr = stderr().into_raw_mode().unwrap();
+pub fn pre_entry(entry: &Entry) -> bool {
+    eprintln!("\nInteractive mode");
+    eprintln!("\nNext request:");
+    eprintln!();
 
-    eprintln!("\n\rInteractive mode");
-    eprintln!("\n\rNext request:");
-    log_request(entry.request);
+    log_request(&entry.request);
+
+    // In raw mode, "\n" only means "go one line down", not "line break"
+    // To effectively go do the next new line, we have to write "\r\n".
+    let mut stderr = stderr().into_raw_mode().unwrap();
 
     write!(
         stderr,
-        "\r\nPress Q (Quit) or C (Continue)\n\n\r{}",
+        "\r\nPress Q (Quit) or C (Continue){}\r\n",
         termion::cursor::Hide
     )
     .unwrap();
@@ -45,7 +49,7 @@ pub fn pre_entry(entry: Entry) -> bool {
     stderr.flush().unwrap();
     let mut exit = false;
 
-    for c in stdin.keys() {
+    for c in stdin().keys() {
         print!("\r");
         match c.unwrap() {
             Key::Char('q') => {
@@ -62,61 +66,16 @@ pub fn pre_entry(entry: Entry) -> bool {
     exit
 }
 
+#[allow(dead_code)]
 #[cfg(target_family = "unix")]
-fn log_request(request: Request) {
-    eprintln!("\r\n{} {}", request.method, request.url);
-    for header in request.headers {
-        eprintln!("\r{}: {}", header.key, header.value);
-    }
-    for section in request.sections {
-        eprintln!("\r[{}]", section.name());
-        match section.value {
-            SectionValue::QueryParams(key_values) => {
-                for value in key_values {
-                    eprintln!("\r{}: {}", value.key, value.value);
-                }
-            }
-            SectionValue::BasicAuth(Some(key_value)) => {
-                eprintln!("\r{}: {}", key_value.key, key_value.value);
-            }
-            SectionValue::FormParams(key_values) => {
-                for value in key_values {
-                    eprintln!("\r{}: {}", value.key, value.value);
-                }
-            }
-            SectionValue::MultipartFormData(multipart_params) => {
-                for param in multipart_params {
-                    match param {
-                        MultipartParam::Param(value) => {
-                            eprintln!("\r{}: {}", value.key, value.value);
-                        }
-                        MultipartParam::FileParam(file_param) => {
-                            let content_type =
-                                if let Some(content_type) = file_param.value.content_type {
-                                    format!("; {content_type}")
-                                } else {
-                                    String::new()
-                                };
-                            eprintln!(
-                                "\r{}: {}{}",
-                                file_param.key, file_param.value.filename, content_type
-                            );
-                        }
-                    }
-                }
-            }
-            SectionValue::Cookies(cookies) => {
-                for cookie in cookies {
-                    eprintln!("\r{}: {}", cookie.name, cookie.value);
-                }
-            }
-            _ => {}
-        }
-    }
+fn log_request(request: &Request) {
+    let method = &request.method;
+    let url = &request.url;
+    eprintln!("{method} {url}");
 }
 
 #[cfg(target_family = "windows")]
-pub fn pre_entry(_: Entry) -> bool {
+pub fn pre_entry(_: &Entry) -> bool {
     eprintln!("Interactive not supported yet in windows!");
     true
 }

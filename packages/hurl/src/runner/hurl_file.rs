@@ -160,7 +160,7 @@ pub fn run_entries(
         let entry = &entries[entry_index - 1];
 
         if let Some(pre_entry) = runner_options.pre_entry {
-            let exit = pre_entry(entry.clone());
+            let exit = pre_entry(entry);
             if exit {
                 break;
             }

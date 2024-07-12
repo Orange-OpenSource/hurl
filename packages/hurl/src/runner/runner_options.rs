@@ -52,7 +52,7 @@ pub struct RunnerOptionsBuilder {
     output: Option<Output>,
     path_as_is: bool,
     post_entry: Option<fn() -> bool>,
-    pre_entry: Option<fn(Entry) -> bool>,
+    pre_entry: Option<fn(&Entry) -> bool>,
     proxy: Option<String>,
     repeat: Option<Count>,
     resolves: Vec<String>,
@@ -310,7 +310,7 @@ impl RunnerOptionsBuilder {
     /// Sets function to be executed before each entry execution.
     ///
     /// If the function returns true, the run is stopped.
-    pub fn pre_entry(&mut self, pre_entry: Option<fn(Entry) -> bool>) -> &mut Self {
+    pub fn pre_entry(&mut self, pre_entry: Option<fn(&Entry) -> bool>) -> &mut Self {
         self.pre_entry = pre_entry;
         self
     }
@@ -468,7 +468,7 @@ pub struct RunnerOptions {
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
     pub(crate) post_entry: Option<fn() -> bool>,
-    pub(crate) pre_entry: Option<fn(Entry) -> bool>,
+    pub(crate) pre_entry: Option<fn(&Entry) -> bool>,
     pub(crate) proxy: Option<String>,
     pub(crate) repeat: Option<Count>,
     pub(crate) resolves: Vec<String>,
