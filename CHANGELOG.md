@@ -31,7 +31,9 @@ Enhancements:
 Bugs Fixed:
 
 * Get SSL certificates info on reused connections, from a cache [#3031](https://github.com/Orange-OpenSource/hurl/issues/3031)
-* Fix error displayed in double with bad option. [#2920](https://github.com/Orange-OpenSource/hurl/issues/2920)
+* Fix max-redirs: -1 in [Options] section [#3023](https://github.com/Orange-OpenSource/hurl/issues/3023)
+* Fix error displayed in double with bad option [#2920](https://github.com/Orange-OpenSource/hurl/issues/2920)
+* Fix hurlfmt exit code with lint error [#2919](https://github.com/Orange-OpenSource/hurl/issues/2919)
 * Truncate file then append it when dumping response with --output. [#2886](https://github.com/Orange-OpenSource/hurl/issues/2886)
 * Fix crash with --json option when capturing 'HttpOnly' and 'Secure' cookie attribute [#2871](https://github.com/Orange-OpenSource/hurl/issues/2871)
 * Fix crash when capturing 'Expires' cookie attribute [#2870](https://github.com/Orange-OpenSource/hurl/issues/2870)
