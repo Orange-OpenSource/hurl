@@ -19,7 +19,7 @@ use std::io;
 
 use crate::parallel::job::{Job, JobResult};
 use crate::parallel::worker::WorkerId;
-use crate::util::term::{Stderr, Stdout};
+use crate::util::term::Stderr;
 
 /// Represents a message sent from the worker to the runner (running on the main thread).
 pub enum WorkerMessage {
@@ -38,6 +38,7 @@ pub enum WorkerMessage {
 /// A message sent from worker to runner when the input file can't be read.
 pub struct IOErrorMsg {
     /// Identifier of the worker sending this message.
+    #[allow(dead_code)]
     pub worker_id: WorkerId,
     /// Job originator of this message.
     pub job: Job,
@@ -59,8 +60,10 @@ impl IOErrorMsg {
 /// A message sent from worker to runner when the input file can't be parsed.
 pub struct ParsingErrorMsg {
     /// Identifier of the worker sending this message.
+    #[allow(dead_code)]
     pub worker_id: WorkerId,
     /// Job originator of this message.
+    #[allow(dead_code)]
     pub job: Job,
     /// Standard error of the worker for this job.
     pub stderr: Stderr,
@@ -107,19 +110,16 @@ pub struct CompletedMsg {
     pub worker_id: WorkerId,
     /// Result execution of the originator job, can successful or failed.
     pub result: JobResult,
-    /// Standard output of the worker for this job.
-    pub stdout: Stdout,
     /// Standard error of the worker for this job.
     pub stderr: Stderr,
 }
 
 impl CompletedMsg {
     /// Creates a new completed message: the job has completed, successfully or not.
-    pub fn new(worker_id: WorkerId, result: JobResult, stdout: Stdout, stderr: Stderr) -> Self {
+    pub fn new(worker_id: WorkerId, result: JobResult, stderr: Stderr) -> Self {
         CompletedMsg {
             worker_id,
             result,
-            stdout,
             stderr,
         }
     }

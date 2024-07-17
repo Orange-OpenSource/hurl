@@ -250,10 +250,3 @@ error: Decompression error
     | ^^^^^ compression unknown is not supported
     |
 
-error: Unsupported HTTP version
-   --> tests_failed/runner_errors.hurl:169:5
-    |
-169 | GET http://localhost:8000/runner_errors
-    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version
-    |
-
