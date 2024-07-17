@@ -73,7 +73,7 @@ def test_exit_code(f: str, result: subprocess.CompletedProcess) -> bool:
 
 
 def test_stdout(f, result):
-    """test stdout"""
+    """Test stdout"""
 
     if not os.path.exists(f):
         return
@@ -87,53 +87,18 @@ def test_stdout(f, result):
 
 
 def test_stdout_pattern(f, result):
-    """test stdout with pattern lines"""
+    """Test stdout with pattern lines"""
     if not os.path.exists(f):
         return
 
+    actual = result.stdout
     expected = open(f, encoding="utf-8").read()
 
-    # curl debug logs are too dependent on the context, so we filter
-    # them and not take them into account for testing differences.
-    expected = ignore_lines(expected)
-    expected_lines = expected.split("\n")
-    expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
-
-    actual = decode_string(result.stdout)
-    actual = ignore_lines(actual)
-    actual_lines = re.split(r"\r?\n", actual)
-
-    if len(actual_lines) != len(expected_pattern_lines):
-        print(">>> error in stdout / mismatch in number of lines")
-        print(
-            f"actual:   {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
-        )
-        print(f"actual <{actual}>")
-        print("# Actual lines")
-        for i, line in enumerate(actual_lines):
-            print("%2d: %s" % (i, line))
-        print("# Expected lines")
-        for i, line in enumerate(expected_lines):
-            print("%2d: %s" % (i, line))
-        print("# Expected Pattern lines")
-        for i, line in enumerate(expected_pattern_lines):
-            print("%2d: %s" % (i, line))
-
-        sys.exit(1)
-    for i in range(len(expected_pattern_lines)):
-        if not re.match(expected_pattern_lines[i], actual_lines[i]):
-            print(f">>> error in stdout in line {i+1}")
-            print("actual:")
-            print(actual_lines[i])
-            print("expected (pattern):")
-            print(expected_lines[i])
-            print("expected (regex):")
-            print(expected_pattern_lines[i])
-            sys.exit(1)
+    show_pattern_diff(actual, expected, "stdout")
 
 
 def test_stderr(f, result):
-    """test stderr"""
+    """Test stderr"""
 
     if not os.path.exists(f):
         return
@@ -150,42 +115,36 @@ def test_stderr(f, result):
 
 
 def test_stderr_pattern(f, result):
-    """test stderr with pattern lines"""
-
+    """Test stderr with pattern lines"""
     if not os.path.exists(f):
         return
-
+    actual = result.stderr
     expected = open(f, encoding="utf-8").read()
 
+    show_pattern_diff(actual, expected, "stderr")
+
+
+def show_pattern_diff(actual: bytes, expected: str, name: str):
+    """Show diff in actual vs expecetd when exoected is patternized"""
     # curl debug logs are too dependent on the context, so we filter
     # them and not take them into account for testing differences.
     expected = ignore_lines(expected)
     expected_lines = expected.split("\n")
     expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
 
-    actual = decode_string(result.stderr)
+    actual = decode_string(actual)
     actual = ignore_lines(actual)
     actual_lines = re.split(r"\r?\n", actual)
 
     if len(actual_lines) != len(expected_pattern_lines):
-        print(">>> error in stderr / mismatch in number of lines")
-        print(
-            f"actual:   {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
-        )
-        print("# Actual lines")
-        for i, line in enumerate(actual_lines):
-            print("%2d: %s" % (i, line))
-        print("# Expected lines")
-        for i, line in enumerate(expected_lines):
-            print("%2d: %s" % (i, line))
-        print("# Expected Pattern lines")
-        for i, line in enumerate(expected_pattern_lines):
-            print("%2d: %s" % (i, line))
+        print(f">>> error in {name} / mismatch in number of lines")
+        print(f"actual:   {len(actual_lines)} lines")
+        print(f"expected: {len(expected_pattern_lines)} lines")
 
-        sys.exit(1)
-    for i in range(len(expected_pattern_lines)):
+    count = min(len(actual_lines), len(expected_lines))
+    for i in range(count):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
-            print(f">>> error in stderr in line {i+1}")
+            print(f">>> first error in {name} in line {i+1}")
             print("actual:")
             print(actual_lines[i])
             print("expected (pattern):")

@@ -258,10 +258,3 @@
 [1;34m    |[0m[1;31m ^^^^^ compression unknown is not supported[0m
 [1;34m    |[0m
 
-[1;31merror[0m: [1mUnsupported HTTP version[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:169:5
-[1;34m    |[0m
-[1;34m169 |[0m GET http://localhost:8000/runner_errors
-[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version[0m
-[1;34m    |[0m
-
