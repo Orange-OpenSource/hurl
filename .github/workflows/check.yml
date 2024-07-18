@@ -19,16 +19,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Checkout repository
+      uses: actions/checkout@v4.1.7
+      with:
+        ref: ${{ inputs.branch }}
+
     - name: ruff
       if: always()
       run: |
         curl -LsSf https://astral.sh/ruff/install.sh | sh
         ruff check .
-
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.7
-      with:
-        ref: ${{ inputs.branch }}
 
     - name: Shellcheck
       if: always()
