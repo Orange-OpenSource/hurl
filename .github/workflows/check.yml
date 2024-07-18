@@ -20,9 +20,11 @@ jobs:
     steps:
 
     - name: ruff
-      uses: chartboost/ruff-action@v1
-      with:
-        src: '.'
+      if: always()
+      run: |
+        curl -LsSf https://astral.sh/ruff/install.sh | sh
+        ruff check .
+
     - name: Checkout repository
       uses: actions/checkout@v4.1.7
       with:
