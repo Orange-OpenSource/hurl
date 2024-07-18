@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 echo "----- install prerequisite packages -----"
-pacman -Sy --noconfirm \
+pacman -Syu --noconfirm \
     bash \
     sudo \
     expect \
@@ -17,7 +17,7 @@ pacman -Sy --noconfirm \
     squid \
     jq
 # Temporary install to patch a python3/pip crash
-pacman -Sy --noconfirm expat
+pacman -Syu --noconfirm expat
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
 
