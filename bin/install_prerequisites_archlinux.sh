@@ -5,6 +5,7 @@ echo "----- install prerequisite packages -----"
 pacman -Syu --noconfirm \
     bash \
     sudo \
+    gcc \
     expect \
     openssl \
     python3 \
