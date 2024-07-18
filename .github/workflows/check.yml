@@ -21,7 +21,8 @@ jobs:
 
     - name: ruff
       uses: chartboost/ruff-action@v1
-
+      with:
+        src: '.'
     - name: Checkout repository
       uses: actions/checkout@v4.1.7
       with:
