@@ -28,7 +28,7 @@ jobs:
       if: always()
       run: |
         curl -LsSf https://astral.sh/ruff/install.sh | sh
-        ruff check .
+        ruff check . --output-format github
 
     - name: Shellcheck
       if: always()
