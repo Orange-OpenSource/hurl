@@ -6,6 +6,7 @@ apk update --quiet
 apk add --quiet \
     bash \
     sudo \
+    expect \
     netcat-openbsd \
     curl \
     curl-dev \

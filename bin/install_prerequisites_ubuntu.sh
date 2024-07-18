@@ -9,6 +9,7 @@ fi
 sudo apt-get update
 sudo apt-get -y install \
     bash \
+    expect \
     curl \
     net-tools \
     g++-aarch64-linux-gnu \
