@@ -23,11 +23,11 @@ function usage(){
     echo "        : example: --github-project-path Orange-OpenSource/hurl"
     echo
     echo "  --github-token <github token access> #mandatory"
-    echo "      specify github user token with acces to PR api"
+    echo "      specify github user token with access to PR api"
     echo "        : example: --github-token ghp_kJvDuaalZidk3nB1uYtgsqMrkQ5Hkh76jh2o"      
     echo
     echo "  --max-days-of-inactivity <days> #optional"
-    echo "      maximium days of inactivity before closing a PR"
+    echo "      maximum days of inactivity before closing a PR"
     echo "        : default value: 30"
     echo "        : example for a month: 7"
     echo

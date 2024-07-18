@@ -22,7 +22,7 @@ function usage(){
     echo "        : example: orange-opensource/hurl"
     echo
     echo "  --github-token <github token access> #mandatory"
-    echo "      specify github user token with acces to PR api"
+    echo "      specify github user token with access to PR api"
     echo "        : example: --github-token ghp_kJvDuaalZtyhinB1uYtgsqMrkQ5Hkh76jh2o"      
     echo
 }
@@ -123,7 +123,7 @@ function is_release(){
     if [[ $gh_exit_code -eq 0 ]] ; then
         echo "${release} is a release in ${github_repo}"
     else
-        log_error "release informations" "${release} release does not exist in ${github_repo}"
+        log_error "release information" "${release} release does not exist in ${github_repo}"
         return 1
     fi
 }

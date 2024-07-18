@@ -122,31 +122,31 @@ impl StyledString {
         let mut width = 0;
 
         for token in &self.tokens {
-            let mut chunck = String::new();
+            let mut chunk = String::new();
             let mut it = token.content.chars().peekable();
 
             // Iterate over each chars of the current token, splitting the current
             // token if necessary
             while let Some(c) = it.next() {
-                chunck.push(c);
+                chunk.push(c);
                 width += 1;
 
                 if width >= max_width {
-                    let token = Token::new(&chunck, token.style);
+                    let token = Token::new(&chunk, token.style);
                     string.push_token(token);
                     if it.peek().is_some() {
                         // New lines are always plain
                         let nl = Token::new("\n", Style::new());
                         string.push_token(nl);
                     }
-                    chunck = String::new();
+                    chunk = String::new();
                     width = 0;
                 }
             }
 
-            // Append the last chunck
-            if !chunck.is_empty() {
-                let token = Token::new(&chunck, token.style);
+            // Append the last chunk
+            if !chunk.is_empty() {
+                let token = Token::new(&chunk, token.style);
                 string.push_token(token);
             }
         }

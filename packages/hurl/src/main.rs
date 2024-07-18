@@ -98,7 +98,7 @@ fn main() {
         Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
     };
 
-    // Compute duration of the test here to not take reports writings into acccount.
+    // Compute duration of the test here to not take reports writings into account.
     let duration = start.elapsed();
 
     // Write HTML, JUnit, TAP reports on disk.

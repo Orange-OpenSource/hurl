@@ -340,7 +340,7 @@ mod tests {
             suggestion(&valid_values, "assert"),
             Some("Asserts".to_string())
         );
-        assert_eq!(suggestion(&valid_values, "asser"), None);
+        assert_eq!(suggestion(&valid_values, "assert"), None);
     }
 
     #[test]
