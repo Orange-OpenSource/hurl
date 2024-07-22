@@ -1,0 +1,24 @@
+Source: hurl
+Section: utils
+Priority: optional
+Maintainer: lepapareil <filipe.pinto@orange.com>
+Build-Depends:
+  debhelper (=10),
+  rustc,
+  cargo,
+  curl,
+  libxml2-dev,
+  libssl-dev
+Standards-Version: 4.6.0
+Homepage: https://hurl.dev
+Rules-Requires-Root: no
+
+Package: hurl
+Section: utils
+Architecture: any
+Maintainer: lepapareil <filipe.pinto@orange.com>
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Hurl is a command line tool that runs HTTP requests defined in a simple plain text format.
+ It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very versatile: it can be used for both fetching data and testing HTTP sessions.
+  Hurl makes it easy to work with HTML content, REST / SOAP / GraphQL APIs, or any other XML / JSON based APIs.
+

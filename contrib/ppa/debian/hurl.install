@@ -1,0 +1,3 @@
+target/release/hurl    usr/bin
+README.md              usr/share/doc/hurl
+
