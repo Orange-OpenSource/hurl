@@ -84,6 +84,7 @@ hurl (4.3.0) UNRELEASED; urgency=medium
 
  -- lepapareil <filipe.pinto@orange.com>  Fri, 17 May 2024 13:30:36 +0200
 EOF
+```
 
 ## create debian/rules file
 cat << EOF > debian/rules
