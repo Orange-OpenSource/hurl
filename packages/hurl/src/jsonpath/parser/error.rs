@@ -15,16 +15,49 @@
  * limitations under the License.
  *
  */
-use super::Pos;
+
+use hurl_core::reader::Pos;
+
+pub type ParseResult<T> = Result<T, ParseError>;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error {
+pub struct ParseError {
     pub pos: Pos,
     pub recoverable: bool,
-    pub inner: ParseError,
+    pub kind: ParseErrorKind,
+}
+
+impl ParseError {
+    pub fn new(pos: Pos, recoverable: bool, kind: ParseErrorKind) -> Self {
+        ParseError {
+            pos,
+            recoverable,
+            kind,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ParseError {
-    Expecting { value: String },
+pub enum ParseErrorKind {
+    Expecting(String),
+}
+
+impl hurl_core::combinator::ParseError for ParseError {
+    fn is_recoverable(&self) -> bool {
+        self.recoverable
+    }
+
+    fn to_recoverable(self) -> Self {
+        ParseError {
+            recoverable: true,
+            ..self
+        }
+    }
+
+    fn to_non_recoverable(self) -> Self {
+        ParseError {
+            recoverable: false,
+            ..self
+        }
+    }
 }

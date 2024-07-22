@@ -15,11 +15,14 @@
  * limitations under the License.
  *
  */
+//! Wrapper on standard output/error.
 use std::io;
 #[cfg(target_family = "windows")]
 use std::io::IsTerminal;
 use std::io::Write;
 
+/// The way to write on standard output and error: either immediate like `println!` macro,
+/// or buffered in an internal buffer.
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum WriteMode {
     /// Messages are printed immediately.

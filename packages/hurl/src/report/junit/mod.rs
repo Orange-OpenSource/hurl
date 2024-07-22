@@ -16,7 +16,7 @@
  *
  */
 
-//! XML JUnit report
+//! XML JUnit report.
 //!
 //! The link below seems the most "official" spec
 //! <https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format>
@@ -62,22 +62,34 @@ use std::path::Path;
 pub use testcase::Testcase;
 
 use crate::report::junit::xml::{Element, XmlDocument};
-use crate::report::Error;
+use crate::report::ReportError;
 
 /// Creates a JUnit from a list of `testcases`.
-pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Error> {
-    // If there is an existing JUnit report, we parses it to insert a new testsuite.
+pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
+    // We ensure that parent folder is created.
+    if let Some(parent) = filename.parent() {
+        match std::fs::create_dir_all(parent) {
+            Ok(_) => {}
+            Err(err) => {
+                return Err(ReportError::from_error(
+                    err,
+                    filename,
+                    "Issue writing Junit report",
+                ))
+            }
+        }
+    }
+
+    // If there is an existing JUnit report, we parse it to insert a new testsuite.
     let mut root = if filename.exists() {
         let file = match File::open(filename) {
             Ok(s) => s,
-            Err(why) => {
-                return Err(Error {
-                    message: format!(
-                        "Issue reading {} to string to {:?}",
-                        filename.display(),
-                        why
-                    ),
-                });
+            Err(e) => {
+                return Err(ReportError::from_error(
+                    e,
+                    filename,
+                    "Issue reading JUnit report",
+                ))
             }
         };
         let doc = XmlDocument::parse(file).unwrap();
@@ -93,16 +105,18 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Error
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(Error {
-                message: format!("Failed to produce JUnit report: {e:?}"),
-            });
+            return Err(ReportError::from_error(
+                e,
+                filename,
+                "Issue writing JUnit report",
+            ))
         }
     };
     match doc.write(file) {
         Ok(_) => Ok(()),
-        Err(e) => Err(Error {
-            message: format!("Failed to produce Junit report: {e:?}"),
-        }),
+        Err(e) => Err(ReportError::from_string(&format!(
+            "Failed to produce Junit report: {e:?}"
+        ))),
     }
 }
 
@@ -132,12 +146,16 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
 
 #[cfg(test)]
 mod tests {
-    use crate::http::HttpError;
-    use hurl_core::ast::{Pos, SourceInfo};
+    use std::time::Duration;
 
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
+    use hurl_core::reader::Pos;
+
+    use crate::http::HttpError;
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
-    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};
+    use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
 
     #[test]
     fn create_junit_report() {
@@ -147,7 +165,7 @@ mod tests {
         let mut testcases = vec![];
         let res = HurlResult {
             entries: vec![],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -169,10 +187,10 @@ mod tests {
                     },
                     true,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -195,10 +213,10 @@ mod tests {
                     }),
                     false,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,

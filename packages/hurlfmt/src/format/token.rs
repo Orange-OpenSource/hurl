@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::ast::*;
+use hurl_core::typing::Count;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -902,6 +903,7 @@ impl Tokenizable for OptionKind {
             OptionKind::Output(filename) => filename.tokenize(),
             OptionKind::PathAsIs(value) => value.tokenize(),
             OptionKind::Proxy(value) => value.tokenize(),
+            OptionKind::Repeat(value) => value.tokenize(),
             OptionKind::Resolve(value) => value.tokenize(),
             OptionKind::Retry(value) => value.tokenize(),
             OptionKind::RetryInterval(value) => value.tokenize(),
@@ -933,21 +935,20 @@ impl Tokenizable for NaturalOption {
     }
 }
 
-impl Tokenizable for RetryOption {
+impl Tokenizable for CountOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            RetryOption::Literal(retry) => retry.tokenize(),
-            RetryOption::Expression(expr) => expr.tokenize(),
+            CountOption::Literal(retry) => retry.tokenize(),
+            CountOption::Expression(expr) => expr.tokenize(),
         }
     }
 }
 
-impl Tokenizable for Retry {
+impl Tokenizable for Count {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            Retry::None => vec![Token::Number("0".to_string())],
-            Retry::Finite(n) => vec![Token::Number(n.to_string())],
-            Retry::Infinite => vec![Token::Number("-1".to_string())],
+            Count::Finite(n) => vec![Token::Number(n.to_string())],
+            Count::Infinite => vec![Token::Number("-1".to_string())],
         }
     }
 }

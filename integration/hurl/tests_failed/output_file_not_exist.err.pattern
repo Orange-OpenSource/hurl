@@ -1,1 +1,6 @@
-error: ~~~foo~bar~baz can not be written (~~~)
+error: IO Error
+  --> tests_ok/hello.hurl:17:1
+   |
+17 | GET http://localhost:8000/hello
+   | ^ <<<.*?>>>foo<<<.*?>>>bar<<<.*?>>>baz can not be written (<<<.*?>>>)
+   |

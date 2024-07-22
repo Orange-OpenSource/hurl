@@ -2,10 +2,10 @@ name: jobs
 long: jobs
 value: NUM
 value_parser: clap::value_parser!(u32).range(1..)
-help: (Experimental) Maximum number of parallel jobs
+help: Maximum number of parallel jobs
 cli_only: true
 ---
-(Experimental) Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
 current amount of CPUs.
 
 See also [`--parallel`](#parallel).

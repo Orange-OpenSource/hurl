@@ -16,21 +16,21 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::error::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{base64, filename, key_string, ParseResult};
+use crate::reader::Reader;
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor();
     match reader.read() {
         None => Err(ParseError::new(start.pos, true, ParseErrorKind::Space)),
         Some(c) => {
             if c == ' ' || c == '\t' {
                 Ok(Whitespace {
                     value: c.to_string(),
-                    source_info: SourceInfo::new(start.pos, reader.state.pos),
+                    source_info: SourceInfo::new(start.pos, reader.cursor().pos),
                 })
             } else {
                 Err(ParseError::new(start.pos, true, ParseErrorKind::Space))
@@ -40,13 +40,13 @@ pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 pub fn one_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor();
     match one_or_more(space, reader) {
         Ok(v) => {
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::new(start.pos, reader.state.pos),
+                source_info: SourceInfo::new(start.pos, reader.cursor().pos),
             })
         }
         Err(e) => Err(e),
@@ -54,14 +54,14 @@ pub fn one_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 pub fn zero_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor();
     match zero_or_more(space, reader) {
         //Ok(v) => return Ok(v.join("")),
         Ok(v) => {
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::new(start.pos, reader.state.pos),
+                source_info: SourceInfo::new(start.pos, reader.cursor().pos),
             })
         }
         Err(e) => Err(e),
@@ -75,7 +75,7 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<LineTerminator> {
     let nl = if reader.is_eof() {
         Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(reader.state.pos, reader.state.pos),
+            source_info: SourceInfo::new(reader.cursor().pos, reader.cursor().pos),
         }
     } else {
         match newline(reader) {
@@ -102,40 +102,37 @@ pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<Vec<LineTer
 
 pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
     try_literal("#", reader)?;
-    let start = reader.state;
+    let start = reader.cursor();
     let mut value = String::new();
     loop {
         if reader.is_eof() {
             break;
         }
-        let save_state = reader.state;
+        let save_state = reader.cursor();
         match newline(reader) {
             Ok(_) => {
-                reader.state = save_state;
+                reader.seek(save_state);
                 break;
             }
             _ => {
-                reader.state = save_state;
+                reader.seek(save_state);
                 if let Some(c) = reader.read() {
                     value.push(c);
                 }
             }
         }
     }
+    let end = reader.cursor();
     Ok(Comment {
         value,
-        source_info: SourceInfo {
-            start: start.pos,
-            end: reader.state.pos,
-        },
+        source_info: SourceInfo::new(start.pos, end.pos),
     })
 }
 
 /// Does not return a value, non recoverable parser. Use combinator recover to make it recoverable
 pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
-    let start = reader.state;
+    let start = reader.cursor();
     for c in s.chars() {
-        let _state = reader.state;
         match reader.read() {
             None => {
                 let kind = ParseErrorKind::Expecting {
@@ -160,11 +157,11 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
 
 /// Recoverable version which reset the cursor, meant to be combined with following action.
 pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
-    let save_state = reader.state;
+    let save_state = reader.cursor();
     match literal(s, reader) {
         Ok(_) => Ok(()),
         Err(e) => {
-            reader.state = save_state;
+            reader.seek(save_state);
             Err(ParseError::new(e.pos, true, e.kind))
         }
     }
@@ -172,15 +169,15 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
 
 /// Returns the literal string
 pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state;
+    let start = reader.cursor();
     match literal(s1, reader) {
         Ok(_) => Ok(s1.to_string()),
         Err(_) => {
-            reader.state = start;
+            reader.seek(start);
             match literal(s2, reader) {
                 Ok(_) => Ok(s2.to_string()),
                 Err(_) => {
-                    reader.state = start;
+                    reader.seek(start);
                     let kind = ParseErrorKind::Expecting {
                         value: format!("<{s1}> or <{s2}>"),
                     };
@@ -192,16 +189,16 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<Stri
 }
 
 pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state;
+    let start = reader.cursor();
     match try_literal("\r\n", reader) {
         Ok(_) => Ok(Whitespace {
             value: "\r\n".to_string(),
-            source_info: SourceInfo::new(start.pos, reader.state.pos),
+            source_info: SourceInfo::new(start.pos, reader.cursor().pos),
         }),
         Err(_) => match literal("\n", reader) {
             Ok(_) => Ok(Whitespace {
                 value: "\n".to_string(),
-                source_info: SourceInfo::new(start.pos, reader.state.pos),
+                source_info: SourceInfo::new(start.pos, reader.cursor().pos),
             }),
             Err(_) => {
                 let kind = ParseErrorKind::Expecting {
@@ -238,10 +235,10 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let mut value: Vec<u8> = vec![];
-    let start = reader.state.cursor;
+    let start = reader.cursor();
     let mut current: i32 = -1;
     loop {
-        let s = reader.state;
+        let s = reader.cursor();
         match hex_digit(reader) {
             Ok(d) => {
                 if current != -1 {
@@ -252,19 +249,19 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
                 }
             }
             Err(_) => {
-                reader.state = s;
+                reader.seek(s);
                 break;
             }
         };
     }
     if current != -1 {
         return Err(ParseError::new(
-            reader.state.pos,
+            reader.cursor().pos,
             false,
             ParseErrorKind::OddNumberOfHexDigits,
         ));
     }
-    let encoded = reader.peek_back(start);
+    let encoded = reader.read_from(start.index);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
 
@@ -278,7 +275,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
 
 pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     try_literal("/", reader)?;
-    let start = reader.state.pos;
+    let start = reader.cursor();
     let mut s = String::new();
 
     // Hurl escaping /
@@ -293,7 +290,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
                 let kind = ParseErrorKind::RegexExpr {
                     message: "unexpected end of file".to_string(),
                 };
-                return Err(ParseError::new(reader.state.pos, false, kind));
+                return Err(ParseError::new(reader.cursor().pos, false, kind));
             }
             Some('/') => break,
             Some('\\') => {
@@ -332,7 +329,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
                 _ => "unknown".to_string(),
             };
             Err(ParseError::new(
-                start,
+                start.pos,
                 false,
                 ParseErrorKind::RegexExpr { message },
             ))
@@ -345,7 +342,7 @@ pub fn null(reader: &mut Reader) -> ParseResult<()> {
 }
 
 pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
-    let start = reader.state;
+    let start = reader.cursor();
     match try_literal("true", reader) {
         Ok(_) => Ok(true),
         Err(_) => match literal("false", reader) {
@@ -361,7 +358,7 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
 }
 
 pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
-    let _start = reader.state;
+    let _start = reader.cursor();
     try_literal("file", reader)?;
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -378,14 +375,13 @@ pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
 pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     // base64 => can have whitespace
     // support parser position
-    let _start = reader.state;
     try_literal("base64", reader)?;
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let save_state = reader.state;
+    let save_state = reader.cursor();
     let value = base64::parse(reader);
-    let count = reader.state.cursor - save_state.cursor;
-    reader.state = save_state;
+    let count = reader.cursor().index - save_state.index;
+    reader.seek(save_state);
     let encoded = reader.read_n(count);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
@@ -404,7 +400,7 @@ pub fn eof(reader: &mut Reader) -> ParseResult<()> {
         let kind = ParseErrorKind::Expecting {
             value: String::from("eof"),
         };
-        Err(ParseError::new(reader.state.pos, false, kind))
+        Err(ParseError::new(reader.cursor().pos, false, kind))
     }
 }
 
@@ -431,7 +427,7 @@ pub fn hex_digit_value(c: char) -> Option<u32> {
 }
 
 pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
-    let start = reader.clone().state;
+    let start = reader.cursor();
     match reader.read() {
         Some(c) => match hex_digit_value(c) {
             Some(v) => Ok(v),
@@ -444,14 +440,14 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_space() {
         let mut reader = Reader::new("x");
         let error = space(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("  ");
         assert_eq!(
@@ -461,7 +457,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             }),
         );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -490,7 +486,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             })
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("xxx");
         assert_eq!(
@@ -500,7 +496,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             })
         );
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new(" xxx");
         assert_eq!(
@@ -510,7 +506,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             })
         );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -541,7 +537,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 10)),
             })
         );
-        assert_eq!(reader.state.cursor, 9);
+        assert_eq!(reader.cursor().index, 9);
 
         let mut reader = Reader::new("xxx");
         let error = comment(&mut reader).err().unwrap();
@@ -553,7 +549,7 @@ mod tests {
     fn test_literal() {
         let mut reader = Reader::new("hello");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -564,7 +560,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new("hi");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -575,7 +571,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("he");
         let error = literal("hello", &mut reader).err().unwrap();
@@ -586,7 +582,7 @@ mod tests {
                 value: String::from("hello")
             }
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -732,7 +728,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.state.cursor, 14);
+        assert_eq!(reader.cursor().index, 14);
     }
 
     #[test]
@@ -741,13 +737,13 @@ mod tests {
         let error = key_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert!(error.recoverable);
-        assert_eq!(reader.state.cursor, 5); // does not reset cursor
+        assert_eq!(reader.cursor().index, 5); // does not reset cursor
 
         let mut reader = Reader::new("GET http://google.fr");
         let error = key_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(error.recoverable);
-        assert_eq!(reader.state.cursor, 5); // does not reset cursor
+        assert_eq!(reader.cursor().index, 5); // does not reset cursor
     }
 
     #[test]
@@ -1053,6 +1049,6 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.state.cursor, 15);
+        assert_eq!(reader.cursor().index, 15);
     }
 }

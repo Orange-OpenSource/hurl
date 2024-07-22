@@ -14,13 +14,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server
@@ -50,13 +50,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server
@@ -86,13 +86,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server
@@ -122,13 +122,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server
@@ -158,13 +158,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server
@@ -194,13 +194,13 @@
 > GET /not-found HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in ~~ ms)
+* Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 207
 < Server: Flask Server

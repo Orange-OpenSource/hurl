@@ -18,9 +18,12 @@
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::typing::Count;
+
 use crate::output;
 use crate::parallel::error::JobError;
-use crate::parallel::job::{Job, JobResult};
+use crate::parallel::job::{Job, JobQueue, JobResult};
 use crate::parallel::message::WorkerMessage;
 use crate::parallel::progress::{Mode, ParProgress};
 use crate::parallel::worker::{Worker, WorkerId};
@@ -50,6 +53,8 @@ pub struct ParallelRunner {
     progress: ParProgress,
     /// Output type for each completed job on standard output.
     output_type: OutputType,
+    /// Repeat mode for the runner: infinite or finite.
+    repeat: Count,
 }
 
 /// Represents a worker's state.
@@ -90,17 +95,23 @@ impl ParallelRunner {
     /// When a job is completed, depending on `output_type`, it can be outputted to standard output:
     /// whether as a raw response body bytes, or in a structured JSON output.
     ///
+    /// The runner can repeat running a list of jobs. For instance, when repeating two times the job
+    /// sequence (`a`, `b`, `c`), runner will act as if it runs (`a`, `b`, `c`, `a`, `b`, `c`).
+    ///
     /// If `test` mode is `true` the runner is run in "test" mode, reporting the success or failure
-    /// of each file on standard error. Additionally to the test mode, a `progress_bar` designed for
-    /// parallel run progression can be use.
+    /// of each file on standard error. In addition to the test mode, a `progress_bar` designed for
+    /// parallel run progression can be used. When the progress bar is displayed, it's wrapped with
+    /// new lines at width `max_width`.
     ///
     /// `color` determines if color if used in standard error.
     pub fn new(
         workers_count: usize,
         output_type: OutputType,
+        repeat: Count,
         test: bool,
         progress_bar: bool,
         color: bool,
+        max_width: Option<usize>,
     ) -> Self {
         // Worker are running on theirs own thread, while parallel runner is running in the main
         // thread.
@@ -120,7 +131,7 @@ impl ParallelRunner {
             .collect::<Vec<_>>();
 
         let mode = Mode::new(test, progress_bar);
-        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color);
+        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color, max_width);
 
         ParallelRunner {
             workers,
@@ -128,6 +139,7 @@ impl ParallelRunner {
             rx: rx_in,
             progress,
             output_type,
+            repeat,
         }
     }
 
@@ -143,24 +155,28 @@ impl ParallelRunner {
         let mut stdout = Stdout::new(WriteMode::Immediate);
         let mut stderr = Stderr::new(WriteMode::Immediate);
 
-        // Create the jobs queue (last item is the first job to run):
-        let jobs_count = jobs.len();
-        let mut jobs = jobs.iter().rev().collect::<Vec<_>>();
+        // Create the jobs queue:
+        let mut queue = JobQueue::new(jobs, self.repeat);
+        let jobs_count = queue.jobs_count();
 
-        // Initiate the runner, fill our workers
+        // Initiate the runner, fill our workers:
         self.workers.iter().for_each(|_| {
-            if let Some(job) = jobs.pop() {
-                _ = self.tx.send(job.clone());
+            if let Some(job) = queue.next() {
+                _ = self.tx.send(job);
             }
         });
+
+        // When dumped HTTP responses, we truncate existing output file on first save, then append
+        // it on subsequent write.
+        let mut append = false;
 
         // Start the message pump:
         let mut results = vec![];
         for msg in self.rx.iter() {
             match msg {
-                // If we any error (either a [`WorkerMessage::IOError`] or a [`WorkerMessage::ParsingError`]
-                // we don't take any more jobs and exit form the methods in error. This is the
-                // same behaviour than when we run sequentially a list of Hurl files.
+                // If we have any error (either a [`WorkerMessage::IOError`] or a [`WorkerMessage::ParsingError`]
+                // we don't take any more jobs and exit from the methods in error. This is the same
+                // behaviour as when we run sequentially a list of Hurl files.
                 WorkerMessage::IOError(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
@@ -198,7 +214,8 @@ impl ParallelRunner {
                 }
                 // A new job has been completed, we take a new job if the queue is not empty.
                 // Contrary to when we receive a running message, we clear the progress bar no
-                // matter what the frequency is.
+                // matter what the frequency is, to get a "correct" and up-to-date display on any
+                // test completion.
                 WorkerMessage::Completed(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
@@ -210,9 +227,17 @@ impl ParallelRunner {
                     if !msg.stderr.buffer().is_empty() {
                         stderr.eprint(msg.stderr.buffer());
                     }
+                    if !msg.stdout.buffer().is_empty() {
+                        let ret = stdout.write_all(msg.stdout.buffer());
+                        if ret.is_err() {
+                            return Err(JobError::IO("Issue writing to stdout".to_string()));
+                        }
+                    }
 
-                    // Then, we print job output on standard output.
-                    self.print_output(&msg.result, &mut stdout, &mut stderr)?;
+                    // Then, we print job output on standard output (the first response truncates
+                    // exiting file, subsequent response appends bytes).
+                    self.print_output(&msg.result, &mut stdout, append)?;
+                    append = true;
 
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
@@ -232,15 +257,17 @@ impl ParallelRunner {
                     self.progress.force_next_update();
 
                     // We run the next job to process:
-                    let job = jobs.pop();
+                    let job = queue.next();
                     match job {
                         Some(job) => {
-                            _ = self.tx.send(job.clone());
+                            _ = self.tx.send(job);
                         }
                         None => {
                             // If we have received all the job results, we can stop the run.
-                            if results.len() == jobs_count {
-                                break;
+                            if let Some(jobs_count) = jobs_count {
+                                if results.len() == jobs_count {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -258,11 +285,12 @@ impl ParallelRunner {
 
     /// Prints a job `result` to standard output `stdout`, either as a raw HTTP response (last
     /// body of the run), or in a structured JSON way.
+    /// If `append` is true, any existing file will be appended instead of being truncated.
     fn print_output(
         &self,
         result: &JobResult,
         stdout: &mut Stdout,
-        stderr: &mut Stderr,
+        append: bool,
     ) -> Result<(), JobError> {
         let job = &result.job;
         let content = &result.content;
@@ -282,16 +310,27 @@ impl ParallelRunner {
                         color,
                         filename_out,
                         stdout,
-                        stderr,
+                        append,
                     );
                     if let Err(e) = result {
-                        return Err(JobError::Runtime(e.to_string()));
+                        return Err(JobError::Runtime(e.to_string(
+                            &filename_in.to_string(),
+                            content,
+                            None,
+                            OutputFormat::Terminal(color),
+                        )));
                     }
                 }
             }
             OutputType::Json => {
-                let result =
-                    output::write_json(hurl_result, content, filename_in, filename_out, stdout);
+                let result = output::write_json(
+                    hurl_result,
+                    content,
+                    filename_in,
+                    filename_out,
+                    stdout,
+                    append,
+                );
                 if let Err(e) = result {
                     return Err(JobError::Runtime(e.to_string()));
                 }

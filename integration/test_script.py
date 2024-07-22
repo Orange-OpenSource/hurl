@@ -123,10 +123,12 @@ def test_stdout_pattern(f, result):
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
             print(f">>> error in stdout in line {i+1}")
-            print(f"actual:   <{actual_lines[i]}>")
-            print(
-                f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
-            )
+            print("actual:")
+            print(actual_lines[i])
+            print("expected (pattern):")
+            print(expected_lines[i])
+            print("expected (regex):")
+            print(expected_pattern_lines[i])
             sys.exit(1)
 
 
@@ -140,7 +142,10 @@ def test_stderr(f, result):
     actual = ignore_lines(decode_string(result.stderr))
     if actual != expected:
         print(">>> error in stderr")
-        print(f"actual:   <{actual}>\nexpected: <{expected}>")
+        print("actual:")
+        print(actual)
+        print("expected:")
+        print(expected)
         sys.exit(1)
 
 
@@ -181,20 +186,59 @@ def test_stderr_pattern(f, result):
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
             print(f">>> error in stderr in line {i+1}")
-            print(f"actual:   <{actual_lines[i]}>")
-            print(
-                f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
-            )
+            print("actual:")
+            print(actual_lines[i])
+            print("expected (pattern):")
+            print(expected_lines[i])
+            print("expected (regex):")
+            print(expected_pattern_lines[i])
             sys.exit(1)
 
 
-def parse_pattern(s: str) -> str:
-    """Transform a stderr pattern to a regex"""
-    # Escape regex metacharacters
-    for c in ["\\", ".", "(", ")", "[", "]", "^", "$", "*", "+", "?", "|"]:
-        s = s.replace(c, "\\" + c)
+def escape_regex_metacharacters(s) -> str:
+    """escape all regex metacharacters in a string"""
+    escaped_s = ""
+    for c in s:
+        escaped_s += escape_regex_metacharacter(c)
+    return escaped_s
 
-    s = re.sub("~+", ".*", s)
+
+def escape_regex_metacharacter(c) -> str:
+    """escape regex metacharacter"""
+    if c in [
+        "\\",
+        "/",
+        ".",
+        "{",
+        "}",
+        "(",
+        ")",
+        "[",
+        "]",
+        "^",
+        "$",
+        "*",
+        "+",
+        "?",
+        "|",
+    ]:
+        return "\\" + c
+    return c
+
+
+def parse_pattern(s: str) -> str:
+    """Create a standard regex string from the custom pattern file"""
+
+    # Split string into alternating tokens: escaping regex metacharacters and no escaping
+    # The first token must always be escaped
+    tokens = re.split("<<<([^>]+)>>>", s)
+    s = ""
+    for i, token in enumerate(tokens):
+        if i % 2 == 0:
+            s += escape_regex_metacharacters(token)
+        else:
+            s += token
+
     s = "^" + s + "$"
     return s
 

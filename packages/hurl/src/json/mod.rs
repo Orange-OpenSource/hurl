@@ -15,6 +15,6 @@
  * limitations under the License.
  *
  */
-
+//! Serialize / Deserialize a [`crate::runner::HurlResult`] to JSON.
 mod result;
 mod value;

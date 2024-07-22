@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
 use std::str;
 use std::str::FromStr;
 use std::time::Instant;
@@ -26,6 +27,7 @@ use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Version};
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
+use hurl_core::typing::Count;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
@@ -57,6 +59,8 @@ pub struct Client {
     /// HTTP version support
     http2: bool,
     http3: bool,
+    /// Certificates cache to get SSL certificates on reused libcurl connections.
+    certificates: HashMap<i64, Certificate>,
 }
 
 /// Represents the state of the HTTP client.
@@ -94,6 +98,7 @@ impl Client {
             state: ClientState::default(),
             http2: version.feature_http2(),
             http3: version.feature_http3(),
+            certificates: HashMap::new(),
         }
     }
 
@@ -107,14 +112,16 @@ impl Client {
         let mut calls = vec![];
 
         let mut request_spec = request_spec.clone();
+        let mut options = options.clone();
 
-        // Unfortunately, follow-location feature from libcurl can not be used
-        // libcurl returns a single list of headers for the 2 responses
-        // Hurl needs to keep everything.
+        // Unfortunately, follow-location feature from libcurl can not be used as libcurl returns a
+        // single list of headers for the 2 responses and Hurl needs to keep every header of every
+        // response.
         let mut redirect_count = 0;
         loop {
-            let call = self.execute(&request_spec, options, logger)?;
-            let redirect_url = self.get_follow_location(&call.request, &call.response)?;
+            let call = self.execute(&request_spec, &options, logger)?;
+            let request_url = call.request.url.clone();
+            let redirect_url = self.follow_location(&request_url, &call.response)?;
             let status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
@@ -125,18 +132,22 @@ impl Client {
             logger.debug(&format!("=> Redirect to {redirect_url}"));
             logger.debug("");
             redirect_count += 1;
-            if let Some(max_redirect) = options.max_redirect {
+            if let Count::Finite(max_redirect) = options.max_redirect {
                 if redirect_count > max_redirect {
                     return Err(HttpError::TooManyRedirect);
                 }
-            }
-            let redirect_method = get_redirect_method(status, request_spec.method);
-            let headers = if options.follow_location_trusted {
-                request_spec.headers
-            } else {
-                request_spec.headers.retain(|h| !h.name_eq(AUTHORIZATION));
-                request_spec.headers
             };
+
+            let redirect_method = redirect_method(status, request_spec.method);
+            let mut headers = request_spec.headers;
+
+            // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
+            // to trust the redirected host with `--location-trusted`.
+            let host_changed = request_url.host() != redirect_url.host();
+            if host_changed && !options.follow_location_trusted {
+                headers.retain(|h| !h.name_eq(AUTHORIZATION));
+                options.user = None;
+            }
             request_spec = RequestSpec {
                 method: redirect_method,
                 url: redirect_url.to_string(),
@@ -263,27 +274,18 @@ impl Client {
         let status = self.handle.response_code()?;
         // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {
-            None => return Err(HttpError::StatuslineIsMissing),
             Some(status_line) => self.parse_response_version(status_line)?,
+            None => return Err(HttpError::CouldNotParseResponse),
         };
         let headers = self.parse_response_headers(&response_headers);
         let length = response_body.len();
-        let certificate = if let Some(cert_info) = easy_ext::get_certinfo(&self.handle)? {
-            match Certificate::try_from(cert_info) {
-                Ok(value) => Some(value),
-                Err(message) => {
-                    logger.error(&format!("can not parse certificate - {message}"));
-                    None
-                }
-            }
-        } else {
-            None
-        };
+
+        let certificate = self.cert_info(logger)?;
         let duration = start.elapsed();
         let stop_dt = start_dt + duration;
         let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
 
-        let url = Url::try_from(url.as_str())?;
+        let url = Url::from_str(&url)?;
         let request = Request::new(
             &method.to_string(),
             url.clone(),
@@ -296,7 +298,7 @@ impl Client {
             headers,
             response_body,
             duration,
-            &url.to_string(),
+            url,
             certificate,
         );
 
@@ -362,7 +364,7 @@ impl Client {
         // way to get access to the outgoing headers.
         self.handle.verbose(true)?;
 
-        // We checks libcurl HTTP version support.
+        // We check libcurl HTTP version support.
         let http_version = options.http_version;
         if (http_version == RequestedHttpVersion::Http2 && !self.http2)
             || (http_version == RequestedHttpVersion::Http3 && !self.http3)
@@ -531,7 +533,7 @@ impl Client {
         // Workaround for libcurl issue #11664: When Hurl explicitly sets `Expect:` to remove the header,
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
-        // Therefore we only remove this header when not in aws_sigv4 mode.
+        // Therefore, we only remove this header when not in aws_sigv4 mode.
         if !request_spec.headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
@@ -683,9 +685,9 @@ impl Client {
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
     /// 3. a header Location
-    fn get_follow_location(
+    fn follow_location(
         &mut self,
-        request: &Request,
+        request_url: &Url,
         response: &Response,
     ) -> Result<Option<Url>, HttpError> {
         let response_code = response.status;
@@ -695,12 +697,12 @@ impl Client {
         let Some(location) = response.headers.get(LOCATION) else {
             return Ok(None);
         };
-        let url = request.url.join(&location.value)?;
+        let url = request_url.join(&location.value)?;
         Ok(Some(url))
     }
 
     /// Returns cookie storage.
-    pub fn get_cookie_storage(&mut self) -> Vec<Cookie> {
+    pub fn cookie_storage(&mut self) -> Vec<Cookie> {
         let list = self.handle.cookies().unwrap();
         let mut cookies = vec![];
         for cookie in list.iter() {
@@ -747,7 +749,7 @@ impl Client {
         // after all the options
         let url = arguments.pop().unwrap();
 
-        let cookies = all_cookies(&self.get_cookie_storage(), request_spec);
+        let cookies = all_cookies(&self.cookie_storage(), request_spec);
         if !cookies.is_empty() {
             arguments.push("--cookie".to_string());
             arguments.push(format!(
@@ -778,10 +780,43 @@ impl Client {
         arguments.push(url);
         arguments.join(" ")
     }
+
+    /// Returns the SSL certificates information associated to this call.
+    ///
+    /// Certificate information are cached by libcurl handle connection id, in order to get
+    /// SSL information even if libcurl connection is reused (see <https://github.com/Orange-OpenSource/hurl/issues/3031>).
+    fn cert_info(&mut self, logger: &mut Logger) -> Result<Option<Certificate>, HttpError> {
+        if let Some(cert_info) = easy_ext::cert_info(&self.handle)? {
+            match Certificate::try_from(cert_info) {
+                Ok(value) => {
+                    // We try to get the connection id for the libcurl handle and cache the
+                    // certificate. Getting a connection id can fail on older libcurl version, we
+                    // don't cache the certificate in these cases.
+                    if let Ok(conn_id) = easy_ext::conn_id(&self.handle) {
+                        self.certificates.insert(conn_id, value.clone());
+                    }
+                    Ok(Some(value))
+                }
+                Err(message) => {
+                    logger.error(&format!("can not parse certificate - {message}"));
+                    Ok(None)
+                }
+            }
+        } else {
+            // We query the cache to see if we have a cached certificate for this connection;
+            // As libcurl 8.2.0+ exposes the connection id through `CURLINFO_CONN_ID`, we don't
+            // raise an error if we can't get a connection id (older version than 8.2.0), and return
+            // a `None` certificate.
+            match easy_ext::conn_id(&self.handle) {
+                Ok(conn_id) => Ok(self.certificates.get(&conn_id).cloned()),
+                Err(_) => Ok(None),
+            }
+        }
+    }
 }
 
 /// Returns the method used for redirecting a request/response with `response_status`.
-fn get_redirect_method(response_status: u32, original_method: Method) -> Method {
+fn redirect_method(response_status: u32, original_method: Method) -> Method {
     // This replicates curl's behavior
     match response_status {
         301..=303 => Method("GET".to_string()),
@@ -951,9 +986,10 @@ impl From<IpResolve> for easy::IpResolve {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::default::Default;
     use std::path::PathBuf;
+
+    use super::*;
 
     #[test]
     fn test_parse_header() {
@@ -1031,7 +1067,7 @@ mod tests {
         ];
         for (status, original, redirected) in data {
             assert_eq!(
-                get_redirect_method(status, Method(original.to_string())),
+                redirect_method(status, Method(original.to_string())),
                 Method(redirected.to_string())
             );
         }
@@ -1114,7 +1150,7 @@ mod tests {
             compressed: true,
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
             insecure: true,
-            max_redirect: Some(10),
+            max_redirect: Count::Finite(10),
             path_as_is: true,
             proxy: Some("localhost:3128".to_string()),
             no_proxy: None,

@@ -32,13 +32,6 @@ pub enum ParserError {
 /// Deserializes a XML document from [`std::io::Read`] source. The XML
 /// document returned is a in-memory tree representation of the whole document.
 impl XmlDocument {
-    /// Convenient associated method to read and parse a XML string `source`.
-    #[allow(dead_code)]
-    pub fn parse_str(source: &str) -> Result<XmlDocument, ParserError> {
-        let bytes = source.as_bytes();
-        XmlDocument::parse(bytes)
-    }
-
     /// Read a XML `source` and parses it to a [`XmlDocument`].
     pub fn parse<R>(source: R) -> Result<XmlDocument, ParserError>
     where
@@ -139,7 +132,14 @@ impl Element {
 
 #[cfg(test)]
 mod tests {
+    use crate::report::junit::xml::reader::ParserError;
     use crate::report::junit::xml::{Element, XmlDocument};
+
+    /// Convenient function to read and parse a XML string `source`.
+    fn parse_str(source: &str) -> Result<XmlDocument, ParserError> {
+        let bytes = source.as_bytes();
+        XmlDocument::parse(bytes)
+    }
 
     #[test]
     fn read_xml_0_succeed() {
@@ -149,7 +149,7 @@ mod tests {
     <name first="elizabeth" last="smith" />
 </names>
 "#;
-        let doc = XmlDocument::parse_str(xml).unwrap();
+        let doc = parse_str(xml).unwrap();
         assert_eq!(
             doc.root.unwrap(),
             Element::new("names")
@@ -203,7 +203,7 @@ mod tests {
 </project>
         "#;
 
-        let doc = XmlDocument::parse_str(xml).unwrap();
+        let doc = parse_str(xml).unwrap();
         assert_eq!(
             doc.root.unwrap(),
             Element::new("project")
@@ -296,7 +296,7 @@ mod tests {
   </p:datum>
 </p:data>"#;
 
-        let doc = XmlDocument::parse_str(xml).unwrap();
+        let doc = parse_str(xml).unwrap();
         assert_eq!(
             doc.root.unwrap(),
             Element::new("data").add_child(
@@ -336,7 +336,7 @@ mod tests {
    |   actual:   string &lt;Hurl - Run and Test HTTP Requests>
    |   expected: string &lt;Hello World!>
    |</failure></testcase></testsuite></testsuites>"#;
-        let doc = XmlDocument::parse_str(xml).unwrap();
+        let doc = parse_str(xml).unwrap();
         assert_eq!(
             doc.root.unwrap(),
             Element::new("testsuites")

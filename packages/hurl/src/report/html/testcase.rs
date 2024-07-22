@@ -19,10 +19,11 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
+use hurl_core::input::Input;
 use hurl_core::parser;
 use uuid::Uuid;
 
-use crate::runner::{EntryResult, HurlResult, Input, RunnerError};
+use crate::runner::{EntryResult, HurlResult, RunnerError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -46,14 +47,14 @@ impl Testcase {
         Testcase {
             id: id.to_string(),
             filename: filename.to_string(),
-            time_in_ms: hurl_result.time_in_ms,
+            time_in_ms: hurl_result.duration.as_millis(),
             success: hurl_result.success,
             errors,
             timestamp: hurl_result.timestamp,
         }
     }
 
-    /// Exports a [`Testcase`] to HTML.
+    /// Exports a [`Testcase`] to HTML in the directory `dir`.
     ///
     /// It will create three HTML files:
     /// - an HTML view of the Hurl source file (with potential errors and syntax colored),
@@ -63,27 +64,27 @@ impl Testcase {
         &self,
         content: &str,
         entries: &[EntryResult],
-        dir_path: &Path,
-    ) -> Result<(), crate::report::Error> {
+        dir: &Path,
+    ) -> Result<(), crate::report::ReportError> {
         // We parse the content as we'll reuse the AST to construct the HTML source file, and
         // the waterfall.
         // TODO: for the moment, we can only have parseable file.
         let hurl_file = parser::parse_hurl_file(content).unwrap();
 
         // We create the timeline view.
-        let output_file = dir_path.join("store").join(self.timeline_filename());
+        let output_file = dir.join(self.timeline_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_timeline_html(&hurl_file, content, entries);
         file.write_all(html.as_bytes())?;
 
         // Then create the run view.
-        let output_file = dir_path.join("store").join(self.run_filename());
+        let output_file = dir.join(self.run_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_run_html(&hurl_file, content, entries);
         file.write_all(html.as_bytes())?;
 
         // And create the source view.
-        let output_file = dir_path.join("store").join(self.source_filename());
+        let output_file = dir.join(self.source_filename());
         let mut file = File::create(output_file)?;
         let html = self.get_source_html(&hurl_file, content);
         file.write_all(html.as_bytes())?;

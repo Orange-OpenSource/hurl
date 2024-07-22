@@ -23,8 +23,8 @@ use libxml::bindings::{
 };
 
 use crate::parser::error::*;
-use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 /// Parses a text buffer until a valid XML has been found.
 /// We're using a SAX XML parser because we need to stop the parsing at the byte position where
@@ -49,12 +49,18 @@ use crate::parser::ParseResult;
 pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     // We test if our first character is a start of an XML text.
     // If not, we return immediately a recoverable error.
-    // Otherwise, we start parsing the supposedly XML buffer. Any
-    // subsequent error will be a non recoverable error.
+    // Otherwise, we start parsing the supposed XML buffer. Any subsequent error will be a
+    // non-recoverable error.
     let c = reader.peek();
     match c {
         Some('<') => {}
-        _ => return Err(ParseError::new(reader.state.pos, true, ParseErrorKind::Xml)),
+        _ => {
+            return Err(ParseError::new(
+                reader.cursor().pos,
+                true,
+                ParseErrorKind::Xml,
+            ))
+        }
     }
 
     let mut buf = String::new();
@@ -74,8 +80,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             ptr::null(),
         );
 
-        // We keep track of the previous char reader position, to accurately  raise eventual error.
-        let mut prev_pos = reader.state.pos;
+        // We keep track of the previous char reader position, to accurately raise eventual error.
+        let mut prev_pos = reader.cursor().pos;
 
         while let Some(c) = reader.read() {
             buf.push(c);
@@ -101,7 +107,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             {
                 break;
             }
-            prev_pos = reader.state.pos;
+            prev_pos = reader.cursor().pos;
         }
 
         xmlFreeParserCtxt(context);
@@ -214,7 +220,7 @@ unsafe extern "C" fn on_end_element(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn parse_xml_brute_force_errors() {
@@ -266,14 +272,14 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.state.cursor, 23);
+        assert_eq!(reader.cursor().index, 23);
 
         let mut reader = Reader::new("<users><user /></users>xx");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
-        assert_eq!(reader.state.cursor, 23);
+        assert_eq!(reader.cursor().index, 23);
         assert_eq!(reader.peek_n(2), String::from("xx"));
 
         let mut reader = Reader::new("<?xml version=\"1.0\"?><users/>xxx");
@@ -281,7 +287,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             String::from("<?xml version=\"1.0\"?><users/>")
         );
-        assert_eq!(reader.state.cursor, 29);
+        assert_eq!(reader.cursor().index, 29);
     }
 
     #[test]
@@ -300,25 +306,25 @@ mod tests {
         let output = xml;
         let mut reader = Reader::new(input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         // A XML with data padding
         let input = format!("{xml} xx xx xx xx");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         // Two consecutive XML
         let input = format!("{xml}{xml}");
         let output = xml;
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor().index, 520);
 
         let mut reader = Reader::new(&input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
-        assert_eq!(reader.state.cursor, 520);
+        assert_eq!(reader.cursor().index, 520);
     }
 
     #[test]
@@ -408,7 +414,7 @@ mod tests {
       <genre>Science Fiction</genre>
       <price>6.95</price>
       <publish_date>2000-11-02</publish_date>
-      <description>After an inadvertant trip through a Heisenberg
+      <description>After an inadvertent trip through a Heisenberg
       Uncertainty Device, James Salway discovers the problems
       of being quantum.</description>
    </book>
@@ -447,6 +453,6 @@ mod tests {
         let chunk = format!("{xml}\nHTTP 200");
         let mut reader = Reader::new(&chunk);
         assert_eq!(parse(&mut reader).unwrap(), String::from(xml),);
-        assert_eq!(reader.state.cursor, 4411);
+        assert_eq!(reader.cursor().index, 4411);
     }
 }

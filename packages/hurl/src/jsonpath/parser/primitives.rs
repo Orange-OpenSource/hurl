@@ -15,51 +15,45 @@
  * limitations under the License.
  *
  */
-use super::super::ast::*;
-use super::error::{Error, ParseError};
-use super::{ParseResult, Reader};
+use hurl_core::reader::Reader;
+
+use crate::jsonpath::ast::Number;
+use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
 
 pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
-    let start = reader.state;
+    let start = reader.cursor();
 
     if reader.is_eof() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("natural".to_string());
+        let error = ParseError::new(start.pos, true, kind);
+        return Err(error);
     }
     let first_digit = reader.read().unwrap();
     if !first_digit.is_ascii_digit() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("natural".to_string());
+        let error = ParseError::new(start.pos, true, kind);
+        return Err(error);
     }
 
-    let save = reader.state;
+    let save = reader.cursor();
     let s = reader.read_while(|c| c.is_ascii_digit());
 
     // if the first digit is zero, you should not have any more digits
     if first_digit == '0' && !s.is_empty() {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let kind = ParseErrorKind::Expecting("natural".to_string());
+        let error = ParseError::new(save.pos, false, kind);
+        return Err(error);
     }
     Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
 pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
-    let sign = if reader.try_literal("-") { -1 } else { 1 };
+    let sign = if reader.peek() == Some('-') {
+        _ = reader.read();
+        -1
+    } else {
+        1
+    };
     let nat = natural(reader)?;
     Ok(sign * (nat as i64))
 }
@@ -67,26 +61,19 @@ pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
 pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     let int = integer(reader)?;
 
-    let decimal = if reader.try_literal(".") {
+    let decimal = if reader.peek() == Some('.') {
+        _ = reader.read();
         if reader.is_eof() {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
-                    value: String::from("natural"),
-                },
-            });
+            let kind = ParseErrorKind::Expecting("natural".to_string());
+            let error = ParseError::new(reader.cursor().pos, false, kind);
+            return Err(error);
         }
 
         let s = reader.read_while(|c| c.is_ascii_digit());
         if s.is_empty() {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
-                    value: String::from("natural"),
-                },
-            });
+            let kind = ParseErrorKind::Expecting("natural".to_string());
+            let error = ParseError::new(reader.cursor().pos, false, kind);
+            return Err(error);
         }
         format!("{s:0<18}").parse().unwrap()
     } else {
@@ -96,19 +83,15 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     Ok(Number { int, decimal })
 }
 
-pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
+pub fn string_value(reader: &mut Reader) -> Result<String, ParseError> {
     try_literal("'", reader)?;
     let mut s = String::new();
     loop {
         match reader.read() {
             None => {
-                return Err(Error {
-                    pos: reader.state.pos,
-                    recoverable: false,
-                    inner: ParseError::Expecting {
-                        value: String::from("'"),
-                    },
-                })
+                let kind = ParseErrorKind::Expecting("'".to_string());
+                let error = ParseError::new(reader.cursor().pos, false, kind);
+                return Err(error);
             }
             Some('\'') => break,
             Some('\\') => {
@@ -118,13 +101,9 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
                         s.push('\'');
                     }
                     _ => {
-                        return Err(Error {
-                            pos: reader.state.pos,
-                            recoverable: false,
-                            inner: ParseError::Expecting {
-                                value: String::from("'"),
-                            },
-                        })
+                        let kind = ParseErrorKind::Expecting("'".to_string());
+                        let error = ParseError::new(reader.cursor().pos, false, kind);
+                        return Err(error);
                     }
                 }
             }
@@ -137,7 +116,7 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
     Ok(s)
 }
 
-pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
+pub fn key_name(reader: &mut Reader) -> Result<String, ParseError> {
     // test python or javascript
     // subset that can used for dot notation
     // The key must not be empty and must not start with a digit
@@ -147,32 +126,24 @@ pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
             if c.is_alphabetic() || c == '_' {
                 c
             } else {
-                return Err(Error {
-                    pos: reader.state.pos,
-                    recoverable: false,
-                    inner: ParseError::Expecting {
-                        value: "key".to_string(),
-                    },
-                });
+                let kind = ParseErrorKind::Expecting("key".to_string());
+                let error = ParseError::new(reader.cursor().pos, false, kind);
+                return Err(error);
             }
         }
         None => {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
-                    value: "key".to_string(),
-                },
-            })
+            let kind = ParseErrorKind::Expecting("key".to_string());
+            let error = ParseError::new(reader.cursor().pos, false, kind);
+            return Err(error);
         }
     };
-    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
+    let s = reader.read_while(|c| c.is_alphanumeric() || c == '_');
     whitespace(reader);
     Ok(format!("{first_char}{s}"))
 }
 
 // key1.key2.key3
-pub fn key_path(reader: &mut Reader) -> Result<Vec<String>, Error> {
+pub fn key_path(reader: &mut Reader) -> Result<Vec<String>, ParseError> {
     let root = key_name(reader)?;
     let mut path = vec![root];
     while let Some('.') = reader.peek() {
@@ -187,37 +158,24 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
     // non recoverable reader
     // => use combinator recover to make it recoverable
-    let start = reader.state;
+    let start = reader.cursor();
     if reader.is_eof() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: s.to_string(),
-            },
-        });
+        let kind = ParseErrorKind::Expecting(s.to_string());
+        let error = ParseError::new(start.pos, false, kind);
+        return Err(error);
     }
     for c in s.chars() {
-        let _state = reader.state;
         match reader.read() {
             None => {
-                return Err(Error {
-                    pos: start.pos,
-                    recoverable: false,
-                    inner: ParseError::Expecting {
-                        value: s.to_string(),
-                    },
-                });
+                let kind = ParseErrorKind::Expecting(s.to_string());
+                let error = ParseError::new(start.pos, false, kind);
+                return Err(error);
             }
             Some(x) => {
                 if x != c {
-                    return Err(Error {
-                        pos: start.pos,
-                        recoverable: false,
-                        inner: ParseError::Expecting {
-                            value: s.to_string(),
-                        },
-                    });
+                    let kind = ParseErrorKind::Expecting(s.to_string());
+                    let error = ParseError::new(start.pos, false, kind);
+                    return Err(error);
                 } else {
                     continue;
                 }
@@ -231,10 +189,10 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
 pub fn try_literal(s: &str, p: &mut Reader) -> ParseResult<()> {
     match literal(s, p) {
         Ok(_) => Ok(()),
-        Err(Error { pos, inner, .. }) => Err(Error {
+        Err(ParseError { pos, kind, .. }) => Err(ParseError {
             pos,
             recoverable: true,
-            inner,
+            kind,
         }),
     }
 }
@@ -247,22 +205,23 @@ pub fn whitespace(reader: &mut Reader) {
 
 #[cfg(test)]
 mod tests {
-    use super::super::Pos;
+    use hurl_core::reader::Pos;
+
     use super::*;
 
     #[test]
     fn test_natural() {
         let mut reader = Reader::new("0");
         assert_eq!(natural(&mut reader).unwrap(), 0);
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("0.");
         assert_eq!(natural(&mut reader).unwrap(), 0);
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(natural(&mut reader).unwrap(), 10);
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -270,34 +229,19 @@ mod tests {
         let mut reader = Reader::new("");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert!(error.recoverable);
 
         let mut reader = Reader::new("01");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("x");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert!(error.recoverable);
     }
 
@@ -315,12 +259,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = integer(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert!(error.recoverable);
     }
 
@@ -328,11 +267,11 @@ mod tests {
     fn test_number() {
         let mut reader = Reader::new("1");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("1.0");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
-        assert_eq!(reader.state.cursor, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
@@ -342,7 +281,7 @@ mod tests {
                 decimal: 0
             }
         );
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
@@ -352,7 +291,7 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             }
         );
-        assert_eq!(reader.state.cursor, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
@@ -362,7 +301,7 @@ mod tests {
                 decimal: 100_000_000_000_000_000
             }
         );
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
@@ -372,7 +311,7 @@ mod tests {
                 decimal: 10_000_000_000_000_000
             }
         );
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
@@ -382,7 +321,7 @@ mod tests {
                 decimal: 10_000_000_000_000_000
             }
         );
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("-0.333333333333333333");
         assert_eq!(
@@ -392,52 +331,32 @@ mod tests {
                 decimal: 333_333_333_333_333_333
             }
         );
-        assert_eq!(reader.state.cursor, 21);
+        assert_eq!(reader.cursor().index, 21);
     }
 
     #[test]
     fn test_number_error() {
         let mut reader = Reader::new("");
         let error = number(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("-");
         let error = number(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("1.");
         let error = number(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("1.x");
         let error = number(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("natural")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("natural".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert!(!error.recoverable);
     }
@@ -452,23 +371,13 @@ mod tests {
 
         let mut reader = Reader::new("1");
         let error = string_value(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("'")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("'".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("'hi");
         let error = string_value(&mut reader).err().unwrap();
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("'")
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("'".to_string()));
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
         assert!(!error.recoverable);
     }
@@ -484,22 +393,12 @@ mod tests {
         let mut reader = Reader::new(".");
         let error = key_name(&mut reader).err().unwrap();
         assert!(!error.recoverable);
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: "key".to_string()
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("key".to_string()));
 
         let mut reader = Reader::new("1id");
         let error = key_name(&mut reader).err().unwrap();
         assert!(!error.recoverable);
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: "key".to_string()
-            }
-        );
+        assert_eq!(error.kind, ParseErrorKind::Expecting("key".to_string()));
     }
 
     #[test]
@@ -518,43 +417,28 @@ mod tests {
     fn test_literal() {
         let mut reader = Reader::new("hello");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("hello ");
         assert_eq!(literal("hello", &mut reader), Ok(()));
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("hello")
-            }
-        );
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
+        assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new("hi");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("hello")
-            }
-        );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("he");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("hello")
-            }
-        );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(error.kind, ParseErrorKind::Expecting("hello".to_string()));
+        assert_eq!(reader.cursor().index, 2);
     }
 }

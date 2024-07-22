@@ -12,13 +12,13 @@ rust-version = "1.78.0"
 
 [dependencies]
 base64 = "0.22.1"
-clap = { version = "4.5.4", features = ["cargo", "wrap_help"] }
+clap = { version = "4.5.9", features = ["cargo", "wrap_help"] }
 colored = "2.1.0"
 hurl_core = { version = "5.0.0-SNAPSHOT", path = "../hurl_core" }
-regex = "1.10.4"
+regex = "1.10.5"
 
 [dev-dependencies]
-proptest = "1.4.0"
+proptest = "1.5.0"
 
 [lints]
 workspace = true

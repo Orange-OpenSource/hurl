@@ -56,10 +56,11 @@ pub fn eval_decode(
 
 #[cfg(test)]
 pub mod tests {
-    use crate::runner::filter::eval::eval_filter;
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
 
     use super::*;
+    use crate::runner::filter::eval::eval_filter;
 
     #[test]
     pub fn eval_filter_url_decode() {

@@ -1,6 +1,6 @@
 Hurl, run and test HTTP requests with plain text
 
-Usage: hurl~~~ [OPTIONS] [FILES]...
+Usage: hurl<<<(\.exe)?>>> [OPTIONS] [FILES]...
 
 Arguments:
   [FILES]...  Set the input file to use
@@ -66,7 +66,7 @@ Options:
           Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
           IPv4
       --jobs <NUM>
-          (Experimental) Maximum number of parallel jobs
+          Maximum number of parallel jobs
       --json
           Output each Hurl file result to JSON
       --max-filesize <BYTES>
@@ -90,13 +90,17 @@ Options:
   -o, --output <FILE>
           Write to FILE instead of stdout
       --parallel
-          (Experimental) Run files in parallel
+          Run files in parallel (default in test mode)
       --path-as-is
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>
           Use proxy on given PROTOCOL/HOST/PORT
+      --repeat <NUM>
+          Repeat the input files sequence NUM times, -1 for infinite loop
       --report-html <DIR>
           Generate HTML report to DIR
+      --report-json <DIR>
+          Generate JSON report to DIR
       --report-junit <FILE>
           Write a JUnit XML report to FILE
       --report-tap <FILE>
@@ -104,13 +108,13 @@ Options:
       --resolve <HOST:PORT:ADDR>
           Provide a custom address for a specific HOST and PORT pair
       --retry <NUM>
-          Maximum number of retries, 0 for no retries, -1 for unlimited retries [default: 0]
+          Maximum number of retries, 0 for no retries, -1 for unlimited retries
       --retry-interval <MILLISECONDS>
           Interval in milliseconds before a retry [default: 1000]
       --ssl-no-revoke
           (Windows) Tell Hurl to disable certificate revocation checks
       --test
-          Activate test mode
+          Activate test mode (use parallel execution)
       --to-entry <ENTRY_NUMBER>
           Execute Hurl file to ENTRY_NUMBER (starting at 1)
       --unix-socket <PATH>

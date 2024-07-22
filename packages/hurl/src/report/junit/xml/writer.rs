@@ -16,6 +16,8 @@
  *
  */
 use std::borrow::Cow;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
 use std::string::FromUtf8Error;
 
 use xml::attribute::Attribute;
@@ -24,7 +26,6 @@ use xml::namespace::Namespace;
 use xml::writer::{Error, XmlEvent};
 use xml::EventWriter;
 
-use crate::report::junit::xml::writer::WriterError::GenericError;
 use crate::report::junit::xml::{Element, XmlDocument, XmlNode};
 
 /// Errors raised when serializing an XML document.
@@ -35,6 +36,16 @@ pub enum WriterError {
     GenericError(String),
 }
 
+impl fmt::Display for WriterError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            WriterError::Io(err) => write!(f, "{err}"),
+            WriterError::FromUtf8Error(err) => write!(f, "{err}"),
+            WriterError::GenericError(err) => write!(f, "{err}"),
+        }
+    }
+}
+
 impl From<Error> for WriterError {
     fn from(value: Error) -> Self {
         match value {
@@ -42,7 +53,7 @@ impl From<Error> for WriterError {
             Error::DocumentStartAlreadyEmitted
             | Error::LastElementNameNotAvailable
             | Error::EndElementNameIsNotEqualToLastStartElementName
-            | Error::EndElementNameIsNotSpecified => GenericError(value.to_string()),
+            | Error::EndElementNameIsNotSpecified => WriterError::GenericError(value.to_string()),
         }
     }
 }

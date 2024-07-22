@@ -18,8 +18,8 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
     try_literal("{{", reader)?;
@@ -51,8 +51,8 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
-    let start = reader.state;
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
+    let start = reader.cursor();
+    let name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
     if name.is_empty() {
         return Err(ParseError::new(
             start.pos,
@@ -62,14 +62,14 @@ fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
     }
     Ok(Variable {
         name,
-        source_info: SourceInfo::new(start.pos, reader.state.pos),
+        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
     })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_expr() {

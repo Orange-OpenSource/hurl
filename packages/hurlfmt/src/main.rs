@@ -16,19 +16,23 @@
  *
  */
 use std::io::{self, Write};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process;
 
-use hurl_core::parser;
+use hurl_core::input::Input;
+use hurl_core::{parser, text};
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
+use hurlfmt::cli::Logger;
 use hurlfmt::{cli, curl, format, linter};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR: i32 = 1;
+const EXIT_INVALID_INPUT: i32 = 2;
+const EXIT_LINT_ISSUE: i32 = 3;
 
 /// Executes `hurlfmt` entry point.
 fn main() {
-    init_colored();
+    text::init_crate_colored();
 
     let opts = match cli::options::parse() {
         Ok(v) => v,
@@ -44,91 +48,79 @@ fn main() {
         },
     };
 
-    let log_error_message = cli::make_logger_error_message(opts.color);
+    let logger = Logger::new(opts.color);
     let mut output_all = String::new();
-    for input_file in &opts.input_files {
-        match cli::read_to_string(input_file) {
-            Ok(contents) => {
-                // parse input
-                let input = match opts.input_format {
-                    InputFormat::Hurl => contents.to_string(),
-                    InputFormat::Curl => match curl::parse(&contents) {
-                        Ok(s) => s,
-                        Err(e) => {
-                            eprintln!("{}", e);
-                            process::exit(2);
-                        }
-                    },
-                };
-                let input_path = Path::new(input_file).to_path_buf();
-                let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-                    .unwrap()
-                    .split(&input)
-                    .collect();
-                let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
-                let log_parser_error = cli::make_logger_parser_error(
-                    lines.clone(),
-                    opts.color,
-                    Some(input_path.clone()),
-                );
-                let log_linter_error =
-                    cli::make_logger_linter_error(lines, opts.color, Some(input_path));
 
-                match parser::parse_hurl_file(&input) {
-                    Err(e) => {
-                        log_parser_error(&e, false);
-                        process::exit(2);
-                    }
-                    Ok(hurl_file) => {
-                        if opts.check {
-                            for e in linter::check_hurl_file(&hurl_file).iter() {
-                                log_linter_error(e, true);
-                            }
-                            process::exit(1);
-                        } else {
-                            let output = match opts.output_format {
-                                OutputFormat::Hurl => {
-                                    let hurl_file = linter::lint_hurl_file(&hurl_file);
-                                    format::format_text(hurl_file, opts.color)
-                                }
-                                OutputFormat::Json => format::format_json(&hurl_file),
-                                OutputFormat::Html => {
-                                    hurl_core::format::format_html(&hurl_file, opts.standalone)
-                                }
-                            };
-                            if opts.in_place {
-                                let output_file = Some(Path::new(input_file).to_path_buf());
-                                write_output(&output, output_file.clone());
-                            } else {
-                                output_all.push_str(&output);
-                            }
-                        }
-                    }
-                }
-            }
+    for input_file in &opts.input_files {
+        let input_file = Input::new(input_file);
+
+        // Get content of the input
+        let content = match input_file.read_to_string() {
+            Ok(c) => c,
             Err(e) => {
-                log_error_message(
-                    false,
-                    format!("Input file {} can not be read - {}", input_file, e.message).as_str(),
-                );
-                process::exit(2);
+                logger.error(&format!(
+                    "Input file {} can not be read - {e}",
+                    &input_file.to_string()
+                ));
+                process::exit(EXIT_INVALID_INPUT);
             }
+        };
+
+        // Parse input curl or Hurl file
+        let input = match opts.input_format {
+            InputFormat::Hurl => content.to_string(),
+            InputFormat::Curl => match curl::parse(&content) {
+                Ok(s) => s,
+                Err(e) => {
+                    logger.error(&e.to_string());
+                    process::exit(EXIT_INVALID_INPUT);
+                }
+            },
+        };
+
+        // Parse Hurl content
+        let hurl_file = match parser::parse_hurl_file(&input) {
+            Ok(h) => h,
+            Err(e) => {
+                logger.error_parsing(&content, &input_file, &e);
+                process::exit(EXIT_INVALID_INPUT);
+            }
+        };
+
+        // Only checks
+        if opts.check {
+            let lints = linter::check_hurl_file(&hurl_file);
+            for e in lints.iter() {
+                logger.warn_lint(&content, &input_file, e);
+            }
+            if lints.is_empty() {
+                process::exit(EXIT_OK);
+            } else {
+                process::exit(EXIT_LINT_ISSUE);
+            }
+        }
+
+        // Output files
+        let output = match opts.output_format {
+            OutputFormat::Hurl => {
+                let hurl_file = linter::lint_hurl_file(&hurl_file);
+                format::format_text(hurl_file, opts.color)
+            }
+            OutputFormat::Json => format::format_json(&hurl_file),
+            OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
+        };
+        if opts.in_place {
+            let Input::File(path) = input_file else {
+                unreachable!("--in-place and standard input have been filtered in args parsing")
+            };
+            write_output(&output, Some(path));
+        } else {
+            output_all.push_str(&output);
         }
     }
     if !opts.in_place {
         write_output(&output_all, opts.output_file);
     }
-}
-
-#[cfg(target_family = "unix")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-}
-
-#[cfg(target_family = "windows")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 fn write_output(content: &str, filename: Option<PathBuf>) {

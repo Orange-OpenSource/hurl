@@ -16,7 +16,8 @@ def post_json():
     "spacing": "\\n",
     "g_clef": "\\uD834\\uDD1E",
     "items": [true, \"true\", 1],
-    "variable": "\\\\"
+    "variable": "\\\\",
+    "": "empty"
 }"""
     )
     return ""
@@ -71,7 +72,8 @@ def post_json_numbers():
         == """{
     "natural": 100,
     "negative": -1,
-    "float": "3.333333333333333",
+    "float": 3.333333333333333,
+    "float_with_00": 123.00,
     "exponent": 100e100
 }"""
     )

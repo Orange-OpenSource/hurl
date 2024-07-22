@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
+use hurl_core::typing::Count;
 use std::time::Duration;
-
-use hurl_core::ast::Retry;
 
 use crate::http::request::RequestedHttpVersion;
 use crate::http::IpResolve;
@@ -38,7 +37,7 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub ip_resolve: IpResolve,
     pub max_filesize: Option<u64>,
-    pub max_redirect: Option<usize>,
+    pub max_redirect: Count,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -46,7 +45,6 @@ pub struct ClientOptions {
     pub path_as_is: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
-    pub retry: Retry,
     pub ssl_no_revoke: bool,
     pub timeout: Duration,
     pub unix_socket: Option<String>,
@@ -79,7 +77,7 @@ impl Default for ClientOptions {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
-            max_redirect: Some(50),
+            max_redirect: Count::Finite(50),
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -87,7 +85,6 @@ impl Default for ClientOptions {
             path_as_is: false,
             proxy: None,
             resolves: vec![],
-            retry: Retry::None,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             unix_socket: None,
@@ -160,8 +157,8 @@ impl ClientOptions {
         }
         if self.max_redirect != ClientOptions::default().max_redirect {
             let max_redirect = match self.max_redirect {
-                None => -1,
-                Some(n) => n as i32,
+                Count::Finite(n) => n as i32,
+                Count::Infinite => -1,
             };
             arguments.push("--max-redirs".to_string());
             arguments.push(max_redirect.to_string());
@@ -231,7 +228,7 @@ mod tests {
                 insecure: true,
                 ip_resolve: IpResolve::IpV6,
                 max_filesize: None,
-                max_redirect: Some(10),
+                max_redirect: Count::Finite(10),
                 netrc: false,
                 netrc_file: Some("/var/run/netrc".to_string()),
                 netrc_optional: true,
@@ -242,7 +239,6 @@ mod tests {
                     "foo.com:80:192.168.0.1".to_string(),
                     "bar.com:443:127.0.0.1".to_string(),
                 ],
-                retry: Retry::None,
                 ssl_no_revoke: false,
                 timeout: Duration::from_secs(10),
                 unix_socket: Some("/var/run/example.sock".to_string()),

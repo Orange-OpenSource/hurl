@@ -113,7 +113,7 @@ HTTP 200
 jsonpath "$.count" == 10
 
 # QueryInvalidJsonpathExpression
-GET http://localhost:8000/runner_errors
+GET http://localhost:8000/runner_errors/json-list
 HTTP 200
 [Asserts]
 jsonpath "xxx" == 10
@@ -164,8 +164,3 @@ GET http://localhost:8000/runner_errors/unsupported-content-encoding
 HTTP 200
 [Asserts]
 bytes count == 10
-
-# UnsupportedHttpVersion
-GET http://localhost:8000/runner_errors
-[Options]
-http3: true

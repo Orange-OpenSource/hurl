@@ -16,13 +16,13 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::choice;
 use crate::parser::json::parse as parse_json;
 use crate::parser::multiline::multiline_string;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::backtick_template;
 use crate::parser::{xml, ParseResult};
+use crate::reader::Reader;
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     choice(
@@ -77,6 +77,7 @@ fn string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
 mod tests {
     use super::super::error::*;
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_bytes_json() {
@@ -104,7 +105,7 @@ mod tests {
                 ],
             })
         );
-        assert_eq!(reader.state.cursor, 7);
+        assert_eq!(reader.cursor().index, 7);
 
         let mut reader = Reader::new("{ } ");
         assert_eq!(
@@ -114,14 +115,14 @@ mod tests {
                 elements: vec![],
             })
         );
-        assert_eq!(reader.state.cursor, 3);
+        assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("true");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Boolean(true))
         );
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("\"\" x");
         assert_eq!(
@@ -132,7 +133,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
             }))
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
@@ -201,6 +202,6 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
             })
         );
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
     }
 }

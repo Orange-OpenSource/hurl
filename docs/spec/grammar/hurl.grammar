@@ -139,6 +139,7 @@ option:
   | output-option
   | path-as-is-option
   | proxy-option
+  | repeat-option
   | resolve-option
   | retry-option
   | retry-interval-option
@@ -197,6 +198,8 @@ path-as-is-option: "path-as-is" ":" boolean-option lt
 proxy-option: "proxy" ":" value-string lt
 
 resolve-option: "resolve" ":" value-string lt
+
+repeat-option: "repeat" ":" integer-option lt
 
 retry-option: "retry" ":" integer-option lt
 
@@ -506,6 +509,7 @@ filter:
   | replace-filter
   | split-filter
   | to-date-filter
+  | to-float-filter
   | to-int-filter
   | url-decode-filter
   | url-encode-filter

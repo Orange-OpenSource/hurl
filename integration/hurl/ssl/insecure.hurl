@@ -1,8 +1,6 @@
 GET https://localhost:8001/hello
-
 HTTP 200
 [Asserts]
-
 certificate "Subject" replace " = " "=" replace ";" ", " == "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"
 certificate "Issuer" replace " = " "=" replace ";" ", " == "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"
 certificate "Start-Date" isDate

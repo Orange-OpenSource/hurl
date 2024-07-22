@@ -1,0 +1,27 @@
+error: Invalid decoding
+  --> tests_failed/body_binary.hurl:3:1
+   |
+   | GET http://localhost:8000/body-binary
+   | ...
+ 3 | {
+   | ^ the body can not be decoded with charset 'utf-8'
+   |
+
+error: Invalid decoding
+  --> tests_failed/body_binary.hurl:10:1
+   |
+   | GET http://localhost:8000/body-binary
+   | ...
+10 | <?xml version="1.0" encoding="UTF-8"?>
+   | ^ the body can not be decoded with charset 'utf-8'
+   |
+
+error: Invalid decoding
+  --> tests_failed/body_binary.hurl:21:1
+   |
+   | GET http://localhost:8000/body-binary
+   | ...
+21 | ```
+   | ^ the body can not be decoded with charset 'utf-8'
+   |
+

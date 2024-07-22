@@ -1,0 +1,7 @@
+error: Parsing method
+  --> tests_failed/parse_ko.hurl:1:1
+   |
+ 1 | xxx
+   | ^ the HTTP method <xxx> is not valid. Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
+   |
+

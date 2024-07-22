@@ -15,29 +15,34 @@
  * limitations under the License.
  *
  */
-use crate::runner::{HurlResult, Input, Output};
-use crate::util::term::Stdout;
 use std::io;
+
+use hurl_core::input::Input;
+
+use crate::runner::{HurlResult, Output};
+use crate::util::term::Stdout;
 
 /// Writes the `hurl_result` JSON representation to the file `filename_out`.
 ///
-/// If `filename_out` is `None`, stdout is used. The original content of the Hurl
-/// file is necessary in order to construct error fields with column, line number etc... when
-/// processing failed asserts and captures.
+/// If `filename_out` is `None`, stdout is used. If `append` is true, any existing file will
+/// be appended instead of being truncated. The original `content` of the Hurl file and the
+/// source `filename_in` is necessary in order to construct error fields with column, line number
+/// etc... when processing failed asserts and captures.
 pub fn write_json(
     hurl_result: &HurlResult,
     content: &str,
     filename_in: &Input,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
+    append: bool,
 ) -> Result<(), io::Error> {
     let json_result = hurl_result.to_json(content, filename_in, None)?;
     let serialized = serde_json::to_string(&json_result).unwrap();
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
     match filename_out {
-        Some(out) => out.write(&bytes, stdout)?,
-        None => Output::Stdout.write(&bytes, stdout)?,
+        Some(out) => out.write(&bytes, stdout, append)?,
+        None => Output::Stdout.write(&bytes, stdout, append)?,
     }
     Ok(())
 }

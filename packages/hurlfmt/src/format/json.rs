@@ -18,6 +18,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
+use hurl_core::typing::Count;
 
 use super::serialize_json::*;
 
@@ -90,6 +91,18 @@ impl ToJson for Request {
         if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
+
+        // Request comments (can be used to check custom commands)
+        let comments: Vec<_> = self
+            .line_terminators
+            .iter()
+            .filter_map(|l| l.comment.as_ref())
+            .collect();
+        if !comments.is_empty() {
+            let comments = comments.iter().map(|c| c.to_json()).collect();
+            attributes.push(("comments".to_string(), JValue::List(comments)));
+        }
+
         JValue::Object(attributes)
     }
 }
@@ -303,6 +316,7 @@ impl ToJson for EntryOption {
             OptionKind::Output(filename) => JValue::String(filename.to_string()),
             OptionKind::PathAsIs(value) => value.to_json(),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
+            OptionKind::Repeat(value) => value.to_json(),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),
             OptionKind::Retry(value) => value.to_json(),
             OptionKind::RetryInterval(value) => value.to_json(),
@@ -339,21 +353,20 @@ impl ToJson for NaturalOption {
     }
 }
 
-impl ToJson for RetryOption {
+impl ToJson for CountOption {
     fn to_json(&self) -> JValue {
         match self {
-            RetryOption::Literal(value) => value.to_json(),
-            RetryOption::Expression(expr) => expr.to_json(),
+            CountOption::Literal(value) => value.to_json(),
+            CountOption::Expression(expr) => expr.to_json(),
         }
     }
 }
 
-impl ToJson for Retry {
+impl ToJson for Count {
     fn to_json(&self) -> JValue {
         match self {
-            Retry::None => JValue::Number("0".to_string()),
-            Retry::Finite(value) => JValue::Number(value.to_string()),
-            Retry::Infinite => JValue::Number("-1".to_string()),
+            Count::Finite(n) => JValue::Number(n.to_string()),
+            Count::Infinite => JValue::Number("-1".to_string()),
         }
     }
 }
@@ -739,8 +752,16 @@ impl ToJson for Expr {
     }
 }
 
+impl ToJson for Comment {
+    fn to_json(&self) -> JValue {
+        JValue::String(self.value.to_string())
+    }
+}
+
 #[cfg(test)]
 pub mod tests {
+    use hurl_core::reader::Pos;
+
     use super::*;
 
     fn whitespace() -> Whitespace {

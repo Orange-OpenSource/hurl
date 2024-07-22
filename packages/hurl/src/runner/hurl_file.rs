@@ -21,13 +21,15 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
-use hurl_core::ast::{Body, Bytes, Entry, MultilineString, Request, Response, Retry};
+use hurl_core::ast::{
+    Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, SourceInfo,
+};
 use hurl_core::error::DisplaySourceError;
 use hurl_core::parser;
+use hurl_core::typing::Count;
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
-use crate::runner::progress::{Mode, SeqProgress};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
@@ -90,24 +92,6 @@ pub fn run(
     // each entry).
     let mut logger = Logger::new(logger_options, stderr);
 
-    // Create a progress bar for the sequential run, progress will be report in the main thread,
-    // as soon as an entry is executed.
-    let filename = &logger_options.filename;
-    let current_file = logger_options.current_file;
-    let total_files = logger_options.total_files;
-    let test = logger_options.test;
-    let color = logger_options.color;
-    let progress_bar = logger_options.progress_bar;
-    let progress = SeqProgress::new(
-        filename,
-        current_file,
-        total_files,
-        Mode::new(test, progress_bar),
-        color,
-    );
-
-    progress.print_test_start(&mut logger.stderr);
-
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
     let hurl_file = match hurl_file {
@@ -125,15 +109,14 @@ pub fn run(
         runner_options,
         variables,
         &mut stdout,
-        &progress,
+        None,
         &mut logger,
     );
 
     if result.success && result.entries.last().is_none() {
+        let filename = &logger_options.filename;
         logger.warning(&format!("No entry have been executed for file {filename}"));
     }
-
-    progress.print_test_completed(&result, &mut logger.stderr);
 
     Ok(result)
 }
@@ -150,15 +133,15 @@ pub fn run_entries(
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     stdout: &mut Stdout,
-    listener: &dyn EventListener,
+    listener: Option<&dyn EventListener>,
     logger: &mut Logger,
 ) -> HurlResult {
     let mut http_client = Client::new();
     let mut entries_result = vec![];
     let mut variables = variables.clone();
     let mut entry_index = runner_options.from_entry.unwrap_or(1);
+    let mut repeat_count = 0;
     let n = runner_options.to_entry.unwrap_or(entries.len());
-    let mut retry_count = 1;
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
@@ -169,6 +152,7 @@ pub fn run_entries(
     // The `entry_index` is not always incremented of each loop tick: an entry can be retried upon
     // errors for instance. Each entry is executed with options that are computed from the global
     // runner options and the "overridden" request options.
+    // See <docs/spec/runner/run_cycle.md>
     loop {
         if entry_index > n {
             break;
@@ -176,7 +160,7 @@ pub fn run_entries(
         let entry = &entries[entry_index - 1];
 
         if let Some(pre_entry) = runner_options.pre_entry {
-            let exit = pre_entry(entry.clone());
+            let exit = pre_entry(entry);
             if exit {
                 break;
             }
@@ -191,61 +175,151 @@ pub fn run_entries(
             logger.verbosity = entry_verbosity;
         }
 
-        logger.debug_important(
-            "------------------------------------------------------------------------------",
-        );
-        logger.debug_important(&format!("Executing entry {entry_index}"));
+        log_run_entry(entry_index, logger);
 
         warn_deprecated(entry, logger);
 
-        listener.on_running(entry_index - 1, n, &mut logger.stderr);
+        // We can report the progression of the run for --test mode.
+        if let Some(listener) = listener {
+            listener.on_running(entry_index - 1, n);
+        }
 
-        // The real execution of the entry happens here, with the overridden entry options.
+        // The real execution of the entry happens here, first: we compute the overridden request
+        // options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, logger);
-        let entry_result = match &options {
-            Err(error) => EntryResult {
+        if let Err(error) = &options {
+            // If we have error evaluating request options, we consider it as a non retryable error
+            // and either break the runner or go to the next entries.
+            let entry_result = EntryResult {
                 entry_index,
                 source_info: entry.source_info(),
                 errors: vec![error.clone()],
                 ..Default::default()
-            },
-            Ok(options) => {
-                if options.skip {
-                    logger.debug("");
-                    logger.debug_important(&format!("Entry {entry_index} has been skipped"));
-                    entry_index += 1;
-                    continue;
-                }
-
-                let delay = options.delay;
-                let delay_ms = delay.as_millis();
-                if delay_ms > 0 {
-                    logger.debug("");
-                    logger.debug_important(&format!(
-                        "Delay entry {entry_index} (x{retry_count} by {delay_ms} ms)"
-                    ));
-                    thread::sleep(delay);
-                };
-
-                entry::run(
-                    entry,
-                    entry_index,
-                    &mut http_client,
-                    &mut variables,
-                    options,
-                    logger,
-                )
+            };
+            log_errors(&entry_result, content, false, logger);
+            entries_result.push(entry_result);
+            if runner_options.continue_on_error {
+                entry_index += 1;
+                continue;
+            } else {
+                break;
             }
+        }
+
+        let options = options.unwrap();
+
+        // Should we skip?
+        if options.skip {
+            logger.debug("");
+            logger.debug_important(&format!("Entry {entry_index} has been skipped"));
+            entry_index += 1;
+            continue;
+        }
+
+        // Repeat 0 is equivalent to skip.
+        if options.repeat == Some(Count::Finite(0)) {
+            logger.debug("");
+            logger.debug_important(&format!("Entry {entry_index} is skipped (repeat 0 times)"));
+            entry_index += 1;
+            continue;
+        }
+
+        // Should we delay?
+        let delay = options.delay;
+        let delay_ms = delay.as_millis();
+        if delay_ms > 0 {
+            logger.debug("");
+            logger.debug_important(&format!("Delay entry {entry_index} (pause {delay_ms} ms)"));
+            thread::sleep(delay);
         };
+
+        // Loop for executing HTTP run requests, with optional retry. Only "HTTP" errors in options
+        // are taken into account for retry (errors while computing entry options and output error
+        // are not retried).
+        let results = run_request(
+            entry,
+            entry_index,
+            content,
+            &mut http_client,
+            &options,
+            &mut variables,
+            stdout,
+            logger,
+        );
+
+        let has_error = results.last().map_or(false, |r| !r.errors.is_empty());
+
+        entries_result.extend(results);
+
+        if let Some(post_entry) = runner_options.post_entry {
+            let exit = post_entry();
+            if exit {
+                break;
+            }
+        }
+        if !runner_options.continue_on_error && has_error {
+            break;
+        }
+
+        // We pass to the next entry if the repeat count is reached.
+        repeat_count += 1;
+        match options.repeat {
+            None => {
+                repeat_count = 0;
+                entry_index += 1;
+            }
+            Some(Count::Finite(n)) => {
+                if repeat_count >= n {
+                    repeat_count = 0;
+                    entry_index += 1;
+                } else {
+                    logger.debug_important(&format!(
+                        "Repeat entry {entry_index} (x{repeat_count}/{n})"
+                    ));
+                }
+            }
+            Some(Count::Infinite) => {
+                logger.debug_important(&format!("Repeat entry {entry_index} (x{repeat_count})"));
+            }
+        }
+    }
+
+    let duration = start.elapsed();
+    let cookies = http_client.cookie_storage();
+    let success = is_success(&entries_result);
+    HurlResult {
+        entries: entries_result,
+        duration,
+        success,
+        cookies,
+        timestamp,
+    }
+}
+
+/// Runs an HTTP request and optional retry it until there are no HTTP errors. Returns a list of
+/// [`EntryResult`].
+#[allow(clippy::too_many_arguments)]
+fn run_request(
+    entry: &Entry,
+    entry_index: usize,
+    content: &str,
+    http_client: &mut Client,
+    options: &RunnerOptions,
+    variables: &mut HashMap<String, Value>,
+    stdout: &mut Stdout,
+    logger: &mut Logger,
+) -> Vec<EntryResult> {
+    let mut results = vec![];
+    let mut retry_count = 1;
+
+    loop {
+        let mut result = entry::run(entry, entry_index, http_client, variables, options, logger);
 
         // Check if we need to retry.
-        let has_error = !entry_result.errors.is_empty();
-        let (retry_opts, retry_interval) = match &options {
-            Ok(options) => (options.retry, options.retry_interval),
-            Err(_) => (runner_options.retry, runner_options.retry_interval),
-        };
-        // The retry threshold can only reached with a finite positive number of retries
-        let retry_max_reached = if let Retry::Finite(r) = retry_opts {
+        let mut has_error = !result.errors.is_empty();
+
+        // The retry threshold can only be reached with a finite positive number of retries
+        let retry_max_reached = if let Some(Count::Finite(r)) = options.retry {
             retry_count > r
         } else {
             false
@@ -259,77 +333,62 @@ pub fn run_entries(
             logger.debug("");
         }
 
-        // We logs eventual errors, only if we're not retrying the current entry...
-        let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
-        if has_error {
-            log_errors(&entry_result, content, retry, logger);
-        }
+        // We log eventual errors, only if we're not retrying the current entry...
+        // The retry does not take into account a possible output Error
+        let retry = options.retry.is_some() && !retry_max_reached && has_error;
 
         // When --output is overridden on a request level, we output the HTTP response only if the
-        // call has succeeded.
-        if let Ok(RunnerOptions {
-            output: Some(output),
-            ..
-        }) = options
-        {
+        // call has succeeded. Output errors are not taken into account for retrying requests.
+        if let Some(output) = &options.output {
             if !has_error {
-                // TODO: make output write and access error as part of entry result errors.
-                // For the moment, we deal the --output request failure as a simple warning and not
-                // an error. If we want to treat it as an error, we've to add it to the current
-                // `entry_result` errors, and optionally deals with retry if we can't write to the
-                // specified path.
-                let source_info = entry.source_info();
-                if let Err(error) = entry_result.write_response(
-                    &output,
-                    &runner_options.context_dir,
-                    stdout,
-                    source_info,
-                ) {
-                    logger.warning(&error.fixme(&[], logger.color));
+                let source_info = get_output_source_info(entry);
+                if let Err(error) =
+                    result.write_response(output, &options.context_dir, stdout, source_info)
+                {
+                    result.errors.push(error);
+                    has_error = true;
                 }
             }
         }
-        entries_result.push(entry_result);
 
-        if retry {
-            let delay = retry_interval.as_millis();
-            logger.debug("");
-            logger.debug_important(&format!(
-                "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
-            ));
-            retry_count += 1;
-            // If we retry the entry, we do not want to display a 'blank' progress bar during the
-            // sleep delay. During the pause, we artificially show the previously erased progress
-            // line.
-            thread::sleep(retry_interval);
-            continue;
+        if has_error {
+            log_errors(&result, content, retry, logger);
         }
+        results.push(result);
 
-        if let Some(post_entry) = runner_options.post_entry {
-            let exit = post_entry();
-            if exit {
-                break;
-            }
-        }
-        if !runner_options.continue_on_error && has_error {
+        // No retry, we leave the HTTP run requests loop.
+        if !retry {
             break;
         }
 
-        // We pass to the next entry
-        entry_index += 1;
-        retry_count = 1;
+        let delay = options.retry_interval.as_millis();
+        logger.debug("");
+        logger.debug_important(&format!(
+            "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
+        ));
+        retry_count += 1;
+        // If we retry the entry, we do not want to display a 'blank' progress bar during the
+        // sleep delay. During the pause, we artificially show the previously erased progress
+        // line.
+        thread::sleep(options.retry_interval);
+
+        // TODO: We keep this log because we don't want to change stderr with the changes
+        // introduced by <https://github.com/Orange-OpenSource/hurl/issues/1973>
+        log_run_entry(entry_index, logger);
     }
 
-    let time_in_ms = start.elapsed().as_millis();
-    let cookies = http_client.get_cookie_storage();
-    let success = is_success(&entries_result);
-    HurlResult {
-        entries: entries_result,
-        time_in_ms,
-        success,
-        cookies,
-        timestamp,
+    results
+}
+
+/// Use source_info from output option if this option has been defined
+fn get_output_source_info(entry: &Entry) -> SourceInfo {
+    let mut source_info = entry.source_info();
+    for option_entry in entry.request.options() {
+        if let OptionKind::Output(value) = option_entry.kind {
+            source_info = value.source_info;
+        }
     }
+    source_info
 }
 
 /// Returns `true` if all the entries results are successful, `false` otherwise.
@@ -442,9 +501,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
     }
 
     if options.max_redirect != default_options.max_redirect {
-        if let Some(n) = options.max_redirect {
-            non_default_options.push(("max redirect", n.to_string()));
-        }
+        non_default_options.push(("max redirect", options.max_redirect.to_string()));
     }
 
     if options.proxy != default_options.proxy {
@@ -454,7 +511,11 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
     }
 
     if options.retry != default_options.retry {
-        non_default_options.push(("retry", options.retry.to_string()));
+        let value = match options.retry {
+            Some(retry) => retry.to_string(),
+            None => "none".to_string(),
+        };
+        non_default_options.push(("retry", value));
     }
 
     if options.unix_socket != default_options.unix_socket {
@@ -514,6 +575,14 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &m
         .errors
         .iter()
         .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));
+}
+
+/// Logs the header indicating the begin of the entry run.
+fn log_run_entry(entry_index: usize, logger: &mut Logger) {
+    logger.debug_important(
+        "------------------------------------------------------------------------------",
+    );
+    logger.debug_important(&format!("Executing entry {entry_index}"));
 }
 
 #[cfg(test)]

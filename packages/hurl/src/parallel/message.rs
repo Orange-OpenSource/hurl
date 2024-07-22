@@ -38,6 +38,7 @@ pub enum WorkerMessage {
 /// A message sent from worker to runner when the input file can't be read.
 pub struct IOErrorMsg {
     /// Identifier of the worker sending this message.
+    #[allow(dead_code)]
     pub worker_id: WorkerId,
     /// Job originator of this message.
     pub job: Job,
@@ -59,8 +60,10 @@ impl IOErrorMsg {
 /// A message sent from worker to runner when the input file can't be parsed.
 pub struct ParsingErrorMsg {
     /// Identifier of the worker sending this message.
+    #[allow(dead_code)]
     pub worker_id: WorkerId,
     /// Job originator of this message.
+    #[allow(dead_code)]
     pub job: Job,
     /// Standard error of the worker for this job.
     pub stderr: Stderr,

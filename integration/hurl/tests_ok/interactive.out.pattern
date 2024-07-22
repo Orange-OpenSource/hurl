@@ -1,0 +1,72 @@
+spawn hurl --no-color --verbose --interactive tests_ok/interactive.hurl
+
+Interactive mode
+
+Next request:
+
+GET http://localhost:8000/hello?name=Alice
+
+Press Q (Quit) or C (Continue)[?25l
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello?name=Alice
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello?name=Alice'
+*
+> GET /hello?name=Alice HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
+
+Interactive mode
+
+Next request:
+
+GET http://localhost:8000/hello?name=Bob
+
+Press Q (Quit) or C (Continue)[?25l
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello?name=Bob
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello?name=Bob'
+*
+> GET /hello?name=Bob HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
+<<<.*>>>

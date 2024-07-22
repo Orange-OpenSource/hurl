@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Pos, SourceInfo};
-use crate::error::DisplaySourceError;
-use colored::Colorize;
 use std::cmp;
+
+use crate::ast::SourceInfo;
+use crate::error::DisplaySourceError;
+use crate::reader::Pos;
+use crate::text::{Style, StyledString};
 
 /// Represents a parser error.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -78,16 +80,6 @@ impl ParseError {
             kind,
         }
     }
-
-    /// Makes a recoverable error.
-    pub fn recoverable(&self) -> ParseError {
-        ParseError::new(self.pos, true, self.kind.clone())
-    }
-
-    /// Makes a non recoverable error.
-    pub fn non_recoverable(&self) -> ParseError {
-        ParseError::new(self.pos, false, self.kind.clone())
-    }
 }
 
 impl DisplaySourceError for ParseError {
@@ -135,7 +127,7 @@ impl DisplaySourceError for ParseError {
         }
     }
 
-    fn fixme(&self, content: &[&str], color: bool) -> String {
+    fn fixme(&self, content: &[&str]) -> StyledString {
         let message = match &self.kind {
             ParseErrorKind::DuplicateSection => "the section is already defined".to_string(),
             ParseErrorKind::EscapeChar => "the escaping sequence is not valid".to_string(),
@@ -246,15 +238,29 @@ impl DisplaySourceError for ParseError {
         };
 
         let message = crate::error::add_carets(&message, self.source_info(), content);
-        if color {
-            message.red().bold().to_string()
-        } else {
-            message.to_string()
+        let mut s = StyledString::new();
+        s.push_with(&message, Style::new().red().bold());
+        s
+    }
+}
+
+impl crate::combinator::ParseError for ParseError {
+    fn is_recoverable(&self) -> bool {
+        self.recoverable
+    }
+
+    fn to_recoverable(self) -> Self {
+        ParseError {
+            recoverable: true,
+            ..self
         }
     }
 
-    fn show_source_line(&self) -> bool {
-        true
+    fn to_non_recoverable(self) -> Self {
+        ParseError {
+            recoverable: false,
+            ..self
+        }
     }
 }
 
@@ -311,6 +317,7 @@ fn levenshtein_distance(s1: &str, s2: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::error::OutputFormat;
 
     #[test]
     fn test_levenshtein() {
@@ -334,5 +341,25 @@ mod tests {
             Some("Asserts".to_string())
         );
         assert_eq!(suggestion(&valid_values, "asser"), None);
+    }
+
+    #[test]
+    fn test_parsing_error() {
+        let content = "GET abc";
+        let filename = "test.hurl";
+        let error = ParseError {
+            pos: Pos::new(1, 5),
+            recoverable: false,
+            kind: ParseErrorKind::UrlInvalidStart,
+        };
+        assert_eq!(
+            error.to_string(filename, content, None, OutputFormat::Terminal(false)),
+            r#"Parsing URL
+  --> test.hurl:1:5
+   |
+ 1 | GET abc
+   |     ^ expecting http://, https:// or {{
+   |"#
+        );
     }
 }

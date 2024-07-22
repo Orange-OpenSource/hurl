@@ -32,6 +32,7 @@ const CURLINFO_CONNECT_TIME_T: CURLINFO = CURLINFO_OFF_T + 52;
 const CURLINFO_PRETRANSFER_TIME_T: CURLINFO = CURLINFO_OFF_T + 53;
 const CURLINFO_STARTTRANSFER_TIME_T: CURLINFO = CURLINFO_OFF_T + 54;
 const CURLINFO_APPCONNECT_TIME_T: CURLINFO = CURLINFO_OFF_T + 56;
+const CURLINFO_CONN_ID: CURLINFO = CURLINFO_OFF_T + 64;
 
 /// Represents certificate information.
 /// `data` has format "name:content";
@@ -41,7 +42,7 @@ pub struct CertInfo {
 }
 
 /// Returns the information of the first certificate in the certificates chain.
-pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
+pub fn cert_info(easy: &Easy) -> Result<Option<CertInfo>, Error> {
     unsafe {
         let mut certinfo = ptr::null_mut::<curl_certinfo>();
         let rc =
@@ -57,6 +58,16 @@ pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         let slist = *((*certinfo).certinfo.offset(0));
         let data = to_list(slist);
         Ok(Some(CertInfo { data }))
+    }
+}
+
+/// Returns the connection identifier use by this libcurl handle.
+pub fn conn_id(easy: &Easy) -> Result<i64, Error> {
+    unsafe {
+        let conn_id: curl_off_t = 0;
+        let rc = curl_sys::curl_easy_getinfo(easy.raw(), CURLINFO_CONN_ID, &conn_id);
+        cvt(easy, rc)?;
+        Ok(conn_id)
     }
 }
 

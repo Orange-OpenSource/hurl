@@ -18,7 +18,7 @@ hurl --test `
   tests_ok\assert_xpath.hurl `
   tests_ok\bytes.hurl `
   tests_ok\bytes_empty.hurl `
-  tests_ok\capture_and_assert.hurl `
+  tests_ok\captures.hurl `
   tests_ok\charset.hurl `
   tests_ok\compressed_option.hurl `
   tests_ok\cookie_storage.hurl `

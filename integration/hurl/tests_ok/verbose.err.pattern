@@ -12,13 +12,13 @@
 > GET /verbose HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in ~~~ ms)
+* Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server

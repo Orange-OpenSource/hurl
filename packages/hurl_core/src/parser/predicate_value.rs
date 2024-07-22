@@ -16,13 +16,13 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::choice;
 use crate::parser::multiline::multiline_string;
 use crate::parser::number::number;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, ParseError, ParseErrorKind, ParseResult};
+use crate::reader::Reader;
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(
@@ -85,6 +85,7 @@ mod tests {
 
     use super::*;
     use crate::parser::ParseErrorKind;
+    use crate::reader::Pos;
 
     #[test]
     fn test_predicate_value() {

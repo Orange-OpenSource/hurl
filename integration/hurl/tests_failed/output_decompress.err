@@ -1,1 +1,6 @@
-error: could not uncompress response with gzip
+error: Decompression error
+  --> tests_failed/output_decompress.hurl:5:1
+   |
+ 5 | GET http://localhost:8000/error-output-decompress
+   | ^ could not uncompress response with gzip
+   |

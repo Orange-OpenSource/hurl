@@ -59,10 +59,7 @@ pub fn url(arg_matches: &ArgMatches) -> String {
 }
 
 pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
-    let mut headers = match get_strings(arg_matches, "headers") {
-        None => vec![],
-        Some(v) => v,
-    };
+    let mut headers = get_strings(arg_matches, "headers").unwrap_or_default();
     if !has_content_type(&headers) {
         if let Some(data) = get_string(arg_matches, "data") {
             if !data.starts_with('@') {

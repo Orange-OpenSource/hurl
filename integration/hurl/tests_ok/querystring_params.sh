@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/querystring_params.hurl --verbose
+hurl tests_ok/querystring_params.hurl

@@ -16,12 +16,12 @@
  *
  */
 use std::collections::HashMap;
-use std::time::Duration;
 
 use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::ClientOptions;
+use crate::runner::cache::BodyCache;
 use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
@@ -46,6 +46,8 @@ pub fn run(
     let compressed = runner_options.compressed;
     let source_info = entry.source_info();
     let context_dir = &runner_options.context_dir;
+
+    // Evaluates our source requests given our set of variables
     let http_request = match request::eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
         Err(error) => {
@@ -100,20 +102,18 @@ pub fn run(
         }
     };
 
-    // We runs capture and asserts on the last HTTP request/response chains.
+    // Now, we can compute capture and asserts on the last HTTP request/response chains.
     let call = calls.last().unwrap();
     let http_response = &call.response;
-    // `time_in_ms` represent the network time of calls, not including assert processing.
-    let time_in_ms = calls
-        .iter()
-        .map(|call| call.timings.total)
-        .sum::<Duration>()
-        .as_millis();
+
+    // `transfer_duration` represent the network time of calls, not including assert processing.
+    let transfer_duration = calls.iter().map(|call| call.timings.total).sum();
 
     // We proceed asserts and captures in this order:
     // 1. first, check implicit assert on status and version. If KO, test is failed
     // 2. then, we compute captures, we might need them in asserts
     // 3. finally, run the remaining asserts
+    let mut cache = BodyCache::new();
     let mut asserts = vec![];
 
     if !runner_options.ignore_asserts {
@@ -131,7 +131,7 @@ pub fn run(
                     captures: vec![],
                     asserts,
                     errors,
-                    time_in_ms,
+                    transfer_duration,
                     compressed,
                 };
             }
@@ -141,7 +141,7 @@ pub fn run(
     let captures = match &entry.response {
         None => vec![],
         Some(response_spec) => {
-            match response::eval_captures(response_spec, http_response, variables) {
+            match response::eval_captures(response_spec, http_response, &mut cache, variables) {
                 Ok(captures) => captures,
                 Err(e) => {
                     return EntryResult {
@@ -151,7 +151,7 @@ pub fn run(
                         captures: vec![],
                         asserts,
                         errors: vec![e],
-                        time_in_ms,
+                        transfer_duration,
                         compressed,
                     };
                 }
@@ -164,8 +164,13 @@ pub fn run(
     // Compute asserts
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut other_asserts =
-                response::eval_asserts(response_spec, variables, http_response, context_dir);
+            let mut other_asserts = response::eval_asserts(
+                response_spec,
+                variables,
+                http_response,
+                &mut cache,
+                context_dir,
+            );
             asserts.append(&mut other_asserts);
         }
     };
@@ -179,7 +184,7 @@ pub fn run(
         captures,
         asserts,
         errors,
-        time_in_ms,
+        transfer_duration,
         compressed,
     }
 }
@@ -224,7 +229,6 @@ impl ClientOptions {
             no_proxy: runner_options.no_proxy.clone(),
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
-            retry: runner_options.retry,
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
             unix_socket: runner_options.unix_socket.clone(),
@@ -249,7 +253,7 @@ fn log_request(
 ) {
     logger.debug("");
     logger.debug_important("Cookie store:");
-    for cookie in &http_client.get_cookie_storage() {
+    for cookie in &http_client.cookie_storage() {
         logger.debug(&cookie.to_string());
     }
 

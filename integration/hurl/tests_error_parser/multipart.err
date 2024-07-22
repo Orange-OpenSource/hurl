@@ -1,7 +1,7 @@
 error: Parsing file content type
   --> tests_error_parser/multipart.hurl:4:27
    |
- 4 | field3: file,example.zip; ~~~application/zip
+ 4 | field3: file,example.zip; <<<.*>>>application/zip
    |                           ^ expecting a content type
    |
 

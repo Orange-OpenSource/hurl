@@ -15,7 +15,7 @@ export CURL_PATH
 echo "CURL_PATH=$CURL_PATH"
 PATH="$CURL_PATH:$PATH"
 export PATH
-brew install bash pkg-config squid jq
+brew install bash expect pkg-config squid jq
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
 

@@ -15,156 +15,65 @@
  * limitations under the License.
  *
  */
-use std::path::PathBuf;
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
+use hurl_core::text::{Format, Style, StyledString};
 
-use crate::linter;
-use colored::*;
-use hurl_core::error::DisplaySourceError;
-use hurl_core::parser;
-
-pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
-    move |message| log_verbose(verbose, message)
+/// A simple logger to log app related event (start, high levels error, etc...).
+pub struct Logger {
+    /// Format of the message in the terminal: ANSI or plain.
+    format: Format,
 }
 
-pub fn make_logger_error_message(color: bool) -> impl Fn(bool, &str) {
-    move |warning, message| log_error_message(color, warning, message)
-}
-
-pub fn make_logger_parser_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<PathBuf>,
-) -> impl Fn(&parser::ParseError, bool) {
-    move |error: &parser::ParseError, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning);
+impl Logger {
+    /// Creates a new logger using `color`.
+    pub fn new(color: bool) -> Self {
+        let format = if color { Format::Ansi } else { Format::Plain };
+        Logger { format }
     }
-}
 
-pub fn make_logger_linter_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<PathBuf>,
-) -> impl Fn(&linter::Error, bool) {
-    move |error: &linter::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning);
+    /// Prints an error `message` on standard error.
+    pub fn error(&self, message: &str) {
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push_with(message, Style::new().bold());
+        eprintln!("{}", s.to_string(self.format));
     }
-}
 
-pub fn log_info(message: &str) {
-    eprintln!("{message}");
-}
-
-fn log_error_message(color: bool, warning: bool, message: &str) {
-    let log_type = match (color, warning) {
-        (false, true) => "warning".to_string(),
-        (false, false) => "error".to_string(),
-        (true, true) => "warning".yellow().bold().to_string(),
-        (true, false) => "error".red().bold().to_string(),
-    };
-    eprintln!("{log_type}: {message}");
-}
-
-fn log_verbose(verbose: bool, message: &str) {
-    if verbose {
-        if message.is_empty() {
-            eprintln!("*");
-        } else {
-            eprintln!("* {message}");
-        }
-    }
-}
-
-fn log_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<PathBuf>,
-    error: &dyn DisplaySourceError,
-    warning: bool,
-) {
-    let line_number_size = if lines.len() < 100 {
-        2
-    } else if lines.len() < 1000 {
-        3
-    } else {
-        4
-    };
-
-    let error_type = if warning {
-        String::from("warning")
-    } else {
-        String::from("error")
-    };
-    let error_type = if !color {
-        error_type
-    } else if warning {
-        error_type.yellow().bold().to_string()
-    } else {
-        error_type.red().bold().to_string()
-    };
-    eprintln!("{}: {}", error_type, error.description());
-
-    if let Some(filename) = filename {
-        eprintln!(
-            "{}--> {}:{}:{}",
-            " ".repeat(line_number_size).as_str(),
-            filename.display(),
-            error.source_info().start.line,
-            error.source_info().start.column,
+    /// Displays a Hurl parsing error.
+    pub fn error_parsing<E: DisplaySourceError>(&self, content: &str, file: &Input, error: &E) {
+        // FIXME: peut-être qu'on devrait faire rentrer le prefix `error:` qui est
+        // fournit par `self.error_rich` dans la méthode `error.to_string`
+        let message = error.to_string(
+            &file.to_string(),
+            content,
+            None,
+            OutputFormat::Terminal(self.format == Format::Ansi),
         );
+
+        let mut s = StyledString::new();
+        s.push_with("error", Style::new().red().bold());
+        s.push(": ");
+        s.push(&message);
+        s.push("\n");
+        eprintln!("{}", s.to_string(self.format));
     }
-    eprintln!("{} |", " ".repeat(line_number_size));
 
-    let line = lines.get(error.source_info().start.line - 1).unwrap();
-    let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
-    eprintln!(
-        "{line_number:>width$} |{line}",
-        line_number = error.source_info().start.line,
-        width = line_number_size,
-        line = if line.is_empty() {
-            line
-        } else {
-            format!(" {line}")
-        }
-    );
-
-    // TODO: to clean/Refacto
-    // specific case for assert errors
-    let lines = lines.iter().map(|s| s.as_str()).collect::<Vec<&str>>();
-    if error.source_info().start.column == 0 {
-        let fix_me = &error.fixme(&lines, color);
-        let fixme_lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(fix_me)
-            .collect();
-        // edd an empty line at the end?
-        for line in fixme_lines {
-            eprintln!(
-                "{} |   {fixme}",
-                " ".repeat(line_number_size).as_str(),
-                fixme = line,
-            );
-        }
-    } else {
-        let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let width = error.source_info().end.column - error.source_info().start.column;
-
-        let mut tab_shift = 0;
-        for (i, c) in line.chars().enumerate() {
-            if i >= error.source_info().start.column - 1 {
-                break;
-            };
-            if c == '\t' {
-                tab_shift += 1;
-            }
-        }
-        eprintln!(
-            "{} | {}{} {fixme}",
-            " ".repeat(line_number_size).as_str(),
-            " ".repeat(error.source_info().start.column - 1 + tab_shift * 3),
-            "^".repeat(if width > 1 { width } else { 1 }),
-            fixme = error.fixme(&lines, color).as_str(),
+    /// Displays a lint warning.
+    pub fn warn_lint<E: DisplaySourceError>(&self, content: &str, file: &Input, error: &E) {
+        let message = error.to_string(
+            &file.to_string(),
+            content,
+            None,
+            OutputFormat::Terminal(self.format == Format::Ansi),
         );
-    }
 
-    eprintln!("{} |\n", " ".repeat(line_number_size));
+        let mut s = StyledString::new();
+        s.push_with("warning", Style::new().yellow().bold());
+        s.push(": ");
+        s.push(&message);
+        s.push("\n");
+        eprintln!("{}", s.to_string(self.format));
+    }
 }

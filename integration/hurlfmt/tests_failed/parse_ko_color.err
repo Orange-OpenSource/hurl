@@ -1,0 +1,7 @@
+[1;31merror[0m: [1mParsing method[0m
+  [1;34m-->[0m tests_failed/parse_ko.hurl:1:1
+[1;34m   |[0m
+[1;34m 1 |[0m xxx
+[1;34m   |[0m[1;31m ^ the HTTP method <xxx> is not valid. Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH[0m
+[1;34m   |[0m
+

@@ -16,24 +16,24 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::one_or_more;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::{template, ParseResult};
+use crate::reader::Reader;
 
 /// Steps:
 /// 1- parse String until end of stream, end of line
 ///    the string does not contain trailing space
 /// 2- templatize
 pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state;
+    let start = reader.cursor();
     let mut chars = vec![];
     let mut spaces = vec![];
     let mut end = start;
     loop {
-        let pos = reader.state.pos;
-        match any_char(vec!['#'], reader) {
+        let pos = reader.cursor().pos;
+        match any_char(&['#'], reader) {
             Err(e) => {
                 if e.recoverable {
                     break;
@@ -53,27 +53,21 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
                         spaces = vec![];
                     }
                     chars.push((c, s, pos));
-                    end = reader.state;
+                    end = reader.cursor();
                 }
             }
         }
     }
-    reader.state = end;
+    reader.seek(end);
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.pos,
-            end: end.pos,
-        },
+        source_info: SourceInfo::new(start.pos, end.pos),
         chars,
     };
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
         delimiter: None,
         elements,
-        source_info: SourceInfo {
-            start: start.pos,
-            end: end.pos,
-        },
+        source_info: SourceInfo::new(start.pos, end.pos),
     })
 }
 
@@ -81,23 +75,23 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
 // (decoding escape sequence)
 pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<String> {
     literal("\"", reader)?;
-    let s = reader.read_while(|c| *c != '"' && *c != '\n');
+    let s = reader.read_while(|c| c != '"' && c != '\n');
     literal("\"", reader)?;
     Ok(s)
 }
 
 pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state.pos;
+    let start = reader.cursor();
     let mut end = start;
     try_literal("\"", reader)?;
     let mut chars = vec![];
     loop {
-        let pos = reader.state.pos;
-        let save = reader.state;
-        match any_char(vec!['"'], reader) {
+        let pos = reader.cursor().pos;
+        let save = reader.cursor();
+        match any_char(&['"'], reader) {
             Err(e) => {
                 if e.recoverable {
-                    reader.state = save;
+                    reader.seek(save);
                     break;
                 } else {
                     return Err(e);
@@ -105,39 +99,36 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
             }
             Ok((c, s)) => {
                 chars.push((c, s, pos));
-                end = reader.state.pos;
+                end = reader.cursor();
             }
         }
     }
     literal("\"", reader)?;
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo { start, end },
+        source_info: SourceInfo::new(start.pos, end.pos),
         chars,
     };
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
         delimiter: Some('"'),
         elements,
-        source_info: SourceInfo {
-            start,
-            end: reader.state.pos,
-        },
+        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
     })
 }
 
 pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     let delimiter = Some('`');
-    let start = reader.state.pos;
+    let start = reader.cursor();
     let mut end = start;
     try_literal("`", reader)?;
     let mut chars = vec![];
     loop {
-        let pos = reader.state.pos;
-        let save = reader.state;
-        match any_char(vec!['`', '\n'], reader) {
+        let pos = reader.cursor().pos;
+        let save = reader.cursor();
+        match any_char(&['`', '\n'], reader) {
             Err(e) => {
                 if e.recoverable {
-                    reader.state = save;
+                    reader.seek(save);
                     break;
                 } else {
                     return Err(e);
@@ -145,33 +136,30 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
             }
             Ok((c, s)) => {
                 chars.push((c, s, pos));
-                end = reader.state.pos;
+                end = reader.cursor();
             }
         }
     }
     literal("`", reader)?;
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo { start, end },
+        source_info: SourceInfo::new(start.pos, end.pos),
         chars,
     };
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
         delimiter,
         elements,
-        source_info: SourceInfo {
-            start,
-            end: reader.state.pos,
-        },
+        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
     })
 }
 
-fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String)> {
-    let start = reader.state;
+fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)> {
+    let start = reader.cursor();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.peek_back(start.cursor))),
+        Ok(c) => Ok((c, reader.read_from(start.index))),
         Err(e) => {
             if e.recoverable {
-                reader.state = start;
+                reader.seek(start);
                 match reader.read() {
                     None => {
                         let kind = ParseErrorKind::Expecting {
@@ -188,7 +176,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
                             };
                             Err(ParseError::new(start.pos, true, kind))
                         } else {
-                            Ok((c, reader.peek_back(start.cursor)))
+                            Ok((c, reader.read_from(start.index)))
                         }
                     }
                 }
@@ -201,7 +189,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
 
 fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
-    let start = reader.state;
+    let start = reader.cursor();
     match reader.read() {
         Some('#') => Ok('#'),
         Some('"') => Ok('"'),
@@ -228,7 +216,7 @@ pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
     let c = match std::char::from_u32(v) {
         None => {
             return Err(ParseError::new(
-                reader.state.pos,
+                reader.cursor().pos,
                 false,
                 ParseErrorKind::Unicode,
             ))
@@ -256,6 +244,7 @@ mod tests {
     use std::time::SystemTime;
 
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_unquoted_template_empty() {
@@ -268,7 +257,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
         );
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor().index, 0);
     }
 
     #[test]
@@ -285,7 +274,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             }
         );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
@@ -302,7 +291,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
             }
         );
-        assert_eq!(reader.state.cursor, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
@@ -319,7 +308,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
         );
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
     }
 
     #[test]
@@ -356,7 +345,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
             }
         );
-        assert_eq!(reader.state.cursor, 20);
+        assert_eq!(reader.cursor().index, 20);
     }
 
     #[test]
@@ -370,7 +359,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             }
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\"a#\"");
         assert_eq!(
@@ -384,7 +373,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
         );
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("\"{0}\"");
         assert_eq!(
@@ -398,7 +387,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
     }
 
     #[test]
@@ -416,7 +405,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.state.cursor, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -437,11 +426,11 @@ mod tests {
     fn test_quoted_string() {
         let mut reader = Reader::new("\"\"");
         assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "");
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\"Hello\"");
         assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "Hello");
-        assert_eq!(reader.state.cursor, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
@@ -455,7 +444,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
             }
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("`foo#`");
         assert_eq!(
@@ -469,7 +458,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
             }
         );
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("`{0}`");
         assert_eq!(
@@ -483,7 +472,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
-        assert_eq!(reader.state.cursor, 5);
+        assert_eq!(reader.cursor().index, 5);
     }
 
     #[test]
@@ -501,7 +490,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.state.cursor, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -521,58 +510,49 @@ mod tests {
     #[test]
     fn test_any_char() {
         let mut reader = Reader::new("a");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            ('a', "a".to_string())
-        );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(any_char(&[], &mut reader).unwrap(), ('a', "a".to_string()));
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new(" ");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            (' ', " ".to_string())
-        );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(any_char(&[], &mut reader).unwrap(), (' ', " ".to_string()));
+        assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("\\t");
         assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
+            any_char(&[], &mut reader).unwrap(),
             ('\t', "\\t".to_string())
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("#");
-        assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
-            ('#', "#".to_string())
-        );
-        assert_eq!(reader.state.cursor, 1);
+        assert_eq!(any_char(&[], &mut reader).unwrap(), ('#', "#".to_string()));
+        assert_eq!(reader.cursor().index, 1);
     }
 
     #[test]
     fn test_any_char_quote() {
         let mut reader = Reader::new("\\\"");
         assert_eq!(
-            any_char(vec![], &mut reader).unwrap(),
+            any_char(&[], &mut reader).unwrap(),
             ('"', "\\\"".to_string())
         );
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
     fn test_any_char_error() {
         let mut reader = Reader::new("");
-        let error = any_char(vec![], &mut reader).err().unwrap();
+        let error = any_char(&[], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("#");
-        let error = any_char(vec!['#'], &mut reader).err().unwrap();
+        let error = any_char(&['#'], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
         let mut reader = Reader::new("\t");
-        let error = any_char(vec![], &mut reader).err().unwrap();
+        let error = any_char(&[], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
     }
@@ -581,11 +561,11 @@ mod tests {
     fn test_escape_char() {
         let mut reader = Reader::new("\\n");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.state.cursor, 2);
+        assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\\u{0a}");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("x");
         let error = escape_char(&mut reader).err().unwrap();
@@ -597,18 +577,18 @@ mod tests {
             }
         );
         assert!(error.recoverable);
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.cursor().index, 0);
     }
 
     #[test]
     fn test_unicode() {
         let mut reader = Reader::new("{000a}");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("{E9}");
         assert_eq!(unicode(&mut reader).unwrap(), 'é');
-        assert_eq!(reader.state.cursor, 4);
+        assert_eq!(reader.cursor().index, 4);
     }
 
     #[test]
@@ -637,7 +617,7 @@ mod tests {
 
         let now = SystemTime::now();
         assert!(quoted_template(&mut reader).is_ok());
-        assert_eq!(reader.state.cursor, 14);
+        assert_eq!(reader.cursor().index, 14);
         eprintln!("duration= {}", now.elapsed().unwrap().as_nanos());
     }
 }

@@ -23,13 +23,14 @@ use std::path::Path;
 use std::time::Instant;
 use std::{env, process, thread};
 
-use crate::cli::{BaseLogger, CliError};
-use colored::control;
-use hurl::report::{html, junit, tap};
+use hurl::report::{html, json, junit, tap};
 use hurl::runner;
-use hurl::runner::{HurlResult, Input};
+use hurl::runner::HurlResult;
+use hurl_core::input::Input;
+use hurl_core::text;
 
-use crate::cli::options::CliOptionsError;
+use crate::cli::options::{CliOptions, CliOptionsError};
+use crate::cli::{BaseLogger, CliError};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -50,7 +51,7 @@ struct HurlRun {
 
 /// Executes Hurl entry point.
 fn main() {
-    init_colored();
+    text::init_crate_colored();
 
     let opts = match cli::options::parse() {
         Ok(v) => v,
@@ -97,48 +98,19 @@ fn main() {
         Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
     };
 
-    if let Some(filename) = opts.junit_file {
-        base_logger.debug(&format!("Writing JUnit report to {}", filename.display()));
-        let result = create_junit_report(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
+    // Compute duration of the test here to not take reports writings into account.
+    let duration = start.elapsed();
 
-    if let Some(filename) = opts.tap_file {
-        base_logger.debug(&format!("Writing TAP report to {}", filename.display()));
-        let result = create_tap_report(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
-
-    if let Some(dir) = opts.html_dir {
-        base_logger.debug(&format!("Writing HTML report to {}", dir.display()));
-        let result = create_html_report(&runs, &dir);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
-
-    if let Some(filename) = opts.cookie_output_file {
-        base_logger.debug(&format!("Writing cookies to {}", filename.display()));
-        let result = create_cookies_file(&runs, &filename);
-        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-    }
+    // Write HTML, JUnit, TAP reports on disk.
+    let ret = export_results(&runs, &opts, &base_logger);
+    unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
 
     if opts.test {
-        let duration = start.elapsed().as_millis();
-        let summary = get_summary(&runs, duration);
+        let summary = cli::summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
 
     process::exit(exit_code(&runs));
-}
-
-#[cfg(target_family = "unix")]
-fn init_colored() {
-    control::set_override(true);
-}
-
-#[cfg(target_family = "windows")]
-fn init_colored() {
-    control::set_override(true);
-    control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 /// Unwraps a `result` or exit with message.
@@ -158,6 +130,35 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
         logger.error(message);
     }
     process::exit(code);
+}
+
+/// Writes `runs` results on file, in HTML, TAP, JUnit or Cookie file format.
+fn export_results(
+    runs: &[HurlRun],
+    opts: &CliOptions,
+    logger: &BaseLogger,
+) -> Result<(), CliError> {
+    if let Some(file) = &opts.junit_file {
+        logger.debug(&format!("Writing JUnit report to {}", file.display()));
+        create_junit_report(runs, file)?;
+    }
+    if let Some(file) = &opts.tap_file {
+        logger.debug(&format!("Writing TAP report to {}", file.display()));
+        create_tap_report(runs, file)?;
+    }
+    if let Some(dir) = &opts.html_dir {
+        logger.debug(&format!("Writing HTML report to {}", dir.display()));
+        create_html_report(runs, dir)?;
+    }
+    if let Some(dir) = &opts.json_report_dir {
+        logger.debug(&format!("Writing JSON report to {}", dir.display()));
+        create_json_report(runs, dir)?;
+    }
+    if let Some(file) = &opts.cookie_output_file {
+        logger.debug(&format!("Writing cookies to {}", file.display()));
+        create_cookies_file(runs, file)?;
+    }
+    Ok(())
 }
 
 /// Create a JUnit report for this run.
@@ -183,15 +184,33 @@ fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> 
 /// Create an HTML report for this run.
 fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
-    std::fs::create_dir_all(dir_path.join("store")).unwrap();
+    let store_path = dir_path.join("store");
+    std::fs::create_dir_all(&store_path)?;
 
     let mut testcases = vec![];
     for run in runs.iter() {
-        let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
-        testcase.write_html(&run.content, &run.hurl_result.entries, dir_path)?;
+        let result = &run.hurl_result;
+        let testcase = html::Testcase::from(result, &run.filename);
+        testcase.write_html(&run.content, &result.entries, &store_path)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;
+    Ok(())
+}
+
+/// Create an JSON report for this run.
+fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
+    // We ensure that the containing folder exists.
+    let store_path = dir_path.join("store");
+    std::fs::create_dir_all(&store_path)?;
+
+    let testcases = runs
+        .iter()
+        .map(|r| json::Testcase::new(&r.hurl_result, &r.content, &r.filename))
+        .collect::<Vec<_>>();
+
+    let index_path = dir_path.join("report.json");
+    json::write_report(&index_path, &testcases, &store_path)?;
     Ok(())
 }
 
@@ -251,79 +270,4 @@ fn create_cookies_file(runs: &[HurlRun], filename: &Path) -> Result<(), CliError
         )));
     }
     Ok(())
-}
-
-/// Returns the text summary of this Hurl runs.
-fn get_summary(runs: &[HurlRun], duration: u128) -> String {
-    let total = runs.len();
-    let success = runs.iter().filter(|r| r.hurl_result.success).count();
-    let success_percent = 100.0 * success as f32 / total as f32;
-    let failed = total - success;
-    let failed_percent = 100.0 * failed as f32 / total as f32;
-    format!(
-        "--------------------------------------------------------------------------------\n\
-             Executed files:  {total}\n\
-             Succeeded files: {success} ({success_percent:.1}%)\n\
-             Failed files:    {failed} ({failed_percent:.1}%)\n\
-             Duration:        {duration} ms\n"
-    )
-}
-
-#[cfg(test)]
-pub mod tests {
-    use hurl::runner::EntryResult;
-    use hurl_core::ast::{Pos, SourceInfo};
-
-    use super::*;
-
-    #[test]
-    fn create_run_summary() {
-        fn new_run(success: bool, entries_count: usize) -> HurlRun {
-            let dummy_entry = EntryResult {
-                entry_index: 0,
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
-                errors: vec![],
-                time_in_ms: 0,
-                compressed: false,
-            };
-            HurlRun {
-                content: String::new(),
-                filename: Input::new(""),
-                hurl_result: HurlResult {
-                    entries: vec![dummy_entry; entries_count],
-                    time_in_ms: 0,
-                    success,
-                    cookies: vec![],
-                    timestamp: 1,
-                },
-            }
-        }
-
-        let runs = vec![new_run(true, 10), new_run(true, 20), new_run(true, 4)];
-        let duration = 128;
-        let summary = get_summary(&runs, duration);
-        assert_eq!(
-            summary,
-            "--------------------------------------------------------------------------------\n\
-             Executed files:  3\n\
-             Succeeded files: 3 (100.0%)\n\
-             Failed files:    0 (0.0%)\n\
-             Duration:        128 ms\n"
-        );
-
-        let runs = vec![new_run(true, 10), new_run(false, 10), new_run(true, 40)];
-        let duration = 200;
-        let summary = get_summary(&runs, duration);
-        assert_eq!(
-            summary,
-            "--------------------------------------------------------------------------------\n\
-            Executed files:  3\n\
-            Succeeded files: 2 (66.7%)\n\
-            Failed files:    1 (33.3%)\n\
-            Duration:        200 ms\n"
-        );
-    }
 }

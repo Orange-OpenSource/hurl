@@ -1,0 +1,14 @@
+TAP version 13
+1..12
+ok 1 - tests_ok/repeat_a.hurl
+ok 2 - tests_ok/repeat_b.hurl
+ok 3 - tests_ok/repeat_c.hurl
+ok 4 - tests_ok/repeat_a.hurl
+ok 5 - tests_ok/repeat_b.hurl
+ok 6 - tests_ok/repeat_c.hurl
+ok 7 - tests_ok/repeat_a.hurl
+ok 8 - tests_ok/repeat_b.hurl
+ok 9 - tests_ok/repeat_c.hurl
+ok 10 - tests_ok/repeat_a.hurl
+ok 11 - tests_ok/repeat_b.hurl
+ok 12 - tests_ok/repeat_c.hurl

@@ -18,32 +18,32 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::{expr, ParseResult};
+use crate::reader::Reader;
 
 pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     // Must be neither JSON-encoded nor empty.
     // But more restrictive: whitelist characters, not empty
-    let start = reader.state;
+    let start = reader.cursor();
     let mut elements = vec![];
     let mut buffer = String::new();
 
     if !url_prefix_valid(reader) {
         return Err(ParseError::new(
-            reader.state.pos,
+            reader.cursor().pos,
             false,
             ParseErrorKind::UrlInvalidStart,
         ));
     }
 
     loop {
-        let save = reader.state;
+        let save = reader.cursor();
         match line_terminator(reader) {
             Ok(_) => {
-                reader.state = save;
+                reader.seek(save);
                 break;
             }
-            _ => reader.state = save,
+            _ => reader.seek(save),
         }
 
         match expr::parse(reader) {
@@ -61,7 +61,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
                 if !e.recoverable {
                     return Err(e);
                 } else {
-                    reader.state = save;
+                    reader.seek(save);
                     match reader.read() {
                         None => break,
                         Some(c) => {
@@ -74,7 +74,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
                             {
                                 buffer.push(c);
                             } else {
-                                reader.state = save;
+                                reader.seek(save);
                                 break;
                             }
                         }
@@ -92,25 +92,22 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     // URLs should be followed by a line terminator
-    let save = reader.state;
+    let save = reader.cursor();
     if line_terminator(reader).is_err() {
-        reader.state = save;
+        reader.seek(save);
         let c = reader.peek().unwrap();
         return Err(ParseError::new(
-            reader.state.pos,
+            reader.cursor().pos,
             false,
             ParseErrorKind::UrlIllegalCharacter(c),
         ));
     }
 
-    reader.state = save;
+    reader.seek(save);
     Ok(Template {
         delimiter: None,
         elements,
-        source_info: SourceInfo {
-            start: start.pos,
-            end: reader.state.pos,
-        },
+        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
     })
 }
 
@@ -129,6 +126,7 @@ fn url_prefix_valid(reader: &mut Reader) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_url() {
@@ -144,7 +142,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 17)),
             }
         );
-        assert_eq!(reader.state.cursor, 16);
+        assert_eq!(reader.cursor().index, 16);
     }
 
     #[test]
@@ -163,7 +161,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 57)),
             }
         );
-        assert_eq!(reader.state.cursor, 56);
+        assert_eq!(reader.cursor().index, 56);
     }
 
     #[test]
@@ -200,7 +198,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
-        assert_eq!(reader.state.cursor, 18);
+        assert_eq!(reader.cursor().index, 18);
     }
 
     #[test]
@@ -221,7 +219,7 @@ mod tests {
             }
         );
         assert!(!error.recoverable);
-        assert_eq!(reader.state.cursor, 14);
+        assert_eq!(reader.cursor().index, 14);
     }
 
     #[test]

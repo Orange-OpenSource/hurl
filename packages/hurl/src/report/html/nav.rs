@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
-use crate::util::logger;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -83,7 +84,12 @@ fn error_to_html(
 ) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
-    let message = logger::error_string(filename, content, error, Some(error.source_info), false);
+    let message = error.to_string(
+        filename,
+        content,
+        Some(error.source_info),
+        OutputFormat::Terminal(false),
+    );
     let message = html_escape(&message);
     // We override the first part of the error string to add an anchor to
     // the error context.
@@ -101,9 +107,11 @@ fn html_escape(text: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+
     use crate::report::html::nav::error_to_html;
     use crate::runner::{RunnerError, RunnerErrorKind};
-    use hurl_core::ast::{Pos, SourceInfo};
 
     #[test]
     fn test_error_html() {

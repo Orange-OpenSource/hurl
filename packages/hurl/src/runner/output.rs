@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::{fmt, io};
 
+use hurl_core::ast::SourceInfo;
+
 use crate::runner::{RunnerError, RunnerErrorKind};
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
-use hurl_core::ast::{Pos, SourceInfo};
 
 /// Represents the output of write operation: can be either a file or standard output.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -56,14 +57,16 @@ impl Output {
 
     /// Writes these `bytes` to the output.
     ///
-    /// If output is a standard output variant, `stdout` is used to write the bytes.
-    pub fn write(&self, bytes: &[u8], stdout: &mut Stdout) -> Result<(), io::Error> {
+    /// If output is a standard output variant, `stdout` is used to write the bytes. If `append`
+    /// the output file is created in append mode, else any existing file will be truncated.
+    pub fn write(&self, bytes: &[u8], stdout: &mut Stdout, append: bool) -> Result<(), io::Error> {
         match self {
             Output::Stdout => stdout.write_all(bytes)?,
             Output::File(filename) => {
-                // If we have a context dir, we check if we can write to this filename and compute
-                // the new filename given this context dir.
-                let mut file = File::create(filename)?;
+                let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(append)
+                    .open(filename)?;
                 file.write_all(bytes)?;
             }
         }
@@ -79,6 +82,7 @@ impl Output {
         bytes: &[u8],
         stdout: &mut Stdout,
         context_dir: &ContextDir,
+        source_info: SourceInfo,
     ) -> Result<(), RunnerError> {
         // TODO: Check if write method above can be reused
         match self {
@@ -86,12 +90,19 @@ impl Output {
                 Ok(_) => Ok(()),
                 Err(e) => {
                     let filename = Path::new("stdout");
-                    Err(RunnerError::new_file_write_access(filename, &e.to_string()))
+                    Err(RunnerError::new_file_write_access(
+                        filename,
+                        &e.to_string(),
+                        source_info,
+                    ))
                 }
             },
             Output::File(filename) => {
                 if !context_dir.is_access_allowed(filename) {
-                    return Err(RunnerError::new_unauthorized_file_access(filename));
+                    return Err(RunnerError::new_unauthorized_file_access(
+                        filename,
+                        source_info,
+                    ));
                 }
                 // we check if we can write to this filename and compute the new filename given this context dir.
                 let filename = context_dir.resolved_path(filename);
@@ -101,6 +112,7 @@ impl Output {
                         return Err(RunnerError::new_file_write_access(
                             &filename,
                             &e.to_string(),
+                            source_info,
                         ))
                     }
                 };
@@ -109,6 +121,7 @@ impl Output {
                     Err(e) => Err(RunnerError::new_file_write_access(
                         &filename,
                         &e.to_string(),
+                        source_info,
                     )),
                 }
             }
@@ -116,11 +129,9 @@ impl Output {
     }
 }
 
-// TODO: improve the error with a [`SourceInfo`] passed in parameter.
 impl RunnerError {
     /// Creates a new file write access error.
-    fn new_file_write_access(path: &Path, error: &str) -> RunnerError {
-        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+    fn new_file_write_access(path: &Path, error: &str, source_info: SourceInfo) -> RunnerError {
         let path = path.to_path_buf();
         let kind = RunnerErrorKind::FileWriteAccess {
             path,
@@ -130,8 +141,7 @@ impl RunnerError {
     }
 
     /// Creates a new authorization access error.
-    fn new_unauthorized_file_access(path: &Path) -> RunnerError {
-        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+    fn new_unauthorized_file_access(path: &Path, source_info: SourceInfo) -> RunnerError {
         let path = path.to_path_buf();
         let kind = RunnerErrorKind::UnauthorizedFileAccess { path };
         RunnerError::new(source_info, kind, false)

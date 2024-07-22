@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 
 use hurl_core::ast::{Filter, FilterValue};
 
+use super::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
 use crate::runner::filter::decode::eval_decode;
@@ -37,15 +37,12 @@ use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::xpath::eval_xpath;
-
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
-
-use super::count::eval_count;
 
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
-    filters: &Vec<Filter>,
+    filters: &[Filter],
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
@@ -65,6 +62,7 @@ pub fn eval_filters(
     Ok(value)
 }
 
+/// Evaluates a `filter` with an input `value`, given a set of `variables`.
 pub fn eval_filter(
     filter: &Filter,
     value: &Value,
@@ -117,12 +115,16 @@ pub fn eval_filter(
         }
     }
 }
+
 #[cfg(test)]
 pub mod tests {
+    use std::collections::HashMap;
+
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
+
     use crate::runner::filter::eval::eval_filters;
     use crate::runner::{Number, Value};
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
-    use std::collections::HashMap;
 
     #[test]
     pub fn test_filters() {
@@ -130,7 +132,7 @@ pub mod tests {
 
         assert_eq!(
             eval_filters(
-                &vec![Filter {
+                &[Filter {
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
                     value: FilterValue::Count,
                 }],

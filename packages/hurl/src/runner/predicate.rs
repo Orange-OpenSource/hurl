@@ -19,6 +19,7 @@ use std::cmp::Ordering;
 use std::collections::HashMap;
 
 use hurl_core::ast::*;
+use hurl_core::reader::Pos;
 
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
@@ -137,7 +138,7 @@ impl Number {
 }
 
 impl Value {
-    fn expected(&self) -> String {
+    pub(crate) fn format(&self) -> String {
         match self {
             Value::Bool(value) => format!("bool <{value}>"),
             Value::Bytes(values) => format!("list of size {}", values.len()),
@@ -182,23 +183,23 @@ fn expected_no_value(
     match &predicate_func_value {
         PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(value.expected())
+            Ok(value.format())
         }
         PredicateFuncValue::GreaterThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than <{}>", value.expected()))
+            Ok(format!("greater than <{}>", value.format()))
         }
         PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than or equals to <{}>", value.expected()))
+            Ok(format!("greater than or equals to <{}>", value.format()))
         }
         PredicateFuncValue::LessThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than <{}>", value.expected()))
+            Ok(format!("less than <{}>", value.format()))
         }
         PredicateFuncValue::LessThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than or equals to <{}>", value.expected()))
+            Ok(format!("less than or equals to <{}>", value.format()))
         }
         PredicateFuncValue::StartWith {
             value: expected, ..
@@ -220,7 +221,7 @@ fn expected_no_value(
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("include {}", value.expected()))
+            Ok(format!("include {}", value.format()))
         }
         PredicateFuncValue::Match {
             value: expected, ..
@@ -727,6 +728,12 @@ fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
             expected: expected_display,
             type_mismatch: false,
         },
+        (Value::Date(value1), Value::Date(value2)) => AssertResult {
+            success: value1 == value2,
+            actual: actual_display,
+            expected: expected_display,
+            type_mismatch: false,
+        },
         // FIXME: why case (UNIT UNIT) is not treated?
         (Value::Unit, _) => AssertResult {
             success: false,
@@ -779,6 +786,12 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
             type_mismatch: false,
         },
         (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual_display,
+            expected: expected_display,
+            type_mismatch: false,
+        },
+        (Value::Date(value1), Value::Date(value2)) => AssertResult {
             success: value1 != value2,
             actual: actual_display,
             expected: expected_display,
@@ -923,8 +936,9 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{AssertResult, *};
     use std::path::Path;
+
+    use super::{AssertResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {

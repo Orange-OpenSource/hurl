@@ -16,7 +16,6 @@
  *
  */
 pub type ParseResult<T> = Result<T, ParseError>;
-pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
 
 pub fn parse_hurl_file(s: &str) -> ParseResult<HurlFile> {
     let mut reader = Reader::new(s);
@@ -28,13 +27,12 @@ pub use self::json::{
     boolean_value as parse_json_boolean, null_value as parse_json_null,
     number_value as parse_json_number, parse as parse_json,
 };
-pub use self::reader::Reader;
 pub use self::template::templatize;
 use crate::ast::HurlFile;
+use crate::reader::Reader;
 
 mod base64;
 mod bytes;
-mod combinators;
 mod cookiepath;
 mod error;
 mod expr;
@@ -51,7 +49,6 @@ mod predicate;
 mod predicate_value;
 mod primitives;
 mod query;
-mod reader;
 mod sections;
 mod string;
 mod template;

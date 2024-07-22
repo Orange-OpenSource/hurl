@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
+
 use crate::report::junit::xml::Element;
-use crate::runner::{HurlResult, Input};
-use crate::util::logger;
+use crate::runner::HurlResult;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -33,12 +35,17 @@ impl Testcase {
     pub fn from(hurl_result: &HurlResult, content: &str, filename: &Input) -> Testcase {
         let id = filename.to_string();
         let name = filename.to_string();
-        let time_in_ms = hurl_result.time_in_ms;
+        let time_in_ms = hurl_result.duration.as_millis();
         let mut failures = vec![];
         let mut errors = vec![];
 
         for (error, entry_src_info) in hurl_result.errors() {
-            let message = logger::error_string(&name, content, error, Some(entry_src_info), false);
+            let message = error.to_string(
+                &name,
+                content,
+                Some(entry_src_info),
+                OutputFormat::Terminal(false),
+            );
             if error.assert {
                 failures.push(message);
             } else {
@@ -84,18 +91,22 @@ impl Testcase {
 
 #[cfg(test)]
 mod test {
-    use crate::http::HttpError;
-    use hurl_core::ast::{Pos, SourceInfo};
+    use std::time::Duration;
 
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
+    use hurl_core::reader::Pos;
+
+    use crate::http::HttpError;
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
-    use crate::runner::{EntryResult, HurlResult, Input, RunnerError, RunnerErrorKind};
+    use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
 
     #[test]
     fn test_create_testcase_success() {
         let hurl_result = HurlResult {
             entries: vec![],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -131,10 +142,10 @@ HTTP/1.0 200
                     },
                     true,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,
@@ -173,10 +184,10 @@ HTTP/1.0 200
                     }),
                     false,
                 )],
-                time_in_ms: 0,
+                transfer_duration: Duration::from_millis(0),
                 compressed: false,
             }],
-            time_in_ms: 230,
+            duration: Duration::from_millis(230),
             success: true,
             cookies: vec![],
             timestamp: 1,

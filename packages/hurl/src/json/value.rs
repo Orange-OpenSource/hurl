@@ -15,13 +15,17 @@
  * limitations under the License.
  *
  */
+use std::str::FromStr;
 
 use base64::engine::general_purpose;
 use base64::Engine;
-use std::str::FromStr;
 
 use crate::runner::{Number, Value};
 
+/// Serializes a [`Value`] to JSON, used in captures serialization.
+///
+/// Natural JSON types are used to represent captures: if a [`Value::List`] is captured,
+/// the serialized data will be a JSON list.
 impl Value {
     pub fn to_json(&self) -> serde_json::Value {
         match self {
@@ -41,6 +45,15 @@ impl Value {
                 serde_json::Value::Object(map)
             }
             Value::Nodeset(size) => {
+                // For nodeset, we don't have a "native" JSON representation to use as a serialized
+                // format. As a fallback, we serialize with a `type` field:
+                //
+                // ```json
+                // {
+                //   "type": "nodeset",
+                //   "size": 4,
+                // }
+                // ```
                 let mut map = serde_json::Map::new();
                 let size = *size as i64;
                 map.insert(
@@ -56,12 +69,25 @@ impl Value {
             }
             Value::Null => serde_json::Value::Null,
             Value::Regex(value) => serde_json::Value::String(value.to_string()),
-            Value::Unit => todo!("how to serialize that in json?"),
+            Value::Unit => {
+                // Like nodeset, we don't have a "native" JSON representation for the unit type,
+                // we use a general fallback with `type` field
+                let mut map = serde_json::Map::new();
+                map.insert(
+                    "type".to_string(),
+                    serde_json::Value::String("unit".to_string()),
+                );
+                serde_json::Value::Object(map)
+            }
         }
     }
 }
 
 impl Number {
+    /// Serializes a number to JSON.
+    ///
+    /// Numbers that are representable in JSON use the number JSON type, while big number
+    /// will be serialized as string.
     pub fn to_json(&self) -> serde_json::Value {
         match self {
             Number::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),

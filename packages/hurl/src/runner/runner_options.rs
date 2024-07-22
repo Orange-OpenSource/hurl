@@ -17,7 +17,8 @@
  */
 use std::time::Duration;
 
-use hurl_core::ast::{Entry, Retry};
+use hurl_core::ast::Entry;
+use hurl_core::typing::Count;
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;
@@ -43,7 +44,7 @@ pub struct RunnerOptionsBuilder {
     insecure: bool,
     ip_resolve: IpResolve,
     max_filesize: Option<u64>,
-    max_redirect: Option<usize>,
+    max_redirect: Count,
     netrc: bool,
     netrc_file: Option<String>,
     netrc_optional: bool,
@@ -51,10 +52,11 @@ pub struct RunnerOptionsBuilder {
     output: Option<Output>,
     path_as_is: bool,
     post_entry: Option<fn() -> bool>,
-    pre_entry: Option<fn(Entry) -> bool>,
+    pre_entry: Option<fn(&Entry) -> bool>,
     proxy: Option<String>,
+    repeat: Option<Count>,
     resolves: Vec<String>,
-    retry: Retry,
+    retry: Option<Count>,
     retry_interval: Duration,
     skip: bool,
     ssl_no_revoke: bool,
@@ -87,7 +89,7 @@ impl Default for RunnerOptionsBuilder {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
-            max_redirect: Some(50),
+            max_redirect: Count::Finite(50),
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -97,8 +99,9 @@ impl Default for RunnerOptionsBuilder {
             post_entry: None,
             pre_entry: None,
             proxy: None,
+            repeat: None,
             resolves: vec![],
-            retry: Retry::None,
+            retry: None,
             retry_interval: Duration::from_millis(1000),
             skip: false,
             ssl_no_revoke: false,
@@ -255,7 +258,7 @@ impl RunnerOptionsBuilder {
     /// Set maximum number of redirection-followings allowed
     ///
     /// By default, the limit is set to 50 redirections
-    pub fn max_redirect(&mut self, max_redirect: Option<usize>) -> &mut Self {
+    pub fn max_redirect(&mut self, max_redirect: Count) -> &mut Self {
         self.max_redirect = max_redirect;
         self
     }
@@ -307,7 +310,7 @@ impl RunnerOptionsBuilder {
     /// Sets function to be executed before each entry execution.
     ///
     /// If the function returns true, the run is stopped.
-    pub fn pre_entry(&mut self, pre_entry: Option<fn(Entry) -> bool>) -> &mut Self {
+    pub fn pre_entry(&mut self, pre_entry: Option<fn(&Entry) -> bool>) -> &mut Self {
         self.pre_entry = pre_entry;
         self
     }
@@ -315,6 +318,12 @@ impl RunnerOptionsBuilder {
     /// Sets the specified proxy to be used.
     pub fn proxy(&mut self, proxy: Option<String>) -> &mut Self {
         self.proxy = proxy;
+        self
+    }
+
+    /// Set the number of repetition for a given entry.
+    pub fn repeat(&mut self, repeat: Option<Count>) -> &mut Self {
+        self.repeat = repeat;
         self
     }
 
@@ -327,7 +336,7 @@ impl RunnerOptionsBuilder {
     /// Sets maximum number of retries.
     ///
     /// Default is 0.
-    pub fn retry(&mut self, retry: Retry) -> &mut Self {
+    pub fn retry(&mut self, retry: Option<Count>) -> &mut Self {
         self.retry = retry;
         self
     }
@@ -415,6 +424,7 @@ impl RunnerOptionsBuilder {
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
+            repeat: self.repeat,
             resolves: self.resolves.clone(),
             retry: self.retry,
             retry_interval: self.retry_interval,
@@ -450,7 +460,7 @@ pub struct RunnerOptions {
     pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
     pub(crate) max_filesize: Option<u64>,
-    pub(crate) max_redirect: Option<usize>,
+    pub(crate) max_redirect: Count,
     pub(crate) netrc: bool,
     pub(crate) netrc_file: Option<String>,
     pub(crate) netrc_optional: bool,
@@ -458,10 +468,11 @@ pub struct RunnerOptions {
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
     pub(crate) post_entry: Option<fn() -> bool>,
-    pub(crate) pre_entry: Option<fn(Entry) -> bool>,
+    pub(crate) pre_entry: Option<fn(&Entry) -> bool>,
     pub(crate) proxy: Option<String>,
+    pub(crate) repeat: Option<Count>,
     pub(crate) resolves: Vec<String>,
-    pub(crate) retry: Retry,
+    pub(crate) retry: Option<Count>,
     pub(crate) retry_interval: Duration,
     pub(crate) skip: bool,
     pub(crate) ssl_no_revoke: bool,

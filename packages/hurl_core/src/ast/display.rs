@@ -187,11 +187,11 @@ impl fmt::Display for NaturalOption {
     }
 }
 
-impl fmt::Display for RetryOption {
+impl fmt::Display for CountOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            RetryOption::Literal(v) => write!(f, "{}", v),
-            RetryOption::Expression(v) => write!(f, "{}", v),
+            CountOption::Literal(v) => write!(f, "{}", v),
+            CountOption::Expression(v) => write!(f, "{}", v),
         }
     }
 }
@@ -278,20 +278,10 @@ impl PredicateFuncValue {
     }
 }
 
-impl fmt::Display for Retry {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let value = match self {
-            Retry::None => 0,
-            Retry::Finite(n) => *n as i32,
-            Retry::Infinite => -1,
-        };
-        write!(f, "{}", value)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     fn whitespace() -> Whitespace {
         Whitespace {

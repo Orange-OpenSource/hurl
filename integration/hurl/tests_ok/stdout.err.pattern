@@ -15,13 +15,13 @@
 > GET /stdout/text HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 5 bytes in ~~~ ms)
+* Response: (received 5 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 5
 < Server: Flask Server

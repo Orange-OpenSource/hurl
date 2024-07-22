@@ -26,16 +26,18 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use clap::ArgMatches;
+pub use error::CliOptionsError;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
-use hurl::runner::{Input, Output};
+use hurl::runner::Output;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
-use hurl_core::ast::{Entry, Retry};
+use hurl_core::ast::Entry;
+use hurl_core::input::Input;
+use hurl_core::typing::Count;
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
-pub use error::CliOptionsError;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -66,9 +68,10 @@ pub struct CliOptions {
     pub interactive: bool,
     pub ip_resolve: Option<IpResolve>,
     pub jobs: Option<usize>,
+    pub json_report_dir: Option<PathBuf>,
     pub junit_file: Option<PathBuf>,
     pub max_filesize: Option<u64>,
-    pub max_redirect: Option<usize>,
+    pub max_redirect: Count,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -79,8 +82,9 @@ pub struct CliOptions {
     pub path_as_is: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
+    pub repeat: Option<Count>,
     pub resolves: Vec<String>,
-    pub retry: Retry,
+    pub retry: Option<Count>,
     pub retry_interval: Duration,
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,
@@ -95,12 +99,23 @@ pub struct CliOptions {
     pub very_verbose: bool,
 }
 
+/// Error format: long or rich.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
     Short,
     Long,
 }
 
+impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
+    fn from(value: ErrorFormat) -> Self {
+        match value {
+            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
+            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
+        }
+    }
+}
+
+/// Requested HTTP version.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum HttpVersion {
     V10,
@@ -120,6 +135,7 @@ impl From<HttpVersion> for RequestedHttpVersion {
     }
 }
 
+/// IP protocol used.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum IpResolve {
     IpV4,
@@ -131,15 +147,6 @@ impl From<IpResolve> for http::IpResolve {
         match value {
             IpResolve::IpV4 => http::IpResolve::IpV4,
             IpResolve::IpV6 => http::IpResolve::IpV6,
-        }
-    }
-}
-
-impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
-    fn from(value: ErrorFormat) -> Self {
-        match value {
-            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
-            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
         }
     }
 }
@@ -205,7 +212,9 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::parallel())
         .arg(commands::path_as_is())
         .arg(commands::proxy())
+        .arg(commands::repeat())
         .arg(commands::report_html())
+        .arg(commands::report_json())
         .arg(commands::report_junit())
         .arg(commands::report_tap())
         .arg(commands::resolve())
@@ -221,15 +230,20 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::variables_file())
         .arg(commands::verbose())
         .arg(commands::very_verbose());
-
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
-    let opts = parse_matches(&arg_matches)?;
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if opts.input_files.is_empty() {
+    if !matches::has_input_files(&arg_matches) {
         let help = command.render_help().to_string();
         return Err(CliOptionsError::NoInput(help));
+    }
+
+    let opts = parse_matches(&arg_matches)?;
+    if opts.input_files.is_empty() {
+        return Err(CliOptionsError::Error(
+            "No input files provided".to_string(),
+        ));
     }
 
     if opts.cookie_output_file.is_some() && opts.input_files.len() > 1 {
@@ -265,6 +279,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let insecure = matches::insecure(arg_matches);
     let interactive = matches::interactive(arg_matches);
     let ip_resolve = matches::ip_resolve(arg_matches);
+    let json_report_dir = matches::json_report_dir(arg_matches)?;
     let junit_file = matches::junit_file(arg_matches);
     let max_filesize = matches::max_filesize(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
@@ -278,6 +293,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
+    let repeat = matches::repeat(arg_matches);
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches);
@@ -319,6 +335,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         insecure,
         interactive,
         ip_resolve,
+        json_report_dir,
         junit_file,
         max_filesize,
         max_redirect,
@@ -332,6 +349,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         proxy,
         output,
         output_type,
+        repeat,
         resolves,
         retry,
         retry_interval,
@@ -407,7 +425,7 @@ impl CliOptions {
             None
         };
         let pre_entry = if self.interactive {
-            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
+            Some(cli::interactive::pre_entry as fn(&Entry) -> bool)
         } else {
             None
         };
@@ -464,22 +482,13 @@ impl CliOptions {
             .build()
     }
 
-    pub fn to_logger_options(
-        &self,
-        filename: &Input,
-        current_file: usize,
-        total_files: usize,
-    ) -> LoggerOptions {
+    pub fn to_logger_options(&self, filename: &Input) -> LoggerOptions {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())
             .filename(&filename.to_string())
             .verbosity(verbosity)
-            .test(self.test)
-            .progress_bar(self.progress_bar)
-            .current_file(current_file)
-            .total_files(total_files)
             .build()
     }
 }

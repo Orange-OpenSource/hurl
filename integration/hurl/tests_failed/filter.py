@@ -8,7 +8,8 @@ def error_filter():
         """{
           "id":"123x",
           "status": true,
-          "list": [1,2,3]
+          "list": [1,2,3],
+          "number": 42
 }
 """,
         mimetype="application/json",

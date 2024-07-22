@@ -18,8 +18,11 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::*;
+use hurl_core::reader::Pos;
 
 use crate::http;
+use crate::runner::cache::BodyCache;
+use crate::runner::diff::diff;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
@@ -89,6 +92,24 @@ impl AssertResult {
                     Ok(actual) => {
                         if actual == expected {
                             None
+                        } else if use_diff(expected, actual) {
+                            let actual = actual.to_string();
+                            let expected = expected.to_string();
+                            let hunks = diff(&expected, &actual);
+                            let source_line = hunks
+                                .clone()
+                                .first()
+                                .expect("at least a diff hunk")
+                                .source_line;
+                            let kind = RunnerErrorKind::AssertBodyDiffError {
+                                hunks,
+                                body_source_info: *source_info,
+                            };
+                            let diff_source_info = SourceInfo::new(
+                                Pos::new(source_info.start.line + source_line, 1),
+                                Pos::new(source_info.start.line + source_line, 1),
+                            );
+                            Some(RunnerError::new(diff_source_info, kind, false))
                         } else {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
@@ -117,15 +138,27 @@ impl AssertResult {
     }
 }
 
+fn use_diff(expected: &Value, actual: &Value) -> bool {
+    if let (Value::String(expected), Value::String(actual)) = (actual, expected) {
+        expected.contains('\n') || actual.contains('\n')
+    } else {
+        false
+    }
+}
+
 /// Evaluates an explicit `assert`, given a set of `variables`, a HTTP response and a context
 /// directory `context_dir`.
+///
+/// The `cache` is used to store XML / JSON structured response data and avoid redundant parsing
+/// operation on the response.
 pub fn eval_explicit_assert(
     assert: &Assert,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
+    cache: &mut BodyCache,
     context_dir: &ContextDir,
 ) -> AssertResult {
-    let query_result = eval_query(&assert.query, variables, http_response);
+    let query_result = eval_query(&assert.query, variables, http_response, cache);
 
     let actual = if assert.filters.is_empty() {
         query_result
@@ -142,7 +175,11 @@ pub fn eval_explicit_assert(
                 assert: true,
             }),
             Some(value) => {
-                let filters = assert.filters.iter().map(|(_, f)| f.clone()).collect();
+                let filters = assert
+                    .filters
+                    .iter()
+                    .map(|(_, f)| f.clone())
+                    .collect::<Vec<_>>();
                 match eval_filters(&filters, &value, variables, true) {
                     Ok(value) => Ok(value),
                     Err(e) => Err(e),
@@ -173,8 +210,10 @@ pub fn eval_explicit_assert(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::SourceInfo;
     use std::path::Path;
+
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use super::super::query;
     use super::*;
@@ -229,11 +268,13 @@ pub mod tests {
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let mut cache = BodyCache::new();
         assert_eq!(
             eval_explicit_assert(
                 &assert_count_user(),
                 &variables,
                 &xml_three_users_http_response(),
+                &mut cache,
                 &context_dir
             ),
             AssertResult::Explicit {
@@ -242,5 +283,18 @@ pub mod tests {
                 predicate_result: Some(Ok(())),
             }
         );
+    }
+
+    #[test]
+    pub fn test_use_diff() {
+        assert!(!use_diff(&Value::Bool(true), &Value::Bool(false)));
+        assert!(!use_diff(
+            &Value::String("a".to_string()),
+            &Value::String("b".to_string())
+        ));
+        assert!(use_diff(
+            &Value::String("a\n".to_string()),
+            &Value::String("b".to_string())
+        ));
     }
 }

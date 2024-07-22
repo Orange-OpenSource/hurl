@@ -1,3 +1,48 @@
+[5.0.0 (TO_BE_RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.0)
+========================================================================================================================
+
+Thanks to
+[@lambrospetrou](https://github.com/lambrospetrou),
+[@OverkillGuy](https://github.com/OverkillGuy),
+[@badboy](https://github.com/badboy),
+[@DenuxPlays](https://github.com/DenuxPlays),
+[@linkdd](https://github.com/linkdd),
+[@nkback](https://github.com/nkback),
+[@claytonneal](https://github.com/claytonneal),
+
+Enhancements:
+
+* Create intermediary directories if necessary when producing TAP report [#2860](https://github.com/Orange-OpenSource/hurl/issues/2860)
+* Expose request comments in --out json (hurlfmt) [#2850](https://github.com/Orange-OpenSource/hurl/issues/2850)
+* Create intermediary directories if necessary when producing JUnit report [#2842](https://github.com/Orange-OpenSource/hurl/issues/2842)
+* Add global requests count in test summary [#2832](https://github.com/Orange-OpenSource/hurl/issues/2832)
+* Replace output warnings by errors [#2815](https://github.com/Orange-OpenSource/hurl/issues/2815)
+* Fix inconsistent case for fields queryString and httpVersion in --json [#2804](https://github.com/Orange-OpenSource/hurl/issues/2804)
+* Run tests in parallel [#2753](https://github.com/Orange-OpenSource/hurl/issues/2753)
+* Add support for importing curl url option in hurlfmt [#2750](https://github.com/Orange-OpenSource/hurl/issues/2750)
+* Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
+* Add repeat option to repeat a sequence of Hurl file [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
+* Add repeat option per request [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
+* Apply delay only once per entry, no matter how many retry [#1973](https://github.com/Orange-OpenSource/hurl/issues/1973)
+* Add toFloat filter [#1732](https://github.com/Orange-OpenSource/hurl/issues/1732)
+* Accept directory as Hurl arguments for processing file [#1446](https://github.com/Orange-OpenSource/hurl/issues/1446)
+
+
+Bugs Fixed:
+
+* Get SSL certificates info on reused connections, from a cache [#3031](https://github.com/Orange-OpenSource/hurl/issues/3031)
+* Fix max-redirs: -1 in [Options] section [#3023](https://github.com/Orange-OpenSource/hurl/issues/3023)
+* Fix error displayed in double with bad option [#2920](https://github.com/Orange-OpenSource/hurl/issues/2920)
+* Fix hurlfmt exit code with lint error [#2919](https://github.com/Orange-OpenSource/hurl/issues/2919)
+* Truncate file then append it when dumping response with --output. [#2886](https://github.com/Orange-OpenSource/hurl/issues/2886)
+* Fix crash with --json option when capturing 'HttpOnly' and 'Secure' cookie attribute [#2871](https://github.com/Orange-OpenSource/hurl/issues/2871)
+* Fix crash when capturing 'Expires' cookie attribute [#2870](https://github.com/Orange-OpenSource/hurl/issues/2870)
+* Fix empty JSON key parsing [#2836](https://github.com/Orange-OpenSource/hurl/issues/2836)
+* Do not filter 'Authorization' header if host doesn't change while following redirect [#2823](https://github.com/Orange-OpenSource/hurl/issues/2823)
+* Fix sending 'Authorization' header from --user when following redirect [#2812](https://github.com/Orange-OpenSource/hurl/issues/2812)
+* Fix URL when following redirect for certain 'Location' header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
+
+
 [4.3.0 (2024-04-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
 ========================================================================================================================
 

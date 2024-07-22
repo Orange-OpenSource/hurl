@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::http::{HttpError, Param};
 use std::fmt;
+use std::str::FromStr;
+
+use crate::http::{HttpError, Param};
 
 /// A parsed URL.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -34,6 +36,13 @@ impl Url {
             .collect()
     }
 
+    pub fn host(&self) -> String {
+        self.inner
+            .host()
+            .expect("HTTP and HTTPS URL must have a domain")
+            .to_string()
+    }
+
     /// Parse a string `input` as an URL, with this URL as the base URL.
     pub fn join(&self, input: &str) -> Result<Url, HttpError> {
         let new_inner = self.inner.join(input);
@@ -46,15 +55,15 @@ impl Url {
                 ))
             }
         };
-        Url::try_from(new_inner.to_string().as_str())
+        new_inner.as_str().parse()
     }
 }
 
-impl TryFrom<&str> for Url {
-    type Error = HttpError;
+impl FromStr for Url {
+    type Err = HttpError;
 
     /// Parses an absolute URL from a string.
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
         let inner = match url::Url::parse(value) {
             Ok(url) => url,
             Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
@@ -78,6 +87,8 @@ impl fmt::Display for Url {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::Url;
     use crate::http::Param;
 
@@ -91,16 +102,16 @@ mod tests {
             "https://localhost:8000",
         ];
         for url in urls {
-            assert!(Url::try_from(url).is_ok());
+            assert!(Url::from_str(url).is_ok());
         }
     }
 
     #[test]
     fn query_params() {
-        let url = Url::try_from("http://localhost:8000/hello").unwrap();
+        let url: Url = "http://localhost:8000/hello".parse().unwrap();
         assert_eq!(url.query_params(), vec![]);
 
-        let url = Url::try_from("http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3").unwrap();
+        let url: Url = "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".parse().unwrap();
         assert_eq!(
             url.query_params(),
             vec![
@@ -114,29 +125,29 @@ mod tests {
 
     #[test]
     fn test_join() {
-        let base = Url::try_from("http://example.net/foo/index.html").unwrap();
+        let base: Url = "http://example.net/foo/index.html".parse().unwrap();
 
         // Test join with absolute
         assert_eq!(
             base.join("http://bar.com/redirected").unwrap(),
-            Url::try_from("http://bar.com/redirected").unwrap()
+            "http://bar.com/redirected".parse().unwrap()
         );
 
         // Test join with relative
         assert_eq!(
             base.join("/redirected").unwrap(),
-            Url::try_from("http://example.net/redirected").unwrap()
+            "http://example.net/redirected".parse().unwrap()
         );
 
         assert_eq!(
             base.join("../bar/index.html").unwrap(),
-            Url::try_from("http://example.net/bar/index.html").unwrap()
+            "http://example.net/bar/index.html".parse().unwrap()
         );
 
         // Scheme relative URL
         assert_eq!(
             base.join("//example.org/baz/index.html").unwrap(),
-            Url::try_from("http://example.org/baz/index.html").unwrap()
-        )
+            "http://example.org/baz/index.html".parse().unwrap()
+        );
     }
 }

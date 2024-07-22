@@ -15,9 +15,25 @@
  * limitations under the License.
  *
  */
-use crate::http::{Header, HeaderVec, Method, Param, RequestCookie, RequestSpec, Response};
+use std::str::FromStr;
+
+use crate::http::{
+    Header, HeaderVec, HttpVersion, Method, Param, RequestCookie, RequestSpec, Response, Url,
+};
 
 /// Some Request Response to be used by tests
+
+fn default_response() -> Response {
+    Response {
+        version: HttpVersion::Http10,
+        status: 200,
+        headers: HeaderVec::new(),
+        body: vec![],
+        duration: Default::default(),
+        url: Url::from_str("http://localhost").unwrap(),
+        certificate: None,
+    }
+}
 
 pub fn hello_http_request() -> RequestSpec {
     RequestSpec {
@@ -42,7 +58,7 @@ pub fn json_http_response() -> Response {
 "#
             .to_string(),
         ),
-        ..Default::default()
+        ..default_response()
     }
 }
 
@@ -63,7 +79,7 @@ pub fn xml_two_users_http_response() -> Response {
 "#
             .to_string(),
         ),
-        ..Default::default()
+        ..default_response()
     }
 }
 
@@ -85,7 +101,7 @@ pub fn xml_three_users_http_response() -> Response {
 "#
             .to_string(),
         ),
-        ..Default::default()
+        ..default_response()
     }
 }
 
@@ -97,7 +113,7 @@ pub fn hello_http_response() -> Response {
     Response {
         headers,
         body: String::into_bytes(String::from("Hello World!")),
-        ..Default::default()
+        ..default_response()
     }
 }
 
@@ -109,7 +125,7 @@ pub fn bytes_http_response() -> Response {
     Response {
         headers,
         body: vec![255],
-        ..Default::default()
+        ..default_response()
     }
 }
 
@@ -122,7 +138,7 @@ pub fn html_http_response() -> Response {
         body: String::into_bytes(String::from(
             "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
         )),
-        ..Default::default()
+        ..default_response()
     }
 }
 

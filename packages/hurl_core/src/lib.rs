@@ -16,6 +16,11 @@
  *
  */
 pub mod ast;
+pub mod combinator;
 pub mod error;
 pub mod format;
+pub mod input;
 pub mod parser;
+pub mod reader;
+pub mod text;
+pub mod typing;

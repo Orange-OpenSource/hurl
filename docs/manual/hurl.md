@@ -215,7 +215,7 @@ This is a cli-only option.
 
 ### --delay <MILLISECONDS> {#delay}
 
-Sets delay before each request.
+Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
 
 ### --error-format <FORMAT> {#error-format}
 
@@ -297,7 +297,7 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 
 ### --jobs <NUM> {#jobs}
 
-(Experimental) Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
 current amount of CPUs.
 
 See also [`--parallel`](#parallel).
@@ -385,9 +385,9 @@ Write output to FILE instead of stdout.
 
 ### --parallel {#parallel}
 
-(Experimental) Run files in parallel.
+Run files in parallel.
 
-Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential.
+Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#test) mode.
 
 See also [`--jobs`](#jobs).
 
@@ -401,11 +401,26 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 Use the specified proxy.
 
+### --repeat <NUM> {#repeat}
+
+Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
+times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
+
+This is a cli-only option.
+
 ### --report-html <DIR> {#report-html}
 
 Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
+### --report-json <DIR> {#report-json}
+
+Generate JSON report in DIR.
+
+If the JSON report already exists, it will be updated with the new test results.
 
 This is a cli-only option.
 
@@ -446,6 +461,10 @@ This is a cli-only option.
 ### --test {#test}
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
+
+In test mode, files are executed in parallel. To run test in a sequential way use `--job 1`.
+
+See also [`--jobs`](#jobs).
 
 This is a cli-only option.
 

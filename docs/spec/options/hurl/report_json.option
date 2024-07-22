@@ -1,0 +1,9 @@
+name: report_json
+long: report-json
+value: DIR
+help: Generate JSON report to DIR
+cli_only: true
+---
+Generate JSON report in DIR.
+
+If the JSON report already exists, it will be updated with the new test results.

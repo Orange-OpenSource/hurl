@@ -8,7 +8,7 @@ description = "Hurl, run and test HTTP requests"
 documentation = "https://hurl.dev"
 homepage = "https://hurl.dev"
 repository = "https://github.com/Orange-OpenSource/hurl"
-rust-version = "1.78.0"
+rust-version = "1.79.0"
 
 [lib]
 name = "hurl"
@@ -20,10 +20,10 @@ vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "6.0.0"
 chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
-clap = { version = "4.5.4", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.5.9", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.46"
-curl-sys = "0.4.72"
+curl-sys = "0.4.73"
 encoding = "0.2.33"
 float-cmp = "0.9.0"
 glob = "0.3.1"
@@ -34,24 +34,26 @@ libflate = "2.1.0"
 libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
-regex = "1.10.4"
-serde = "1.0.202"
-serde_json = { version = "1.0.117", features = ["arbitrary_precision"] }
+regex = "1.10.5"
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = { version = "1.0.120", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
-url = "2.5.0"
+url = "2.5.2"
 xml-rs = { version = "0.8.20" }
-lazy_static = "1.4.0"
+lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.8.0", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.10.0", features = ["v4" , "fast-rng"] }
+similar = "2.5.0"
+terminal_size = "0.3.0"
 
 [target.'cfg(unix)'.dependencies]
-termion = "4.0.0"
+termion = "4.0.2"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.97"
+cc = "1.1.6"
 
 [lints]
 workspace = true

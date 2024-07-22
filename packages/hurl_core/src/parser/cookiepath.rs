@@ -16,18 +16,20 @@
  *
  */
 use crate::ast::*;
-use crate::parser::combinators::*;
+use crate::combinator::optional;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::ParseResult;
+use crate::reader::Reader;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
-    let start = reader.state.pos;
-    let s = reader.read_while(|c| *c != '[');
-    let mut template_reader = Reader::new(s.as_str());
-    template_reader.state.pos = start;
+    let start = reader.cursor().pos;
+
+    // We create a specialized reader for the templated, error and created structures are
+    // relative tho the main reader.
+    let s = reader.read_while(|c| c != '[');
+    let mut template_reader = Reader::with_pos(s.as_str(), start);
     let name = unquoted_template(&mut template_reader)?;
     let attribute = optional(cookiepath_attribute, reader)?;
     Ok(CookiePath { name, attribute })
@@ -47,8 +49,8 @@ fn cookiepath_attribute(reader: &mut Reader) -> ParseResult<CookieAttribute> {
 }
 
 fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttributeName> {
-    let start = reader.state.pos;
-    let s = reader.read_while(|c| c.is_alphabetic() || *c == '-');
+    let start = reader.cursor().pos;
+    let s = reader.read_while(|c| c.is_alphabetic() || c == '-');
     match s.to_lowercase().as_str() {
         "value" => Ok(CookieAttributeName::Value(s)),
         "expires" => Ok(CookieAttributeName::Expires(s)),
@@ -69,10 +71,11 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttribute
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Pos, SourceInfo};
+    use crate::ast::SourceInfo;
+    use crate::reader::Pos;
 
     #[test]
-    fn test_cookiepath_simple() {
+    fn cookiepath_simple() {
         let mut reader = Reader::new("cookie1");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
@@ -88,11 +91,11 @@ mod tests {
                 attribute: None,
             }
         );
-        assert_eq!(reader.state.cursor, 7);
+        assert_eq!(reader.cursor().index, 7);
     }
 
     #[test]
-    fn test_cookiepath_with_attribute() {
+    fn cookiepath_with_attribute() {
         let mut reader = Reader::new("cookie1[Domain]");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
@@ -118,11 +121,11 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.state.cursor, 15);
+        assert_eq!(reader.cursor().index, 15);
     }
 
     #[test]
-    fn test_cookiepath_with_template() {
+    fn cookiepath_with_template() {
         let mut reader = Reader::new("{{name}}[Domain]");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
@@ -158,11 +161,11 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.state.cursor, 16);
+        assert_eq!(reader.cursor().index, 16);
     }
 
     #[test]
-    fn test_cookiepath_error() {
+    fn cookiepath_error() {
         let mut reader = Reader::new("cookie1[");
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
@@ -174,23 +177,43 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
         assert_eq!(error.kind, ParseErrorKind::InvalidCookieAttribute);
         assert!(!error.recoverable);
+
+        // Check that errors are well reported with a buffer that have already read data.
+        let mut reader = Reader::new("xxxx{{cookie[Domain]");
+        _ = reader.read_while(|c| c == 'x');
+
+        let error = cookiepath(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 13
+            }
+        );
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: "}}".to_string()
+            }
+        );
+        assert!(!error.recoverable);
     }
 
     #[test]
-    fn test_cookie_attribute_name() {
+    fn test_cookiepath_attribute_name() {
         let mut reader = Reader::new("Domain");
         assert_eq!(
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("Domain".to_string())
         );
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("domain");
         assert_eq!(
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("domain".to_string())
         );
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("unknown");
         let error = cookiepath_attribute_name(&mut reader).err().unwrap();

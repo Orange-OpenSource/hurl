@@ -83,7 +83,8 @@ fn underline_errors(content: &str, errors: &[RunnerError]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Pos, SourceInfo};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
 
     use super::*;
     use crate::runner::RunnerErrorKind::QueryHeaderNotFound;

@@ -16,6 +16,8 @@
  *
  */
 use crate::ast::json;
+use crate::reader::Pos;
+use crate::typing::Count;
 
 ///
 /// Hurl AST
@@ -123,23 +125,23 @@ pub struct Response {
 
 impl Response {
     /// Returns the captures list of this spec response.
-    pub fn captures(&self) -> Vec<Capture> {
+    pub fn captures(&self) -> &[Capture] {
         for section in self.sections.iter() {
             if let SectionValue::Captures(captures) = &section.value {
-                return captures.clone();
+                return captures;
             }
         }
-        vec![]
+        &[]
     }
 
     /// Returns the asserts list of this spec response.
-    pub fn asserts(&self) -> Vec<Assert> {
+    pub fn asserts(&self) -> &[Assert] {
         for section in self.sections.iter() {
             if let SectionValue::Asserts(asserts) = &section.value {
-                return asserts.clone();
+                return asserts;
             }
         }
-        vec![]
+        &[]
     }
 }
 
@@ -388,7 +390,7 @@ impl CookieAttributeName {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum CertificateAttributeName {
     Subject,
     Issuer,
@@ -665,18 +667,6 @@ impl PartialEq for Regex {
 impl Eq for Regex {}
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Pos {
-    pub line: usize,
-    pub column: usize,
-}
-
-impl Pos {
-    pub fn new(line: usize, column: usize) -> Pos {
-        Pos { line, column }
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct SourceInfo {
     pub start: Pos,
     pub end: Pos,
@@ -729,15 +719,16 @@ pub enum OptionKind {
     IpV6(BooleanOption),
     FollowLocation(BooleanOption),
     FollowLocationTrusted(BooleanOption),
-    MaxRedirect(NaturalOption),
+    MaxRedirect(CountOption),
     NetRc(BooleanOption),
     NetRcFile(Template),
     NetRcOptional(BooleanOption),
     Output(Template),
     PathAsIs(BooleanOption),
     Proxy(Template),
+    Repeat(CountOption),
     Resolve(Template),
-    Retry(RetryOption),
+    Retry(CountOption),
     RetryInterval(NaturalOption),
     Skip(BooleanOption),
     UnixSocket(Template),
@@ -773,6 +764,7 @@ impl OptionKind {
             OptionKind::Output(_) => "output",
             OptionKind::PathAsIs(_) => "path-as-is",
             OptionKind::Proxy(_) => "proxy",
+            OptionKind::Repeat(_) => "repeat",
             OptionKind::Resolve(_) => "resolve",
             OptionKind::Retry(_) => "retry",
             OptionKind::RetryInterval(_) => "retry-interval",
@@ -810,6 +802,7 @@ impl OptionKind {
             OptionKind::Output(filename) => filename.to_string(),
             OptionKind::PathAsIs(value) => value.to_string(),
             OptionKind::Proxy(value) => value.to_string(),
+            OptionKind::Repeat(value) => value.to_string(),
             OptionKind::Resolve(value) => value.to_string(),
             OptionKind::Retry(value) => value.to_string(),
             OptionKind::RetryInterval(value) => value.to_string(),
@@ -838,8 +831,8 @@ pub enum NaturalOption {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum RetryOption {
-    Literal(Retry),
+pub enum CountOption {
+    Literal(Count),
     Expression(Expr),
 }
 
@@ -914,11 +907,4 @@ pub enum FilterValue {
         space0: Whitespace,
         expr: Template,
     },
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Copy)]
-pub enum Retry {
-    None,
-    Finite(usize),
-    Infinite,
 }

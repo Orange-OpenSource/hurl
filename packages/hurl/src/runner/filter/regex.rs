@@ -20,7 +20,6 @@ use std::collections::HashMap;
 use hurl_core::ast::{RegexValue, SourceInfo};
 
 use crate::runner::regex::eval_regex_value;
-
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 pub fn eval_regex(
@@ -50,11 +49,14 @@ pub fn eval_regex(
 pub mod tests {
     use std::collections::HashMap;
 
+    use hurl_core::ast::{
+        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
+    };
+    use hurl_core::reader::Pos;
+
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{RunnerErrorKind, Value};
-    use hurl_core::ast::{
-        Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
-    };
+
     #[test]
     fn eval_filter_regex() {
         // regex "Hello (.*)!"

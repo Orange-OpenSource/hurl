@@ -1,1 +1,6 @@
-error: build~tmp can not be written (~~~)
+error: IO Error
+  --> tests_ok/hello.hurl:17:1
+   |
+17 | GET http://localhost:8000/hello
+   | ^ build<<<[/\\]>>>tmp can not be written (<<<.*?>>>)
+   |

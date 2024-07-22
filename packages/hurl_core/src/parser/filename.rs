@@ -18,9 +18,9 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::try_literal;
-use crate::parser::reader::Reader;
 use crate::parser::template::template;
 use crate::parser::{string, ParseResult};
+use crate::reader::Reader;
 
 /// Parse a filename.
 ///
@@ -29,11 +29,11 @@ use crate::parser::{string, ParseResult};
 /// This is very similar to the behaviour in a standard shell.
 ///
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state;
+    let start = reader.cursor();
 
     let mut elements = vec![];
     loop {
-        let start = reader.state;
+        let start = reader.cursor();
         match template(reader) {
             Ok(expr) => {
                 let element = TemplateElement::Expression(expr);
@@ -45,9 +45,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let encoded: String = reader.buffer[start.cursor..reader.state.cursor]
-                        .iter()
-                        .collect();
+                    let encoded = reader.read_from(start.index);
                     let element = TemplateElement::String { value, encoded };
                     elements.push(element);
                 } else {
@@ -69,7 +67,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
 
-    let end = reader.state;
+    let end = reader.cursor();
     Ok(Template {
         delimiter: None,
         elements,
@@ -107,12 +105,12 @@ fn filename_content(reader: &mut Reader) -> ParseResult<String> {
 fn filename_text(reader: &mut Reader) -> String {
     let mut s = String::new();
     loop {
-        let save = reader.state;
+        let save = reader.cursor();
         match reader.read() {
             None => break,
             Some(c) => {
                 if ['#', ';', '{', '}', ' ', '\n', '\\'].contains(&c) {
-                    reader.state = save;
+                    reader.seek(save);
                     break;
                 } else {
                     s.push(c);
@@ -125,7 +123,7 @@ fn filename_text(reader: &mut Reader) -> String {
 
 fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
-    let start = reader.state;
+    let start = reader.cursor();
     match reader.read() {
         Some('\\') => Ok('\\'),
         Some('b') => Ok('\x08'),
@@ -150,7 +148,7 @@ fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::Pos;
+    use crate::reader::Pos;
 
     #[test]
     fn test_filename() {
@@ -166,7 +164,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }
         );
-        assert_eq!(reader.state.cursor, 13);
+        assert_eq!(reader.cursor().index, 13);
 
         let mut reader = Reader::new("data.bin");
         assert_eq!(
@@ -181,7 +179,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
-        assert_eq!(reader.state.cursor, 8);
+        assert_eq!(reader.cursor().index, 8);
     }
 
     #[test]
@@ -198,7 +196,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
-        assert_eq!(reader.state.cursor, 18);
+        assert_eq!(reader.cursor().index, 18);
     }
 
     #[test]
@@ -215,7 +213,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11)),
             }
         );
-        assert_eq!(reader.state.cursor, 10);
+        assert_eq!(reader.cursor().index, 10);
     }
 
     #[test]

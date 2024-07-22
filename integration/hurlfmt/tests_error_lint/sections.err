@@ -1,0 +1,7 @@
+warning: Unnecessary space
+  --> tests_error_lint/sections.hurl:4:1
+   |
+ 4 |  [QueryStringParams]
+   | ^ Remove space
+   |
+

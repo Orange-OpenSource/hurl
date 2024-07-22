@@ -17,7 +17,7 @@
  */
 
 /**
- * Serde json son can not be easily used for serialization here because of the orphan rule.
+ * Serde-json can not be easily used for serialization here because of the orphan rule.
  * It seems easier just to reimplement it from scratch (around 50 lines of code)
  */
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-//! [Test Anything Protocol (TAP)](https://testanything.org) report
+//! [Test Anything Protocol (TAP)](https://testanything.org) report.
 mod report;
 mod testcase;
 

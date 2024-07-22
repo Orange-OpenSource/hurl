@@ -54,6 +54,23 @@ impl TryFrom<CertInfo> for Certificate {
     }
 }
 
+/// Parses certificate's subject attribute.
+///
+/// TODO: we're exposing the subject and issuer directly from libcurl. In the certificate, these
+/// properties are list of pair of key-value.
+/// Through libcurl, these lists are serialized to a string:
+///
+/// Example:
+/// vec![("C","US"),("O","Google Trust Services LLC"),("CN","GTS Root R1"))] =>
+/// "C = US, O = Google Trust Services LLC, CN = GTS Root R1"
+///
+/// We should normalize the serialization (use 'A = B' or 'A=B') to always have the same issuer/
+/// subject given a certain certificate. Actually the value can differ on different platforms, for
+/// a given certificate.
+///
+/// See:
+/// - <integration/hurl/ssl/cacert_to_json.out.pattern>
+/// - https://curl.se/mail/lib-2024-06/0013.html
 fn parse_subject(attributes: &HashMap<String, String>) -> Result<String, String> {
     match attributes.get("subject") {
         None => Err(format!("missing Subject attribute in {attributes:?}")),
@@ -61,6 +78,7 @@ fn parse_subject(attributes: &HashMap<String, String>) -> Result<String, String>
     }
 }
 
+/// Parses certificate's issuer attribute.
 fn parse_issuer(attributes: &HashMap<String, String>) -> Result<String, String> {
     match attributes.get("issuer") {
         None => Err(format!("missing Issuer attribute in {attributes:?}")),

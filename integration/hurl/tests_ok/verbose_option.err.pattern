@@ -15,13 +15,13 @@
 > GET /hello HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in ~~~ ms)
+* Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
@@ -48,17 +48,17 @@
 > GET /hello HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~
+> User-Agent: hurl/<<<.*?>>>
 >
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
 ** Closing connection 3
-* Response: (received 12 bytes in ~~~ ms)
+* Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/~~~ Python/~~~
-< Date: ~~~
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
@@ -68,12 +68,12 @@
 * Hello World!
 *
 * Timings:
-* begin: ~~~ UTC
-* end: ~~~ UTC
-* namelookup: ~~~ µs
-* connect: ~~~ µs
-* app_connect: ~~~ µs
-* pre_transfer: ~~~ µs
-* start_transfer: ~~~ µs
-* total: ~~~ µs
+* begin: <<<.*?>>> UTC
+* end: <<<.*?>>> UTC
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
 *

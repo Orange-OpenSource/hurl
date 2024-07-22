@@ -48,7 +48,7 @@
         },
         {
           "line": 11,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\n   |>\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\r\n   |>\n   |",
           "success": false
         },
         {
@@ -72,11 +72,11 @@
               },
               {
                 "name": "User-Agent",
-                "value": "hurl/~~~"
+                "value": "hurl/<<<.*?>>>"
               }
             ],
             "method": "GET",
-            "queryString": [],
+            "query_string": [],
             "url": "http://localhost:8000/error-assert-value"
           },
           "response": {
@@ -84,11 +84,11 @@
             "headers": [
               {
                 "name": "Server",
-                "value": "Werkzeug/~~~"
+                "value": "Werkzeug/<<<.*?>>>"
               },
               {
                 "name": "Date",
-                "value": "~~~"
+                "value": "<<<.*?>>>"
               },
               {
                 "name": "Content-Type",
@@ -107,28 +107,28 @@
                 "value": "close"
               }
             ],
-            "httpVersion": "HTTP/1.1",
+            "http_version": "HTTP/1.1",
             "status": 200
           },
           "timings": {
-            "app_connect": ~~~,
-            "begin_call": "~~~",
-            "connect": ~~~,
-            "end_call": "~~~",
-            "name_lookup": ~~~,
-            "pre_transfer": ~~~,
-            "start_transfer": ~~~,
-            "total": ~~~
+            "app_connect": <<<\d+>>>,
+            "begin_call": "<<<.*?>>>",
+            "connect": <<<\d+>>>,
+            "end_call": "<<<.*?>>>",
+            "name_lookup": <<<\d+>>>,
+            "pre_transfer": <<<\d+>>>,
+            "start_transfer": <<<\d+>>>,
+            "total": <<<.*?>>>
           }
         }
       ],
       "captures": [],
       "index": 1,
       "line": 1,
-      "time": ~~~
+      "time": <<<\d+>>>
     }
   ],
   "filename": "tests_failed/assert_value_error.hurl",
   "success": false,
-  "time": ~~~
+  "time": <<<\d+>>>
 }

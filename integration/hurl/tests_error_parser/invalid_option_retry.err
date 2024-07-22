@@ -1,0 +1,7 @@
+error: Parsing literal
+  --> tests_error_parser/invalid_option_retry.hurl:3:8
+   |
+ 3 | retry: -24
+   |        ^ expecting 'integer >= -1'
+   |
+

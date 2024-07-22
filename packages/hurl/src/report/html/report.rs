@@ -21,12 +21,12 @@ use std::path::Path;
 use chrono::{DateTime, Local};
 
 use crate::report::html::{HTMLResult, Testcase};
-use crate::report::Error;
+use crate::report::ReportError;
 
 /// Creates and HTML report for this list of [`Testcase`] at `dir_path`/index.html.
 ///
 /// If the report already exists, results are merged.
-pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Error> {
+pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
     for testcase in testcases.iter() {
@@ -38,17 +38,21 @@ pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Error
 
     let file_path = index_path;
     let mut file = match std::fs::File::create(&file_path) {
-        Err(why) => {
-            return Err(Error {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-            });
+        Err(err) => {
+            return Err(ReportError::from_error(
+                err,
+                &file_path,
+                "Issue writing HTML report",
+            ))
         }
         Ok(file) => file,
     };
-    if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(Error {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-        });
+    if let Err(err) = file.write_all(s.as_bytes()) {
+        return Err(ReportError::from_error(
+            err,
+            &file_path,
+            "Issue writing HTML report",
+        ));
     }
     Ok(())
 }
@@ -79,14 +83,16 @@ fn create_html_index(now: &str, hurl_results: &[HTMLResult]) -> String {
     )
 }
 
-fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, Error> {
+fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, ReportError> {
     if path.exists() {
         let s = match std::fs::read_to_string(path) {
             Ok(s) => s,
-            Err(why) => {
-                return Err(Error {
-                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
-                });
+            Err(e) => {
+                return Err(ReportError::from_error(
+                    e,
+                    path,
+                    "Issue reading HTML report",
+                ))
             }
         };
         Ok(parse_html_report(&s))
@@ -111,6 +117,9 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     "#,
     )
     .unwrap();
+    // TODO: if the existing HTML report is not valid, we consider that there is no
+    // existing report to append, without displaying any error or warning. Maybe a better option
+    // would be to raise an error here and ask the user to explicitly deal with this error.
     re.captures_iter(html)
         .map(|cap| {
             let filename = cap["filename"].to_string();

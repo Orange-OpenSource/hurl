@@ -24,6 +24,8 @@ netrc-optional: false
 output: output.txt
 path-as-is: false
 proxy: http://proxy.example
+repeat: -1
+repeat: 5
 resolve: example.com:443:127.0.0.1
 retry: 0
 retry: -1
@@ -65,6 +67,7 @@ netrc-optional: {{netrc-optional}}
 output: {{output}}
 path-as-is: {{path-as-is}}
 proxy: {{proxy}}
+repeat: {{repeat}}
 resolve: {{resolve}}
 retry: {{retry}}
 retry-interval: {{retry-interval}}

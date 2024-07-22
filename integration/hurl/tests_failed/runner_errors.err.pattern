@@ -59,7 +59,15 @@ error: File read access
     |      ^^^^^^^^^^^^^ file undefined.txt can not be read
     |
 
-warning: tests_failed~~~output can not be written (~~~)
+error: File write access
+   --> tests_failed/runner_errors.hurl:40:9
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+ 40 | output: undefined/output
+    |         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)
+    |
+
 error: Filter error
    --> tests_failed/runner_errors.hurl:46:5
     |
@@ -176,7 +184,7 @@ error: Invalid JSON
 error: Invalid JSONPath
    --> tests_failed/runner_errors.hurl:119:10
     |
-    | GET http://localhost:8000/runner_errors
+    | GET http://localhost:8000/runner_errors/json-list
     | ...
 119 | jsonpath "xxx" == 10
     |          ^^^^^ the JSONPath expression 'xxx' is not valid
@@ -206,7 +214,7 @@ error: Invalid variable type
     | GET http://localhost:8000/runner_errors
     | ...
 137 | verbose: {{verbose}}
-    |            ^^^^^^^ expecting boolean, actual value is <1>
+    |            ^^^^^^^ expecting boolean, actual value is integer <1>
     |
 
 error: Undefined variable
@@ -248,12 +256,5 @@ error: Decompression error
     | ...
 166 | bytes count == 10
     | ^^^^^ compression unknown is not supported
-    |
-
-error: Unsupported HTTP version
-   --> tests_failed/runner_errors.hurl:169:5
-    |
-169 | GET http://localhost:8000/runner_errors
-    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version
     |
 

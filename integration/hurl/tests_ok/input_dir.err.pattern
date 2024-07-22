@@ -1,0 +1,11 @@
+tests_ok<<<.input_dir.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok<<<.input_dir.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok<<<.input_dir.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok<<<.input_dir.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
+--------------------------------------------------------------------------------
+Executed files:    4
+Executed requests: 4 (<<<.*?>>>/s)
+Succeeded files:   4 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          <<<\d+>>> ms
+

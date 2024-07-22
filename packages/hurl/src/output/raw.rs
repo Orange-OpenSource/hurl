@@ -18,15 +18,15 @@
 use std::cmp::min;
 use std::io::IsTerminal;
 
-use colored::Colorize;
-
+use crate::output::error::OutputErrorKind;
 use crate::output::OutputError;
 use crate::runner::{HurlResult, Output};
-use crate::util::term::{Stderr, Stdout};
+use crate::util::term::Stdout;
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
-/// If `filename_out` is `None`, standard output is used. If `include_headers` is true, the last
+/// If `filename_out` is `None`, standard output is used. If `append` is true, any existing file will
+/// be appended instead of being truncated. If `include_headers` is true, the last
 /// HTTP response headers are written before the body response.
 pub fn write_last_body(
     hurl_result: &HurlResult,
@@ -34,7 +34,7 @@ pub fn write_last_body(
     color: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
-    stderr: &mut Stderr,
+    append: bool,
 ) -> Result<(), OutputError> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
@@ -57,7 +57,9 @@ pub fn write_last_body(
         let mut bytes = match response.uncompress_body() {
             Ok(b) => b,
             Err(e) => {
-                return Err(OutputError::new(&e.message()));
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Http(e);
+                return Err(OutputError::new(source_info, kind));
             }
         };
         output.append(&mut bytes);
@@ -66,33 +68,31 @@ pub fn write_last_body(
         output.extend(bytes);
     }
     // We replicate curl's checks for binary output: a warning is displayed when user hasn't
-    // use `--output` option and the response is considered as a binary content. If user has used
+    // used `--output` option and the response is considered as a binary content. If user has used
     // `--output` whether to save to a file, or to redirect output to standard output (`--output -`)
     // we don't display any warning.
     match filename_out {
         None => {
             if std::io::stdout().is_terminal() && is_binary(&output) {
-                let message = "Binary output can mess up your terminal. Use \"--output -\" to tell Hurl to output it to your terminal anyway, or consider \"--output\" to save to a file.";
-                let message = if color {
-                    format!("{}: {}", "warning".yellow().bold(), message.bold())
-                } else {
-                    format!("warning: {message}")
-                };
-                stderr.eprintln(&message);
-                // We don't want to have any additional error message.
-                return Err(OutputError::new(""));
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Binary;
+                return Err(OutputError::new(source_info, kind));
             }
-            Output::Stdout
-                .write(&output, stdout)
-                .map_err(|e| OutputError::new(&e.to_string()))?;
+            Output::Stdout.write(&output, stdout, append).map_err(|e| {
+                let source_info = last_entry.source_info;
+                let kind = OutputErrorKind::Io(e.to_string());
+                OutputError::new(source_info, kind)
+            })?;
         }
-        Some(out) => out.write(&output, stdout).map_err(|e| {
+        Some(out) => out.write(&output, stdout, append).map_err(|e| {
             let filename = if let Output::File(filename) = out {
                 filename.display().to_string()
             } else {
                 "stdout".to_string()
             };
-            OutputError::new(&format!("{filename} can not be written ({})", e))
+            let source_info = last_entry.source_info;
+            let kind = OutputErrorKind::Io(format!("{filename} can not be written ({})", e));
+            OutputError::new(source_info, kind)
         })?,
     }
     Ok(())
@@ -117,11 +117,28 @@ fn is_binary(bytes: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+    use std::time::Duration;
+
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
-    use crate::util::term::{Stderr, Stdout, WriteMode};
-    use hurl_core::ast::{Pos, SourceInfo};
+    use crate::util::term::{Stdout, WriteMode};
+
+    fn default_response() -> Response {
+        Response {
+            version: HttpVersion::Http10,
+            status: 200,
+            headers: HeaderVec::new(),
+            body: vec![],
+            duration: Default::default(),
+            url: Url::from_str("http://localhost").unwrap(),
+            certificate: None,
+        }
+    }
 
     fn hurl_result_json() -> HurlResult {
         let mut headers = HeaderVec::new();
@@ -138,18 +155,18 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://foo.com").unwrap(),
+                            url: Url::from_str("https://foo.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
                         },
-                        response: Default::default(),
+                        response: default_response(),
                         timings: Default::default(),
                     }],
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
                 EntryResult {
@@ -157,18 +174,18 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://bar.com").unwrap(),
+                            url: Url::from_str("https://bar.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
                         },
-                        response: Default::default(),
+                        response: default_response(),
                         timings: Default::default(),
                     }],
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
                 EntryResult {
@@ -176,7 +193,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
-                            url: Url::try_from("https://baz.com").unwrap(),
+                            url: Url::from_str("https://baz.com").unwrap(),
                             method: "GET".to_string(),
                             headers: HeaderVec::new(),
                             body: vec![],
@@ -187,7 +204,7 @@ mod tests {
                             headers,
                             body: b"{\"say\": \"Hello World!\"}".into(),
                             duration: Default::default(),
-                            url: String::new(),
+                            url: Url::from_str("https://baz.com").unwrap(),
                             certificate: None,
                         },
                         timings: Default::default(),
@@ -195,11 +212,11 @@ mod tests {
                     captures: vec![],
                     asserts: vec![],
                     errors: vec![],
-                    time_in_ms: 0,
+                    transfer_duration: Duration::from_millis(0),
                     compressed: false,
                 },
             ],
-            time_in_ms: 100,
+            duration: Duration::from_millis(100),
             success: true,
             cookies: vec![],
             timestamp: 0,
@@ -213,7 +230,6 @@ mod tests {
         let color = false;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
-        let mut stderr = Stderr::new(WriteMode::Buffered);
 
         write_last_body(
             &result,
@@ -221,7 +237,7 @@ mod tests {
             color,
             output.as_ref(),
             &mut stdout,
-            &mut stderr,
+            true,
         )
         .unwrap();
         let stdout = String::from_utf8(stdout.buffer().to_vec()).unwrap();

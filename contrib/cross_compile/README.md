@@ -49,7 +49,7 @@ docker run --platform linux/arm64 --volume /tmp/hurl-"${tag}":/hurl --workdir /h
 uname -m
 export DEBIAN_FRONTEND=noninteractive
 apt update
-bin/install_prerequisites_docker_ubuntu.sh
+bin/install_prerequisites_ubuntu.sh
 ```
 
 ## Build

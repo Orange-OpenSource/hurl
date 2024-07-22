@@ -15,23 +15,8 @@
  * limitations under the License.
  *
  */
-
-use error::Error;
-use reader::Reader;
-
-#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Pos {
-    pub line: usize,
-    pub column: usize,
-}
-
-pub type ParseResult<T> = Result<T, Error>;
-pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
-
 pub use self::parse::parse;
 
-mod combinators;
 mod error;
 mod parse;
 mod primitives;
-mod reader;

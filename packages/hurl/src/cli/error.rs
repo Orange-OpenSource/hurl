@@ -28,9 +28,9 @@ pub enum CliError {
     Runtime(String),
 }
 
-impl From<report::Error> for CliError {
-    fn from(error: report::Error) -> Self {
-        CliError::IO(error.message)
+impl From<report::ReportError> for CliError {
+    fn from(error: report::ReportError) -> Self {
+        CliError::IO(error.to_string())
     }
 }
 

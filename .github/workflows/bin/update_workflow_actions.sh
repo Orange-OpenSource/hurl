@@ -19,7 +19,7 @@ function usage(){
     echo "        : example: --dry"
     echo
     echo "  --github-token <github token access> #mandatory"
-    echo "      specify github user token with acces to PR api"
+    echo "      specify github user token with access to PR api"
     echo "        : example: --github-token ghp_kJvDuaalZtyhinB1uYtgsqMrkQ5Hkh76jh2o"      
     echo
 }

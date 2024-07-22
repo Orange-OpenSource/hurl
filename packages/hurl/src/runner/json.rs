@@ -18,7 +18,8 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
-use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
+use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number};
+use hurl_core::reader::Reader;
 
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::render_expression;
@@ -70,15 +71,15 @@ pub fn eval_json_value(
             // The String can only be null, a bool, a number
             // It will be easier when your variables value have a type
             let mut reader = Reader::new(s.as_str());
-            let start = reader.state;
+            let start = reader.cursor();
             if parse_json_number(&mut reader).is_ok() {
                 return Ok(s);
             }
-            reader.state = start;
+            reader.seek(start);
             if parse_json_boolean(&mut reader).is_ok() {
                 return Ok(s);
             }
-            reader.state = start;
+            reader.seek(start);
             if parse_json_null(&mut reader).is_ok() {
                 return Ok(s);
             }
@@ -177,6 +178,7 @@ fn encode_json_char(c: char) -> String {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::*;
+    use hurl_core::reader::Pos;
 
     use super::super::error::RunnerErrorKind;
     use super::*;

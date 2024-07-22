@@ -269,7 +269,7 @@ pub fn jobs() -> clap::Arg {
         .long("jobs")
         .value_name("NUM")
         .value_parser(clap::value_parser!(u32).range(1..))
-        .help("(Experimental) Maximum number of parallel jobs")
+        .help("Maximum number of parallel jobs")
         .num_args(1)
 }
 
@@ -375,7 +375,7 @@ pub fn output() -> clap::Arg {
 pub fn parallel() -> clap::Arg {
     clap::Arg::new("parallel")
         .long("parallel")
-        .help("(Experimental) Run files in parallel")
+        .help("Run files in parallel (default in test mode)")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -395,11 +395,29 @@ pub fn proxy() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn repeat() -> clap::Arg {
+    clap::Arg::new("repeat")
+        .long("repeat")
+        .value_name("NUM")
+        .value_parser(clap::value_parser!(i32).range(-1..))
+        .allow_hyphen_values(true)
+        .help("Repeat the input files sequence NUM times, -1 for infinite loop")
+        .num_args(1)
+}
+
 pub fn report_html() -> clap::Arg {
     clap::Arg::new("report_html")
         .long("report-html")
         .value_name("DIR")
         .help("Generate HTML report to DIR")
+        .num_args(1)
+}
+
+pub fn report_json() -> clap::Arg {
+    clap::Arg::new("report_json")
+        .long("report-json")
+        .value_name("DIR")
+        .help("Generate JSON report to DIR")
         .num_args(1)
 }
 
@@ -432,7 +450,6 @@ pub fn retry() -> clap::Arg {
     clap::Arg::new("retry")
         .long("retry")
         .value_name("NUM")
-        .default_value("0")
         .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
         .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
@@ -459,7 +476,7 @@ pub fn ssl_no_revoke() -> clap::Arg {
 pub fn test() -> clap::Arg {
     clap::Arg::new("test")
         .long("test")
-        .help("Activate test mode")
+        .help("Activate test mode (use parallel execution)")
         .action(clap::ArgAction::SetTrue)
 }
 

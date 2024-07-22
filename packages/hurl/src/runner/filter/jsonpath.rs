@@ -31,7 +31,19 @@ pub fn eval_jsonpath(
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
-        Value::String(json) => eval_jsonpath_string(json, expr, variables, source_info),
+        Value::String(text) => {
+            let json = match serde_json::from_str(text) {
+                Err(_) => {
+                    return Err(RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::QueryInvalidJson,
+                        false,
+                    ));
+                }
+                Ok(v) => v,
+            };
+            eval_jsonpath_json(&json, expr, variables)
+        }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v._type());
             Err(RunnerError::new(source_info, kind, assert))
@@ -39,33 +51,22 @@ pub fn eval_jsonpath(
     }
 }
 
-pub fn eval_jsonpath_string(
-    json: &str,
+pub fn eval_jsonpath_json(
+    json: &serde_json::Value,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: SourceInfo,
 ) -> Result<Option<Value>, RunnerError> {
-    let value = eval_template(expr, variables)?;
-    let expr_source_info = &expr.source_info;
-    let jsonpath_query = match jsonpath::parse(value.as_str()) {
+    let expr_str = eval_template(expr, variables)?;
+    let expr_source_info = expr.source_info;
+    let jsonpath_query = match jsonpath::parse(&expr_str) {
         Ok(q) => q,
         Err(_) => {
-            let kind = RunnerErrorKind::QueryInvalidJsonpathExpression { value };
-            return Err(RunnerError::new(*expr_source_info, kind, false));
+            let kind = RunnerErrorKind::QueryInvalidJsonpathExpression { value: expr_str };
+            return Err(RunnerError::new(expr_source_info, kind, false));
         }
-    };
-    let value = match serde_json::from_str(json) {
-        Err(_) => {
-            return Err(RunnerError::new(
-                source_info,
-                RunnerErrorKind::QueryInvalidJson,
-                false,
-            ));
-        }
-        Ok(v) => v,
     };
 
-    let results = jsonpath_query.eval(&value);
+    let results = jsonpath_query.eval(json);
     match results {
         None => Ok(None),
         Some(jsonpath::JsonpathResult::SingleEntry(value)) => Ok(Some(Value::from_json(&value))),
@@ -77,10 +78,10 @@ pub fn eval_jsonpath_string(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{
-        Filter, FilterValue, Pos, SourceInfo, Template, TemplateElement, Whitespace,
-    };
     use std::collections::HashMap;
+
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;

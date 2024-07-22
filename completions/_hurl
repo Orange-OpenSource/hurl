@@ -44,7 +44,7 @@ _hurl() {
     '--interactive[Turn on interactive mode]' \
     '(-4 --ipv4)'{-4,--ipv4}'[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]' \
     '(-6 --ipv6)'{-6,--ipv6}'[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]' \
-    '--jobs[(Experimental) Maximum number of parallel jobs]: :' \
+    '--jobs[Maximum number of parallel jobs]: :' \
     '--json[Output each Hurl file result to JSON]' \
     '--max-filesize[Specify the maximum size (in bytes) of a file to download]: :' \
     '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]: :' \
@@ -56,17 +56,19 @@ _hurl() {
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--noproxy[List of hosts which do not use proxy]: :' \
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \
-    '--parallel[(Experimental) Run files in parallel]' \
+    '--parallel[Run files in parallel (default in test mode)]' \
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
+    '--repeat[Repeat the input files sequence NUM times, -1 for infinite loop]: :' \
     '--report-html[Generate HTML report to DIR]: :' \
+    '--report-json[Generate JSON report to DIR]: :' \
     '--report-junit[Write a JUnit XML report to FILE]: :_files' \
     '--report-tap[Write a TAP report to FILE]: :_files' \
     '*--resolve[Provide a custom address for a specific HOST and PORT pair]: :' \
     '--retry[Maximum number of retries, 0 for no retries, -1 for unlimited retries]: :' \
     '--retry-interval[Interval in milliseconds before a retry]: :' \
     '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks]' \
-    '--test[Activate test mode]' \
+    '--test[Activate test mode (use parallel execution)]' \
     '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]: :' \
     '--unix-socket[(HTTP) Connect through this Unix domain socket, instead of using the network]: :_files' \
     '(-u --user)'{-u,--user}'[Add basic Authentication header to each request]: :' \

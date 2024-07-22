@@ -18,6 +18,7 @@
 use std::fmt::Display;
 
 use crate::ast::*;
+use crate::typing::Count;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
@@ -230,15 +231,16 @@ impl HtmlFormatter {
             OptionKind::Insecure(value) => self.fmt_bool_option(value),
             OptionKind::IpV4(value) => self.fmt_bool_option(value),
             OptionKind::IpV6(value) => self.fmt_bool_option(value),
-            OptionKind::MaxRedirect(value) => self.fmt_natural_option(value),
+            OptionKind::MaxRedirect(value) => self.fmt_count_option(value),
             OptionKind::NetRc(value) => self.fmt_bool_option(value),
             OptionKind::NetRcFile(filename) => self.fmt_filename(filename),
             OptionKind::NetRcOptional(value) => self.fmt_bool_option(value),
             OptionKind::Output(filename) => self.fmt_filename(filename),
             OptionKind::PathAsIs(value) => self.fmt_bool_option(value),
             OptionKind::Proxy(value) => self.fmt_template(value),
+            OptionKind::Repeat(value) => self.fmt_count_option(value),
             OptionKind::Resolve(value) => self.fmt_template(value),
-            OptionKind::Retry(value) => self.fmt_retry_option(value),
+            OptionKind::Retry(value) => self.fmt_count_option(value),
             OptionKind::RetryInterval(value) => self.fmt_natural_option(value),
             OptionKind::Skip(value) => self.fmt_bool_option(value),
             OptionKind::UnixSocket(value) => self.fmt_template(value),
@@ -251,18 +253,17 @@ impl HtmlFormatter {
         self.fmt_lt(&option.line_terminator0);
     }
 
-    fn fmt_retry_option(&mut self, retry_option: &RetryOption) {
-        match retry_option {
-            RetryOption::Literal(retry) => self.fmt_retry(retry),
-            RetryOption::Expression(expr) => self.fmt_expr(expr),
-        };
+    fn fmt_count_option(&mut self, count_option: &CountOption) {
+        match count_option {
+            CountOption::Literal(repeat) => self.fmt_count(*repeat),
+            CountOption::Expression(expr) => self.fmt_expr(expr),
+        }
     }
 
-    fn fmt_retry(&mut self, retry: &Retry) {
-        match retry {
-            Retry::Finite(n) => self.fmt_number(n),
-            Retry::Infinite => self.fmt_number(-1),
-            Retry::None => self.fmt_number(0),
+    fn fmt_count(&mut self, count: Count) {
+        match count {
+            Count::Finite(n) => self.fmt_number(n),
+            Count::Infinite => self.fmt_number(-1),
         };
     }
 
@@ -901,6 +902,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_multiline_string() {

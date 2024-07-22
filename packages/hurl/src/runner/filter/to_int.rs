@@ -45,10 +45,13 @@ pub fn eval_to_int(
 #[cfg(test)]
 pub mod tests {
 
+    use std::collections::HashMap;
+
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
+
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Number, RunnerErrorKind, Value};
-    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
-    use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_to_int() {
