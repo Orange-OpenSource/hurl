@@ -93,7 +93,7 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.1.0
+        uses: docker/setup-qemu-action@v3.2.0
       - name: Create package
         uses: addnab/docker-run-action@v3
         with:
