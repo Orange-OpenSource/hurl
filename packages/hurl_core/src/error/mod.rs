@@ -25,30 +25,38 @@ pub trait DisplaySourceError {
     fn description(&self) -> String;
     fn fixme(&self, content: &[&str]) -> StyledString;
 
-    /// Return the constructed message for the error
+    /// Returns the constructed message for the error
     ///
     /// It may include:
+    ///
     /// - source line
     /// - column position and number of characters (with one or more carets)
     ///
     /// Examples:
     ///
+    /// ```text
     /// GET abc
     ///     ^ expecting http://, https:// or {{
+    /// ```
     ///
+    /// ```text
     /// HTTP/1.0 200
     ///          ^^^ actual value is <404>
+    /// ```
     ///
+    /// ```text
     /// jsonpath "$.count" >= 5
     ///   actual:   int <2>
     ///   expected: greater than int <5>
+    /// ```
     ///
+    /// ```text
     /// {
     ///    "name": "John",
     ///-   "age": 27
     ///+   "age": 28
     /// }
-    ///
+    /// ```
     fn message(&self, content: &[&str]) -> StyledString {
         let mut text = StyledString::new();
         add_source_line(&mut text, content, self.source_info().start.line);
@@ -67,13 +75,17 @@ pub trait DisplaySourceError {
     ///
     /// Example:
     ///
+    ///
+    ///
     /// ```text
-    /// Assert status code
-    ///  --> test.hurl:2:10
-    ///   |
-    /// 2 | HTTP/1.0 200
-    ///   |          ^^^ actual value is <404>
-    ///   |
+    /// Assert status code                        | > description()
+    ///  --> test.hurl:2:10                       | > add_filename_with_sourceinfo()
+    ///   |                                       |
+    ///   | GET http://foo.com                    | > add_entry_line()
+    ///   | ...                                   |
+    /// 2 | HTTP/1.0 200                          | > message()
+    ///   |          ^^^ actual value is <404>    | >
+    ///   |                                       |
     /// ```
     fn to_string(
         &self,
@@ -219,7 +231,7 @@ pub fn add_source_line(text: &mut StyledString, content: &[&str], line: usize) {
     text.push("\n");
 }
 
-pub fn add_filename_with_sourceinfo(
+fn add_filename_with_sourceinfo(
     text: &mut StyledString,
     spaces: &str,
     filename: &str,
@@ -232,7 +244,7 @@ pub fn add_filename_with_sourceinfo(
     text.push("\n");
 }
 
-pub fn add_entry_line(
+fn add_entry_line(
     text: &mut StyledString,
     lines: &[&str],
     error_line: usize,
@@ -255,7 +267,7 @@ pub fn add_entry_line(
     }
 }
 
-pub fn format_error_message(message: &StyledString, format: OutputFormat) -> String {
+fn format_error_message(message: &StyledString, format: OutputFormat) -> String {
     let colored = format == OutputFormat::Terminal(true);
     let message = if colored {
         message.to_string(Format::Ansi)

@@ -18,6 +18,7 @@
 use std::cmp;
 
 use crate::ast::SourceInfo;
+use crate::error;
 use crate::error::DisplaySourceError;
 use crate::reader::Pos;
 use crate::text::{Style, StyledString};
@@ -237,7 +238,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::Xml => "invalid XML".to_string(),
         };
 
-        let message = crate::error::add_carets(&message, self.source_info(), content);
+        let message = error::add_carets(&message, self.source_info(), content);
         let mut s = StyledString::new();
         s.push_with(&message, Style::new().red().bold());
         s
