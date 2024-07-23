@@ -95,7 +95,7 @@ pub trait DisplaySourceError {
         format: OutputFormat,
     ) -> String {
         let mut text = StyledString::new();
-        let lines = split_lines(content);
+        let lines = content.lines().collect::<Vec<_>>();
 
         let error_line = self.source_info().start.line;
         let error_column = self.source_info().start.column;
@@ -136,7 +136,7 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
     let prefix = get_carets(line_raw, error_column, width);
 
     let mut s = String::new();
-    for (i, line) in split_lines(message).iter().enumerate() {
+    for (i, line) in message.lines().enumerate() {
         if i == 0 {
             s.push_str(format!("{prefix}{line}").as_str());
         } else {
@@ -196,11 +196,6 @@ pub fn add_line_info_prefix(
     }
 
     text2
-}
-
-/// Splits this `text` to a list of LF/CRLF separated lines.
-pub fn split_lines(text: &str) -> Vec<&str> {
-    regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
 
 /// Generate carets for the given source_line/source_info
@@ -367,10 +362,9 @@ HTTP 200
         let error = E;
 
         colored::control::set_override(true);
+        let lines = content.lines().collect::<Vec<_>>();
         assert_eq!(
-            error
-                .message(&split_lines(content))
-                .to_string(Format::Plain),
+            error.message(&lines).to_string(Format::Plain),
             r#"
  4 | {
    |   "name": "John",
@@ -380,7 +374,7 @@ HTTP 200
    |"#
         );
         assert_eq!(
-            error.message(&split_lines(content)).to_string(Format::Ansi),
+            error.message(&lines).to_string(Format::Ansi),
             "\n\u{1b}[1;34m 4 |\u{1b}[0m {\n\u{1b}[1;34m   |\u{1b}[0m   \"name\": \"John\",\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[31m-  \"age\": 27\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[32m+  \"age\": 28\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m }\n\u{1b}[1;34m   |\u{1b}[0m"
         );
 

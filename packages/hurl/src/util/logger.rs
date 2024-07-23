@@ -18,7 +18,7 @@
 //! Log utilities.
 
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
@@ -206,7 +206,7 @@ impl Logger {
             Some(entry_src_info),
             OutputFormat::Terminal(self.color),
         );
-        split_lines(&message).iter().for_each(|l| self.debug(l));
+        message.lines().for_each(|l| self.debug(l));
     }
 
     pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {

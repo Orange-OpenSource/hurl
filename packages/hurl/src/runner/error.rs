@@ -383,7 +383,7 @@ fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> Sty
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::SourceInfo;
-    use hurl_core::error::{split_lines, DisplaySourceError, OutputFormat};
+    use hurl_core::error::{DisplaySourceError, OutputFormat};
     use hurl_core::reader::Pos;
     use hurl_core::text::Format;
 
@@ -394,6 +394,7 @@ mod tests {
     #[test]
     fn test_error_timeout() {
         let content = "GET http://unknown";
+        let lines = content.lines().collect::<Vec<_>>();
         let filename = "test.hurl";
         let kind = RunnerErrorKind::Http(HttpError::Libcurl {
             code: 6,
@@ -402,9 +403,10 @@ mod tests {
         let error_source_info = SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19));
         let error = RunnerError::new(error_source_info, kind, true);
+
         assert_eq!(
             error
-                .message(&split_lines(content))
+                .message(&lines)
                 .to_string(Format::Plain),
             "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
@@ -429,6 +431,7 @@ mod tests {
         let content = r#"GET http://unknown
 HTTP/1.0 200
 "#;
+        let lines = content.lines().collect::<Vec<_>>();
         let filename = "test.hurl";
         let kind = RunnerErrorKind::AssertStatus {
             actual: "404".to_string(),
@@ -438,14 +441,12 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            error
-                .message(&split_lines(content))
-                .to_string(Format::Plain),
+            error.message(&lines).to_string(Format::Plain),
             "\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |"
         );
         colored::control::set_override(true);
         assert_eq!(
-            error.message(&split_lines(content)).to_string(Format::Ansi),
+            error.message(&lines).to_string(Format::Ansi),
             "\n\u{1b}[1;34m 2 |\u{1b}[0m HTTP/1.0 200\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m"
         );
 
@@ -473,6 +474,7 @@ HTTP/1.0 200
 [Asserts]
 xpath "strong(//head/title)" == "Hello"
 "#;
+        let lines = content.lines().collect::<Vec<_>>();
         let filename = "test.hurl";
         let error_source_info = SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 22));
@@ -482,7 +484,7 @@ xpath "strong(//head/title)" == "Hello"
             true,
         );
         assert_eq!(
-        &error.message( &split_lines(content)).to_string(Format::Plain),
+        &error.message(&lines).to_string(Format::Plain),
         "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
     );
         assert_eq!(
@@ -510,6 +512,7 @@ HTTP/1.0 200
 [Asserts]
 jsonpath "$.count" >= 5
 "#;
+        let lines = content.lines().collect::<Vec<_>>();
         let filename = "test.hurl";
         let error_source_info = SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0));
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14));
@@ -524,9 +527,7 @@ jsonpath "$.count" >= 5
         };
 
         assert_eq!(
-            error
-                .message(&split_lines(content))
-                .to_string(Format::Plain),
+            error.message(&lines).to_string(Format::Plain),
             r#"
  4 | jsonpath "$.count" >= 5
    |   actual:   int <2>
@@ -561,6 +562,7 @@ HTTP/1.0 200
 <p>Hello</p>
 ```
 "#;
+        let lines = content.lines().collect::<Vec<_>>();
         let filename = "test.hurl";
         let kind = RunnerErrorKind::AssertBodyDiffError {
             hunks: diff("<p>Hello</p>\n", "<p>Hello</p>\n\n"),
@@ -571,9 +573,7 @@ HTTP/1.0 200
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            error
-                .message(&split_lines(content))
-                .to_string(Format::Plain),
+            error.message(&lines).to_string(Format::Plain),
             "\n 4 | <p>Hello</p>\n   |+\n   |"
         );
         assert_eq!(
