@@ -99,19 +99,25 @@ pub trait DisplaySourceError {
 
         let error_line = self.source_info().start.line;
         let error_column = self.source_info().start.column;
-        // The number of digits of the lines count.
-        let loc_max_width = max(lines.len().to_string().len(), 2);
-        let separator = "|";
 
-        let spaces = " ".repeat(loc_max_width);
-        let mut prefix = StyledString::new();
-        prefix.push_with(&format!("{spaces} {separator}"), Style::new().blue().bold());
+        // Push one-line description of the error
         text.push_with(&self.description(), Style::new().bold());
         text.push("\n");
 
+        // We build the prefix
+        let loc_max_width = max(lines.len().to_string().len(), 2);
+        let spaces = " ".repeat(loc_max_width);
+        let separator = "|";
+        let mut prefix = StyledString::new();
+        prefix.push_with(&format!("{spaces} {separator}"), Style::new().blue().bold());
+
+        // Add filename, with a left margin space for error line number.
         add_filename_with_sourceinfo(&mut text, &spaces, filename, error_line, error_column);
+
+        // First line of the error message
         text.append(prefix.clone());
 
+        // We can have an optional source line for context
         let entry_line = entry_src_info.map(|e| e.start.line);
         if let Some(entry_line) = entry_line {
             add_entry_line(&mut text, &lines, error_line, entry_line, &prefix);

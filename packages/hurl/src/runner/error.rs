@@ -160,6 +160,8 @@ impl DisplaySourceError for RunnerError {
 
     fn fixme(&self, content: &[&str]) -> StyledString {
         match &self.kind {
+            // FIXME: this variant can not be called because message doesn't call it
+            // contrary to the default implementation.
             RunnerErrorKind::AssertBodyDiffError { hunks, .. } => {
                 let mut message = StyledString::new();
                 for hunk in &hunks[..1] {
