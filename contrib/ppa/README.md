@@ -86,9 +86,12 @@ cd /tmp/ppa/hurl-"${HURL_VERSION}"
 
 ```
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-wget https://static.rust-lang.org/dist/rust-"${rust_version}"-x86_64-unknown-linux-gnu.tar.gz
-tar xvvf rust-"${rust_version}"-x86_64-unknown-linux-gnu.tar.gz
-./rust-"${rust_version}"-x86_64-unknown-linux-gnu/install.sh --bindir=/usr/bin
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linux-gnu.tar.gz"
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
+rust_architecture=$(uname -m)
+package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
+tar xvvf "${package}.tar.gz"
+./"${package}"/install.sh --bindir=/usr/bin
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
