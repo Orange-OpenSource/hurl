@@ -54,6 +54,7 @@ apt install -y \
     gpg \
     git \
     curl \
+    wget \
     vim \
     xz-utils
 ```
@@ -85,14 +86,12 @@ cd /tmp/ppa/hurl-"${HURL_VERSION}"
 
 ```
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-curl https://sh.rustup.rs -sSfkL | sh -s -- -y --default-toolchain "${rust_version}"
-. "$HOME/.cargo/env"
-rm /usr/bin/rustc || true
-rm /usr/bin/cargo || true
-ln -s /root/.cargo/bin/rustc /usr/bin/rustc
-ln -s /root/.cargo/bin/cargo /usr/bin/cargo
+wget https://static.rust-lang.org/dist/rust-"${rust_version}"-x86_64-unknown-linux-gnu.tar.gz
+tar xvvf rust-"${rust_version}"-x86_64-unknown-linux-gnu.tar.gz
+./rust-"${rust_version}"-x86_64-unknown-linux-gnu/install.sh --bindir=/usr/bin
 rustc --version
 cargo --version
+rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
 ```
 
 ## Create vendor.tar.xz (offline cargo deps)
