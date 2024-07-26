@@ -1,5 +1,3 @@
-# WIP !!
-
 ## Create the PPA
 
 - Go to https://launchpad.net
@@ -39,12 +37,12 @@ gpg --armor --export-secret-keys "${gpg_keyid}" > /tmp/myprivatekey.asc
 ## Choose Hurl version
 
 ```
-hurl_version=4.2.0
+hurl_version=<hurl tag>
 ```
 ## Run ubuntu container
 
 ```
-docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:20.04 bash
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:24.04 bash
 ```
 
 ## Install user prerequisites
@@ -58,6 +56,14 @@ apt install -y \
     curl \
     vim \
     xz-utils
+```
+
+## Install build dependencies
+
+```
+apt install -y \
+    pkg-config build-essential curl libxml2-dev libssl-dev \
+    devscripts debhelper dh-cargo
 ```
 
 ## Import GPG key into container
@@ -75,22 +81,14 @@ git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HU
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
 ```
 
-## Install build dependencies
-
-```
-apt install -y \
-    pkg-config build-essential curl libxml2-dev libssl-dev \
-    devscripts debhelper dh-cargo
-```
-
 ## Install rust and cargo
 
 ```
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
 curl https://sh.rustup.rs -sSfkL | sh -s -- -y --default-toolchain "${rust_version}"
 . "$HOME/.cargo/env"
-rm /usr/bin/rustc
-rm /usr/bin/cargo
+rm /usr/bin/rustc || true
+rm /usr/bin/cargo || true
 ln -s /root/.cargo/bin/rustc /usr/bin/rustc
 ln -s /root/.cargo/bin/cargo /usr/bin/cargo
 rustc --version
@@ -132,20 +130,8 @@ cat debian/cargo.config
 
 ## Create deb package source
 
-### Only source
-
 ```
 debuild -S -sa -k"${GPG_KEYID}"
-```
-
-### Source and build
-
-```
-debuild -k"${GPG_KEYID}"
-```
-## List deb package source files
-
-```
 cd ..
 ls -l hurl_*
 ```
@@ -161,6 +147,6 @@ dput ppa:<USER_NAME>/<PPA_NAME> hurl_*_source.changes
 ```shell
 apt update
 apt install -y software-properties-common
-add-apt-repository -y ppa:lepapareil/hurl
+add-apt-repository -y ppa:<USER_NAME>/<PPA_NAME>
 apt install -y hurl
 ```
