@@ -349,6 +349,16 @@ impl Client {
         options: &ClientOptions,
         logger: &mut Logger,
     ) -> Result<(String, Method), HttpError> {
+        // With curl/8.8.0 openssl/3.3.1 on Arch Linux we begin to have sporadic timeout
+        // on <https://google.com> in HTTP/3.
+        // We haven't reproduced the bug with
+        // - libcurl C sample
+        // - curl-sys crate sample
+        // Our hypothesis is that the Easy curl crate wrapper is doing something additional (compare
+        // to curl-sys) that may cause some trouble. We set a dummy `ssl_ctx` callback to deactivate
+        // the default call in <https://github.com/alexcrichton/curl-rust/blame/9cfd9a7bf22633a7c5471d4e907c812b9a4e1fd0/src/easy/handler.rs#L667>
+        self.handle.ssl_ctx_function(|_| Ok(()))?;
+
         // Activates cookie engine.
         // See <https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html>
         // > It also enables the cookie engine, making libcurl parse and send cookies on subsequent
@@ -356,8 +366,7 @@ impl Client {
         // > By passing the empty string ("") to this option, you enable the cookie
         // > engine without reading any initial cookies.
         self.handle
-            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())
-            .unwrap();
+            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())?;
 
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
