@@ -11,6 +11,17 @@ override_dh_clean:
 override_dh_auto_build:
 	echo "untar pxf vendor.tar.xz:"
 	tar pxfv vendor.tar.xz
+	echo "install rustc and cargo"
+	rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
+	rust_architecture=$(uname -m)
+	package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu.tar.gz"
+	echo "rust_version=${rust_version}"
+	echo "rust_architecture=${rust_architecture}"
+	echo "package=${package}"
+	tar xvf "${package}"
+	./"${package}"/install.sh --bindir=/usr/bin
+	rustc --version
+	cargo --version
 	echo ".cargo/config:"
 	cat .cargo/config
 	echo "build:"
