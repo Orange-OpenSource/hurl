@@ -42,7 +42,14 @@ hurl_version=<hurl tag>
 ## Run ubuntu container
 
 ```
-docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:24.04 bash
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:22.04 bash
+```
+
+## Import GPG key into container
+
+```
+gpg --import /tmp/mypublickey.asc
+gpg --import /tmp/myprivatekey.asc
 ```
 
 ## Install user prerequisites
@@ -54,6 +61,7 @@ apt install -y \
     gpg \
     git \
     curl \
+    wget \
     vim \
     xz-utils
 ```
@@ -62,15 +70,24 @@ apt install -y \
 
 ```
 apt install -y \
-    pkg-config build-essential curl libxml2-dev libssl-dev \
-    devscripts debhelper dh-cargo
+    pkg-config gcc curl libxml2-dev libssl-dev \
+    devscripts debhelper
 ```
 
-## Import GPG key into container
+## Install rust and cargo
 
 ```
-gpg --import /tmp/mypublickey.asc
-gpg --import /tmp/myprivatekey.asc
+rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linux-gnu.tar.gz"
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
+rust_architecture=$(uname -m)
+package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
+tar xfv "${package}.tar.gz"
+./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
+export PATH="/tmp/rust/usr/local/bin:$PATH"
+rustc --version
+cargo --version
+rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
 ```
 
 ## Clone hurl
@@ -79,20 +96,6 @@ gpg --import /tmp/myprivatekey.asc
 rm -fr /tmp/ppa || true
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
-```
-
-## Install rust and cargo
-
-```
-rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-curl https://sh.rustup.rs -sSfkL | sh -s -- -y --default-toolchain "${rust_version}"
-. "$HOME/.cargo/env"
-rm /usr/bin/rustc || true
-rm /usr/bin/cargo || true
-ln -s /root/.cargo/bin/rustc /usr/bin/rustc
-ln -s /root/.cargo/bin/cargo /usr/bin/cargo
-rustc --version
-cargo --version
 ```
 
 ## Create vendor.tar.xz (offline cargo deps)

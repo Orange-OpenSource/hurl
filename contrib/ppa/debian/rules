@@ -4,14 +4,7 @@
 	dh \$@
 
 override_dh_clean:
-	dh_clean
-	rm -rf vendor target
-	cargo clean
+	./debian/bin/clean.sh
 
 override_dh_auto_build:
-	echo "untar pxf vendor.tar.xz:"
-	tar pxfv vendor.tar.xz
-	echo ".cargo/config:"
-	cat .cargo/config
-	echo "build:"
-	cargo build --release --frozen --verbose --package hurl
+	./debian/bin/build.sh
