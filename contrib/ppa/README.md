@@ -47,6 +47,19 @@ hurl_version=4.2.0
 docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:20.04 bash
 ```
 
+## Install user prerequisites
+
+```
+export DEBIAN_FRONTEND=noninteractive
+apt update
+apt install -y \
+    gpg \
+    git \
+    curl \
+    vim \
+    xz-utils
+```
+
 ## Import GPG key into container
 
 ```
@@ -60,18 +73,6 @@ gpg --import /tmp/myprivatekey.asc
 rm -fr /tmp/ppa || true
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
-```
-
-## Install user prerequisites
-
-```
-export DEBIAN_FRONTEND=noninteractive
-apt update
-apt install -y \
-    git \
-    curl \
-    vim \
-    xz-utils
 ```
 
 ## Install build dependencies
