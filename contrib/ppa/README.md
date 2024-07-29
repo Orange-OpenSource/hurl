@@ -90,7 +90,7 @@ wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linu
 wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
 rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
-tar xvvf "${package}.tar.gz"
+tar xf "${package}.tar.gz"
 ./"${package}"/install.sh --bindir=/usr/bin
 rustc --version
 cargo --version
