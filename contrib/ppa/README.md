@@ -42,7 +42,7 @@ hurl_version=<hurl tag>
 ## Run ubuntu container
 
 ```
-docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:24.04 bash
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:22.04 bash
 ```
 
 ## Install user prerequisites
