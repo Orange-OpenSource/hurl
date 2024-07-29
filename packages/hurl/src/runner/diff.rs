@@ -26,10 +26,10 @@ pub struct DiffHunk {
     pub source_line: usize, // 0-based
 }
 
-#[allow(dead_code)]
 pub fn diff(old: &str, new: &str) -> Vec<DiffHunk> {
     let text_diff = TextDiff::from_lines(old, new);
-    let unified_diff = text_diff.unified_diff();
+    let mut unified_diff = text_diff.unified_diff();
+    let unified_diff = unified_diff.context_radius(0);
 
     let mut hunks = vec![];
     for hunk in unified_diff.iter_hunks() {
@@ -359,12 +359,6 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "first_name": "John",
-   "last_name": "Smith",
-   "is_alive": true,
-"#,
-        );
 
         let hunks = diff(&old_string(), &new_string_change_line1());
         let first_hunk = hunks.first().unwrap().clone();
@@ -376,10 +370,6 @@ mod tests {
     #[test]
     fn test_diff_change_line2() {
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#" {
-"#,
-        );
         expected_diff_output.push_with(
             r#"-  "first_name": "John",
 "#,
@@ -390,28 +380,17 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "last_name": "Smith",
-   "is_alive": true,
-   "age": 27,
-"#,
-        );
 
         let hunks = diff(&old_string(), &new_string_change_line2());
         let first_hunk = hunks.first().unwrap().clone();
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.start, 1);
         assert_eq!(first_hunk.source_line, 1);
     }
 
     #[test]
     fn test_diff_change_line3() {
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#" {
-   "first_name": "John",
-"#,
-        );
         expected_diff_output.push_with(
             r#"-  "last_name": "Smith",
 "#,
@@ -422,29 +401,17 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "is_alive": true,
-   "age": 27,
-   "address": {
-"#,
-        );
 
         let hunks = diff(&old_string(), &new_string_change_line3());
         let first_hunk = hunks.first().unwrap().clone();
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.start, 2);
         assert_eq!(first_hunk.source_line, 2);
     }
 
     #[test]
     fn test_diff_change_line4() {
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#"   "first_name": "John",
-   "last_name": "Smith",
-   "is_alive": true,
-"#,
-        );
         expected_diff_output.push_with(
             r#"-  "age": 27,
 "#,
@@ -455,72 +422,43 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "address": {
-     "street_address": "21 2nd Street",
-     "city": "New York",
-"#,
-        );
         let hunks = diff(&old_string(), &new_string_change_line4());
 
         let first_hunk = hunks.first().unwrap().clone();
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 1);
+        assert_eq!(first_hunk.start, 4);
         assert_eq!(first_hunk.source_line, 4);
     }
 
     #[test]
     fn test_diff_delete_line3() {
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#" {
-   "first_name": "John",
-"#,
-        );
         expected_diff_output.push_with(
             r#"-  "last_name": "Smith",
 "#,
             Style::new().red(),
         );
-        expected_diff_output.push(
-            r#"   "is_alive": true,
-   "age": 27,
-   "address": {
-"#,
-        );
 
         let hunks = diff(&old_string(), &new_string_delete_line3());
         let first_hunk = hunks.first().unwrap().clone();
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.start, 2);
         assert_eq!(first_hunk.source_line, 2);
     }
 
     #[test]
     fn test_diff_add_line3() {
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#" {
-   "first_name": "John",
-"#,
-        );
-
         expected_diff_output.push_with(
             r#"+  "middle_name": "Bob",
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "last_name": "Smith",
-   "is_alive": true,
-   "age": 27,
-"#,
-        );
 
         let hunks = diff(&old_string(), &new_string_add_line3());
         let first_hunk = hunks.first().unwrap().clone();
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.start, 2);
         assert_eq!(first_hunk.source_line, 1);
     }
 
@@ -530,12 +468,6 @@ mod tests {
 
         let first_hunk = hunks.first().unwrap().clone();
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#"   "first_name": "John",
-   "last_name": "Smith",
-   "is_alive": true,
-"#,
-        );
         expected_diff_output.push_with(
             r#"-  "age": 27,
 "#,
@@ -546,24 +478,12 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   "address": {
-     "street_address": "21 2nd Street",
-     "city": "New York",
-"#,
-        );
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 1);
+        assert_eq!(first_hunk.start, 4);
         assert_eq!(first_hunk.source_line, 4);
 
         let second_hunk = hunks.get(1).unwrap().clone();
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(
-            r#"   "children": [
-     "Catherine",
-     "Thomas",
-"#,
-        );
         expected_diff_output.push_with(
             r#"-    "Trevor"
 "#,
@@ -574,15 +494,8 @@ mod tests {
 "#,
             Style::new().green(),
         );
-        expected_diff_output.push(
-            r#"   ],
-   "spouse": null
- }
-"#,
-        );
-
         assert_eq!(second_hunk.content, expected_diff_output);
-        assert_eq!(second_hunk.start, 21);
+        assert_eq!(second_hunk.start, 24);
         assert_eq!(second_hunk.source_line, 24);
     }
 
@@ -592,11 +505,10 @@ mod tests {
         let first_hunk = hunks.first().unwrap().clone();
 
         let mut expected_diff_output = StyledString::new();
-        expected_diff_output.push(" <p>Hello</p>\n");
         expected_diff_output.push_with("+\n", Style::new().green());
 
         assert_eq!(first_hunk.content, expected_diff_output);
-        assert_eq!(first_hunk.start, 0);
+        assert_eq!(first_hunk.start, 1);
         assert_eq!(first_hunk.source_line, 0);
     }
 }

@@ -3,13 +3,8 @@ error: Assert body value
    |
    | GET http://localhost:8000/error/multiline
    | ...
-   |   "first_name": "John",
-   |   "last_name": "Smith",
-   |   "is_alive": true,
- 8 |-  "age": 27,
-   |+  "age": 28,
-   |   "address": {
-   |     "street_address": "21 2nd Street",
-   |     "city": "New York",
+ 8 |   "age": 27,
+   |   -  "age": 27,
+   |   +  "age": 28,
    |
 

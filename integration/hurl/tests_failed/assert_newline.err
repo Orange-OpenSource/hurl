@@ -4,6 +4,6 @@ error: Assert body value
    | GET http://localhost:8000/error-assert-newline
    | ...
 10 | <p>Hello</p>
-   |+
+   |   +
    |
 

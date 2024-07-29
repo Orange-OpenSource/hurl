@@ -67,7 +67,7 @@ def error_diff_change_line2():
 """
 
 
-@app.route("/diff/change/line1")
+@app.route("/diff/change/line3")
 def error_diff_change_line3():
     return """{
   "first_name": "John",
@@ -228,5 +228,21 @@ def error_diff_add_line3():
     "Trevor"
   ],
   "spouse": null
+}
+"""
+
+
+@app.route("/diff/change/unicode")
+def error_diff_change_unicode():
+    return """{
+  "f_clef": "𝄢"
+}
+"""
+
+
+@app.route("/diff/change/variable")
+def error_diff_change_variable():
+    return """{
+  "name": "Bob"
 }
 """

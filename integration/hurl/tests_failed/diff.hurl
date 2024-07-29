@@ -233,3 +233,22 @@ HTTP 200
   "spouse": null
 }
 ```
+
+
+GET http://localhost:8000/diff/change/unicode
+HTTP 200
+```escape
+{
+  "g_clef": "\u{1D11E}"
+}
+```
+
+GET http://localhost:8000/diff/change/variable
+[Options]
+variable: name=John
+HTTP 200
+```
+{
+  "name": "{{name}}"
+}
+```

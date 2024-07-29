@@ -323,6 +323,7 @@ impl DisplaySourceError for RunnerError {
                 text.append(hunk_string(
                     hunk,
                     body_source_info.start.line,
+                    content,
                     loc_max_width,
                 ));
             }
@@ -350,7 +351,12 @@ fn color_red_multiline_string(s: &str) -> StyledString {
     s
 }
 
-fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> StyledString {
+fn hunk_string(
+    hunk: &DiffHunk,
+    source_line: usize,
+    content: &[&str],
+    loc_max_width: usize,
+) -> StyledString {
     let mut s = StyledString::new();
     let lines = hunk.content.split('\n');
 
@@ -361,10 +367,10 @@ fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> Sty
         format!("{spaces} {separator}").as_str(),
         Style::new().blue().bold(),
     );
-    let mut prefix_with_number = StyledString::new();
     let error_line = source_line + hunk.source_line;
-    prefix_with_number.push_with(
-        format!("{error_line:>loc_max_width$} {separator}").as_str(),
+    let source = content[error_line - 1];
+    s.push_with(
+        format!("{error_line:>loc_max_width$} {separator} {source}\n").as_str(),
         Style::new().blue().bold(),
     );
 
@@ -372,12 +378,11 @@ fn hunk_string(hunk: &DiffHunk, source_line: usize, loc_max_width: usize) -> Sty
         if i > 0 {
             s.push("\n");
         }
-        if i == (hunk.source_line - hunk.start) {
-            s.append(prefix_with_number.clone());
-        } else {
-            s.append(prefix.clone());
+        s.append(prefix.clone());
+        if !line.is_empty() {
+            s.push("   ");
+            s.append(line.clone());
         }
-        s.append(line.clone());
     }
     s
 }
@@ -576,7 +581,7 @@ HTTP/1.0 200
 
         assert_eq!(
             error.message(&lines).to_string(Format::Plain),
-            "\n 4 | <p>Hello</p>\n   |+\n   |"
+            "\n 4 | <p>Hello</p>\n   |   +\n   |"
         );
         assert_eq!(
             error.to_string(
@@ -591,7 +596,7 @@ HTTP/1.0 200
    | GET http://localhost
    | ...
  4 | <p>Hello</p>
-   |+
+   |   +
    |"#
         );
     }
