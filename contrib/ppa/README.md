@@ -101,7 +101,7 @@ rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
 
 ```
 cargo vendor
-tar pcfJv vendor.tar.xz vendor
+tar pcfJ vendor.tar.xz vendor
 rm -rf vendor
 ```
 
