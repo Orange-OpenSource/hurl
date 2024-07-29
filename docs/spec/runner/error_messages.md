@@ -11,9 +11,8 @@ error: Assert body value
    |
    | GET http://localhost:8000/test
    | ...
- 4 | Hi World!
-   | ^ actual value is <Hello World!
->
+ 4 | `Hello World!`
+   | ^^^^^^^^^^^^^^ actual value is <Hi World!>
    |
 ```
 
@@ -95,6 +94,7 @@ error: Assert body value
 ### Using diff output
 
 A diff output (similar to git diff) could be used instead to display the error.
+The context line from the input source file will be displayed like for the asserts errors.
 
 ```
 error: Assert body value
@@ -102,14 +102,9 @@ error: Assert body value
    |
    | GET http://localhost:8000/test
    | ...
-   |    "first_name": "John",
-   |    "last_name": "Smith",
-   |    "is_alive": true,
- 8 | -  "age": 27,
-   | +  "age": 28,
-   |    "address": {
-   |    "street_address": "21 2nd Street",
-   |    "city": "New York",
+ 8 |   "age": 27,
+   |   -  "age": 27,
+   |   +  "age": 28,
    |
 ```
 
@@ -129,8 +124,9 @@ error: Assert body value
    |
    | GET http://localhost:8000/test
    | ...
- 4 | -Hello World!
-   | +Hi World!
+ 4 | `Hello World!`
+   |   -Hello World!
+   |   +Hi World!
    |
 ```
 
@@ -143,19 +139,18 @@ The color is necessary here to see the additional whitespace.
 We could also add a cli option to show explicitly "invisible characters".
 
 
-## Display more or less context lines before first change
+## Change
 
 ### Change at line 1
 
-Standard unified diff
+Standard unified diff (without context)
 
 ```
-@@ -1,4 +1,4 @@
+--- old.txt	2024-07-29 10:03:27.267387991 +0200
++++ new_line1.txt	2024-07-29 10:18:55.523048872 +0200
+@@ -1 +1 @@
 -{
 +[
-   "first_name": "John",
-   "last_name": "Smith",
-   "is_alive": true,
 ```
 
 Hurl Output
@@ -165,27 +160,21 @@ error: Assert body value
   --> test.hurl:4:1
    |
    | GET http://localhost:8000/test
- 4 | -{
-   | +[  
-   |    "first_name": "John",
-   |    "last_name": "Smith",
-   |    "is_alive": true,
+ 4 | {
+   |   -{
+   |   +[  
 ```
 
 
 ### Change at line 2
 
 
-Standard unified diff
+Standard unified diff (without context)
 
 ```
-@@ -1,5 +1,5 @@
- {
+@@ -2 +2 @@
 -  "first_name": "John",
 +  "first_name": "Bob",
-   "last_name": "Smith",
-   "is_alive": true,
-   "age": 27,
 ```
 
 Hurl Output
@@ -195,27 +184,21 @@ error: Assert body value
   --> test.hurl:5:1
    |
    | GET http://localhost:8000/test
-   |  {
- 5 |-   "first_name": "John",
-   |+   "first_name": "Bob",
-   |    "is_alive": true,
-   |    "age": 27,
+   | ...
+ 5 |   "first_name": "John",
+   |   -  "first_name": "John",
+   |   +   "first_name": "Bob",
 ```
 
 
 ### Change at line 3
 
-Standard unified diff
+Standard unified diff (without context)
 
 ```
-@@ -1,6 +1,6 @@
- {
-   "first_name": "John",
+@@ -3 +3 @@
 -  "last_name": "Smith",
 +  "last_name": "Smiths",
-   "is_alive": true,
-   "age": 27,
-   "address": {
 ```
 
 Hurl Output
@@ -225,13 +208,10 @@ error: Assert body value
   --> test.hurl:6:1
    |
    | GET http://localhost:8000/test
-   | {
-   |   "first_name": "John",
-6  |-  "last_name": "Smith",
-   |+  "last_name": "Smiths",
-   |   "is_alive": true,
-   |   "age": 27,
-   |   "address": {
+   | ...
+6  |   "last_name": "Smith",
+   |   -  "last_name": "Smith",
+   |   +  "last_name": "Smith",
 ```
 
 
@@ -239,16 +219,11 @@ error: Assert body value
 ## Deletion
 
 
-Standard unified diff
+Standard unified diff (without context)
 
 ```
-@@ -1,6 +1,5 @@
- {
-   "first_name": "John",
+@@ -3 +2,0 @@
 -  "last_name": "Smith",
-   "is_alive": true,
-   "age": 27,
-   "address": {
 ```
 
 Hurl Output
@@ -258,27 +233,19 @@ error: Assert body value
   --> test.hurl:6:1
    |
    | GET http://localhost:8000/test
-   | {
-   |   "first_name": "John",
-6  |-  "last_name": "Smith",
-   |   "is_alive": true,
-   |   "age": 27,
-   |   "address": {
+   | ...
+6  |   "last_name": "Smith"
+   |   - "last_name": "Smith"
 ```
 
 
 ## Addition
 
-Standard unified diff
+Standard unified diff (without context)
 
 ```
-@@ -1,5 +1,6 @@
- {
-   "first_name": "John",
+@@ -2,0 +3 @@
 +  "middle_name": "Bob",
-   "last_name": "Smith",
-   "is_alive": true,
-   "age": 27,
 ```
 
 Hurl Output
@@ -288,40 +255,24 @@ error: Assert body value
   --> test.hurl:5:1
    |
    | GET http://localhost:8000/test
-   | {
+   | ...
 5  |   "first_name": "John",
-   |+  "middle_name": "Bob",
-   |   "last_name": "Smith",
-   |   "is_alive": true,
-   |   "age": 27,
-   |   "address": {
+   |   +  "middle_name": "Bob",
 ```
 
 
 ## Display several diff Hunks
 
 
-Standard Unified Diff
+Standard unified diff (without context)
 
 ```
-@@ -2,7 +2,7 @@
-   "first_name": "John",
-   "last_name": "Smith",
-   "is_alive": true,
+@@ -5 +5 @@
 -  "age": 27,
 +  "age": 28,
-   "address": {
-     "street_address": "21 2nd Street",
-     "city": "New York",
-@@ -22,7 +22,7 @@
-   "children": [
-     "Catherine",
-     "Thomas",
+@@ -25 +25 @@
 -    "Trevor"
 +    "Bob"
-   ],
-   "spouse": null
- }
 ```
 
 ```
@@ -330,22 +281,12 @@ error: Assert body value
    |
    | GET http://localhost:8000/test
    | ...
-   |   "first_name": "John",
-   |-  "last_name": "Smith",
-   |   "is_alive": true,
- 8 |-  "age": 27,
-   |+  "age": 28,
-   |   "address": {
-   |     "street_address": "21 2nd Street",
-   |     "city": "New York",
+ 8 |   "age": 27,
+   |   -  "age": 27,
+   |   +  "age": 28,
    | ...
-   |   "children": [
-   |     "Catherine",
-   |     "Thomas",
-28 |-    "Trevor"
-   |+    "Bob"
-   |   ],
-   |   "spouse": null
-   | }  
-  
+28 |     "Trevor"
+   |   -    "Trevor"
+   |   +    "Bob"
+   |
 ```
