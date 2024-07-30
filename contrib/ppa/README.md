@@ -92,6 +92,7 @@ rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
 tar xf "${package}.tar.gz"
 ./"${package}"/install.sh --destdir=/tmp/rust
+export PATH="/tmp/rust/usr/local/bin:$PATH"
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
