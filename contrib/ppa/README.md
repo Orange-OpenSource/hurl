@@ -63,7 +63,7 @@ apt install -y \
 
 ```
 apt install -y \
-    pkg-config build-essential curl libxml2-dev libssl-dev \
+    pkg-config gcc curl libxml2-dev libssl-dev \
     devscripts debhelper dh-cargo
 ```
 
