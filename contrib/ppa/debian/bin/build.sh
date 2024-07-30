@@ -22,3 +22,5 @@ cargo --version
 echo "## .cargo/config:"
 cat .cargo/config
 
+echo "## build:"
+cargo build --release --frozen --verbose --package hurl
