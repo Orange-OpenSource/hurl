@@ -91,7 +91,7 @@ wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-lin
 rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
 tar xf "${package}.tar.gz"
-./"${package}"/install.sh --bindir=/usr/bin
+./"${package}"/install.sh --destdir=/tmp/rust
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
