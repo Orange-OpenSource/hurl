@@ -13,7 +13,7 @@ echo rust_architecture=$rust_arch
 echo package=$package
 tar xf $package.tar.gz
 mkdir -p /tmp/rust
-./$package/install.sh --verbose --destdir=/tmp/rust
+./$package/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
 export PATH="/tmp/rust/usr/local/bin:$PATH"
 export LD_LIBRARY_PATH="/tmp/rust/usr/local/lib:$LD_LIBRARY_PATH"
 rustc --version
