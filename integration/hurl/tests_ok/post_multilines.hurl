@@ -20,3 +20,14 @@ bob,{{bob_age}}
 bill,22
 ```
 HTTP 200
+
+POST http://localhost:8000/post-escape-chars
+`tab=\t\ng_clef=\u{1d11e}\n`
+HTTP 200
+
+POST http://localhost:8000/post-escape-chars
+```
+tab=\t
+g_clef=\u{1d11e}
+```
+HTTP 200

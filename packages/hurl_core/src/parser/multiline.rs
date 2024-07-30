@@ -19,6 +19,7 @@ use crate::ast::*;
 use crate::combinator::{choice, optional, zero_or_more};
 use crate::parser::json::object_value;
 use crate::parser::primitives::*;
+use crate::parser::string::escape_char;
 use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
@@ -211,8 +212,14 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.cursor();
     while reader.peek_n(3) != "```" && !reader.is_eof() {
         let pos = reader.cursor().pos;
-        let c = reader.read().unwrap();
-        chars.push((c, c.to_string(), pos));
+        let save = reader.cursor();
+        if reader.peek() == Some('\\') {
+            let c = escape_char(reader)?;
+            chars.push((c, reader.read_from(save.index), pos));
+        } else {
+            let c = reader.read().unwrap();
+            chars.push((c, c.to_string(), pos));
+        }
     }
     let end = reader.cursor();
     literal("```", reader)?;
@@ -621,6 +628,20 @@ mod tests {
             }
         );
         assert_eq!(reader.cursor().index, 8);
+
+        let mut reader = Reader::new("\\t```");
+        assert_eq!(
+            multiline_string_value(&mut reader).unwrap(),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "\t".to_string(),
+                    encoded: "\\t".to_string(),
+                }],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
+            }
+        );
+        assert_eq!(reader.cursor().index, 5);
     }
 
     #[test]

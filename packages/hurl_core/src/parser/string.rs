@@ -187,7 +187,7 @@ fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)>
     }
 }
 
-fn escape_char(reader: &mut Reader) -> ParseResult<char> {
+pub fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
     let start = reader.cursor();
     match reader.read() {
