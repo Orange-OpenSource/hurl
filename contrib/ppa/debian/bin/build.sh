@@ -25,4 +25,7 @@ cat .cargo/config
 
 echo "## build:"
 cargo build --release --frozen --verbose
+
+echo "## doc:"
+gzip -9 -n --stdout CHANGELOG.md > changelog.Debian.gz
 bin/release/man.sh
