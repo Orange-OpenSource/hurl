@@ -45,6 +45,13 @@ hurl_version=<hurl tag>
 docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:22.04 bash
 ```
 
+## Import GPG key into container
+
+```
+gpg --import /tmp/mypublickey.asc
+gpg --import /tmp/myprivatekey.asc
+```
+
 ## Install user prerequisites
 
 ```
@@ -67,11 +74,20 @@ apt install -y \
     devscripts debhelper
 ```
 
-## Import GPG key into container
+## Install rust and cargo
 
 ```
-gpg --import /tmp/mypublickey.asc
-gpg --import /tmp/myprivatekey.asc
+rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linux-gnu.tar.gz"
+wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
+rust_architecture=$(uname -m)
+package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
+tar xfv "${package}.tar.gz"
+./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
+export PATH="/tmp/rust/usr/local/bin:$PATH"
+rustc --version
+cargo --version
+rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
 ```
 
 ## Clone hurl
@@ -82,27 +98,11 @@ git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HU
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
 ```
 
-## Install rust and cargo
-
-```
-rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linux-gnu.tar.gz"
-wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
-rust_architecture=$(uname -m)
-package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
-tar xf "${package}.tar.gz"
-./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
-export PATH="/tmp/rust/usr/local/bin:$PATH"
-rustc --version
-cargo --version
-rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
-```
-
 ## Create vendor.tar.xz (offline cargo deps)
 
 ```
 cargo vendor
-tar pcfJ vendor.tar.xz vendor
+tar pcfJv vendor.tar.xz vendor
 rm -rf vendor
 ```
 
