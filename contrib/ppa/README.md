@@ -2,7 +2,7 @@
 
 - Go to https://launchpad.net
 - Create an account
-- Create you PPA
+- Create PPA
 - Add your GPG Public key to https://keyserver.ubuntu.com/#submitKey
 - Add your GPG public key to your PPA
 
@@ -39,10 +39,10 @@ gpg --armor --export-secret-keys "${gpg_keyid}" > /tmp/myprivatekey.asc
 ```
 hurl_version=<hurl tag>
 ```
-## Run ubuntu container
+## Run ubuntu bionic container
 
 ```
-docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:22.04 bash
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:18.04 bash
 ```
 
 ## Import GPG key into container
@@ -74,6 +74,14 @@ apt install -y \
     devscripts debhelper
 ```
 
+## Clone hurl
+
+```
+rm -fr /tmp/ppa || true
+git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
+cd /tmp/ppa/hurl-"${HURL_VERSION}"
+```
+
 ## Install rust and cargo
 
 ```
@@ -84,18 +92,12 @@ rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
 tar xfv "${package}.tar.gz"
 ./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
-export PATH="/tmp/rust/usr/local/bin:$PATH"
+mkdir -p ~/.cargo
+ln -s /tmp/rust/usr/local/bin ~/.cargo/bin
+export PATH="~/.cargo/bin:$PATH"
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
-```
-
-## Clone hurl
-
-```
-rm -fr /tmp/ppa || true
-git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
-cd /tmp/ppa/hurl-"${HURL_VERSION}"
 ```
 
 ## Create vendor.tar.xz (offline cargo deps)
@@ -142,14 +144,33 @@ ls -l hurl_*
 ## Push to PPA
 
 ```
-dput ppa:<USER_NAME>/<PPA_NAME> hurl_*_source.changes
+dput ppa:lepapareil/hurl hurl_*_source.changes
 ```
 
-## Install Hurl from PPA
+## Copy published PPA (bionic) to newers ubuntu codenames
+
+![image](https://github.com/user-attachments/assets/8e7d506a-d266-44eb-8d2f-48431defb890)
+
+![image](https://github.com/user-attachments/assets/9304a5d9-1422-4320-915f-11b3cf3d1c27)
+
+## Install and test Hurl from PPA
 
 ```shell
+codename=<ubuntu codename from bionic to latest>
+hurl_version=<hurl tag>
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --env CODENAME=${codename} --volume /tmp:/tmp ubuntu:${codename} bash
+export DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y software-properties-common
-add-apt-repository -y ppa:<USER_NAME>/<PPA_NAME>
+apt install -y git sudo curl software-properties-common
+# apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1550DC447B95F03B
+apt-add-repository -y ppa:lepapareil/hurl
 apt install -y hurl
+hurl --version
+hurlfmt --version
+git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/hurl-"${HURL_VERSION}"
+cd /tmp/hurl-"${HURL_VERSION}"
+./bin/install_prerequisites_ubuntu.sh
+./bin/install_python3_venv.sh
+./bin/test/test_prerequisites.sh
+./bin/test/test_integ.sh
 ```

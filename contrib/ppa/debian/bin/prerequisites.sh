@@ -14,7 +14,9 @@ echo package=$package
 tar xf $package.tar.gz
 mkdir -p /tmp/rust
 ./$package/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
-export PATH="/tmp/rust/usr/local/bin:$PATH"
+mkdir -p ~/.cargo
+ln -s /tmp/rust/usr/local/bin ~/.cargo/bin
+export PATH="~/.cargo/bin:$PATH"
 which rustc
 which cargo
 rustc --version
@@ -22,10 +24,3 @@ cargo --version
 
 echo "## .cargo/config:"
 cat .cargo/config
-
-echo "## build:"
-cargo build --release --frozen --verbose
-
-echo "## doc:"
-gzip -9 -n --stdout CHANGELOG.md > changelog.Debian.gz
-bin/release/man.sh

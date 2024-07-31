@@ -7,4 +7,7 @@ override_dh_clean:
 	./debian/bin/clean.sh
 
 override_dh_auto_build:
-	./debian/bin/build.sh
+	./debian/bin/prerequisites.sh
+	bin/release/release.sh
+	gzip -9 -n --stdout CHANGELOG.md > changelog.Debian.gz
+	bin/release/man.sh
