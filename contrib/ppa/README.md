@@ -64,7 +64,7 @@ apt install -y \
 ```
 apt install -y \
     pkg-config gcc curl libxml2-dev libssl-dev \
-    devscripts debhelper dh-cargo
+    devscripts debhelper
 ```
 
 ## Import GPG key into container
