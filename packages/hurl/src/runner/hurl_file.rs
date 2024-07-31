@@ -25,6 +25,7 @@ use hurl_core::ast::{
     Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, SourceInfo,
 };
 use hurl_core::error::DisplaySourceError;
+use hurl_core::input::Input;
 use hurl_core::parser;
 use hurl_core::typing::Count;
 
@@ -39,8 +40,10 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 ///
 /// If `content` is a syntactically correct Hurl file, an [`HurlResult`] is always returned on
 /// run completion. The success or failure of the run (due to assertions checks, runtime failures
-/// etc..) can be read in the [`HurlResult`] `success` field. If `content` is not syntactically
+/// etc...) can be read in the [`HurlResult`] `success` field. If `content` is not syntactically
 /// correct, a parsing error is returned. This is the only possible way for this function to fail.
+///
+/// `filename` indicates an optional file source, used when displaying errors.
 ///
 /// # Example
 ///
@@ -49,12 +52,15 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder};
 /// use hurl::util::logger::{LoggerOptionsBuilder, Verbosity};
+/// use hurl_core::input::Input;
 ///
 /// // A simple Hurl sample
 /// let content = r#"
 /// GET http://localhost:8000/hello
 /// HTTP 200
 /// "#;
+///
+/// let filename = Input::new("sample.hurl");
 ///
 /// // Define runner and logger options
 /// let runner_opts = RunnerOptionsBuilder::new()
@@ -71,6 +77,7 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// // Run the Hurl sample
 /// let result = runner::run(
 ///     content,
+///     Some(filename).as_ref(),
 ///     &runner_opts,
 ///     &variables,
 ///     &logger_opts
@@ -79,6 +86,7 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// ```
 pub fn run(
     content: &str,
+    filename: Option<&Input>,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     logger_options: &LoggerOptions,
@@ -97,7 +105,7 @@ pub fn run(
     let hurl_file = match hurl_file {
         Ok(h) => h,
         Err(e) => {
-            logger.error_parsing_rich(content, &e);
+            logger.error_parsing_rich(content, filename, &e);
             return Err(e.description());
         }
     };
@@ -106,6 +114,7 @@ pub fn run(
     let result = run_entries(
         &hurl_file.entries,
         content,
+        filename,
         runner_options,
         variables,
         &mut stdout,
@@ -114,13 +123,14 @@ pub fn run(
     );
 
     if result.success && result.entries.last().is_none() {
-        let filename = &logger_options.filename;
+        let filename = filename.map_or(String::new(), |f| f.to_string());
         logger.warning(&format!("No entry have been executed for file {filename}"));
     }
 
     Ok(result)
 }
 
+#[allow(clippy::too_many_arguments)]
 /// Runs a list of `entries` and returns a [`HurlResult`] upon completion.
 ///
 /// `content` is the original source content, used to construct `entries`. It is used to construct
@@ -130,6 +140,7 @@ pub fn run(
 pub fn run_entries(
     entries: &[Entry],
     content: &str,
+    filename: Option<&Input>,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     stdout: &mut Stdout,
@@ -177,7 +188,7 @@ pub fn run_entries(
 
         log_run_entry(entry_index, logger);
 
-        warn_deprecated(entry, logger);
+        warn_deprecated(entry, filename, logger);
 
         // We can report the progression of the run for --test mode.
         if let Some(listener) = listener {
@@ -196,7 +207,7 @@ pub fn run_entries(
                 errors: vec![error.clone()],
                 ..Default::default()
             };
-            log_errors(&entry_result, content, false, logger);
+            log_errors(&entry_result, content, filename, false, logger);
             entries_result.push(entry_result);
             if runner_options.continue_on_error {
                 entry_index += 1;
@@ -240,6 +251,7 @@ pub fn run_entries(
             entry,
             entry_index,
             content,
+            filename,
             &mut http_client,
             &options,
             &mut variables,
@@ -303,6 +315,7 @@ fn run_request(
     entry: &Entry,
     entry_index: usize,
     content: &str,
+    filename: Option<&Input>,
     http_client: &mut Client,
     options: &RunnerOptions,
     variables: &mut HashMap<String, Value>,
@@ -352,7 +365,7 @@ fn run_request(
         }
 
         if has_error {
-            log_errors(&result, content, retry, logger);
+            log_errors(&result, content, filename, retry, logger);
         }
         results.push(result);
 
@@ -420,10 +433,10 @@ fn is_success(entries: &[EntryResult]) -> bool {
 }
 
 /// Logs deprecated syntax and provides alternatives.
-fn warn_deprecated(entry: &Entry, logger: &mut Logger) {
+fn warn_deprecated(entry: &Entry, filename: Option<&Input>, logger: &mut Logger) {
+    let filename = filename.map_or(String::new(), |f| f.to_string());
     // HTTP/* is used instead of HTTP.
     if let Some(response) = &entry.response {
-        let filename = &logger.filename;
         let version = &response.version;
         let source_info = &version.source_info;
         let line = &source_info.start.line;
@@ -443,7 +456,6 @@ fn warn_deprecated(entry: &Entry, logger: &mut Logger) {
         ..
     } = &entry.request
     {
-        let filename = &logger.filename;
         let source_info = &template.source_info;
         let line = &source_info.start.line;
         let column = &source_info.start.column;
@@ -460,7 +472,6 @@ fn warn_deprecated(entry: &Entry, logger: &mut Logger) {
         ..
     }) = &entry.response
     {
-        let filename = &logger.filename;
         let source_info = &template.source_info;
         let line = &source_info.start.line;
         let column = &source_info.start.column;
@@ -557,12 +568,17 @@ fn log_run_info(
 
 /// Logs runner `errors`.
 /// If we're going to `retry` the entry, we log errors only in verbose. Otherwise, we log error on stderr.
-fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &mut Logger) {
+fn log_errors(
+    entry_result: &EntryResult,
+    content: &str,
+    filename: Option<&Input>,
+    retry: bool,
+    logger: &mut Logger,
+) {
     if retry {
-        entry_result
-            .errors
-            .iter()
-            .for_each(|e| logger.debug_error(content, e, entry_result.source_info));
+        entry_result.errors.iter().for_each(|error| {
+            logger.debug_error(content, filename, error, entry_result.source_info);
+        });
         return;
     }
 
@@ -571,10 +587,9 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &m
             response.log_info_all(logger);
         }
     }
-    entry_result
-        .errors
-        .iter()
-        .for_each(|error| logger.error_runtime_rich(content, error, entry_result.source_info));
+    entry_result.errors.iter().for_each(|error| {
+        logger.error_runtime_rich(content, filename, error, entry_result.source_info);
+    });
 }
 
 /// Logs the header indicating the begin of the entry run.

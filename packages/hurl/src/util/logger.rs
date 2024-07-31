@@ -19,6 +19,7 @@
 
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::input::Input;
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
@@ -51,7 +52,6 @@ impl Verbosity {
 pub struct Logger {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,
-    pub(crate) filename: String,
     pub(crate) verbosity: Option<Verbosity>,
     pub(crate) stderr: Stderr,
 }
@@ -60,14 +60,12 @@ pub struct Logger {
 pub struct LoggerOptions {
     pub(crate) color: bool,
     pub(crate) error_format: ErrorFormat,
-    pub(crate) filename: String,
     pub(crate) verbosity: Option<Verbosity>,
 }
 
 pub struct LoggerOptionsBuilder {
     color: bool,
     error_format: ErrorFormat,
-    filename: String,
     verbosity: Option<Verbosity>,
 }
 
@@ -97,18 +95,11 @@ impl LoggerOptionsBuilder {
         self
     }
 
-    /// Sets filename.
-    pub fn filename(&mut self, filename: &str) -> &mut Self {
-        self.filename = filename.to_string();
-        self
-    }
-
     /// Creates a new logger.
     pub fn build(&self) -> LoggerOptions {
         LoggerOptions {
             color: self.color,
             error_format: self.error_format,
-            filename: self.filename.clone(),
             verbosity: self.verbosity,
         }
     }
@@ -119,7 +110,6 @@ impl Default for LoggerOptionsBuilder {
         LoggerOptionsBuilder {
             color: false,
             error_format: ErrorFormat::Short,
-            filename: String::new(),
             verbosity: None,
         }
     }
@@ -131,7 +121,6 @@ impl Logger {
         Logger {
             color: options.color,
             error_format: options.error_format,
-            filename: options.filename.to_string(),
             verbosity: options.verbosity,
             stderr: term,
         }
@@ -194,14 +183,16 @@ impl Logger {
     pub fn debug_error<E: DisplaySourceError>(
         &mut self,
         content: &str,
+        filename: Option<&Input>,
         error: &E,
         entry_src_info: SourceInfo,
     ) {
         if self.verbosity.is_none() {
             return;
         }
+        let filename = filename.map_or(String::new(), |f| f.to_string());
         let message = error.to_string(
-            &self.filename,
+            &filename,
             content,
             Some(entry_src_info),
             OutputFormat::Terminal(self.color),
@@ -272,26 +263,29 @@ impl Logger {
         self.stderr.eprintln(&s.to_string(fmt));
     }
 
-    pub fn error_parsing_rich<E: DisplaySourceError>(&mut self, content: &str, error: &E) {
+    pub fn error_parsing_rich<E: DisplaySourceError>(
+        &mut self,
+        content: &str,
+        filename: Option<&Input>,
+        error: &E,
+    ) {
         // FIXME: peut-être qu'on devrait faire rentrer le prefix `error:` qui est
         // fournit par `self.error_rich` dans la méthode `error.to_string`
-        let message = error.to_string(
-            &self.filename,
-            content,
-            None,
-            OutputFormat::Terminal(self.color),
-        );
+        let filename = filename.map_or(String::new(), |f| f.to_string());
+        let message = error.to_string(&filename, content, None, OutputFormat::Terminal(self.color));
         self.error_rich(&message);
     }
 
     pub fn error_runtime_rich<E: DisplaySourceError>(
         &mut self,
         content: &str,
+        filename: Option<&Input>,
         error: &E,
         entry_src_info: SourceInfo,
     ) {
+        let filename = filename.map_or(String::new(), |f| f.to_string());
         let message = error.to_string(
-            &self.filename,
+            &filename,
             content,
             Some(entry_src_info),
             OutputFormat::Terminal(self.color),

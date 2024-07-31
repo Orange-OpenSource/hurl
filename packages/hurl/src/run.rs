@@ -59,13 +59,18 @@ pub fn run_seq(
         };
         let variables = &options.variables;
         let runner_options = options.to_runner_options(&filename, current_dir);
-        let logger_options = options.to_logger_options(&filename);
+        let logger_options = options.to_logger_options();
 
         // Run our Hurl file now, we can only fail if there is a parsing error.
         // The parsing error is displayed in the `execute` call, that's why we gobble the error
         // string.
-        let Ok(hurl_result) = runner::run(&content, &runner_options, variables, &logger_options)
-        else {
+        let Ok(hurl_result) = runner::run(
+            &content,
+            Some(&filename),
+            &runner_options,
+            variables,
+            &logger_options,
+        ) else {
             return Err(CliError::Parsing);
         };
 
@@ -181,7 +186,7 @@ pub fn run_par(
         .enumerate()
         .map(|(seq, input)| {
             let runner_options = options.to_runner_options(input, current_dir);
-            let logger_options = options.to_logger_options(input);
+            let logger_options = options.to_logger_options();
             Job::new(input, seq, &runner_options, variables, &logger_options)
         })
         .collect::<Vec<_>>();

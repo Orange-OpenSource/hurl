@@ -24,6 +24,7 @@ use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
+use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
 #[test]
@@ -98,7 +99,7 @@ fn simple_sample() {
     `Hello World!`
     "#;
 
-    let filename = "-";
+    let filename = Some(Input::Stdin);
 
     // Define runner and logger options
     let runner_opts = RunnerOptionsBuilder::new()
@@ -128,7 +129,6 @@ fn simple_sample() {
 
     let logger_opts = LoggerOptionsBuilder::new()
         .color(false)
-        .filename(filename)
         .verbosity(None)
         .build();
 
@@ -136,7 +136,14 @@ fn simple_sample() {
     let variables = HashMap::default();
 
     // Run the hurl file and check data:
-    let result = runner::run(content, &runner_opts, &variables, &logger_opts).unwrap();
+    let result = runner::run(
+        content,
+        filename.as_ref(),
+        &runner_opts,
+        &variables,
+        &logger_opts,
+    )
+    .unwrap();
     check_result(&result);
 
     let entry = result.entries.first().unwrap();

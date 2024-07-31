@@ -102,7 +102,7 @@ impl Worker {
             let hurl_file = match hurl_file {
                 Ok(h) => h,
                 Err(e) => {
-                    logger.error_parsing_rich(&content, &e);
+                    logger.error_parsing_rich(&content, Some(&job.filename), &e);
                     let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
                     return tx.send(WorkerMessage::ParsingError(msg));
                 }
@@ -112,6 +112,7 @@ impl Worker {
             let result = runner::run_entries(
                 &hurl_file.entries,
                 &content,
+                Some(&job.filename),
                 &job.runner_options,
                 &job.variables,
                 &mut stdout,

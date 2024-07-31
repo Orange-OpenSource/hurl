@@ -482,12 +482,11 @@ impl CliOptions {
             .build()
     }
 
-    pub fn to_logger_options(&self, filename: &Input) -> LoggerOptions {
+    pub fn to_logger_options(&self) -> LoggerOptions {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())
-            .filename(&filename.to_string())
             .verbosity(verbosity)
             .build()
     }
