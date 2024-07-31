@@ -438,12 +438,48 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
 
 fn lint_multiline_string(multiline_string: &MultilineString) -> MultilineString {
     match multiline_string {
-        MultilineString::OneLineText(value) => MultilineString::OneLineText(lint_template(value)),
-        MultilineString::Text(value) => MultilineString::Text(lint_text(value)),
-        MultilineString::Json(value) => MultilineString::Json(lint_text(value)),
-        MultilineString::Xml(value) => MultilineString::Xml(lint_text(value)),
-        MultilineString::GraphQl(value) => MultilineString::GraphQl(lint_graphql(value)),
+        MultilineString {
+            kind: MultilineStringKind::OneLineText(value),
+            attributes,
+        } => MultilineString {
+            kind: MultilineStringKind::OneLineText(lint_template(value)),
+            attributes: lint_multiline_string_attributes(attributes),
+        },
+        MultilineString {
+            kind: MultilineStringKind::Text(value),
+            attributes,
+        } => MultilineString {
+            kind: MultilineStringKind::Text(lint_text(value)),
+            attributes: lint_multiline_string_attributes(attributes),
+        },
+        MultilineString {
+            kind: MultilineStringKind::Json(value),
+            attributes,
+        } => MultilineString {
+            kind: MultilineStringKind::Json(lint_text(value)),
+            attributes: lint_multiline_string_attributes(attributes),
+        },
+        MultilineString {
+            kind: MultilineStringKind::Xml(value),
+            attributes,
+        } => MultilineString {
+            kind: MultilineStringKind::Xml(lint_text(value)),
+            attributes: lint_multiline_string_attributes(attributes),
+        },
+        MultilineString {
+            kind: MultilineStringKind::GraphQl(value),
+            attributes,
+        } => MultilineString {
+            kind: MultilineStringKind::GraphQl(lint_graphql(value)),
+            attributes: lint_multiline_string_attributes(attributes),
+        },
     }
+}
+
+fn lint_multiline_string_attributes(
+    attributes: &[MultilineStringAttributes],
+) -> Vec<MultilineStringAttributes> {
+    attributes.to_vec()
 }
 
 fn lint_text(text: &Text) -> Text {

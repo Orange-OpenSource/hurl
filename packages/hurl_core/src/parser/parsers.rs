@@ -355,24 +355,27 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
-                value: Bytes::MultilineString(MultilineString::Text(Text {
-                    space: Whitespace {
-                        value: String::new(),
-                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),
-                    },
-                    newline: Whitespace {
-                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
-                        value: "\n".to_string(),
-                    },
-                    value: Template {
-                        elements: vec![TemplateElement::String {
-                            value: String::from("Hello World!\n"),
-                            encoded: String::from("Hello World!\n"),
-                        }],
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
-                    },
-                })),
+                value: Bytes::MultilineString(MultilineString {
+                    kind: MultilineStringKind::Text(Text {
+                        space: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),
+                        },
+                        newline: Whitespace {
+                            source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
+                            value: "\n".to_string(),
+                        },
+                        value: Template {
+                            elements: vec![TemplateElement::String {
+                                value: String::from("Hello World!\n"),
+                                encoded: String::from("Hello World!\n"),
+                            }],
+                            delimiter: None,
+                            source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
+                        },
+                    }),
+                    attributes: vec![]
+                }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),

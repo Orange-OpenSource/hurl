@@ -17,7 +17,7 @@
  */
 use std::collections::HashMap;
 
-use hurl_core::ast::{MultilineString, Text};
+use hurl_core::ast::{MultilineString, MultilineStringKind, Text};
 use serde_json::json;
 
 use crate::runner::json::eval_json_value;
@@ -30,17 +30,32 @@ pub fn eval_multiline(
     variables: &HashMap<String, Value>,
 ) -> Result<String, RunnerError> {
     match multiline {
-        MultilineString::OneLineText(value) => {
+        MultilineString {
+            kind: MultilineStringKind::OneLineText(value),
+            ..
+        } => {
             let s = eval_template(value, variables)?;
             Ok(s)
         }
-        MultilineString::Text(Text { value, .. })
-        | MultilineString::Json(Text { value, .. })
-        | MultilineString::Xml(Text { value, .. }) => {
+        MultilineString {
+            kind: MultilineStringKind::Text(Text { value, .. }),
+            ..
+        }
+        | MultilineString {
+            kind: MultilineStringKind::Json(Text { value, .. }),
+            ..
+        }
+        | MultilineString {
+            kind: MultilineStringKind::Xml(Text { value, .. }),
+            ..
+        } => {
             let s = eval_template(value, variables)?;
             Ok(s)
         }
-        MultilineString::GraphQl(graphql) => {
+        MultilineString {
+            kind: MultilineStringKind::GraphQl(graphql),
+            ..
+        } => {
             let query = eval_template(&graphql.value, variables)?;
             let body = match &graphql.variables {
                 None => json!({ "query": query.trim()}).to_string(),
@@ -60,8 +75,8 @@ mod tests {
     use std::collections::HashMap;
 
     use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, SourceInfo,
-        Template, TemplateElement, Whitespace,
+        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
+        MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
 
@@ -94,19 +109,22 @@ mod tests {
   }
 }"#;
         let variables = HashMap::new();
-        let multiline = MultilineString::GraphQl(GraphQl {
-            space: whitespace(),
-            newline: newline(),
-            value: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: query.to_string(),
-                    encoded: query.to_string(),
-                }],
-                source_info: empty_source_info(),
-            },
-            variables: None,
-        });
+        let multiline = MultilineString {
+            kind: MultilineStringKind::GraphQl(GraphQl {
+                space: whitespace(),
+                newline: newline(),
+                value: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: query.to_string(),
+                        encoded: query.to_string(),
+                    }],
+                    source_info: empty_source_info(),
+                },
+                variables: None,
+            }),
+            attributes: vec![],
+        };
         let body = eval_multiline(&multiline, &variables).unwrap();
         assert_eq!(
             body,
@@ -170,19 +188,22 @@ mod tests {
             },
             whitespace: whitespace(),
         };
-        let multiline = MultilineString::GraphQl(GraphQl {
-            space: whitespace(),
-            newline: newline(),
-            value: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: query.to_string(),
-                    encoded: query.to_string(),
-                }],
-                source_info: empty_source_info(),
-            },
-            variables: Some(graphql_variables),
-        });
+        let multiline = MultilineString {
+            kind: MultilineStringKind::GraphQl(GraphQl {
+                space: whitespace(),
+                newline: newline(),
+                value: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: query.to_string(),
+                        encoded: query.to_string(),
+                    }],
+                    source_info: empty_source_info(),
+                },
+                variables: Some(graphql_variables),
+            }),
+            attributes: vec![],
+        };
 
         let body = eval_multiline(&multiline, &hurl_variables).unwrap();
         assert_eq!(body, r#"{"query":"{\n  human(id: \"1000\") {\n    name\n    height(unit: FOOT)\n  }\n}","variables":{"episode":"JEDI","withFriends":false}}"#.to_string());

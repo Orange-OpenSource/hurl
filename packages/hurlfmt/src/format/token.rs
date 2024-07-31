@@ -639,16 +639,35 @@ impl Tokenizable for MultilineString {
         let mut tokens: Vec<Token> = vec![Token::StringDelimiter("```".to_string())];
         // FIXME: ugly if !let workaround, will be removed soon as
         // OneLineText is temporary.
-        if let MultilineString::OneLineText(..) = self {
+        if let MultilineString {
+            kind: MultilineStringKind::OneLineText(..),
+            ..
+        } = self
+        {
         } else {
             tokens.push(Token::Lang(self.lang().to_string()));
         }
         match self {
-            MultilineString::OneLineText(template) => tokens.append(&mut template.tokenize()),
-            MultilineString::Text(text)
-            | MultilineString::Json(text)
-            | MultilineString::Xml(text) => tokens.append(&mut text.tokenize()),
-            MultilineString::GraphQl(graphql) => tokens.append(&mut graphql.tokenize()),
+            MultilineString {
+                kind: MultilineStringKind::OneLineText(template),
+                ..
+            } => tokens.append(&mut template.tokenize()),
+            MultilineString {
+                kind: MultilineStringKind::Text(text),
+                ..
+            }
+            | MultilineString {
+                kind: MultilineStringKind::Json(text),
+                ..
+            }
+            | MultilineString {
+                kind: MultilineStringKind::Xml(text),
+                ..
+            } => tokens.append(&mut text.tokenize()),
+            MultilineString {
+                kind: MultilineStringKind::GraphQl(graphql),
+                ..
+            } => tokens.append(&mut graphql.tokenize()),
         }
         tokens.push(Token::StringDelimiter("```".to_string()));
         tokens

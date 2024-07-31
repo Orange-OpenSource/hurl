@@ -48,7 +48,9 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
             }
             reader.seek(save);
             let value = oneline_string_value(reader)?;
-            Ok(MultilineString::OneLineText(value))
+            let kind = MultilineStringKind::OneLineText(value);
+            let attributes = vec![];
+            Ok(MultilineString { kind, attributes })
         }
     }
 }
@@ -67,12 +69,16 @@ fn text(lang: &str, reader: &mut Reader) -> ParseResult<Text> {
 
 fn json_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let text = text("json", reader)?;
-    Ok(MultilineString::Json(text))
+    let kind = MultilineStringKind::Json(text);
+    let attributes = vec![];
+    Ok(MultilineString { kind, attributes })
 }
 
 fn xml_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let text = text("xml", reader)?;
-    Ok(MultilineString::Xml(text))
+    let kind = MultilineStringKind::Xml(text);
+    let attributes = vec![];
+    Ok(MultilineString { kind, attributes })
 }
 
 fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
@@ -106,13 +112,14 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
                         elements,
                         source_info: SourceInfo::new(start.pos, end.pos),
                     };
-
-                    return Ok(MultilineString::GraphQl(GraphQl {
+                    let kind = MultilineStringKind::GraphQl(GraphQl {
                         space,
                         newline,
                         value: template,
                         variables: Some(variables),
-                    }));
+                    });
+                    let attributes = vec![];
+                    return Ok(MultilineString { kind, attributes });
                 }
             }
         }
@@ -132,12 +139,14 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
         source_info: SourceInfo::new(start.pos, end.pos),
     };
 
-    Ok(MultilineString::GraphQl(GraphQl {
+    let kind = MultilineStringKind::GraphQl(GraphQl {
         space,
         newline,
         value: template,
         variables: None,
-    }))
+    });
+    let attributes = vec![];
+    Ok(MultilineString { kind, attributes })
 }
 
 fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
@@ -198,11 +207,13 @@ fn plain_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
     let value = multiline_string_value(reader)?;
-    Ok(MultilineString::Text(Text {
+    let kind = MultilineStringKind::Text(Text {
         space,
         newline,
         value,
-    }))
+    });
+    let attributes = vec![];
+    Ok(MultilineString { kind, attributes })
 }
 
 fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
@@ -262,55 +273,62 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::reader::Pos;
+
+    use super::*;
 
     #[test]
     fn test_multiline_string_text() {
         let mut reader = Reader::new("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
 
         let mut reader = Reader::new("```         \nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: "         ".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 13)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: "         ".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 13)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -319,24 +337,27 @@ mod tests {
         let mut reader = Reader::new("```json\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Json(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Json(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -345,49 +366,55 @@ mod tests {
         let mut reader = Reader::new("```graphql\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::GraphQl(GraphQl {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-                variables: None,
-            })
+            MultilineString {
+                kind: MultilineStringKind::GraphQl(GraphQl {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                    variables: None,
+                }),
+                attributes: vec![]
+            }
         );
 
         let mut reader = Reader::new("```graphql      \nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::GraphQl(GraphQl {
-                space: Whitespace {
-                    value: "      ".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 17)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 17), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-                variables: None,
-            })
+            MultilineString {
+                kind: MultilineStringKind::GraphQl(GraphQl {
+                    space: Whitespace {
+                        value: "      ".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 17)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 17), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                    variables: None,
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -409,50 +436,59 @@ mod tests {
         let mut reader = Reader::new("``````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::OneLineText(Template {
-                delimiter: None,
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-            })
+            MultilineString {
+                kind: MultilineStringKind::OneLineText(Template {
+                    delimiter: None,
+                    elements: vec![],
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                }),
+                attributes: vec![]
+            }
         );
 
         let mut reader = Reader::new("```\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
         let mut reader = Reader::new("```\r\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\r\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\r\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -461,14 +497,17 @@ mod tests {
         let mut reader = Reader::new("```Hello World!```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::OneLineText(Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: "Hello World!".to_string(),
-                    encoded: "Hello World!".to_string(),
-                }],
-                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 16)),
-            })
+            MultilineString {
+                kind: MultilineStringKind::OneLineText(Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "Hello World!".to_string(),
+                        encoded: "Hello World!".to_string(),
+                    }],
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 16)),
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -477,14 +516,17 @@ mod tests {
         let mut reader = Reader::new("```base64_inline```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::OneLineText(Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: "base64_inline".to_string(),
-                    encoded: "base64_inline".to_string(),
-                }],
-                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 17)),
-            })
+            MultilineString {
+                kind: MultilineStringKind::OneLineText(Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "base64_inline".to_string(),
+                        encoded: "base64_inline".to_string(),
+                    }],
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 17)),
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -493,24 +535,27 @@ mod tests {
         let mut reader = Reader::new("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "line1\nline2\nline3\n".to_string(),
-                        encoded: "line1\nline2\nline3\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "line1\nline2\nline3\n".to_string(),
+                            encoded: "line1\nline2\nline3\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -519,48 +564,54 @@ mod tests {
         let mut reader = Reader::new("```\n\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
                         value: "\n".to_string(),
-                        encoded: "\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
-                },
-            })
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "\n".to_string(),
+                            encoded: "\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
 
         // One cr
         let mut reader = Reader::new("```\n\r\n````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::Text(Text {
-                space: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
-                },
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "\r\n".to_string(),
-                        encoded: "\r\n".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
-                },
-            })
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "\r\n".to_string(),
+                            encoded: "\r\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                    },
+                }),
+                attributes: vec![]
+            }
         );
     }
 
@@ -641,7 +692,8 @@ variables {
 
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::GraphQl(GraphQl {
+            MultilineString {
+            kind: MultilineStringKind::GraphQl(GraphQl {
                 space: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
@@ -698,7 +750,7 @@ variables {
                         source_info: SourceInfo::new(Pos::new(10, 2), Pos::new(11, 1))
                     }
                 })
-            })
+            }), attributes: vec![]}
         );
     }
 

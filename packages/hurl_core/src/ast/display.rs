@@ -147,12 +147,12 @@ impl fmt::Display for Regex {
 
 impl fmt::Display for MultilineString {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let body = match self {
-            MultilineString::OneLineText(template) => template.to_string(),
-            MultilineString::Text(text)
-            | MultilineString::Json(text)
-            | MultilineString::Xml(text) => text.value.to_string(),
-            MultilineString::GraphQl(graphql) => {
+        let body = match &self.kind {
+            MultilineStringKind::OneLineText(template) => template.to_string(),
+            MultilineStringKind::Text(text)
+            | MultilineStringKind::Json(text)
+            | MultilineStringKind::Xml(text) => text.value.to_string(),
+            MultilineStringKind::GraphQl(graphql) => {
                 let var = match &graphql.variables {
                     None => String::new(),
                     Some(var) => {

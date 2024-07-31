@@ -181,10 +181,26 @@ impl ToJson for Bytes {
                 // base64,SGVsbG8gd29ybGQ=;
                 // ~~~
                 let lang = match multi {
-                    MultilineString::OneLineText(_) | MultilineString::Text(_) => "text",
-                    MultilineString::Json(_) => "json",
-                    MultilineString::Xml(_) => "xml",
-                    MultilineString::GraphQl(_) => "graphql",
+                    MultilineString {
+                        kind: MultilineStringKind::OneLineText(_),
+                        ..
+                    }
+                    | MultilineString {
+                        kind: MultilineStringKind::Text(_),
+                        ..
+                    } => "text",
+                    MultilineString {
+                        kind: MultilineStringKind::Json(_),
+                        ..
+                    } => "json",
+                    MultilineString {
+                        kind: MultilineStringKind::Xml(_),
+                        ..
+                    } => "xml",
+                    MultilineString {
+                        kind: MultilineStringKind::GraphQl(_),
+                        ..
+                    } => "graphql",
                 };
                 JValue::Object(vec![
                     ("type".to_string(), JValue::String(lang.to_string())),

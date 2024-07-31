@@ -103,14 +103,25 @@ pub fn eval_request(
     } else if let Some(Body {
         value:
             Bytes::Json { .. }
-            | Bytes::MultilineString(MultilineString::GraphQl(..))
-            | Bytes::MultilineString(MultilineString::Json(..)),
+            | Bytes::MultilineString(MultilineString {
+                kind: MultilineStringKind::GraphQl(..),
+                ..
+            })
+            | Bytes::MultilineString(MultilineString {
+                kind: MultilineStringKind::Json(..),
+                ..
+            }),
         ..
     }) = request.body
     {
         Some("application/json".to_string())
     } else if let Some(Body {
-        value: Bytes::Xml { .. } | Bytes::MultilineString(MultilineString::Xml(..)),
+        value:
+            Bytes::Xml { .. }
+            | Bytes::MultilineString(MultilineString {
+                kind: MultilineStringKind::Xml(..),
+                ..
+            }),
         ..
     }) = request.body
     {

@@ -502,7 +502,13 @@ pub enum PredicateFuncValue {
 // Primitives
 //
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum MultilineString {
+pub struct MultilineString {
+    pub kind: MultilineStringKind,
+    pub attributes: Vec<MultilineStringAttributes>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MultilineStringKind {
     // FIXME: temporary type until we implement oneline as `foo` instead of ```foo```
     OneLineText(Template),
     Text(Text),
@@ -511,23 +517,29 @@ pub enum MultilineString {
     GraphQl(GraphQl),
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MultilineStringAttributes {
+    Escape,
+    NoVariable,
+}
+
 impl MultilineString {
     pub fn lang(&self) -> &'static str {
-        match self {
-            MultilineString::OneLineText(_) | MultilineString::Text(_) => "",
-            MultilineString::Json(_) => "json",
-            MultilineString::Xml(_) => "xml",
-            MultilineString::GraphQl(_) => "graphql",
+        match self.kind {
+            MultilineStringKind::OneLineText(_) | MultilineStringKind::Text(_) => "",
+            MultilineStringKind::Json(_) => "json",
+            MultilineStringKind::Xml(_) => "xml",
+            MultilineStringKind::GraphQl(_) => "graphql",
         }
     }
 
     pub fn value(&self) -> Template {
-        match self {
-            MultilineString::OneLineText(template) => template.clone(),
-            MultilineString::Text(text)
-            | MultilineString::Json(text)
-            | MultilineString::Xml(text) => text.value.clone(),
-            MultilineString::GraphQl(text) => text.value.clone(),
+        match &self.kind {
+            MultilineStringKind::OneLineText(template) => template.clone(),
+            MultilineStringKind::Text(text)
+            | MultilineStringKind::Json(text)
+            | MultilineStringKind::Xml(text) => text.value.clone(),
+            MultilineStringKind::GraphQl(text) => text.value.clone(),
         }
     }
 }

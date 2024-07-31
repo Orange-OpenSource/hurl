@@ -22,7 +22,8 @@ use std::time::Instant;
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::{
-    Body, Bytes, Entry, MultilineString, OptionKind, Request, Response, SourceInfo,
+    Body, Bytes, Entry, MultilineString, MultilineStringKind, OptionKind, Request, Response,
+    SourceInfo,
 };
 use hurl_core::error::DisplaySourceError;
 use hurl_core::input::Input;
@@ -450,7 +451,11 @@ fn warn_deprecated(entry: &Entry, filename: Option<&Input>, logger: &mut Logger)
     if let Request {
         body:
             Some(Body {
-                value: Bytes::MultilineString(MultilineString::OneLineText(template)),
+                value:
+                    Bytes::MultilineString(MultilineString {
+                        kind: MultilineStringKind::OneLineText(template),
+                        ..
+                    }),
                 ..
             }),
         ..
@@ -466,7 +471,11 @@ fn warn_deprecated(entry: &Entry, filename: Option<&Input>, logger: &mut Logger)
     if let Some(Response {
         body:
             Some(Body {
-                value: Bytes::MultilineString(MultilineString::OneLineText(template)),
+                value:
+                    Bytes::MultilineString(MultilineString {
+                        kind: MultilineStringKind::OneLineText(template),
+                        ..
+                    }),
                 ..
             }),
         ..
