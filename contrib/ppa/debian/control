@@ -8,7 +8,7 @@ Homepage: https://hurl.dev
 Rules-Requires-Root: no
 
 Package: hurl
-Architecture: any
+Architecture: amd64
 Depends: libc6 (>= 2.17), libcurl4, zlib1g, libxml2
 Description: Hurl is a command line tool that runs HTTP requests defined in a simple plain text format.
  It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very versatile: it can be used for both fetching data and testing HTTP sessions.

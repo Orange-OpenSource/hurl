@@ -8,3 +8,4 @@ override_dh_clean:
 
 override_dh_auto_build:
 	./debian/bin/build.sh
+	./debian/bin/create_docs.sh
