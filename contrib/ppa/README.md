@@ -94,7 +94,7 @@ tar xfv "${package}.tar.gz"
 ./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
 mkdir -p ~/.cargo
 ln -s /tmp/rust/usr/local/bin ~/.cargo/bin
-export PATH="~/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
