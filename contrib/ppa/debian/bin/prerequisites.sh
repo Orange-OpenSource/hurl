@@ -14,9 +14,7 @@ echo "package=${package}"
 tar xf "${package}.tar.gz"
 mkdir -p /tmp/rust
 ./"${package}"/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
-mkdir -p ~/.cargo
-ln -s /tmp/rust/usr/local/bin ~/.cargo/bin
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/tmp/rust/usr/local/bin:$PATH"
 which rustc
 which cargo
 rustc --version
@@ -24,3 +22,7 @@ cargo --version
 
 echo "## .cargo/config:"
 cat .cargo/config
+
+echo "## update release.sh"
+sed -i "s#\"\$HOME\"/.cargo/bin#/tmp/rust/usr/local/bin#g" bin/release/release.sh
+cat bin/release/release.sh

@@ -39,17 +39,10 @@ gpg --armor --export-secret-keys "${gpg_keyid}" > /tmp/myprivatekey.asc
 ```
 hurl_version=<hurl tag>
 ```
-## Run ubuntu bionic container
+## Run ubuntu focal container
 
 ```
-docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:18.04 bash
-```
-
-## Import GPG key into container
-
-```
-gpg --import /tmp/mypublickey.asc
-gpg --import /tmp/myprivatekey.asc
+docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --volume /tmp:/tmp ubuntu:20.04 bash
 ```
 
 ## Install user prerequisites
@@ -74,27 +67,34 @@ apt install -y \
     devscripts debhelper
 ```
 
+## Import GPG key into container
+
+```
+gpg --import /tmp/mypublickey.asc
+gpg --import /tmp/myprivatekey.asc
+```
+
 ## Clone hurl
 
 ```
 rm -fr /tmp/ppa || true
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
+cp -r contrib/ppa/debian .
 ```
 
 ## Install rust and cargo
 
 ```
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-wget "https://static.rust-lang.org/dist/rust-${rust_version}-x86_64-unknown-linux-gnu.tar.gz"
-wget "https://static.rust-lang.org/dist/rust-${rust_version}-aarch64-unknown-linux-gnu.tar.gz"
+for arch in x86_64 aarch64 ; do 
+    wget "https://static.rust-lang.org/dist/rust-${rust_version}-${arch}-unknown-linux-gnu.tar.gz"
+done
 rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
 tar xfv "${package}.tar.gz"
 ./"${package}"/install.sh --destdir=/tmp/rust --disable-ldconfig
-mkdir -p ~/.cargo
-ln -s /tmp/rust/usr/local/bin ~/.cargo/bin
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/tmp/rust/usr/local/bin:$PATH"
 rustc --version
 cargo --version
 rm -fr rust-"${rust_version}"-x86_64-unknown-linux-gnu
@@ -147,7 +147,7 @@ ls -l hurl_*
 dput ppa:lepapareil/hurl hurl_*_source.changes
 ```
 
-## Copy published PPA (bionic) to newers ubuntu codenames
+## Copy published PPA (focal) to newers ubuntu codenames
 
 ![image](https://github.com/user-attachments/assets/8e7d506a-d266-44eb-8d2f-48431defb890)
 
@@ -156,7 +156,7 @@ dput ppa:lepapareil/hurl hurl_*_source.changes
 ## Install and test Hurl from PPA
 
 ```shell
-codename=<ubuntu codename from bionic to latest>
+codename=<ubuntu codename from focal to latest>
 hurl_version=<hurl tag>
 docker run -it --rm --env GPG_KEYID=${gpg_keyid} --env HURL_VERSION=${hurl_version} --env CODENAME=${codename} --volume /tmp:/tmp ubuntu:${codename} bash
 export DEBIAN_FRONTEND=noninteractive
