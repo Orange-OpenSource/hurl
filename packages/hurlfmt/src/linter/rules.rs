@@ -470,8 +470,8 @@ fn lint_multiline_string(multiline_string: &MultilineString) -> MultilineString 
 }
 
 fn lint_multiline_string_attributes(
-    attributes: &[MultilineStringAttributes],
-) -> Vec<MultilineStringAttributes> {
+    attributes: &[MultilineStringAttribute],
+) -> Vec<MultilineStringAttribute> {
     attributes.to_vec()
 }
 

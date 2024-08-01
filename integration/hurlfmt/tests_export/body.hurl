@@ -22,6 +22,11 @@ POST http://localhost:8000/multiline-string
 Hello
 ```
 
+POST http://localhost:8000/multiline-string
+```escape
+Hello\tWorld!
+```
+
 POST http://localhost:8000/oneline-string
 `Hello`
 

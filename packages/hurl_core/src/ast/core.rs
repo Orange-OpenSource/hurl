@@ -504,7 +504,7 @@ pub enum PredicateFuncValue {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MultilineString {
     pub kind: MultilineStringKind,
-    pub attributes: Vec<MultilineStringAttributes>,
+    pub attributes: Vec<MultilineStringAttribute>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -516,7 +516,7 @@ pub enum MultilineStringKind {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum MultilineStringAttributes {
+pub enum MultilineStringAttribute {
     Escape,
     NoVariable,
 }

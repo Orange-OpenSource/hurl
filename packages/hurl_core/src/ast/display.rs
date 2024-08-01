@@ -168,6 +168,15 @@ impl fmt::Display for MultilineString {
     }
 }
 
+impl fmt::Display for MultilineStringAttribute {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            MultilineStringAttribute::Escape => write!(f, "escape"),
+            MultilineStringAttribute::NoVariable => write!(f, "novariable"),
+        }
+    }
+}
+
 impl fmt::Display for BooleanOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

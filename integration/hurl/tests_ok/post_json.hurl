@@ -61,3 +61,5 @@ POST http://localhost:8000/check_name
 {
     "name": "{{name}}"
 }
+
+

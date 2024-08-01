@@ -610,7 +610,16 @@ impl HtmlFormatter {
         // ```
         let lang = multiline_string.lang();
         if as_body {
-            let body = format!("```{lang}\n{multiline_string}```");
+            let mut attributes = String::new();
+            for (i, attribute) in multiline_string.attributes.iter().enumerate() {
+                if i > 0 || !lang.is_empty() {
+                    attributes.push_str(", ");
+                }
+                attributes.push_str(attribute.to_string().as_str());
+            }
+            // Keep original encoded string
+            let multiline_string_encoded = multiline_string.kind.to_encoded_string();
+            let body = format!("```{lang}{attributes}\n{multiline_string_encoded}```");
             let body = format_multilines(&body);
             self.fmt_span("multiline", &body);
         } else {
@@ -867,6 +876,37 @@ impl Template {
     }
 }
 
+impl MultilineStringKind {
+    fn to_encoded_string(&self) -> String {
+        match self {
+            MultilineStringKind::Text(text)
+            | MultilineStringKind::Json(text)
+            | MultilineStringKind::Xml(text) => text.value.to_encoded_string(),
+            MultilineStringKind::GraphQl(graphql) => graphql.to_encoded_string(),
+        }
+    }
+}
+
+impl GraphQl {
+    fn to_encoded_string(&self) -> String {
+        let mut s = self.value.to_encoded_string();
+        if let Some(vars) = &self.variables {
+            s.push_str(&vars.to_encoded_string());
+        }
+        s
+    }
+}
+
+impl GraphQlVariables {
+    fn to_encoded_string(&self) -> String {
+        let mut s = "variables".to_string();
+        s.push_str(&self.space.value);
+        s.push_str(&self.value.encoded());
+        s.push_str(&self.whitespace.value);
+        s
+    }
+}
+
 fn encode_html(s: String) -> String {
     s.replace('>', "&gt;").replace('<', "&lt;")
 }
@@ -917,7 +957,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "line1\nline2\n".to_string(),
-                    encoded: "unused".to_string(),
+                    encoded: "line1\nline2\n".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },

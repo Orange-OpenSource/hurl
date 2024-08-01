@@ -19,6 +19,7 @@ use crate::ast::*;
 use crate::combinator::{choice, optional, zero_or_more};
 use crate::parser::json::object_value;
 use crate::parser::primitives::*;
+use crate::parser::string::escape_char;
 use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
@@ -28,35 +29,41 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     choice(&[json_text, xml_text, graphql, plain_text], reader)
 }
 
-fn text(lang: &str, reader: &mut Reader) -> ParseResult<Text> {
+fn text(lang: &str, reader: &mut Reader) -> ParseResult<(Text, Vec<MultilineStringAttribute>)> {
     try_literal(lang, reader)?;
+    drop(try_literal(",", reader));
+    let attributes = multiline_string_attributes(reader)?;
+    let escape = attributes.contains(&MultilineStringAttribute::Escape);
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
-    let value = multiline_string_value(reader)?;
-    Ok(Text {
-        space,
-        newline,
-        value,
-    })
+    let value = multiline_string_value(reader, escape)?;
+    Ok((
+        Text {
+            space,
+            newline,
+            value,
+        },
+        attributes,
+    ))
 }
 
 fn json_text(reader: &mut Reader) -> ParseResult<MultilineString> {
-    let text = text("json", reader)?;
+    let (text, attributes) = text("json", reader)?;
     let kind = MultilineStringKind::Json(text);
-    let attributes = vec![];
     Ok(MultilineString { kind, attributes })
 }
 
 fn xml_text(reader: &mut Reader) -> ParseResult<MultilineString> {
-    let text = text("xml", reader)?;
+    let (text, attributes) = text("xml", reader)?;
     let kind = MultilineStringKind::Xml(text);
-    let attributes = vec![];
     Ok(MultilineString { kind, attributes })
 }
 
 fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("graphql", reader)?;
     let space = zero_or_more_spaces(reader)?;
+    drop(try_literal(",", reader));
+    let attributes = multiline_string_attributes(reader)?;
     let newline = newline(reader)?;
 
     let mut chars = vec![];
@@ -118,8 +125,34 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
         value: template,
         variables: None,
     });
-    let attributes = vec![];
     Ok(MultilineString { kind, attributes })
+}
+
+fn multiline_string_attributes(reader: &mut Reader) -> ParseResult<Vec<MultilineStringAttribute>> {
+    let mut attributes = vec![];
+    zero_or_more_spaces(reader)?;
+
+    while !reader.is_eof() && reader.peek() != Some('\n') && reader.peek() != Some('\r') {
+        let pos = reader.cursor().pos;
+        let attribute = reader
+            .read_while(|c| c != ',' && c != '\r' && c != '\n')
+            .trim()
+            .to_string();
+        if attribute == "escape" {
+            attributes.push(MultilineStringAttribute::Escape);
+        } else if attribute == "novariable" {
+            attributes.push(MultilineStringAttribute::NoVariable);
+        } else {
+            let kind = ParseErrorKind::MultilineAttribute(attribute);
+            return Err(ParseError {
+                kind,
+                pos,
+                recoverable: false,
+            });
+        }
+        drop(try_literal(",", reader));
+    }
+    Ok(attributes)
 }
 
 fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
@@ -178,25 +211,41 @@ fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
 
 fn plain_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let space = zero_or_more_spaces(reader)?;
+    drop(try_literal(",", reader));
+    let attributes = multiline_string_attributes(reader)?;
+    let escape = attributes.contains(&MultilineStringAttribute::Escape);
     let newline = newline(reader)?;
-    let value = multiline_string_value(reader)?;
+    let value = multiline_string_value(reader, escape)?;
     let kind = MultilineStringKind::Text(Text {
         space,
         newline,
         value,
     });
-    let attributes = vec![];
     Ok(MultilineString { kind, attributes })
 }
 
-fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
+fn multiline_string_value(reader: &mut Reader, escape: bool) -> ParseResult<Template> {
     let mut chars = vec![];
 
     let start = reader.cursor();
     while reader.peek_n(3) != "```" && !reader.is_eof() {
         let pos = reader.cursor().pos;
-        let c = reader.read().unwrap();
-        chars.push((c, c.to_string(), pos));
+        let cursor = reader.cursor();
+        if escape {
+            match escape_char(reader) {
+                Ok(c) => {
+                    let s = reader.read_from(cursor.index);
+                    chars.push((c, s, pos));
+                }
+                Err(_) => {
+                    let c = reader.read().unwrap();
+                    chars.push((c, c.to_string(), pos));
+                }
+            }
+        } else {
+            let c = reader.read().unwrap();
+            chars.push((c, c.to_string(), pos));
+        }
     }
     let end = reader.cursor();
     literal("```", reader)?;
@@ -301,6 +350,38 @@ mod tests {
                     },
                 }),
                 attributes: vec![]
+            }
+        );
+
+        let mut reader = Reader::new(
+            r#"```json,escape
+{
+  "g_clef": "\u{1D11E}"
+}
+```"#,
+        );
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString {
+                kind: MultilineStringKind::Json(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "{\n  \"g_clef\": \"𝄞\"\n}\n".to_string(),
+                            encoded: "{\n  \"g_clef\": \"\\u{1D11E}\"\n}\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    },
+                }),
+                attributes: vec![MultilineStringAttribute::Escape]
             }
         );
     }
@@ -430,9 +511,7 @@ mod tests {
         assert_eq!(error.pos, Pos::new(1, 4));
         assert_eq!(
             error.kind,
-            ParseErrorKind::Expecting {
-                value: "newline".to_string()
-            }
+            ParseErrorKind::MultilineAttribute("Hello World!```".to_string())
         );
     }
 
@@ -522,6 +601,69 @@ mod tests {
     }
 
     #[test]
+    fn test_multiline_string_attributes() {
+        let mut reader = Reader::new("escape\n```");
+        assert_eq!(
+            multiline_string_attributes(&mut reader).unwrap(),
+            vec![MultilineStringAttribute::Escape]
+        );
+        assert_eq!(reader.cursor().index, 6);
+
+        let mut reader = Reader::new("\n```");
+        assert_eq!(multiline_string_attributes(&mut reader).unwrap(), vec![]);
+        assert_eq!(reader.cursor().index, 0);
+
+        let mut reader = Reader::new("\r\n```");
+        assert_eq!(multiline_string_attributes(&mut reader).unwrap(), vec![]);
+        assert_eq!(reader.cursor().index, 0);
+
+        let mut reader = Reader::new("toto\n```");
+        let error = multiline_string_attributes(&mut reader).unwrap_err();
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::MultilineAttribute("toto".to_string())
+        );
+        assert_eq!(error.pos, Pos::new(1, 1));
+
+        let mut reader = Reader::new(",escape\n```");
+        let error = multiline_string_attributes(&mut reader).unwrap_err();
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::MultilineAttribute(String::new())
+        );
+        assert_eq!(error.pos, Pos::new(1, 1));
+    }
+
+    #[test]
+    fn test_multiline_string_escape() {
+        let mut reader = Reader::new("```escape\n\\t\n```");
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString {
+                kind: MultilineStringKind::Text(Text {
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
+                    },
+                    newline: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(2, 1)),
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "\t\n".to_string(),
+                            encoded: "\\t\n".to_string(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                    },
+                }),
+                attributes: vec![MultilineStringAttribute::Escape]
+            }
+        );
+    }
+
+    #[test]
     fn test_multiline_string_error() {
         let mut reader = Reader::new("xxx");
         let error = multiline_string(&mut reader).err().unwrap();
@@ -550,9 +692,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
         assert_eq!(
             error.kind,
-            ParseErrorKind::Expecting {
-                value: "newline".to_string()
-            }
+            ParseErrorKind::MultilineAttribute("xxx".to_string())
         );
         assert!(!error.recoverable);
     }
@@ -561,7 +701,7 @@ mod tests {
     fn test_multiline_string_value() {
         let mut reader = Reader::new("```");
         assert_eq!(
-            multiline_string_value(&mut reader).unwrap(),
+            multiline_string_value(&mut reader, false).unwrap(),
             Template {
                 delimiter: None,
                 elements: vec![],
@@ -572,7 +712,7 @@ mod tests {
 
         let mut reader = Reader::new("hello```");
         assert_eq!(
-            multiline_string_value(&mut reader).unwrap(),
+            multiline_string_value(&mut reader, false).unwrap(),
             Template {
                 delimiter: None,
                 elements: vec![TemplateElement::String {

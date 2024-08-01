@@ -638,6 +638,12 @@ impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::StringDelimiter("```".to_string())];
         tokens.push(Token::Lang(self.lang().to_string()));
+        for (i, attribute) in self.attributes.iter().enumerate() {
+            if i > 0 || !self.lang().is_empty() {
+                tokens.push(Token::StringDelimiter(",".to_string()));
+            }
+            tokens.append(&mut attribute.tokenize());
+        }
         match self {
             MultilineString {
                 kind: MultilineStringKind::Text(text),
@@ -658,6 +664,15 @@ impl Tokenizable for MultilineString {
         }
         tokens.push(Token::StringDelimiter("```".to_string()));
         tokens
+    }
+}
+
+impl Tokenizable for MultilineStringAttribute {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            MultilineStringAttribute::Escape => vec![Token::String("escape".to_string())],
+            MultilineStringAttribute::NoVariable => vec![Token::String("novariable".to_string())],
+        }
     }
 }
 

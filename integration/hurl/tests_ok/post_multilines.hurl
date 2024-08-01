@@ -20,3 +20,11 @@ bob,{{bob_age}}
 bill,22
 ```
 HTTP 200
+
+POST http://localhost:8000/post-multilines-json
+```json,escape
+{
+    "g_clef": "\u{1D11E}"
+}
+```
+HTTP 200
