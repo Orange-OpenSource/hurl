@@ -21,10 +21,7 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
-use hurl_core::ast::{
-    Body, Bytes, Entry, MultilineString, MultilineStringKind, OptionKind, Request, Response,
-    SourceInfo,
-};
+use hurl_core::ast::{Entry, OptionKind, SourceInfo};
 use hurl_core::error::DisplaySourceError;
 use hurl_core::input::Input;
 use hurl_core::parser;
@@ -445,52 +442,6 @@ fn warn_deprecated(entry: &Entry, filename: Option<&Input>, logger: &mut Logger)
         if version.value == VersionAnyLegacy {
             logger.warning(&format!("{filename}:{line}:{column} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead"));
         }
-    }
-
-    // one line string with ```something``` syntax instead of `something`
-    if let Request {
-        body:
-            Some(Body {
-                value:
-                    Bytes::MultilineString(MultilineString {
-                        kind: MultilineStringKind::OneLineText(template),
-                        ..
-                    }),
-                ..
-            }),
-        ..
-    } = &entry.request
-    {
-        let source_info = &template.source_info;
-        let line = &source_info.start.line;
-        let column = &source_info.start.column;
-        let template = template.to_string();
-        logger.warning(&format!("{filename}:{line}:{column} '```{template}```' request body is deprecated, please use '`{template}`' instead"));
-    }
-
-    if let Some(Response {
-        body:
-            Some(Body {
-                value:
-                    Bytes::MultilineString(MultilineString {
-                        kind: MultilineStringKind::OneLineText(template),
-                        ..
-                    }),
-                ..
-            }),
-        ..
-    }) = &entry.response
-    {
-        let source_info = &template.source_info;
-        let line = &source_info.start.line;
-        let column = &source_info.start.column;
-        let template = template.to_string();
-        logger.warning(
-            format!(
-                "{filename}:{line}:{column} '```{template}```' response body is deprecated, please use '`{template}`' instead"
-            )
-            .as_str(),
-        );
     }
 }
 

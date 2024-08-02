@@ -509,8 +509,6 @@ pub struct MultilineString {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultilineStringKind {
-    // FIXME: temporary type until we implement oneline as `foo` instead of ```foo```
-    OneLineText(Template),
     Text(Text),
     Json(Text),
     Xml(Text),
@@ -526,7 +524,7 @@ pub enum MultilineStringAttributes {
 impl MultilineString {
     pub fn lang(&self) -> &'static str {
         match self.kind {
-            MultilineStringKind::OneLineText(_) | MultilineStringKind::Text(_) => "",
+            MultilineStringKind::Text(_) => "",
             MultilineStringKind::Json(_) => "json",
             MultilineStringKind::Xml(_) => "xml",
             MultilineStringKind::GraphQl(_) => "graphql",
@@ -535,7 +533,6 @@ impl MultilineString {
 
     pub fn value(&self) -> Template {
         match &self.kind {
-            MultilineStringKind::OneLineText(template) => template.clone(),
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
             | MultilineStringKind::Xml(text) => text.value.clone(),

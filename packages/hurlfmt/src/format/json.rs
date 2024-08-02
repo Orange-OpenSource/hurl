@@ -182,10 +182,6 @@ impl ToJson for Bytes {
                 // ~~~
                 let lang = match multi {
                     MultilineString {
-                        kind: MultilineStringKind::OneLineText(_),
-                        ..
-                    }
-                    | MultilineString {
                         kind: MultilineStringKind::Text(_),
                         ..
                     } => "text",

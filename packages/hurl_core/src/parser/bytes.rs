@@ -162,8 +162,13 @@ mod tests {
     fn test_bytes_multilines_error() {
         let mut reader = Reader::new("```\nxxx ");
         let error = bytes(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 4 });
-        assert_eq!(error.kind, ParseErrorKind::Multiline);
+        assert_eq!(error.pos, Pos { line: 2, column: 5 });
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: "```".to_string()
+            }
+        );
     }
 
     #[test]

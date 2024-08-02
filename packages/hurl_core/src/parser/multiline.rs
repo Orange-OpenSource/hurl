@@ -24,35 +24,8 @@ use crate::reader::Reader;
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;
-    let save = reader.cursor();
 
-    match choice(&[json_text, xml_text, graphql, plain_text], reader) {
-        Ok(multi) => Ok(multi),
-        Err(err) => {
-            // FIXME: how to parse
-            //
-            // ```graphql_inline```
-            //
-            // => this one is non recoverable but should be parsed as TextOneline
-            //
-            // ```graphql
-            // {
-            //   me
-            // }
-            // variables
-            // ```
-            //
-            // => this one is non recoverable should trigger an GraphQL variables error
-            if let ParseErrorKind::GraphQlVariables = err.kind {
-                return Err(err);
-            }
-            reader.seek(save);
-            let value = oneline_string_value(reader)?;
-            let kind = MultilineStringKind::OneLineText(value);
-            let attributes = vec![];
-            Ok(MultilineString { kind, attributes })
-        }
-    }
+    choice(&[json_text, xml_text, graphql, plain_text], reader)
 }
 
 fn text(lang: &str, reader: &mut Reader) -> ParseResult<Text> {
@@ -242,35 +215,6 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     })
 }
 
-fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
-    let mut chars = vec![];
-
-    let start = reader.cursor();
-    while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.cursor().pos;
-        let c = reader.read().unwrap();
-        if c == '\n' {
-            return Err(ParseError::new(start.pos, false, ParseErrorKind::Multiline));
-        }
-        chars.push((c, c.to_string(), pos));
-    }
-    let end = reader.cursor();
-    literal("```", reader)?;
-
-    let encoded_string = template::EncodedString {
-        source_info: SourceInfo::new(start.pos, end.pos),
-        chars,
-    };
-
-    let elements = template::templatize(encoded_string)?;
-
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use crate::reader::Pos;
@@ -433,19 +377,6 @@ mod tests {
 
     #[test]
     fn test_multiline_string_empty() {
-        let mut reader = Reader::new("``````");
-        assert_eq!(
-            multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                kind: MultilineStringKind::OneLineText(Template {
-                    delimiter: None,
-                    elements: vec![],
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
-                }),
-                attributes: vec![]
-            }
-        );
-
         let mut reader = Reader::new("```\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
@@ -493,39 +424,14 @@ mod tests {
     }
 
     #[test]
-    fn test_multiline_string_hello() {
+    fn test_multiline_string_hello_error() {
         let mut reader = Reader::new("```Hello World!```");
+        let error = multiline_string(&mut reader).unwrap_err();
+        assert_eq!(error.pos, Pos::new(1, 4));
         assert_eq!(
-            multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                kind: MultilineStringKind::OneLineText(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "Hello World!".to_string(),
-                        encoded: "Hello World!".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 16)),
-                }),
-                attributes: vec![]
-            }
-        );
-    }
-
-    #[test]
-    fn test_multiline_string_base64_prefix() {
-        let mut reader = Reader::new("```base64_inline```");
-        assert_eq!(
-            multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                kind: MultilineStringKind::OneLineText(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
-                        value: "base64_inline".to_string(),
-                        encoded: "base64_inline".to_string(),
-                    }],
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 17)),
-                }),
-                attributes: vec![]
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: "newline".to_string()
             }
         );
     }
@@ -630,17 +536,22 @@ mod tests {
 
         let mut reader = Reader::new("```\nxxx");
         let error = multiline_string(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 4 });
-        assert_eq!(error.kind, ParseErrorKind::Multiline);
-        assert!(!error.recoverable);
-
-        let mut reader = Reader::new("```xxx");
-        let error = multiline_string(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 7 });
+        assert_eq!(error.pos, Pos { line: 2, column: 4 });
         assert_eq!(
             error.kind,
             ParseErrorKind::Expecting {
                 value: "```".to_string()
+            }
+        );
+        assert!(!error.recoverable);
+
+        let mut reader = Reader::new("```xxx");
+        let error = multiline_string(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 4 });
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: "newline".to_string()
             }
         );
         assert!(!error.recoverable);

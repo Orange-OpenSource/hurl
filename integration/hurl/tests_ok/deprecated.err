@@ -1,3 +1,1 @@
 warning: tests_ok/deprecated.hurl:3:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
-warning: tests_ok/deprecated.hurl:7:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
-warning: tests_ok/deprecated.hurl:8:4 '```Hello World!```' response body is deprecated, please use '`Hello World!`' instead

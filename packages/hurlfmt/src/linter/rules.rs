@@ -439,13 +439,6 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
 fn lint_multiline_string(multiline_string: &MultilineString) -> MultilineString {
     match multiline_string {
         MultilineString {
-            kind: MultilineStringKind::OneLineText(value),
-            attributes,
-        } => MultilineString {
-            kind: MultilineStringKind::OneLineText(lint_template(value)),
-            attributes: lint_multiline_string_attributes(attributes),
-        },
-        MultilineString {
             kind: MultilineStringKind::Text(value),
             attributes,
         } => MultilineString {

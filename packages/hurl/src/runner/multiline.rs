@@ -31,13 +31,6 @@ pub fn eval_multiline(
 ) -> Result<String, RunnerError> {
     match multiline {
         MultilineString {
-            kind: MultilineStringKind::OneLineText(value),
-            ..
-        } => {
-            let s = eval_template(value, variables)?;
-            Ok(s)
-        }
-        MultilineString {
             kind: MultilineStringKind::Text(Text { value, .. }),
             ..
         }

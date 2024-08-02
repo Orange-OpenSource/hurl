@@ -554,18 +554,6 @@ impl HtmlFormatter {
     }
 
     fn fmt_multiline_string(&mut self, multiline_string: &MultilineString, as_body: bool) {
-        if let MultilineStringKind::OneLineText(line) = &multiline_string.kind {
-            let line = format!("```{line}```");
-            if as_body {
-                self.fmt_span_open("multiline");
-                self.fmt_span("line", &line);
-                self.fmt_span_close();
-            } else {
-                self.fmt_span("multiline", &line);
-            }
-            return;
-        }
-
         // The multiline spans multiple newlines. We distinguish cases for multiline
         // as a body and multiline as a predicate value. When used as a body, we can embed
         // span lines with the multiline span. Used as a predicate, we have to break the multiline
@@ -906,51 +894,6 @@ mod tests {
 
     #[test]
     fn test_multiline_string() {
-        // ``````
-        let kind = MultilineStringKind::OneLineText(Template {
-            delimiter: None,
-            elements: vec![TemplateElement::String {
-                value: String::new(),
-                encoded: "unused".to_string(),
-            }],
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        });
-        let attributes = vec![];
-        let multiline_string = MultilineString { kind, attributes };
-        let mut fmt = HtmlFormatter::new();
-        fmt.fmt_multiline_string(&multiline_string, false);
-        assert_eq!(fmt.buffer, "<span class=\"multiline\">``````</span>");
-        let mut fmt = HtmlFormatter::new();
-        fmt.fmt_multiline_string(&multiline_string, true);
-        assert_eq!(
-            fmt.buffer,
-            "<span class=\"multiline\">\
-                <span class=\"line\">``````</span>\
-            </span>"
-        );
-
-        // ```hello```
-        let kind = MultilineStringKind::OneLineText(Template {
-            delimiter: None,
-            elements: vec![TemplateElement::String {
-                value: "hello".to_string(),
-                encoded: "unused".to_string(),
-            }],
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        });
-        let attributes = vec![];
-        let multiline_string = MultilineString { kind, attributes };
-        let mut fmt = HtmlFormatter::new();
-        fmt.fmt_multiline_string(&multiline_string, false);
-        assert_eq!(fmt.buffer, "<span class=\"multiline\">```hello```</span>");
-        let mut fmt = HtmlFormatter::new();
-        fmt.fmt_multiline_string(&multiline_string, true);
-        assert_eq!(
-            fmt.buffer,
-            "<span class=\"multiline\">\
-                <span class=\"line\">```hello```</span>\
-            </span>"
-        );
         // ```
         // line1
         // line2

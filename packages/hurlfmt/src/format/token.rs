@@ -637,21 +637,8 @@ impl Tokenizable for PredicateValue {
 impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::StringDelimiter("```".to_string())];
-        // FIXME: ugly if !let workaround, will be removed soon as
-        // OneLineText is temporary.
-        if let MultilineString {
-            kind: MultilineStringKind::OneLineText(..),
-            ..
-        } = self
-        {
-        } else {
-            tokens.push(Token::Lang(self.lang().to_string()));
-        }
+        tokens.push(Token::Lang(self.lang().to_string()));
         match self {
-            MultilineString {
-                kind: MultilineStringKind::OneLineText(template),
-                ..
-            } => tokens.append(&mut template.tokenize()),
             MultilineString {
                 kind: MultilineStringKind::Text(text),
                 ..

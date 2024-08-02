@@ -148,7 +148,6 @@ impl fmt::Display for Regex {
 impl fmt::Display for MultilineString {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let body = match &self.kind {
-            MultilineStringKind::OneLineText(template) => template.to_string(),
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
             | MultilineStringKind::Xml(text) => text.value.to_string(),
