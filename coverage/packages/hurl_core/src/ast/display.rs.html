@@ -592,8 +592,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="11655">
-                11655
+                role="cell" aria-label="11660">
+                11660
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -608,8 +608,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="11655">
-                11655
+                role="cell" aria-label="11660">
+                11660
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -688,8 +688,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="11445">
-                11445
+                role="cell" aria-label="11450">
+                11450
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -736,8 +736,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="11655">
-                11655
+                role="cell" aria-label="11660">
+                11660
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let body = match self {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let body = match &amp;self.kind {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            MultilineString::OneLineText(template) =&gt; template.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            MultilineStringKind::OneLineText(template) =&gt; template.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            MultilineString::Text(text)</pre>
+                <pre class="has-background-success-light py-0 px-2">            MultilineStringKind::Text(text)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            | MultilineString::Json(text)</pre>
+                <pre class="has-background-success-light py-0 px-2">            | MultilineStringKind::Json(text)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2501,7 +2501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            | MultilineString::Xml(text) =&gt; text.value.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            | MultilineStringKind::Xml(text) =&gt; text.value.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,7 +2517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            MultilineString::GraphQl(graphql) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            MultilineStringKind::GraphQl(graphql) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6203,7 +6203,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-08-01 08:09</p>
+                <p class="heading">Date: 2024-08-02 08:09</p>
             </div>
         </footer>
     </body>
