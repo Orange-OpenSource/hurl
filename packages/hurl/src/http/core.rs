@@ -76,11 +76,11 @@ impl fmt::Display for Cookie {
     /// > From left-to-right, here is what each field represents:
     /// > - domain - The domain that created AND that can read the variable.
     /// > - flag - A TRUE/FALSE value indicating if all machines within a given domain can access
-    /// > the variable. This value is set automatically by the browser, depending on the value you
-    /// > set for domain.
+    /// >   the variable. This value is set automatically by the browser, depending on the value you
+    /// >   set for domain.
     /// > - path - The path within the domain that the variable is valid for.
     /// > - secure - A TRUE/FALSE value indicating if a secure connection with the domain is
-    /// > needed to access the variable.
+    /// >   needed to access the variable.
     /// > - expiration - The UNIX time that the variable will expire on. UNIX time is defined as the
     /// > - number of seconds since Jan 1, 1970 00:00:00 GMT.
     /// > - name - The name of the variable.

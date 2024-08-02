@@ -158,7 +158,7 @@ impl HtmlFormatter {
     }
 
     fn fmt_status(&mut self, status: &Status) {
-        self.fmt_number(&status.value.to_string());
+        self.fmt_number(status.value.to_string());
     }
 
     fn fmt_section(&mut self, section: &Section) {
