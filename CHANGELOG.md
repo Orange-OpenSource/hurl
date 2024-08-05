@@ -10,6 +10,12 @@ Thanks to
 [@nkback](https://github.com/nkback),
 [@claytonneal](https://github.com/claytonneal),
 
+
+Breaking Changes:
+
+* Encode oneline string only with one backtick [#3113](https://github.com/Orange-OpenSource/hurl/issues/3113)
+
+
 Enhancements:
 
 * Create intermediary directories if necessary when producing TAP report [#2860](https://github.com/Orange-OpenSource/hurl/issues/2860)
