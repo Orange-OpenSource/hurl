@@ -260,7 +260,7 @@ jobs:
           fi
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4.3.4
+        uses: actions/upload-artifact@v4.3.5
         if: ${{ always() }}
         with:
           name: release-changelog
