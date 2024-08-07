@@ -5,7 +5,7 @@
 * Executing entry 1
 *
 * Entry options:
-* delay: 5000
+* delay: 5000ms
 *
 * Delay entry 1 (pause 5000 ms)
 *
@@ -39,7 +39,7 @@
 * Executing entry 1
 *
 * Entry options:
-* delay: 5000
+* delay: 5000ms
 *
 * Delay entry 1 (pause 5000 ms)
 *
@@ -73,7 +73,7 @@
 * Executing entry 1
 *
 * Entry options:
-* delay: 5000
+* delay: 5000ms
 *
 * Delay entry 1 (pause 5000 ms)
 *
@@ -107,7 +107,7 @@
 * Executing entry 1
 *
 * Entry options:
-* delay: 5000
+* delay: 5000ms
 *
 * Delay entry 1 (pause 5000 ms)
 *

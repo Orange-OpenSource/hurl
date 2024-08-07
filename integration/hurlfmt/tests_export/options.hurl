@@ -8,6 +8,8 @@ key: keyfile
 compressed: false
 connect-to: example.com:443:example.net:8443
 delay: 1000
+delay: 1000ms
+delay: 1s
 location: false
 location-trusted: false
 http1.0: false
@@ -31,6 +33,8 @@ retry: 0
 retry: -1
 retry: 4
 retry-interval: 1000
+retry-interval: 1000ms
+retry-interval: 1s
 skip: false
 unix-socket: build/unix_socket.sock
 user: bob:secret

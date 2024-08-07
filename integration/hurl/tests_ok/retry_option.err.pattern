@@ -32,7 +32,7 @@
 *
 * Entry options:
 * retry: 10
-* retry-interval: 100
+* retry-interval: 100ms
 *
 * Cookie store:
 *

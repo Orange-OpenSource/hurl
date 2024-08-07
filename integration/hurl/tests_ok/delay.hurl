@@ -18,7 +18,7 @@ HTTP 200
 GET http://localhost:8000/delay-and-retry
 [Options]
 retry: 10
-retry-interval: 10
+retry-interval: 10ms
 HTTP 200
 [Asserts]
 body toInt > 5 # Trigger a retry for 5 requests

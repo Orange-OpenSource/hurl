@@ -3,7 +3,7 @@
 *
 * Entry options:
 * retry: 2
-* retry-interval: 0
+* retry-interval: 0ms
 *
 * Cookie store:
 *

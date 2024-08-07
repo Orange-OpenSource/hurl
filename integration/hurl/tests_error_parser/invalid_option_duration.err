@@ -1,0 +1,7 @@
+error: Parsing duration
+  --> tests_error_parser/invalid_option_duration.hurl:3:10
+   |
+ 3 | delay: 10mms
+   |          ^ the duration unit is not valid. Did you mean ms?
+   |
+
