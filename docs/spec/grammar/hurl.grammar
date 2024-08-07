@@ -163,7 +163,7 @@ compressed-option: "compressed" ":" boolean-option lt
 
 connect-to-option: "connect-to" ":" value-string lt
 
-delay-option: "delay" ":" integer-option lt
+delay-option: "delay" ":" duration-option lt
 
 follow-redirect-option: "location" ":" boolean-option lt
 
@@ -203,7 +203,7 @@ repeat-option: "repeat" ":" integer-option lt
 
 retry-option: "retry" ":" integer-option lt
 
-retry-interval-option: "retry-interval" ":" integer-option lt
+retry-interval-option: "retry-interval" ":" duration-option lt
 
 skip-option: "skip" ":" boolean-option lt
 
@@ -222,6 +222,10 @@ variable-definition: variable-name "=" variable-value
 boolean-option: boolean | template
 
 integer-option: integer | template
+
+duration-option: (integer duration-unit?)  | template
+
+duration-unit: "ms" | "s"
 
 variable-value:
     null

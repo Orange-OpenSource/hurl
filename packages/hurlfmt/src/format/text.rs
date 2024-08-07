@@ -121,5 +121,6 @@ pub fn format_token(token: Token, color: bool) -> String {
             }
         }
         Token::Lang(value) => value,
+        Token::Unit(value) => value,
     }
 }

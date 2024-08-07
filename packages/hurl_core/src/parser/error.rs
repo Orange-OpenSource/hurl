@@ -41,6 +41,7 @@ pub enum ParseErrorKind {
     GraphQlVariables,
     HexDigit,
     InvalidCookieAttribute,
+    InvalidDurationUnit(String),
     InvalidOption(String),
     Json(JsonErrorVariant),
     JsonPathExpr,
@@ -103,6 +104,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::HexDigit => "Parsing hexadecimal number".to_string(),
             ParseErrorKind::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
             ParseErrorKind::InvalidOption(_) => "Parsing option".to_string(),
+            ParseErrorKind::InvalidDurationUnit(_) => "Parsing duration".to_string(),
             ParseErrorKind::Json(_) => "Parsing JSON".to_string(),
             ParseErrorKind::JsonPathExpr => "Parsing JSONPath expression".to_string(),
             ParseErrorKind::Method { .. } => "Parsing method".to_string(),
@@ -143,6 +145,12 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::HexDigit => "expecting a valid hexadecimal number".to_string(),
             ParseErrorKind::InvalidCookieAttribute => {
                 "the cookie attribute is not valid".to_string()
+            }
+            ParseErrorKind::InvalidDurationUnit(name) => {
+                let valid_values = ["ms", "s"];
+                let default = format!("Valid values are {}", valid_values.join(", "));
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
+                format!("the duration unit is not valid. {did_you_mean}")
             }
             ParseErrorKind::InvalidOption(name) => {
                 let valid_values = [

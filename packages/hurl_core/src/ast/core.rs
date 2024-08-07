@@ -17,7 +17,7 @@
  */
 use crate::ast::json;
 use crate::reader::Pos;
-use crate::typing::Count;
+use crate::typing::{Count, Duration};
 
 ///
 /// Hurl AST
@@ -718,7 +718,7 @@ pub enum OptionKind {
     ClientKey(Template),
     Compressed(BooleanOption),
     ConnectTo(Template),
-    Delay(NaturalOption),
+    Delay(DurationOption),
     Http10(BooleanOption),
     Http11(BooleanOption),
     Http2(BooleanOption),
@@ -738,7 +738,7 @@ pub enum OptionKind {
     Repeat(CountOption),
     Resolve(Template),
     Retry(CountOption),
-    RetryInterval(NaturalOption),
+    RetryInterval(DurationOption),
     Skip(BooleanOption),
     UnixSocket(Template),
     User(Template),
@@ -842,6 +842,12 @@ pub enum NaturalOption {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CountOption {
     Literal(Count),
+    Expression(Expr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum DurationOption {
+    Literal(Duration),
     Expression(Expr),
 }
 

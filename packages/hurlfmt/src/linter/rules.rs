@@ -18,6 +18,7 @@
 use crate::linter::{LinterError, LinterErrorKind};
 use hurl_core::ast::*;
 use hurl_core::reader::Pos;
+use hurl_core::typing::{Duration, DurationUnit};
 
 /// Returns lint errors for the `hurl_file`.
 pub fn check_hurl_file(hurl_file: &HurlFile) -> Vec<LinterError> {
@@ -668,7 +669,44 @@ fn lint_template(template: &Template) -> Template {
 }
 
 fn lint_entry_option(entry_option: &EntryOption) -> EntryOption {
-    entry_option.clone()
+    EntryOption {
+        line_terminators: entry_option.line_terminators.clone(),
+        space0: empty_whitespace(),
+        space1: empty_whitespace(),
+        space2: one_whitespace(),
+        kind: lint_option_kind(&entry_option.kind),
+        line_terminator0: entry_option.line_terminator0.clone(),
+    }
+}
+
+fn lint_option_kind(option_kind: &OptionKind) -> OptionKind {
+    match option_kind {
+        OptionKind::Delay(duration) => {
+            OptionKind::Delay(lint_duration_option(duration, DurationUnit::MilliSecond))
+        }
+        OptionKind::RetryInterval(duration) => {
+            OptionKind::RetryInterval(lint_duration_option(duration, DurationUnit::MilliSecond))
+        }
+        _ => option_kind.clone(),
+    }
+}
+
+fn lint_duration_option(
+    duration_option: &DurationOption,
+    default_unit: DurationUnit,
+) -> DurationOption {
+    match duration_option {
+        DurationOption::Literal(duration) => {
+            DurationOption::Literal(lint_duration(duration, default_unit))
+        }
+        DurationOption::Expression(expr) => DurationOption::Expression(expr.clone()),
+    }
+}
+
+fn lint_duration(duration: &Duration, default_unit: DurationUnit) -> Duration {
+    let value = duration.value;
+    let unit = Some(duration.unit.unwrap_or(default_unit));
+    Duration { value, unit }
 }
 
 fn lint_filter(filter: &Filter) -> Filter {

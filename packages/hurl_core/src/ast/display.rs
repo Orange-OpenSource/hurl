@@ -204,6 +204,15 @@ impl fmt::Display for CountOption {
     }
 }
 
+impl fmt::Display for DurationOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            DurationOption::Literal(v) => write!(f, "{}", v),
+            DurationOption::Expression(v) => write!(f, "{}", v),
+        }
+    }
+}
+
 impl fmt::Display for VariableDefinition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}={}", self.name, self.value)

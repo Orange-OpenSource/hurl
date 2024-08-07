@@ -221,7 +221,7 @@ impl HtmlFormatter {
             OptionKind::ClientKey(filename) => self.fmt_filename(filename),
             OptionKind::Compressed(value) => self.fmt_bool_option(value),
             OptionKind::ConnectTo(value) => self.fmt_template(value),
-            OptionKind::Delay(value) => self.fmt_natural_option(value),
+            OptionKind::Delay(value) => self.fmt_duration_option(value),
             OptionKind::FollowLocation(value) => self.fmt_bool_option(value),
             OptionKind::FollowLocationTrusted(value) => self.fmt_bool_option(value),
             OptionKind::Http10(value) => self.fmt_bool_option(value),
@@ -241,7 +241,7 @@ impl HtmlFormatter {
             OptionKind::Repeat(value) => self.fmt_count_option(value),
             OptionKind::Resolve(value) => self.fmt_template(value),
             OptionKind::Retry(value) => self.fmt_count_option(value),
-            OptionKind::RetryInterval(value) => self.fmt_natural_option(value),
+            OptionKind::RetryInterval(value) => self.fmt_duration_option(value),
             OptionKind::Skip(value) => self.fmt_bool_option(value),
             OptionKind::UnixSocket(value) => self.fmt_template(value),
             OptionKind::User(value) => self.fmt_template(value),
@@ -687,10 +687,15 @@ impl HtmlFormatter {
         }
     }
 
-    fn fmt_natural_option(&mut self, value: &NaturalOption) {
+    fn fmt_duration_option(&mut self, value: &DurationOption) {
         match value {
-            NaturalOption::Literal(value) => self.fmt_span("number", &value.to_string()),
-            NaturalOption::Expression(value) => self.fmt_expr(value),
+            DurationOption::Literal(value) => {
+                self.fmt_span("number", &value.value.to_string());
+                if let Some(unit) = value.unit {
+                    self.fmt_span("unit", &unit.to_string());
+                }
+            }
+            DurationOption::Expression(value) => self.fmt_expr(value),
         }
     }
 

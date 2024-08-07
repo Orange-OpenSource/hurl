@@ -17,8 +17,9 @@
  */
 use crate::ast::*;
 use crate::combinator::{choice, non_recover};
+use crate::parser::duration::duration;
 use crate::parser::error::*;
-use crate::parser::number::{integer, natural, number};
+use crate::parser::number::{integer, number};
 use crate::parser::primitives::*;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
@@ -118,7 +119,7 @@ fn option_connect_to(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = natural_option(reader)?;
+    let value = duration_option(reader)?;
     Ok(OptionKind::Delay(value))
 }
 
@@ -223,7 +224,7 @@ fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = non_recover(natural_option, reader)?;
+    let value = non_recover(duration_option, reader)?;
     Ok(OptionKind::RetryInterval(value))
 }
 
@@ -289,23 +290,6 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
     }
 }
 
-fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
-    let start = reader.cursor();
-    match natural(reader) {
-        Ok(v) => Ok(NaturalOption::Literal(v)),
-        Err(_) => {
-            reader.seek(start);
-            let exp = expr::parse(reader).map_err(|e| {
-                let kind = ParseErrorKind::Expecting {
-                    value: "integer".to_string(),
-                };
-                ParseError::new(e.pos, false, kind)
-            })?;
-            Ok(NaturalOption::Expression(exp))
-        }
-    }
-}
-
 fn count_option(reader: &mut Reader) -> ParseResult<CountOption> {
     let start = reader.cursor();
     match count(reader) {
@@ -319,6 +303,27 @@ fn count_option(reader: &mut Reader) -> ParseResult<CountOption> {
                 ParseError::new(e.pos, false, kind)
             })?;
             Ok(CountOption::Expression(exp))
+        }
+    }
+}
+
+fn duration_option(reader: &mut Reader) -> ParseResult<DurationOption> {
+    let start = reader.cursor();
+    match duration(reader) {
+        Ok(v) => Ok(DurationOption::Literal(v)),
+        Err(e) => {
+            if e.recoverable {
+                reader.seek(start);
+                let exp = expr::parse(reader).map_err(|e| {
+                    let kind = ParseErrorKind::Expecting {
+                        value: "integer".to_string(),
+                    };
+                    ParseError::new(e.pos, false, kind)
+                })?;
+                Ok(DurationOption::Expression(exp))
+            } else {
+                Err(e)
+            }
         }
     }
 }

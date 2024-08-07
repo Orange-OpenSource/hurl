@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::ast::*;
-use hurl_core::typing::Count;
+use hurl_core::typing::{Count, Duration};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -42,6 +42,7 @@ pub enum Token {
     CodeDelimiter(String),
     CodeVariable(String),
     Lang(String),
+    Unit(String),
 }
 
 pub trait Tokenizable {
@@ -971,6 +972,25 @@ impl Tokenizable for Count {
             Count::Finite(n) => vec![Token::Number(n.to_string())],
             Count::Infinite => vec![Token::Number("-1".to_string())],
         }
+    }
+}
+
+impl Tokenizable for DurationOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            DurationOption::Literal(value) => value.tokenize(),
+            DurationOption::Expression(expr) => expr.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for Duration {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens = vec![Token::Number(self.value.to_string())];
+        if let Some(unit) = self.unit {
+            tokens.push(Token::Unit(unit.to_string()));
+        }
+        tokens
     }
 }
 

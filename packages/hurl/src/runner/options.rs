@@ -16,13 +16,12 @@
  *
  */
 use std::collections::HashMap;
-use std::time::Duration;
 
 use hurl_core::ast::{
-    BooleanOption, CountOption, Entry, EntryOption, Float, NaturalOption, Number as AstNumber,
+    BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, Number as AstNumber,
     OptionKind, SectionValue, VariableDefinition, VariableValue,
 };
-use hurl_core::typing::Count;
+use hurl_core::typing::{Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
@@ -82,8 +81,9 @@ pub fn get_entry_options(
                         entry_options.connects_to.push(value);
                     }
                     OptionKind::Delay(value) => {
-                        let value = eval_natural_option(value, variables)?;
-                        entry_options.delay = Duration::from_millis(value);
+                        let value =
+                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                        entry_options.delay = value;
                     }
                     // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
                     // through a flag. In an `[Options]` section, the signification of such a flag is:
@@ -212,8 +212,9 @@ pub fn get_entry_options(
                         entry_options.retry = Some(value);
                     }
                     OptionKind::RetryInterval(value) => {
-                        let value = eval_natural_option(value, variables)?;
-                        entry_options.retry_interval = Duration::from_millis(value);
+                        let value =
+                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                        entry_options.retry_interval = value;
                     }
                     OptionKind::Skip(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -320,37 +321,6 @@ fn eval_boolean_option(
     }
 }
 
-fn eval_natural_option(
-    natural_value: &NaturalOption,
-    variables: &HashMap<String, Value>,
-) -> Result<u64, RunnerError> {
-    match natural_value {
-        NaturalOption::Literal(value) => Ok(*value),
-        NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
-            Value::Number(Number::Integer(value)) => {
-                if value < 0 {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
-                        value: format!("integer <{value}>"),
-                        expecting: "positive integer".to_string(),
-                    };
-                    Err(RunnerError::new(expr.variable.source_info, kind, false))
-                } else {
-                    Ok(value as u64)
-                }
-            }
-            v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
-                    value: v.format(),
-                    expecting: "positive integer".to_string(),
-                };
-                Err(RunnerError::new(expr.variable.source_info, kind, false))
-            }
-        },
-    }
-}
-
 fn eval_count_option(
     count_value: &CountOption,
     variables: &HashMap<String, Value>,
@@ -384,6 +354,50 @@ fn eval_count_option(
     }
 }
 
+/// return duration value in milliseconds
+fn eval_duration_option(
+    duration_value: &DurationOption,
+    variables: &HashMap<String, Value>,
+    default_unit: DurationUnit,
+) -> Result<std::time::Duration, RunnerError> {
+    let millis = match duration_value {
+        DurationOption::Literal(value) => {
+            let unit = value.unit.unwrap_or(default_unit);
+
+            match unit {
+                DurationUnit::MilliSecond => value.value,
+                DurationUnit::Second => value.value * 1000,
+            }
+        }
+        DurationOption::Expression(expr) => match eval_expression(expr, variables)? {
+            Value::Number(Number::Integer(value)) => {
+                if value < 0 {
+                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                        name: expr.variable.name.clone(),
+                        value: format!("integer <{value}>"),
+                        expecting: "positive integer".to_string(),
+                    };
+                    return Err(RunnerError::new(expr.variable.source_info, kind, false));
+                } else {
+                    match default_unit {
+                        DurationUnit::MilliSecond => value as u64,
+                        DurationUnit::Second => (value * 1000) as u64,
+                    }
+                }
+            }
+            v => {
+                let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                    name: expr.variable.name.clone(),
+                    value: v.format(),
+                    expecting: "positive integer".to_string(),
+                };
+                return Err(RunnerError::new(expr.variable.source_info, kind, false));
+            }
+        },
+    };
+    Ok(std::time::Duration::from_millis(millis))
+}
+
 fn eval_variable_value(
     variable_value: &VariableValue,
     variables: &mut HashMap<String, Value>,
@@ -411,6 +425,7 @@ fn eval_number(number: &AstNumber) -> Value {
 mod tests {
     use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
+    use hurl_core::typing::{Duration, DurationUnit};
 
     use super::*;
     use crate::runner::RunnerErrorKind;
@@ -433,9 +448,9 @@ mod tests {
         })
     }
 
-    fn retry_option_template() -> NaturalOption {
+    fn retry_option_template() -> DurationOption {
         // {{retry}}
-        NaturalOption::Expression(Expr {
+        DurationOption::Expression(Expr {
             space0: Whitespace {
                 value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -492,14 +507,24 @@ mod tests {
     fn test_eval_natural_option() {
         let mut variables = HashMap::default();
         assert_eq!(
-            eval_natural_option(&NaturalOption::Literal(1), &variables).unwrap(),
-            1
+            eval_duration_option(
+                &DurationOption::Literal(Duration::new(1, Some(DurationUnit::Second))),
+                &variables,
+                DurationUnit::MilliSecond
+            )
+            .unwrap(),
+            std::time::Duration::from_millis(1000)
         );
 
         variables.insert("retry".to_string(), Value::Number(Number::Integer(10)));
         assert_eq!(
-            eval_natural_option(&retry_option_template(), &variables).unwrap(),
-            10
+            eval_duration_option(
+                &retry_option_template(),
+                &variables,
+                DurationUnit::MilliSecond
+            )
+            .unwrap(),
+            std::time::Duration::from_millis(10)
         );
     }
 }

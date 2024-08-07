@@ -18,7 +18,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
-use hurl_core::typing::Count;
+use hurl_core::typing::{Count, Duration};
 
 use super::serialize_json::*;
 
@@ -297,13 +297,6 @@ impl ToJson for Cookie {
 
 impl ToJson for EntryOption {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-
-        let name = "name".to_string();
-        let value = JValue::String(self.kind.name().to_string());
-        attributes.push((name, value));
-
-        let name = "value".to_string();
         let value = match &self.kind {
             OptionKind::AwsSigV4(value) => JValue::String(value.to_string()),
             OptionKind::CaCertificate(filename) => JValue::String(filename.to_string()),
@@ -341,8 +334,25 @@ impl ToJson for EntryOption {
             OptionKind::Verbose(value) => value.to_json(),
             OptionKind::VeryVerbose(value) => value.to_json(),
         };
-        attributes.push((name, value));
 
+        // If the value contains the unit such as `{ "value": 10, "unit": "second" }`
+        // The JSON for this option should still have one level
+        // for example: { "name": "delay", "value": 10, "unit", "second" }
+        let attributes = if let JValue::Object(mut attributes) = value {
+            attributes.push((
+                "name".to_string(),
+                JValue::String(self.kind.name().to_string()),
+            ));
+            attributes
+        } else {
+            vec![
+                (
+                    "name".to_string(),
+                    JValue::String(self.kind.name().to_string()),
+                ),
+                ("value".to_string(), value),
+            ]
+        };
         JValue::Object(attributes)
     }
 }
@@ -352,15 +362,6 @@ impl ToJson for BooleanOption {
         match self {
             BooleanOption::Literal(value) => JValue::Boolean(*value),
             BooleanOption::Expression(expr) => expr.to_json(),
-        }
-    }
-}
-
-impl ToJson for NaturalOption {
-    fn to_json(&self) -> JValue {
-        match self {
-            NaturalOption::Literal(value) => JValue::Number(value.to_string()),
-            NaturalOption::Expression(expr) => expr.to_json(),
         }
     }
 }
@@ -379,6 +380,28 @@ impl ToJson for Count {
         match self {
             Count::Finite(n) => JValue::Number(n.to_string()),
             Count::Infinite => JValue::Number("-1".to_string()),
+        }
+    }
+}
+
+impl ToJson for DurationOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            DurationOption::Literal(value) => value.to_json(),
+            DurationOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
+
+impl ToJson for Duration {
+    fn to_json(&self) -> JValue {
+        if let Some(unit) = self.unit {
+            let mut attributes =
+                vec![("value".to_string(), JValue::Number(self.value.to_string()))];
+            attributes.push(("unit".to_string(), JValue::String(unit.to_string())));
+            JValue::Object(attributes)
+        } else {
+            JValue::Number(self.value.to_string())
         }
     }
 }
