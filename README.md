@@ -47,7 +47,7 @@ Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
-<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="/docs/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+<a href="https://hurl.dev/player.html?id=starwars&speed=3"><img src="/docs/assets/img/poster-starwars.png" width="100%" alt="Hurl Demo"/></a>
 
 
 It is well adapted for <b>REST / JSON APIs</b>

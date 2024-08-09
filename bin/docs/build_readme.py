@@ -96,9 +96,9 @@ def replace(text: str, dest: str) -> str:
         ),
         (
             """<div id="home-demo"></div>""",
-            """<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="/docs/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+            """<a href="https://hurl.dev/player.html?id=starwars&speed=3"><img src="/docs/assets/img/poster-starwars.png" width="100%" alt="Hurl Demo"/></a>
 """,
-            """<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="https://hurl.dev/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+            """<a href="https://hurl.dev/player.html?id=starwars&speed=3"><img src="https://hurl.dev/assets/img/poster-starwars.png" width="100%" alt="Hurl Demo"/></a>
 """,
         ),
         (
