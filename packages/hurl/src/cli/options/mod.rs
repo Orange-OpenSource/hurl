@@ -16,6 +16,7 @@
  *
  */
 mod commands;
+mod duration;
 mod error;
 mod matches;
 mod variables;
@@ -261,12 +262,12 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let client_key_file = matches::client_key_file(arg_matches)?;
     let color = matches::color(arg_matches);
     let compressed = matches::compressed(arg_matches);
-    let connect_timeout = matches::connect_timeout(arg_matches);
+    let connect_timeout = matches::connect_timeout(arg_matches)?;
     let connects_to = matches::connects_to(arg_matches);
     let continue_on_error = matches::continue_on_error(arg_matches);
     let cookie_input_file = matches::cookie_input_file(arg_matches);
     let cookie_output_file = matches::cookie_output_file(arg_matches);
-    let delay = matches::delay(arg_matches);
+    let delay = matches::delay(arg_matches)?;
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
@@ -296,11 +297,11 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let repeat = matches::repeat(arg_matches);
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
-    let retry_interval = matches::retry_interval(arg_matches);
+    let retry_interval = matches::retry_interval(arg_matches)?;
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
     let tap_file = matches::tap_file(arg_matches);
     let test = matches::test(arg_matches);
-    let timeout = matches::timeout(arg_matches);
+    let timeout = matches::timeout(arg_matches)?;
     let to_entry = matches::to_entry(arg_matches);
     let unix_socket = matches::unix_socket(arg_matches);
     let user = matches::user(arg_matches);

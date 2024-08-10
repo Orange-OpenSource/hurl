@@ -79,7 +79,6 @@ pub fn connect_timeout() -> clap::Arg {
         .long("connect-timeout")
         .value_name("SECONDS")
         .default_value("300")
-        .value_parser(clap::value_parser!(u64))
         .help("Maximum time allowed for connection")
         .num_args(1)
 }
@@ -123,7 +122,6 @@ pub fn delay() -> clap::Arg {
         .long("delay")
         .value_name("MILLISECONDS")
         .default_value("0")
-        .value_parser(clap::value_parser!(u64))
         .help("Sets delay before each request")
         .num_args(1)
 }
@@ -307,7 +305,6 @@ pub fn max_time() -> clap::Arg {
         .short('m')
         .value_name("SECONDS")
         .default_value("300")
-        .value_parser(clap::value_parser!(u64))
         .help("Maximum time allowed for the transfer")
         .num_args(1)
 }
@@ -461,7 +458,6 @@ pub fn retry_interval() -> clap::Arg {
         .long("retry-interval")
         .value_name("MILLISECONDS")
         .default_value("1000")
-        .value_parser(clap::value_parser!(u64))
         .help("Interval in milliseconds before a retry")
         .num_args(1)
 }

@@ -25,10 +25,10 @@ use std::{env, fs, io};
 use clap::ArgMatches;
 use hurl::runner::Value;
 use hurl_core::input::Input;
-use hurl_core::typing::Count;
+use hurl_core::typing::{Count, DurationUnit};
 
 use crate::cli::options::variables::{parse as parse_variable, parse_value};
-use crate::cli::options::CliOptionsError;
+use crate::cli::options::{duration, CliOptionsError};
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 
@@ -101,9 +101,9 @@ pub fn compressed(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "compressed")
 }
 
-pub fn connect_timeout(arg_matches: &ArgMatches) -> Duration {
-    let value = get::<u64>(arg_matches, "connect_timeout").unwrap();
-    Duration::from_secs(value)
+pub fn connect_timeout(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
+    let s = get::<String>(arg_matches, "connect_timeout").unwrap_or_default();
+    get_duration(&s, DurationUnit::Second)
 }
 
 pub fn connects_to(arg_matches: &ArgMatches) -> Vec<String> {
@@ -126,9 +126,9 @@ pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
     get::<String>(arg_matches, "cookies_output_file").map(PathBuf::from)
 }
 
-pub fn delay(arg_matches: &ArgMatches) -> Duration {
-    let millis = get::<u64>(arg_matches, "delay").unwrap();
-    Duration::from_millis(millis)
+pub fn delay(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
+    let s = get::<String>(arg_matches, "delay").unwrap_or_default();
+    get_duration(&s, DurationUnit::MilliSecond)
 }
 
 pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
@@ -387,9 +387,9 @@ pub fn retry(arg_matches: &ArgMatches) -> Option<Count> {
     }
 }
 
-pub fn retry_interval(arg_matches: &ArgMatches) -> Duration {
-    let value = get::<u64>(arg_matches, "retry_interval").unwrap();
-    Duration::from_millis(value)
+pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
+    let s = get::<String>(arg_matches, "retry_interval").unwrap_or_default();
+    get_duration(&s, DurationUnit::MilliSecond)
 }
 
 pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
@@ -404,9 +404,9 @@ pub fn test(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "test")
 }
 
-pub fn timeout(arg_matches: &ArgMatches) -> Duration {
-    let value = get::<u64>(arg_matches, "max_time").unwrap();
-    Duration::from_secs(value)
+pub fn timeout(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
+    let s = get::<String>(arg_matches, "max_time").unwrap_or_default();
+    get_duration(&s, DurationUnit::Second)
 }
 
 pub fn to_entry(arg_matches: &ArgMatches) -> Option<usize> {
@@ -543,6 +543,17 @@ pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+/// Get duration from input string `s` and `default_unit`
+fn get_duration(s: &str, default_unit: DurationUnit) -> Result<Duration, CliOptionsError> {
+    let duration = duration::parse(s).map_err(CliOptionsError::Error)?;
+    let unit = duration.unit.unwrap_or(default_unit);
+    let millis = match unit {
+        DurationUnit::MilliSecond => duration.value,
+        DurationUnit::Second => duration.value * 1000,
+    };
+    Ok(Duration::from_millis(millis))
 }
 
 /// Whether or not this running in a Continuous Integration environment.

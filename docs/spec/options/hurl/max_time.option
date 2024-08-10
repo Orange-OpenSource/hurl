@@ -3,7 +3,6 @@ long: max-time
 short: m
 value: SECONDS
 value_default: 300
-value_parser: clap::value_parser!(u64)
 help: Maximum time allowed for the transfer
 cli_only: true
 ---

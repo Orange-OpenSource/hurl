@@ -21,6 +21,7 @@ use crate::parser::number::natural;
 use crate::parser::ParseResult;
 use crate::reader::Reader;
 use crate::typing::{Duration, DurationUnit};
+use std::str::FromStr;
 
 pub fn duration(reader: &mut Reader) -> ParseResult<Duration> {
     let value = natural(reader)?;
@@ -33,16 +34,15 @@ fn duration_unit(reader: &mut Reader) -> ParseResult<Option<DurationUnit>> {
     let s = reader.read_while(|c| c.is_ascii_alphabetic());
     if s.is_empty() {
         Ok(None)
-    } else if s == "s" {
-        Ok(Some(DurationUnit::Second))
-    } else if s == "ms" {
-        Ok(Some(DurationUnit::MilliSecond))
     } else {
-        Err(ParseError {
-            pos,
-            kind: ParseErrorKind::InvalidDurationUnit(s),
-            recoverable: false,
-        })
+        match DurationUnit::from_str(&s) {
+            Ok(unit) => Ok(Some(unit)),
+            Err(_) => Err(ParseError {
+                pos,
+                kind: ParseErrorKind::InvalidDurationUnit(s),
+                recoverable: false,
+            }),
+        }
     }
 }
 

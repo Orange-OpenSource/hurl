@@ -17,6 +17,7 @@
  */
 //! Hurl common types.
 use core::fmt;
+use std::str::FromStr;
 
 /// Represents a count operation, either finite or infinite.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -74,6 +75,18 @@ impl fmt::Display for DurationUnit {
         match self {
             DurationUnit::MilliSecond => write!(f, "ms"),
             DurationUnit::Second => write!(f, "s"),
+        }
+    }
+}
+
+impl FromStr for DurationUnit {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "s" => Ok(DurationUnit::Second),
+            "ms" => Ok(DurationUnit::MilliSecond),
+            x => Err(format!("Invalid duration unit {x}")),
         }
     }
 }
