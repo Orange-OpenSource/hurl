@@ -2,6 +2,20 @@ error: HTTP connection
   --> tests_failed/timeout.hurl:1:5
    |
  1 | GET http://localhost:8000/timeout
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (28) Operation timed out after <<<.*?>>> milliseconds with 0 bytes received
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (28) Operation timed out after <<<\d\d\d\d>>> milliseconds with 0 bytes received
+   |
+
+error: HTTP connection
+  --> tests_failed/timeout.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/timeout
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (28) Operation timed out after <<<\d\d\d\d>>> milliseconds with 0 bytes received
+   |
+
+error: HTTP connection
+  --> tests_failed/timeout.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/timeout
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (28) Operation timed out after <<<\d\d\d>>> milliseconds with 0 bytes received
    |
 
