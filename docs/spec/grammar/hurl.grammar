@@ -496,9 +496,24 @@ json-number: integer fraction? exponent?
 
 template: "{{" expr "}}"
 
-expr: variable-name (sp filter)*
+expr: (variable-name | function) (sp filter)*
 
 variable-name: [A-Za-z] [A-Za-z_-0-9]*
+
+
+# Function
+
+function: 
+    env-function
+  | now-function
+  | uuid-function
+
+env-function: "getEnv"
+
+now-function: "newDate"
+
+uuid-function: "newUuid"
+
 
 
 # Filter
