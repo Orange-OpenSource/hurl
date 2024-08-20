@@ -176,6 +176,8 @@ Request a compressed response using one of the algorithms br, gzip, deflate and 
 
 Maximum time in seconds that you allow Hurl's connection to take.
 
+You can specify time units in the connect timeout expression. Set Hurl to use a connect timeout of 20 seconds with `--connect-timeout 20s` or set it to 35,000 milliseconds with `--connect-timeout 35000ms`. No spaces allowed.
+
 See also [`-m, --max-time`](#max-time).
 
 ### --connect-to <HOST1:PORT1:HOST2:PORT2> {#connect-to}
@@ -215,6 +217,8 @@ This is a cli-only option.
 ### --delay <MILLISECONDS> {#delay}
 
 Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
+
+You can specify time units in the delay expression. Set Hurl to use a delay of 2 seconds with `--delay 2s` or set it to 500 milliseconds with `--delay 500ms`. No spaces allowed.
 
 ### --error-format <FORMAT> {#error-format}
 
@@ -338,6 +342,8 @@ By default, the limit is set to 50 redirections. Set this option to -1 to make i
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
+You can specify time units in the maximum time expression. Set Hurl to use a maximum time of 20 seconds with `--max-time 20s` or set it to 35,000 milliseconds with `--max-time 35000ms`. No spaces allowed.
+
 See also [`--connect-timeout`](#connect-timeout).
 
 This is a cli-only option.
@@ -450,6 +456,8 @@ Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry hap
 ### --retry-interval <MILLISECONDS> {#retry-interval}
 
 Duration in milliseconds between each retry. Default is 1000 ms.
+
+You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
 
 ### --ssl-no-revoke {#ssl-no-revoke}
 

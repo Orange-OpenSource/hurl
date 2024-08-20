@@ -6,4 +6,6 @@ help: Maximum time allowed for connection
 ---
 Maximum time in seconds that you allow Hurl's connection to take.
 
+You can specify time units in the connect timeout expression. Set Hurl to use a connect timeout of 20 seconds with `--connect-timeout 20s` or set it to 35,000 milliseconds with `--connect-timeout 35000ms`. No spaces allowed.
+
 See also [`-m, --max-time`](#max-time).
