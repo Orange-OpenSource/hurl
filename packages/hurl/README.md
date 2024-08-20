@@ -194,6 +194,7 @@ Table of Contents
          * [Checking Full Body](#checking-full-body)
       * [Reports](#reports)
          * [HTML Report](#html-report)
+         * [JSON Report](#json-report)
          * [JUnit Report](#junit-report)
          * [TAP Report](#tap-report)
          * [JSON Output](#json-output)
@@ -280,6 +281,12 @@ GET https://example.ord/dogs/567
 HTTP 200
 ```
 
+Finally, Hurl can take files as input, or directories. In the latter case, Hurl will search files with `.hurl` extension recursively.
+
+```shell
+$ hurl --test integration/*.hurl
+$ hurl --test .
+```
 
 You can check [Hurl tests suite] for more samples.
 
@@ -827,6 +834,15 @@ $ hurl --test --report-html build/report/ *.hurl
 
 [Doc](https://hurl.dev/docs/running-tests.html#generating-report)
 
+### JSON Report
+
+```shell
+$ hurl --test --report-json build/report/ *.hurl
+```
+
+[Doc](https://hurl.dev/docs/running-tests.html#generating-report)
+
+
 ### JUnit Report
 
 ```shell
@@ -887,6 +903,7 @@ jsonpath "$.state" == "RUNNING"
 GET https://api.example.org/jobs/{{job_id}}
 [Options]
 retry: 10   # maximum number of retry, -1 for unlimited
+retry-interval: 500ms
 HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
@@ -896,13 +913,13 @@ jsonpath "$.state" == "COMPLETED"
 
 ### Delaying Requests
 
-Add delay for every request, or a particular requests:
+Add delay for every request, or a particular request:
 
 ```hurl
-# Delaying this request by 5s
+# Delaying this request by 5 seconds
 GET https://example.org/turtle
 [Options]
-delay: 5000
+delay: 5s
 HTTP 200
 
 # No delay!
