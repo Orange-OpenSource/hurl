@@ -15,112 +15,94 @@
  * limitations under the License.
  *
  */
-use colored::*;
 use hurl_core::ast::*;
+use hurl_core::text::{Format, Style, StyledString};
 
 use crate::format::token::*;
 
-pub fn format(hurl_file: HurlFile, color: bool) -> String {
+pub fn format(hurl_file: &HurlFile, color: bool) -> String {
     let mut buffer = String::new();
-    for token in hurl_file.tokenize() {
+    for token in &hurl_file.tokenize() {
         buffer.push_str(format_token(token, color).as_str());
     }
     buffer
 }
 
-pub fn format_token(token: Token, color: bool) -> String {
+pub fn format_token(token: &Token, color: bool) -> String {
+    let format = if color { Format::Ansi } else { Format::Plain };
+
     match token {
-        Token::Whitespace(value) => value,
+        Token::Whitespace(value) => value.clone(),
         Token::Method(value) => {
-            if color {
-                value.yellow().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().yellow());
+            s.to_string(format)
         }
-        Token::Version(value) => value,
-        Token::Status(value) => value,
+        Token::Version(value) => value.clone(),
+        Token::Status(value) => value.clone(),
         Token::SectionHeader(value) => {
-            if color {
-                value.magenta().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().magenta());
+            s.to_string(format)
         }
         Token::Comment(value) => {
-            if color {
-                value.bright_black().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().bright_black());
+            s.to_string(format)
         }
-        Token::Value(value) => value,
-        Token::Colon(value) => value,
+        Token::Value(value) => value.clone(),
+        Token::Colon(value) => value.clone(),
         Token::QueryType(value) => {
-            if color {
-                value.cyan().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().cyan());
+            s.to_string(format)
         }
         Token::PredicateType(value) => {
-            if color {
-                value.yellow().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().yellow());
+            s.to_string(format)
         }
         Token::Not(value) => {
-            if color {
-                value.yellow().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().yellow());
+            s.to_string(format)
         }
         Token::Boolean(value) | Token::Number(value) => {
-            if color {
-                value.cyan().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().cyan());
+            s.to_string(format)
         }
         Token::String(value) => {
-            if color {
-                value.green().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().green());
+            s.to_string(format)
         }
         Token::StringDelimiter(value) => {
-            if color {
-                value.green().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().green());
+            s.to_string(format)
         }
         Token::CodeDelimiter(value) => {
-            if color {
-                value.green().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().green());
+            s.to_string(format)
         }
         Token::CodeVariable(value) => {
-            if color {
-                value.green().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().green());
+            s.to_string(format)
         }
-        Token::Keyword(value) => value,
+        Token::Keyword(value) => value.clone(),
         Token::FilterType(value) => {
-            if color {
-                value.cyan().to_string()
-            } else {
-                value
-            }
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().cyan());
+            s.to_string(format)
         }
-        Token::Lang(value) => value,
-        Token::Unit(value) => value,
+        Token::Lang(value) => value.clone(),
+        Token::Unit(value) => {
+            let mut s = StyledString::new();
+            s.push_with(value, Style::new().cyan());
+            s.to_string(format)
+        }
     }
 }

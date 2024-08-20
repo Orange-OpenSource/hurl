@@ -104,7 +104,7 @@ fn main() {
         let output = match opts.output_format {
             OutputFormat::Hurl => {
                 let hurl_file = linter::lint_hurl_file(&hurl_file);
-                format::format_text(hurl_file, opts.color)
+                format::format_text(&hurl_file, opts.color)
             }
             OutputFormat::Json => format::format_json(&hurl_file),
             OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),

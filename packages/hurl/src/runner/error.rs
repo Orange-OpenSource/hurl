@@ -435,6 +435,8 @@ mod tests {
 
     #[test]
     fn test_assert_error_status() {
+        hurl_core::text::init_crate_colored();
+
         let content = r#"GET http://unknown
 HTTP/1.0 200
 "#;
@@ -451,7 +453,6 @@ HTTP/1.0 200
             error.message(&lines).to_string(Format::Plain),
             "\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |"
         );
-        colored::control::set_override(true);
         assert_eq!(
             error.message(&lines).to_string(Format::Ansi),
             "\n\u{1b}[1;34m 2 |\u{1b}[0m HTTP/1.0 200\n\u{1b}[1;34m   |\u{1b}[0m\u{1b}[1;31m          ^^^ actual value is <404>\u{1b}[0m\n\u{1b}[1;34m   |\u{1b}[0m"

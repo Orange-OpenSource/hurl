@@ -331,6 +331,8 @@ mod tests {
 
     #[test]
     fn test_diff_error() {
+        crate::text::init_crate_colored();
+
         let content = r#"GET http://localhost:8000/failed/multiline/json
 HTTP 200
 ```
@@ -367,7 +369,6 @@ HTTP 200
         }
         let error = E;
 
-        colored::control::set_override(true);
         let lines = content.lines().collect::<Vec<_>>();
         assert_eq!(
             error.message(&lines).to_string(Format::Plain),

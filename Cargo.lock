@@ -517,7 +517,6 @@ dependencies = [
  "cc",
  "chrono",
  "clap",
- "colored",
  "curl",
  "curl-sys",
  "encoding",
@@ -560,7 +559,6 @@ version = "5.0.0-SNAPSHOT"
 dependencies = [
  "base64",
  "clap",
- "colored",
  "hurl_core",
  "proptest",
  "regex",

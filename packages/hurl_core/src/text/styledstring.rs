@@ -203,6 +203,13 @@ impl Token {
                         s.green().to_string()
                     }
                 }
+                Color::Magenta => {
+                    if self.style.bold {
+                        s.magenta().bold().to_string()
+                    } else {
+                        s.magenta().to_string()
+                    }
+                }
                 Color::Purple => {
                     if self.style.bold {
                         s.purple().bold().to_string()
@@ -238,7 +245,8 @@ mod tests {
 
     #[test]
     fn test_hello() {
-        colored::control::set_override(true);
+        crate::text::init_crate_colored();
+
         let mut message = StyledString::new();
         message.push("Hello ");
         message.push_with("Bob", Style::new().red());
