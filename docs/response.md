@@ -77,8 +77,7 @@ xpath "//li" count == 18
 
 ## Capture and Assertion
 
-With the response section, one can optionally [capture value from headers, body],
-or [add assert on status code, body or headers].
+With the response section, one can optionally [capture value from headers, body], or [add assert on status code, body or headers].
 
 ### Body compression
 
@@ -91,7 +90,9 @@ header by example) and add assert and captures on the decoded body as if there w
 
 ## Timings
 
-HTTP response timings are exposed through Hurl structured output (see [`--json`]) and HTML report (see [`--report-html`]).
+HTTP response timings are exposed through Hurl structured output (see [`--json`]), HTML report (see [`--report-html`])
+and JSON report (see [`--report-json`]).
+
 On each response, libcurl response timings are available:
 
 - __time_namelookup__: the time it took from the start until the name resolving was completed. You can use
@@ -127,4 +128,5 @@ All timings are in microsecond.
 [`Accept-Encoding`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
 [`--json`]: /docs/manual.md#json
 [`--report-html`]: /docs/manual.md#report-html
+[`--report-json`]: /docs/manual.md#report-json
 [`--resolve`]: /docs/manual.md#resolve

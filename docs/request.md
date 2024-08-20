@@ -640,7 +640,7 @@ GET https://example.org
 aws-sigv4: aws:amz:sts  # generate AWS SigV4 Authorization header
 cacert: /etc/cert.pem   # custom certificate file
 compressed: true        # request a compressed response
-delay: 3000             # delay in ms for this request
+delay: 3s               # delay for this request
 http3: true             # use HTTP/3 protocol version
 insecure: true          # allow insecure SSL connections and transfers
 ipv6: true              # use IPv6 addresses
@@ -648,6 +648,8 @@ location: true          # follow redirection for this request
 max-redirs: 10          # maximum number of redirections
 output: out.html        # dump the response to this file
 path-as-is: true        # do not handle sequences of /../ or /./ in URL path
+retry: 10               # number of retry if HTTP/asserts errors
+retry-interval: 500ms   # interval between retry
 skip: false             # skip this request
 unix-socket: sock       # use Unix socket for transfer
 user: bob:secret        # use basic authentication

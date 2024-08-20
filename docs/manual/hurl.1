@@ -36,6 +36,8 @@ If no input files are specified, input is read from stdin.
           "url": "http://httpbin.org/get"
         }
 
+Hurl can take files as input, or directories. In the latter case, Hurl will search files with `.hurl` extension recursively.
+
 Output goes to stdout by default. To have output go to a file, use the \fI-o, --output\fP option:
 
     $ hurl -o output input.hurl

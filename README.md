@@ -1082,6 +1082,8 @@ $ echo GET http://httpbin.org/get | hurl
     }
 ```
 
+Hurl can take files as input, or directories. In the latter case, Hurl will search files with `.hurl` extension recursively.
+
 Output goes to stdout by default. To have output go to a file, use the [`-o, --output`](#output) option:
 
 ```shell
