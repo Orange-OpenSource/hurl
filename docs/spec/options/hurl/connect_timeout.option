@@ -3,6 +3,7 @@ long: connect-timeout
 value: SECONDS
 value_default: 300
 help: Maximum time allowed for connection
+cli_only: true
 ---
 Maximum time in seconds that you allow Hurl's connection to take.
 
