@@ -133,6 +133,7 @@ jsonpath "$.state" == "RUNNING"
 GET http://api.example.org/jobs/{{job_id}}
 [Options]
 retry: 10   # maximum number of retry, -1 for unlimited
+retry-interval: 300ms
 HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
@@ -159,20 +160,20 @@ skip: true
 HTTP 200
 ```
 
-Additionally, a `delay` can be insert between requests, to add a delay before execution of a request.
+Additionally, a `delay` can be inserted between requests, to add a delay before execution of a request.
 
 ```hurl
-# A 5 s delayed request 
+# A 5 seconds delayed request 
 GET https://example.org/foo
 [Options]
-delay: 5000
+delay: 5s
 HTTP 200
 ```
 
 [`delay`] and [`repeat`] can also be used globally as command line options:
 
 ```shell
-$ hurl --delay 500 --repeat 3 foo.hurl
+$ hurl --delay 500ms --repeat 3 foo.hurl
 ```
 
 
