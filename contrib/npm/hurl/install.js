@@ -2,10 +2,8 @@
 
 const os = require("os");
 const path = require("path");
-const cTable = require("console.table");
 const archive = require("./archive");
-//const {version} = require("./package.json");
-const version = "4.3.0";
+const {hurlBinaryVersion} = require("./package.json");
 
 const supportedPlatforms = require("./platform.json");
 
@@ -25,14 +23,16 @@ function getPlatformMetadata() {
             return supportedPlatform;
         }
     }
+    const platforms = supportedPlatforms.map((p) => `${p.type} ${p.architecture}`)
+        .join("\n");
     error(
         `Platform with type "${type}" and architecture "${architecture}" is not supported.
-        Your system must be one of the following:
-        ${cTable.getTable(supportedPlatforms)}`
+Your system must be one of the following:
+${platforms}`
     );
 }
 
 
 const metadata = getPlatformMetadata();
-const url = `https://github.com/Orange-OpenSource/hurl/releases/download/${version}/hurl-${version}-${metadata.rust_target}${metadata.archive_extension}`;
+const url = `https://github.com/Orange-OpenSource/hurl/releases/download/${hurlBinaryVersion}/hurl-${hurlBinaryVersion}-${metadata.rust_target}${metadata.archive_extension}`;
 archive.install(url, path.join(__dirname, "dist"), metadata.checksum);

@@ -6,11 +6,12 @@ Hurl is [distributed on npm] as a thin wrapper around the native binary.
 
 ## Publish
 
-To publish a new version `x.y.z`:
+To publish a new version of the package `PACKAGE_VERSION` using the binary `HURL_VERSION`:
 
 ```shell
 $ cp docs/manual/*.1 contrib/npm/hurl/docs/
-$ python3 ./contrib/npm/check_publish.py x.y.z
+$ python3 ./contrib/npm/check_publish.py $HURL_VERSION $PACKAGE_VERSION
+$ rm -rfd contrib/npm/hurl/dist contrib/npm/hurl/node_modules
 $ npm publish --dry-run contrib/npm/hurl/
 $ npm publish contrib/npm/hurl/
 ```
