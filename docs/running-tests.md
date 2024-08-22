@@ -64,9 +64,17 @@ In test mode, files are executed in parallel to speed-ud the execution. If a seq
 $ hurl --test --jobs 1 *.hurl
 ```
 
+[`--repeat` option] can be used to repeat run files and do performance check. For instance, this call will run 1000 tests
+in parallel:
+
+```shell
+$ hurl --test --repeat 1000 stress.hurl
+```
+
+
 ### Selecting Tests
 
-Hurl can takes multiple files into inputs:
+Hurl can take multiple files into inputs:
 
 ```shell
 $ hurl --test test/integration/a.hurl test/integration/b.hurl test/integration/c.hurl 
@@ -263,3 +271,5 @@ You will find a detailed description in the [Injecting Variables] section of the
 [`verbose`]: /docs/manual.md#verbose
 [`very-verbose`]: /docs/manual.md#very-verbose
 [`--output` option]: /docs/manual.md#output
+[`--repeat` option]: /docs/manual.md#repeat
+

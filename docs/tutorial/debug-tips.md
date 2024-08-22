@@ -86,7 +86,6 @@ In each run request, we can also see a curl command line to replay this particul
 ...
 ```
 
-
 In verbose mode, HTTP request and response bodies are not displayed in the debug logs. If you need to inspect the 
 request or response body, you can display more logs with [`--very-verbose`] option:
 
@@ -213,7 +212,6 @@ $ hurl --very-verbose --no-output basic.hurl
 [`--very-verbose`] output is much more verbose; with body request and response, [`libcurl`] logs and [response timings] 
 are displayed. 
 
-
 ### Debugging a specific entry
 
 If you have a lot of entries (request / response pairs) in your Hurl file, using [`--verbose`] or [`--very-verbose`]
@@ -335,7 +333,43 @@ $ hurl --error-format long --test basic.hurl
 [1mbasic.hurl[0m: [1;31mFailure[0m (4 request(s) in 23 ms)
 ```
 
+## Get Response Body
 
+When there are errors (HTTP runtimes or asserts errors), Hurl doesn't output HTTP response body. But sometimes the response
+body is necessary to explain failures. To do so, either:
+
+- use [`--very-verbose`] globally or per-request to get the full body response
+
+```hurl
+GET https://foo.com/success
+HTTP 200
+
+GET https://foo.com/failure
+[Options]
+very-verbose: true
+HTTP 200
+
+GET https://foo.com/success
+HTTP 200
+```
+
+- use [`--output`] per-request and [`--ignore-asserts`]: `--ignore-asserts` will disable any check, while `--output` can
+be used to output any particular response body. With this file, the response of `https://foo.com/failure` will be outputted
+on standard output:
+
+```hurl
+GET https://foo.com/success
+HTTP 200
+
+GET https://foo.com/failure
+[Options]
+# use - to output on standard output, foo.bin to save on disk 
+output: -
+HTTP 200
+
+GET https://foo.com/success
+HTTP 200
+```
 
 ## Interactive Mode
 
@@ -469,3 +503,5 @@ the returned response to Hurl.
 [`--error-format`]: /docs/manual.md#error-format
 [`libcurl`]: https://curl.se/libcurl/
 [response timings]: /docs/response.md#timings
+[`--ignore-asserts`]: /docs/manual.md#ignore-asserts
+[`--output`]: /docs/manual.md#output
