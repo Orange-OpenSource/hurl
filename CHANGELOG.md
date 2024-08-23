@@ -29,6 +29,7 @@ Enhancements:
 * Add JSON report [#2738](https://github.com/Orange-OpenSource/hurl/issues/2738)
 * Add repeat option to repeat a sequence of Hurl file [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
 * Add repeat option per request [#2680](https://github.com/Orange-OpenSource/hurl/issues/2680)
+* Add optional duration unit [#2653](https://github.com/Orange-OpenSource/hurl/issues/2653)
 * Apply delay only once per entry, no matter how many retry [#1973](https://github.com/Orange-OpenSource/hurl/issues/1973)
 * Add toFloat filter [#1732](https://github.com/Orange-OpenSource/hurl/issues/1732)
 * Accept directory as Hurl arguments for processing file [#1446](https://github.com/Orange-OpenSource/hurl/issues/1446)
