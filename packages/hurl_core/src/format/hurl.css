@@ -25,7 +25,7 @@ code {
     color: black;
 }
 
-.number, boolean {
+.number, .boolean, .unit {
     color: blue;
 }
 
@@ -64,7 +64,7 @@ code {
         color: white;
     }
 
-    .number, .boolean {
+    .number, .boolean, .unit {
         color: dodgerblue;
     }
 
