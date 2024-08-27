@@ -367,6 +367,7 @@ fn eval_duration_option(
             match unit {
                 DurationUnit::MilliSecond => value.value,
                 DurationUnit::Second => value.value * 1000,
+                DurationUnit::Minute => value.value * 1000 * 60,
             }
         }
         DurationOption::Expression(expr) => match eval_expression(expr, variables)? {
@@ -382,6 +383,7 @@ fn eval_duration_option(
                     match default_unit {
                         DurationUnit::MilliSecond => value as u64,
                         DurationUnit::Second => (value * 1000) as u64,
+                        DurationUnit::Minute => (value * 1000 * 60) as u64,
                     }
                 }
             }

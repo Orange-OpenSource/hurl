@@ -225,7 +225,7 @@ integer-option: integer | template
 
 duration-option: (integer duration-unit?)  | template
 
-duration-unit: "ms" | "s"
+duration-unit: "ms" | "s" | "m"
 
 variable-value:
     null

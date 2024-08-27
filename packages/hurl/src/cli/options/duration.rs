@@ -80,5 +80,12 @@ mod tests {
                 unit: Some(DurationUnit::MilliSecond)
             }
         );
+        assert_eq!(
+            parse("5m").unwrap(),
+            Duration {
+                value: 5,
+                unit: Some(DurationUnit::Minute)
+            }
+        );
     }
 }

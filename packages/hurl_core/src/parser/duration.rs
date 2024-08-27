@@ -69,6 +69,11 @@ mod tests {
             duration_unit(&mut reader).unwrap().unwrap(),
             DurationUnit::MilliSecond
         );
+        let mut reader = Reader::new("m\n");
+        assert_eq!(
+            duration_unit(&mut reader).unwrap().unwrap(),
+            DurationUnit::Minute
+        );
     }
 
     #[test]

@@ -44,6 +44,7 @@ impl Duration {
 pub enum DurationUnit {
     MilliSecond,
     Second,
+    Minute,
 }
 
 impl fmt::Display for Count {
@@ -75,6 +76,7 @@ impl fmt::Display for DurationUnit {
         match self {
             DurationUnit::MilliSecond => write!(f, "ms"),
             DurationUnit::Second => write!(f, "s"),
+            DurationUnit::Minute => write!(f, "m"),
         }
     }
 }
@@ -84,8 +86,9 @@ impl FromStr for DurationUnit {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "s" => Ok(DurationUnit::Second),
             "ms" => Ok(DurationUnit::MilliSecond),
+            "s" => Ok(DurationUnit::Second),
+            "m" => Ok(DurationUnit::Minute),
             x => Err(format!("Invalid duration unit {x}")),
         }
     }
