@@ -1,4 +1,8 @@
-<img src="https://hurl.dev/assets/img/logo-light.svg" width="264px" alt="Hurl Logo">
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://hurl.dev/assets/img/logo-light.svg" > 
+    <source media="(prefers-color-scheme: dark)" srcset="https://hurl.dev/assets/img/logo-dark.svg" > 
+    <img src="https://hurl.dev/assets/img/logo-light.svg" width="264px" alt="Hurl Logo">
+</picture>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![coverage](https://Orange-OpenSource.github.io/hurl/coverage/badges/flat.svg)](https://Orange-OpenSource.github.io/hurl/coverage)
@@ -124,7 +128,11 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit, TAP and HTML reports
 
-<img src="https://hurl.dev/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://hurl.dev/assets/img/home-waterfall-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://hurl.dev/assets/img/home-waterfall-dark.png">
+    <img src="https://hurl.dev/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+</picture>
 
 # Why Hurl?
 

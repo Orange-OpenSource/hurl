@@ -86,7 +86,11 @@ def replace(text: str, dest: str) -> str:
 [![documentation](https://img.shields.io/badge/-documentation-ff0288)](https://hurl.dev)
 """,
             """\
-<img src="https://hurl.dev/assets/img/logo-light.svg" width="264px" alt="Hurl Logo">
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://hurl.dev/assets/img/logo-light.svg" > 
+    <source media="(prefers-color-scheme: dark)" srcset="https://hurl.dev/assets/img/logo-dark.svg" > 
+    <img src="https://hurl.dev/assets/img/logo-light.svg" width="264px" alt="Hurl Logo">
+</picture>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![coverage](https://Orange-OpenSource.github.io/hurl/coverage/badges/flat.svg)](https://Orange-OpenSource.github.io/hurl/coverage)
@@ -126,7 +130,11 @@ def replace(text: str, dest: str) -> str:
 </picture>
 """,
             """\
-<img src="https://hurl.dev/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://hurl.dev/assets/img/home-waterfall-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://hurl.dev/assets/img/home-waterfall-dark.png">
+    <img src="https://hurl.dev/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+</picture>
 """,
         ),
     ]
