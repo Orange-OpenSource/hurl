@@ -208,6 +208,7 @@ Table of Contents
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
          * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
          * [AWS Signature Version 4 Requests](#aws-signature-version-4-requests)
+         * [Using curl Options](#using-curl-options)
    * [Manual](#manual)
       * [Name](#name)
       * [Synopsis](#synopsis)
@@ -1032,6 +1033,31 @@ Version: 2011-06-15
 
 [Doc](https://hurl.dev/docs/manual.html#aws-sigv4)
 
+### Using curl Options
+
+curl options (for instance [`--resolve`] or [`--connect-to`]) can be used as CLI argument. In this case, they're applicable
+to each request of an Hurl file.
+
+```shell
+$ hurl --resolve foo.com:8000:127.0.0.1 foo.hurl
+```
+
+Use  [`[Options]` section][option] to configure a specific request:
+
+```hurl
+GET http://bar.com
+HTTP 200
+
+
+GET http://foo.com:8000/resolve
+[Options]
+resolve: foo.com:8000:127.0.0.1
+HTTP 200
+`Hello World!`
+```
+
+[Doc](https://hurl.dev/docs/request.html#options)
+
 
 # Manual
 
@@ -1507,6 +1533,8 @@ Please follow the [contrib on Windows section].
 [Captures]: https://hurl.dev/docs/capturing-response.html
 [option]: https://hurl.dev/docs/request.html#options
 [`--json` option]: https://hurl.dev/docs/manual.html#json
+[`--resolve`]: https://hurl.dev/docs/manual.html#resolve
+[`--connect-to`]: https://hurl.dev/docs/manual.html#connect-to
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
 [Visual C++ Redistributable Package]: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version

@@ -780,6 +780,31 @@ Version: 2011-06-15
 
 [Doc](/docs/manual.md#aws-sigv4)
 
+### Using curl Options
+
+curl options (for instance [`--resolve`] or [`--connect-to`]) can be used as CLI argument. In this case, they're applicable
+to each request of an Hurl file.
+
+```shell
+$ hurl --resolve foo.com:8000:127.0.0.1 foo.hurl
+```
+
+Use  [`[Options]` section][option] to configure a specific request:
+
+```hurl
+GET http://bar.com
+HTTP 200
+
+
+GET http://foo.com:8000/resolve
+[Options]
+resolve: foo.com:8000:127.0.0.1
+HTTP 200
+`Hello World!`
+```
+
+[Doc](/docs/request.md#options)
+
 
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
@@ -801,3 +826,5 @@ Version: 2011-06-15
 [Captures]: /docs/capturing-response.md
 [option]: /docs/request.md#options
 [`--json` option]: /docs/manual.md#json
+[`--resolve`]: /docs/manual.md#resolve
+[`--connect-to`]: /docs/manual.md#connect-to
