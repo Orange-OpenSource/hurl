@@ -99,3 +99,9 @@ jobs:
     - name: Check doc generation
       if: always()
       run: bin/check/doc.sh
+
+    - name: Check completion files
+      if: always()
+      run: |
+        sudo apt-get install -y zsh fish powershell
+        bin/check/completion.sh
