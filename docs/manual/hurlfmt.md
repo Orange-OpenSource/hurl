@@ -63,7 +63,7 @@ Fruit: Raspberry
 
 ### --check {#check}
 
-Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise.
+Run in check mode. Exits with 0 if input is formatted correctly, 1 otherwise.
 
 This can not be used with [--output](#output).
 

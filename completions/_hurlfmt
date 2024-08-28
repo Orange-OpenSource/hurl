@@ -15,7 +15,7 @@ _hurlfmt() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \
-    '--check[Run in 'check' mode]' \
+    '--check[Run in check mode]' \
     '--color[Colorize Output]' \
     '--format[Specify output format: hurl, json or html]: :' \
     '--in-place[Modify files in place]' \

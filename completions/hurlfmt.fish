@@ -1,4 +1,4 @@
-complete -c hurlfmt -l check -d 'Run in 'check' mode'
+complete -c hurlfmt -l check -d 'Run in check mode'
 complete -c hurlfmt -l color -d 'Colorize Output'
 complete -c hurlfmt -l format -d 'Specify output format: hurl, json or html'
 complete -c hurlfmt -l in-place -d 'Modify files in place'

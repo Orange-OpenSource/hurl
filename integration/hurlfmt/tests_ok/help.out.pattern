@@ -6,7 +6,7 @@ Arguments:
   [FILES]...  Set the input file to use
 
 Options:
-      --check          Run in 'check' mode
+      --check          Run in check mode
       --color          Colorize Output
       --in-place       Modify files in place
       --in <FORMAT>    Specify input format: hurl or curl [default: hurl]

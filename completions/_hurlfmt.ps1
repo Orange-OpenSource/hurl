@@ -20,7 +20,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurlfmt' -ScriptBlock {
 
     $completions = @(switch ($command) {
         'hurlfmt'
-         {[CompletionResult]::new('--check', 'check', [CompletionResultType]::ParameterName, 'Run in 'check' mode')
+         {[CompletionResult]::new('--check', 'check', [CompletionResultType]::ParameterName, 'Run in check mode')
             [CompletionResult]::new('--color', 'color', [CompletionResultType]::ParameterName, 'Colorize Output')
             [CompletionResult]::new('--format', 'format', [CompletionResultType]::ParameterName, 'Specify output format: hurl, json or html')
             [CompletionResult]::new('--in-place', 'in-place', [CompletionResultType]::ParameterName, 'Modify files in place')

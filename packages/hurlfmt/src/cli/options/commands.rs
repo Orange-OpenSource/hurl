@@ -29,7 +29,7 @@ pub fn input_files() -> clap::Arg {
 pub fn check() -> clap::Arg {
     clap::Arg::new("check")
         .long("check")
-        .help("Run in 'check' mode")
+        .help("Run in check mode")
         .conflicts_with("format")
         .conflicts_with("output")
         .action(clap::ArgAction::SetTrue)
