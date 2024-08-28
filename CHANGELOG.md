@@ -1,4 +1,4 @@
-[5.0.0 (TO_BE_RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.0)
+[5.0.0 (2024-08-29)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.0)
 ========================================================================================================================
 
 Thanks to
@@ -48,6 +48,7 @@ Bugs Fixed:
 * Do not filter 'Authorization' header if host doesn't change while following redirect [#2823](https://github.com/Orange-OpenSource/hurl/issues/2823)
 * Fix sending 'Authorization' header from --user when following redirect [#2812](https://github.com/Orange-OpenSource/hurl/issues/2812)
 * Fix URL when following redirect for certain 'Location' header [#2783](https://github.com/Orange-OpenSource/hurl/issues/2783)
+* Fix powershell completion file [#2729](https://github.com/Orange-OpenSource/hurl/issues/2729)
 
 
 [4.3.0 (2024-04-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.3.0)
