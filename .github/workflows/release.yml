@@ -331,6 +331,14 @@ jobs:
             artifacts/release-macos-aarch64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-aarch64-apple-darwin.tar.gz \
             artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe \
             artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip
+            find ./artifacts -name "*sha256" | xargs -I FILE sh -c 'echo "$(basename FILE) $(cat FILE)"' > ${{ needs.set-context.outputs.release_version }}.sha256.csv
+
+      - name: Archive sha256 artifacts
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: release-sha256-csv
+          path: ${{ needs.set-context.outputs.release_version }}.sha256.csv
+
 
       - name: Deliver release
         run: |
