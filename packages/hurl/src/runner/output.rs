@@ -64,6 +64,7 @@ impl Output {
             Output::Stdout => stdout.write_all(bytes)?,
             Output::File(filename) => {
                 let mut file = OpenOptions::new()
+                    .create(true)
                     .write(true)
                     .append(append)
                     .open(filename)?;
