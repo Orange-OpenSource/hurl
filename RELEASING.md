@@ -25,6 +25,7 @@ Used to publish a new release from master branch (normal process).
   - Create draft GitHub release `x.y.0`
   - Create PR from `release/x.y.0` to `master`
   - Publish the draft release
+- Test release on external test project
 - Change the release status from draft to public on github
 - Accept the PR from `release/x.y.0` to `master` with `/accept`
 - Run `extra-package.yml` workflow on `master` branch  filling in the `desired tag version` and selecting  wanted extra packages
