@@ -510,7 +510,7 @@ checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 
 [[package]]
 name = "hurl"
-version = "5.0.0"
+version = "5.0.1-SNAPSHOT"
 dependencies = [
  "base64",
  "brotli",
@@ -545,7 +545,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "5.0.0"
+version = "5.0.1-SNAPSHOT"
 dependencies = [
  "colored",
  "float-cmp",
@@ -555,7 +555,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "5.0.0"
+version = "5.0.1-SNAPSHOT"
 dependencies = [
  "base64",
  "clap",
