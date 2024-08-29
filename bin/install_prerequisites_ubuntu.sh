@@ -2,7 +2,9 @@
 set -Eeuo pipefail
 
 echo "----- install prerequisite packages -----"
+export DEBIAN_FRONTEND=noninteractive
 if ! command -V sudo  ; then
+    echo ":: Installing sudo"
     apt-get update
     apt-get -y install sudo
 fi
