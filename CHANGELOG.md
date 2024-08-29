@@ -1,6 +1,10 @@
 [5.0.1 (TO_BE_DEFINED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
 ========================================================================================================================
 
+Bugs Fixed:
+
+* Fix regression in --output when output file doesn't exist [#3195](https://github.com/Orange-OpenSource/hurl/issues/3195)
+
 [5.0.0 (2024-08-29)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.0)
 ========================================================================================================================
 
