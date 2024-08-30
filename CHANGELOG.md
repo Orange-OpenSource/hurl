@@ -1,4 +1,4 @@
-[5.0.1 (TO_BE_DEFINED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
+[5.0.1 (2024-08-30)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
 ========================================================================================================================
 
 Bugs Fixed:
