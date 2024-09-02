@@ -15,10 +15,6 @@ on:
         description: 'Push to winget'
         type: boolean
         default: false
-      package-generic-linux-aarch64:
-        description: 'Create generic linux aarch64 package'
-        type: boolean
-        default: false
 
 concurrency: extra-package
 
@@ -80,57 +76,3 @@ jobs:
           Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile .\wingetcreate.exe
           .\wingetcreate.exe version
           .\bin\release\push_package_to_winget.ps1 "$env:RELEASE_VERSION" "$env:LEPAPAREIL_WINGET_TOKEN"
-
-  package-generic-linux-aarch64:
-    if: github.event.inputs.package-generic-linux-aarch64 == 'true'
-    needs: check-release
-    name: Create generic linux aarch64 package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.7
-        with:
-          fetch-depth: 1
-          ref: ${{ github.event.inputs.set-release-version }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.2.0
-      - name: Create package
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ubuntu:22.04
-          options: --platform linux/arm64/v8 --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --env CARGO_BUILD_TARGET=aarch64-unknown-linux-gnu
-          run: |
-            set -e
-            echo "::group::Install Prerequisites"
-              export DEBIAN_FRONTEND=noninteractive
-              bin/install_prerequisites_ubuntu.sh
-              sudo apt-get install -y g++-aarch64-linux-gnu libc6-dev-arm64-cross
-              ./bin/export_cross_compile_env.sh
-            echo "::endgroup::"
-            echo "::group::Install Rust"
-              bin/install_rust.sh
-              . "$HOME/.cargo/env"
-            echo "::endgroup::"
-            echo "::group::Environment"
-              bin/environment.sh
-            echo "::endgroup::"
-            echo "::group::Build"
-              ./bin/release/release.sh
-              cp -frp target/$CARGO_BUILD_TARGET/release/hurl ./target/release/
-              cp -frp target/$CARGO_BUILD_TARGET/release/hurlfmt ./target/release/
-            echo "::endgroup::"
-            echo "::group::Get version"
-              export VERSION=$(bin/release/get_version.sh)
-            echo "::endgroup::"
-            echo "::group::Create man"
-              bin/release/man.sh
-            echo "::endgroup::"
-            echo "::group::Create tarball"
-              bin/release/create_tarball.sh
-              bin/release/sha256sum.sh --write target/upload/hurl-$VERSION-aarch64-unknown-linux-gnu.tar.gz
-            echo "::endgroup::"
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4.4.0
-        with:
-          name: release-generic-linux-aarch64-artifacts
-          path: target/upload/*
