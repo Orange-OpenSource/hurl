@@ -34,7 +34,7 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.10.6"
-serde = { version = "1.0.209", features = ["derive"] }
+serde = { version = "1.0.210", features = ["derive"] }
 serde_json = { version = "1.0.128", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.2"
@@ -52,7 +52,7 @@ termion = "4.0.2"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.1.16"
+cc = "1.1.17"
 
 [lints]
 workspace = true
