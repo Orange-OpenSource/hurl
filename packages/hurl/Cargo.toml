@@ -56,3 +56,9 @@ cc = "1.1.18"
 
 [lints]
 workspace = true
+
+# cargo-binstall metadata
+# See https://github.com/cargo-bins/cargo-binstall/blob/main/SUPPORT.md
+# for docs explaining the fields here.
+[package.metadata.binstall]
+bin-dir = "{ name }-{ version }-{ target }/bin/{ bin }{ binary-ext }"

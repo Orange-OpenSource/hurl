@@ -21,3 +21,10 @@ proptest = "1.5.0"
 
 [lints]
 workspace = true
+
+# cargo-binstall metadata
+# See https://github.com/cargo-bins/cargo-binstall/blob/main/SUPPORT.md
+# for docs explaining the fields here.
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/{ version }/hurl-{ version }-{ target }{ archive-suffix }"
+bin-dir = "hurl-{ version }-{ target }/bin/{ bin }{ binary-ext }"
