@@ -17,7 +17,7 @@ oriented output, you can use [`--test` option]:
 $ hurl --test sample.hurl
 ```
 
-A particular response can be saved with [`[Options] section`][option]:
+A particular response can be saved with [`[Options] section`](/docs/request.md#options):
 
 ```hurl
 GET https://example.ord/cats/123
@@ -766,7 +766,7 @@ Action: GetCallerIdentity
 Version: 2011-06-15
 ```
 
-The Access Key is given per [`--user`], either with command line option or within the [`[Options]`][option] section:
+The Access Key is given per [`--user`], either with command line option or within the [`[Options]`](/docs/request.md#options) section:
 
 ```hurl
 POST https://sts.eu-central-1.amazonaws.com/
@@ -789,7 +789,7 @@ to each request of an Hurl file.
 $ hurl --resolve foo.com:8000:127.0.0.1 foo.hurl
 ```
 
-Use  [`[Options]` section][option] to configure a specific request:
+Use  [`[Options]` section](/docs/request.md#options) to configure a specific request:
 
 ```hurl
 GET http://bar.com
@@ -824,7 +824,6 @@ HTTP 200
 [Hurl templates]: /docs/templates.md
 [AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 [Captures]: /docs/capturing-response.md
-[option]: /docs/request.md#options
 [`--json` option]: /docs/manual.md#json
 [`--resolve`]: /docs/manual.md#resolve
 [`--connect-to`]: /docs/manual.md#connect-to

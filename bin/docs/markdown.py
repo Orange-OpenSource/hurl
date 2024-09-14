@@ -42,7 +42,7 @@ class Whitespace(Node):
     pass
 
 
-def build_header(title: str, level: int) -> str:
+def build_header(title: str, level: int, _id: str | None) -> str:
     """Constructs a header in Markdown format.
 
     Arg:
@@ -50,7 +50,10 @@ def build_header(title: str, level: int) -> str:
         level: 1 base index of the header level
     """
     hashes = "#" * level
-    return f"{hashes} {title}\n"
+    if _id:
+        return f"{hashes} {title} {{#{_id}}}\n"
+    else:
+        return f"{hashes} {title}\n"
 
 
 class Header(Node):
@@ -58,11 +61,13 @@ class Header(Node):
 
     title: str
     level: int
+    _id: str | None
 
-    def __init__(self, title: str, level: int) -> None:
+    def __init__(self, title: str, level: int, _id: str = None) -> None:
         super().__init__(content=None)
         self.title = title
         self.level = level
+        self._id = _id
         self.update_content()
 
     def indent(self, count: int) -> None:
@@ -75,7 +80,15 @@ class Header(Node):
         self.update_content()
 
     def update_content(self) -> None:
-        self.content = build_header(title=self.title, level=self.level)
+        self.content = build_header(title=self.title, level=self.level, _id=self._id)
+
+    @property
+    def id(self) -> str | None:
+        return self._id
+
+    @id.setter
+    def id(self, value: str | None):
+        self._id = value
 
 
 class RefLink(Node):
@@ -198,6 +211,19 @@ def parse_code(parser: Parser) -> Code:
     return Code(content=content)
 
 
+def parse_table(parser: Parser) -> Table:
+    """Parse and return a table token."""
+    content = ""
+    while parser.left() > 0:
+        line = parser.read_while(lambda it: it != "\n")
+        _ = parser.read()
+        content += line + "\n"
+        c = parser.peek()
+        if c != "|":
+            break
+    return Table(content=content)
+
+
 def parse_header(parser: Parser) -> Header:
     """Parse and return a header token."""
     hashes = parser.read_while(lambda it: it == "#")
@@ -254,6 +280,11 @@ def parse_markdown(text: str) -> "MarkdownDoc":
                 node = parse_ref_link(parser=parser)
                 root.add_child(node)
                 continue
+
+        if c == "|":
+            node = parse_table(parser=parser)
+            root.add_child(node)
+            continue
 
         # Default node parsing:
         node = parse_paragraph(parser=parser)
@@ -312,12 +343,12 @@ class MarkdownDoc:
         self.children.extend(other.children)
 
     def insert_node(self, start: Node, node: Node) -> None:
-        """Insert a child node to the current document, after a specified node."""
+        """Insert a child node to the current document, before a specified node."""
         index = self.children.index(start)
         self.children.insert(index, node)
 
     def insert_nodes(self, start: Node, nodes: List[Node]) -> None:
-        """Insert children nodes to the current document, after a specified node."""
+        """Insert children nodes to the current document, before a specified node."""
         index = self.children.index(start)
         self.children[index:index] = nodes
 
@@ -373,15 +404,23 @@ class MarkdownDoc:
             return re.sub(r"[-\s]+", "-", value).replace("/", "")
 
         headers = [child for child in self.children if isinstance(child, Header)]
+
+        # Find the minimum header level, we'll delta all documents level from this
+        min_level = min([h.level for h in headers])
+
         toc = dedent(
             """\
-        Table of Contents
-        =================
+        # Table of Contents
+        
         """
         )
         for header in headers:
-            indent = "   " * header.level
-            slug = slugify(header.title)
+            indent = "    " * (header.level - min_level)
+            if header.id:
+                slug = header.id
+            else:
+                slug = slugify(header.title)
             line = f"{indent}* [{header.title}](#{slug})\n"
             toc += line
+        toc += "\n"
         return toc
