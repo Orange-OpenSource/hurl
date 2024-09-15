@@ -1,0 +1,7 @@
+error: Parsing variable
+  --> tests_error_parser/invalid_variable.hurl:4:11
+   |
+ 4 | variable: newUuid=123
+   |           ^ conflicts with the newUuid function, use a different name
+   |
+

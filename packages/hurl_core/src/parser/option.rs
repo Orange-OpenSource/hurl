@@ -350,6 +350,11 @@ fn variable_name(reader: &mut Reader) -> ParseResult<String> {
             value: "variable name".to_string(),
         };
         return Err(ParseError::new(start.pos, false, kind));
+    } else if is_variable_reserved(&name) {
+        let kind = ParseErrorKind::Variable(format!(
+            "conflicts with the {name} function, use a different name"
+        ));
+        return Err(ParseError::new(start.pos, false, kind));
     }
     Ok(name)
 }

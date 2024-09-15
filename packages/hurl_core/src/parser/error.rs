@@ -62,6 +62,7 @@ pub enum ParseErrorKind {
     Unicode,
     UrlIllegalCharacter(char),
     UrlInvalidStart,
+    Variable(String),
     Version,
     XPathExpr,
     Xml,
@@ -126,6 +127,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::Unicode => "Parsing unicode literal".to_string(),
             ParseErrorKind::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             ParseErrorKind::UrlInvalidStart => "Parsing URL".to_string(),
+            ParseErrorKind::Variable(_) => "Parsing variable".to_string(),
             ParseErrorKind::Version => "Parsing version".to_string(),
             ParseErrorKind::XPathExpr => "Parsing XPath expression".to_string(),
             ParseErrorKind::Xml => "Parsing XML".to_string(),
@@ -242,6 +244,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::Unicode => "Invalid unicode literal".to_string(),
             ParseErrorKind::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
             ParseErrorKind::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
+            ParseErrorKind::Variable(message) => message.clone(),
             ParseErrorKind::Version => {
                 "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string()
             }

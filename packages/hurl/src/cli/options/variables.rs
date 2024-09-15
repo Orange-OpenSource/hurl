@@ -18,6 +18,7 @@
 
 use super::CliOptionsError;
 use crate::runner::{Number, Value};
+use hurl_core::ast::is_variable_reserved;
 
 pub fn parse(s: &str) -> Result<(String, Value), CliOptionsError> {
     match s.find('=') {
@@ -26,6 +27,11 @@ pub fn parse(s: &str) -> Result<(String, Value), CliOptionsError> {
         ))),
         Some(index) => {
             let (name, value) = s.split_at(index);
+            if is_variable_reserved(name) {
+                return Err(CliOptionsError::Error(format!(
+                    "Variable {name} conflicts with the {name} function, use a different name."
+                )));
+            }
             let value = parse_value(&value[1..])?;
             Ok((name.to_string(), value))
         }

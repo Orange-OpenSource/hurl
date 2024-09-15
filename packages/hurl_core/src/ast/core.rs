@@ -700,6 +700,12 @@ pub struct Variable {
     pub source_info: SourceInfo,
 }
 
+/// Check that variable name is not reserved
+/// (would conflicts with an existing function)
+pub fn is_variable_reserved(name: &str) -> bool {
+    ["getEnv", "newDate", "newUuid"].contains(&name)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryOption {
     pub line_terminators: Vec<LineTerminator>,
