@@ -172,93 +172,94 @@ HTTP 200
 
 [Tutorial]
 
-[Documentation]
+[Documentation] (download [HTML], [PDF], [Markdown]) 
 
 [GitHub]
 
-Table of Contents
-=================
-   * [Samples](#samples)
-      * [Getting Data](#getting-data)
-         * [HTTP Headers](#http-headers)
-         * [Query Params](#query-params)
-         * [Basic Authentication](#basic-authentication)
-         * [Passing Data between Requests ](#passing-data-between-requests)
-      * [Sending Data](#sending-data)
-         * [Sending HTML Form Data](#sending-html-form-data)
-         * [Sending Multipart Form Data](#sending-multipart-form-data)
-         * [Posting a JSON Body](#posting-a-json-body)
-         * [Templating a JSON Body](#templating-a-json-body)
-         * [Templating a XML Body](#templating-a-xml-body)
-         * [Using GraphQL Query](#using-graphql-query)
-      * [Testing Response](#testing-response)
-         * [Testing Status Code](#testing-status-code)
-         * [Testing Response Headers](#testing-response-headers)
-         * [Testing REST APIs](#testing-rest-apis)
-         * [Testing HTML Response](#testing-html-response)
-         * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
-         * [Testing Bytes Content](#testing-bytes-content)
-         * [SSL Certificate](#ssl-certificate)
-         * [Checking Full Body](#checking-full-body)
-      * [Reports](#reports)
-         * [HTML Report](#html-report)
-         * [JSON Report](#json-report)
-         * [JUnit Report](#junit-report)
-         * [TAP Report](#tap-report)
-         * [JSON Output](#json-output)
-      * [Others](#others)
-         * [HTTP Version](#http-version)
-         * [Polling and Retry](#polling-and-retry)
-         * [Delaying Requests](#delaying-requests)
-         * [Skipping Requests](#skipping-requests)
-         * [Testing Endpoint Performance](#testing-endpoint-performance)
-         * [Using SOAP APIs](#using-soap-apis)
-         * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
-         * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
-         * [AWS Signature Version 4 Requests](#aws-signature-version-4-requests)
-         * [Using curl Options](#using-curl-options)
-   * [Manual](#manual)
-      * [Name](#name)
-      * [Synopsis](#synopsis)
-      * [Description](#description)
-      * [Hurl File Format](#hurl-file-format)
-         * [Capturing values](#capturing-values)
-         * [Asserts](#asserts)
-      * [Options](#options)
-      * [Environment](#environment)
-      * [Exit Codes](#exit-codes)
-      * [WWW](#www)
-      * [See Also](#see-also)
-   * [Installation](#installation)
-      * [Binaries Installation](#binaries-installation)
-         * [Linux](#linux)
+# Table of Contents
+
+* [Samples](#samples)
+    * [Getting Data](#getting-data)
+        * [HTTP Headers](#http-headers)
+        * [Query Params](#query-params)
+        * [Basic Authentication](#basic-authentication)
+        * [Passing Data between Requests ](#passing-data-between-requests)
+    * [Sending Data](#sending-data)
+        * [Sending HTML Form Data](#sending-html-form-data)
+        * [Sending Multipart Form Data](#sending-multipart-form-data)
+        * [Posting a JSON Body](#posting-a-json-body)
+        * [Templating a JSON Body](#templating-a-json-body)
+        * [Templating a XML Body](#templating-a-xml-body)
+        * [Using GraphQL Query](#using-graphql-query)
+    * [Testing Response](#testing-response)
+        * [Testing Status Code](#testing-status-code)
+        * [Testing Response Headers](#testing-response-headers)
+        * [Testing REST APIs](#testing-rest-apis)
+        * [Testing HTML Response](#testing-html-response)
+        * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
+        * [Testing Bytes Content](#testing-bytes-content)
+        * [SSL Certificate](#ssl-certificate)
+        * [Checking Full Body](#checking-full-body)
+    * [Reports](#reports)
+        * [HTML Report](#html-report)
+        * [JSON Report](#json-report)
+        * [JUnit Report](#junit-report)
+        * [TAP Report](#tap-report)
+        * [JSON Output](#json-output)
+    * [Others](#others)
+        * [HTTP Version](#http-version)
+        * [Polling and Retry](#polling-and-retry)
+        * [Delaying Requests](#delaying-requests)
+        * [Skipping Requests](#skipping-requests)
+        * [Testing Endpoint Performance](#testing-endpoint-performance)
+        * [Using SOAP APIs](#using-soap-apis)
+        * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
+        * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
+        * [AWS Signature Version 4 Requests](#aws-signature-version-4-requests)
+        * [Using curl Options](#using-curl-options)
+* [Manual](#manual)
+    * [Name](#name)
+    * [Synopsis](#synopsis)
+    * [Description](#description)
+    * [Hurl File Format](#hurl-file-format)
+        * [Capturing values](#capturing-values)
+        * [Asserts](#asserts)
+    * [Options](#options)
+    * [Environment](#environment)
+    * [Exit Codes](#exit-codes)
+    * [WWW](#www)
+    * [See Also](#see-also)
+* [Installation](#installation)
+    * [Binaries Installation](#binaries-installation)
+        * [Linux](#linux)
             * [Debian / Ubuntu](#debian--ubuntu)
             * [Alpine](#alpine)
             * [Arch Linux / Manjaro](#arch-linux--manjaro)
             * [NixOS / Nix](#nixos--nix)
-         * [macOS](#macos)
+        * [macOS](#macos)
             * [Homebrew](#homebrew)
             * [MacPorts](#macports)
-         * [FreeBSD](#freebsd)
-         * [Windows](#windows)
+        * [FreeBSD](#freebsd)
+        * [Windows](#windows)
             * [Zip File](#zip-file)
             * [Installer](#installer)
             * [Chocolatey](#chocolatey)
             * [Scoop](#scoop)
             * [Windows Package Manager](#windows-package-manager)
-         * [Cargo](#cargo)
-         * [conda-forge](#conda-forge)
-         * [Docker](#docker)
-         * [npm](#npm)
-      * [Building From Sources](#building-from-sources)
-         * [Build on Linux](#build-on-linux)
+        * [Cargo](#cargo)
+        * [conda-forge](#conda-forge)
+        * [Docker](#docker)
+        * [npm](#npm)
+    * [Building From Sources](#building-from-sources)
+        * [Build on Linux](#build-on-linux)
             * [Debian based distributions](#debian-based-distributions)
             * [Fedora based distributions](#fedora-based-distributions)
             * [Red Hat based distributions](#red-hat-based-distributions)
             * [Arch based distributions](#arch-based-distributions)
             * [Alpine based distributions](#alpine-based-distributions)
-         * [Build on macOS](#build-on-macos)
-         * [Build on Windows](#build-on-windows)
+        * [Build on macOS](#build-on-macos)
+        * [Build on Windows](#build-on-windows)
+
 # Samples
 
 To run a sample, edit a file with the sample content, and run Hurl:
@@ -278,7 +279,7 @@ oriented output, you can use [`--test` option]:
 $ hurl --test sample.hurl
 ```
 
-A particular response can be saved with [`[Options] section`][option]:
+A particular response can be saved with [`[Options] section`](https://hurl.dev/docs/request.html#options):
 
 ```hurl
 GET https://example.ord/cats/123
@@ -1027,7 +1028,7 @@ Action: GetCallerIdentity
 Version: 2011-06-15
 ```
 
-The Access Key is given per [`--user`], either with command line option or within the [`[Options]`][option] section:
+The Access Key is given per [`--user`], either with command line option or within the [`[Options]`](https://hurl.dev/docs/request.html#options) section:
 
 ```hurl
 POST https://sts.eu-central-1.amazonaws.com/
@@ -1050,7 +1051,7 @@ to each request of an Hurl file.
 $ hurl --resolve foo.com:8000:127.0.0.1 foo.hurl
 ```
 
-Use  [`[Options]` section][option] to configure a specific request:
+Use  [`[Options]` section](https://hurl.dev/docs/request.html#options) to configure a specific request:
 
 ```hurl
 GET http://bar.com
@@ -1521,6 +1522,9 @@ Please follow the [contrib on Windows section].
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
+[HTML]: /docs/standalone/hurl-5.0.1.html
+[PDF]: /docs/standalone/hurl-5.0.1.pdf
+[Markdown]: /docs/standalone/hurl-5.0.1.md
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
 [XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
@@ -1539,7 +1543,6 @@ Please follow the [contrib on Windows section].
 [Hurl templates]: https://hurl.dev/docs/templates.html
 [AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 [Captures]: https://hurl.dev/docs/capturing-response.html
-[option]: https://hurl.dev/docs/request.html#options
 [`--json` option]: https://hurl.dev/docs/manual.html#json
 [`--resolve`]: https://hurl.dev/docs/manual.html#resolve
 [`--connect-to`]: https://hurl.dev/docs/manual.html#connect-to

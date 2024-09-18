@@ -137,6 +137,21 @@ def replace(text: str, dest: str) -> str:
 </picture>
 """,
         ),
+        (
+            "[HTML]: /docs/standalone/hurl-5.0.1.html",
+            "[HTML]: /docs/standalone/hurl-5.0.1.html",
+            "[HTML]: https://hurl.dev/assets/docs/hurl-5.0.1.html.gz",
+        ),
+        (
+            "[PDF]: /docs/standalone/hurl-5.0.1.pdf",
+            "[PDF]: /docs/standalone/hurl-5.0.1.pdf",
+            "[PDF]: https://hurl.dev/assets/docs/hurl-5.0.1.pdf.gz",
+        ),
+        (
+            "[Markdown]: https://hurl.dev/docs/standalone/hurl-5.0.1.html",
+            "[Markdown]: /docs/standalone/hurl-5.0.1.md",
+            "[Markdown]: https://hurl.dev/assets/docs/hurl-5.0.1.md.gz",
+        ),
     ]
     for old, new_for_github, new_for_crates in snippets:
         if dest == "github":
