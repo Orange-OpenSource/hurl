@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Check version
 # A specific version defines both the grammar format and the HTML output
 actual_version=$(grammar --version | cut  -d" " -f2)
-expected_version="0.2.0"
+expected_version="0.3.0"
 if [ "$actual_version" != "$expected_version" ] ; then
   echo "version mismatch"
   echo "expected: $expected_version"

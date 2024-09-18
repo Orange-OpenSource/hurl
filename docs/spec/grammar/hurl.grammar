@@ -55,17 +55,17 @@ response-section:
 
 query-string-params-section:
   lt*
-  "[QueryStringParams]" lt
+  ("[QueryStringParams]" | "[Query]") lt
   key-value*
 
 form-params-section:
   lt*
-  "[FormParams]" lt
+  ("[FormParams]" | "[Form]") lt
   key-value*
 
 multipart-form-data-section:
   lt*
-  "[MultipartFormData]" lt
+  ("[MultipartFormData]" | "[Multipart]") lt
   multipart-form-data-param*
 
 cookies-section:
