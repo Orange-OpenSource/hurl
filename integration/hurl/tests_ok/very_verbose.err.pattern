@@ -11,8 +11,13 @@
 * Request can be run with the following curl command:
 * curl --location 'http://localhost:8000/very-verbose/redirect'
 *
+** Host localhost:8000 was resolved.
+** IPv6: ::1
+** IPv4: 127.0.0.1
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 63996 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#0)
+** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/redirect HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -20,8 +25,8 @@
 >
 * Request body:
 *
-** Mark bundle as not supporting multiuse
-** Closing connection 0
+** Request completely sent off
+** Closing connection
 * Response: (received 205 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
@@ -47,20 +52,22 @@
 * </html>
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 63998 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#1)
+** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -68,8 +75,8 @@
 >
 * Request body:
 *
-** Mark bundle as not supporting multiuse
-** Closing connection 1
+** Request completely sent off
+** Closing connection
 * Response: (received 11 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -84,14 +91,14 @@
 * Redirected.
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -105,8 +112,10 @@
 * curl --location 'http://localhost:8000/very-verbose/encoding/latin1'
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64000 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#2)
+** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/encoding/latin1 HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -114,8 +123,8 @@
 >
 * Request body:
 *
-** Mark bundle as not supporting multiuse
-** Closing connection 2
+** Request completely sent off
+** Closing connection
 * Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -130,14 +139,14 @@
 * café
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -152,8 +161,10 @@
 * curl --header 'Accept-Encoding: brotli' --header 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' --location 'http://localhost:8000/very-verbose/compressed/brotli'
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64002 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#3)
+** Connected to localhost (127.0.0.1) port 8000
 > POST /very-verbose/compressed/brotli HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -167,9 +178,8 @@
 *     "foo": "bar",
 *     "baz": true
 * }
-** We are completely uploaded and fine
-** Mark bundle as not supporting multiuse
-** Closing connection 3
+** upload completely sent off: 37 bytes
+** Closing connection
 * Response: (received 17 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -185,14 +195,14 @@
 * Hello World!
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -206,8 +216,10 @@
 * curl --location 'http://localhost:8000/very-verbose/cat'
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64004 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#4)
+** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -215,8 +227,8 @@
 >
 * Request body:
 *
-** Mark bundle as not supporting multiuse
-** Closing connection 4
+** Request completely sent off
+** Closing connection
 * Response: (received 25992 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -231,14 +243,14 @@
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -254,20 +266,21 @@
 * curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64006 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#5)
+** Connected to localhost (127.0.0.1) port 8000
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
-> Content-Length: 265<<<.*?>>>
-> Content-Type: multipart/form-data; boundary=<<<.*?>>><<<.*?>>>
+> Content-Length: <<<\d+>>>
+> Content-Type: multipart/form-data; boundary=<<<[a-zA-Z0-9-]+>>>
 >
 * Request body:
 * Bytes <<<<.*?>>><<<.*?>>>...>
-** We are completely uploaded and fine
-** Mark bundle as not supporting multiuse
-** Closing connection 5
+** upload completely sent off: 26584 bytes
+** Closing connection
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -282,17 +295,69 @@
 *
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 6
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/very-verbose/update-cat
+* [MultipartFormData]
+* cat: file,cat.jpg; image/jpeg
+*
+* Request can be run with the following curl command:
+* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64008 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> POST /very-verbose/update-cat HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: <<<\d+>>>
+> Content-Type: multipart/form-data; boundary=<<<[a-zA-Z0-9-]+>>>
+>
+* Request body:
+* Bytes <<<<.*?>>><<<.*?>>>...>
+** upload completely sent off: 26584 bytes
+** Closing connection
+* Response: (received 0 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 0
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+*
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* ------------------------------------------------------------------------------
+* Executing entry 7
 *
 * Cookie store:
 *
@@ -304,8 +369,10 @@
 * curl --header 'x-foo: bar' --location 'http://localhost:8000/very-verbose/done'
 *
 ** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 64010 failed: Connection refused
 **   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000 (#6)
+** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/done HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -314,8 +381,8 @@
 >
 * Request body:
 *
-** Mark bundle as not supporting multiuse
-** Closing connection 6
+** Request completely sent off
+** Closing connection
 * Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
@@ -330,12 +397,12 @@
 * Done
 *
 * Timings:
-* begin: <<<.*?>>> UTC
-* end: <<<.*?>>> UTC
-* namelookup: <<<.*?>>> µs
-* connect: <<<.*?>>> µs
-* app_connect: <<<.*?>>> µs
-* pre_transfer: <<<.*?>>> µs
-* start_transfer: <<<.*?>>> µs
-* total: <<<.*?>>> µs
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
 *

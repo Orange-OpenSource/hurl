@@ -10,6 +10,7 @@ POST http://localhost:8000/content-type-json
 }
 HTTP 200
 
+
 # JSON body using multilines strings:
 POST http://localhost:8000/content-type-json
 ```json
@@ -19,6 +20,7 @@ POST http://localhost:8000/content-type-json
 }
 ```
 HTTP 200
+
 
 # Without language hints:
 POST http://localhost:8000/content-type-json
@@ -31,6 +33,7 @@ Content-Type: application/json
 ```
 HTTP 200
 
+
 POST http://localhost:8000/content-type-json
 ```graphql
 {
@@ -41,6 +44,7 @@ POST http://localhost:8000/content-type-json
 ```
 HTTP 200
 
+
 POST http://localhost:8000/content-type-json
 Content-Type: application/json
 {
@@ -49,6 +53,7 @@ Content-Type: application/json
 }
 HTTP 200
 
+
 POST http://localhost:8000/content-type-vnd-json
 Content-Type: application/vnd.api+json
 {
@@ -56,6 +61,7 @@ Content-Type: application/vnd.api+json
     "age": 30
 }
 HTTP 200
+
 
 # "content-type vs "Content-Type": explicit content-type header must override implicit
 # content type even if name of the header is in lowercase
@@ -75,12 +81,30 @@ field2: bar
 field2: baz
 HTTP 200
 
+
+POST http://localhost:8000/content-type-form
+[Form]
+field1: foo
+field2: bar
+field2: baz
+HTTP 200
+
+
 POST http://localhost:8000/content-type-multipart
 [MultipartFormData]
 field1: foo
 field2: bar
 field2: baz
 HTTP 200
+
+
+POST http://localhost:8000/content-type-multipart
+[Multipart]
+field1: foo
+field2: bar
+field2: baz
+HTTP 200
+
 
 POST http://localhost:8000/content-type-xml
 <note>
@@ -90,6 +114,7 @@ POST http://localhost:8000/content-type-xml
     <body>Don't forget me this weekend!</body>
 </note>
 HTTP 200
+
 
 # XML body using multilines strings:
 POST http://localhost:8000/content-type-xml
@@ -102,6 +127,7 @@ POST http://localhost:8000/content-type-xml
 </note>
 ```
 HTTP 200
+
 
 # XML body using multilines strings:
 POST http://localhost:8000/content-type-xml

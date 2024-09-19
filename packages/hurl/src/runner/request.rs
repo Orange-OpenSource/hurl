@@ -269,48 +269,54 @@ mod tests {
                 line_terminators: vec![],
                 space0: whitespace(),
                 line_terminator0: line_terminator,
-                value: SectionValue::QueryParams(vec![
-                    simple_key_value(
-                        Template {
-                            delimiter: None,
-                            elements: vec![TemplateElement::String {
-                                value: "param1".to_string(),
-                                encoded: "param1".to_string(),
-                            }],
-                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        },
-                        Template {
-                            delimiter: None,
-                            elements: vec![TemplateElement::Expression(Expr {
-                                space0: whitespace(),
-                                variable: Variable {
-                                    name: String::from("param1"),
-                                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
-                                },
-                                space1: whitespace(),
-                            })],
-                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        },
-                    ),
-                    simple_key_value(
-                        Template {
-                            delimiter: None,
-                            elements: vec![TemplateElement::String {
-                                value: "param2".to_string(),
-                                encoded: "param2".to_string(),
-                            }],
-                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        },
-                        Template {
-                            delimiter: None,
-                            elements: vec![TemplateElement::String {
-                                value: "a b".to_string(),
-                                encoded: "a b".to_string(),
-                            }],
-                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        },
-                    ),
-                ]),
+                value: SectionValue::QueryParams(
+                    vec![
+                        simple_key_value(
+                            Template {
+                                delimiter: None,
+                                elements: vec![TemplateElement::String {
+                                    value: "param1".to_string(),
+                                    encoded: "param1".to_string(),
+                                }],
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            },
+                            Template {
+                                delimiter: None,
+                                elements: vec![TemplateElement::Expression(Expr {
+                                    space0: whitespace(),
+                                    variable: Variable {
+                                        name: String::from("param1"),
+                                        source_info: SourceInfo::new(
+                                            Pos::new(1, 7),
+                                            Pos::new(1, 15),
+                                        ),
+                                    },
+                                    space1: whitespace(),
+                                })],
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            },
+                        ),
+                        simple_key_value(
+                            Template {
+                                delimiter: None,
+                                elements: vec![TemplateElement::String {
+                                    value: "param2".to_string(),
+                                    encoded: "param2".to_string(),
+                                }],
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            },
+                            Template {
+                                delimiter: None,
+                                elements: vec![TemplateElement::String {
+                                    value: "a b".to_string(),
+                                    encoded: "a b".to_string(),
+                                }],
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            },
+                        ),
+                    ],
+                    false,
+                ),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             }],
             body: None,

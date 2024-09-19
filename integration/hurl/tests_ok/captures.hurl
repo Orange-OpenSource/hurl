@@ -23,6 +23,13 @@ param2: {{param2}}
 HTTP 200
 
 
+GET http://localhost:8000/captures-check
+[Query]
+param1: {{param1}}
+param2: {{param2}}
+HTTP 200
+
+
 GET http://localhost:8000/captures-xml
 HTTP 200
 [Captures]

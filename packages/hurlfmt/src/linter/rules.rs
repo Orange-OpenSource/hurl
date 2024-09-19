@@ -165,8 +165,8 @@ fn lint_section(section: &Section) -> Section {
 
 fn lint_section_value(section_value: &SectionValue) -> SectionValue {
     match section_value {
-        SectionValue::QueryParams(params) => {
-            SectionValue::QueryParams(params.iter().map(lint_key_value).collect())
+        SectionValue::QueryParams(params, short) => {
+            SectionValue::QueryParams(params.iter().map(lint_key_value).collect(), *short)
         }
         SectionValue::BasicAuth(param) => {
             SectionValue::BasicAuth(param.as_ref().map(lint_key_value))
@@ -177,12 +177,13 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
         SectionValue::Asserts(asserts) => {
             SectionValue::Asserts(asserts.iter().map(lint_assert).collect())
         }
-        SectionValue::FormParams(params) => {
-            SectionValue::FormParams(params.iter().map(lint_key_value).collect())
+        SectionValue::FormParams(params, short) => {
+            SectionValue::FormParams(params.iter().map(lint_key_value).collect(), *short)
         }
-        SectionValue::MultipartFormData(params) => {
-            SectionValue::MultipartFormData(params.iter().map(lint_multipart_param).collect())
-        }
+        SectionValue::MultipartFormData(params, short) => SectionValue::MultipartFormData(
+            params.iter().map(lint_multipart_param).collect(),
+            *short,
+        ),
         SectionValue::Cookies(cookies) => {
             SectionValue::Cookies(cookies.iter().map(lint_cookie).collect())
         }
@@ -196,10 +197,10 @@ fn section_value_index(section_value: SectionValue) -> u32 {
     match section_value {
         // Request sections
         SectionValue::Options(_) => 0,
-        SectionValue::QueryParams(_) => 1,
+        SectionValue::QueryParams(_, _) => 1,
         SectionValue::BasicAuth(_) => 2,
-        SectionValue::FormParams(_) => 3,
-        SectionValue::MultipartFormData(_) => 4,
+        SectionValue::FormParams(_, _) => 3,
+        SectionValue::MultipartFormData(_, _) => 4,
         SectionValue::Cookies(_) => 5,
         // Response sections
         SectionValue::Captures(_) => 0,

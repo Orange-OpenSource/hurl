@@ -45,10 +45,13 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
 
     let line_terminator0 = line_terminator(reader)?;
     let value = match name.as_str() {
-        "QueryStringParams" => section_value_query_params(reader)?,
+        "Query" => section_value_query_params(reader, true)?,
+        "QueryStringParams" => section_value_query_params(reader, false)?,
         "BasicAuth" => section_value_basic_auth(reader)?,
-        "FormParams" => section_value_form_params(reader)?,
-        "MultipartFormData" => section_value_multipart_form_data(reader)?,
+        "Form" => section_value_form_params(reader, true)?,
+        "FormParams" => section_value_form_params(reader, false)?,
+        "Multipart" => section_value_multipart_form_data(reader, true)?,
+        "MultipartFormData" => section_value_multipart_form_data(reader, false)?,
         "Cookies" => section_value_cookies(reader)?,
         "Options" => section_value_options(reader)?,
         _ => {
@@ -110,9 +113,9 @@ fn section_name(reader: &mut Reader) -> ParseResult<String> {
     Ok(name)
 }
 
-fn section_value_query_params(reader: &mut Reader) -> ParseResult<SectionValue> {
+fn section_value_query_params(reader: &mut Reader, short: bool) -> ParseResult<SectionValue> {
     let items = zero_or_more(key_value, reader)?;
-    Ok(SectionValue::QueryParams(items))
+    Ok(SectionValue::QueryParams(items, short))
 }
 
 fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<SectionValue> {
@@ -120,14 +123,17 @@ fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<SectionValue> {
     Ok(SectionValue::BasicAuth(v))
 }
 
-fn section_value_form_params(reader: &mut Reader) -> ParseResult<SectionValue> {
+fn section_value_form_params(reader: &mut Reader, short: bool) -> ParseResult<SectionValue> {
     let items = zero_or_more(key_value, reader)?;
-    Ok(SectionValue::FormParams(items))
+    Ok(SectionValue::FormParams(items, short))
 }
 
-fn section_value_multipart_form_data(reader: &mut Reader) -> ParseResult<SectionValue> {
+fn section_value_multipart_form_data(
+    reader: &mut Reader,
+    short: bool,
+) -> ParseResult<SectionValue> {
     let items = zero_or_more(multipart_param, reader)?;
-    Ok(SectionValue::MultipartFormData(items))
+    Ok(SectionValue::MultipartFormData(items, short))
 }
 
 fn section_value_cookies(reader: &mut Reader) -> ParseResult<SectionValue> {

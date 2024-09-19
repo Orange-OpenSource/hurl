@@ -204,7 +204,7 @@ impl Tokenizable for SectionValue {
             SectionValue::Asserts(items) => {
                 tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
-            SectionValue::QueryParams(items) => {
+            SectionValue::QueryParams(items, _) => {
                 tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::BasicAuth(item) => {
@@ -212,10 +212,10 @@ impl Tokenizable for SectionValue {
                     tokens.append(&mut kv.tokenize());
                 }
             }
-            SectionValue::FormParams(items) => {
+            SectionValue::FormParams(items, _) => {
                 tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
-            SectionValue::MultipartFormData(items) => {
+            SectionValue::MultipartFormData(items, _) => {
                 tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::Cookies(items) => {

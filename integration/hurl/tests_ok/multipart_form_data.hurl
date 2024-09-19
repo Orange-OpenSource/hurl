@@ -8,6 +8,15 @@ upload3: file,data.txt; text/html
 HTTP 200
 
 
+POST http://localhost:8000/multipart-form-data
+[Multipart]
+key1: value1
+upload1: file,data.txt;
+upload2: file,data.html;
+upload3: file,data.txt; text/html
+HTTP 200
+
+
 # Or, as an alternative to the [MultipartFormData] section, we can just use
 # a multiline string body, constructing boundaries by hand (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST).
 # The downside of this method is that we must inline the files content (for the moment).

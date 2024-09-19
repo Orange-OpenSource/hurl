@@ -58,7 +58,7 @@ pub struct Request {
 impl Request {
     pub fn querystring_params(&self) -> Vec<KeyValue> {
         for section in &self.sections {
-            if let SectionValue::QueryParams(params) = &section.value {
+            if let SectionValue::QueryParams(params, _) = &section.value {
                 return params.clone();
             }
         }
@@ -66,7 +66,7 @@ impl Request {
     }
     pub fn form_params(&self) -> Vec<KeyValue> {
         for section in &self.sections {
-            if let SectionValue::FormParams(params) = &section.value {
+            if let SectionValue::FormParams(params, _) = &section.value {
                 return params.clone();
             }
         }
@@ -74,7 +74,7 @@ impl Request {
     }
     pub fn multipart_form_data(&self) -> Vec<MultipartParam> {
         for section in &self.sections {
-            if let SectionValue::MultipartFormData(params) = &section.value {
+            if let SectionValue::MultipartFormData(params, _) = &section.value {
                 return params.clone();
             }
         }
@@ -203,12 +203,15 @@ impl Section {
     pub fn name(&self) -> &str {
         match self.value {
             SectionValue::Asserts(_) => "Asserts",
-            SectionValue::QueryParams(_) => "QueryStringParams",
+            SectionValue::QueryParams(_, true) => "Query",
+            SectionValue::QueryParams(_, false) => "QueryStringParams",
             SectionValue::BasicAuth(_) => "BasicAuth",
-            SectionValue::FormParams(_) => "FormParams",
+            SectionValue::FormParams(_, true) => "Form",
+            SectionValue::FormParams(_, false) => "FormParams",
             SectionValue::Cookies(_) => "Cookies",
             SectionValue::Captures(_) => "Captures",
-            SectionValue::MultipartFormData(_) => "MultipartFormData",
+            SectionValue::MultipartFormData(_, true) => "Multipart",
+            SectionValue::MultipartFormData(_, false) => "MultipartFormData",
             SectionValue::Options(_) => "Options",
         }
     }
@@ -217,10 +220,10 @@ impl Section {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum SectionValue {
-    QueryParams(Vec<KeyValue>),
-    BasicAuth(Option<KeyValue>),
-    FormParams(Vec<KeyValue>),
-    MultipartFormData(Vec<MultipartParam>),
+    QueryParams(Vec<KeyValue>, bool), // boolean param indicates if we use the short syntax
+    BasicAuth(Option<KeyValue>),      // boolean param indicates if we use the short syntax
+    FormParams(Vec<KeyValue>, bool),
+    MultipartFormData(Vec<MultipartParam>, bool), // boolean param indicates if we use the short syntax
     Cookies(Vec<Cookie>),
     Captures(Vec<Capture>),
     Asserts(Vec<Assert>),

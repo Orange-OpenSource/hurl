@@ -1,3 +1,4 @@
 # FIXME: actually use --aws-sigv4 option instead of a faked Authorization header,
 # once all integration test targets have a libcurl that supports aws-sigv4.
 curl --data 'test=test' --header "Authorization: AWS4-HMAC-SHA256 Credential=someAccessKeyId/20230825/eu-central-1/hurltest/aws4_request, SignedHeaders=host;x-amz-date, Signature=821d58e7c6a595f9dae0eafa66c0afbb0dfce4154e6bfec22aeafb11c970bf10" --user 'someAccessKeyId:someSecretKey' 'http://localhost:8000/aws-sigv4'
+curl --data 'test=test' --header "Authorization: AWS4-HMAC-SHA256 Credential=someAccessKeyId/20230825/eu-central-1/hurltest/aws4_request, SignedHeaders=host;x-amz-date, Signature=821d58e7c6a595f9dae0eafa66c0afbb0dfce4154e6bfec22aeafb11c970bf10" --user 'someAccessKeyId:someSecretKey' 'http://localhost:8000/aws-sigv4'

@@ -6,6 +6,7 @@ GET http://localhost:8000/key-template/header
 variable: key=name
 HTTP 200
 
+
 GET http://localhost:8000/key-template/querystring
 [Options]
 variable: key=name
@@ -13,12 +14,30 @@ variable: key=name
 {{key}}: value
 HTTP 200
 
+
+GET http://localhost:8000/key-template/querystring
+[Options]
+variable: key=name
+[Query]
+{{key}}: value
+HTTP 200
+
+
 POST http://localhost:8000/key-template/form
 [Options]
 variable: key=name
 [FormParams]
 {{key}}: value
 HTTP 200
+
+
+POST http://localhost:8000/key-template/form
+[Options]
+variable: key=name
+[Form]
+{{key}}: value
+HTTP 200
+
 
 POST http://localhost:8000/key-template/multipart-form-data
 [Options]
@@ -29,12 +48,24 @@ variable: key2=file
 {{key2}}: file,data.txt;
 HTTP 200
 
+
+POST http://localhost:8000/key-template/multipart-form-data
+[Options]
+variable: key1=name
+variable: key2=file
+[Multipart]
+{{key1}}: value
+{{key2}}: file,data.txt;
+HTTP 200
+
+
 GET http://localhost:8000/key-template/cookie
 [Options]
 variable: key=name
 [Cookies]
 {{key}}: value
 HTTP 200
+
 
 GET http://localhost:8000/key-template/capture
 [Options]

@@ -175,14 +175,14 @@ impl HtmlFormatter {
     fn fmt_section_value(&mut self, section_value: &SectionValue) {
         match section_value {
             SectionValue::Asserts(items) => items.iter().for_each(|item| self.fmt_assert(item)),
-            SectionValue::QueryParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
+            SectionValue::QueryParams(items, _) => items.iter().for_each(|item| self.fmt_kv(item)),
             SectionValue::BasicAuth(item) => {
                 if let Some(kv) = item {
                     self.fmt_kv(kv);
                 }
             }
-            SectionValue::FormParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
-            SectionValue::MultipartFormData(items) => {
+            SectionValue::FormParams(items, _) => items.iter().for_each(|item| self.fmt_kv(item)),
+            SectionValue::MultipartFormData(items, _) => {
                 items.iter().for_each(|item| self.fmt_multipart_param(item));
             }
             SectionValue::Cookies(items) => items.iter().for_each(|item| self.fmt_cookie(item)),

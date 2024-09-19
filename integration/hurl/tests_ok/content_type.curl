@@ -6,6 +6,8 @@ curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n 
 curl --header 'Content-Type: application/vnd.api+json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
 curl --header 'content-type: application/vnd.api+json' --data $'{\n    "name": "Bob",\n    "age": 30\n}' 'http://localhost:8000/content-type-vnd-json'
 curl --data 'field1=foo' --data 'field2=bar' --data 'field2=baz' 'http://localhost:8000/content-type-form'
+curl --data 'field1=foo' --data 'field2=bar' --data 'field2=baz' 'http://localhost:8000/content-type-form'
+curl --form 'field1=foo' --form 'field2=bar' --form 'field2=baz' 'http://localhost:8000/content-type-multipart'
 curl --form 'field1=foo' --form 'field2=bar' --form 'field2=baz' 'http://localhost:8000/content-type-multipart'
 curl --header 'Content-Type: application/xml' --data $'<note>\n    <to>Tove</to>\n    <from>Jani</from>\n    <heading>Reminder</heading>\n    <body>Don\'t forget me this weekend!</body>\n</note>' 'http://localhost:8000/content-type-xml'
 curl --header 'Content-Type: application/xml' --data $'<note>\n    <to>Tove</to>\n    <from>Jani</from>\n    <heading>Reminder</heading>\n    <body>Don\'t forget me this weekend!</body>\n</note>\n' 'http://localhost:8000/content-type-xml'
