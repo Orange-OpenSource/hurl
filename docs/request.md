@@ -637,27 +637,29 @@ to the command line), while other requests are unaffected.
 GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
-aws-sigv4: aws:amz:sts  # generate AWS SigV4 Authorization header
-cacert: /etc/cert.pem   # custom certificate file
-compressed: true        # request a compressed response
-delay: 3s               # delay for this request
-http3: true             # use HTTP/3 protocol version
-insecure: true          # allow insecure SSL connections and transfers
-ipv6: true              # use IPv6 addresses
-location: true          # follow redirection for this request
-max-redirs: 10          # maximum number of redirections
-output: out.html        # dump the response to this file
-path-as-is: true        # do not handle sequences of /../ or /./ in URL path
-retry: 10               # number of retry if HTTP/asserts errors
-retry-interval: 500ms   # interval between retry
-skip: false             # skip this request
-unix-socket: sock       # use Unix socket for transfer
-user: bob:secret        # use basic authentication
-proxy: my.proxy:8012    # define proxy (host:port where host can be an IP address)
-variable: country=Italy # define variable country
-variable: planet=Earth  # define variable planet
-verbose: true           # allow verbose output
-very-verbose: true      # allow more verbose output    
+aws-sigv4: aws:amz:sts     # generate AWS SigV4 Authorization header
+cacert: /etc/cert.pem      # custom certificate file
+cert: /etc/client-cert.pem # client authentication certificate
+key: /etc/client-cert.key  # client authentication certificate key
+compressed: true           # request a compressed response
+delay: 3s                  # delay for this request
+http3: true                # use HTTP/3 protocol version
+insecure: true             # allow insecure SSL connections and transfers
+ipv6: true                 # use IPv6 addresses
+location: true             # follow redirection for this request
+max-redirs: 10             # maximum number of redirections
+output: out.html           # dump the response to this file
+path-as-is: true           # do not handle sequences of /../ or /./ in URL path
+retry: 10                  # number of retry if HTTP/asserts errors
+retry-interval: 500ms      # interval between retry
+skip: false                # skip this request
+unix-socket: sock          # use Unix socket for transfer
+user: bob:secret           # use basic authentication
+proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
+variable: country=Italy    # define variable country
+variable: planet=Earth     # define variable planet
+verbose: true              # allow verbose output
+very-verbose: true         # allow more verbose output    
 ```
 
 > Variable defined in an `[Options]` section are defined also for the next entries. This is 
