@@ -271,6 +271,19 @@ impl Client {
             }
         }
 
+        // We perform an additional check on the response size if maximum filesize is specified
+        // because curl can fail to do this under certain circumstances.
+        // See:
+        // - <https://github.com/Orange-OpenSource/hurl/issues/3245>
+        // - <https://curl.se/docs/manpage.html#--max-filesize>
+        // > Note: before curl 8.4.0, when the file size is not known prior to download, for such files
+        // > this option has no effect even if the file transfer ends up being larger than this given limit.
+        if let Some(max_filesize) = options.max_filesize {
+            if response_body.len() as u64 > max_filesize {
+                return Err(HttpError::AllowedResponseSizeExceeded(max_filesize));
+            }
+        }
+
         let status = self.handle.response_code()?;
         // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {

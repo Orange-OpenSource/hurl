@@ -44,6 +44,10 @@ pub enum HttpError {
     },
     UnsupportedHttpVersion(RequestedHttpVersion),
     InvalidUrl(String, String),
+    /// The maximum response size has been exceeded.
+    /// This error can be raised even if libcurl has been configured to respect a given maximum
+    /// file size.
+    AllowedResponseSizeExceeded(u64),
 }
 
 impl From<curl::Error> for HttpError {
@@ -57,6 +61,7 @@ impl From<curl::Error> for HttpError {
 impl HttpError {
     pub fn description(&self) -> String {
         match self {
+            HttpError::AllowedResponseSizeExceeded(_) => "HTTP connection".to_string(),
             HttpError::CouldNotParseResponse => "HTTP connection".to_string(),
             HttpError::CouldNotUncompressResponse { .. } => "Decompression error".to_string(),
             HttpError::InvalidCharset { .. } => "Invalid charset".to_string(),
@@ -72,6 +77,9 @@ impl HttpError {
 
     pub fn message(&self) -> String {
         match self {
+            HttpError::AllowedResponseSizeExceeded(max_size) => {
+                format!("exceeded the maximum allowed file size ({max_size} bytes)")
+            }
             HttpError::CouldNotParseResponse => "could not parse Response".to_string(),
             HttpError::CouldNotUncompressResponse { description } => {
                 format!("could not uncompress response with {description}")
