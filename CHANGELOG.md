@@ -1,3 +1,24 @@
+[6.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
+========================================================================================================================
+
+Thanks to
+[@lambrospetrou](https://github.com/lambrospetrou),
+
+Breaking Changes:
+
+* Check that variables do not conflict with existing functions [#3229](https://github.com/Orange-OpenSource/hurl/issues/3229)
+
+
+Enhancements:
+
+* Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
+
+
+Bugs Fixed:
+
+* Add additional check for --max-filesize option [#3245](https://github.com/Orange-OpenSource/hurl/issues/3245)
+
+
 [5.0.1 (2024-08-30)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
 ========================================================================================================================
 
