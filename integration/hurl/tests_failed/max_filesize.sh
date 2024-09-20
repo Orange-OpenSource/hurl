@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl --max-filesize 255 tests_failed/max_filesize.hurl
+hurl --continue-on-error --max-filesize 255 tests_failed/max_filesize.hurl

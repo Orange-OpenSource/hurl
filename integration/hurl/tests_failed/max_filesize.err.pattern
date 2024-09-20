@@ -1,0 +1,21 @@
+error: HTTP connection
+  --> tests_failed/max_filesize.hurl:7:5
+   |
+ 7 | GET http://localhost:8000/return-256-bytes
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (63) Maximum file size exceeded
+   |
+
+error: HTTP connection
+  --> tests_failed/max_filesize.hurl:13:5
+   |
+13 | GET http://localhost:8000/redirect-to-return-256-bytes
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (63) Maximum file size exceeded
+   |
+
+error: HTTP connection
+  --> tests_failed/max_filesize.hurl:20:5
+   |
+20 | GET https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ <<<.*>>><<<(Exceeded|exceeded)>>> the maximum allowed file size<<<.*>>>
+   |
+
