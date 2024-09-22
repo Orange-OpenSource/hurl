@@ -29,28 +29,33 @@ jsonpath "$..book[?(@.isbn)].title" nth 1 == "The Lord of the Rings"
 jsonpath "$..book[?(@.price<10)]" count == 2                               # filter all books cheaper than 10
 jsonpath "$..book[?(@.price<10)].title" nth 0 == "Sayings of the Century"
 jsonpath "$..book[?(@.price<10)].title" nth 1 == "Moby Dick"
-jsonpath "$..*" count == 27             	                               # all Elements in XML document. All members of JSON structure.
+jsonpath "$.store.book[?(@.published==true)].title" nth 0 == "Moby Dick"   # Filter on published books
+jsonpath "$..*" count == 31             	                               # All members of JSON structure.
 
 {
   "store": {
     "book": [
       { "category": "reference",
+        "published": false,
         "author": "Nigel Rees",
         "title": "Sayings of the Century",
         "price": 8.95
       },
       { "category": "fiction",
+        "published": false,
         "author": "Evelyn Waugh",
         "title": "Sword of Honour",
         "price": 12.99
       },
       { "category": "fiction",
+        "published": true,
         "author": "Herman Melville",
         "title": "Moby Dick",
         "isbn": "0-553-21311-3",
         "price": 8.99
       },
       { "category": "fiction",
+        "published": false,
         "author": "J. R. R. Tolkien",
         "title": "The Lord of the Rings",
         "isbn": "0-395-19395-8",
