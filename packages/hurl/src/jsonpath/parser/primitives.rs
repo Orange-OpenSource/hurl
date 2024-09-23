@@ -83,6 +83,23 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     Ok(Number { int, decimal })
 }
 
+pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
+    let token = reader.read_while(|c| c.is_alphabetic());
+
+    // Match the token against the strings "true" and "false"
+    let result = match token.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => {
+            let kind = ParseErrorKind::Expecting("bool".to_string());
+            let error = ParseError::new(reader.cursor().pos, true, kind);
+            Err(error)
+        }
+    };
+    whitespace(reader);
+    result
+}
+
 pub fn string_value(reader: &mut Reader) -> Result<String, ParseError> {
     try_literal("'", reader)?;
     let mut s = String::new();
