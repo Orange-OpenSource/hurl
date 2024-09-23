@@ -71,6 +71,53 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.ps1" | grep -v "./completions/")
 
+# Check hurl command diffs between sh and ps1 tests files
+echo "------------------------------------------------------------------------------------------"
+tmp_sh="/tmp/sh"
+tmp_ps1="/tmp/ps1"
+tmp_diff="/tmp/diff"
+touch "${tmp_sh}" "${tmp_ps1}" "${tmp_diff}"
+command -v icdiff >/dev/null 2>&1 || sudo apt-get install -qq -y icdiff > /dev/null 2>&1
+if tput cols >/dev/null 2>&1 ; then
+    nb_cols="$(tput cols)"
+else
+    nb_cols=220
+fi
+while read -r script_sh ; do
+    script_ps1="${script_sh%.sh}.ps1"
+    if [[ -f "${script_ps1}" ]] ; then
+        (grep -E "hurl | hurl|hurlfmt | hurlfmt" "${script_sh}" || true) | \
+            sed "s/.*=.*(hurl/hurl/g" | \
+                sed "s/)$//g" | \
+                        sed "s/^#//g" > "${tmp_sh}"
+        (grep -E "hurl | hurl|hurlfmt | hurlfmt" "${script_ps1}" || true) | \
+            sed "s/.*=hurl/hurl/g" | \
+                sed "s/C://g" | \
+                    sed "s#\`\$#\\\#g" | \
+                        sed "s#\$null#/dev/null#g" | \
+                            sed "s#--output NUL#--output /dev/null#g" | \
+                                sed "s/^#//g" > "${tmp_ps1}"
+        if ! cmp -s "${tmp_sh}" "${tmp_ps1}" >/dev/null 2>&1 ; then
+            icdiff \
+                --show-all-spaces \
+                --highlight \
+                --strip-trailing-cr \
+                --cols="${nb_cols}" \
+                --label="${script_sh}" \
+                --label="${script_ps1}" \
+                "${tmp_sh}" "${tmp_ps1}" | tee -a "${tmp_diff}"
+            echo
+        fi
+    else
+        echo "${color_red}${script_sh}${color_reset} does not have his ${color_red}${script_ps1}${color_reset} clone."
+        echo
+        errors_count=$((errors_count+1))
+    fi
+done < <(find ./integration/hurl*/tests_* -type f -name "*sh" | sort)
+if [ -s "${tmp_diff}" ] ; then
+    errors_count=$((errors_count+1))
+fi
+
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then
     exit 1
