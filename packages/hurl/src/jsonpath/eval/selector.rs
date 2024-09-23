@@ -172,6 +172,7 @@ impl Predicate {
                         (serde_json::Value::String(v), PredicateFunc::EqualString(ref s)) => {
                             v == *s
                         }
+                        (serde_json::Value::Bool(v), PredicateFunc::EqualBool(ref s)) => v == *s,
                         _ => false,
                     }
                 } else {
@@ -392,6 +393,18 @@ mod tests {
             }),
         }
         .eval(json!({"key": 1})));
+
+        assert!(Predicate {
+            key: vec!["key".to_string()],
+            func: PredicateFunc::EqualBool(true),
+        }
+        .eval(json!({"key": true})));
+
+        assert!(Predicate {
+            key: vec!["key".to_string()],
+            func: PredicateFunc::EqualBool(false),
+        }
+        .eval(json!({"key": false})));
     }
 
     #[test]

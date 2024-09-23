@@ -21,7 +21,8 @@ use hurl_core::reader::Reader;
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Query, Selector, Slice};
 use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
 use crate::jsonpath::parser::primitives::{
-    integer, key_name, key_path, literal, natural, number, string_value, try_literal, whitespace,
+    boolean, integer, key_name, key_path, literal, natural, number, string_value, try_literal,
+    whitespace,
 };
 
 pub fn parse(s: &str) -> Result<Query, ParseError> {
@@ -229,6 +230,7 @@ fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
             greater_than_or_equal_predicate_func,
             less_than_predicate_func,
             less_than_or_equal_predicate_func,
+            equal_boolean_predicate_func,
             equal_string_predicate_func,
         ],
         reader,
@@ -240,6 +242,13 @@ fn equal_number_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc
     whitespace(reader);
     let num = number(reader)?;
     Ok(PredicateFunc::Equal(num))
+}
+
+fn equal_boolean_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
+    try_literal("==", reader)?;
+    whitespace(reader);
+    let boolean = boolean(reader)?;
+    Ok(PredicateFunc::EqualBool(boolean))
 }
 
 fn greater_than_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
@@ -580,6 +589,20 @@ mod tests {
 
     #[test]
     pub fn test_predicate_func() {
+        let mut reader = Reader::new("==true");
+        assert_eq!(
+            predicate_func(&mut reader).unwrap(),
+            PredicateFunc::EqualBool(true)
+        );
+        assert_eq!(reader.cursor().index, 6);
+
+        let mut reader = Reader::new("==false");
+        assert_eq!(
+            predicate_func(&mut reader).unwrap(),
+            PredicateFunc::EqualBool(false)
+        );
+        assert_eq!(reader.cursor().index, 7);
+
         let mut reader = Reader::new("==2");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),

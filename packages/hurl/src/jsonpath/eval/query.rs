@@ -80,6 +80,7 @@ mod tests {
     pub fn json_first_book() -> serde_json::Value {
         json!({
             "category": "reference",
+            "published": false,
             "author": "Nigel Rees",
             "title": "Sayings of the Century",
             "price": 8.95
@@ -89,6 +90,7 @@ mod tests {
     pub fn json_second_book() -> serde_json::Value {
         json!({
             "category": "fiction",
+            "published": false,
             "author": "Evelyn Waugh",
             "title": "Sword of Honour",
             "price": 12.99
@@ -98,6 +100,7 @@ mod tests {
     pub fn json_third_book() -> serde_json::Value {
         json!({
             "category": "fiction",
+            "published": true,
             "author": "Herman Melville",
             "title": "Moby Dick",
             "isbn": "0-553-21311-3",
@@ -108,6 +111,7 @@ mod tests {
     pub fn json_fourth_book() -> serde_json::Value {
         json!({
             "category": "fiction",
+            "published": false,
             "author": "J. R. R. Tolkien",
             "title": "The Lord of the Rings",
             "isbn": "0-395-19395-8",
@@ -162,6 +166,44 @@ mod tests {
         assert_eq!(
             query.eval(&json_root()).unwrap(),
             JsonpathResult::Collection(vec![json!("Sayings of the Century"), json!("Moby Dick")])
+        );
+
+        // $.store.book[?(@.published==true)].title
+        let query = Query {
+            selectors: vec![
+                Selector::NameChild("store".to_string()),
+                Selector::NameChild("book".to_string()),
+                Selector::Filter(Predicate {
+                    key: vec!["published".to_string()],
+                    func: PredicateFunc::EqualBool(true),
+                }),
+                Selector::NameChild("title".to_string()),
+            ],
+        };
+        assert_eq!(
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::Collection(vec![json!("Moby Dick")])
+        );
+
+        // $.store.book[?(@.published==false)].title
+        let query = Query {
+            selectors: vec![
+                Selector::NameChild("store".to_string()),
+                Selector::NameChild("book".to_string()),
+                Selector::Filter(Predicate {
+                    key: vec!["published".to_string()],
+                    func: PredicateFunc::EqualBool(false),
+                }),
+                Selector::NameChild("title".to_string()),
+            ],
+        };
+        assert_eq!(
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::Collection(vec![
+                json!("Sayings of the Century"),
+                json!("Sword of Honour"),
+                json!("The Lord of the Rings")
+            ])
         );
 
         // $..author

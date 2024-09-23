@@ -54,6 +54,7 @@ pub struct Predicate {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PredicateFunc {
     KeyExist,
+    EqualBool(bool),
     EqualString(String),
     Equal(Number),
     GreaterThan(Number),
