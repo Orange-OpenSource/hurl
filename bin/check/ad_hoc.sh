@@ -1,6 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+
 color_red=$(echo -e "\033[1;31m")
 color_green=$(echo -ne "\033[1;32m")
 color_reset=$(echo -e "\033[0m")
@@ -70,6 +71,53 @@ while read -r script ; do
         echo "[\$ErrorActionPreference = 'Stop'] is present in second line of ${color_green}${script}${color_reset}"
     fi
 done < <(find . -type f -name "*.ps1" | grep -v "./completions/")
+
+# Check hurl command diffs between sh and ps1 tests files
+echo "------------------------------------------------------------------------------------------"
+tmp_sh="/tmp/sh"
+tmp_ps1="/tmp/ps1"
+tmp_diff="/tmp/diff"
+touch "${tmp_sh}" "${tmp_ps1}" "${tmp_diff}"
+command -v icdiff >/dev/null 2>&1 || sudo apt-get install -qq -y icdiff > /dev/null 2>&1
+if tput cols >/dev/null 2>&1 ; then
+    nb_cols="$(tput cols)"
+else
+    nb_cols=220
+fi
+function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" || true ;}
+function clean_indent { sed "s/^ *hurl/hurl/g" ;}
+function uncomment { sed "s/^#//g" ;}
+function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
+function clean_ps1_var_redirect { sed "s/.*=hurl/hurl/g" ;}
+function clean_c_drive { sed "s/C://g" ;}
+function conv_ps1_antislash_to_sh { sed "s#\`\$#\\\#g" | sed "s#\`\\\#\\\\\\\#g" ;}
+function conv_ps1_null_to_sh { sed "s#\$null#/dev/null#g" | sed "s#--output NUL#--output /dev/null#g" ;}
+while read -r script_sh ; do
+    script_ps1="${script_sh%.sh}.ps1"
+    if [[ -f "${script_ps1}" ]] ; then
+        filter_hurl_and_hurlfmt "${script_sh}" | clean_sh_var_redirect | clean_indent | uncomment > "${tmp_sh}"
+        filter_hurl_and_hurlfmt "${script_ps1}" | clean_ps1_var_redirect | clean_c_drive | conv_ps1_antislash_to_sh | conv_ps1_null_to_sh | clean_indent | uncomment > "${tmp_ps1}"
+        if ! cmp -s "${tmp_sh}" "${tmp_ps1}" >/dev/null 2>&1 ; then
+            icdiff \
+                --show-all-spaces \
+                --highlight \
+                --strip-trailing-cr \
+                --cols="${nb_cols}" \
+                --label="${script_sh}" \
+                --label="${script_ps1}" \
+                "${tmp_sh}" "${tmp_ps1}" | tee -a "${tmp_diff}"
+            echo
+        fi
+    else
+        echo "${color_red}${script_sh}${color_reset} does not have his ${color_red}${script_ps1}${color_reset} clone."
+        echo
+        errors_count=$((errors_count+1))
+    fi
+done < <(find ./integration/hurl*/tests_* -type f -name "*sh" | sort)
+unset -f filter_hurl_and_hurlfmt clean_indent uncomment clean_sh_var_redirect clean_ps1_var_redirect clean_c_drive conv_ps1_antislash_to_sh conv_ps1_null_to_sh
+if [ -s "${tmp_diff}" ] ; then
+    errors_count=$((errors_count+1))
+fi
 
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then
