@@ -3,6 +3,7 @@
 
 Thanks to
 [@lambrospetrou](https://github.com/lambrospetrou),
+[@jmvargas](https://github.com/jmvargas)
 
 Breaking Changes:
 
@@ -11,6 +12,7 @@ Breaking Changes:
 
 Enhancements:
 
+* Jsonpath / Add Filter on boolean value [#3252](https://github.com/Orange-OpenSource/hurl/issues/3252)
 * Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
 
 
