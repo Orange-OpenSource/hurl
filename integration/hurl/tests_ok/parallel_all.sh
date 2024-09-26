@@ -103,5 +103,5 @@ ret=$?
 
 cat build/parallel-all.txt
 
-# We use the exit code of the hurl command (and not the cat command)
+# We use the exit code of the Hurl command (and not the cat command)
 exit $ret
