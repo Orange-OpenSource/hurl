@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Set up QEMU
@@ -109,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -160,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -211,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -262,7 +262,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -312,7 +312,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
-     uses: actions/checkout@v4.1.7
+     uses: actions/checkout@v4.2.0
      with:
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
@@ -383,7 +383,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -434,7 +434,7 @@ jobs:
     runs-on: macos-13
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -483,7 +483,7 @@ jobs:
     runs-on: macos-14
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -538,7 +538,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v4.2.0
       with:
         ref: ${{ inputs.branch }}
     - name: Install Rust
@@ -590,7 +590,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
         with:
           ref: ${{ inputs.branch }}
       - uses: actions/download-artifact@v4.1.8

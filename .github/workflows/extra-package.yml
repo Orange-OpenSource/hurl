@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
@@ -67,7 +67,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
