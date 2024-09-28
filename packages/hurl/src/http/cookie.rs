@@ -128,7 +128,7 @@ impl ResponseCookie {
     /// Converts a cookie attribute value named `name` into a boolean.
     fn attr_as_bool(&self, name: &str) -> bool {
         for attr in &self.attributes {
-            if attr.name == name && attr.value.is_none() {
+            if attr.name.to_lowercase() == name.to_lowercase() && attr.value.is_none() {
                 return true;
             }
         }
@@ -138,7 +138,7 @@ impl ResponseCookie {
     /// Converts a cookie attribute value named `name` into an integer.
     fn attr_as_i64(&self, name: &str) -> Option<i64> {
         for attr in &self.attributes {
-            if attr.name == name {
+            if attr.name.to_lowercase() == name.to_lowercase() {
                 if let Some(v) = &attr.value {
                     if let Ok(v2) = v.as_str().parse::<i64>() {
                         return Some(v2);
@@ -182,6 +182,13 @@ pub mod tests {
             CookieAttribute::parse("HttpOnly".to_string()).unwrap(),
             CookieAttribute {
                 name: "HttpOnly".to_string(),
+                value: None
+            }
+        );
+        assert_eq!(
+            CookieAttribute::parse("httponly".to_string()).unwrap(),
+            CookieAttribute {
+                name: "httponly".to_string(),
                 value: None
             }
         );

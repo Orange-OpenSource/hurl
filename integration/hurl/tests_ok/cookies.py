@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request, make_response, Response
 from app import app
 
 
@@ -128,4 +128,17 @@ def set_cookies():
         secure=True,
         httponly=True,
     )
+    return resp
+
+
+@app.route("/cookies/attributes/caseinsentitive")
+def set_cookies_attributes_caseinsensitive():
+    headers = {
+        "Set-Cookie": [
+            "CAMELCASE=value; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Max-Age=1000; Path=/accounts; SECURE; HttpOnly; SameSite=Strict",
+            "LOWERCASE=value; expires=Wed, 13 Jan 2021 22:23:01 GMT; max-age=1000; path=/accounts; SECURE; httponly; samesite=Strict",
+            "UPPERCASE=value; EXPIRES=Wed, 13 Jan 2021 22:23:01 GMT; MAX-AGE=1000; PATH=/accounts; SECURE; HTTPONLY; SAMESITE=Strict",
+        ]
+    }
+    resp = Response("", headers=headers)
     return resp
