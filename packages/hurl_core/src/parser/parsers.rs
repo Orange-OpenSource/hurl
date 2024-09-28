@@ -23,9 +23,10 @@ use crate::parser::error::*;
 use crate::parser::number::natural;
 use crate::parser::primitives::*;
 use crate::parser::sections::*;
-use crate::parser::url::url;
 use crate::parser::ParseResult;
 use crate::reader::Reader;
+
+use super::string::unquoted_template;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
     let entries = zero_or_more(entry, reader)?;
@@ -52,8 +53,7 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let space0 = zero_or_more_spaces(reader)?;
     let m = method(reader)?;
     let space1 = one_or_more_spaces(reader)?;
-    let u = url(reader)?;
-
+    let url = unquoted_template(reader)?;
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = request_sections(reader)?;
@@ -79,7 +79,7 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
         space0,
         method: m,
         space1,
-        url: u,
+        url,
         line_terminator0,
         headers,
         sections,

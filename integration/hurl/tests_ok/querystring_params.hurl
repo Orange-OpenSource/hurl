@@ -4,6 +4,7 @@ param1: value1
 param2:
 param3: a=b
 param4: 1,2,3
+param5: {bar}
 $top: 5
 HTTP 200
 
@@ -14,12 +15,13 @@ param1: value1
 param2:
 param3: a=b
 param4: 1,2,3
+param5: {bar}
 $top: 5
 HTTP 200
 
 
 # Same version as raw
-GET http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3&$top=5
+GET http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3&param5={bar}&$top=5
 HTTP 200
 
 
@@ -29,11 +31,12 @@ GET http://localhost:8000/querystring-params?param1=value1
 param2:
 param3: a=b
 param4: 1,2,3
+param5: {bar}
 $top: 5
 HTTP 200
 
 
-GET http://localhost:8000/querystring-params?param1=value1
+GET http://localhost:8000/querystring-params?param1=value1&param5={bar}
 [Query]
 param2:
 param3: a=b

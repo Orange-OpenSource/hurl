@@ -1,7 +1,0 @@
-error: Parsing URL
-  --> tests_error_parser/invalid_url_1.hurl:1:5
-   |
- 1 | GET localhost:8000
-   |     ^ expecting http://, https:// or {{
-   |
-

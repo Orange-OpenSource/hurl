@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/~user"}},{"request":{"method":"GET","url":"http://localhost:8000/%7Euser"}},{"request":{"method":"GET","url":"http://localhost:8000/!$&()*+,;=:@[]"}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/~user"}},{"request":{"method":"GET","url":"http://localhost:8000/%7Euser"}},{"request":{"method":"GET","url":"http://localhost:8000/!$&()*+,;=:@[]"}},{"request":{"method":"GET","url":"http://localhost:8000?foo={bar}"}}]}

@@ -1,7 +1,0 @@
-error: Parsing URL
-  --> tests_error_parser/invalid_url.hurl:1:26
-   |
- 1 | GET http://localhost:8000> #
-   |                          ^ illegal character <>>
-   |
-

@@ -1,7 +1,0 @@
-error: Parsing URL
-  --> tests_error_parser/url_bad_prefix.hurl:4:5
-   |
- 4 | GET "http://localhost:8000"
-   |     ^ expecting http://, https:// or {{
-   |
-

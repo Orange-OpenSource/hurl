@@ -53,5 +53,4 @@ mod query;
 mod sections;
 mod string;
 mod template;
-mod url;
 mod xml;

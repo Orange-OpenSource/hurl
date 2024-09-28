@@ -8,6 +8,7 @@ def querystring_params():
     assert request.args.get("param2") == ""
     assert request.args.get("param3") == "a=b"
     assert request.args.get("param4") == "1,2,3"
+    assert request.args.get("param5") == "{bar}"
     assert request.args.get("$top") == "5"
     return ""
 
