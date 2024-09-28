@@ -4,6 +4,8 @@
 Thanks to
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@jmvargas](https://github.com/jmvargas)
+[@mohammed90](https://github.com/mohammed90)
+[@thePanz](https://github.com/thePanz)
 
 Breaking Changes:
 
@@ -18,7 +20,9 @@ Enhancements:
 
 Bugs Fixed:
 
+* Support case-insensitive Cookie Attributes [#3265](https://github.com/Orange-OpenSource/hurl/issues/3265)
 * Add additional check for --max-filesize option [#3245](https://github.com/Orange-OpenSource/hurl/issues/3245)
+* Fix filename parsing (used by cert option) [#3242](https://github.com/Orange-OpenSource/hurl/issues/3242)
 
 
 [5.0.1 (2024-08-30)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
