@@ -115,7 +115,7 @@ fn filename_password_text(reader: &mut Reader) -> String {
         match reader.read() {
             None => break,
             Some(c) => {
-                if ['#', ';', '{', '}', '\n', '\\'].contains(&c) {
+                if ['#', ';', '{', '}', ' ', '\n', '\\'].contains(&c) {
                     reader.seek(save);
                     break;
                 } else {
@@ -172,5 +172,22 @@ mod tests {
             }
         );
         assert_eq!(reader.cursor().index, 18);
+    }
+
+    #[test]
+    fn test_parse() {
+        let mut reader = Reader::new("/etc/client-cert.pem #foo");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "/etc/client-cert.pem".to_string(),
+                    encoded: "/etc/client-cert.pem".to_string()
+                }],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
+            }
+        );
+        assert_eq!(reader.cursor().index, 20);
     }
 }

@@ -558,6 +558,29 @@ mod tests {
     }
 
     #[test]
+    fn test_option_cert() {
+        let mut reader = Reader::new("/etc/client-cert.pem #foo");
+
+        assert_eq!(
+            option_cert(&mut reader).unwrap(),
+            OptionKind::ClientCert(Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "/etc/client-cert.pem".to_string(),
+                    encoded: "/etc/client-cert.pem".to_string()
+                }],
+                source_info: SourceInfo {
+                    start: Pos { line: 1, column: 1 },
+                    end: Pos {
+                        line: 1,
+                        column: 21,
+                    },
+                },
+            }),
+        );
+    }
+
+    #[test]
     fn test_option_retry_error() {
         let mut reader = Reader::new("retry: ###");
         let error = parse(&mut reader).err().unwrap();
