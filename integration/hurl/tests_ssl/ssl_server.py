@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# usage: ./server.py <port> <cert_file> <Client certificate authentication>
+# usage: ./ssl_server.py <port> <cert_file> <Client certificate authentication>
 # Start the server with or without client certificate authentication
 import flask
 import sys
@@ -29,7 +29,7 @@ def get_ssl_context(cert_file, use_client_certificate_authentication):
 
 def print_usage_and_exit():
     print(
-        "usage: ./server.py <port> <cert_file> <use_client_certificate_authentication>"
+        "usage: ./ssl_server.py <port> <cert_file> <use_client_certificate_authentication>"
     )
     sys.exit(1)
 

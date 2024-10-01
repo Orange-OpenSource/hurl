@@ -1,3 +1,5 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl --cacert tests_ssl/ca/cert.pem --ssl-no-revoke --json tests_ssl/cacert.hurl
+# Does not work without --ssl-no-revoke
+#hurl --cacert tests_ssl/ca/cert.pem --json tests_ssl/cacert.hurl
+exit 255

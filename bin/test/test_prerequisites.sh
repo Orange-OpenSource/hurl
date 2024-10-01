@@ -77,17 +77,17 @@ echo -e "\n------------------ Starting server.py"
 python3 server.py > build/server.log 2>&1 &
 check_listen_port "server.py" 8000 || cat_and_exit_err build/server.log
 
-echo -e "\n------------------ Starting tests_ssl/server.py (Self-signed certificate)"
-python3 tests_ssl/server.py 8001 tests_ssl/server/cert.selfsigned.pem false > build/server-ssl-selfsigned.log 2>&1 &
-check_listen_port "tests_ssl/server.py" 8001 || cat_and_exit_err build/server-ssl-selfsigned.log
+echo -e "\n------------------ Starting tests_ssl/ssl_server.py (Self-signed certificate)"
+python3 tests_ssl/ssl_server.py 8001 tests_ssl/server/cert.selfsigned.pem false > build/server-ssl-selfsigned.log 2>&1 &
+check_listen_port "tests_ssl/ssl_server.py" 8001 || cat_and_exit_err build/server-ssl-selfsigned.log
 
-echo -e "\n------------------ Starting tests_ssl/server.py (Signed by CA)"
-python3 tests_ssl/server.py 8002 tests_ssl/server/cert.pem false > build/server-ssl-signedbyca.log 2>&1 &
-check_listen_port "tests_ssl/server.py" 8002 || cat_and_exit_err build/server-ssl-signedbyca.log
+echo -e "\n------------------ Starting tests_ssl/ssl_server.py (Signed by CA)"
+python3 tests_ssl/ssl_server.py 8002 tests_ssl/server/cert.pem false > build/server-ssl-signedbyca.log 2>&1 &
+check_listen_port "tests_ssl/ssl_server.py" 8002 || cat_and_exit_err build/server-ssl-signedbyca.log
 
-echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + Client certificate authentication)"
-python3 tests_ssl/server.py 8003 tests_ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 &
-check_listen_port "tests_ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
+echo -e "\n------------------ Starting ssl/ssl_server.py (Self-signed certificate + Client certificate authentication)"
+python3 tests_ssl/ssl_server.py 8003 tests_ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 &
+check_listen_port "tests_ssl/ssl_server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
 echo -e "\n------------------ Starting unix_socket/server.py"
 python3 tests_unix_socket/server.py > build/server-unix-socket.log 2>&1 &
