@@ -1,4 +1,0 @@
-curl --insecure 'https://localhost:8001/hello'
-curl --insecure 'https://localhost:8001/hello'
-curl --cacert ssl/server/cert.selfsigned.pem 'https://localhost:8001/hello'
-

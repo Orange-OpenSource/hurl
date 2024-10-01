@@ -1,2 +1,0 @@
-curl --cacert ssl/server/cert.selfsigned.pem --cert ssl/client/cert.pem --key ssl/client/key.pem 'https://localhost:8003/hello'
-

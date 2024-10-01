@@ -1,1 +1,0 @@
-curl --cacert ssl/ca/cert.pem 'https://localhost:8002/hello'
