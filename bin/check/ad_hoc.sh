@@ -43,15 +43,16 @@ done < <(find . -type f -name "*.sh")
 # Check bash function names in kebab case instead of camel case
 echo "------------------------------------------------------------------------------------------"
 while read -r script ; do
-    kebab_case_function_list=$( (grep -Ev "^#" "${script}" || true) | (grep -E "^function" "${script}" || true) | (grep '-' || true) )
+    kebab_case_function_list=$( (grep -Ev "^#" "${script}" || true) | (grep -E "^function" "${script}" || true) | cut --delimiter '{' --field 1 | cut --delimiter '(' --field 1 | tr -s ' ' | cut --delimiter ' ' --field 2)
     if [ -n "${kebab_case_function_list}" ] ; then
-        echo "Kebab case is not allowed for function naming, use snake case instead in ${color_red}${script}${color_reset}"
         while read -r function ; do
-            clean_function=$(echo "${function}" | tr -s ' ' | cut --delimiter ' ' --field 2 | cut --delimiter '(' --field 1)
-            echo "${color_red}${clean_function}${color_reset} have to be: $(echo "${clean_function}" | tr '-' '_')"
+            if [[ "${function}" =~ "-" ]] ; then 
+                echo "${color_red}${script}: function ${function}${color_reset} have to be: $(echo "${function}" | tr '-' '_')"
+                errors_count=$((errors_count+1))
+            else
+                echo "${script}: function ${function} ${color_green}well formated${color_reset}"
+            fi
         done < <(echo "${kebab_case_function_list}")
-        echo
-        errors_count=$((errors_count+1))
     fi
 done < <(find . -type f -name "*.sh")
 
@@ -107,6 +108,9 @@ while read -r script_sh ; do
                 --label="${script_ps1}" \
                 "${tmp_sh}" "${tmp_ps1}" | tee -a "${tmp_diff}"
             echo
+            errors_count=$((errors_count+1))
+        else
+            echo "${script_sh} has the same hurl commands as ${color_green}${script_ps1}${color_reset}"
         fi
     else
         echo "${color_red}${script_sh}${color_reset} does not have his ${color_red}${script_ps1}${color_reset} clone."
@@ -115,9 +119,6 @@ while read -r script_sh ; do
     fi
 done < <(find ./integration/hurl*/*/ -maxdepth 1 -type f -name "*sh" | sort)
 unset -f filter_hurl_and_hurlfmt clean_indent uncomment clean_sh_var_redirect clean_ps1_var_redirect clean_c_drive conv_ps1_antislash_to_sh conv_ps1_null_to_sh
-if [ -s "${tmp_diff}" ] ; then
-    errors_count=$((errors_count+1))
-fi
 
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then
