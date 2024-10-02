@@ -89,9 +89,9 @@ echo -e "\n------------------ Starting ssl/ssl_server.py (Self-signed certificat
 python3 tests_ssl/ssl_server.py 8003 tests_ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 &
 check_listen_port "tests_ssl/ssl_server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
-echo -e "\n------------------ Starting unix_socket/server.py"
-python3 tests_unix_socket/server.py > build/server-unix-socket.log 2>&1 &
-check_unix_socket "tests_unix_socket/server.py" build/unix_socket.sock "GET /hello HTTP/1.0\r\n"
+echo -e "\n------------------ Starting tests_unix_socket/unix_socket_server.py"
+python3 tests_unix_socket/unix_socket_server.py > build/server-unix-socket.log 2>&1 &
+check_unix_socket "tests_unix_socket/unix_socket_server.py" build/unix_socket.sock "GET /hello HTTP/1.0\r\n"
 
 echo -e "\n------------------ Starting squid (proxy)"
 if [ -f /var/run/squid.pid ] ; then

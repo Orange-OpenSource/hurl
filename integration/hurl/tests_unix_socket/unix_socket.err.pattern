@@ -1,5 +1,5 @@
 error: HTTP connection
-  --> tests_ok/unix_socket.hurl:1:5
+  --> tests_unix_socket/unix_socket.hurl:1:5
    |
  1 | GET http://example/hello
    |     ^^^^^^^^^^^^^^^^^^^^ (7) <<<.*?>>>
