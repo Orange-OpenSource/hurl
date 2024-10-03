@@ -16,6 +16,6 @@ HTTP 200
 
 GET https://localhost:8001/hello
 [Options]
-cacert: tests_ssl/server/cert.selfsigned.pem       # with a custom certificate
+cacert: tests_ssl/certs/server/cert.selfsigned.pem       # with a custom certificate
 HTTP 200
 `Hello World!`

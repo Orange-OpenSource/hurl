@@ -22,8 +22,8 @@ def get_ssl_context(cert_file, use_client_certificate_authentication):
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     if use_client_certificate_authentication:
         ssl_context.verify_mode = ssl.CERT_REQUIRED
-    ssl_context.load_verify_locations("tests_ssl/ca/cert.pem")
-    ssl_context.load_cert_chain(cert_file, "tests_ssl/server/key.pem")
+    ssl_context.load_verify_locations("tests_ssl/certs/ca/cert.pem")
+    ssl_context.load_cert_chain(cert_file, "tests_ssl/certs/server/key.pem")
     return ssl_context
 
 

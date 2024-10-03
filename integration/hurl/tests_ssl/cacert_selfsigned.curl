@@ -1,1 +1,1 @@
-curl --cacert tests_ssl/server/cert.selfsigned.pem 'https://localhost:8001/hello'
+curl --cacert tests_ssl/certs/server/cert.selfsigned.pem 'https://localhost:8001/hello'
