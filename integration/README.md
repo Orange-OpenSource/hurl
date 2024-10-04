@@ -6,7 +6,7 @@ In the Hurl project, there are three type of tests:
 
 - Rust unit tests: run at the root of the project with `cargo test --lib`
 - Rust integration tests: run at the root of the project with `cargo test`. You will also run unit test with this command. 
-To run Rust integration tests, you need to launch a local test server (see below).
+To run Rust tests, you need to launch a local test servers (see below).
 
 These tests are "classic" Rust tests and should not surprise a Rust developer.
 
@@ -30,16 +30,22 @@ $ pip install --requirement bin/requirements-frozen.txt
 
 ### Proxy
 
-Some integration tests need a proxy. You can use [mitmproxy] or [squid].
+Some integration tests need a proxy. Given our cross-platform needs, we selected [squid] rather than [mitmproxy].
 
 ### Start local server
 
-You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the 
-local test server and proxy. Once launch, there is:
+to start the local test server and proxy, you can use the scripts depending on your OS:
+
+- [`bin/test/test_prerequisites.sh`]
+- [`bin/test/test_prerequisites.ps1`]
+
+Once launch, there is:
 
 - a Flask server instance listening on <http://localhost:8000>
 - a Flask server instance listening on <https://localhost:8001>
 - a Flask server instance listening on <https://localhost:8002>
+- - a Flask server instance listening on <https://localhost:8003>
+- a Flask server instance listening on <build/unix_socket.sock>
 - a HTTP proxy listening on <http://localhost:8888>
 
 Now, everything is ready to run the integration tests!
@@ -56,8 +62,8 @@ ensure that there is no regression even if a Hurl file doesn't follow a stricter
 - [`hurl/tests_failed`]: every test must fail (exit code different from 0). Tests are syntactically correct, so the error
 raised by the test is a runtime error.
 - [`hurl/tests_error_parser`]: every test is not a syntactically correct Hurl file. We test here the parsing error message.
-- [`hurl/ssl`]: tests SSL features (server and client certificates, etc...)
-- [`hurl/unix_socket`]: tests Unix Socket
+- [`hurl/tests_ssl`]: tests SSL features (server, test files, certificates, etc...)
+- [`hurl/tests_unix_socket`]: tests Unix Socket (server, tests files, etc...)
 
 
 Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` directory:
@@ -65,7 +71,6 @@ Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` 
 - [`hurlfmt/tests_ok`]: every test there must be successful (exit code 0)
 - [`hurlfmt/tests_export`]: every hurl file has its own JSON and HTML version/export.
 - [`hurlfmt/tests_error_lint`]: every test is syntactically correct, but is not formatted through `hurlfmt`. We test here the linting.
-
 
 ### Files Description
 
@@ -90,10 +95,7 @@ is a JSON view of the Hurl source file and can serve to convert from/to Hurl for
 To run all integration tests:
 
 ```shell
-$ cd integration/hurl
-$ python3 integration.py
-$ cd integration/hurlfmt
-$ python3 integration.py
+$ bin/test/test_integ.sh
 ```
 
 To run a particular integration test without any check:
@@ -195,6 +197,8 @@ curl 'http://localhost:8000/include'
 [`hurl/tests_ok_not_linted`]: /integration/hurl/tests_ok_not_linted
 [`hurl/tests_failed`]: /integration/hurl/tests_failed
 [`hurl/tests_error_parser`]: /integration/hurl/tests_error_parser
+[`hurl/tests_ssl`]: /integration/hurl/tests_ssl
+[`hurl/tests_unix_socket`]: /integration/hurl/tests_unix_socket
 [`hurlfmt/tests_ok`]: /integration/hurlfmt/tests_ok
 [`hurlfmt/tests_export`]: /integration/hurlfmt/tests_export
 [`hurlfmt/tests_error_lint`]: /integration/hurlfmt/tests_error_lint

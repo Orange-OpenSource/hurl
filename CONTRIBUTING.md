@@ -38,7 +38,7 @@ relevant to you and we understand it; that's said, we try to reflect on every as
 - All tests must be green before merge. Our CI/CD will run [a test suite] to insure everything is OK.
 - Hurl Git history is linear, so we may rebase your PR on your fork before final merge.
 
-## Build and Test
+## Build
 
 Hurl is a Rust project, so you will need the Rust toolchain to build it. You can check the [Hurl build documentation] to 
 see how to build locally the latest version (master branch).
@@ -54,15 +54,9 @@ $ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
 ```
 
-To run unit tests, you can run:
+## Test
 
-```shell
-$ cargo test --lib
-```
-
-
-Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.6+. You can use a [virtual environment] and install the dependencies needed
-by the tests suite:
+Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.9+. You can use a [virtual environment]:
 
 ```shell
 $ python3 -m venv .venv
@@ -70,18 +64,22 @@ $ source .venv/bin/activate
 $ pip install --requirement bin/requirements-frozen.txt 
 ```
 
-Then, you can launch our local server (used to test Hurl features):
+Then, you can launch our local servers (used to test Hurl features):
 
 ```shell
-$ cd integration
-$ python3 server.py >server.log 2>&1 &
-$ python3 ssl/server.py >server-ssl.log 2>&1 &
-$ squid_conf="http_access allow all\nhttp_port 3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
-$ (echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1) &
-$ jobs
-[1]    running    python3 server.py > server.log 2>&1
-[2]  - running    python3 ssl/server.py > server-ssl.log 2>&1
-[3]  + running    echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1
+$ bin/test/test_prerequisites.sh
+```
+
+To run unit tests, you can run:
+
+```shell
+$ bin/test/test_unit.sh
+```
+
+To run integration tests, you can run:
+
+```shell
+$ bin/test/test_integ.sh
 ```
 
 You can check [the integration `README`] for more details
@@ -91,8 +89,9 @@ Now, you can follow these steps when you make changes:
 1. Build `cargo build`
 2. Run Clippy `cargo clippy`
 3. Format `cargo fmt`
-4. Run units tests `cargo test --lib`
-5. Run integration tests `cd integration && python3 integration.py`
+4. Run local servers `bin/test/test_prerequisites.sh`
+5. Run units tests `bin/test/test_unit.sh`
+6. Run integration tests `bin/test/test_integ.sh`
 
 Et voilà 🎉! 
 

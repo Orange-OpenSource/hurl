@@ -129,36 +129,36 @@ Hurl sources are available in [GitHub].
 
 ### Build on Linux
 
-Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
+Hurl depends on libcurl, libidn2, libssl, and libxml2 native libraries. You will need their development files in your platform.
 
 #### Debian based distributions
 
 ```shell
-$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+$ apt install -y build-essential pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev
 ```
 
 #### Fedora based distributions
 
 ```shell
-$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel
+$ dnf install -y gcc pkgconf-pkg-config libcurl-devel openssl-devel libxml2-devel
 ```
 
 #### Red Hat based distributions
 
 ```shell
-$ yum install -y pkg-config gcc openssl-devel libxml2-devel
+$ yum install -y gcc pkg-config openssl-devel libxml2-devel
 ```
 
 #### Arch based distributions
 
 ```shell
-$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2
+$ pacman -S --noconfirm gcc glibc pkgconf base-devel curl openssl libxml2
 ```
 
 #### Alpine based distributions
 
 ```shell
-$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev
+$ apk add gcc musl-dev curl-dev libcurl openssl-dev libxml2-dev
 ```
 
 ### Build on macOS

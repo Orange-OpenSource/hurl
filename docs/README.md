@@ -16,7 +16,6 @@ Dependencies:
 ```
 docs/manual/hurl.md => docs/manual/hurl.1
 docs/manual/hurl.md => docs/manual.md
-
 docs/manual/hurlfmt.md => docs/manual/hurlfmt.1
 ```
 
@@ -30,6 +29,9 @@ Dependencies:
 docs/*.md => README.md
 docs/*.md => packages/hurl/README.md
 ```
+## Prerequisites
+
+Install python 3.10+
 
 ## Scripts
 
