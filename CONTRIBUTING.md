@@ -47,10 +47,10 @@ Once your setup is ready, just build the project:
 
 ```shell
 $ cargo build
-   Compiling hurl_core v2.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurl_core)
+   Compiling hurl_core v6.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurl_core)
    ...
-   Compiling hurlfmt v2.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurlfmt)
-   Compiling hurl v2.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurl)
+   Compiling hurlfmt v6.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurlfmt)
+   Compiling hurl v6.0.0-SNAPSHOT (/Users/jc/Documents/Dev/hurl/packages/hurl)
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
 ```
 
@@ -61,7 +61,7 @@ $ cargo test --lib
 ```
 
 
-Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.6+. You can use a [virtual environment] and install the dependencies needed
+Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.9+. You can use a [virtual environment] and install the dependencies needed
 by the tests suite:
 
 ```shell
@@ -73,15 +73,21 @@ $ pip install --requirement bin/requirements-frozen.txt
 Then, you can launch our local server (used to test Hurl features):
 
 ```shell
-$ cd integration
-$ python3 server.py >server.log 2>&1 &
-$ python3 ssl/server.py >server-ssl.log 2>&1 &
-$ squid_conf="http_access allow all\nhttp_port 3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
-$ (echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1) &
+$ cd integration/hurl
+$ python3 server.py > server.log 2>&1 &
+$ python3 tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false > server-ssl-selfsigned.log 2>&1 &
+$ python3 tests_ssl/ssl_server.py 8002 tests_ssl/certs/server/cert.pem false > server-ssl-signedbyca.log 2>&1 &
+$ python3 tests_ssl/ssl_server.py 8003 tests_ssl/certs/server/cert.selfsigned.pem true > server-ssl-client-authent.log 2>&1 &
+$ python3 tests_unix_socket/unix_socket_server.py > server-unix-socket.log 2>&1 &
+$ squid_conf="cache deny all\ncache_log /dev/null\naccess_log /dev/null\nhttp_access allow all\nhttp_port 127.0.0.1:3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
+$ (echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee proxy.log 2>&1) &
 $ jobs
-[1]    running    python3 server.py > server.log 2>&1
-[2]  - running    python3 ssl/server.py > server-ssl.log 2>&1
-[3]  + running    echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1
+
+[1] Running ( echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee build/proxy.log 2>&1 ) &
+[2] Running python3 server.py > server.log 2>&1 &
+[3] Running python3 tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false > server-ssl-selfsigned.log 2>&1 &
+[4]-Running python3 tests_ssl/ssl_server.py 8002 tests_ssl/certs/server/cert.pem false > server-ssl-signedbyca.log 2>&1 &
+[5]+Running python3 tests_ssl/ssl_server.py 8003 tests_ssl/certs/server/cert.selfsigned.pem true > server-ssl-client-authent.log 2>&1 &
 ```
 
 You can check [the integration `README`] for more details
@@ -92,7 +98,7 @@ Now, you can follow these steps when you make changes:
 2. Run Clippy `cargo clippy`
 3. Format `cargo fmt`
 4. Run units tests `cargo test --lib`
-5. Run integration tests `cd integration && python3 integration.py`
+5. Run integration tests `cd integration/hurl && python3 integration.py`
 
 Et voilà 🎉! 
 
