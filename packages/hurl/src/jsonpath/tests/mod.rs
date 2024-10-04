@@ -257,24 +257,15 @@ fn test_bookstore_path() {
     let expr = jsonpath::parse("$..book[?(@.title!='Moby Dick')]").unwrap();
     assert_eq!(
         expr.eval(&bookstore_value()).unwrap(),
-        JsonpathResult::Collection(vec![
-            book0_value(),
-            book1_value(),
-            book3_value()
-        ])
+        JsonpathResult::Collection(vec![book0_value(), book1_value(), book3_value()])
     );
 
     // get all books whose price is not 8.95 (first book)
     let expr = jsonpath::parse("$..book[?(@.price!=8.95)]").unwrap();
     assert_eq!(
         expr.eval(&bookstore_value()).unwrap(),
-        JsonpathResult::Collection(vec![
-            book1_value(),
-            book2_value(),
-            book3_value()
-        ])
+        JsonpathResult::Collection(vec![book1_value(), book2_value(), book3_value()])
     );
-
 
     // All members of JSON structure
     let expr = jsonpath::parse("$..*").unwrap();

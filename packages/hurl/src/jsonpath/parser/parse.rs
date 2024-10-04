@@ -233,7 +233,7 @@ fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
             equal_boolean_predicate_func,
             equal_string_predicate_func,
             notequal_string_predicate_func,
-            notequal_number_func
+            notequal_number_func,
         ],
         reader,
     )
@@ -668,7 +668,10 @@ mod tests {
         let mut reader = Reader::new("!=2.5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
-            PredicateFunc::NotEqual(Number { int: 2, decimal: 500_000_000_000_000_000 })
+            PredicateFunc::NotEqual(Number {
+                int: 2,
+                decimal: 500_000_000_000_000_000
+            })
         );
 
         let mut reader = Reader::new(">5");
