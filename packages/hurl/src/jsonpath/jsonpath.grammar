@@ -31,7 +31,9 @@ predicate-key = "@." key-name
 
 predicate-func = key-exist-predicate-func
                | equal-string-predicate-func
+               | notequal-string-predicate-func
                | equal-number-predicate-func
+               | notequal-number-predicate-func
                | greater-than-predicate-func
                | greater-or-equal-than-predicate-func
 
@@ -39,6 +41,10 @@ predicate-func = key-exist-predicate-func
 equal-string-predicate-func = "=" string-value
 
 equal-number-predicate-func- = "=" number
+
+notequal-string-predicate-func = "!=" string-value
+
+notequal-number-predicate-func = "!=" number
 
 
 #
@@ -50,6 +56,3 @@ key-name = <alpha + "-" + "_">
 string-value = "'" <alphanum> "'"
 
 number = <floating-point number>
-
-
-

@@ -172,6 +172,12 @@ impl Predicate {
                         (serde_json::Value::String(v), PredicateFunc::EqualString(ref s)) => {
                             v == *s
                         }
+                        (serde_json::Value::String(v), PredicateFunc::NotEqualString(ref s)) => {
+                            v != *s
+                        }
+                        (serde_json::Value::Number(v), PredicateFunc::NotEqual(ref num)) => {
+                            !approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
+                        }
                         (serde_json::Value::Bool(v), PredicateFunc::EqualBool(ref s)) => v == *s,
                         _ => false,
                     }

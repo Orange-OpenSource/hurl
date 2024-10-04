@@ -232,6 +232,8 @@ fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
             less_than_or_equal_predicate_func,
             equal_boolean_predicate_func,
             equal_string_predicate_func,
+            notequal_string_predicate_func,
+            notequal_number_func
         ],
         reader,
     )
@@ -284,6 +286,20 @@ fn equal_string_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc
     whitespace(reader);
     let s = string_value(reader)?;
     Ok(PredicateFunc::EqualString(s))
+}
+
+fn notequal_string_predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
+    try_literal("!=", reader)?;
+    whitespace(reader);
+    let s = string_value(reader)?;
+    Ok(PredicateFunc::NotEqualString(s))
+}
+
+fn notequal_number_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
+    try_literal("!=", reader)?;
+    whitespace(reader);
+    let num = number(reader)?;
+    Ok(PredicateFunc::NotEqual(num))
 }
 
 #[cfg(test)]
@@ -636,6 +652,24 @@ mod tests {
             PredicateFunc::EqualString("hello".to_string())
         );
         assert_eq!(reader.cursor().index, 9);
+
+        let mut reader = Reader::new("!='hello'");
+        assert_eq!(
+            predicate_func(&mut reader).unwrap(),
+            PredicateFunc::NotEqualString("hello".to_string())
+        );
+
+        let mut reader = Reader::new("!=2");
+        assert_eq!(
+            predicate_func(&mut reader).unwrap(),
+            PredicateFunc::NotEqual(Number { int: 2, decimal: 0 })
+        );
+
+        let mut reader = Reader::new("!=2.5");
+        assert_eq!(
+            predicate_func(&mut reader).unwrap(),
+            PredicateFunc::NotEqual(Number { int: 2, decimal: 500_000_000_000_000_000 })
+        );
 
         let mut reader = Reader::new(">5");
         assert_eq!(
