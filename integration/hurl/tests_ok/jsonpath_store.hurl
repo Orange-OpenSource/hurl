@@ -2,7 +2,7 @@
 GET http://localhost:8000/json/store
 HTTP 200
 [Asserts]
-jsonpath "$.store.book[*].author" count == 4                             # the authors of all books in the store
+jsonpath "$.store.book[*].author" count == 4                               # the authors of all books in the store
 jsonpath "$.store.book[*].author" nth 0 == "Nigel Rees"
 jsonpath "$.store.book[*].author" nth 1 == "Evelyn Waugh"
 jsonpath "$.store.book[*].author" nth 2 == "Herman Melville"
@@ -13,7 +13,7 @@ jsonpath "$..author" nth 1 == "Evelyn Waugh"
 jsonpath "$..author" nth 2 == "Herman Melville"
 jsonpath "$..author" nth 3 == "J. R. R. Tolkien"
 jsonpath "$.store.*" count == 2                             	           # all things in store, which are some books and a red bicycle.
-jsonpath "$.store..price" count == 5                 	                   #  the price of everything in the store.
+jsonpath "$.store..price" count == 5                 	                   # the price of everything in the store.
 jsonpath "$..book[2].title" nth 0 == "Moby Dick"                           # the third book
 #jsonpath "$..book[(@.length-1)]" nth 0 == "fiction"                       # not supported yet
 jsonpath "$..book[-1:].title" nth 0 == "The Lord of the Rings"             # the last book in order.
@@ -29,8 +29,12 @@ jsonpath "$..book[?(@.isbn)].title" nth 1 == "The Lord of the Rings"
 jsonpath "$..book[?(@.price<10)]" count == 2                               # filter all books cheaper than 10
 jsonpath "$..book[?(@.price<10)].title" nth 0 == "Sayings of the Century"
 jsonpath "$..book[?(@.price<10)].title" nth 1 == "Moby Dick"
-jsonpath "$.store.book[?(@.published==true)].title" nth 0 == "Moby Dick"   # Filter on published books
-jsonpath "$..*" count == 31             	                               # All members of JSON structure.
+jsonpath "$.store.book[?(@.published==true)].title" nth 0 == "Moby Dick"   # filter on published books
+jsonpath "$..book[?(@.author != 'Charles Dickens')]" count == 4            # filter all books for author other than Charles Dickens
+jsonpath "$..book[?(@.author != 'Nigel Rees')]" count == 3                 # filter all books for author other than Nogen Rees
+jsonpath "$..book[?(@.price != 10.00)]" count == 4                         # filter all books for price different from 10.00
+jsonpath "$..book[?(@.price != 8.95)]" count == 3                          # filter all books for price different from 8.95
+jsonpath "$..*" count == 31             	                               # all members of JSON structure.
 
 {
   "store": {
