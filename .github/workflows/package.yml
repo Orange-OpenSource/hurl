@@ -316,7 +316,7 @@ jobs:
      with:
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
-     uses: docker/setup-buildx-action@v3.7.0
+     uses: docker/setup-buildx-action@v3.7.1
    - name: Build docker images
      run: |
          echo "::group::Docker build prerequisites"
@@ -545,7 +545,7 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4.1.0
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-release-windows-x64
