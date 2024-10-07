@@ -46,13 +46,13 @@ similar = "2.6.0"
 terminal_size = "0.4.0"
 
 [target.'cfg(unix)'.dependencies]
-termion = "4.0.2"
+termion = "4.0.3"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.1.24"
+cc = "1.1.28"
 
 [lints]
 workspace = true
