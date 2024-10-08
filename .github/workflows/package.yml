@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -51,7 +51,7 @@ jobs:
         bin/release/man.sh
         bin/release/create_tarball.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Set up QEMU
@@ -99,7 +99,7 @@ jobs:
             bin/release/create_tarball.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-generic-linux-aarch64-artifacts
         path: target/upload/*
@@ -109,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -148,7 +148,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-ubuntu-x64-artifacts
@@ -160,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -199,7 +199,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
@@ -211,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -250,7 +250,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
@@ -262,7 +262,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -301,7 +301,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
@@ -312,7 +312,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
-     uses: actions/checkout@v4.2.0
+     uses: actions/checkout@v4.2.1
      with:
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
@@ -372,7 +372,7 @@ jobs:
        pwd
        find . -name "*.log"
    - name: Archive production artifacts
-     uses: actions/upload-artifact@v4.4.0
+     uses: actions/upload-artifact@v4.4.1
      if: ${{ always() }}
      with:
        name: test-docker-amd64-package-artifacts
@@ -383,7 +383,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -425,7 +425,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -434,7 +434,7 @@ jobs:
     runs-on: macos-13
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -474,7 +474,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -483,7 +483,7 @@ jobs:
     runs-on: macos-14
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -523,7 +523,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-macos-aarch64-artifacts
         path: target/upload/*
@@ -538,7 +538,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v4.2.1
       with:
         ref: ${{ inputs.branch }}
     - name: Install Rust
@@ -571,7 +571,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4.4.1
       with:
         name: release-windows-x64-artifacts
         path: |
@@ -590,7 +590,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.1
         with:
           ref: ${{ inputs.branch }}
       - uses: actions/download-artifact@v4.1.8
