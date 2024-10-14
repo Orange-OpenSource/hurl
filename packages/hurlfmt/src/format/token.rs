@@ -908,6 +908,7 @@ impl Tokenizable for OptionKind {
             OptionKind::ClientKey(filename) => filename.tokenize(),
             OptionKind::Compressed(value) => value.tokenize(),
             OptionKind::ConnectTo(value) => value.tokenize(),
+            OptionKind::ConnectTimeout(value) => value.tokenize(),
             OptionKind::Delay(value) => value.tokenize(),
             OptionKind::FollowLocation(value) => value.tokenize(),
             OptionKind::FollowLocationTrusted(value) => value.tokenize(),

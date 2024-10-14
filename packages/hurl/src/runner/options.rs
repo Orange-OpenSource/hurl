@@ -80,6 +80,11 @@ pub fn get_entry_options(
                         let value = eval_template(value, variables)?;
                         entry_options.connects_to.push(value);
                     }
+                    OptionKind::ConnectTimeout(value) => {
+                        let value =
+                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                        entry_options.connect_timeout = value;
+                    }
                     OptionKind::Delay(value) => {
                         let value =
                             eval_duration_option(value, variables, DurationUnit::MilliSecond)?;

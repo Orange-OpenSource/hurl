@@ -221,6 +221,7 @@ impl HtmlFormatter {
             OptionKind::ClientKey(filename) => self.fmt_filename(filename),
             OptionKind::Compressed(value) => self.fmt_bool_option(value),
             OptionKind::ConnectTo(value) => self.fmt_template(value),
+            OptionKind::ConnectTimeout(value) => self.fmt_duration_option(value),
             OptionKind::Delay(value) => self.fmt_duration_option(value),
             OptionKind::FollowLocation(value) => self.fmt_bool_option(value),
             OptionKind::FollowLocationTrusted(value) => self.fmt_bool_option(value),

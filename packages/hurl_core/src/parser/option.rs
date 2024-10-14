@@ -45,6 +45,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "cert" => option_cert(reader)?,
         "compressed" => option_compressed(reader)?,
         "connect-to" => option_connect_to(reader)?,
+        "connect-timeout" => option_connect_timeout(reader)?,
         "delay" => option_delay(reader)?,
         "insecure" => option_insecure(reader)?,
         "http1.0" => option_http_10(reader)?,
@@ -116,6 +117,11 @@ fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_connect_to(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = unquoted_template(reader)?;
     Ok(OptionKind::ConnectTo(value))
+}
+
+fn option_connect_timeout(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = duration_option(reader)?;
+    Ok(OptionKind::ConnectTimeout(value))
 }
 
 fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {

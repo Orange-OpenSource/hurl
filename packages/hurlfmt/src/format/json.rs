@@ -304,6 +304,7 @@ impl ToJson for EntryOption {
             OptionKind::ClientKey(filename) => JValue::String(filename.to_string()),
             OptionKind::Compressed(value) => value.to_json(),
             OptionKind::ConnectTo(value) => JValue::String(value.to_string()),
+            OptionKind::ConnectTimeout(value) => value.to_json(),
             OptionKind::Delay(value) => value.to_json(),
             OptionKind::FollowLocation(value) => value.to_json(),
             OptionKind::FollowLocationTrusted(value) => value.to_json(),
