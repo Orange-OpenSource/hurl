@@ -6,6 +6,9 @@ date
 echo "# os"
 uname -a
 
+echo "# user"
+whoami
+
 echo "# python3"
 if command -V python3 ; then
     which python3

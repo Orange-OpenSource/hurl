@@ -277,6 +277,9 @@ jobs:
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
         run: |
           set -e
+          echo "::group::Disable PAM for sudo with root and no tty"
+            bin/disable_pam_for_sudo.sh
+          echo "::endgroup::"
           echo "::group::Install system prerequisites"
             bin/install_prerequisites_fedora.sh
           echo "::endgroup::"
