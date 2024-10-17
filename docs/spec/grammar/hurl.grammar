@@ -122,6 +122,7 @@ option:
   | client-key-option
   | compressed-option
   | connect-to-option
+  | connect-timeout-option
   | delay-option
   | follow-redirect-option
   | follow-redirect-trusted-option
@@ -162,6 +163,8 @@ client-key-option: "key" ":" value-string lt
 compressed-option: "compressed" ":" boolean-option lt
 
 connect-to-option: "connect-to" ":" value-string lt
+
+connect-timeout-option: "connect-timeout" ":" duration-option lt
 
 delay-option: "delay" ":" duration-option lt
 
@@ -503,7 +506,7 @@ variable-name: [A-Za-z] [A-Za-z_-0-9]*
 
 # Function
 
-function: 
+function:
     env-function
   | now-function
   | uuid-function
