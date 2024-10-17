@@ -7,6 +7,7 @@ cert: certfile:qU114@q,["NO
 key: keyfile
 compressed: false
 connect-to: example.com:443:example.net:8443
+connect-timeout: 60s
 delay: 1000ms
 delay: 1000ms
 delay: 1s
@@ -54,6 +55,7 @@ cert: {{cert}}
 key: {{key}}
 compressed: {{compressed}}
 connect-to: {{connect-to}}
+connect-timeout: {{connect-timeout}}
 delay: {{delay}}
 location: {{location}}
 location-trusted: {{location-trusted}}
