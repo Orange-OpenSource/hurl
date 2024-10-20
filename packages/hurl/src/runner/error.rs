@@ -89,6 +89,10 @@ pub enum RunnerErrorKind {
         value: String,
     },
     InvalidRegex,
+    InvalidUrl {
+        url: String,
+        message: String,
+    },
     NoQueryResult,
     QueryHeaderNotFound,
     QueryInvalidJsonpathExpression {
@@ -138,6 +142,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::FilterMissingInput => "Filter error".to_string(),
             RunnerErrorKind::Http(http_error) => http_error.description(),
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
+            RunnerErrorKind::InvalidUrl { .. } => "Invalid URL".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
             RunnerErrorKind::NoQueryResult => "No query result".to_string(),
             RunnerErrorKind::QueryHeaderNotFound => "Header not found".to_string(),
@@ -241,6 +246,11 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::InvalidJson { value } => {
                 let message = &format!("actual value is <{value}>");
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+            RunnerErrorKind::InvalidUrl { url, message } => {
+                let message = &format!("invalid URL <{url}> ({message})");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

@@ -25,7 +25,7 @@ use crate::http;
 use crate::http::{HeaderVec, AUTHORIZATION};
 use crate::runner::error::RunnerError;
 use crate::runner::value::Value;
-use crate::runner::{body, multipart, template};
+use crate::runner::{body, multipart, template, RunnerErrorKind};
 use crate::util::path::ContextDir;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
@@ -35,7 +35,7 @@ pub fn eval_request(
     context_dir: &ContextDir,
 ) -> Result<http::RequestSpec, RunnerError> {
     let method = eval_method(&request.method);
-    let url = template::eval_template(&request.url, variables)?;
+    let url = eval_url(&request.url, variables)?;
 
     // Headers
     let mut headers = HeaderVec::new();
@@ -141,6 +141,33 @@ pub fn eval_request(
         body,
         implicit_content_type,
     })
+}
+
+fn eval_url(
+    url_template: &Template,
+    variables: &HashMap<String, Value>,
+) -> Result<String, RunnerError> {
+    let url = template::eval_template(url_template, variables)?;
+
+    // Check protocol
+    let tokens = url.split("://").collect::<Vec<&str>>();
+    let protocol = if tokens.len() > 1 {
+        tokens.first().unwrap()
+    } else {
+        ""
+    };
+    if protocol.is_empty() {
+        let source_info = url_template.source_info;
+        let message = "Missing protocol http or https".to_string();
+        let runner_error_kind = RunnerErrorKind::InvalidUrl { url, message };
+        return Err(RunnerError::new(source_info, runner_error_kind, false));
+    } else if protocol != "http" && protocol != "https" {
+        let source_info = url_template.source_info;
+        let message = "Only http and https protocols are supported".to_string();
+        let runner_error_kind = RunnerErrorKind::InvalidUrl { url, message };
+        return Err(RunnerError::new(source_info, runner_error_kind, false));
+    }
+    Ok(url)
 }
 
 /// Experimental feature
