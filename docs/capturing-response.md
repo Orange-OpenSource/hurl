@@ -184,7 +184,7 @@ GET https://example.org/home
 # Capture the identifier from the dom node <div id="pet0">5646eaf23</div
 HTTP 200
 [Captures]
-ped-id: xpath "normalize-space(//div[@id='pet0'])"
+pet-id: xpath "normalize-space(//div[@id='pet0'])"
 
 # Open the captured page.
 GET https://example.org/home/pets/{{pet-id}}
@@ -210,7 +210,7 @@ XPath expression can also be evaluated against part of the body with a [`xpath` 
 GET https://example.org/home_cn
 HTTP 200
 [Captures]
-ped-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
+pet-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 ```
 
 
