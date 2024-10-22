@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{Receiver, SendError, Sender};
 use std::sync::{Arc, Mutex};
 use std::{fmt, thread};
 
@@ -34,6 +34,8 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 pub struct Worker {
     /// The id of this worker.
     worker_id: WorkerId,
+    /// The thread handle of this worker.
+    thread: Option<thread::JoinHandle<Result<(), SendError<WorkerMessage>>>>,
 }
 
 impl fmt::Display for Worker {
@@ -72,7 +74,7 @@ impl Worker {
         let rx = Arc::clone(rx);
         let tx = tx.clone();
 
-        thread::spawn(move || loop {
+        let thread = thread::spawn(move || loop {
             let Ok(job) = rx.lock().unwrap().recv() else {
                 return tx.send(WorkerMessage::ShutDown);
             };
@@ -131,7 +133,17 @@ impl Worker {
             _ = tx.send(WorkerMessage::Completed(msg));
         });
 
-        Worker { worker_id }
+        Worker {
+            worker_id,
+            thread: Some(thread),
+        }
+    }
+
+    /// Takes the thread out of the worker, leaving a None in its place.
+    pub fn take_thread(
+        &mut self,
+    ) -> Option<thread::JoinHandle<Result<(), SendError<WorkerMessage>>>> {
+        self.thread.take()
     }
 }
 

@@ -46,7 +46,7 @@ pub struct ParallelRunner {
     /// The list of workers, running Hurl file in their inner thread.
     workers: Vec<(Worker, WorkerState)>,
     /// The transmit end of the channel used to send messages to workers.
-    tx: Sender<Job>,
+    tx: Option<Sender<Job>>,
     /// The receiving end of the channel used to communicate to workers.
     rx: Receiver<WorkerMessage>,
     /// Progress reporter to display the advancement of the parallel runs.
@@ -136,7 +136,7 @@ impl ParallelRunner {
 
         ParallelRunner {
             workers,
-            tx: tx_out,
+            tx: Some(tx_out),
             rx: rx_in,
             progress,
             output_type,
@@ -163,7 +163,7 @@ impl ParallelRunner {
         // Initiate the runner, fill our workers:
         self.workers.iter().for_each(|_| {
             if let Some(job) = queue.next() {
-                _ = self.tx.send(job);
+                _ = self.tx.as_ref().unwrap().send(job);
             }
         });
 
@@ -261,7 +261,7 @@ impl ParallelRunner {
                     let job = queue.next();
                     match job {
                         Some(job) => {
-                            _ = self.tx.send(job);
+                            _ = self.tx.as_ref().unwrap().send(job);
                         }
                         None => {
                             // If we have received all the job results, we can stop the run.
@@ -273,8 +273,17 @@ impl ParallelRunner {
                         }
                     }
                 }
-                // Graceful shutdown for the worker.
+                // Worker has been shutdown.
                 WorkerMessage::ShutDown => {}
+            }
+        }
+
+        // We gracefully shut down workers, by dropping the sender and wait for each thread workers
+        // to join.
+        drop(self.tx.take());
+        for worker in &mut self.workers {
+            if let Some(thread) = worker.0.take_thread() {
+                let _ = thread.join().unwrap();
             }
         }
 
