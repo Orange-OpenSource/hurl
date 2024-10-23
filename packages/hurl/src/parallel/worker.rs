@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::sync::mpsc::{Receiver, SendError, Sender};
+use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::{fmt, thread};
 
@@ -35,7 +35,7 @@ pub struct Worker {
     /// The id of this worker.
     worker_id: WorkerId,
     /// The thread handle of this worker.
-    thread: Option<thread::JoinHandle<Result<(), SendError<WorkerMessage>>>>,
+    thread: Option<thread::JoinHandle<()>>,
 }
 
 impl fmt::Display for Worker {
@@ -76,7 +76,7 @@ impl Worker {
 
         let thread = thread::spawn(move || loop {
             let Ok(job) = rx.lock().unwrap().recv() else {
-                return tx.send(WorkerMessage::ShutDown);
+                return;
             };
             // In parallel execution, standard output and standard error messages are buffered
             // (in sequential mode, we'll use immediate standard output and error).
@@ -95,7 +95,8 @@ impl Worker {
                 Ok(c) => c,
                 Err(e) => {
                     let msg = IOErrorMsg::new(worker_id, &job, e);
-                    return tx.send(WorkerMessage::IOError(msg));
+                    _ = tx.send(WorkerMessage::IOError(msg));
+                    return;
                 }
             };
 
@@ -106,7 +107,8 @@ impl Worker {
                 Err(e) => {
                     logger.error_parsing_rich(&content, Some(&job.filename), &e);
                     let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
-                    return tx.send(WorkerMessage::ParsingError(msg));
+                    _ = tx.send(WorkerMessage::ParsingError(msg));
+                    return;
                 }
             };
 
@@ -140,9 +142,7 @@ impl Worker {
     }
 
     /// Takes the thread out of the worker, leaving a None in its place.
-    pub fn take_thread(
-        &mut self,
-    ) -> Option<thread::JoinHandle<Result<(), SendError<WorkerMessage>>>> {
+    pub fn take_thread(&mut self) -> Option<thread::JoinHandle<()>> {
         self.thread.take()
     }
 }

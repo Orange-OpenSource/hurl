@@ -272,8 +272,6 @@ impl ParallelRunner {
                         }
                     }
                 }
-                // Worker has been shutdown.
-                WorkerMessage::ShutDown => {}
             }
         }
 
@@ -282,7 +280,7 @@ impl ParallelRunner {
         drop(self.tx.take());
         for worker in &mut self.workers {
             if let Some(thread) = worker.0.take_thread() {
-                let _ = thread.join().unwrap();
+                thread.join().unwrap();
             }
         }
 

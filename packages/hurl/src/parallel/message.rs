@@ -31,8 +31,6 @@ pub enum WorkerMessage {
     Running(RunningMsg),
     /// Sent when the Hurl file is completed, whether successful or failed.
     Completed(CompletedMsg),
-    /// Sent when worker thread is disconnected (for graceful shutdown).
-    ShutDown,
 }
 
 /// A message sent from worker to runner when the input file can't be read.
