@@ -30,6 +30,8 @@ jsonpath "$.failures" count == 1
 jsonpath "$.failures" isCollection
 jsonpath "$.warnings" count == 0
 jsonpath "$.warnings" isEmpty
+jsonpath "$.message" == "Bob says \"Hello\""
+jsonpath "$.message" == `Bob says "Hello"`
 jsonpath "$.toto" not exists
 jsonpath "$.failures" exists
 jsonpath "$.warnings" exists
@@ -62,7 +64,7 @@ jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
 jsonpath "$.errors[0]" not isEmpty
 jsonpath "$.empty" isEmpty
-jsonpath "$.*" count == 11
+jsonpath "$.*" count == 12
 jsonpath "$.errors..*" count == 4
 jsonpath "$..id" count == 3
 jsonpath "$.dates[0]" isIsoDate
@@ -79,6 +81,7 @@ jsonpath "$.tags[0]" not isNumber
   "errors": [{"id":"error1"},{"id":"error2"}],
   "failures": [{"id":"failure1"}],
   "warnings": [],
+  "message": "Bob says \"Hello\"",
   "duration": 1.5,
   "tags": ["test"],
   "nullable": null,
@@ -101,6 +104,7 @@ GET http://localhost:8000/assert-json
 HTTP 200
 [Asserts]
 jsonpath "$.errors[{{index}}].id" == "error2"
+jsonpath "$.errors[{{index}}].id" == `error2`
 jsonpath "$.tags" includes "test"
 jsonpath "$.tags" not includes "prod"
 jsonpath "$.tags" not includes null

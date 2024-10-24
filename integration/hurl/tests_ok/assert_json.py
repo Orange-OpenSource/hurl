@@ -11,6 +11,7 @@ def assert_json():
   "errors": [{"id":"error1"},{"id":"error2"}],
   "failures": [{"id":"failure1"}],
   "warnings": [],
+  "message": "Bob says \\"Hello\\"",
   "duration": 1.5,
   "tags": ["test"],
   "nullable": null,
