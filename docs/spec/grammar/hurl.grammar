@@ -356,6 +356,7 @@ predicate-value:
   | multiline-string
   | null
   | number
+  | oneline-string
   | oneline-base64
   | oneline-file
   | oneline-hex
