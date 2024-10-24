@@ -38,7 +38,7 @@ fn default_response() -> Response {
 pub fn hello_http_request() -> RequestSpec {
     RequestSpec {
         method: Method("GET".to_string()),
-        url: "http://localhost:8000/hello".to_string(),
+        url: Url::from_str("http://localhost:8000/hello").unwrap(),
         ..Default::default()
     }
 }
@@ -145,7 +145,7 @@ pub fn html_http_response() -> Response {
 pub fn query_http_request() -> RequestSpec {
     RequestSpec {
         method: Method("GET".to_string()),
-        url: "http://localhost:8000/querystring-params".to_string(),
+        url: Url::from_str("http://localhost:8000/querystring-params").unwrap(),
         querystring: vec![
             Param {
                 name: String::from("param1"),
@@ -167,7 +167,7 @@ pub fn custom_http_request() -> RequestSpec {
 
     RequestSpec {
         method: Method("GET".to_string()),
-        url: "http://localhost/custom".to_string(),
+        url: Url::from_str("http://localhost/custom").unwrap(),
         headers,
         cookies: vec![
             RequestCookie {
