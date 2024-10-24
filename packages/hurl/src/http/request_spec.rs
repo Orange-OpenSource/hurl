@@ -19,13 +19,14 @@ use core::fmt;
 
 use crate::http::core::*;
 use crate::http::header::HeaderVec;
+use crate::http::Url;
 
 /// Represents the HTTP request asked to be executed by our user (different from the runtime
 /// executed HTTP request [`crate::http::Request`].
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RequestSpec {
     pub method: Method,
-    pub url: String,
+    pub url: Url,
     pub headers: HeaderVec,
     pub querystring: Vec<Param>,
     pub form: Vec<Param>,
@@ -43,7 +44,7 @@ impl Default for RequestSpec {
     fn default() -> Self {
         RequestSpec {
             method: Method("GET".to_string()),
-            url: String::new(),
+            url: Url::default(),
             headers: HeaderVec::new(),
             querystring: vec![],
             form: vec![],

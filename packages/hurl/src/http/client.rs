@@ -150,7 +150,7 @@ impl Client {
             }
             request_spec = RequestSpec {
                 method: redirect_method,
-                url: redirect_url.to_string(),
+                url: redirect_url,
                 headers,
                 ..Default::default()
             };
@@ -501,12 +501,13 @@ impl Client {
     }
 
     /// Generates URL.
-    fn generate_url(&mut self, url: &str, params: &[Param]) -> String {
+    fn generate_url(&mut self, url: &Url, params: &[Param]) -> String {
+        let url = url.raw();
         if params.is_empty() {
-            url.to_string()
+            url
         } else {
             let url = if url.ends_with('?') {
-                url.to_string()
+                url
             } else if url.contains('?') {
                 format!("{url}&")
             } else {
@@ -852,7 +853,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
         &mut cookie_storage
             .iter()
             .filter(|c| c.expires != "1") // cookie expired when libcurl set value to 1?
-            .filter(|c| match_cookie(c, request_spec.url.as_str()))
+            .filter(|c| match_cookie(c, &request_spec.url))
             .map(|c| RequestCookie {
                 name: c.name.clone(),
                 value: c.value.clone(),
@@ -863,12 +864,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
 }
 
 /// Matches cookie for a given URL.
-pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
-    // FIXME: is it possible to do it with libcurl?
-    let url = match url::Url::parse(url) {
-        Ok(url) => url,
-        Err(_) => return false,
-    };
+pub fn match_cookie(cookie: &Cookie, url: &Url) -> bool {
     if let Some(domain) = url.domain() {
         if cookie.include_subdomain == "FALSE" {
             if cookie.domain != domain {
@@ -1045,9 +1041,18 @@ mod tests {
             value: String::new(),
             http_only: false,
         };
-        assert!(match_cookie(&cookie, "http://example.com/toto"));
-        assert!(!match_cookie(&cookie, "http://sub.example.com/tata"));
-        assert!(!match_cookie(&cookie, "http://toto/tata"));
+        assert!(match_cookie(
+            &cookie,
+            &Url::from_str("http://example.com/toto").unwrap()
+        ));
+        assert!(!match_cookie(
+            &cookie,
+            &Url::from_str("http://sub.example.com/tata").unwrap()
+        ));
+        assert!(!match_cookie(
+            &cookie,
+            &Url::from_str("http://toto/tata").unwrap()
+        ));
 
         let cookie = Cookie {
             domain: "example.com".to_string(),
@@ -1059,9 +1064,18 @@ mod tests {
             value: String::new(),
             http_only: false,
         };
-        assert!(match_cookie(&cookie, "http://example.com/toto"));
-        assert!(match_cookie(&cookie, "http://sub.example.com/toto"));
-        assert!(!match_cookie(&cookie, "http://example.com/tata"));
+        assert!(match_cookie(
+            &cookie,
+            &Url::from_str("http://example.com/toto").unwrap()
+        ));
+        assert!(match_cookie(
+            &cookie,
+            &Url::from_str("http://sub.example.com/toto").unwrap()
+        ));
+        assert!(!match_cookie(
+            &cookie,
+            &Url::from_str("http://example.com/tata").unwrap()
+        ));
     }
 
     #[test]
@@ -1157,7 +1171,7 @@ mod tests {
         let mut client = Client::new();
         let request = RequestSpec {
             method: Method("GET".to_string()),
-            url: "https://example.org".to_string(),
+            url: Url::from_str("https://example.org").unwrap(),
             ..Default::default()
         };
         let context_dir = ContextDir::default();

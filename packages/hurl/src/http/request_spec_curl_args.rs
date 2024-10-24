@@ -109,11 +109,11 @@ impl RequestSpec {
             params.join("&")
         };
         let url = if querystring.as_str() == "" {
-            self.url.to_string()
-        } else if self.url.to_string().contains('?') {
-            format!("{}&{}", self.url, querystring)
+            self.url.raw()
+        } else if self.url.raw().contains('?') {
+            format!("{}&{}", self.url.raw(), querystring)
         } else {
-            format!("{}?{}", self.url, querystring)
+            format!("{}?{}", self.url.raw(), querystring)
         };
         arguments.push(format!("'{url}'"));
 
@@ -253,6 +253,7 @@ fn escape_string(s: &str) -> String {
 #[cfg(test)]
 pub mod tests {
     use std::path::Path;
+    use std::str::FromStr;
 
     use super::*;
 
@@ -265,7 +266,7 @@ pub mod tests {
 
         RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost/form-params".to_string(),
+            url: Url::from_str("http://localhost/form-params").unwrap(),
             headers,
             form: vec![
                 Param {
@@ -287,7 +288,7 @@ pub mod tests {
         headers.push(Header::new("content-type", "application/vnd.api+json"));
         RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost/json".to_string(),
+            url: Url::from_str("http://localhost/json").unwrap(),
             headers,
             body: Body::Text("{\"foo\":\"bar\"}".to_string()),
             implicit_content_type: Some("application/json".to_string()),
@@ -421,6 +422,16 @@ pub mod tests {
                 "'http://localhost/json'".to_string(),
             ]
         );
+
+        assert_eq!(
+            RequestSpec {
+                method: Method("GET".to_string()),
+                url: Url::from_str("http://localhost:8000/").unwrap(),
+                ..Default::default()
+            }
+            .curl_args(context_dir),
+            vec!["'http://localhost:8000/'".to_string(),]
+        );
     }
 
     #[test]
@@ -428,7 +439,7 @@ pub mod tests {
         let context_dir = &ContextDir::default();
         let req = RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost:8000/hello".to_string(),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
             body: Body::Text("foo".to_string()),
             ..Default::default()
         };
@@ -446,7 +457,7 @@ pub mod tests {
         let context_dir = &ContextDir::default();
         let req = RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost:8000/hello".to_string(),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
             body: Body::File(b"Hello World!".to_vec(), "foo.bin".to_string()),
             ..Default::default()
         };

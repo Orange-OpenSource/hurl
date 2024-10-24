@@ -16,13 +16,14 @@
  *
  */
 use std::collections::HashMap;
+use std::str::FromStr;
 
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::http::{HeaderVec, AUTHORIZATION};
+use crate::http::{HeaderVec, HttpError, Url, AUTHORIZATION};
 use crate::runner::error::RunnerError;
 use crate::runner::value::Value;
 use crate::runner::{body, multipart, template, RunnerErrorKind};
@@ -146,28 +147,18 @@ pub fn eval_request(
 fn eval_url(
     url_template: &Template,
     variables: &HashMap<String, Value>,
-) -> Result<String, RunnerError> {
+) -> Result<Url, RunnerError> {
     let url = template::eval_template(url_template, variables)?;
-
-    // Check protocol
-    let tokens = url.split("://").collect::<Vec<&str>>();
-    let protocol = if tokens.len() > 1 {
-        tokens.first().unwrap()
-    } else {
-        ""
-    };
-    if protocol.is_empty() {
+    Url::from_str(&url).map_err(|e| {
         let source_info = url_template.source_info;
-        let message = "Missing protocol http or https".to_string();
+        let message = if let HttpError::InvalidUrl(_, message) = e {
+            message
+        } else {
+            String::new()
+        };
         let runner_error_kind = RunnerErrorKind::InvalidUrl { url, message };
-        return Err(RunnerError::new(source_info, runner_error_kind, false));
-    } else if protocol != "http" && protocol != "https" {
-        let source_info = url_template.source_info;
-        let message = "Only http and https protocols are supported".to_string();
-        let runner_error_kind = RunnerErrorKind::InvalidUrl { url, message };
-        return Err(RunnerError::new(source_info, runner_error_kind, false));
-    }
-    Ok(url)
+        RunnerError::new(source_info, runner_error_kind, false)
+    })
 }
 
 /// Experimental feature

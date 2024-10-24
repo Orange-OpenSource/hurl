@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use regex::Regex;
 use std::fmt;
 use std::str::FromStr;
 
@@ -23,11 +24,24 @@ use crate::http::{HttpError, Param};
 /// A parsed URL.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct Url {
+    /// The input url from the user
+    raw: String,
+
     /// A structured URL (implementation).
     inner: url::Url,
 }
 
+impl Default for Url {
+    fn default() -> Self {
+        Url::from_str("https://localhost").unwrap()
+    }
+}
+
 impl Url {
+    pub fn raw(&self) -> String {
+        self.raw.clone()
+    }
+
     /// Returns a list of query parameters (values are URL decoded).
     pub fn query_params(&self) -> Vec<Param> {
         self.inner
@@ -41,6 +55,14 @@ impl Url {
             .host()
             .expect("HTTP and HTTPS URL must have a domain")
             .to_string()
+    }
+
+    pub fn domain(&self) -> Option<String> {
+        self.inner.domain().map(|s| s.to_string())
+    }
+
+    pub fn path(&self) -> String {
+        self.inner.path().to_string()
     }
 
     /// Parse a string `input` as an URL, with this URL as the base URL.
@@ -59,23 +81,47 @@ impl Url {
     }
 }
 
+/// Extracting scheme from `url`
+///
+/// The parse method from the url crate does not seem to parse url without scheme
+/// For example, "localhost:8000" is parsed with its scheme set to "localhost"
+///
+fn extract_scheme(url: &str) -> Option<String> {
+    let re = Regex::new("^([a-z]+://).*").unwrap();
+    if let Some(caps) = re.captures(url) {
+        let scheme = &caps[1];
+        Some(scheme.to_string())
+    } else {
+        None
+    }
+}
+
 impl FromStr for Url {
     type Err = HttpError;
 
     /// Parses an absolute URL from a string.
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        let inner = match url::Url::parse(value) {
-            Ok(url) => url,
-            Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
-        };
-        let scheme = inner.scheme();
-        if scheme != "http" && scheme != "https" {
-            return Err(HttpError::InvalidUrl(
-                value.to_string(),
-                "Missing protocol http or https".to_string(),
-            ));
+        match extract_scheme(value) {
+            None => {
+                return Err(HttpError::InvalidUrl(
+                    value.to_string(),
+                    "Missing protocol http or https".to_string(),
+                ));
+            }
+            Some(scheme) => {
+                if scheme != "http://" && scheme != "https://" {
+                    return Err(HttpError::InvalidUrl(
+                        value.to_string(),
+                        "Only http and https protocols are supported".to_string(),
+                    ));
+                }
+            }
         }
-        Ok(Url { inner })
+
+        let raw = value.to_string();
+        let inner = url::Url::parse(value)
+            .map_err(|e| HttpError::InvalidUrl(raw.to_string(), e.to_string()))?;
+        Ok(Url { raw, inner })
     }
 }
 
@@ -90,7 +136,8 @@ mod tests {
     use std::str::FromStr;
 
     use super::Url;
-    use crate::http::Param;
+    use crate::http::url::extract_scheme;
+    use crate::http::{HttpError, Param};
 
     #[test]
     fn parse_url_ok() {
@@ -100,6 +147,7 @@ mod tests {
             "http://localhost:8000/cookies",
             "http://localhost",
             "https://localhost:8000",
+            "http://localhost:8000/path-as-is/../resource"
         ];
         for url in urls {
             assert!(Url::from_str(url).is_ok());
@@ -148,6 +196,39 @@ mod tests {
         assert_eq!(
             base.join("//example.org/baz/index.html").unwrap(),
             "http://example.org/baz/index.html".parse().unwrap()
+        );
+    }
+
+    #[test]
+    fn test_parsing_error() {
+        assert_eq!(
+            Url::from_str("localhost:8000").err().unwrap(),
+            HttpError::InvalidUrl(
+                "localhost:8000".to_string(),
+                "Missing protocol http or https".to_string()
+            )
+        );
+        assert_eq!(
+            Url::from_str("file://localhost:8000").err().unwrap(),
+            HttpError::InvalidUrl(
+                "file://localhost:8000".to_string(),
+                "Only http and https protocols are supported".to_string()
+            )
+        );
+    }
+
+    #[test]
+    fn test_extract_scheme() {
+        assert!(extract_scheme("localhost:8000").is_none());
+        assert!(extract_scheme("http1://localhost:8000").is_none());
+        assert!(extract_scheme("://localhost:8000").is_none());
+        assert_eq!(
+            extract_scheme("file://data").unwrap(),
+            "file://".to_string()
+        );
+        assert_eq!(
+            extract_scheme("http://data").unwrap(),
+            "http://".to_string()
         );
     }
 }
