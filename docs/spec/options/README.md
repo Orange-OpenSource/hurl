@@ -31,3 +31,9 @@ $ bin/spec/options/generate_man.py docs/spec/options/hurlfmt/*.option
 ```
 
 This script generates (part of) man file for `hurl` / `hurlfmt`.
+
+A script is provided to run all these commands:
+
+```shell
+$ bin/spec/options/generate_all.py
+```

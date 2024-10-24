@@ -182,8 +182,6 @@ You can specify time units in the connect timeout expression. Set Hurl to use a 
 
 See also [`-m, --max-time`](#max-time).
 
-This is a cli-only option.
-
 ### --connect-to <HOST1:PORT1:HOST2:PORT2> {#connect-to}
 
 For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.
