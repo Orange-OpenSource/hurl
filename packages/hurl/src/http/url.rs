@@ -27,6 +27,12 @@ pub struct Url {
     inner: url::Url,
 }
 
+impl Default for Url {
+    fn default() -> Self {
+        Url::from_str("https://localhost").unwrap()
+    }
+}
+
 impl Url {
     /// Returns a list of query parameters (values are URL decoded).
     pub fn query_params(&self) -> Vec<Param> {
@@ -41,6 +47,14 @@ impl Url {
             .host()
             .expect("HTTP and HTTPS URL must have a domain")
             .to_string()
+    }
+
+    pub fn domain(&self) -> Option<String> {
+        self.inner.domain().map(|s| s.to_string())
+    }
+
+    pub fn path(&self) -> String {
+        self.inner.path().to_string()
     }
 
     /// Parse a string `input` as an URL, with this URL as the base URL.
@@ -69,10 +83,15 @@ impl FromStr for Url {
             Err(e) => return Err(HttpError::InvalidUrl(value.to_string(), e.to_string())),
         };
         let scheme = inner.scheme();
-        if scheme != "http" && scheme != "https" {
+        if scheme.is_empty() {
             return Err(HttpError::InvalidUrl(
                 value.to_string(),
                 "Missing protocol http or https".to_string(),
+            ));
+        } else if scheme != "http" && scheme != "https" {
+            return Err(HttpError::InvalidUrl(
+                value.to_string(),
+                "Only http and https protocols are supported".to_string(),
             ));
         }
         Ok(Url { inner })

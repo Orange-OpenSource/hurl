@@ -115,6 +115,7 @@ impl RequestSpec {
         } else {
             format!("{}?{}", self.url, querystring)
         };
+        let url = url.trim_end_matches("\\/");
         arguments.push(format!("'{url}'"));
 
         arguments
@@ -253,6 +254,7 @@ fn escape_string(s: &str) -> String {
 #[cfg(test)]
 pub mod tests {
     use std::path::Path;
+    use std::str::FromStr;
 
     use super::*;
 
@@ -265,7 +267,7 @@ pub mod tests {
 
         RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost/form-params".to_string(),
+            url: Url::from_str("http://localhost/form-params").unwrap(),
             headers,
             form: vec![
                 Param {
@@ -287,7 +289,7 @@ pub mod tests {
         headers.push(Header::new("content-type", "application/vnd.api+json"));
         RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost/json".to_string(),
+            url: Url::from_str("http://localhost/json").unwrap(),
             headers,
             body: Body::Text("{\"foo\":\"bar\"}".to_string()),
             implicit_content_type: Some("application/json".to_string()),
@@ -428,7 +430,7 @@ pub mod tests {
         let context_dir = &ContextDir::default();
         let req = RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost:8000/hello".to_string(),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
             body: Body::Text("foo".to_string()),
             ..Default::default()
         };
@@ -446,7 +448,7 @@ pub mod tests {
         let context_dir = &ContextDir::default();
         let req = RequestSpec {
             method: Method("POST".to_string()),
-            url: "http://localhost:8000/hello".to_string(),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
             body: Body::File(b"Hello World!".to_vec(), "foo.bin".to_string()),
             ..Default::default()
         };
