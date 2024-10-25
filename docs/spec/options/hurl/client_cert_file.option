@@ -2,6 +2,7 @@ name: cacert_file
 long: cacert
 value: FILE
 help: CA certificate to verify peer against (PEM format)
+help_heading: HTTP options
 ---
 Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
 Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.

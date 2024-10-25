@@ -1,6 +1,7 @@
 name: http2
 long: http2
 help: Tell Hurl to use HTTP version 2
+help_heading: HTTP options
 ---
 Tells Hurl to use HTTP version 2.
 For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.

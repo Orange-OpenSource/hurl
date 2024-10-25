@@ -2,6 +2,7 @@ name: report_json
 long: report-json
 value: DIR
 help: Generate JSON report to DIR
+help_heading: Report options
 cli_only: true
 ---
 Generate JSON report in DIR.

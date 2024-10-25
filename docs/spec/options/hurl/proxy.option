@@ -3,5 +3,6 @@ long: proxy
 short: x
 value: [PROTOCOL://]HOST[:PORT]
 help: Use proxy on given PROTOCOL/HOST/PORT
+help_heading: HTTP options
 ---
 Use the specified proxy.

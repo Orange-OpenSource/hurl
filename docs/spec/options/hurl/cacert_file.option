@@ -3,6 +3,7 @@ long: cert
 short: E
 value: CERTIFICATE[:PASSWORD]
 help: Client certificate file and password
+help_heading: HTTP options
 ---
 Client certificate file and password.
 

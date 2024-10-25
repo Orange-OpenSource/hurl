@@ -2,6 +2,7 @@ name: glob
 long: glob
 value: GLOB
 help: Specify input files that match the given GLOB. Multiple glob flags may be used
+help_heading: Other options
 multi: append
 cli_only: true
 ---

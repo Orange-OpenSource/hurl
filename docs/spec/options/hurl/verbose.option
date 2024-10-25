@@ -2,6 +2,7 @@ name: verbose
 long: verbose
 short: v
 help: Turn on verbose
+help_heading: Output options
 ---
 Turn on verbose output on standard error stream.
 Useful for debugging.

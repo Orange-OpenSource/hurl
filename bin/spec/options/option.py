@@ -13,6 +13,7 @@ class Option:
     value_default: Optional[str] = None
     value_parser: Optional[str] = None
     help: Optional[str] = None
+    help_heading: Optional[str] = None
     conflict: Optional[str] = None
     append: bool = False
     cli_only: bool = False
@@ -32,6 +33,8 @@ class Option:
             s += "\nvalue_parser: " + self.value_parser
         if self.help is not None:
             s += "\nhelp: " + self.help
+        if self.help_heading is not None:
+            s += "\nhelp_heading: " + self.help_heading
         if self.conflict is not None:
             s += "\nconflict: " + " ".join(self.conflict)
         if self.append:
@@ -55,6 +58,7 @@ class Option:
         value_default = None
         value_parser = None
         help = None
+        help_heading = None
         conflict = None
         append = False
         cli_only = False
@@ -86,6 +90,8 @@ class Option:
                     help = v
                     if help.endswith("."):
                         raise Exception(f"{name}: help should not end with period")
+                elif key == "help_heading":
+                    help_heading = v
                 elif key == "conflict":
                     conflict = [a.strip() for a in v.split(" ")]
                 elif key == "multi":
@@ -135,6 +141,7 @@ class Option:
             value_default=value_default,
             value_parser=value_parser,
             help=help,
+            help_heading=help_heading,
             conflict=conflict,
             append=append,
             cli_only=cli_only,

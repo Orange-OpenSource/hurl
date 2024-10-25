@@ -1,6 +1,7 @@
 name: no_output
 long: no-output
 help: Suppress output. By default, Hurl outputs the body of the last response
+help_heading: Output options
 conflict: json
 cli_only: true
 ---

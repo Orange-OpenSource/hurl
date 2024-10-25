@@ -3,5 +3,6 @@ long: output
 short: o
 value: FILE
 help: Write to FILE instead of stdout
+help_heading: Output options
 ---
 Write output to FILE instead of stdout.

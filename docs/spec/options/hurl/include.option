@@ -2,6 +2,7 @@ name: include
 long: include
 short: i
 help: Include the HTTP headers in the output
+help_heading: Output options
 cli_only: true
 ---
 Include the HTTP headers in the output

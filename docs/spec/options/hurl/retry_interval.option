@@ -3,6 +3,7 @@ long: retry-interval
 value: MILLISECONDS
 value_default: 1000
 help: Interval in milliseconds before a retry
+help_heading: Run options
 ---
 Duration in milliseconds between each retry. Default is 1000 ms.
 

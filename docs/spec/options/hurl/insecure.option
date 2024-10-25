@@ -2,5 +2,6 @@ name: insecure
 long: insecure
 short: k
 help: Allow insecure SSL connections
+help_heading: HTTP options
 ---
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.

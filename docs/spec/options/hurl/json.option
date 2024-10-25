@@ -1,6 +1,7 @@
 name: json
 long: json
 help: Output each Hurl file result to JSON
+help_heading: Output options
 conflict: no_output
 cli_only: true
 ---

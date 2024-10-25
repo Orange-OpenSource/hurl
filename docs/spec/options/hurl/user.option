@@ -3,5 +3,6 @@ long: user
 short: u
 value: USER:PASSWORD
 help: Add basic Authentication header to each request
+help_heading: HTTP options
 ---
 Add basic Authentication header to each request.

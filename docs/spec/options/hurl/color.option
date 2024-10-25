@@ -1,6 +1,7 @@
 name: color
 long: color
 help: Colorize output
+help_heading: Output options
 conflict: no_color
 cli_only: true
 ---

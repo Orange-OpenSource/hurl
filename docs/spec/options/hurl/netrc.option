@@ -2,6 +2,7 @@ name: netrc
 long: netrc
 short: n
 help: Must read .netrc for username and password
+help_heading: Other options
 conflict: netrc_file netrc_optional
 ---
 Scan the .netrc file in the user's home directory for the username and password.

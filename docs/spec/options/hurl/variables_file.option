@@ -2,6 +2,7 @@ name: variables_file
 long: variables-file
 value: FILE
 help: Define a properties file in which you define your variables
+help_heading: Run options
 multi: append
 cli_only: true
 ---

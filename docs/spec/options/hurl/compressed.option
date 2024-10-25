@@ -1,5 +1,6 @@
 name: compressed
 long: compressed
 help: Request compressed response (using deflate or gzip)
+help_heading: HTTP options
 ---
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.

@@ -2,6 +2,7 @@ name: file_root
 long: file-root
 value: DIR
 help: Set root directory to import files [default: input file directory]
+help_heading: Other options
 cli_only: true
 ---
 Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.

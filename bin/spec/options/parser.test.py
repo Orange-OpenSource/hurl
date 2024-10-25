@@ -17,6 +17,7 @@ value: SECONDS
 value_default: 300
 value_parser: u64
 help: Maximum time allowed for connection
+help_heading: HTTP options
 ---
 Maximum time in seconds that you allow Hurl’s connection to take.
 
@@ -33,6 +34,7 @@ See also -m, --max-time.
                 value_default="300",
                 value_parser="u64",
                 help="Maximum time allowed for connection",
+                help_heading="HTTP options",
                 conflict=None,
                 append=False,
                 deprecated=False,
@@ -47,6 +49,7 @@ See also -m, --max-time.
 long: connect-to
 value: HOST1:PORT1:HOST2:PORT2
 help: For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead
+help_heading: HTTP options
 multi: append
 ---
 For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead.
@@ -62,6 +65,7 @@ For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead.
                 value_default=None,
                 value_parser=None,
                 help="For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead",
+                help_heading="HTTP options",
                 conflict=None,
                 append=True,
                 deprecated=False,

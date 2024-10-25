@@ -4,6 +4,7 @@ short: m
 value: SECONDS
 value_default: 300
 help: Maximum time allowed for the transfer
+help_heading: HTTP options
 cli_only: true
 ---
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.

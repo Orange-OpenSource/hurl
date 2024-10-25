@@ -65,6 +65,8 @@ def generate_source_option(option: Option) -> str:
         if "-1" in option.value_parser:
             s += f"\n        .allow_hyphen_values(true)"
     s += f'\n        .help("{option.help}")'
+    if option.help_heading is not None:
+        s += f'\n        .help_heading("{option.help_heading}")'
     if option.conflict is not None:
         for conflict in option.conflict:
             s += f'\n        .conflicts_with("{conflict}")'

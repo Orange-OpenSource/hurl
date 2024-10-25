@@ -1,6 +1,7 @@
 name: continue_on_error
 long: continue-on-error
 help: Continue executing requests even if an error occurs
+help_heading: Run options
 cli_only: true
 ---
 Continue executing requests to the end of the Hurl file even when an assert error occurs.

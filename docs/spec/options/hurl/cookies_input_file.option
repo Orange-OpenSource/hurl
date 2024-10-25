@@ -3,6 +3,7 @@ long: cookie
 short: b
 value: FILE
 help: Read cookies from FILE
+help_heading: Other options
 cli_only: true
 ---
 Read cookies from FILE (using the Netscape cookie file format).

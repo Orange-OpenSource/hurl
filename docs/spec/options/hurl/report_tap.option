@@ -2,6 +2,7 @@ name: report_tap
 long: report-tap
 value: FILE
 help: Write a TAP report to FILE
+help_heading: Report options
 cli_only: true
 ---
 Generate TAP report.

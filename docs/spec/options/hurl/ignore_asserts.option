@@ -1,6 +1,7 @@
 name: ignore_asserts
 long: ignore-asserts
 help: Ignore asserts defined in the Hurl file
+help_heading: Run options
 cli_only: true
 ---
 Ignore all asserts defined in the Hurl file.

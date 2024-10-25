@@ -1,6 +1,7 @@
 name: test
 long: test
 help: Activate test mode (use parallel execution)
+help_heading: Run options
 cli_only: true
 ---
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.

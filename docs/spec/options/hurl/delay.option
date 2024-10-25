@@ -3,6 +3,7 @@ long: delay
 value: MILLISECONDS
 value_default: 0
 help: Sets delay before each request
+help_heading: Run options
 ---
 Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
 

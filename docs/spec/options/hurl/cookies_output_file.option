@@ -3,6 +3,7 @@ long: cookie-jar
 short: c
 value: FILE
 help: Write cookies to FILE after running the session (only for one session)
+help_heading: Other options
 cli_only: true
 ---
 Write cookies to FILE after running the session (only for one session).

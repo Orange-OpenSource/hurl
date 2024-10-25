@@ -2,6 +2,7 @@ name: noproxy
 long: noproxy
 value: HOST(S)
 help: List of hosts which do not use proxy
+help_heading: HTTP options
 ---
 Comma-separated list of hosts which do not use a proxy.
 

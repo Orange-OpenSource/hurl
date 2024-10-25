@@ -1,6 +1,7 @@
 name: fail_at_end
 long: fail-at-end
 help: Fail at end
+help_heading: Run options
 deprecated: true
 ---
 

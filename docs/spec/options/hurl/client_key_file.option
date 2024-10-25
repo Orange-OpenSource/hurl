@@ -2,5 +2,6 @@ name: client_key_file
 long: key
 value: KEY
 help: Private key file name
+help_heading: HTTP options
 ---
 Private key file name.

@@ -1,6 +1,7 @@
 name: parallel
 long: parallel
 help: Run files in parallel (default in test mode)
+help_heading: Run options
 cli_only: true
 ---
 Run files in parallel.

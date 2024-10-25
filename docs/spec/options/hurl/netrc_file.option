@@ -2,6 +2,7 @@ name: netrc_file
 long: netrc-file
 value: FILE
 help: Specify FILE for .netrc
+help_heading: Other options
 conflict: netrc
 ---
 Like [`--netrc`](#netrc), but provide the path to the netrc file.

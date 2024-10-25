@@ -1,6 +1,7 @@
 name: netrc_optional
 long: netrc-optional
 help: Use either .netrc or the URL
+help_heading: Other options
 conflict: netrc
 ---
 Similar to [`--netrc`](#netrc), but make the .netrc usage optional.

@@ -2,6 +2,7 @@ name: variable
 long: variable
 value: NAME=VALUE
 help: Define a variable
+help_heading: Run options
 multi: append
 ---
 Define variable (name/value) to be used in Hurl templates.
