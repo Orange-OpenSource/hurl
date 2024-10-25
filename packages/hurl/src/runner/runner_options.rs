@@ -18,7 +18,7 @@
 use std::time::Duration;
 
 use hurl_core::ast::Entry;
-use hurl_core::typing::Count;
+use hurl_core::typing::{BytesPerSec, Count};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;
@@ -44,7 +44,9 @@ pub struct RunnerOptionsBuilder {
     insecure: bool,
     ip_resolve: IpResolve,
     max_filesize: Option<u64>,
+    max_recv_speed: Option<BytesPerSec>,
     max_redirect: Count,
+    max_send_speed: Option<BytesPerSec>,
     netrc: bool,
     netrc_file: Option<String>,
     netrc_optional: bool,
@@ -89,7 +91,9 @@ impl Default for RunnerOptionsBuilder {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
+            max_recv_speed: None,
             max_redirect: Count::Finite(50),
+            max_send_speed: None,
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -255,11 +259,29 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Set the file size limit
+    pub fn max_filesize(&mut self, max_filesize: Option<u64>) -> &mut Self {
+        self.max_filesize = max_filesize;
+        self
+    }
+
     /// Set maximum number of redirection-followings allowed
     ///
     /// By default, the limit is set to 50 redirections
     pub fn max_redirect(&mut self, max_redirect: Count) -> &mut Self {
         self.max_redirect = max_redirect;
+        self
+    }
+
+    /// Set the maximum upload speed.
+    pub fn max_send_speed(&mut self, max_send_speed: Option<BytesPerSec>) -> &mut Self {
+        self.max_send_speed = max_send_speed;
+        self
+    }
+
+    /// Set the maximum download speed.
+    pub fn max_recv_speed(&mut self, max_recv_speed: Option<BytesPerSec>) -> &mut Self {
+        self.max_recv_speed = max_recv_speed;
         self
     }
 
@@ -386,12 +408,6 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Set the file size limit
-    pub fn max_filesize(&mut self, max_filesize: Option<u64>) -> &mut Self {
-        self.max_filesize = max_filesize;
-        self
-    }
-
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
@@ -414,7 +430,9 @@ impl RunnerOptionsBuilder {
             insecure: self.insecure,
             ip_resolve: self.ip_resolve,
             max_filesize: self.max_filesize,
+            max_recv_speed: self.max_recv_speed,
             max_redirect: self.max_redirect,
+            max_send_speed: self.max_send_speed,
             netrc: self.netrc,
             netrc_file: self.netrc_file.clone(),
             netrc_optional: self.netrc_optional,
@@ -460,7 +478,9 @@ pub struct RunnerOptions {
     pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
     pub(crate) max_filesize: Option<u64>,
+    pub(crate) max_recv_speed: Option<BytesPerSec>,
     pub(crate) max_redirect: Count,
+    pub(crate) max_send_speed: Option<BytesPerSec>,
     pub(crate) netrc: bool,
     pub(crate) netrc_file: Option<String>,
     pub(crate) netrc_optional: bool,

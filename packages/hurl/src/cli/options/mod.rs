@@ -35,7 +35,7 @@ use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
 use hurl_core::input::Input;
-use hurl_core::typing::Count;
+use hurl_core::typing::{BytesPerSec, Count};
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
@@ -71,6 +71,7 @@ pub struct CliOptions {
     pub jobs: Option<usize>,
     pub json_report_dir: Option<PathBuf>,
     pub junit_file: Option<PathBuf>,
+    pub limit_rate: Option<BytesPerSec>,
     pub max_filesize: Option<u64>,
     pub max_redirect: Count,
     pub netrc: bool,
@@ -200,6 +201,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::ipv6())
         .arg(commands::jobs())
         .arg(commands::json())
+        .arg(commands::limit_rate())
         .arg(commands::max_filesize())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
@@ -282,6 +284,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let ip_resolve = matches::ip_resolve(arg_matches);
     let json_report_dir = matches::json_report_dir(arg_matches)?;
     let junit_file = matches::junit_file(arg_matches);
+    let limit_rate = matches::limit_rate(arg_matches);
     let max_filesize = matches::max_filesize(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
     let netrc = matches::netrc(arg_matches);
@@ -338,6 +341,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         ip_resolve,
         json_report_dir,
         junit_file,
+        limit_rate,
         max_filesize,
         max_redirect,
         netrc,
@@ -413,6 +417,10 @@ impl CliOptions {
             None => http::IpResolve::default(),
         };
         let max_filesize = self.max_filesize;
+        // Like curl, we don't differentiate upload and download limit rate, we have
+        // only one option.
+        let max_recv_speed = self.limit_rate;
+        let max_send_speed = self.limit_rate;
         let max_redirect = self.max_redirect;
         let netrc = self.netrc;
         let netrc_file = self.netrc_file.clone();
@@ -461,7 +469,9 @@ impl CliOptions {
             .insecure(insecure)
             .ip_resolve(ip_resolve)
             .max_filesize(max_filesize)
+            .max_recv_speed(max_recv_speed)
             .max_redirect(max_redirect)
+            .max_send_speed(max_send_speed)
             .netrc(netrc)
             .netrc_file(netrc_file)
             .netrc_optional(netrc_optional)

@@ -93,3 +93,13 @@ impl FromStr for DurationUnit {
         }
     }
 }
+
+/// Represents bit rate.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub struct BytesPerSec(pub u64);
+
+impl fmt::Display for BytesPerSec {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}

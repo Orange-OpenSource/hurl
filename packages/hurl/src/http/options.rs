@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::typing::Count;
+use hurl_core::typing::{BytesPerSec, Count};
 use std::time::Duration;
 
 use crate::http::request::RequestedHttpVersion;
@@ -37,7 +37,9 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub ip_resolve: IpResolve,
     pub max_filesize: Option<u64>,
+    pub max_recv_speed: Option<BytesPerSec>,
     pub max_redirect: Count,
+    pub max_send_speed: Option<BytesPerSec>,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -77,7 +79,9 @@ impl Default for ClientOptions {
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
+            max_recv_speed: None,
             max_redirect: Count::Finite(50),
+            max_send_speed: None,
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -155,6 +159,12 @@ impl ClientOptions {
             arguments.push("--max-filesize".to_string());
             arguments.push(max_filesize.to_string());
         }
+        if let Some(max_speed) = self.max_recv_speed {
+            arguments.push("--limit-rate".to_string());
+            arguments.push(max_speed.to_string());
+        }
+        // We don't implement --limit-rate for self.max_send_speed as curl limit-rate seems
+        // to limit both upload and download speed. There is no distinct option..
         if self.max_redirect != ClientOptions::default().max_redirect {
             let max_redirect = match self.max_redirect {
                 Count::Finite(n) => n as i32,
@@ -228,7 +238,9 @@ mod tests {
                 insecure: true,
                 ip_resolve: IpResolve::IpV6,
                 max_filesize: None,
+                max_recv_speed: Some(BytesPerSec(8000)),
                 max_redirect: Count::Finite(10),
+                max_send_speed: Some(BytesPerSec(8000)),
                 netrc: false,
                 netrc_file: Some("/var/run/netrc".to_string()),
                 netrc_optional: true,
@@ -259,6 +271,8 @@ mod tests {
                 "--insecure",
                 "--ipv6",
                 "--location",
+                "--limit-rate",
+                "8000",
                 "--max-redirs",
                 "10",
                 "--netrc-file",

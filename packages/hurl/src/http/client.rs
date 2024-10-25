@@ -464,6 +464,12 @@ impl Client {
         if let Some(max_filesize) = options.max_filesize {
             self.handle.max_filesize(max_filesize)?;
         }
+        if let Some(max_recv_speed) = options.max_recv_speed {
+            self.handle.max_recv_speed(max_recv_speed.0)?;
+        }
+        if let Some(max_send_speed) = options.max_send_speed {
+            self.handle.max_send_speed(max_send_speed.0)?;
+        }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 

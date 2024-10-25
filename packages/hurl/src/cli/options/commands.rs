@@ -310,12 +310,22 @@ pub fn json() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn limit_rate() -> clap::Arg {
+    clap::Arg::new("limit_rate")
+        .long("limit-rate")
+        .value_name("SPEED")
+        .value_parser(clap::value_parser!(u64))
+        .help("Specify the maximum transfer rate in bytes/second, for both downloads and uploads")
+        .help_heading("HTTP options")
+        .num_args(1)
+}
+
 pub fn max_filesize() -> clap::Arg {
     clap::Arg::new("max_filesize")
         .long("max-filesize")
         .value_name("BYTES")
         .value_parser(clap::value_parser!(u64))
-        .help("Specify the maximum size (in bytes) of a file to download")
+        .help("Specify the maximum size in bytes of a file to download")
         .help_heading("HTTP options")
         .num_args(1)
 }

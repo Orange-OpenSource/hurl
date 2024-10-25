@@ -3,12 +3,11 @@ from flask import make_response
 from io import BytesIO
 
 
-@app.route("/get_large")
-def get_large():
+@app.route("/dummy_bytes")
+def get_dummy_bytes():
     result = BytesIO()
-    # Returns ~536M
-    for _ in range(1024 * 1024 * 32):
-        result.write(b"0123456789abcdef")
+    for _ in range(30_000_000):
+        result.write(b"a")
     data = result.getvalue()
     resp = make_response(data)
     resp.content_type = "application/octet-stream"

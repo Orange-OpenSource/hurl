@@ -46,7 +46,8 @@ _hurl() {
     '(-6 --ipv6)'{-6,--ipv6}'[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]' \
     '--jobs[Maximum number of parallel jobs]: :' \
     '--json[Output each Hurl file result to JSON]' \
-    '--max-filesize[Specify the maximum size (in bytes) of a file to download]: :' \
+    '--limit-rate[Specify the maximum transfer rate in bytes/second, for both downloads and uploads]: :' \
+    '--max-filesize[Specify the maximum size in bytes of a file to download]: :' \
     '--max-redirs[Maximum number of redirects allowed, -1 for unlimited redirects]: :' \
     '(-m --max-time)'{-m,--max-time}'[Maximum time allowed for the transfer]: :' \
     '(-n --netrc)'{-n,--netrc}'[Must read .netrc for username and password]' \

@@ -319,6 +319,13 @@ This is a cli-only option.
 
 Private key file name.
 
+### --limit-rate <SPEED> {#limit-rate}
+
+Specify the maximum transfer rate you want Hurl to use, for both downloads and uploads. This feature is useful if you have a limited pipe and you would like your transfer not to use your entire bandwidth. To make it slower than it otherwise would be.
+The given speed is measured in bytes/second.
+
+This is a cli-only option.
+
 ### -L, --location {#location}
 
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
@@ -330,7 +337,7 @@ This may or may not introduce a security breach if the site redirects you to a s
 
 ### --max-filesize <BYTES> {#max-filesize}
 
-Specify the maximum size (in bytes) of a file to download. If the file requested is larger than this value, the transfer does not start.
+Specify the maximum size in bytes of a file to download. If the file requested is larger than this value, the transfer does not start.
 
 This is a cli-only option.
 

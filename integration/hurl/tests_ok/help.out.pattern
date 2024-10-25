@@ -45,8 +45,10 @@ HTTP options:
   -6, --ipv6
           Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
           IPv4
+      --limit-rate <SPEED>
+          Specify the maximum transfer rate in bytes/second, for both downloads and uploads
       --max-filesize <BYTES>
-          Specify the maximum size (in bytes) of a file to download
+          Specify the maximum size in bytes of a file to download
       --max-redirs <NUM>
           Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]
   -m, --max-time <SECONDS>

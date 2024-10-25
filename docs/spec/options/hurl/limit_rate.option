@@ -1,0 +1,10 @@
+name: limit_rate
+long: limit-rate
+value: SPEED
+value_parser: clap::value_parser!(u64)
+help: Specify the maximum transfer rate in bytes/second, for both downloads and uploads
+help_heading: HTTP options
+cli_only: true
+---
+Specify the maximum transfer rate you want Hurl to use, for both downloads and uploads. This feature is useful if you have a limited pipe and you would like your transfer not to use your entire bandwidth. To make it slower than it otherwise would be.
+The given speed is measured in bytes/second.

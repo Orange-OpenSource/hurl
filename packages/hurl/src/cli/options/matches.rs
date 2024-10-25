@@ -25,7 +25,7 @@ use std::{env, fs, io};
 use clap::ArgMatches;
 use hurl::runner::Value;
 use hurl_core::input::Input;
-use hurl_core::typing::{Count, DurationUnit};
+use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::cli::options::variables::{parse as parse_variable, parse_value};
 use crate::cli::options::{duration, CliOptionsError};
@@ -276,6 +276,14 @@ pub fn junit_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
     get::<String>(arg_matches, "report_junit").map(PathBuf::from)
 }
 
+pub fn limit_rate(arg_matches: &ArgMatches) -> Option<BytesPerSec> {
+    get::<u64>(arg_matches, "limit_rate").map(BytesPerSec)
+}
+
+pub fn max_filesize(arg_matches: &ArgMatches) -> Option<u64> {
+    get::<u64>(arg_matches, "max_filesize")
+}
+
 pub fn max_redirect(arg_matches: &ArgMatches) -> Count {
     match get::<i32>(arg_matches, "max_redirects").unwrap() {
         -1 => Count::Infinite,
@@ -486,10 +494,6 @@ pub fn verbose(arg_matches: &ArgMatches) -> bool {
 
 pub fn very_verbose(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "very_verbose")
-}
-
-pub fn max_filesize(arg_matches: &ArgMatches) -> Option<u64> {
-    get::<u64>(arg_matches, "max_filesize")
 }
 
 /// Returns a list of path names from the command line options `matches`.
