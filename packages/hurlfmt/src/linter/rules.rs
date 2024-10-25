@@ -36,10 +36,9 @@ pub fn lint_hurl_file(hurl_file: &HurlFile) -> HurlFile {
 fn check_entry(entry: &Entry) -> Vec<LinterError> {
     let mut errors = vec![];
     errors.append(&mut check_request(&entry.request));
-    match &entry.response {
-        Some(r) => errors.append(&mut check_response(r)),
-        None => {}
-    };
+    if let Some(response) = &entry.response {
+        errors.append(&mut check_response(response));
+    }
     errors
 }
 

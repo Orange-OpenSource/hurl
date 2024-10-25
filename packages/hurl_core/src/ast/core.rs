@@ -510,6 +510,7 @@ pub struct MultilineString {
     pub attributes: Vec<MultilineStringAttribute>,
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultilineStringKind {
     Text(Text),
@@ -646,6 +647,7 @@ pub struct LineTerminator {
     pub newline: Whitespace,
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Bytes {
     Json(json::Value),

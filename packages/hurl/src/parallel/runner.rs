@@ -58,6 +58,7 @@ pub struct ParallelRunner {
 }
 
 /// Represents a worker's state.
+#[allow(clippy::large_enum_variant)]
 pub enum WorkerState {
     /// Worker has no job to run.
     Idle,
