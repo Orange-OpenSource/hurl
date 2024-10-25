@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -55,11 +55,11 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
-      uses: actions/setup-python@v5.2.0
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.10'
     - name: Install Prerequisites
@@ -104,11 +104,11 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
-      uses: actions/setup-python@v5.2.0
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.10'
     - name: Install Prerequisites
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -189,7 +189,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -237,7 +237,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -287,7 +287,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -335,7 +335,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -389,7 +389,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
     - name: Install Rust
