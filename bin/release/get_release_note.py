@@ -22,6 +22,7 @@ class Pull:
         self,
         url: str,
         description: str,
+        author: str,
         tags: Optional[List[str]] = None,
         issues: Optional[List[int]] = None,
     ):
@@ -31,13 +32,15 @@ class Pull:
             issues = []
         self.url = url
         self.description = description
+        self.author = author
         self.tags = tags
         self.issues = issues
 
     def __repr__(self):
-        return 'Pull("%s", "%s","%s", %s)' % (
+        return 'Pull("%s", "%s", "%s", "%s", %s)' % (
             self.url,
             self.description,
+            self.author,
             str(self.tags),
             str(self.issues),
         )
@@ -48,6 +51,8 @@ class Pull:
             if self.url != other.url:
                 return False
             if self.description != other.description:
+                return False
+            if self.author != other.author:
                 return False
             if self.tags != other.tags:
                 return False
@@ -79,8 +84,74 @@ class Issue:
 def release_note(milestone: str, token: Optional[str]) -> str:
     """return markdown release note for the given milestone"""
     date = datetime.datetime.now()
-    milestone_number = get_milestone(title=milestone, token=token)
-    issues = get_issues(milestone_number=milestone_number, token=token)
+
+    query = """\
+query {
+    repository(owner:"Orange-OpenSource", name:"hurl") {
+        milestones(query:"MILESTONE", first:1) {
+            edges {
+                node {
+                    issues(last:100, states:CLOSED) {
+                        edges {
+                            node {
+                                title
+                                number
+                                url
+                                author {
+                                    login
+                                }
+                                closedByPullRequestsReferences(includeClosedPrs:true, first:5) {
+                                    edges {
+                                        node {
+                                            title
+                                            url
+                                            author {
+                                                login
+                                            }
+                                        }
+                                    }
+                                }
+                                labels(first:5) {
+                                    edges {
+                                        node {
+                                            name
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+"""
+    query = query.replace("MILESTONE", milestone)
+    payload = github_graphql(token=token, query=query)
+    response = json.loads(payload)
+    issues_dict = response["data"]["repository"]["milestones"]["edges"][0]["node"][
+        "issues"
+    ]["edges"]
+    issues = []
+    for issue_dict in issues_dict:
+        number = issue_dict["node"]["number"]
+        author_issue = issue_dict["node"]["author"]["login"]
+        tags_dict = issue_dict["node"]["labels"]["edges"]
+        tags = [t["node"]["name"] for t in tags_dict]
+
+        pulls = []
+        pulls_dict = issue_dict["node"]["closedByPullRequestsReferences"]["edges"]
+        for pull_dict in pulls_dict:
+            title = pull_dict["node"]["title"]
+            url = pull_dict["node"]["url"]
+            author_pull = pull_dict["node"]["author"]["login"]
+            pull = Pull(description=title, url=url, author=author_pull)
+            pulls.append(pull)
+
+        issue = Issue(number=number, tags=tags, author=author_issue, pulls=pulls)
+        issues.append(issue)
+
     pulls = pulls_from_issues(issues)
     authors = [
         author
@@ -102,7 +173,7 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
                         saved_pull.tags.append(tag)
                 saved_pull.issues.append(issue.number)
             else:
-                if pull.url.startswith("/Orange-OpenSource/hurl"):
+                if pull.url.startswith("https://github.com/Orange-OpenSource/hurl"):
                     pull.tags = issue.tags
                     pull.issues.append(issue.number)
                     pulls[pull.url] = pull
@@ -110,65 +181,15 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
     return list(pulls.values())
 
 
-def get_issues(milestone_number: int, token: Optional[str]) -> List[Issue]:
-    """Return issues for the given milestone and tags"""
-    path = "/issues?milestone=%s&state=closed&per_page=100" % milestone_number
-    response = github_get(path=path, token=token)
-    issues = []
-    for issue_json in json.loads(response):
-        if "pull_request" in issue_json:
-            continue
-        number = issue_json["number"]
-        tags = []
-        if "labels" in issue_json:
-            labels = issue_json["labels"]
-            tags = [label["name"] for label in labels]
-        author = issue_json["user"]["login"]
-        pulls = get_linked_pulls(issue_number=number, token=token)
-        issue = Issue(number, tags, author, pulls)
-        issues.append(issue)
-    return issues
-
-
-def get_linked_pulls(issue_number: int, token: Optional[str]) -> List[Pull]:
-    """return linked pull request for a given issue"""
-    # Webscapping the webpage issue
-    # because the API does not provide the relationship between issues and Pull request
-
-    url = "https://github.com/Orange-OpenSource/hurl/issues/%d" % issue_number
-    sys.stderr.write("* GET %s\n" % url)
-    headers = {}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    r = requests.get(url, headers=headers)
-    html = r.text
-    pulls = webscrapping_linked_pulls(html)
-    return pulls
-
-
-def webscrapping_linked_pulls(html: str) -> List[Pull]:
-    soup = BeautifulSoup(html, "html.parser")
-    links = soup.select("development-menu a")
-    pulls = []
-    for link in links:
-        url = link["href"]
-        if not isinstance(url, str):
-            continue
-        if url == "/Orange-OpenSource/hurl":
-            continue
-        description = "".join(link.getText()).strip()
-        pull = Pull(url, description)
-        pulls.append(pull)
-    return pulls
-
-
 def authors_from_issues(issues: List[Issue]) -> List[str]:
     """return list of unique authors from a list of issues"""
     authors = []
     for issue in issues:
-        author = issue.author
-        if author not in authors:
-            authors.append(author)
+        if issue.author not in authors:
+            authors.append(issue.author)
+        for pull in issue.pulls:
+            if pull.author not in authors:
+                authors.append(pull.author)
     return authors
 
 
@@ -209,25 +230,16 @@ def generate_md(
     return s
 
 
-def get_milestone(title: str, token: Optional[str]) -> int:
-    """Return milestone number"""
-    path = "/milestones?state=all"
-    response = github_get(path=path, token=token)
-    for milestone in json.loads(response):
-        if milestone["title"] == title:
-            return milestone["number"]
-    return -1
-
-
-def github_get(path: str, token: Optional[str]) -> str:
-    """Execute an HTTP GET with request"""
-    github_api_url = "https://api.github.com/repos/Orange-OpenSource/hurl"
-    url = github_api_url + path
-    sys.stderr.write("* GET %s\n" % url)
+def github_graphql(token: Optional[str], query: str) -> str:
+    """Execute a GraphQL query using GitHub API."""
+    url = "https://api.github.com/graphql"
+    query_json = {"query": query}
+    body = json.dumps(query_json)
+    sys.stderr.write("* POST %s\n" % url)
     headers = {}
     if token:
         headers["Authorization"] = f"Bearer {token}"
-    r = requests.get(url, headers=headers)
+    r = requests.post(url, data=body, headers=headers)
     if r.status_code != 200:
         raise Exception("HTTP Error %s - %s" % (r.status_code, r.text))
     return r.text
