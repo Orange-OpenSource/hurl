@@ -24,7 +24,6 @@ clap = { version = "4.5.20", features = ["cargo", "string", "wrap_help"] }
 curl = "0.4.47"
 curl-sys = "0.4.77"
 encoding = "0.2.33"
-float-cmp = "0.10.0"
 glob = "0.3.1"
 hex = "0.4.3"
 hex-literal = "0.4.1"

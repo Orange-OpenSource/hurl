@@ -430,15 +430,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8c02a5121d4ea3eb16a80748c74f5549a5665e4c21333c6098f283870fbdea6"
 
 [[package]]
-name = "float-cmp"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b09cf3155332e944990140d967ff5eceb70df778b34f77d8075db46e4704e6d8"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -514,7 +505,6 @@ dependencies = [
  "curl",
  "curl-sys",
  "encoding",
- "float-cmp",
  "glob",
  "hex",
  "hex-literal",
@@ -542,7 +532,6 @@ name = "hurl_core"
 version = "6.0.0-SNAPSHOT"
 dependencies = [
  "colored",
- "float-cmp",
  "libxml",
  "regex",
 ]

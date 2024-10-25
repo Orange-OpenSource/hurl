@@ -16,8 +16,6 @@
  *
  */
 
-use float_cmp::approx_eq;
-
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Selector, Slice};
 use crate::jsonpath::JsonpathResult;
 
@@ -154,8 +152,8 @@ impl Predicate {
                     match (value, self.func.clone()) {
                         (_, PredicateFunc::KeyExist) => true,
                         (serde_json::Value::Number(v), PredicateFunc::Equal(ref num)) => {
-                            approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
-                        } //v.as_f64().unwrap() == num.to_f64(),
+                            (v.as_f64().unwrap() - num.to_f64()).abs() < f64::EPSILON
+                        }
                         (serde_json::Value::Number(v), PredicateFunc::GreaterThan(ref num)) => {
                             v.as_f64().unwrap() > num.to_f64()
                         }
@@ -176,7 +174,7 @@ impl Predicate {
                             v != *s
                         }
                         (serde_json::Value::Number(v), PredicateFunc::NotEqual(ref num)) => {
-                            !approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
+                            (v.as_f64().unwrap() - num.to_f64()).abs() >= f64::EPSILON
                         }
                         (serde_json::Value::Bool(v), PredicateFunc::EqualBool(ref s)) => v == *s,
                         _ => false,
