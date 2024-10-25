@@ -14,7 +14,7 @@ rust-version = "1.78.0"
 base64 = "0.22.1"
 clap = { version = "4.5.20", features = ["cargo", "wrap_help"] }
 hurl_core = { version = "6.0.0-SNAPSHOT", path = "../hurl_core" }
-regex = "1.11.0"
+regex = "1.11.1"
 
 [dev-dependencies]
 proptest = "1.5.0"
