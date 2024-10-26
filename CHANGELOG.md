@@ -21,9 +21,9 @@ Enhancements:
 * Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
 * Remove the crate float-cmp [#3247](https://github.com/Orange-OpenSource/hurl/issues/3247)
 * Jsonpath / Add filter on boolean value  [#3252](https://github.com/Orange-OpenSource/hurl/issues/3252)
-* feat: Added a not eq operator to predicates [#3261](https://github.com/Orange-OpenSource/hurl/issues/3261)
 * Jsonpath / Add non-equal filter on string and number value [#3261](https://github.com/Orange-OpenSource/hurl/issues/3261)
 * Add support for backtick strings in predicates values [#3317](https://github.com/Orange-OpenSource/hurl/issues/3317)
+* Categorise options in --help [#3339](https://github.com/Orange-OpenSource/hurl/issues/3339)
 
 
 Bugs Fixed:
@@ -31,6 +31,7 @@ Bugs Fixed:
 * Fix filename parsing (used by cert option) [#3242](https://github.com/Orange-OpenSource/hurl/issues/3242)
 * Add additional check for --max-filesize option [#3245](https://github.com/Orange-OpenSource/hurl/issues/3245)
 * Support case-insensitive Cookie Attributes [#3265](https://github.com/Orange-OpenSource/hurl/issues/3265)
+* Fix graceful shutdown of workers threads in --test [#3297](https://github.com/Orange-OpenSource/hurl/issues/3297)
 
 
 [5.0.1 (2024-08-30)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
