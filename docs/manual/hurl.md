@@ -324,8 +324,6 @@ Private key file name.
 Specify the maximum transfer rate you want Hurl to use, for both downloads and uploads. This feature is useful if you have a limited pipe and you would like your transfer not to use your entire bandwidth. To make it slower than it otherwise would be.
 The given speed is measured in bytes/second.
 
-This is a cli-only option.
-
 ### -L, --location {#location}
 
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option

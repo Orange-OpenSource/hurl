@@ -642,10 +642,12 @@ cacert: /etc/cert.pem      # custom certificate file
 cert: /etc/client-cert.pem # client authentication certificate
 key: /etc/client-cert.key  # client authentication certificate key
 compressed: true           # request a compressed response
+connect-timeout: 20s       # connect timeout
 delay: 3s                  # delay for this request
 http3: true                # use HTTP/3 protocol version
 insecure: true             # allow insecure SSL connections and transfers
 ipv6: true                 # use IPv6 addresses
+limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
 location: true             # follow redirection for this request
 max-redirs: 10             # maximum number of redirections
 output: out.html           # dump the response to this file
