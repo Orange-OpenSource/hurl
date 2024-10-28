@@ -315,6 +315,7 @@ impl ToJson for EntryOption {
             OptionKind::Insecure(value) => value.to_json(),
             OptionKind::IpV4(value) => value.to_json(),
             OptionKind::IpV6(value) => value.to_json(),
+            OptionKind::LimitRate(value) => value.to_json(),
             OptionKind::MaxRedirect(value) => value.to_json(),
             OptionKind::NetRc(value) => value.to_json(),
             OptionKind::NetRcFile(filename) => JValue::String(filename.to_string()),
@@ -794,6 +795,14 @@ impl ToJson for Comment {
     }
 }
 
+impl ToJson for NaturalOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            NaturalOption::Literal(value) => JValue::Number(value.to_string()),
+            NaturalOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
 #[cfg(test)]
 pub mod tests {
     use hurl_core::reader::Pos;

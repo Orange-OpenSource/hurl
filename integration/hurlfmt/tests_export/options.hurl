@@ -20,6 +20,7 @@ http3: false
 insecure: false
 ipv4: false
 ipv6: false
+limit-rate: 1000
 max-redirs: 10
 netrc: false
 netrc-file: netrcfile
@@ -66,6 +67,7 @@ http3: {{http3}}
 insecure: {{insecure}}
 ipv4: {{ipv4}}
 ipv6: {{ipv6}}
+limit-rate: {{limit-rate}}
 max-redirs: {{max-redirs}}
 netrc: {{netrc}}
 netrc-file: {{netrc-file}}

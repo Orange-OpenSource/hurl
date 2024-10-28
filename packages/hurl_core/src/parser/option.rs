@@ -19,7 +19,7 @@ use crate::ast::*;
 use crate::combinator::{choice, non_recover};
 use crate::parser::duration::duration;
 use crate::parser::error::*;
-use crate::parser::number::{integer, number};
+use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::*;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, filename_password, ParseResult};
@@ -55,6 +55,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "ipv4" => option_ipv4(reader)?,
         "ipv6" => option_ipv6(reader)?,
         "key" => option_key(reader)?,
+        "limit-rate" => option_limit_rate(reader)?,
         "location" => option_follow_location(reader)?,
         "location-trusted" => option_follow_location_trusted(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
@@ -179,6 +180,11 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::ClientKey(value))
 }
 
+fn option_limit_rate(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = non_recover(natural_option, reader)?;
+    Ok(OptionKind::LimitRate(value))
+}
+
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(count_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
@@ -292,6 +298,23 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
                 ParseError::new(e.pos, false, kind)
             })?;
             Ok(BooleanOption::Expression(exp))
+        }
+    }
+}
+
+fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
+    let start = reader.cursor();
+    match natural(reader) {
+        Ok(v) => Ok(NaturalOption::Literal(v)),
+        Err(_) => {
+            reader.seek(start);
+            let exp = expr::parse(reader).map_err(|e| {
+                let kind = ParseErrorKind::Expecting {
+                    value: "integer >= 0".to_string(),
+                };
+                ParseError::new(e.pos, false, kind)
+            })?;
+            Ok(NaturalOption::Expression(exp))
         }
     }
 }

@@ -232,6 +232,7 @@ impl HtmlFormatter {
             OptionKind::Insecure(value) => self.fmt_bool_option(value),
             OptionKind::IpV4(value) => self.fmt_bool_option(value),
             OptionKind::IpV6(value) => self.fmt_bool_option(value),
+            OptionKind::LimitRate(value) => self.fmt_natural_option(value),
             OptionKind::MaxRedirect(value) => self.fmt_count_option(value),
             OptionKind::NetRc(value) => self.fmt_bool_option(value),
             OptionKind::NetRcFile(filename) => self.fmt_filename(filename),
@@ -685,6 +686,13 @@ impl HtmlFormatter {
         match value {
             BooleanOption::Literal(value) => self.fmt_span("boolean", &value.to_string()),
             BooleanOption::Expression(value) => self.fmt_expr(value),
+        }
+    }
+
+    fn fmt_natural_option(&mut self, value: &NaturalOption) {
+        match value {
+            NaturalOption::Literal(value) => self.fmt_span("number", &value.to_string()),
+            NaturalOption::Expression(value) => self.fmt_expr(value),
         }
     }
 

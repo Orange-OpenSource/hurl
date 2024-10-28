@@ -18,10 +18,10 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::{
-    BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, Number as AstNumber,
-    OptionKind, SectionValue, VariableDefinition, VariableValue,
+    BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, NaturalOption,
+    Number as AstNumber, OptionKind, SectionValue, VariableDefinition, VariableValue,
 };
-use hurl_core::typing::{Count, DurationUnit};
+use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
@@ -175,6 +175,11 @@ pub fn get_entry_options(
                             IpResolve::IpV4
                         }
                     }
+                    OptionKind::LimitRate(value) => {
+                        let value = eval_natural_option(value, variables)?;
+                        entry_options.max_send_speed = Some(BytesPerSec(value));
+                        entry_options.max_recv_speed = Some(BytesPerSec(value));
+                    }
                     OptionKind::MaxRedirect(value) => {
                         let value = eval_count_option(value, variables)?;
                         entry_options.max_redirect = value;
@@ -319,6 +324,37 @@ fn eval_boolean_option(
                     name: expr.variable.name.clone(),
                     value: v.format(),
                     expecting: "boolean".to_string(),
+                };
+                Err(RunnerError::new(expr.variable.source_info, kind, false))
+            }
+        },
+    }
+}
+
+fn eval_natural_option(
+    natural_value: &NaturalOption,
+    variables: &HashMap<String, Value>,
+) -> Result<u64, RunnerError> {
+    match natural_value {
+        NaturalOption::Literal(value) => Ok(*value),
+        NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
+            Value::Number(Number::Integer(value)) => {
+                if value > 0 {
+                    Ok(value as u64)
+                } else {
+                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                        name: expr.variable.name.clone(),
+                        value: format!("integer <{value}>"),
+                        expecting: "integer > 0".to_string(),
+                    };
+                    Err(RunnerError::new(expr.variable.source_info, kind, false))
+                }
+            }
+            v => {
+                let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                    name: expr.variable.name.clone(),
+                    value: v.format(),
+                    expecting: "integer".to_string(),
                 };
                 Err(RunnerError::new(expr.variable.source_info, kind, false))
             }
