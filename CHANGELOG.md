@@ -17,6 +17,7 @@ Breaking Changes:
 
 Enhancements:
 
+* Implement --limit-rate from curl [#1222](https://github.com/Orange-OpenSource/hurl/issues/1222)
 * Configure --connect-timeout per request [#3163](https://github.com/Orange-OpenSource/hurl/issues/3163)
 * Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
 * Remove the crate float-cmp [#3247](https://github.com/Orange-OpenSource/hurl/issues/3247)
