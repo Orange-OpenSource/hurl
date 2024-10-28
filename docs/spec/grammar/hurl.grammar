@@ -133,6 +133,7 @@ option:
   | insecure-option
   | ipv4-option
   | ipv6-option
+  | limit-rate-option
   | max-redirs-option
   | netrc-option
   | netrc-file-option
@@ -185,6 +186,8 @@ insecure-option: "insecure" ":" boolean-option lt
 ipv4-option: "ipv4" ":" boolean-option lt
 
 ipv6-option: "ipv6" ":" boolean-option lt
+
+limit-rate-option: "limit-rate" ":" integer-option lt
 
 max-redirs-option: "max-redirs" ":" integer-option lt
 
