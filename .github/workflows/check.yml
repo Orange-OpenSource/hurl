@@ -100,6 +100,13 @@ jobs:
       if: always()
       run: bin/check/doc.sh
 
+    - name: Check Valgrind
+      if: always()
+      run: |
+        sudo apt-get install -y valgrind
+        cargo install cargo-valgrind
+        bin/check/valgrind.sh
+
     - name: Check completion files
       if: always()
       run: |
