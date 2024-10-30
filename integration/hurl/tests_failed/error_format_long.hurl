@@ -24,3 +24,27 @@ HTTP 200
 Content-Type: application/problem+json
 [Asserts]
 jsonpath "$.title" == "You have enough credit."
+
+
+# "JSON like" mimetype are supported, like [FHIR](https://www.hl7.org/fhir/json.html)
+GET http://localhost:8000/error-format-long/fhir
+HTTP 200
+Content-Type: application/fhir+json
+[Asserts]
+jsonpath "$.id" == "foo"
+
+
+# Text like mimetype like CSV are supported
+GET http://localhost:8000/error-format-long/csv
+HTTP 200
+Content-Type: text/csv; charset=utf-8
+[Asserts]
+body split "\n" nth 9 split "," nth 2 == "\"Taxi\""
+
+
+# Bytestream are dumped as a raw bytes stream
+GET http://localhost:8000/error-format-long/bytes
+HTTP 200
+Content-Type: application/octet-stream
+[Asserts]
+bytes == hex,beef;
