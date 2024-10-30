@@ -99,7 +99,7 @@ fn simple_sample() {
     `Hello World!`
     "#;
 
-    let filename = Some(Input::Stdin);
+    let filename = Some(Input::new("foo.hurl"));
 
     // Define runner and logger options
     let runner_opts = RunnerOptionsBuilder::new()

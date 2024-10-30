@@ -161,7 +161,7 @@ mod tests {
     fn create_junit_report() {
         let content = "GET http://localhost:8000/not_found\n\
                        HTTP/1.0 200";
-        let filename = Input::Stdin;
+        let filename = Input::new("test.hurl");
         let mut testcases = vec![];
         let res = HurlResult {
             entries: vec![],
@@ -230,10 +230,10 @@ mod tests {
             doc.to_string().unwrap(),
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
             <testsuite tests=\"3\" errors=\"1\" failures=\"1\">\
-                <testcase id=\"-\" name=\"-\" time=\"0.230\" />\
-                <testcase id=\"-\" name=\"-\" time=\"0.230\">\
+                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.230\" />\
+                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.230\">\
                     <failure>Assert status code\n  \
-                    --&gt; -:2:10\n   \
+                    --&gt; test.hurl:2:10\n   \
                       |\n   \
                       | GET http://localhost:8000/not_found\n \
                     2 | HTTP/1.0 200\n   \
@@ -241,8 +241,8 @@ mod tests {
                       |\
                     </failure>\
                 </testcase>\
-                <testcase id=\"-\" name=\"-\" time=\"0.230\">\
-                    <error>HTTP connection\n  --&gt; -:1:5\n   |\n 1 | GET http://localhost:8000/not_found\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |\
+                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.230\">\
+                    <error>HTTP connection\n  --&gt; test.hurl:1:5\n   |\n 1 | GET http://localhost:8000/not_found\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |\
                     </error>\
                 </testcase>\
             </testsuite>"

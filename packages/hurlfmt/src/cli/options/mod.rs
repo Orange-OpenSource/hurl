@@ -23,13 +23,14 @@ use std::env;
 use std::path::PathBuf;
 
 use clap::ArgMatches;
+use hurl_core::input::Input;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
     pub check: bool,
     pub color: bool,
     pub in_place: bool,
-    pub input_files: Vec<String>,
+    pub input_files: Vec<Input>,
     pub input_format: InputFormat,
     pub output_file: Option<PathBuf>,
     pub output_format: OutputFormat,

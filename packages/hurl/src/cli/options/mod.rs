@@ -34,7 +34,7 @@ use hurl::runner::Output;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
-use hurl_core::input::Input;
+use hurl_core::input::{Input, InputKind};
 use hurl_core::typing::{BytesPerSec, Count};
 
 use crate::cli;
@@ -394,9 +394,9 @@ impl CliOptions {
         let connects_to = self.connects_to.clone();
         let file_root = match &self.file_root {
             Some(f) => Path::new(f),
-            None => match filename {
-                Input::File(path) => path.parent().unwrap(),
-                Input::Stdin => current_dir,
+            None => match filename.kind() {
+                InputKind::File(path) => path.parent().unwrap(),
+                InputKind::Stdin(_) => current_dir,
             },
         };
         let context_dir = ContextDir::new(current_dir, file_root);

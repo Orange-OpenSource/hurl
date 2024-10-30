@@ -360,7 +360,7 @@ mod tests {
             .enumerate()
             .map(|(index, file)| {
                 Job::new(
-                    &Input::new(file),
+                    &Input::new(*file),
                     index,
                     &runner_options,
                     &variables,

@@ -19,7 +19,7 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 use std::process;
 
-use hurl_core::input::Input;
+use hurl_core::input::InputKind;
 use hurl_core::{parser, text};
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
@@ -52,8 +52,6 @@ fn main() {
     let mut output_all = String::new();
 
     for input_file in &opts.input_files {
-        let input_file = Input::new(input_file);
-
         // Get content of the input
         let content = match input_file.read_to_string() {
             Ok(c) => c,
@@ -82,7 +80,7 @@ fn main() {
         let hurl_file = match parser::parse_hurl_file(&input) {
             Ok(h) => h,
             Err(e) => {
-                logger.error_parsing(&content, &input_file, &e);
+                logger.error_parsing(&content, input_file, &e);
                 process::exit(EXIT_INVALID_INPUT);
             }
         };
@@ -91,7 +89,7 @@ fn main() {
         if opts.check {
             let lints = linter::check_hurl_file(&hurl_file);
             for e in lints.iter() {
-                logger.warn_lint(&content, &input_file, e);
+                logger.warn_lint(&content, input_file, e);
             }
             if lints.is_empty() {
                 process::exit(EXIT_OK);
@@ -110,10 +108,10 @@ fn main() {
             OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
         };
         if opts.in_place {
-            let Input::File(path) = input_file else {
+            let InputKind::File(path) = input_file.kind() else {
                 unreachable!("--in-place and standard input have been filtered in args parsing")
             };
-            write_output(&output, Some(path));
+            write_output(&output, Some(path.clone()));
         } else {
             output_all.push_str(&output);
         }

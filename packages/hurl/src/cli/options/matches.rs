@@ -230,7 +230,11 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsErr
         files.push(filename);
     }
     if files.is_empty() && !io::stdin().is_terminal() {
-        files.push(Input::Stdin);
+        let input = match Input::from_stdin() {
+            Ok(input) => input,
+            Err(err) => return Err(CliOptionsError::Error(err.to_string())),
+        };
+        files.push(input);
     }
     Ok(files)
 }

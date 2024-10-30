@@ -21,6 +21,7 @@ use std::path::{Path, PathBuf};
 
 use clap::parser::ValueSource;
 use clap::ArgMatches;
+use hurl_core::input::Input;
 
 use super::OptionsError;
 use crate::cli::options::{InputFormat, OutputFormat};
@@ -86,23 +87,27 @@ pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
 }
 
 /// Returns the input files from the positional arguments and input stream
-pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
+pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<Input>, OptionsError> {
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
-        for filename in filenames {
-            let path = Path::new(&filename);
-            if path.exists() {
-                files.push(filename);
-            } else {
+        for filename in &filenames {
+            let filename = Path::new(filename);
+            if !filename.exists() {
                 return Err(OptionsError::Error(format!(
                     "error: Cannot access '{}': No such file or directory",
-                    path.display()
+                    filename.display()
                 )));
             }
+            let file = Input::from(filename);
+            files.push(file);
         }
     }
     if files.is_empty() && !io::stdin().is_terminal() {
-        files.push("-".to_string());
+        let input = match Input::from_stdin() {
+            Ok(input) => input,
+            Err(err) => return Err(OptionsError::Error(err.to_string())),
+        };
+        files.push(input);
     }
     Ok(files)
 }

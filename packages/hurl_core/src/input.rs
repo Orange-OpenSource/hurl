@@ -22,18 +22,59 @@ use std::{fmt, fs, io};
 
 /// Represents the input of read operation: can be either a file or standard input.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Input {
-    /// Read from file.
-    File(PathBuf),
-    /// Read from standard input.
-    Stdin,
+pub struct Input {
+    /// Kind of input: either sourced from a file source, or from standard input.
+    kind: InputKind,
 }
 
 impl fmt::Display for Input {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.kind.fmt(f)
+    }
+}
+
+impl Input {
+    /// Creates an input from a path source.
+    pub fn new(path: &str) -> Self {
+        let kind = InputKind::File(PathBuf::from(path));
+        Input { kind }
+    }
+
+    /// Creates an input from standard input.
+    /// The content of the standard input is read once and then cached. It can be re-read multiple
+    /// times.
+    pub fn from_stdin() -> Result<Self, io::Error> {
+        let mut contents = String::new();
+        io::stdin().read_to_string(&mut contents)?;
+        let kind = InputKind::Stdin(contents);
+        Ok(Input { kind })
+    }
+
+    pub fn kind(&self) -> &InputKind {
+        &self.kind
+    }
+
+    /// Reads the content of this input to a string, removing any BOM.
+    pub fn read_to_string(&self) -> Result<String, io::Error> {
+        self.kind.read_to_string()
+    }
+}
+
+/// Represents the kind of input of read operation.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum InputKind {
+    /// Read from file.
+    File(PathBuf),
+    /// Read from standard input. Input is read once and the stdin string is cached and can be read
+    /// multiple times.
+    Stdin(String),
+}
+
+impl fmt::Display for InputKind {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let output = match self {
-            Input::File(file) => file.to_string_lossy().to_string(),
-            Input::Stdin => "-".to_string(),
+            InputKind::File(file) => file.to_string_lossy().to_string(),
+            InputKind::Stdin(_) => "-".to_string(),
         };
         write!(f, "{output}")
     }
@@ -41,41 +82,30 @@ impl fmt::Display for Input {
 
 impl From<&Path> for Input {
     fn from(value: &Path) -> Self {
-        Input::File(value.to_path_buf())
+        let kind = InputKind::File(value.to_path_buf());
+        Input { kind }
     }
 }
 
 impl From<PathBuf> for Input {
     fn from(value: PathBuf) -> Self {
-        Input::File(value)
+        let kind = InputKind::File(value);
+        Input { kind }
     }
 }
 
-impl Input {
-    /// Creates a new input from a string filename.
-    pub fn new(filename: &str) -> Self {
-        if filename == "-" {
-            Input::Stdin
-        } else {
-            Input::File(PathBuf::from(filename))
-        }
-    }
-
+impl InputKind {
     /// Reads the content of this input to a string, removing any BOM.
-    pub fn read_to_string(&self) -> Result<String, io::Error> {
+    fn read_to_string(&self) -> Result<String, io::Error> {
         match self {
-            Input::File(path) => {
+            InputKind::File(path) => {
                 let mut f = File::open(path)?;
                 let metadata = fs::metadata(path).unwrap();
                 let mut buffer = vec![0; metadata.len() as usize];
                 f.read_exact(&mut buffer)?;
                 string_from_utf8(buffer)
             }
-            Input::Stdin => {
-                let mut contents = String::new();
-                io::stdin().read_to_string(&mut contents)?;
-                Ok(contents)
-            }
+            InputKind::Stdin(cached) => Ok(cached.clone()),
         }
     }
 }
