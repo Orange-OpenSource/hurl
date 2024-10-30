@@ -9,6 +9,7 @@ Thanks to
 [@sandeshbhusal](https://github.com/sandeshbhusal),
 [@thePanz](https://github.com/thePanz),
 [@infogulch](https://github.com/infogulch),
+[@orlandow](https://github.com/orlandow),
 
 Breaking Changes:
 
@@ -25,6 +26,7 @@ Enhancements:
 * Jsonpath / Add non-equal filter on string and number value [#3261](https://github.com/Orange-OpenSource/hurl/issues/3261)
 * Add support for backtick strings in predicates values [#3317](https://github.com/Orange-OpenSource/hurl/issues/3317)
 * Categorise options in --help [#3339](https://github.com/Orange-OpenSource/hurl/issues/3339)
+* Support more JSON / XML "like" mimetypes with debug output [#3343](https://github.com/Orange-OpenSource/hurl/issues/3343)
 
 
 Bugs Fixed:
