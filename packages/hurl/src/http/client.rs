@@ -31,6 +31,7 @@ use hurl_core::typing::Count;
 
 use crate::http::certificate::Certificate;
 use crate::http::core::*;
+use crate::http::curl_cmd::CurlCmd;
 use crate::http::debug::log_body;
 use crate::http::header::{
     HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
@@ -762,43 +763,9 @@ impl Client {
         output: Option<&Output>,
         options: &ClientOptions,
     ) -> String {
-        let mut arguments = vec!["curl".to_string()];
-        arguments.append(&mut request_spec.curl_args(context_dir));
-
-        // We extract the last part of the arguments (the url) to insert it
-        // after all the options
-        let url = arguments.pop().unwrap();
-
-        let cookies = all_cookies(&self.cookie_storage(), request_spec);
-        if !cookies.is_empty() {
-            arguments.push("--cookie".to_string());
-            arguments.push(format!(
-                "'{}'",
-                cookies
-                    .iter()
-                    .map(|c| c.to_string())
-                    .collect::<Vec<String>>()
-                    .join("; ")
-            ));
-        }
-        arguments.append(&mut options.curl_args());
-
-        // --output is not an option of the HTTP client, we deal with it here:
-        match output {
-            Some(Output::File(filename)) => {
-                let filename = context_dir.resolved_path(filename);
-                arguments.push("--output".to_string());
-                arguments.push(filename.to_string_lossy().to_string());
-            }
-            Some(Output::Stdout) => {
-                arguments.push("--output".to_string());
-                arguments.push("-".to_string());
-            }
-            None => {}
-        }
-
-        arguments.push(url);
-        arguments.join(" ")
+        let cookies = self.cookie_storage();
+        let cmd = CurlCmd::new(request_spec, &cookies, context_dir, output, options);
+        cmd.to_string()
     }
 
     /// Returns the SSL certificates information associated to this call.
