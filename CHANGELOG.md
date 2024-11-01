@@ -31,6 +31,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix reading standard input multiple times [#3216](https://github.com/Orange-OpenSource/hurl/issues/3216)
 * Fix filename parsing (used by cert option) [#3242](https://github.com/Orange-OpenSource/hurl/issues/3242)
 * Add additional check for --max-filesize option [#3245](https://github.com/Orange-OpenSource/hurl/issues/3245)
 * Support case-insensitive Cookie Attributes [#3265](https://github.com/Orange-OpenSource/hurl/issues/3265)
