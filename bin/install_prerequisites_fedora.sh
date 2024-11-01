@@ -7,17 +7,16 @@ yum install -y \
     sudo \
     expect \
     which \
-    python3 \
     procps \
     gcc \
     libxml2-devel \
     openssl-devel \
     libcurl-devel \
-    python3-devel \
-    python3-pip \
+    python3.11-devel \
     nc \
     squid \
     jq
+ln -sf /usr/bin/python3.11 /usr/bin/python3
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
 
