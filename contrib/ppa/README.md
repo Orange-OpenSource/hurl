@@ -78,9 +78,37 @@ gpg --import /tmp/myprivatekey.asc
 
 ```
 rm -fr /tmp/ppa || true
+git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git /tmp/ppa/hurl-ppa
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${HURL_VERSION}" /tmp/ppa/hurl-"${HURL_VERSION}"
 cd /tmp/ppa/hurl-"${HURL_VERSION}"
-cp -r contrib/ppa/debian .
+cp -r ../hurl-ppa/contrib/ppa/debian .
+```
+
+## Minimize repo
+
+```
+rm -fr .circleci \
+       .github \
+       .git \
+       rustfmt.toml \
+       art \
+       contrib \
+       integration \
+       RELEASING.md \
+       README.md \
+       CONTRIBUTING.md
+while read -r dir ; do
+    rm -fr $dir
+done < <(find bin -mindepth 1 -type d | grep -v "bin/release")
+while read -r file ; do
+    rm -fr $file
+done < <(find bin -type f | grep -Ev "man\.sh|release\.sh|gen_manpage\.py")
+while read -r dir ; do
+    rm -fr $dir
+done < <(find docs -mindepth 1 -type d | grep -v "docs/manual")
+while read -r file ; do
+    rm -fr $file
+done < <(find docs -type f | grep -Ev "manual/")
 ```
 
 ## Install rust and cargo
@@ -88,7 +116,7 @@ cp -r contrib/ppa/debian .
 ```
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
 for arch in x86_64 aarch64 ; do 
-    wget "https://static.rust-lang.org/dist/rust-${rust_version}-${arch}-unknown-linux-gnu.tar.gz"
+    wget "https://static.rust-lang.org/dist/rust-${rust_version}-${arch}-unknown-linux-gnu.tar.xz"
 done
 rust_architecture=$(uname -m)
 package="rust-${rust_version}-${rust_architecture}-unknown-linux-gnu"
@@ -137,6 +165,11 @@ cat debian/cargo.config
 
 ```
 debuild -S -sa -k"${GPG_KEYID}"
+```
+
+## verify deb package source
+
+```
 cd ..
 ls -l hurl_*
 ```

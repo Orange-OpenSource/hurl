@@ -11,7 +11,7 @@ package="rust-${rust_version}-${rust_arch}-unknown-linux-gnu"
 echo "rust_version=${rust_version}"
 echo "rust_architecture=${rust_arch}"
 echo "package=${package}"
-tar xf "${package}.tar.gz"
+tar xf "${package}.tar.xz"
 mkdir -p /tmp/rust
 ./"${package}"/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
 export PATH="/tmp/rust/usr/local/bin:$PATH"
