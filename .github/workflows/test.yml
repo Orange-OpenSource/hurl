@@ -422,7 +422,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
       with:
        ref: ${{ inputs.branch }}
     - name: Update wsl
