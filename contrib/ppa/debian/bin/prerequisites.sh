@@ -6,10 +6,10 @@ tar pxf vendor.tar.xz
 
 echo "## install rustc and cargo"
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
-rust_arch=$(uname -m)
-package="rust-${rust_version}-${rust_arch}-unknown-linux-gnu"
+arch=$(uname -m)
+package="rust-${rust_version}-${arch}-unknown-linux-gnu"
 echo "rust_version=${rust_version}"
-echo "rust_architecture=${rust_arch}"
+echo "architecture=${arch}"
 echo "package=${package}"
 tar xf "${package}.tar.xz"
 mkdir -p /tmp/rust
