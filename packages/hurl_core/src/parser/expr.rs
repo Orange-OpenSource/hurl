@@ -21,28 +21,13 @@ use crate::parser::primitives::*;
 use crate::parser::ParseResult;
 use crate::reader::Reader;
 
+/// Parse an expression
+///
+/// Currently, an expression can only be found inside a template.
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
-    try_literal("{{", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let variable = variable_name(reader)?;
     let space1 = zero_or_more_spaces(reader)?;
-
-    if try_literal("}}}", reader).is_err() {
-        literal("}}", reader)?;
-    }
-
-    Ok(Expr {
-        space0,
-        variable,
-        space1,
-    })
-}
-
-pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
-    let space0 = zero_or_more_spaces(reader)?;
-    let variable = variable_name(reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-
     Ok(Expr {
         space0,
         variable,
@@ -70,56 +55,6 @@ fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
 mod tests {
     use super::*;
     use crate::reader::Pos;
-
-    #[test]
-    fn test_expr() {
-        let mut reader = Reader::new("{{ name}}");
-        assert_eq!(
-            parse(&mut reader).unwrap(),
-            Expr {
-                space0: Whitespace {
-                    value: String::from(" "),
-                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
-                },
-                variable: Variable {
-                    name: String::from("name"),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 8)),
-                },
-                space1: Whitespace {
-                    value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
-                },
-            }
-        );
-    }
-
-    #[test]
-    fn test_expr_error() {
-        let mut reader = Reader::new("{{host>}}");
-        let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(
-            error.kind,
-            ParseErrorKind::Expecting {
-                value: String::from("}}")
-            }
-        );
-        assert!(!error.recoverable);
-    }
-
-    #[test]
-    fn test_expr_error_eof() {
-        let mut reader = Reader::new("{{host");
-        let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(
-            error.kind,
-            ParseErrorKind::Expecting {
-                value: String::from("}}")
-            }
-        );
-        assert!(!error.recoverable);
-    }
 
     #[test]
     fn test_variable() {

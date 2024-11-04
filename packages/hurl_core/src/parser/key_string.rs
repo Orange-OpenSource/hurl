@@ -18,7 +18,7 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::template::template;
+use crate::parser::template;
 use crate::parser::{string, ParseResult};
 use crate::reader::Reader;
 
@@ -27,7 +27,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
 
     let mut elements = vec![];
     loop {
-        match template(reader) {
+        match template::parse(reader) {
             Ok(expr) => {
                 let element = TemplateElement::Expression(expr);
                 elements.push(element);

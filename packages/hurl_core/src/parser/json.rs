@@ -20,8 +20,10 @@ use crate::combinator::{choice, non_recover, ParseError as ParseErrorTrait};
 use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::template::*;
-use crate::parser::{expr, ParseResult};
+use crate::parser::ParseResult;
 use crate::reader::{Pos, Reader};
+
+use super::template;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(
@@ -270,7 +272,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let exp = expr::parse(reader)?;
+    let exp = template::parse(reader)?;
     Ok(JsonValue::Expression(exp))
 }
 
