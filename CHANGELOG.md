@@ -21,6 +21,7 @@ Enhancements:
 * Implement --limit-rate from curl [#1222](https://github.com/Orange-OpenSource/hurl/issues/1222)
 * Configure --connect-timeout per request [#3163](https://github.com/Orange-OpenSource/hurl/issues/3163)
 * Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
+* Remove url-specific parser (align with grammar) [#3244](https://github.com/Orange-OpenSource/hurl/issues/3244)
 * Remove the crate float-cmp [#3247](https://github.com/Orange-OpenSource/hurl/issues/3247)
 * Jsonpath / Add filter on boolean value  [#3252](https://github.com/Orange-OpenSource/hurl/issues/3252)
 * Jsonpath / Add non-equal filter on string and number value [#3261](https://github.com/Orange-OpenSource/hurl/issues/3261)
