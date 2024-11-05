@@ -1,5 +1,5 @@
 hurl (${hurl_version}-0ubuntu+${codename}) ${codename}; urgency=medium
 
-  * New ${hurl_version} Release.
+  * New upstream release.
 
  -- lepapareil <filipe.pinto@orange.com>  ${date} +0200

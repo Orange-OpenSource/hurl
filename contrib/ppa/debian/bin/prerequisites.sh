@@ -8,12 +8,13 @@ echo "## install rustc and cargo"
 rust_version=$(grep '^rust-version' packages/hurl/Cargo.toml | cut -f2 -d'"')
 arch=$(uname -m)
 package="rust-${rust_version}-${arch}-unknown-linux-gnu"
+packagelight="${package}-light"
 echo "rust_version=${rust_version}"
 echo "architecture=${arch}"
-echo "package=${package}"
-tar xf "${package}.tar.xz"
+echo "packagelight=${packagelight}"
+tar xf "${packagelight}.tar.xz"
 mkdir -p /tmp/rust
-./"${package}"/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
+./"${packagelight}"/install.sh --verbose --destdir=/tmp/rust --disable-ldconfig
 export PATH="/tmp/rust/usr/local/bin:$PATH"
 which rustc
 which cargo
