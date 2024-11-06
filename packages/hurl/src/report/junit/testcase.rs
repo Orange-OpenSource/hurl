@@ -97,7 +97,7 @@ mod test {
     use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
-    use crate::http::HttpError;
+    use crate::http::{CurlCmd, HttpError};
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
     use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
@@ -144,6 +144,7 @@ HTTP/1.0 200
                 )],
                 transfer_duration: Duration::from_millis(0),
                 compressed: false,
+                curl_cmd: CurlCmd::default(),
             }],
             duration: Duration::from_millis(230),
             success: true,
@@ -186,6 +187,7 @@ HTTP/1.0 200
                 )],
                 transfer_duration: Duration::from_millis(0),
                 compressed: false,
+                curl_cmd: CurlCmd::default(),
             }],
             duration: Duration::from_millis(230),
             success: true,

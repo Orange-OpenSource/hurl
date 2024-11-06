@@ -123,7 +123,7 @@ mod tests {
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
 
-    use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
+    use crate::http::{Call, CurlCmd, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
@@ -168,6 +168,7 @@ mod tests {
                     errors: vec![],
                     transfer_duration: Duration::from_millis(0),
                     compressed: false,
+                    curl_cmd: CurlCmd::default(),
                 },
                 EntryResult {
                     entry_index: 2,
@@ -187,6 +188,7 @@ mod tests {
                     errors: vec![],
                     transfer_duration: Duration::from_millis(0),
                     compressed: false,
+                    curl_cmd: CurlCmd::default(),
                 },
                 EntryResult {
                     entry_index: 3,
@@ -214,6 +216,7 @@ mod tests {
                     errors: vec![],
                     transfer_duration: Duration::from_millis(0),
                     compressed: false,
+                    curl_cmd: CurlCmd::default(),
                 },
             ],
             duration: Duration::from_millis(100),

@@ -84,7 +84,7 @@
             "headers": [
               {
                 "name": "Server",
-                "value": "Werkzeug/<<<.*?>>>"
+                "value": "Werkzeug/<<<.*?>>> Python/<<<.*?>>>"
               },
               {
                 "name": "Date",
@@ -123,6 +123,7 @@
         }
       ],
       "captures": [],
+      "curl_cmd": "curl 'http://localhost:8000/error-assert-value'",
       "index": 1,
       "line": 1,
       "time": <<<\d+>>>

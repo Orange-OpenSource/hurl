@@ -60,6 +60,7 @@ fn requests_count(runs: &[HurlRun]) -> usize {
 
 #[cfg(test)]
 pub mod tests {
+    use hurl::http::CurlCmd;
     use hurl::runner::{EntryResult, HurlResult};
     use hurl_core::ast::SourceInfo;
     use hurl_core::input::Input;
@@ -79,6 +80,7 @@ pub mod tests {
                 errors: vec![],
                 transfer_duration: Duration::from_millis(0),
                 compressed: false,
+                curl_cmd: CurlCmd::default(),
             };
             HurlRun {
                 content: String::new(),

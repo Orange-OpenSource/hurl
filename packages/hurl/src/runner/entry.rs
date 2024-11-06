@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::http::ClientOptions;
+use crate::http::{ClientOptions, CurlCmd};
 use crate::runner::cache::BodyCache;
 use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
@@ -75,13 +75,14 @@ pub fn run(
         http_client.clear_cookie_storage(&client_options);
     }
 
-    log_request(
-        http_client,
+    let curl_cmd = http_client.curl_command_line(
         &http_request,
-        runner_options,
+        context_dir,
+        runner_options.output.as_ref(),
         &client_options,
-        logger,
     );
+
+    log_request(http_client, &curl_cmd, &http_request, logger);
 
     // Run the HTTP requests (optionally follow redirection)
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
@@ -97,6 +98,7 @@ pub fn run(
                 source_info,
                 errors: vec![error],
                 compressed,
+                curl_cmd,
                 ..Default::default()
             };
         }
@@ -133,6 +135,7 @@ pub fn run(
                     errors,
                     transfer_duration,
                     compressed,
+                    curl_cmd,
                 };
             }
         }
@@ -153,6 +156,7 @@ pub fn run(
                         errors: vec![e],
                         transfer_duration,
                         compressed,
+                        curl_cmd,
                     };
                 }
             }
@@ -186,6 +190,7 @@ pub fn run(
         errors,
         transfer_duration,
         compressed,
+        curl_cmd,
     }
 }
 
@@ -248,9 +253,8 @@ impl ClientOptions {
 /// Logs this HTTP `request`.
 fn log_request(
     http_client: &mut http::Client,
+    curl_cmd: &CurlCmd,
     request: &http::RequestSpec,
-    runner_options: &RunnerOptions,
-    client_options: &ClientOptions,
     logger: &mut Logger,
 ) {
     logger.debug("");
@@ -291,11 +295,7 @@ fn log_request(
     }
     logger.debug("");
     logger.debug("Request can be run with the following curl command:");
-    let context_dir = &runner_options.context_dir;
-    let output = &runner_options.output;
-    let curl_command =
-        http_client.curl_command_line(request, context_dir, output.as_ref(), client_options);
-    logger.debug(&curl_command);
+    logger.debug(&curl_cmd.to_string());
     logger.debug("");
 }
 

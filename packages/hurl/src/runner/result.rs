@@ -20,7 +20,7 @@ use std::time::Duration;
 use hurl_core::ast::SourceInfo;
 use hurl_core::reader::Pos;
 
-use crate::http::{Call, Cookie};
+use crate::http::{Call, Cookie, CurlCmd};
 use crate::runner::error::RunnerError;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
@@ -93,6 +93,8 @@ pub struct EntryResult {
     /// server is requested to send compressed response, and the response should be uncompressed
     /// when outputted on stdout.
     pub compressed: bool,
+    /// The debug curl command line from this entry result.
+    pub curl_cmd: CurlCmd,
 }
 
 impl Default for EntryResult {
@@ -106,6 +108,7 @@ impl Default for EntryResult {
             errors: vec![],
             transfer_duration: Duration::from_millis(0),
             compressed: false,
+            curl_cmd: CurlCmd::default(),
         }
     }
 }

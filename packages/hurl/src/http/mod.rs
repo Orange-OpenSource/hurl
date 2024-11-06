@@ -25,6 +25,7 @@ pub(crate) use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::Cookie;
 pub(crate) use self::core::{Param, RequestCookie};
+pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{
     Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,

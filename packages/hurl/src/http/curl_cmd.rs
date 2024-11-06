@@ -28,6 +28,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 /// Represents a curl command, with arguments.
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CurlCmd {
     /// The args of this command.
     args: Vec<String>,
@@ -36,6 +37,14 @@ pub struct CurlCmd {
 impl fmt::Display for CurlCmd {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.args.join(" "))
+    }
+}
+
+impl Default for CurlCmd {
+    fn default() -> Self {
+        CurlCmd {
+            args: vec!["curl".to_string()],
+        }
     }
 }
 
@@ -426,6 +435,9 @@ impl ClientOptions {
         for resolve in self.resolves.iter() {
             arguments.push("--resolve".to_string());
             arguments.push(resolve.clone());
+        }
+        if self.ssl_no_revoke {
+            arguments.push("--ssl-no-revoke".to_string());
         }
         if self.timeout != ClientOptions::default().timeout {
             arguments.push("--timeout".to_string());

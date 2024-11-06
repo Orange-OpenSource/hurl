@@ -77,6 +77,7 @@ struct EntryResultJson {
     captures: Vec<CaptureJson>,
     asserts: Vec<AssertJson>,
     time: u64,
+    curl_cmd: String,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -248,6 +249,7 @@ impl EntryResultJson {
             captures,
             asserts,
             time: entry.transfer_duration.as_millis() as u64,
+            curl_cmd: entry.curl_cmd.to_string(),
         })
     }
 }

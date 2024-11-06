@@ -762,10 +762,9 @@ impl Client {
         context_dir: &ContextDir,
         output: Option<&Output>,
         options: &ClientOptions,
-    ) -> String {
+    ) -> CurlCmd {
         let cookies = self.cookie_storage();
-        let cmd = CurlCmd::new(request_spec, &cookies, context_dir, output, options);
-        cmd.to_string()
+        CurlCmd::new(request_spec, &cookies, context_dir, output, options)
     }
 
     /// Returns the SSL certificates information associated to this call.
@@ -1163,7 +1162,7 @@ mod tests {
 
         let cmd = client.curl_command_line(&request, &context_dir, output, &options);
         assert_eq!(
-            cmd,
+            cmd.to_string(),
             "curl \
          --aws-sigv4 aws:amz:sts \
          --cacert /etc/cert.pem \
