@@ -1,4 +1,4 @@
-.TH hurl 1 "28 Oct 2024" "hurl 6.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "07 Nov 2024" "hurl 6.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -194,6 +194,12 @@ Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
 Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
+
+.IP "--curl <FILE> "
+
+Export each request to a list of curl commands.
 
 This is a cli-only option.
 

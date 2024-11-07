@@ -26,6 +26,7 @@ _hurl() {
     '--continue-on-error[Continue executing requests even if an error occurs]' \
     '(-b --cookie)'{-b,--cookie}'[Read cookies from FILE]: :_files' \
     '(-c --cookie-jar)'{-c,--cookie-jar}'[Write cookies to FILE after running the session (only for one session)]: :_files' \
+    '--curl[Export each request to a list of curl commands]: :_files' \
     '--delay[Sets delay before each request]: :' \
     '--error-format[Control the format of error messages]: :' \
     '--fail-at-end[Fail at end]' \

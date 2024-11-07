@@ -31,6 +31,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--continue-on-error', 'continue-on-error', [CompletionResultType]::ParameterName, 'Continue executing requests even if an error occurs')
             [CompletionResult]::new('--cookie', 'cookie', [CompletionResultType]::ParameterName, 'Read cookies from FILE')
             [CompletionResult]::new('--cookie-jar', 'cookie-jar', [CompletionResultType]::ParameterName, 'Write cookies to FILE after running the session (only for one session)')
+            [CompletionResult]::new('--curl', 'curl', [CompletionResultType]::ParameterName, 'Export each request to a list of curl commands')
             [CompletionResult]::new('--delay', 'delay', [CompletionResultType]::ParameterName, 'Sets delay before each request')
             [CompletionResult]::new('--error-format', 'error-format', [CompletionResultType]::ParameterName, 'Control the format of error messages')
             [CompletionResult]::new('--fail-at-end', 'fail-at-end', [CompletionResultType]::ParameterName, 'Fail at end')

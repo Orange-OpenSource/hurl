@@ -1,0 +1,8 @@
+name: curl
+long: curl
+value: FILE
+help: Export each request to a list of curl commands
+help_heading: Output options
+cli_only: true
+---
+Export each request to a list of curl commands.

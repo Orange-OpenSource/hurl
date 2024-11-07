@@ -19,9 +19,11 @@
 //! Various reports for Hurl runs (JUnit, HTML etc...) A report aggregates multiple runs into
 //! a single unit.
 
+pub mod curl;
 mod error;
 pub mod html;
 pub mod json;
 pub mod junit;
 pub mod tap;
+
 pub use error::ReportError;

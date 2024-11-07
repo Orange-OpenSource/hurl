@@ -216,6 +216,12 @@ Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage betwe
 
 This is a cli-only option.
 
+### --curl <FILE> {#curl}
+
+Export each request to a list of curl commands.
+
+This is a cli-only option.
+
 ### --delay <MILLISECONDS> {#delay}
 
 Sets delay before each request. The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.

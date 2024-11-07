@@ -54,6 +54,7 @@ pub struct CliOptions {
     pub continue_on_error: bool,
     pub cookie_input_file: Option<String>,
     pub cookie_output_file: Option<PathBuf>,
+    pub curl_file: Option<PathBuf>,
     pub delay: Duration,
     pub error_format: ErrorFormat,
     pub file_root: Option<String>,
@@ -180,6 +181,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::continue_on_error())
         .arg(commands::cookies_input_file())
         .arg(commands::cookies_output_file())
+        .arg(commands::curl())
         .arg(commands::delay())
         .arg(commands::error_format())
         .arg(commands::fail_at_end())
@@ -269,6 +271,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let continue_on_error = matches::continue_on_error(arg_matches);
     let cookie_input_file = matches::cookie_input_file(arg_matches);
     let cookie_output_file = matches::cookie_output_file(arg_matches);
+    let curl_file = matches::curl_file(arg_matches);
     let delay = matches::delay(arg_matches)?;
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
@@ -325,6 +328,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         continue_on_error,
         cookie_input_file,
         cookie_output_file,
+        curl_file,
         delay,
         error_format,
         file_root,

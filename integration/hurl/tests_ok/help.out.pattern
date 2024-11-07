@@ -72,6 +72,7 @@ HTTP options:
 
 Output options:
       --color                  Colorize output
+      --curl <FILE>            Export each request to a list of curl commands
       --error-format <FORMAT>  Control the format of error messages [default: short] [possible
                                values: short, long]
   -i, --include                Include the HTTP headers in the output

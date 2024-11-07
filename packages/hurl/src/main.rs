@@ -23,7 +23,7 @@ use std::path::Path;
 use std::time::Instant;
 use std::{env, process, thread};
 
-use hurl::report::{html, json, junit, tap};
+use hurl::report::{curl, html, json, junit, tap};
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl_core::input::Input;
@@ -138,6 +138,9 @@ fn export_results(
     opts: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<(), CliError> {
+    if let Some(file) = &opts.curl_file {
+        create_curl_export(runs, file)?;
+    }
     if let Some(file) = &opts.junit_file {
         logger.debug(&format!("Writing JUnit report to {}", file.display()));
         create_junit_report(runs, file)?;
@@ -161,7 +164,14 @@ fn export_results(
     Ok(())
 }
 
-/// Create a JUnit report for this run.
+/// Creates an export of all curl commands for this run.
+fn create_curl_export(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
+    let results = runs.iter().map(|r| &r.hurl_result).collect::<Vec<_>>();
+    curl::write_curl(&results, filename)?;
+    Ok(())
+}
+
+/// Creates a JUnit report for this run.
 fn create_junit_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let testcases = runs
         .iter()
@@ -171,7 +181,7 @@ fn create_junit_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError
     Ok(())
 }
 
-/// Create a TAP report for this run.
+/// Creates a TAP report for this run.
 fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let testcases = runs
         .iter()
@@ -181,7 +191,7 @@ fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> 
     Ok(())
 }
 
-/// Create an HTML report for this run.
+/// Creates an HTML report for this run.
 fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
     let store_path = dir_path.join("store");
@@ -198,7 +208,7 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError>
     Ok(())
 }
 
-/// Create an JSON report for this run.
+/// Creates an JSON report for this run.
 fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
     let store_path = dir_path.join("store");

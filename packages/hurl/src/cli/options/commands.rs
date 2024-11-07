@@ -128,6 +128,15 @@ pub fn cookies_output_file() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn curl() -> clap::Arg {
+    clap::Arg::new("curl")
+        .long("curl")
+        .value_name("FILE")
+        .help("Export each request to a list of curl commands")
+        .help_heading("Output options")
+        .num_args(1)
+}
+
 pub fn delay() -> clap::Arg {
     clap::Arg::new("delay")
         .long("delay")

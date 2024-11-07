@@ -1,0 +1,4 @@
+curl 'http://localhost:8000/assert-body'
+curl 'http://localhost:8000/assert-body'
+curl 'http://localhost:8000/assert-body-with-crlf'
+curl 'http://localhost:8000/assert-body'

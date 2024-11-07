@@ -126,6 +126,10 @@ pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
     get::<String>(arg_matches, "cookies_output_file").map(PathBuf::from)
 }
 
+pub fn curl_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
+    get::<String>(arg_matches, "curl").map(PathBuf::from)
+}
+
 pub fn delay(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
     let s = get::<String>(arg_matches, "delay").unwrap_or_default();
     get_duration(&s, DurationUnit::MilliSecond)
