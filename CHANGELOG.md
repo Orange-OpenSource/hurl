@@ -19,6 +19,7 @@ Breaking Changes:
 Enhancements:
 
 * Implement --limit-rate from curl [#1222](https://github.com/Orange-OpenSource/hurl/issues/1222)
+* Add --curl option to export executed requests to curl commands [#2679](https://github.com/Orange-OpenSource/hurl/issues/2679)
 * Configure --connect-timeout per request [#3163](https://github.com/Orange-OpenSource/hurl/issues/3163)
 * Support short name for sections [QueryStringParams] => [Query], [FormParams] => [Form], [MultipartFormData] => [Multipart] [#3238](https://github.com/Orange-OpenSource/hurl/issues/3238)
 * Remove url-specific parser (align with grammar) [#3244](https://github.com/Orange-OpenSource/hurl/issues/3244)
@@ -28,6 +29,7 @@ Enhancements:
 * Add support for backtick strings in predicates values [#3317](https://github.com/Orange-OpenSource/hurl/issues/3317)
 * Categorise options in --help [#3339](https://github.com/Orange-OpenSource/hurl/issues/3339)
 * Support more JSON / XML "like" mimetypes with debug output [#3343](https://github.com/Orange-OpenSource/hurl/issues/3343)
+* Add curl debug command to --json and JSON report [#3374](https://github.com/Orange-OpenSource/hurl/issues/3374)
 
 
 Bugs Fixed:
