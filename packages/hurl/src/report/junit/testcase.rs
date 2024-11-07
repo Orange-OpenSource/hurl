@@ -118,7 +118,7 @@ mod test {
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),
-            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
         );
     }
 
@@ -155,7 +155,7 @@ HTTP/1.0 200
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),
-            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
   --&gt; test.hurl:2:10
    |
    | GET http://localhost:8000/not_found
@@ -196,7 +196,7 @@ HTTP/1.0 200
         let doc = XmlDocument::new(element);
         assert_eq!(
             doc.to_string().unwrap(),
-            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
   --&gt; test.hurl:1:5
    |
  1 | GET http://unknown

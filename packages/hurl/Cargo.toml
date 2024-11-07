@@ -22,7 +22,7 @@ brotli = "7.0.0"
 chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
 clap = { version = "4.5.20", features = ["cargo", "string", "wrap_help"] }
 curl = "0.4.47"
-curl-sys = "0.4.77"
+curl-sys = "0.4.78"
 encoding = "0.2.33"
 glob = "0.3.1"
 hex = "0.4.3"
@@ -37,7 +37,7 @@ serde = { version = "1.0.214", features = ["derive"] }
 serde_json = { version = "1.0.132", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.3"
-xml-rs = { version = "0.8.22" }
+xml-rs = { version = "0.8.23" }
 lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.11.0", features = ["v4" , "fast-rng"] }

@@ -209,7 +209,7 @@ mod tests {
         let doc = XmlDocument { root: Some(root) };
         assert_eq!(
             doc.to_string().unwrap(),
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
             <catalog>\
                 <book id=\"bk101\">\
                     <author>Gambardella, Matthew</author>\
