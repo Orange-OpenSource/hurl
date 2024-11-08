@@ -265,7 +265,7 @@ fn log_request(
 
     logger.debug("");
     logger.debug_important("Request:");
-    logger.debug(&format!("{} {}", request.method, request.url));
+    logger.debug(&format!("{} {}", request.method, request.url.raw()));
     for header in &request.headers {
         logger.debug(&header.to_string());
     }

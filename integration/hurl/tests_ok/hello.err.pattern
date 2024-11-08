@@ -1,0 +1,162 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello'
+*
+> GET /hello HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000'
+*
+> GET / HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 207 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/'
+*
+> GET / HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 207 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 4
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello'
+*
+> GET /hello HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 5
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello'
+*
+> GET /hello HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 6
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello'
+*
+> GET /hello HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Connection: close
+<
+*
