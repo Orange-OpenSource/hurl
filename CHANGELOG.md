@@ -8,6 +8,7 @@ Thanks to
 [@quantonganh](https://github.com/quantonganh),
 [@sandeshbhusal](https://github.com/sandeshbhusal),
 [@thePanz](https://github.com/thePanz),
+[@niklasweimann](https://github.com/niklasweimann),
 [@infogulch](https://github.com/infogulch),
 [@orlandow](https://github.com/orlandow),
 
@@ -38,6 +39,7 @@ Bugs Fixed:
 * Fix filename parsing (used by cert option) [#3242](https://github.com/Orange-OpenSource/hurl/issues/3242)
 * Add additional check for --max-filesize option [#3245](https://github.com/Orange-OpenSource/hurl/issues/3245)
 * Support case-insensitive Cookie Attributes [#3265](https://github.com/Orange-OpenSource/hurl/issues/3265)
+* Allow any string in Location Header when not following redirection [#3293](https://github.com/Orange-OpenSource/hurl/issues/3293)
 * Fix graceful shutdown of workers threads in --test [#3297](https://github.com/Orange-OpenSource/hurl/issues/3297)
 
 
