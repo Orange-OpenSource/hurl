@@ -48,6 +48,11 @@ def runner_errors_redirect1():
     return redirect("http://localhost:8000/runner_errors")
 
 
+@app.route("/runner_errors/redirect-custom-scheme")
+def runner_errors_redirect_custom_scheme():
+    return redirect("market://details?id=com.example.package")
+
+
 @app.route("/runner_errors/unsupported-content-encoding")
 def runner_errors_unsupported_content_encoding():
     headers = {"Content-Encoding": "unknown"}

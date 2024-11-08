@@ -43,6 +43,7 @@ pub enum HttpError {
         description: String,
     },
     UnsupportedHttpVersion(RequestedHttpVersion),
+    /// Request URL is invalid (URL and reason)
     InvalidUrl(String, String),
     /// The maximum response size has been exceeded.
     /// This error can be raised even if libcurl has been configured to respect a given maximum

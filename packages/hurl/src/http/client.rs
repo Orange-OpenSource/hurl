@@ -121,11 +121,16 @@ impl Client {
         let mut redirect_count = 0;
         loop {
             let call = self.execute(&request_spec, &options, logger)?;
+            // If we don't follow redirection, we can early exit here.
+            if !options.follow_location {
+                calls.push(call);
+                break;
+            }
             let request_url = call.request.url.clone();
-            let redirect_url = self.follow_location(&request_url, &call.response)?;
             let status = call.response.status;
+            let redirect_url = self.follow_location(&request_url, &call.response)?;
             calls.push(call);
-            if !options.follow_location || redirect_url.is_none() {
+            if redirect_url.is_none() {
                 break;
             }
             let redirect_url = redirect_url.unwrap();

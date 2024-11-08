@@ -2,6 +2,6 @@ error: Invalid URL
   --> tests_failed/invalid_protocol.hurl:1:5
    |
  1 | GET {{url}}
-   |     ^^^^^^^ invalid URL <file:///tmp/foo.txt> (Only http and https protocols are supported)
+   |     ^^^^^^^ invalid URL <file:///tmp/foo.txt> (Only <http://> and <https://> schemes are supported)
    |
 

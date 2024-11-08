@@ -95,6 +95,11 @@ GET {{url}}
 [Options]
 variable: url=localhost:8000/runner_errors
 
+# InvalidUrl (none http/https scheme with redirection)
+GET http://localhost:8000/runner_errors/redirect-custom-scheme
+[Options]
+location: true
+
 # NoQueryResult
 GET http://localhost:8000/runner_errors
 HTTP 200
