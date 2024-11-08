@@ -21,7 +21,7 @@ use hurl_core::ast::*;
 
 use crate::runner::body::eval_file; // TODO move function out of body module
 use crate::runner::error::RunnerError;
-use crate::runner::expr::eval_expr;
+use crate::runner::expr::eval;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
 use crate::runner::{Number as ValueNumber, Value};
@@ -51,7 +51,7 @@ pub fn eval_predicate_value(
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Expression(expr) => {
-            let value = eval_expr(expr, variables)?;
+            let value = eval(expr, variables)?;
             Ok(value)
         }
         PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner.clone())),

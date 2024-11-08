@@ -22,9 +22,8 @@ use hurl_core::ast::Expr;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
 
-/// Evaluates the expression `expr` with `variables` map and `http_response`, returns a
-/// [`Value`] on success or an [`RunnerError`] .
-pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, RunnerError> {
+/// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
+pub fn eval(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, RunnerError> {
     if let Some(value) = variables.get(expr.variable.name.as_str()) {
         Ok(value.clone())
     } else {
@@ -32,5 +31,54 @@ pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Valu
             name: expr.variable.name.clone(),
         };
         Err(RunnerError::new(expr.variable.source_info, kind, false))
+    }
+}
+
+/// Render the expression `expr` with `variables` map, returns a [`String`] on success or an [`RunnerError`] .
+pub fn render(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String, RunnerError> {
+    let source_info = expr.variable.source_info;
+    let name = &expr.variable.name;
+    let value = eval(expr, variables)?;
+    if value.is_renderable() {
+        Ok(value.to_string())
+    } else {
+        let kind = RunnerErrorKind::UnrenderableVariable {
+            name: name.to_string(),
+            value: value.to_string(),
+        };
+        Err(RunnerError::new(source_info, kind, false))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use hurl_core::{
+        ast::{SourceInfo, Variable, Whitespace},
+        reader::Pos,
+    };
+    use std::collections::HashMap;
+
+    use super::*;
+
+    #[test]
+    fn test_render_expression() {
+        let mut variables = HashMap::new();
+        variables.insert("status".to_string(), Value::Bool(true));
+        let expr = Expr {
+            space0: Whitespace {
+                value: String::new(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+            variable: Variable {
+                name: "status".to_string(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+            space1: Whitespace {
+                value: String::new(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+        };
+        assert_eq!(eval(&expr, &variables).unwrap(), Value::Bool(true));
+        assert_eq!(render(&expr, &variables).unwrap(), "true");
     }
 }

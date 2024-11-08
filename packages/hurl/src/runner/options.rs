@@ -24,8 +24,8 @@ use hurl_core::ast::{
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
-use crate::runner::template::{eval_expression, eval_template};
-use crate::runner::{Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value};
+use crate::runner::template::eval_template;
+use crate::runner::{expr, Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
@@ -317,7 +317,7 @@ fn eval_boolean_option(
 ) -> Result<bool, RunnerError> {
     match boolean_value {
         BooleanOption::Literal(value) => Ok(*value),
-        BooleanOption::Expression(expr) => match eval_expression(expr, variables)? {
+        BooleanOption::Expression(expr) => match expr::eval(expr, variables)? {
             Value::Bool(value) => Ok(value),
             v => {
                 let kind = RunnerErrorKind::TemplateVariableInvalidType {
@@ -337,7 +337,7 @@ fn eval_natural_option(
 ) -> Result<u64, RunnerError> {
     match natural_value {
         NaturalOption::Literal(value) => Ok(*value),
-        NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
+        NaturalOption::Expression(expr) => match expr::eval(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value > 0 {
                     Ok(value as u64)
@@ -368,7 +368,7 @@ fn eval_count_option(
 ) -> Result<Count, RunnerError> {
     match count_value {
         CountOption::Literal(repeat) => Ok(*repeat),
-        CountOption::Expression(expr) => match eval_expression(expr, variables)? {
+        CountOption::Expression(expr) => match expr::eval(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value == -1 {
                     Ok(Count::Infinite)
@@ -411,7 +411,7 @@ fn eval_duration_option(
                 DurationUnit::Minute => value.value * 1000 * 60,
             }
         }
-        DurationOption::Expression(expr) => match eval_expression(expr, variables)? {
+        DurationOption::Expression(expr) => match expr::eval(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
