@@ -76,6 +76,10 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize) -> String {
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
+    let cmd = entry.curl_cmd.to_string();
+    let table = new_table("Debug", &[("Command", &cmd)]);
+    text.push_str(&table);
+
     if !entry.captures.is_empty() {
         let mut values = entry
             .captures
