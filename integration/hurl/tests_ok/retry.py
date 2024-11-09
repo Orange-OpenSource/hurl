@@ -1,4 +1,3 @@
-import json
 import uuid
 from http import HTTPStatus
 from app import app

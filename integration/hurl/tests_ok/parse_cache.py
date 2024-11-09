@@ -1,5 +1,5 @@
 from app import app
-from flask import Response, make_response
+from flask import make_response
 
 
 @app.route("/large/html")

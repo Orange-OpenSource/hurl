@@ -3,7 +3,7 @@
 Generate Completion files
 """
 
-from typing import *
+from typing import List
 from option import Option
 
 

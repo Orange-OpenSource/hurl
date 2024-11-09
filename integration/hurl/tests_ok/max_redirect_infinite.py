@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, Response
+from flask import redirect
 
 
 @app.route("/redirect-infinite/<number>", methods=["GET"])

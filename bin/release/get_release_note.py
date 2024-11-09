@@ -13,7 +13,6 @@ import sys
 from typing import List, Optional
 
 import requests
-from bs4 import BeautifulSoup
 
 hurl_repo_url = "https://github.com/Orange-OpenSource/hurl"
 

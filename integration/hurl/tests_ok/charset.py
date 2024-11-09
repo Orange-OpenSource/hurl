@@ -1,5 +1,5 @@
 from app import app
-from flask import request, make_response
+from flask import make_response
 
 
 @app.route("/charset/default")

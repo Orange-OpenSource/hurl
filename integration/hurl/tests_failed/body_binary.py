@@ -1,6 +1,6 @@
 # coding=utf-8
 from app import app
-from flask import Response, make_response
+from flask import make_response
 
 
 @app.route("/body-binary")

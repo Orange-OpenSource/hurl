@@ -18,8 +18,8 @@ def main():
     check_licenses(deps)
 
 
-def is_authorized(license: str) -> bool:
-    for l in [
+def is_authorized(name: str) -> bool:
+    for licence in [
         "MIT",
         "Apache-2.0",
         "Zlib",
@@ -29,14 +29,14 @@ def is_authorized(license: str) -> bool:
         "BSD-3-Clause",
         "Unicode-3.0",
     ]:
-        if l in license:
+        if licence in name:
             return True
     return False
 
 
-def is_forbidden(license: str) -> bool:
-    for l in ["GPL"]:
-        if l in license:
+def is_forbidden(name: str) -> bool:
+    for licence in ["GPL"]:
+        if licence in name:
             return True
     return False
 

@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
+import datetime
 import unittest
 
-from get_release_note import *
+from get_release_note import (
+    Pull,
+    Issue,
+    authors_from_issues,
+    generate_md,
+    pulls_from_issues,
+    webscrapping_linked_pulls,
+)
 
 
 ISSUES = [

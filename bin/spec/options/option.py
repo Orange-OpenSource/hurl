@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
-from typing import *
+from typing import Optional
 
 
 @dataclass
@@ -152,8 +152,6 @@ class Option:
 
     @staticmethod
     def parse_file(filename: str) -> "Option":
-        import sys
-
         # sys.stderr.write("Parsing " + filename + "\n")
         s = open(filename).read()
         return Option.parse(s)

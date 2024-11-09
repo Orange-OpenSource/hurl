@@ -1,5 +1,4 @@
 from app import app
-from flask import request
 
 
 @app.route("/no-output")

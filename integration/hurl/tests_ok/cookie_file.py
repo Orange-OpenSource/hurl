@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request
 from app import app
 
 

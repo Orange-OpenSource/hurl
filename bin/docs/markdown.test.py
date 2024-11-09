@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 
-from markdown import *
+from markdown import Table
 
 
 class UtilsTest(unittest.TestCase):

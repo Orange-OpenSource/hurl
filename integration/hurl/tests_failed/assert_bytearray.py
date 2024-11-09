@@ -1,5 +1,5 @@
 from app import app
-from flask import make_response, request
+from flask import make_response
 from io import BytesIO
 
 

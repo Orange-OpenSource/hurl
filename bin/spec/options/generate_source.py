@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from option import Option
-import sys
+import os
 
 """
 Generate source file for clap
@@ -25,8 +25,6 @@ COPYRIGHT = """/*
  * limitations under the License.
  *
  */"""
-import os
-import sys
 
 # Relative script file
 SCRIPT_FILE = __file__[len(os.getcwd()) + 1 :]
@@ -63,7 +61,7 @@ def generate_source_option(option: Option) -> str:
     if option.value_parser is not None:
         s += f"\n        .value_parser({option.value_parser})"
         if "-1" in option.value_parser:
-            s += f"\n        .allow_hyphen_values(true)"
+            s += "\n        .allow_hyphen_values(true)"
     s += f'\n        .help("{option.help}")'
     if option.help_heading is not None:
         s += f'\n        .help_heading("{option.help_heading}")'
@@ -71,13 +69,13 @@ def generate_source_option(option: Option) -> str:
         for conflict in option.conflict:
             s += f'\n        .conflicts_with("{conflict}")'
     if option.value is not None:
-        s += f"\n        .num_args(1)"
+        s += "\n        .num_args(1)"
     else:
-        s += f"\n        .action(clap::ArgAction::SetTrue)"
+        s += "\n        .action(clap::ArgAction::SetTrue)"
     if option.append:
-        s += f"\n        .action(clap::ArgAction::Append)"
+        s += "\n        .action(clap::ArgAction::Append)"
     if option.deprecated or option.experimental:
-        s += f"\n        .hide(true)"
+        s += "\n        .hide(true)"
     s += "\n}"
     return s
 

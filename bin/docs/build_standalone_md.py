@@ -15,7 +15,7 @@ import sys
 import unicodedata
 
 import markdown
-from markdown import MarkdownDoc, Paragraph, RefLink, Header, Whitespace, Table, Node
+from markdown import MarkdownDoc, Paragraph, RefLink, Header, Whitespace, Table
 from pathlib import Path
 
 

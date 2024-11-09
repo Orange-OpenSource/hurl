@@ -8,7 +8,6 @@ import itertools
 @app.route("/streaming")
 def streaming():
     def stream():
-        count = 0
         for idx in itertools.count():
             yield str(idx) + "\n"
             time.sleep(1)

@@ -5,7 +5,6 @@ from option import Option
 """
 Generate options for man
 """
-import sys
 
 
 def generate_man(options: list[Option]) -> str:

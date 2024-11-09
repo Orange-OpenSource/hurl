@@ -1,5 +1,5 @@
 from app import app
-from flask import make_response, request
+from flask import request
 
 
 @app.route("/request-content-length", methods=["POST"])
