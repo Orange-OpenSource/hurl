@@ -12,7 +12,5 @@ def gb2312():
     </head>
     <body>你好世界</body>
 </html>
-""".encode(
-        "gb2312"
-    )
+""".encode("gb2312")
     return Response(data, headers=headers)

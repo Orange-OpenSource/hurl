@@ -73,9 +73,9 @@ jobs:
       if: always()
       run: bin/check/clippy.sh
 
-    - name: Black
+    - name: Ruff
       if: always()
-      run: bin/check/black.sh
+      run: bin/check/ruff.sh
 
     - name: Check XML/HTML files
       if: always()

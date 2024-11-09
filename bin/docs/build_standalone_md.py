@@ -8,6 +8,7 @@ not easy to maintain it.
 Examples:
     $ python3 bin/docs/build_standalone_md.py > docs/standalone/hurl-5.0.1.md
 """
+
 import os
 import re
 import sys
@@ -210,7 +211,6 @@ def inline_ref_link(md: MarkdownDoc):
 
 
 def main() -> int:
-
     standalone_md = MarkdownDoc()
 
     add_sections(

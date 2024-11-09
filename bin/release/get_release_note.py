@@ -5,6 +5,7 @@ Example:
     $ python3 bin/release/get_release_note.py 1.7.0
 
 """
+
 import argparse
 import datetime
 import json

@@ -12,7 +12,5 @@ def hello_gb2312_failed():
     </head>
     <body>你好世界</body>
 </html>
-""".encode(
-        "gb2312"
-    )
+""".encode("gb2312")
     return Response(data, headers=headers)

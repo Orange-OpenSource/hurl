@@ -6,6 +6,7 @@ This script checks that there is no dependencies with unauthorized license (GPL 
 Examples:
     $ python3 bin/check/license.py
 """
+
 from typing import List, Tuple
 
 import json

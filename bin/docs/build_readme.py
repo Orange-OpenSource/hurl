@@ -14,6 +14,7 @@ Examples:
     $ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 
 """
+
 import os
 import re
 import sys

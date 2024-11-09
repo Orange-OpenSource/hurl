@@ -10,6 +10,7 @@ Examples:
     $ python3 bin/release/gen_manpage.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
 
 """
+
 import sys
 import re
 from datetime import date
