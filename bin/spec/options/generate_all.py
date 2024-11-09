@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-from typing import List
 import glob
-from option import Option
-import generate_source
-import generate_man
-import generate_completion
-import sys
 import re
+import sys
+from typing import List
+
+import generate_completion
+import generate_man
+import generate_source
+from option import Option
 
 
 def get_option_files(dir) -> List[str]:

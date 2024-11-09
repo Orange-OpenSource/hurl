@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # usage: ./ssl_server.py <port> <cert_file> <Client certificate authentication>
 # Start the server with or without client certificate authentication
-import flask
-import sys
 import ssl
+import sys
+
+import flask
 
 app1 = flask.Flask("SSL Server")
 

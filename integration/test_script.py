@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # Test script file.
 #
-import codecs
-import sys
-import subprocess
-import os
 import argparse
+import codecs
+import os
 import re
+import subprocess
+import sys
 
 
 def decode_string(encoded: bytes) -> str:

@@ -1,7 +1,8 @@
 # return 500 by default
 # or 200 if previous request has been executed less than 5 second ago
-from app import app
 import time
+
+from app import app
 
 last = 0
 

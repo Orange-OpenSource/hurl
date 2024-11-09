@@ -7,10 +7,9 @@ Examples:
     $ python3 bin/check/license.py
 """
 
-from typing import List, Tuple
-
 import json
 import subprocess
+from typing import List, Tuple
 
 
 def main():

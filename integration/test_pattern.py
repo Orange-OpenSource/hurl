@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import unittest
-from test_script import parse_pattern, escape_regex_metacharacters
+
+from test_script import escape_regex_metacharacters, parse_pattern
 
 
 class PatternTest(unittest.TestCase):

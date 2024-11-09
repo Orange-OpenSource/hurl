@@ -1,5 +1,5 @@
-from flask import request, make_response
 from app import app
+from flask import make_response, request
 
 
 @app.route("/patch/file.txt", methods=["PATCH"])

@@ -1,6 +1,7 @@
+from io import BytesIO
+
 from app import app
 from flask import make_response
-from io import BytesIO
 
 
 @app.route("/error-query-invalid-utf8")

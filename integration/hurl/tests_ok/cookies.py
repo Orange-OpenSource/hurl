@@ -1,5 +1,5 @@
-from flask import request, make_response, Response
 from app import app
+from flask import Response, make_response, request
 
 
 @app.route("/cookies/set-request-cookie1-valueA")

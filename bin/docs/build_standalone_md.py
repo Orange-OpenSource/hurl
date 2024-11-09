@@ -13,10 +13,10 @@ import os
 import re
 import sys
 import unicodedata
+from pathlib import Path
 
 import markdown
-from markdown import MarkdownDoc, Paragraph, RefLink, Header, Whitespace, Table
-from pathlib import Path
+from markdown import Header, MarkdownDoc, Paragraph, RefLink, Table, Whitespace
 
 
 def add_section_header(doc: MarkdownDoc, title: str):

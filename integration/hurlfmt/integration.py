@@ -5,8 +5,8 @@ import re
 import sys
 
 sys.path.append("..")
-import test_lint
 import test_format
+import test_lint
 import test_script
 
 

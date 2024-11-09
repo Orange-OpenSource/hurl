@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, Response
+from flask import Response, redirect
 
 
 @app.route("/redirect-absolute")

@@ -1,5 +1,5 @@
-from flask import make_response
 from app import app
+from flask import make_response
 
 
 @app.route("/error-assert-query-cookie")

@@ -1,5 +1,6 @@
-from app import app
 from datetime import datetime
+
+from app import app
 
 last = None
 

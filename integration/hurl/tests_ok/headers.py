@@ -1,6 +1,6 @@
 # coding=utf-8
-from flask import request, make_response
 from app import app
+from flask import make_response, request
 
 
 @app.route("/default-headers")

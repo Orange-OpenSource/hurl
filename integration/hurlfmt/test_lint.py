@@ -2,8 +2,8 @@
 # lint hurl file
 #
 import codecs
-import sys
 import subprocess
+import sys
 
 
 def decode_string(encoded):

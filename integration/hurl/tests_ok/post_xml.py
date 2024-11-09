@@ -1,6 +1,6 @@
 # coding=utf-8
-from flask import request
 from app import app
+from flask import request
 
 
 @app.route("/post-xml", methods=["POST"])

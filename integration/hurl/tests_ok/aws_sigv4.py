@@ -1,6 +1,7 @@
-from flask import request
-from app import app
 import re
+
+from app import app
+from flask import request
 
 
 @app.route("/aws-sigv4", methods=["POST"])

@@ -2,8 +2,9 @@
 import datetime
 import json
 import os
-import requests
 import sys
+
+import requests
 
 
 def get_latest_release():

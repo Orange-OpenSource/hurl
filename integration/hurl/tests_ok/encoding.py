@@ -1,6 +1,7 @@
-from flask import make_response
-from app import app
 from io import BytesIO
+
+from app import app
+from flask import make_response
 
 
 @app.route("/encoding/utf8")

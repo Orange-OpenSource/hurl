@@ -11,8 +11,8 @@ Examples:
 
 """
 
-import sys
 import re
+import sys
 from datetime import date
 from typing import Optional
 

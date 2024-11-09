@@ -1,5 +1,6 @@
+from ipaddress import IPv4Address, IPv6Address, ip_address
+
 from app import app
-from ipaddress import ip_address, IPv4Address, IPv6Address
 from flask import Response, request
 
 

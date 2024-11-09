@@ -4,10 +4,10 @@ Examples:
     $ python3 contrib/npm/check_archive.py 1.6.1
 """
 
-import sys
-import json
-from pathlib import Path
 import hashlib
+import json
+import sys
+from pathlib import Path
 from urllib import request
 
 

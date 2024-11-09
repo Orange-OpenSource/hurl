@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-import sys
-from option import Option
 import os
+import sys
+
+from option import Option
 
 """
 Generate source file for clap

@@ -1,5 +1,6 @@
-from app import app
 import time
+
+from app import app
 
 
 @app.route("/timeout")

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # Extract hurl file from html output
-import sys
-from bs4 import BeautifulSoup
-import os
 import codecs
+import os
+import sys
+
+from bs4 import BeautifulSoup
 
 
 def test(html_file):

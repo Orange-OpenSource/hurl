@@ -1,5 +1,5 @@
 from app import app
-from flask import request, redirect, Response
+from flask import Response, redirect, request
 
 
 @app.route("/follow-redirect", methods=["GET", "POST"])

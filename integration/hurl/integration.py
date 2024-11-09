@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import sys
 import glob
-import re
 import platform
+import re
+import sys
 
 sys.path.append("..")
 import test_script

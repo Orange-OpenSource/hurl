@@ -4,6 +4,7 @@ Generate Completion files
 """
 
 from typing import List
+
 from option import Option
 
 

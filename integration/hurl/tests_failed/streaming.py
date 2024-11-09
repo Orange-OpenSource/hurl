@@ -1,8 +1,9 @@
 # coding=utf-8
+import itertools
+import time
+
 from app import app
 from flask import Response
-import time
-import itertools
 
 
 @app.route("/streaming")

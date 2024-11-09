@@ -1,6 +1,7 @@
-from flask import request
-from app import app
 import json
+
+from app import app
+from flask import request
 
 
 @app.route("/variables", methods=["POST"])

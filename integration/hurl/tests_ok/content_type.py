@@ -1,5 +1,5 @@
-from flask import request
 from app import app
+from flask import request
 
 
 @app.route("/content-type-json", methods=["POST"])

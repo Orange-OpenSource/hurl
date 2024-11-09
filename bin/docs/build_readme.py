@@ -20,7 +20,7 @@ import re
 import sys
 from pathlib import Path
 
-from markdown import parse_markdown, MarkdownDoc
+from markdown import MarkdownDoc, parse_markdown
 
 
 def build_home_md(text: str) -> MarkdownDoc:

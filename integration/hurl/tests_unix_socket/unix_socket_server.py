@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from os import path, unlink
-from socket import socket, AF_UNIX
+from socket import AF_UNIX, socket
+
 from flask import Flask
 
 app = Flask("Unix Domain Sockets Server")

@@ -16,13 +16,13 @@ from pathlib import Path
 from typing import List
 
 from markdown import (
-    parse_markdown,
-    MarkdownDoc,
     Header,
-    Paragraph,
-    Whitespace,
+    MarkdownDoc,
     Node,
+    Paragraph,
     Table,
+    Whitespace,
+    parse_markdown,
 )
 
 
