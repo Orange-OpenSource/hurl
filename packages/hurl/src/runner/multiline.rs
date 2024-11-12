@@ -15,19 +15,17 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{MultilineString, MultilineStringKind, Text};
 use serde_json::json;
 
 use crate::runner::json::eval_json_value;
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, Value};
+use crate::runner::{RunnerError, VariableSet};
 
 /// Renders to string a multiline body, given a set of variables.
 pub fn eval_multiline(
     multiline: &MultilineString,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     match multiline {
         MultilineString {
@@ -65,8 +63,6 @@ pub fn eval_multiline(
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{
         GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
         MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
@@ -74,6 +70,7 @@ mod tests {
     use hurl_core::reader::Pos;
 
     use crate::runner::multiline::eval_multiline;
+    use crate::runner::VariableSet;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -101,7 +98,7 @@ mod tests {
     height(unit: FOOT)
   }
 }"#;
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let multiline = MultilineString {
             kind: MultilineStringKind::GraphQl(GraphQl {
                 space: whitespace(),
@@ -134,7 +131,7 @@ mod tests {
     height(unit: FOOT)
   }
 }"#;
-        let hurl_variables = HashMap::new();
+        let hurl_variables = VariableSet::new();
         let graphql_variables = GraphQlVariables {
             space: whitespace(),
             value: JsonValue::Object {

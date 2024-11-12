@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::input::Input;
 use hurl_core::typing::Count;
 
-use crate::runner::{HurlResult, RunnerOptions, Value};
+use crate::runner::{HurlResult, RunnerOptions, VariableSet};
 use crate::util::logger::LoggerOptions;
 
 /// Represents the job to run. A job instance groups the input data to execute, and has no methods
@@ -32,7 +30,7 @@ pub struct Job {
     /// The options to run this file.
     pub runner_options: RunnerOptions,
     /// Set of variables injected in the Hurl file
-    pub variables: HashMap<String, Value>,
+    pub variables: VariableSet,
     /// The logger options for this run
     pub logger_options: LoggerOptions,
     /// The job 0-based index in the jobs list
@@ -45,7 +43,7 @@ impl Job {
         filename: &Input,
         seq: usize,
         runner_options: &RunnerOptions,
-        variables: &HashMap<String, Value>,
+        variables: &VariableSet,
         logger_options: &LoggerOptions,
     ) -> Self {
         Job {
@@ -154,17 +152,15 @@ impl Iterator for JobQueue<'_> {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::input::Input;
     use hurl_core::typing::Count;
 
     use crate::parallel::job::{Job, JobQueue};
-    use crate::runner::RunnerOptionsBuilder;
+    use crate::runner::{RunnerOptionsBuilder, VariableSet};
     use crate::util::logger::LoggerOptionsBuilder;
 
     fn new_job(file: &str, index: usize) -> Job {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let runner_options = RunnerOptionsBuilder::default().build();
         let logger_options = LoggerOptionsBuilder::default().build();
         Job::new(

@@ -40,17 +40,15 @@ pub fn eval_html_escape(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     pub fn eval_filter_html_escape() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::HtmlEscape,

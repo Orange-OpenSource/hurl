@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::path::Path;
 
@@ -25,12 +24,12 @@ use crate::http;
 use crate::runner::body::eval_file;
 use crate::runner::error::RunnerError;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::VariableSet;
 use crate::util::path::ContextDir;
 
 pub fn eval_multipart_param(
     multipart_param: &MultipartParam,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<http::MultipartParam, RunnerError> {
     match multipart_param {
@@ -49,7 +48,7 @@ pub fn eval_multipart_param(
 pub fn eval_file_param(
     file_param: &FileParam,
     context_dir: &ContextDir,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<http::FileParam, RunnerError> {
     let name = eval_template(&file_param.key, variables)?;
     let filename = eval_template(&file_param.value.filename, variables)?;
@@ -65,7 +64,7 @@ pub fn eval_file_param(
 
 pub fn file_value_content_type(
     file_value: &FileValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     let value = match file_value.content_type.clone() {
         None => {
@@ -116,7 +115,7 @@ mod tests {
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("tests");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
-        let variables = HashMap::default();
+        let variables = VariableSet::default();
         let param = eval_file_param(
             &FileParam {
                 line_terminators: vec![],
@@ -164,7 +163,7 @@ mod tests {
 
     #[test]
     pub fn test_file_value_content_type() {
-        let variables = HashMap::default();
+        let variables = VariableSet::default();
         assert_eq!(
             file_value_content_type(
                 &FileValue {

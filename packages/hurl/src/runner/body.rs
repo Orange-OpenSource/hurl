@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::path::PathBuf;
 
 use hurl_core::ast::*;
@@ -25,12 +24,12 @@ use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::json::eval_json_value;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::VariableSet;
 use crate::util::path::ContextDir;
 
 pub fn eval_body(
     body: &Body,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<http::Body, RunnerError> {
     eval_bytes(&body.value, variables, context_dir)
@@ -38,7 +37,7 @@ pub fn eval_body(
 
 pub fn eval_bytes(
     bytes: &Bytes,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<http::Body, RunnerError> {
     match bytes {
@@ -67,7 +66,7 @@ pub fn eval_bytes(
 
 pub fn eval_file(
     filename: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<Vec<u8>, RunnerError> {
     let file = eval_template(filename, variables)?;
@@ -118,7 +117,7 @@ mod tests {
             space1: whitespace,
         });
 
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -149,7 +148,7 @@ mod tests {
             space1: whitespace,
         });
 
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");

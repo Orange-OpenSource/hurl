@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::jsonpath;
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_jsonpath(
     value: &Value,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
@@ -54,7 +52,7 @@ pub fn eval_jsonpath(
 pub fn eval_jsonpath_json(
     json: &serde_json::Value,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<Option<Value>, RunnerError> {
     let expr_str = eval_template(expr, variables)?;
     let expr_source_info = expr.source_info;
@@ -78,17 +76,15 @@ pub fn eval_jsonpath_json(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     pub fn eval_filter_jsonpath() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

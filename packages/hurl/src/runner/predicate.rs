@@ -16,7 +16,6 @@
  *
  */
 use std::cmp::Ordering;
-use std::collections::HashMap;
 
 use hurl_core::ast::*;
 use hurl_core::reader::Pos;
@@ -26,7 +25,7 @@ use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_
 use crate::runner::result::PredicateResult;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
-use crate::runner::{Number, RunnerErrorKind};
+use crate::runner::{Number, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
 
 /// Evaluates a `predicate` against an actual `value`.
@@ -49,7 +48,7 @@ use crate::util::path::ContextDir;
 /// In this case, the predicate is `startsWith "{{name}}"`.
 pub fn eval_predicate(
     predicate: &Predicate,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     value: &Option<Value>,
     context_dir: &ContextDir,
 ) -> PredicateResult {
@@ -177,7 +176,7 @@ fn format_float(value: f64) -> String {
 /// a set of `variables`, when there is no actual value.
 fn expected_no_value(
     predicate_func_value: &PredicateFuncValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<String, RunnerError> {
     match &predicate_func_value {
@@ -247,7 +246,7 @@ fn expected_no_value(
 /// use a set of `variables`.
 fn eval_predicate_func(
     predicate_func: &PredicateFunc,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     value: Option<&Value>,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -314,7 +313,7 @@ fn eval_predicate_func(
 /// Evaluates if an `expected` value (using a `variables` set) is equal to an `actual` value.
 fn eval_equal(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -325,7 +324,7 @@ fn eval_equal(
 /// Evaluates if an `expected` value (using a `variables` set) is not equal to an `actual` value.
 fn eval_not_equal(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -336,7 +335,7 @@ fn eval_not_equal(
 /// Evaluates if an `expected` value (using a `variables` set) is greater than an `actual` value.
 fn eval_greater_than(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -347,7 +346,7 @@ fn eval_greater_than(
 /// Evaluates if an `expected` value (using a `variables` set) is greater than or equal to an `actual` value.
 fn eval_greater_than_or_equal(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -358,7 +357,7 @@ fn eval_greater_than_or_equal(
 /// Evaluates if an `expected` value (using a `variables` set) is less than an `actual` value.
 fn eval_less_than(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -369,7 +368,7 @@ fn eval_less_than(
 /// Evaluates if an `expected` value (using a `variables` set) is less than an `actual` value.
 fn eval_less_than_or_equal(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -381,7 +380,7 @@ fn eval_less_than_or_equal(
 /// This predicate works with string and bytes.
 fn eval_start_with(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -414,7 +413,7 @@ fn eval_start_with(
 /// This predicate works with string and bytes.
 fn eval_end_with(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -447,7 +446,7 @@ fn eval_end_with(
 /// This predicate works with string and bytes.
 fn eval_contain(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -480,7 +479,7 @@ fn eval_contain(
 /// This predicate works with list (maybe we should merge it with `eval_contains`?)
 fn eval_include(
     expected: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
 ) -> Result<AssertResult, RunnerError> {
@@ -492,7 +491,7 @@ fn eval_include(
 fn eval_match(
     expected: &PredicateValue,
     source_info: SourceInfo,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     actual: &Value,
 ) -> Result<AssertResult, RunnerError> {
     let regex = match expected {
@@ -960,7 +959,7 @@ mod tests {
         // `not == 10` with value `1`     OK
         // `not == 10` with value `10`    ValueError
         // `not == 10` with value `true`  => this is now valid
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1022,7 +1021,7 @@ mod tests {
 
     #[test]
     fn test_predicate_type_mismatch() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1042,7 +1041,7 @@ mod tests {
 
     #[test]
     fn test_predicate_type_mismatch_with_unit() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1060,7 +1059,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_error() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1101,7 +1100,7 @@ mod tests {
 
     #[test]
     fn test_predicate_exist() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1131,7 +1130,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_equals_integers() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1149,7 +1148,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_equals_booleans() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1187,7 +1186,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_equals_floats() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1208,7 +1207,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_equals_float_integer() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1226,7 +1225,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_not_equals() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1244,7 +1243,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_equals_string() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1289,7 +1288,7 @@ mod tests {
         // predicate: `== "{{base_url}}"`
         // value: "http://localhost:8000"
         // variables: base_url=http://localhost:8080
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert(
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
@@ -1438,7 +1437,7 @@ mod tests {
             },
         };
 
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         assert!(eval_predicate(
             &predicate,
             &variables,
@@ -1510,7 +1509,7 @@ mod tests {
 
     #[test]
     fn test_no_type_mismatch_with_none_value() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
@@ -1555,13 +1554,13 @@ mod tests {
             },
         };
 
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         assert!(eval_predicate(&predicate, &variables, &None, &context_dir).is_ok());
     }
 
     #[test]
     fn test_predicate_match() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         // predicate: `matches /a{3}/`
         // value: aa

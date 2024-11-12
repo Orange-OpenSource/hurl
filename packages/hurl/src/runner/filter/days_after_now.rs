@@ -40,8 +40,6 @@ pub fn eval_days_after_now(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use chrono::offset::Utc;
     use chrono::Duration;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
@@ -49,10 +47,11 @@ pub mod tests {
 
     use super::*;
     use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
 
     #[test]
     pub fn eval_filter_days_after_before_now() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         let now = Utc::now();
         assert_eq!(

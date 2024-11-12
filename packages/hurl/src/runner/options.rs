@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, NaturalOption,
     Number as AstNumber, OptionKind, SectionValue, VariableDefinition, VariableValue,
@@ -25,7 +23,9 @@ use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::eval_template;
-use crate::runner::{expr, Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value};
+use crate::runner::{
+    expr, Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value, VariableSet,
+};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
@@ -34,7 +34,7 @@ use crate::util::logger::{Logger, Verbosity};
 pub fn get_entry_options(
     entry: &Entry,
     runner_options: &RunnerOptions,
-    variables: &mut HashMap<String, Value>,
+    variables: &mut VariableSet,
     logger: &mut Logger,
 ) -> Result<RunnerOptions, RunnerError> {
     let runner_options = runner_options.clone();
@@ -279,7 +279,7 @@ fn has_options(entry: &Entry) -> bool {
 pub fn get_entry_verbosity(
     entry: &Entry,
     default_verbosity: Option<Verbosity>,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<Option<Verbosity>, RunnerError> {
     let mut verbosity = default_verbosity;
 
@@ -313,7 +313,7 @@ pub fn get_entry_verbosity(
 
 fn eval_boolean_option(
     boolean_value: &BooleanOption,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<bool, RunnerError> {
     match boolean_value {
         BooleanOption::Literal(value) => Ok(*value),
@@ -333,7 +333,7 @@ fn eval_boolean_option(
 
 fn eval_natural_option(
     natural_value: &NaturalOption,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<u64, RunnerError> {
     match natural_value {
         NaturalOption::Literal(value) => Ok(*value),
@@ -364,7 +364,7 @@ fn eval_natural_option(
 
 fn eval_count_option(
     count_value: &CountOption,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<Count, RunnerError> {
     match count_value {
         CountOption::Literal(repeat) => Ok(*repeat),
@@ -398,7 +398,7 @@ fn eval_count_option(
 /// return duration value in milliseconds
 fn eval_duration_option(
     duration_value: &DurationOption,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     default_unit: DurationUnit,
 ) -> Result<std::time::Duration, RunnerError> {
     let millis = match duration_value {
@@ -443,7 +443,7 @@ fn eval_duration_option(
 
 fn eval_variable_value(
     variable_value: &VariableValue,
-    variables: &mut HashMap<String, Value>,
+    variables: &mut VariableSet,
 ) -> Result<Value, RunnerError> {
     match variable_value {
         VariableValue::Null => Ok(Value::Null),
@@ -511,7 +511,7 @@ mod tests {
 
     #[test]
     fn test_eval_boolean_option() {
-        let mut variables = HashMap::default();
+        let mut variables = VariableSet::default();
         assert!(eval_boolean_option(&BooleanOption::Literal(true), &variables).unwrap());
 
         variables.insert("verbose".to_string(), Value::Bool(true));
@@ -520,7 +520,7 @@ mod tests {
 
     #[test]
     fn test_eval_boolean_option_error() {
-        let mut variables = HashMap::default();
+        let mut variables = VariableSet::default();
         let error = eval_boolean_option(&verbose_option_template(), &variables)
             .err()
             .unwrap();
@@ -548,7 +548,7 @@ mod tests {
 
     #[test]
     fn test_eval_natural_option() {
-        let mut variables = HashMap::default();
+        let mut variables = VariableSet::default();
         assert_eq!(
             eval_duration_option(
                 &DurationOption::Literal(Duration::new(1, Some(DurationUnit::Second))),

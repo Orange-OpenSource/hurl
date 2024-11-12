@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{RegexValue, SourceInfo};
 
 use crate::runner::regex::eval_regex_value;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_regex(
     value: &Value,
     regex_value: &RegexValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
@@ -47,20 +45,18 @@ pub fn eval_regex(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{RunnerErrorKind, Value};
+    use crate::runner::{RunnerErrorKind, Value, VariableSet};
 
     #[test]
     fn eval_filter_regex() {
         // regex "Hello (.*)!"
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let whitespace = Whitespace {
             value: String::new(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -106,7 +102,7 @@ pub mod tests {
 
     #[test]
     fn eval_filter_invalid_regex() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let whitespace = Whitespace {
             value: String::new(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

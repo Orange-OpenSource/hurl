@@ -15,19 +15,14 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 
 use crate::runner::error::RunnerError;
-use crate::runner::expr;
 use crate::runner::Value;
+use crate::runner::{expr, VariableSet};
 
 /// Renders to string a `template` given a map of variables.
-pub fn eval_template(
-    template: &Template,
-    variables: &HashMap<String, Value>,
-) -> Result<String, RunnerError> {
+pub fn eval_template(template: &Template, variables: &VariableSet) -> Result<String, RunnerError> {
     let Template { elements, .. } = template;
     let mut value = String::new();
     for elem in elements {
@@ -41,7 +36,7 @@ pub fn eval_template(
 
 fn eval_template_element(
     template_element: &TemplateElement,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     match template_element {
         TemplateElement::String { value, .. } => Ok(value.clone()),
@@ -86,7 +81,7 @@ mod tests {
 
     #[test]
     fn test_template_element() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         assert_eq!(
             eval_template_element(
                 &TemplateElement::String {
@@ -99,7 +94,7 @@ mod tests {
             "World".to_string()
         );
 
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert("name".to_string(), Value::String("World".to_string()));
         assert_eq!(
             eval_template_element(&template_element_expression(), &variables).unwrap(),
@@ -109,7 +104,7 @@ mod tests {
 
     #[test]
     fn test_template_element_error() {
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert(
             "name".to_string(),
             Value::List(vec![

@@ -38,17 +38,16 @@ pub fn eval_count(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use super::*;
     use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
 
     #[test]
     pub fn eval_filter_count() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),

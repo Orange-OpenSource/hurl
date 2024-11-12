@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_format(
     value: &Value,
     fmt: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
@@ -53,7 +51,7 @@ pub mod tests {
 
     #[test]
     pub fn eval_filter_url_decode() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: FilterValue::UrlDecode,

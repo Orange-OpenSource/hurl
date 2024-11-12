@@ -29,6 +29,7 @@ pub use self::output::Output;
 pub use self::result::{AssertResult, CaptureResult, EntryResult, HurlResult};
 pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::Value;
+pub use self::variable::VariableSet;
 
 mod assert;
 mod body;
@@ -57,4 +58,5 @@ mod result;
 mod runner_options;
 mod template;
 mod value;
+mod variable;
 mod xpath;

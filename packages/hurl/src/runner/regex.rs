@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::RegexValue;
 use regex::Regex;
 
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, VariableSet};
 
 pub fn eval_regex_value(
     regex_value: &RegexValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<Regex, RunnerError> {
     match regex_value {
         RegexValue::Template(t) => {

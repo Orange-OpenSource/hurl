@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::str::FromStr;
 use std::time::Duration;
 
 use hurl::http::{Call, HttpVersion, Request, Response, Url};
 use hurl::runner;
-use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
+use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder, VariableSet};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
 use hurl_core::input::Input;
@@ -133,7 +132,7 @@ fn simple_sample() {
         .build();
 
     // Set variables
-    let variables = HashMap::default();
+    let variables = VariableSet::new();
 
     // Run the hurl file and check data:
     let result = runner::run(

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{Filter, FilterValue};
 
 use super::count::eval_count;
@@ -37,14 +35,14 @@ use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::xpath::eval_xpath;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
     filters: &[Filter],
     value: &Value,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     in_assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     let mut value = Some(value.clone());
@@ -66,7 +64,7 @@ pub fn eval_filters(
 pub fn eval_filter(
     filter: &Filter,
     value: &Value,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     in_assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match &filter.value {
@@ -118,17 +116,15 @@ pub fn eval_filter(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filters;
-    use crate::runner::{Number, Value};
+    use crate::runner::{Number, Value, VariableSet};
 
     #[test]
     pub fn test_filters() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         assert_eq!(
             eval_filters(

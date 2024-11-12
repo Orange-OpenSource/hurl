@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::thread;
 use std::time::Instant;
 
@@ -30,7 +29,7 @@ use hurl_core::typing::Count;
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, Value};
+use crate::runner::{entry, options, EntryResult, HurlResult, VariableSet};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
@@ -48,7 +47,7 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// ```
 /// use std::collections::HashMap;
 /// use hurl::runner;
-/// use hurl::runner::{Value, RunnerOptionsBuilder};
+/// use hurl::runner::{Value, RunnerOptionsBuilder, VariableSet};
 /// use hurl::util::logger::{LoggerOptionsBuilder, Verbosity};
 /// use hurl_core::input::Input;
 ///
@@ -69,7 +68,7 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 ///     .build();
 ///
 /// // Set variables
-/// let mut variables = HashMap::default();
+/// let mut variables = VariableSet::default();
 /// variables.insert("name".to_string(), Value::String("toto".to_string()));
 ///
 /// // Run the Hurl sample
@@ -86,7 +85,7 @@ pub fn run(
     content: &str,
     filename: Option<&Input>,
     runner_options: &RunnerOptions,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
     // In this method, we run Hurl content sequentially. Standard output and standard error messages
@@ -140,7 +139,7 @@ pub fn run_entries(
     content: &str,
     filename: Option<&Input>,
     runner_options: &RunnerOptions,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     stdout: &mut Stdout,
     listener: Option<&dyn EventListener>,
     logger: &mut Logger,
@@ -316,7 +315,7 @@ fn run_request(
     filename: Option<&Input>,
     http_client: &mut Client,
     options: &RunnerOptions,
-    variables: &mut HashMap<String, Value>,
+    variables: &mut VariableSet,
     stdout: &mut Stdout,
     logger: &mut Logger,
 ) -> Vec<EntryResult> {
@@ -502,7 +501,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
 fn log_run_info(
     entries: &[Entry],
     runner_options: &RunnerOptions,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     logger: &mut Logger,
 ) {
     if logger.verbosity.is_some() {

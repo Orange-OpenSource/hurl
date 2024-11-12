@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 
 use crate::http;
@@ -26,7 +24,7 @@ use crate::runner::filter::eval_filters;
 use crate::runner::query::eval_query;
 use crate::runner::result::CaptureResult;
 use crate::runner::template::eval_template;
-use crate::runner::Value;
+use crate::runner::VariableSet;
 
 /// Evaluates a `capture` with `variables` map and `http_response`, returns a
 /// [`CaptureResult`] on success or an [`RunnerError`].
@@ -35,7 +33,7 @@ use crate::runner::Value;
 /// operation on the response.
 pub fn eval_capture(
     capture: &Capture,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     http_response: &http::Response,
     cache: &mut BodyCache,
 ) -> Result<CaptureResult, RunnerError> {
@@ -81,7 +79,7 @@ pub mod tests {
 
     use self::super::super::query;
     use super::*;
-    use crate::runner::Number;
+    use crate::runner::{Number, Value};
 
     pub fn user_count_capture() -> Capture {
         // non scalar value
@@ -147,7 +145,7 @@ pub mod tests {
 
     #[test]
     fn test_invalid_xpath() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
         let whitespace = Whitespace {
             value: String::new(),
@@ -235,7 +233,7 @@ pub mod tests {
 
     #[test]
     fn test_capture() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(

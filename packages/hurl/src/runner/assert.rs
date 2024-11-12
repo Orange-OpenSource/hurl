@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 use hurl_core::reader::Pos;
 
@@ -28,7 +26,7 @@ use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
 use crate::runner::query::eval_query;
 use crate::runner::result::AssertResult;
-use crate::runner::Value;
+use crate::runner::{Value, VariableSet};
 use crate::util::path::ContextDir;
 
 impl AssertResult {
@@ -153,7 +151,7 @@ fn use_diff(expected: &Value, actual: &Value) -> bool {
 /// operation on the response.
 pub fn eval_explicit_assert(
     assert: &Assert,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     http_response: &http::Response,
     cache: &mut BodyCache,
     context_dir: &ContextDir,
@@ -264,7 +262,7 @@ pub mod tests {
 
     #[test]
     fn test_eval() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::str::FromStr;
 
 use base64::engine::general_purpose;
@@ -25,14 +24,13 @@ use hurl_core::ast::*;
 use crate::http;
 use crate::http::{HeaderVec, HttpError, Url, AUTHORIZATION};
 use crate::runner::error::RunnerError;
-use crate::runner::value::Value;
-use crate::runner::{body, multipart, template, RunnerErrorKind};
+use crate::runner::{body, multipart, template, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
 pub fn eval_request(
     request: &Request,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<http::RequestSpec, RunnerError> {
     let method = eval_method(&request.method);
@@ -144,10 +142,7 @@ pub fn eval_request(
     })
 }
 
-fn eval_url(
-    url_template: &Template,
-    variables: &HashMap<String, Value>,
-) -> Result<Url, RunnerError> {
+fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, RunnerError> {
     let url = template::eval_template(url_template, variables)?;
     Url::from_str(&url).map_err(|e| {
         let source_info = url_template.source_info;
@@ -195,6 +190,7 @@ fn eval_method(method: &Method) -> http::Method {
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::Value;
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
 
@@ -344,7 +340,7 @@ mod tests {
 
     #[test]
     fn test_error_variable() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let error = eval_request(&hello_request(), &variables, &ContextDir::default())
             .err()
             .unwrap();
@@ -362,7 +358,7 @@ mod tests {
 
     #[test]
     fn test_hello_request() {
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert(
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
@@ -374,7 +370,7 @@ mod tests {
 
     #[test]
     fn test_query_request() {
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert(
             String::from("param1"),
             Value::String(String::from("value1")),

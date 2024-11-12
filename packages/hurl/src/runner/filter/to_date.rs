@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use chrono::NaiveDateTime;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_to_date(
     value: &Value,
     fmt: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
@@ -52,18 +50,16 @@ pub fn eval_to_date(
 #[cfg(test)]
 pub mod tests {
 
-    use std::collections::HashMap;
-
     use chrono::{DateTime, NaiveDate, Utc};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     pub fn eval_filter_to_date() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
 
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

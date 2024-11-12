@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 
 use crate::runner::body::eval_file; // TODO move function out of body module
@@ -24,12 +22,12 @@ use crate::runner::error::RunnerError;
 use crate::runner::expr::eval;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::{Number as ValueNumber, Value};
+use crate::runner::{Number as ValueNumber, Value, VariableSet};
 use crate::util::path::ContextDir;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<Value, RunnerError> {
     match predicate_value {
@@ -60,7 +58,7 @@ pub fn eval_predicate_value(
 
 pub fn eval_predicate_value_template(
     predicate_value: &PredicateValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     match predicate_value {
         PredicateValue::String(template) => eval_template(template, variables),

@@ -321,7 +321,6 @@ fn progress_bar(index: usize, count: usize) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
     use std::sync::{mpsc, Arc, Mutex};
 
     use hurl_core::input::Input;
@@ -331,7 +330,7 @@ mod tests {
     use crate::parallel::progress::{build_progress, progress_bar};
     use crate::parallel::runner::WorkerState;
     use crate::parallel::worker::{Worker, WorkerId};
-    use crate::runner::RunnerOptionsBuilder;
+    use crate::runner::{RunnerOptionsBuilder, VariableSet};
     use crate::util::logger::LoggerOptionsBuilder;
 
     fn new_workers() -> (Worker, Worker, Worker, Worker, Worker) {
@@ -349,7 +348,7 @@ mod tests {
     }
 
     fn new_jobs() -> Vec<Job> {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let runner_options = RunnerOptionsBuilder::default().build();
         let logger_options = LoggerOptionsBuilder::default().build();
         let files = [

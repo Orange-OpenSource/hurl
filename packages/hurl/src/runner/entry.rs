@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 
 use crate::http;
@@ -25,8 +23,7 @@ use crate::runner::cache::BodyCache;
 use crate::runner::error::RunnerError;
 use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::value::Value;
-use crate::runner::{request, response, CaptureResult, RunnerErrorKind};
+use crate::runner::{request, response, CaptureResult, RunnerErrorKind, VariableSet};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
@@ -39,7 +36,7 @@ pub fn run(
     entry: &Entry,
     entry_index: usize,
     http_client: &mut http::Client,
-    variables: &mut HashMap<String, Value>,
+    variables: &mut VariableSet,
     runner_options: &RunnerOptions,
     logger: &mut Logger,
 ) -> EntryResult {

@@ -44,17 +44,15 @@ pub fn eval_to_float(
 #[cfg(test)]
 pub mod tests {
 
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Number, RunnerErrorKind, Value};
+    use crate::runner::{Number, RunnerErrorKind, Value, VariableSet};
 
     #[test]
     pub fn eval_filter_to_float() {
-        let variable = HashMap::new();
+        let variable = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToFloat,
@@ -107,7 +105,7 @@ pub mod tests {
 
     #[test]
     pub fn eval_filter_to_float_error() {
-        let variable = HashMap::new();
+        let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToFloat,
@@ -115,7 +113,7 @@ pub mod tests {
         let err = eval_filter(
             &filter,
             &Value::String("3x.1415".to_string()),
-            &variable,
+            &variables,
             false,
         )
         .err()
@@ -124,7 +122,7 @@ pub mod tests {
             err.kind,
             RunnerErrorKind::FilterInvalidInput("string <3x.1415>".to_string())
         );
-        let err = eval_filter(&filter, &Value::Bool(true), &variable, false)
+        let err = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(

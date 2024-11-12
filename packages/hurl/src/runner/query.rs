@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 use regex::Regex;
 use sha2::Digest;
@@ -26,14 +24,14 @@ use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::eval_template;
 use crate::runner::xpath::{Document, Format};
-use crate::runner::{filter, Number, Value};
+use crate::runner::{filter, Number, Value, VariableSet};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
 /// Evaluates this `query` and returns a [`QueryResult`], using the HTTP `response` and `variables`.
 pub fn eval_query(
     query: &Query,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     response: &http::Response,
     cache: &mut BodyCache,
 ) -> QueryResult {
@@ -83,7 +81,7 @@ fn eval_query_url(response: &http::Response) -> QueryResult {
 fn eval_query_header(
     response: &http::Response,
     name: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> QueryResult {
     let name = eval_template(name, variables)?;
     let values = response.headers.values(&name);
@@ -106,7 +104,7 @@ fn eval_query_cookie(
     response: &http::Response,
     name: &Template,
     attribute: &Option<CookieAttribute>,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> QueryResult {
     let name = eval_template(name, variables)?;
     match response.get_cookie(&name) {
@@ -144,7 +142,7 @@ fn eval_query_xpath(
     response: &http::Response,
     cache: &mut BodyCache,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     query_source_info: SourceInfo,
 ) -> QueryResult {
     let doc = match cache.xml() {
@@ -198,7 +196,7 @@ fn eval_query_jsonpath(
     response: &http::Response,
     cache: &mut BodyCache,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     query_source_info: SourceInfo,
 ) -> QueryResult {
     let json = match cache.json() {
@@ -248,7 +246,7 @@ fn parse_cache_json<'cache>(
 fn eval_query_regex(
     response: &http::Response,
     regex: &RegexValue,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     query_source_info: SourceInfo,
 ) -> QueryResult {
     let s = match response.text() {
@@ -287,7 +285,7 @@ fn eval_query_regex(
 }
 
 /// Evaluates a variable, given a set of `variables`.
-fn eval_query_variable(name: &Template, variables: &HashMap<String, Value>) -> QueryResult {
+fn eval_query_variable(name: &Template, variables: &VariableSet) -> QueryResult {
     let name = eval_template(name, variables)?;
     if let Some(value) = variables.get(name.as_str()) {
         Ok(Some(value.clone()))
@@ -668,7 +666,7 @@ pub mod tests {
 
     #[test]
     fn test_query_status() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
         assert_eq!(
             eval_query(
@@ -688,7 +686,7 @@ pub mod tests {
 
     #[test]
     fn test_header_not_found() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         // header Custom
@@ -727,7 +725,7 @@ pub mod tests {
     #[test]
     fn test_header() {
         // header Content-Type
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         let query_header = Query {
@@ -762,7 +760,7 @@ pub mod tests {
 
     #[test]
     fn test_query_cookie() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         let space = Whitespace {
@@ -972,7 +970,7 @@ pub mod tests {
 
     #[test]
     fn test_body() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1014,7 +1012,7 @@ pub mod tests {
 
     #[test]
     fn test_query_invalid_utf8() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         let http_response = http::Response {
@@ -1035,7 +1033,7 @@ pub mod tests {
 
     #[test]
     fn test_query_xpath_error_eval() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         // xpath ^^^
@@ -1069,7 +1067,7 @@ pub mod tests {
 
     #[test]
     fn test_query_xpath() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1121,7 +1119,7 @@ pub mod tests {
 
     #[test]
     fn test_query_xpath_with_html() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1139,7 +1137,7 @@ pub mod tests {
 
     #[test]
     fn test_query_jsonpath_invalid_expression() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         // jsonpath xxx
@@ -1185,7 +1183,7 @@ pub mod tests {
 
     #[test]
     fn test_query_invalid_json() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
         let http_response = http::Response {
             body: String::into_bytes(String::from("xxx")),
@@ -1200,7 +1198,7 @@ pub mod tests {
 
     #[test]
     fn test_query_json_not_found() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         let http_response = http::Response {
@@ -1215,7 +1213,7 @@ pub mod tests {
 
     #[test]
     fn test_query_json() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1253,7 +1251,7 @@ pub mod tests {
 
     #[test]
     fn test_query_regex() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1285,7 +1283,7 @@ pub mod tests {
 
     #[test]
     fn test_query_bytes() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(
@@ -1306,7 +1304,7 @@ pub mod tests {
 
     #[test]
     fn test_query_sha256() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(

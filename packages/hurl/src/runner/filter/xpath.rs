@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
 use crate::runner::xpath::{Document, Format, XPathError};
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_xpath(
     value: &Value,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
@@ -52,7 +50,7 @@ pub fn eval_xpath(
 pub fn eval_xpath_doc(
     doc: &Document,
     expr: &Template,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
 ) -> Result<Option<Value>, RunnerError> {
     let expr_str = eval_template(expr, variables)?;
     let result = doc.eval_xpath(&expr_str);

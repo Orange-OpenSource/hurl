@@ -48,17 +48,15 @@ pub fn eval_url_encode(
 
 #[cfg(test)]
 pub mod tests {
-    use std::collections::HashMap;
-
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     pub fn eval_filter_url_encode() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: FilterValue::UrlEncode,

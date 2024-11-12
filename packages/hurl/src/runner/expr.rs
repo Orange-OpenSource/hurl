@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::Expr;
 
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
+use crate::runner::VariableSet;
 
 /// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
-pub fn eval(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, RunnerError> {
+pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {
     if let Some(value) = variables.get(expr.variable.name.as_str()) {
         Ok(value.clone())
     } else {
@@ -35,7 +34,7 @@ pub fn eval(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, Ru
 }
 
 /// Render the expression `expr` with `variables` map, returns a [`String`] on success or an [`RunnerError`] .
-pub fn render(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String, RunnerError> {
+pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerError> {
     let source_info = expr.variable.source_info;
     let name = &expr.variable.name;
     let value = eval(expr, variables)?;
@@ -52,17 +51,15 @@ pub fn render(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String,
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use hurl_core::{
         ast::{SourceInfo, Variable, Whitespace},
         reader::Pos,
     };
-    use std::collections::HashMap;
-
-    use super::*;
 
     #[test]
     fn test_render_expression() {
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         variables.insert("status".to_string(), Value::Bool(true));
         let expr = Expr {
             space0: Whitespace {

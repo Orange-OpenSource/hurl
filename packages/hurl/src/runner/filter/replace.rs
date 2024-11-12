@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::{RegexValue, SourceInfo, Template};
 
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 pub fn eval_replace(
     value: &Value,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
     old_value: &RegexValue,
@@ -48,19 +46,17 @@ pub fn eval_replace(
 #[cfg(test)]
 pub mod tests {
 
-    use std::collections::HashMap;
-
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
-    use crate::runner::Value;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     pub fn eval_filter_replace() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Replace {

@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl_core::ast::*;
 
 use crate::http;
 use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::result::{AssertResult, CaptureResult};
-use crate::runner::{assert, body, capture, json, multiline, template, Value};
+use crate::runner::{assert, body, capture, json, multiline, template, Value, VariableSet};
 use crate::util::path::ContextDir;
 
 /// Returns a list of assert results on the response status code and HTTP version,
@@ -61,7 +59,7 @@ pub fn eval_version_status_asserts(
 /// operation on the response.
 pub fn eval_asserts(
     response: &Response,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     http_response: &http::Response,
     cache: &mut BodyCache,
     context_dir: &ContextDir,
@@ -159,7 +157,7 @@ pub fn eval_asserts(
 /// Check the body of an actual HTTP response against a spec body, given a set of variables.
 fn eval_implicit_body_asserts(
     spec_body: &Body,
-    variables: &HashMap<String, Value>,
+    variables: &VariableSet,
     http_response: &http::Response,
     context_dir: &ContextDir,
 ) -> AssertResult {
@@ -354,7 +352,7 @@ pub fn eval_captures(
     response: &Response,
     http_response: &http::Response,
     cache: &mut BodyCache,
-    variables: &mut HashMap<String, Value>,
+    variables: &mut VariableSet,
 ) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
     for capture in response.captures() {
@@ -423,7 +421,7 @@ mod tests {
 
     #[test]
     pub fn test_eval_asserts() {
-        let variables = HashMap::new();
+        let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         let context_dir = ContextDir::default();
@@ -472,7 +470,7 @@ mod tests {
 
     #[test]
     pub fn test_eval_captures() {
-        let mut variables = HashMap::new();
+        let mut variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
         assert_eq!(

@@ -20,7 +20,7 @@ use std::path::Path;
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::{HurlResult, Output};
+use hurl::runner::{HurlResult, Output, VariableSet};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
@@ -57,7 +57,7 @@ pub fn run_seq(
                 return Err(error);
             }
         };
-        let variables = &options.variables;
+        let variables = VariableSet::from(&options.variables);
         let runner_options = options.to_runner_options(&filename, current_dir);
         let logger_options = options.to_logger_options();
 
@@ -68,7 +68,7 @@ pub fn run_seq(
             &content,
             Some(&filename),
             &runner_options,
-            variables,
+            &variables,
             &logger_options,
         ) else {
             return Err(CliError::Parsing);
@@ -175,7 +175,7 @@ pub fn run_par(
         Some(Count::Infinite) => workers_count,
         None => min(files.len(), workers_count),
     };
-    let variables = &options.variables;
+    let variables = VariableSet::from(&options.variables);
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);
@@ -187,7 +187,7 @@ pub fn run_par(
         .map(|(seq, input)| {
             let runner_options = options.to_runner_options(input, current_dir);
             let logger_options = options.to_logger_options();
-            Job::new(input, seq, &runner_options, variables, &logger_options)
+            Job::new(input, seq, &runner_options, &variables, &logger_options)
         })
         .collect::<Vec<_>>();
 
