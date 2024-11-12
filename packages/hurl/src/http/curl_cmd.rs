@@ -608,6 +608,7 @@ mod tests {
             cookie_input_file: Some("cookie_file".to_string()),
             follow_location: true,
             follow_location_trusted: false,
+            fresh_connect: false,
             http_version: RequestedHttpVersion::Http10,
             insecure: true,
             ip_resolve: IpResolve::IpV6,

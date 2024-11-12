@@ -193,6 +193,14 @@ pub fn follow_location_trusted() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn fresh_connect() -> clap::Arg {
+    clap::Arg::new("fresh_connect")
+        .long("fresh-connect")
+        .help("Use a new connection for each request")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn from_entry() -> clap::Arg {
     clap::Arg::new("from_entry")
         .long("from-entry")

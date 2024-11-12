@@ -60,6 +60,7 @@ pub struct CliOptions {
     pub file_root: Option<String>,
     pub follow_location: bool,
     pub follow_location_trusted: bool,
+    pub fresh_connect: bool,
     pub from_entry: Option<usize>,
     pub html_dir: Option<PathBuf>,
     pub http_version: Option<HttpVersion>,
@@ -188,6 +189,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::file_root())
         .arg(commands::follow_location())
         .arg(commands::follow_location_trusted())
+        .arg(commands::fresh_connect())
         .arg(commands::from_entry())
         .arg(commands::glob())
         .arg(commands::http10())
@@ -276,6 +278,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
+    let fresh_connect = matches::fresh_connect(arg_matches);
     let from_entry = matches::from_entry(arg_matches);
     let html_dir = matches::html_dir(arg_matches)?;
     let http_version = matches::http_version(arg_matches);
@@ -334,6 +337,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         file_root,
         follow_location,
         follow_location_trusted,
+        fresh_connect,
         from_entry,
         html_dir,
         http_version,
@@ -409,6 +413,7 @@ impl CliOptions {
         let delay = self.delay;
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
+        let fresh_connect = self.fresh_connect;
         let from_entry = self.from_entry;
         let http_version = match self.http_version {
             Some(version) => version.into(),
@@ -467,6 +472,7 @@ impl CliOptions {
             .cookie_input_file(cookie_input_file)
             .follow_location(follow_location)
             .follow_location_trusted(follow_location_trusted)
+            .fresh_connect(fresh_connect)
             .from_entry(from_entry)
             .http_version(http_version)
             .ignore_asserts(ignore_asserts)

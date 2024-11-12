@@ -38,6 +38,7 @@ pub struct RunnerOptionsBuilder {
     delay: Duration,
     follow_location: bool,
     follow_location_trusted: bool,
+    fresh_connect: bool,
     from_entry: Option<usize>,
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
@@ -85,6 +86,7 @@ impl Default for RunnerOptionsBuilder {
             delay: Duration::from_millis(0),
             follow_location: false,
             follow_location_trusted: false,
+            fresh_connect: false,
             from_entry: None,
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
@@ -226,6 +228,12 @@ impl RunnerOptionsBuilder {
     /// To limit the amount of redirects to follow use [`self.max_redirect()`]
     pub fn follow_location_trusted(&mut self, follow_location_trusted: bool) -> &mut Self {
         self.follow_location_trusted = follow_location_trusted;
+        self
+    }
+
+    /// Sets the fresh-connect flag
+    pub fn fresh_connect(&mut self, fresh_connect: bool) -> &mut Self {
+        self.fresh_connect = fresh_connect;
         self
     }
 
@@ -424,6 +432,7 @@ impl RunnerOptionsBuilder {
             cookie_input_file: self.cookie_input_file.clone(),
             follow_location: self.follow_location,
             follow_location_trusted: self.follow_location_trusted,
+            fresh_connect: self.fresh_connect,
             from_entry: self.from_entry,
             http_version: self.http_version,
             ignore_asserts: self.ignore_asserts,
@@ -472,6 +481,7 @@ pub struct RunnerOptions {
     pub(crate) cookie_input_file: Option<String>,
     pub(crate) follow_location: bool,
     pub(crate) follow_location_trusted: bool,
+    pub(crate) fresh_connect: bool,
     pub(crate) from_entry: Option<usize>,
     pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,

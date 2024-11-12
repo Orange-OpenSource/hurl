@@ -476,6 +476,7 @@ impl Client {
         if let Some(max_send_speed) = options.max_send_speed {
             self.handle.max_send_speed(max_send_speed.0)?;
         }
+        self.handle.fresh_connect(options.fresh_connect)?;
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 

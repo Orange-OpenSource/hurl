@@ -1,0 +1,8 @@
+name: fresh_connect
+long: fresh-connect
+help: Use a new connection for each request
+help_heading: HTTP options
+---
+Use a new (fresh) connection for each request by force instead of trying to reuse an existing one.
+
+This option should be used with caution and only if you understand what it does as it may impact performance negatively.

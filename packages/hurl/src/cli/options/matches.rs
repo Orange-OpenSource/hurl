@@ -155,6 +155,10 @@ pub fn follow_location(arg_matches: &ArgMatches) -> (bool, bool) {
     (follow_location, follow_location_trusted)
 }
 
+pub fn fresh_connect(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "fresh_connect")
+}
+
 pub fn from_entry(arg_matches: &ArgMatches) -> Option<usize> {
     get::<u32>(arg_matches, "from_entry").map(|x| x as usize)
 }

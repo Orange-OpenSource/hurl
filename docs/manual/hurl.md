@@ -241,6 +241,12 @@ When it is not explicitly defined, files are relative to the Hurl file's directo
 
 This is a cli-only option.
 
+### --fresh-connect {#fresh-connect}
+
+Use a new (fresh) connection for each request by force instead of trying to reuse an existing one.
+
+This option should be used with caution and only if you understand what it does as it may impact performance negatively.
+
 ### --from-entry <ENTRY_NUMBER> {#from-entry}
 
 Execute Hurl file from ENTRY_NUMBER (starting at 1).

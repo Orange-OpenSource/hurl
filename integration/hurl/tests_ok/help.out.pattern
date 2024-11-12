@@ -29,6 +29,8 @@ HTTP options:
       --location-trusted
           Follow redirects but allows sending the name + password to all hosts that the site may
           redirect to
+      --fresh-connect
+          Use a new connection for each request
   -0, --http1.0
           Tell Hurl to use HTTP version 1.0
       --http1.1

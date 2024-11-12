@@ -1,4 +1,4 @@
-.TH hurl 1 "07 Nov 2024" "hurl 6.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "12 Nov 2024" "hurl 6.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -221,6 +221,12 @@ Set root directory to import files in Hurl. This is used for files in multipart 
 When it is not explicitly defined, files are relative to the Hurl file's directory.
 
 This is a cli-only option.
+
+.IP "--fresh-connect "
+
+Use a new (fresh) connection for each request by force instead of trying to reuse an existing one.
+
+This option should be used with caution and only if you understand what it does as it may impact performance negatively.
 
 .IP "--from-entry <ENTRY_NUMBER> "
 
