@@ -391,6 +391,8 @@ impl Client {
             return Err(HttpError::UnsupportedHttpVersion(http_version));
         }
 
+        self.handle.fresh_connect(options.fresh_connect)?;
+
         // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
         // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
         // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
@@ -476,7 +478,6 @@ impl Client {
         if let Some(max_send_speed) = options.max_send_speed {
             self.handle.max_send_speed(max_send_speed.0)?;
         }
-        self.handle.fresh_connect(options.fresh_connect)?;
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 
