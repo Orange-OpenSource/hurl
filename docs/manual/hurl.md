@@ -247,6 +247,8 @@ Use a new (fresh) connection for each request by force instead of trying to reus
 
 This option should be used with caution and only if you understand what it does as it may impact performance negatively.
 
+This is a cli-only option.
+
 ### --from-entry <ENTRY_NUMBER> {#from-entry}
 
 Execute Hurl file from ENTRY_NUMBER (starting at 1).
