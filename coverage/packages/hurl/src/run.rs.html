@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl::runner::{HurlResult, Output};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl::runner::{HurlResult, Output, VariableSet};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -997,7 +997,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let variables = &amp;options.variables;</pre>
+                <pre class="has-background-success-light py-0 px-2">        let variables = VariableSet::from(&amp;options.variables);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1173,7 +1173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            variables,</pre>
+                <pre class="has-background-success-light py-0 px-2">            &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2885,7 +2885,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let variables = &amp;options.variables;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let variables = VariableSet::from(&amp;options.variables);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3077,7 +3077,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Job::new(input, seq, &amp;runner_options, variables, &amp;logger_options)</pre>
+                <pre class="has-background-success-light py-0 px-2">            Job::new(input, seq, &amp;runner_options, &amp;variables, &amp;logger_options)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5323,7 +5323,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-11-13 08:11</p>
+                <p class="heading">Date: 2024-11-14 08:12</p>
             </div>
         </footer>
     </body>
