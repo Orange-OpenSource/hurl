@@ -18,16 +18,17 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
-use crate::parser::template;
 use crate::parser::{string, ParseResult};
 use crate::reader::Reader;
+
+use super::placeholder;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.cursor();
 
     let mut elements = vec![];
     loop {
-        match template::parse(reader) {
+        match placeholder::parse(reader) {
             Ok(expr) => {
                 let element = TemplateElement::Expression(expr);
                 elements.push(element);

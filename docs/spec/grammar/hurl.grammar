@@ -225,11 +225,11 @@ very-verbose-option: "very-verbose" ":" boolean-option lt
 
 variable-definition: variable-name "=" variable-value
 
-boolean-option: boolean | template
+boolean-option: boolean | placeholder
 
-integer-option: integer | template
+integer-option: integer | placeholder
 
-duration-option: (integer duration-unit?)  | template
+duration-option: (integer duration-unit?)  | placeholder
 
 duration-unit: "ms" | "s" | "m"
 
@@ -364,7 +364,7 @@ predicate-value:
   | oneline-file
   | oneline-hex
   | quoted-string
-  | template
+  | placeholder
 
 
 # Bytes
@@ -391,7 +391,7 @@ oneline-hex: "hex," hexdigit* ";"
 
 # Strings
 
-quoted-string: "\"" (quoted-string-content | template)* "\""
+quoted-string: "\"" (quoted-string-content | placeholder)* "\""
 
 quoted-string-content: (quoted-string-text | quoted-string-escaped-char)*
 
@@ -400,7 +400,7 @@ quoted-string-text: ~["\\]+
 quoted-string-escaped-char: "\\" ("\"" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char)
 
 
-key-string: (key-string-content | template)+
+key-string: (key-string-content | placeholder)+
 
 key-string-content: (key-string-text | key-string-escaped-char)*
 
@@ -409,7 +409,7 @@ key-string-text: (alphanum | "_" | "-" | "." | "[" | "]" | "@" | "$") +
 key-string-escaped-char: "\\" ("#" | ":" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
 
 
-value-string: (value-string-content | template)*
+value-string: (value-string-content | placeholder)*
 
 value-string-content: (value-string-text | value-string-escaped-char)*
 
@@ -418,7 +418,7 @@ value-string-text: ~[#\n\\]+
 value-string-escaped-char: "\\" ("#" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
 
 
-oneline-string: "`" (oneline-string-content | template)* "`"
+oneline-string: "`" (oneline-string-content | placeholder)* "`"
 
 oneline-string-content: (oneline-string-text | oneline-string-escaped-char)*
 
@@ -429,7 +429,7 @@ oneline-string-escaped-char: "\\" ("`" | "#" | "\\" | "b" | "f" | "u" unicode-ch
 
 multiline-string:
   "```" multiline-string-type? ("," multiline-string-attribute)* lt
-  (multiline-string-content | template)* lt
+  (multiline-string-content | placeholder)* lt
   "```"
 
 multiline-string-type:
@@ -449,7 +449,7 @@ multiline-string-text:  ~[\\]+ ~"```"
 
 multiline-string-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "`" | "u" unicode-char)
 
-filename: (filename-content | template)*
+filename: (filename-content | placeholder)*
 
 filename-content: (filename-text | filename-escaped-char)*
 
@@ -458,7 +458,7 @@ filename-text: ~[#;{} \n\\]+
 filename-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";"| " " | "{" | "}" | "u" unicode-char)
 
 
-filename-password: (filename-password-content | template)*
+filename-password: (filename-password-content | placeholder)*
 
 filename-password-content: (filename-password-text | filename-password-escaped-char)*
 
@@ -470,10 +470,11 @@ unicode-char: "{" hexdigit+ "}"
 
 
 
+
 # JSON
 
 json-value:
-    template
+    placeholder
   | json-object
   | json-array
   | json-string
@@ -487,7 +488,7 @@ json-key-value: json-string ":" json-value
 
 json-array: "[" json-value ("," json-value)* "]"
 
-json-string: "\"" (json-string-content | template)* "\""
+json-string: "\"" (json-string-content | placeholder)* "\""
 
 json-string-content: json-string-text | json-string-escaped-char
 
@@ -499,9 +500,9 @@ json-string-escaped-char:
 json-number: integer fraction? exponent?
 
 
-# Template / Expression
+#  Expression
 
-template: "{{" expr "}}"
+placeholder: "{{" expr "}}"
 
 expr: (variable-name | function) (sp filter)*
 

@@ -23,7 +23,7 @@ use crate::parser::template::*;
 use crate::parser::ParseResult;
 use crate::reader::{Pos, Reader};
 
-use super::template;
+use super::placeholder;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(
@@ -272,7 +272,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let exp = template::parse(reader)?;
+    let exp = placeholder::parse(reader)?;
     Ok(JsonValue::Expression(exp))
 }
 

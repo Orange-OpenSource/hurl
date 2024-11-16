@@ -26,7 +26,7 @@ use crate::parser::{filename, filename_password, ParseResult};
 use crate::reader::Reader;
 use crate::typing::Count;
 
-use super::template;
+use super::placeholder;
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -293,7 +293,7 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
         Ok(v) => Ok(BooleanOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
-            let exp = template::parse(reader).map_err(|e| {
+            let exp = placeholder::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "true|false".to_string(),
                 };
@@ -310,7 +310,7 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
         Ok(v) => Ok(NaturalOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
-            let exp = template::parse(reader).map_err(|e| {
+            let exp = placeholder::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer >= 0".to_string(),
                 };
@@ -327,7 +327,7 @@ fn count_option(reader: &mut Reader) -> ParseResult<CountOption> {
         Ok(v) => Ok(CountOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
-            let exp = template::parse(reader).map_err(|e| {
+            let exp = placeholder::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer >= -1".to_string(),
                 };
@@ -345,7 +345,7 @@ fn duration_option(reader: &mut Reader) -> ParseResult<DurationOption> {
         Err(e) => {
             if e.recoverable {
                 reader.seek(start);
-                let exp = template::parse(reader).map_err(|e| {
+                let exp = placeholder::parse(reader).map_err(|e| {
                     let kind = ParseErrorKind::Expecting {
                         value: "integer".to_string(),
                     };

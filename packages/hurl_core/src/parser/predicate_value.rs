@@ -24,7 +24,7 @@ use crate::parser::string::*;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
-use super::template;
+use super::placeholder;
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(
@@ -53,7 +53,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
                 Ok(value) => Ok(PredicateValue::Base64(value)),
                 Err(e) => Err(e),
             },
-            |p1| match template::parse(p1) {
+            |p1| match placeholder::parse(p1) {
                 Ok(value) => Ok(PredicateValue::Expression(value)),
                 Err(e) => Err(e),
             },

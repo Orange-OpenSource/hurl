@@ -18,9 +18,10 @@
 use crate::ast::*;
 use crate::parser::error::*;
 use crate::parser::primitives::try_literal;
-use crate::parser::template;
 use crate::parser::{string, ParseResult};
 use crate::reader::Reader;
+
+use super::placeholder;
 
 /// Parse a filename with an optional password
 ///
@@ -35,7 +36,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let mut elements = vec![];
     loop {
         let start = reader.cursor();
-        match template::parse(reader) {
+        match placeholder::parse(reader) {
             Ok(expr) => {
                 let element = TemplateElement::Expression(expr);
                 elements.push(element);
