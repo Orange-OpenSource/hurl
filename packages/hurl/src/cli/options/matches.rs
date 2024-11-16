@@ -155,6 +155,10 @@ pub fn from_entry(arg_matches: &ArgMatches) -> Option<usize> {
     get::<u32>(arg_matches, "from_entry").map(|x| x as usize)
 }
 
+pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
+    get_strings(arg_matches, "header").unwrap_or_default()
+}
+
 pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsError> {
     if let Some(dir) = get::<String>(arg_matches, "report_html") {
         let path = Path::new(&dir);

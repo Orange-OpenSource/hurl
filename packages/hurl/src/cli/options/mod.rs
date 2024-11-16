@@ -61,6 +61,7 @@ pub struct CliOptions {
     pub follow_location: bool,
     pub follow_location_trusted: bool,
     pub from_entry: Option<usize>,
+    pub headers: Vec<String>,
     pub html_dir: Option<PathBuf>,
     pub http_version: Option<HttpVersion>,
     pub ignore_asserts: bool,
@@ -177,6 +178,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::compressed())
         .arg(commands::connect_timeout())
         .arg(commands::connect_to())
+        .arg(commands::header())
         .arg(commands::http10())
         .arg(commands::http11())
         .arg(commands::http2())
@@ -282,6 +284,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let file_root = matches::file_root(arg_matches);
     let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
     let from_entry = matches::from_entry(arg_matches);
+    let headers = matches::headers(arg_matches);
     let html_dir = matches::html_dir(arg_matches)?;
     let http_version = matches::http_version(arg_matches);
     let ignore_asserts = matches::ignore_asserts(arg_matches);
@@ -340,6 +343,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         follow_location,
         follow_location_trusted,
         from_entry,
+        headers,
         html_dir,
         http_version,
         ignore_asserts,
@@ -415,6 +419,7 @@ impl CliOptions {
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
         let from_entry = self.from_entry;
+        let headers = &self.headers;
         let http_version = match self.http_version {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),
@@ -473,6 +478,7 @@ impl CliOptions {
             .follow_location(follow_location)
             .follow_location_trusted(follow_location_trusted)
             .from_entry(from_entry)
+            .headers(headers)
             .http_version(http_version)
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)

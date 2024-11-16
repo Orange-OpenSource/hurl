@@ -205,6 +205,17 @@ pub fn glob() -> clap::Arg {
         .action(clap::ArgAction::Append)
 }
 
+pub fn header() -> clap::Arg {
+    clap::Arg::new("header")
+        .long("header")
+        .short('H')
+        .value_name("HEADER")
+        .help("Pass custom header(s) to server")
+        .help_heading("HTTP options")
+        .num_args(1)
+        .action(clap::ArgAction::Append)
+}
+
 pub fn http10() -> clap::Arg {
     clap::Arg::new("http10")
         .long("http1.0")

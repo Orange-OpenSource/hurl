@@ -64,7 +64,6 @@ impl HeaderVec {
     /// Aggregates the headers from `self` and `raw_headers`
     ///
     /// Returns the aggregated `HeaderVec`
-    #[allow(dead_code)]
     pub fn aggregate_raw_headers(&self, raw_headers: &[&str]) -> HeaderVec {
         let mut headers = self.clone();
         let to_aggregate = raw_headers.iter().filter_map(|h| Header::parse(h));

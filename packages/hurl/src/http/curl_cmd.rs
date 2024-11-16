@@ -17,8 +17,8 @@
  */
 use crate::http::client::all_cookies;
 use crate::http::{
-    Body, ClientOptions, Cookie, FileParam, Header, IpResolve, Method, MultipartParam, Param,
-    RequestSpec, RequestedHttpVersion, CONTENT_TYPE,
+    Body, ClientOptions, Cookie, FileParam, Header, HeaderVec, IpResolve, Method, MultipartParam,
+    Param, RequestSpec, RequestedHttpVersion, CONTENT_TYPE,
 };
 use crate::runner::Output;
 use crate::util::path::ContextDir;
@@ -63,7 +63,17 @@ impl CurlCmd {
         let mut params = method_params(request_spec);
         args.append(&mut params);
 
-        let mut params = headers_params(request_spec);
+        let options_headers = options
+            .headers
+            .iter()
+            .map(|h| h.as_str())
+            .collect::<Vec<&str>>();
+        let headers = &request_spec.headers.aggregate_raw_headers(&options_headers);
+        let mut params = headers_params(
+            headers,
+            request_spec.implicit_content_type.as_deref(),
+            &request_spec.body,
+        );
         args.append(&mut params);
 
         let mut params = body_params(request_spec, context_dir);
@@ -90,28 +100,33 @@ fn method_params(request_spec: &RequestSpec) -> Vec<String> {
     request_spec.method.curl_args(has_body)
 }
 
-/// Returns the curl args corresponding to the HTTP headers, from a request spec.
-fn headers_params(request_spec: &RequestSpec) -> Vec<String> {
+/// Returns the curl args corresponding to the HTTP headers, from a list of headers,
+/// an optional implicit content type, and the request body.
+fn headers_params(
+    headers: &HeaderVec,
+    implicit_content_type: Option<&str>,
+    body: &Body,
+) -> Vec<String> {
     let mut args = vec![];
 
-    for header in request_spec.headers.iter() {
+    for header in headers.iter() {
         args.append(&mut header.curl_args());
     }
 
-    let has_explicit_content_type = request_spec.headers.contains_key(CONTENT_TYPE);
+    let has_explicit_content_type = headers.contains_key(CONTENT_TYPE);
     if has_explicit_content_type {
         return args;
     }
 
-    if let Some(content_type) = &request_spec.implicit_content_type {
+    if let Some(content_type) = implicit_content_type {
         if content_type != "application/x-www-form-urlencoded"
             && content_type != "multipart/form-data"
         {
             args.push("--header".to_string());
             args.push(format!("'{}: {content_type}'", CONTENT_TYPE));
         }
-    } else if !request_spec.body.bytes().is_empty() {
-        match request_spec.body {
+    } else if !body.bytes().is_empty() {
+        match body {
             Body::Text(_) => {
                 args.push("--header".to_string());
                 args.push(format!("'{}:'", CONTENT_TYPE));
@@ -608,6 +623,10 @@ mod tests {
             cookie_input_file: Some("cookie_file".to_string()),
             follow_location: true,
             follow_location_trusted: false,
+            headers: vec![
+                "Test-Header-1: content-1".to_string(),
+                "Test-Header-2: content-2".to_string(),
+            ],
             http_version: RequestedHttpVersion::Http10,
             insecure: true,
             ip_resolve: IpResolve::IpV6,
@@ -637,6 +656,8 @@ mod tests {
         assert_eq!(
             cmd.to_string(),
             "curl \
+        --header 'Test-Header-1: content-1' \
+        --header 'Test-Header-2: content-2' \
         --compressed \
         --connect-timeout 20 \
         --connect-to example.com:443:host-47.example.com:443 \

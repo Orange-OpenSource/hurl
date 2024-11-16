@@ -39,6 +39,7 @@ pub struct RunnerOptionsBuilder {
     follow_location: bool,
     follow_location_trusted: bool,
     from_entry: Option<usize>,
+    headers: Vec<String>,
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
@@ -86,6 +87,7 @@ impl Default for RunnerOptionsBuilder {
             follow_location: false,
             follow_location_trusted: false,
             from_entry: None,
+            headers: vec![],
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
@@ -232,6 +234,12 @@ impl RunnerOptionsBuilder {
     /// Executes Hurl file from `from_entry` (starting at 1), ignores the beginning of the file.
     pub fn from_entry(&mut self, from_entry: Option<usize>) -> &mut Self {
         self.from_entry = from_entry;
+        self
+    }
+
+    /// Sets additional headers (overrides if a header already exists).
+    pub fn headers(&mut self, header: &[String]) -> &mut Self {
+        self.headers = header.to_vec();
         self
     }
 
@@ -425,6 +433,7 @@ impl RunnerOptionsBuilder {
             follow_location: self.follow_location,
             follow_location_trusted: self.follow_location_trusted,
             from_entry: self.from_entry,
+            headers: self.headers.clone(),
             http_version: self.http_version,
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
@@ -473,6 +482,7 @@ pub struct RunnerOptions {
     pub(crate) follow_location: bool,
     pub(crate) follow_location_trusted: bool,
     pub(crate) from_entry: Option<usize>,
+    pub(crate) headers: Vec<String>,
     pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,
     pub(crate) ip_resolve: IpResolve,

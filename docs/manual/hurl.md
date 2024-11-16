@@ -256,6 +256,14 @@ However, to avoid your shell accidentally expanding glob patterns before Hurl ha
 
 This is a cli-only option.
 
+### -H, --header <HEADER> {#header}
+
+Add an extra header to include in information sent. Can be used several times in a command
+
+Do not add newlines or carriage returns
+
+This is a cli-only option.
+
 ### -0, --http1.0 {#http10}
 
 Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.

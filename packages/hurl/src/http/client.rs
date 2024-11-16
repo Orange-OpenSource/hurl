@@ -488,9 +488,14 @@ impl Client {
         self.set_multipart(&request_spec.multipart)?;
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
-        let headers_spec = &request_spec.headers;
+        let options_headers = options
+            .headers
+            .iter()
+            .map(|h| h.as_str())
+            .collect::<Vec<&str>>();
+        let headers = &request_spec.headers.aggregate_raw_headers(&options_headers);
         self.set_headers(
-            headers_spec,
+            headers,
             request_spec.implicit_content_type.as_deref(),
             options,
         )?;
@@ -538,19 +543,19 @@ impl Client {
     /// Sets HTTP headers.
     fn set_headers(
         &mut self,
-        headers_spec: &HeaderVec,
+        headers: &HeaderVec,
         implicit_content_type: Option<&str>,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
         let mut list = List::new();
 
-        for header in headers_spec {
+        for header in headers {
             list.append(&format!("{}: {}", header.name, header.value))?;
         }
 
         // If request has no Content-Type header, we set it if the content type has been set
         // implicitly on this request.
-        if !headers_spec.contains_key(CONTENT_TYPE) {
+        if !headers.contains_key(CONTENT_TYPE) {
             if let Some(s) = implicit_content_type {
                 list.append(&format!("{}: {s}", CONTENT_TYPE))?;
             } else {
@@ -566,13 +571,13 @@ impl Client {
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
         // Therefore, we only remove this header when not in aws_sigv4 mode.
-        if !headers_spec.contains_key(EXPECT) && options.aws_sigv4.is_none() {
+        if !headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
             list.append(&format!("{}:", EXPECT))?;
         }
 
-        if !headers_spec.contains_key(USER_AGENT) {
+        if !headers.contains_key(USER_AGENT) {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
@@ -592,12 +597,12 @@ impl Client {
             } else {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
-                if !headers_spec.contains_key(AUTHORIZATION) {
+                if !headers.contains_key(AUTHORIZATION) {
                     list.append(&format!("{}: Basic {authorization}", AUTHORIZATION))?;
                 }
             }
         }
-        if options.compressed && !headers_spec.contains_key(ACCEPT_ENCODING) {
+        if options.compressed && !headers.contains_key(ACCEPT_ENCODING) {
             list.append(&format!("{}: gzip, deflate, br", ACCEPT_ENCODING))?;
         }
 
