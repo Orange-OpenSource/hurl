@@ -368,10 +368,12 @@ mod tests {
     #[test]
     fn test_hello_request() {
         let mut variables = VariableSet::new();
-        variables.insert(
-            String::from("base_url"),
-            Value::String(String::from("http://localhost:8000")),
-        );
+        variables
+            .insert(
+                String::from("base_url"),
+                Value::String(String::from("http://localhost:8000")),
+            )
+            .unwrap();
         let http_request =
             eval_request(&hello_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::hello_http_request());
@@ -380,10 +382,12 @@ mod tests {
     #[test]
     fn test_query_request() {
         let mut variables = VariableSet::new();
-        variables.insert(
-            String::from("param1"),
-            Value::String(String::from("value1")),
-        );
+        variables
+            .insert(
+                String::from("param1"),
+                Value::String(String::from("value1")),
+            )
+            .unwrap();
         let http_request =
             eval_request(&query_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::query_http_request());

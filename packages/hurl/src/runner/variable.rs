@@ -15,14 +15,52 @@
  * limitations under the License.
  *
  */
-use crate::runner::Value;
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use hurl_core::ast::SourceInfo;
 use std::collections::HashMap;
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+enum VariableKind {
+    /// A public variable.
+    Public,
+    /// A private variable, holding a secret value.
+    Secret,
+}
+
+/// Represents a variable, holding a [`Value`].
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct Variable {
+    value: Value,
+    kind: VariableKind,
+}
+
+impl Variable {
+    /// Creates a new variable with `value` and `kind`.
+    fn new(value: Value, kind: VariableKind) -> Self {
+        Variable { value, kind }
+    }
+}
+
+/// Errors raised when trying to insert a public/secret variable into a [`VariableSet`].
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum InsertError {
+    ReadOnlySecret(String),
+}
+
+impl InsertError {
+    /// Converts an instance of [`InsertError`] to a [`RunnerError`].
+    pub fn to_runner_error(&self, source_info: SourceInfo) -> RunnerError {
+        let InsertError::ReadOnlySecret(name) = self;
+        let kind = RunnerErrorKind::ReadOnlySecret { name: name.clone() };
+        RunnerError::new(source_info, kind, false)
+    }
+}
 
 /// Represents a set of variables, either injected at the start
 /// of execution, or inserted during a run.
 #[derive(Clone, Debug, Eq, PartialEq, Default)]
 pub struct VariableSet {
-    variables: HashMap<String, Value>,
+    variables: HashMap<String, Variable>,
 }
 
 impl VariableSet {
@@ -33,26 +71,51 @@ impl VariableSet {
         }
     }
 
-    /// Creates a new variable set from an [`HashMap`].
+    /// Creates a new variable set of public variable from an [`HashMap`].
     pub fn from(variables: &HashMap<String, Value>) -> Self {
-        VariableSet {
-            variables: variables.clone(),
-        }
+        let variables = variables
+            .iter()
+            .map(|(name, value)| {
+                (
+                    name.to_string(),
+                    Variable::new(value.clone(), VariableKind::Public),
+                )
+            })
+            .collect::<HashMap<_, _>>();
+        VariableSet { variables }
     }
 
-    /// Inserts a variable named `name` with `value` into the variable set.
+    /// Inserts a public variable named `name` with `value` into the variable set.
     ///
-    /// If the variable set did not have this key present, [`None`] is returned.
+    /// This method fails when there is a secret variable in the variable set as secret variables
+    /// can't be overridden.
+    pub fn insert(&mut self, name: String, value: Value) -> Result<(), InsertError> {
+        // Secret values can't be overridden by public value, otherwise secret values
+        // becomes public?
+        if let Some(Variable {
+            kind: VariableKind::Secret,
+            ..
+        }) = self.variables.get(&name)
+        {
+            return Err(InsertError::ReadOnlySecret(name));
+        }
+        let variable = Variable::new(value, VariableKind::Public);
+        self.variables.insert(name, variable);
+        Ok(())
+    }
+
+    /// Inserts a secret variable named `name` with `value` into the variable set.
     ///
-    /// If the variable set did have this key present, the value is updated, and the old
-    /// value is returned.
-    pub fn insert(&mut self, name: String, value: Value) -> Option<Value> {
-        self.variables.insert(name, value)
+    /// Contrary to [`VariableSet::insert`], this method can not fail: a secret can override a
+    /// public variable and a secret variable.
+    pub fn insert_secret(&mut self, name: String, value: Value) {
+        let variable = Variable::new(value, VariableKind::Secret);
+        self.variables.insert(name, variable);
     }
 
     /// Returns a reference to the value corresponding to the variable named `name`.
     pub fn get(&self, name: &str) -> Option<&Value> {
-        self.variables.get(name)
+        self.variables.get(name).map(|v| &v.value)
     }
 
     /// Returns true if the variable set contains no variables.
@@ -60,9 +123,11 @@ impl VariableSet {
         self.variables.is_empty()
     }
 
-    /// Returns an iterator over all the variables.
+    /// Returns an iterator over all the variables values.
     pub fn iter(&self) -> impl Iterator<Item = (&String, &Value)> {
-        self.variables.iter()
+        self.variables
+            .iter()
+            .map(|(name, variable)| (name, &variable.value))
     }
 
     /// Returns the number of variables in the set.
@@ -77,16 +142,25 @@ mod test {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    fn test_simple_variable_set() {
+    fn simple_variable_set() {
         let mut variables = VariableSet::new();
         assert!(variables.is_empty());
 
-        variables.insert("foo".to_string(), Value::String("xxx".to_string()));
-        variables.insert("bar".to_string(), Value::Number(Integer(42)));
-        variables.insert("bar".to_string(), Value::Bool(true));
-        variables.insert("baz".to_string(), Value::Number(Float(1.0)));
+        variables
+            .insert("foo".to_string(), Value::String("xxx".to_string()))
+            .unwrap();
+        variables
+            .insert("bar".to_string(), Value::Number(Integer(42)))
+            .unwrap();
+        variables
+            .insert("bar".to_string(), Value::Bool(true))
+            .unwrap();
+        variables
+            .insert("baz".to_string(), Value::Number(Float(1.0)))
+            .unwrap();
+        variables.insert_secret("quic".to_string(), Value::Number(Integer(42)));
 
-        assert_eq!(variables.len(), 3);
+        assert_eq!(variables.len(), 4);
 
         assert_eq!(
             variables.get("foo"),
@@ -94,14 +168,15 @@ mod test {
         );
         assert_eq!(variables.get("bar"), Some(&Value::Bool(true)));
         assert_eq!(variables.get("baz"), Some(&Value::Number(Float(1.0))));
+        assert_eq!(variables.get("quic"), Some(&Value::Number(Integer(42))));
         assert!(variables.get("BAZ").is_none())
     }
 
     #[test]
-    fn test_iter_variable_set() {
+    fn iter_variable_set() {
         fn expected_value<'data>(
-            data: &'data [(String, Value)],
             name: &str,
+            data: &'data [(String, Value)],
         ) -> Option<&'data Value> {
             for (n, v) in data.iter() {
                 if n == name {
@@ -118,13 +193,22 @@ mod test {
         ];
         let mut variables = VariableSet::new();
         data.clone().into_iter().for_each(|(name, value)| {
-            variables.insert(name, value);
+            variables.insert(name, value).unwrap();
         });
 
         // Test iter()
-        for v in variables.iter() {
-            let expected = expected_value(&data, v.0);
-            assert_eq!(expected.unwrap(), v.1);
+        for (name, value) in variables.iter() {
+            let expected = expected_value(name, &data);
+            assert_eq!(expected.unwrap(), value);
         }
+    }
+
+    #[test]
+    fn secret_cant_be_reassigned() {
+        let mut variables = VariableSet::new();
+        variables.insert_secret("foo".to_string(), Value::Number(Integer(42)));
+        assert!(variables
+            .insert("foo".to_string(), Value::String("xxx".to_string()))
+            .is_err());
     }
 }

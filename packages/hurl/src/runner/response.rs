@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{Base64, Body, Bytes, Hex, Response, SourceInfo, StatusValue};
 
 use crate::http;
 use crate::runner::cache::BodyCache;
@@ -359,7 +359,12 @@ pub fn eval_captures(
         let capture_result = capture::eval_capture(capture, variables, http_response, cache)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.
-        variables.insert(capture_result.name.clone(), capture_result.value.clone());
+        let name = capture_result.name.clone();
+        let value = capture_result.value.clone();
+        if let Err(error) = variables.insert(name, value) {
+            let source_info = capture.name.source_info;
+            return Err(error.to_runner_error(source_info));
+        }
         captures.push(capture_result);
     }
     Ok(captures)
@@ -367,6 +372,9 @@ pub fn eval_captures(
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::{
+        LineTerminator, Section, SectionValue, Status, Version, VersionValue, Whitespace,
+    };
     use hurl_core::reader::Pos;
 
     use self::super::super::{assert, capture};

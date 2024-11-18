@@ -88,7 +88,9 @@ mod tests {
         );
 
         let mut variables = VariableSet::new();
-        variables.insert("name".to_string(), Value::String("World".to_string()));
+        variables
+            .insert("name".to_string(), Value::String("World".to_string()))
+            .unwrap();
         assert_eq!(
             eval_template_element(&template_element_expression(), &variables).unwrap(),
             "World".to_string()
@@ -98,13 +100,15 @@ mod tests {
     #[test]
     fn test_template_element_error() {
         let mut variables = VariableSet::new();
-        variables.insert(
-            "name".to_string(),
-            Value::List(vec![
-                Value::Number(Number::Integer(1)),
-                Value::Number(Number::Integer(2)),
-            ]),
-        );
+        variables
+            .insert(
+                "name".to_string(),
+                Value::List(vec![
+                    Value::Number(Number::Integer(1)),
+                    Value::Number(Number::Integer(2)),
+                ]),
+            )
+            .unwrap();
         let error = eval_template_element(&template_element_expression(), &variables)
             .err()
             .unwrap();

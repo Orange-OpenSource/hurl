@@ -1292,10 +1292,12 @@ mod tests {
         // value: "http://localhost:8000"
         // variables: base_url=http://localhost:8080
         let mut variables = VariableSet::new();
-        variables.insert(
-            String::from("base_url"),
-            Value::String(String::from("http://localhost:8000")),
-        );
+        variables
+            .insert(
+                String::from("base_url"),
+                Value::String(String::from("http://localhost:8000")),
+            )
+            .unwrap();
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
