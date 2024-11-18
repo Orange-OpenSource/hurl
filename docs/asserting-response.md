@@ -8,7 +8,7 @@ after this delimiter, you'll find the implicit asserts, then an `[Asserts]` sect
 
 
 ```hurl
-GET https://api/example.org/cats
+GET https://example.org/api/cats
 HTTP 200
 Content-Type: application/json; charset=utf-8      # Implicit assert on Content-Type Header
 [Asserts]                                          # Explicit asserts section 
@@ -561,7 +561,7 @@ Alternatively, `matches` predicate support [JavaScript-like Regular expression s
 the readability:
 
 ```hurl
-GET https://sample.org/hello
+GET https://example.org/hello
 HTTP 200
 [Asserts]
 
@@ -579,7 +579,7 @@ jsonpath "$.name" matches /Hello [a-zA-Z]+!/
 Check that the HTTP received body, decoded as text, matches a regex pattern.
 
 ```hurl
-GET https://sample.org/hello
+GET https://example.org/hello
 HTTP 200
 [Asserts]
 regex "^(\\d{4}-\\d{2}-\\d{2})$" == "2018-12-31"
@@ -633,7 +633,7 @@ variable "pets" count == 200
 Check the total duration (sending plus receiving time) of the HTTP transaction.
 
 ```hurl
-GET https://sample.org/helloworld
+GET https://example.org/helloworld
 HTTP 200
 [Asserts]
 duration < 1000   # Check that response time is less than one second
