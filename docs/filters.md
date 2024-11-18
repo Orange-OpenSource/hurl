@@ -99,7 +99,7 @@ Decode bytes to string using encoding.
 ```hurl
 # The 'Content-Type' HTTP response header does not precise the charset 'gb2312'
 # so body must be decoded explicitly by Hurl before processing any text based assert
-GET https://exapple.org/hello_china
+GET https://example.org/hello_china
 HTTP 200
 [Asserts]
 header "Content-Type" == "text/html"
