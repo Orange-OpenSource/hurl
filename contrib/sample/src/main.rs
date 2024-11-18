@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
+use hurl::runner;
+use hurl::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, RunnerError};
+use hurl::util::logger::{ErrorFormat, LoggerOptionsBuilder, Verbosity};
+use hurl::util::path::ContextDir;
+use hurl_core::input::Input;
+use hurl_core::typing::Count;
+use runner::RunnerOptionsBuilder;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::process::exit;
 use std::time::Duration;
 use std::{env, fs};
-
-use hurl::runner;
-use hurl::runner::{AssertResult, CaptureResult, EntryResult, Error, HurlResult};
-use hurl::util::logger::{ErrorFormat, LoggerOptionsBuilder, Verbosity};
-use hurl::util::path::ContextDir;
-use hurl_core::ast::Retry;
-use runner::RunnerOptionsBuilder;
 
 /// Run a Hurl file and dumps results.
 /// This sample is used to detect public APIs change for Hurl crates.
@@ -40,13 +39,12 @@ fn main() {
         exit(1);
     }
     let filename = &args[1];
-    let content = fs::read_to_string(filename).expect("Should have been able to read the file");
+    let input = Input::new(filename);
+    let content = fs::read_to_string(&args[1]).expect("Should have been able to read the file");
 
     let logger_opts = LoggerOptionsBuilder::new()
         .color(false)
         .error_format(ErrorFormat::Short)
-        .filename(filename)
-        .progress_bar(false)
         .verbosity(Some(Verbosity::Verbose))
         .build();
 
@@ -66,14 +64,14 @@ fn main() {
         .follow_location(false)
         .ignore_asserts(false)
         .insecure(false)
-        .max_redirect(None)
+        .max_redirect(Count::Infinite)
         .no_proxy(None)
         .path_as_is(true)
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
         .resolves(&[])
-        .retry(Retry::None)
+        .retry(None)
         .retry_interval(Duration::from_secs(1))
         .ssl_no_revoke(false)
         .unix_socket(None)
@@ -87,7 +85,14 @@ fn main() {
     let variables = HashMap::default();
 
     // Run the hurl file
-    let result = runner::run(&content, &runner_opts, &variables, &logger_opts).unwrap();
+    let result = runner::run(
+        &content,
+        Some(&input),
+        &runner_opts,
+        &variables,
+        &logger_opts,
+    )
+    .unwrap();
 
     print_result(&result, filename);
 }
@@ -97,7 +102,7 @@ fn print_result(results: &HurlResult, filename: &str) {
     let level = 0;
     print(level, "file", filename);
     print(level, "success", &results.success.to_string());
-    print(level, "duration", &results.time_in_ms.to_string());
+    print(level, "duration", &results.duration.as_millis().to_string());
     if results.entries.is_empty() {
         print(level, "entries", "-");
     } else {
@@ -110,7 +115,11 @@ fn print_result(results: &HurlResult, filename: &str) {
 fn print_entry(entry: &EntryResult) {
     let level = 1;
     print(level, "index", &entry.entry_index.to_string());
-    print(level, "duration (ms)", &entry.time_in_ms.to_string());
+    print(
+        level,
+        "transfer duration (ms)",
+        &entry.transfer_duration.as_millis().to_string(),
+    );
     print(level, "compressed", &entry.compressed.to_string());
     if entry.captures.is_empty() {
         print(level, "captures", "-");
@@ -160,9 +169,9 @@ fn print_assert(assert: &AssertResult) {
 }
 
 /// Prints an error.
-fn print_error(error: &Error) {
+fn print_error(error: &RunnerError) {
     let level = 2;
-    print_dbg(level, "type", &error.inner);
+    print_dbg(level, "type", &error.kind);
 }
 
 // /// Prints a call.
@@ -217,14 +226,14 @@ fn print_error(error: &Error) {
 
 fn print(level: usize, key: &str, value: &str) {
     let prefix = " ".repeat(level * 2);
-    let len = 20 - key.len() - prefix.len();
+    let len = 28 - key.len() - prefix.len();
     let space = " ".repeat(len);
     println!("{prefix}{key}{space}: {value}");
 }
 
 fn print_dbg(level: usize, key: &str, value: impl Debug) {
     let prefix = " ".repeat(level * 2);
-    let len = 20 - key.len() - prefix.len();
+    let len = 28 - key.len() - prefix.len();
     let space = " ".repeat(len);
     println!("{prefix}{key}{space}: {value:?}");
 }
