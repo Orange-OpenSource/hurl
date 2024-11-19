@@ -321,12 +321,11 @@ fn eval_boolean_option(
             match expr::eval(expr, variables)? {
                 Value::Bool(value) => Ok(value),
                 v => {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
                         value: v.format(),
                         expecting: "boolean".to_string(),
                     };
-                    Err(RunnerError::new(expr.variable.source_info, kind, false))
+                    Err(RunnerError::new(expr.source_info, kind, false))
                 }
             }
         }
@@ -345,21 +344,19 @@ fn eval_natural_option(
                     if value > 0 {
                         Ok(value as u64)
                     } else {
-                        let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                            name: expr.variable.name.clone(),
+                        let kind = RunnerErrorKind::ExpressionInvalidType {
                             value: format!("integer <{value}>"),
                             expecting: "integer > 0".to_string(),
                         };
-                        Err(RunnerError::new(expr.variable.source_info, kind, false))
+                        Err(RunnerError::new(expr.source_info, kind, false))
                     }
                 }
                 v => {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
                         value: v.format(),
                         expecting: "integer".to_string(),
                     };
-                    Err(RunnerError::new(expr.variable.source_info, kind, false))
+                    Err(RunnerError::new(expr.source_info, kind, false))
                 }
             }
         }
@@ -379,21 +376,19 @@ fn eval_count_option(
                 } else if value >= 0 {
                     Ok(Count::Finite(value as usize))
                 } else {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
                         value: format!("integer <{value}>"),
                         expecting: "integer >= -1".to_string(),
                     };
-                    Err(RunnerError::new(expr.variable.source_info, kind, false))
+                    Err(RunnerError::new(expr.source_info, kind, false))
                 }
             }
             v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
+                let kind = RunnerErrorKind::ExpressionInvalidType {
                     value: v.format(),
                     expecting: "integer".to_string(),
                 };
-                Err(RunnerError::new(expr.variable.source_info, kind, false))
+                Err(RunnerError::new(expr.source_info, kind, false))
             }
         },
     }
@@ -419,12 +414,11 @@ fn eval_duration_option(
         {
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
-                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                        name: expr.variable.name.clone(),
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
                         value: format!("integer <{value}>"),
                         expecting: "positive integer".to_string(),
                     };
-                    return Err(RunnerError::new(expr.variable.source_info, kind, false));
+                    return Err(RunnerError::new(expr.source_info, kind, false));
                 } else {
                     match default_unit {
                         DurationUnit::MilliSecond => value as u64,
@@ -434,12 +428,11 @@ fn eval_duration_option(
                 }
             }
             v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
+                let kind = RunnerErrorKind::ExpressionInvalidType {
                     value: v.format(),
                     expecting: "positive integer".to_string(),
                 };
-                return Err(RunnerError::new(expr.variable.source_info, kind, false));
+                return Err(RunnerError::new(expr.source_info, kind, false));
             }
         },
     };
@@ -471,7 +464,7 @@ fn eval_number(number: &AstNumber) -> Value {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, Placeholder, SourceInfo, Variable, Whitespace};
+    use hurl_core::ast::{Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::{Duration, DurationUnit};
 
@@ -486,10 +479,11 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             expr: Expr {
-                variable: Variable {
+                kind: ExprKind::Variable(Variable {
                     name: "verbose".to_string(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                }),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
                 value: String::new(),
@@ -506,10 +500,11 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             expr: Expr {
-                variable: Variable {
+                kind: ExprKind::Variable(Variable {
                     name: "retry".to_string(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                }),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
                 value: String::new(),
@@ -547,8 +542,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             error.kind,
-            RunnerErrorKind::TemplateVariableInvalidType {
-                name: "verbose".to_string(),
+            RunnerErrorKind::ExpressionInvalidType {
                 value: "integer <10>".to_string(),
                 expecting: "boolean".to_string()
             }

@@ -1,4 +1,4 @@
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:8:13
    |
    | GET http://localhost:8000/unused
@@ -7,7 +7,7 @@ error: Invalid variable type
    |             ^^^^^^^^ expecting boolean, actual value is integer <10>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:15:15
    |
    | GET http://localhost:8000/unused
@@ -16,7 +16,7 @@ error: Invalid variable type
    |               ^^^^^^^^^^^^ expecting integer >= -1, actual value is integer <-123>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:22:15
    |
    | GET http://localhost:8000/unused
@@ -25,7 +25,7 @@ error: Invalid variable type
    |               ^^^^^^^^^^^^ expecting integer, actual value is string <abc>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:29:11
    |
    | GET http://localhost:8000/unused
@@ -34,7 +34,7 @@ error: Invalid variable type
    |           ^^^^^ expecting integer >= -1, actual value is integer <-2>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:36:11
    |
    | GET http://localhost:8000/unused
@@ -43,7 +43,7 @@ error: Invalid variable type
    |           ^^^^^ expecting integer, actual value is string <foo>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:43:10
    |
    | GET http://localhost:8000/unused
@@ -52,7 +52,7 @@ error: Invalid variable type
    |          ^^^^^ expecting integer >= -1, actual value is integer <-2>
    |
 
-error: Invalid variable type
+error: Invalid expression type
   --> tests_failed/options_template.hurl:50:10
    |
    | GET http://localhost:8000/unused

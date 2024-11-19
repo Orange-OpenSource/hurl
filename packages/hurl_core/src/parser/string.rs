@@ -329,10 +329,11 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 14)),
                         },
                         expr: Expr {
-                            variable: Variable {
+                            kind: ExprKind::Variable(Variable {
                                 name: "name".to_string(),
                                 source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 18)),
-                            }
+                            }),
+                            source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 18)),
                         },
                         space1: Whitespace {
                             value: String::new(),

@@ -50,10 +50,11 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
                 expr: Expr {
-                    variable: Variable {
-                        name: String::from("name"),
+                    kind: ExprKind::Variable(Variable {
+                        name: "name".to_string(),
                         source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 8)),
-                    },
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 8)),
                 },
                 space1: Whitespace {
                     value: String::new(),

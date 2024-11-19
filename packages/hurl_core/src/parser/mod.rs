@@ -40,6 +40,7 @@ mod expr;
 mod filename;
 mod filename_password;
 mod filter;
+mod function;
 mod json;
 mod key_string;
 mod multiline;

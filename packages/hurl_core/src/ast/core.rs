@@ -701,13 +701,25 @@ pub struct Placeholder {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Expr {
-    pub variable: Variable,
+    pub source_info: SourceInfo,
+    pub kind: ExprKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ExprKind {
+    Variable(Variable),
+    Function(Function),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Variable {
     pub name: String,
     pub source_info: SourceInfo,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Function {
+    NewUuid,
 }
 
 /// Check that variable name is not reserved

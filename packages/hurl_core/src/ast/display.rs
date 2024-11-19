@@ -104,13 +104,30 @@ impl fmt::Display for Placeholder {
 
 impl fmt::Display for Expr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.variable)
+        write!(f, "{}", self.kind)
+    }
+}
+
+impl fmt::Display for ExprKind {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ExprKind::Variable(variable) => write!(f, "{}", variable),
+            ExprKind::Function(function) => write!(f, "{}", function),
+        }
     }
 }
 
 impl fmt::Display for Variable {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name)
+    }
+}
+
+impl fmt::Display for Function {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Function::NewUuid => write!(f, "newUuid"),
+        }
     }
 }
 
@@ -323,10 +340,11 @@ mod tests {
         Placeholder {
             space0: whitespace(),
             expr: Expr {
-                variable: Variable {
+                kind: ExprKind::Variable(Variable {
                     name: "name".to_string(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                }),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: whitespace(),
         }

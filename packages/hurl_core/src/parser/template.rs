@@ -135,7 +135,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
 mod tests {
 
     use super::*;
-    use crate::ast::{Expr, Placeholder, Variable, Whitespace};
+    use crate::ast::{Expr, ExprKind, Placeholder, Variable, Whitespace};
 
     #[test]
     fn test_templatize_empty_string() {
@@ -235,10 +235,11 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                     },
                     expr: Expr {
-                        variable: Variable {
+                        kind: ExprKind::Variable(Variable {
                             name: "name".to_string(),
                             source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 15)),
-                        }
+                        }),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 15)),
                     },
                     space1: Whitespace {
                         value: String::new(),
@@ -274,10 +275,11 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
                 expr: Expr {
-                    variable: Variable {
+                    kind: ExprKind::Variable(Variable {
                         name: "x".to_string(),
                         source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
-                    }
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4))
                 },
                 space1: Whitespace {
                     value: String::new(),

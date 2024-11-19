@@ -637,10 +637,11 @@ mod tests {
                                 source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 18)),
                             },
                             expr: Expr {
-                                variable: Variable {
+                                kind: ExprKind::Variable(Variable {
                                     name: "name".to_string(),
                                     source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 22)),
-                                }
+                                }),
+                                source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 22)),
                             },
                             space1: Whitespace {
                                 value: String::new(),
@@ -691,10 +692,11 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                         },
                         expr: Expr {
-                            variable: Variable {
+                            kind: ExprKind::Variable(Variable {
                                 name: "key".to_string(),
-                                source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 6))
-                            }
+                                source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 6)),
+                            }),
+                            source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 6))
                         },
                         space1: Whitespace {
                             value: String::new(),

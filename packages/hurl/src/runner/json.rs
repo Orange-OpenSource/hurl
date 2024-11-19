@@ -83,7 +83,7 @@ pub fn eval_json_value(
                 return Ok(s);
             }
             let kind = RunnerErrorKind::InvalidJson { value: s };
-            Err(RunnerError::new(expr.variable.source_info, kind, false))
+            Err(RunnerError::new(expr.source_info, kind, false))
         }
     }
 }
@@ -198,10 +198,11 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                     expr: Expr {
-                        variable: Variable {
+                        kind: ExprKind::Variable(Variable {
                             name: "name".to_string(),
                             source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
-                        },
+                        }),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
                     },
                     space1: Whitespace {
                         value: String::new(),
@@ -442,10 +443,11 @@ mod tests {
                         TemplateElement::Placeholder(Placeholder {
                             space0: whitespace(),
                             expr: Expr {
-                                variable: Variable {
+                                kind: ExprKind::Variable(Variable {
                                     name: "quote".to_string(),
                                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                                },
+                                }),
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
                             space1: whitespace(),
                         }),

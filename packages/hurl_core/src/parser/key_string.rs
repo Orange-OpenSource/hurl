@@ -25,9 +25,9 @@ use super::placeholder;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.cursor();
-
     let mut elements = vec![];
     loop {
+        let save_state = reader.cursor();
         match placeholder::parse(reader) {
             Ok(placeholder) => {
                 let element = TemplateElement::Placeholder(placeholder);
@@ -35,6 +35,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
             }
             Err(e) => {
                 if e.recoverable {
+                    reader.seek(save_state);
                     let value = key_string_content(reader)?;
                     if value.is_empty() {
                         break;

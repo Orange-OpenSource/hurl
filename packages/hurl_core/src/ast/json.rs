@@ -216,7 +216,7 @@ impl TemplateElement {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Expr, SourceInfo, TemplateElement, Variable, Whitespace};
+    use crate::ast::{Expr, ExprKind, SourceInfo, TemplateElement, Variable, Whitespace};
     use crate::reader::Pos;
 
     #[test]
@@ -229,10 +229,11 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 expr: Expr {
-                    variable: Variable {
+                    kind: ExprKind::Variable(Variable {
                         name: "x".to_string(),
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    }
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 space1: Whitespace {
                     value: String::new(),
@@ -329,10 +330,11 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 expr: Expr {
-                    variable: Variable {
+                    kind: ExprKind::Variable(Variable {
                         name: "name".to_string(),
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                    }
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 space1: Whitespace {
                     value: String::new(),
@@ -351,10 +353,11 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                     expr: Expr {
-                        variable: Variable {
+                        kind: ExprKind::Variable(Variable {
                             name: "name".to_string(),
                             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                        }
+                        }),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                     space1: Whitespace {
                         value: String::new(),

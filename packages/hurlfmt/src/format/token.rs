@@ -774,7 +774,30 @@ impl Tokenizable for Placeholder {
 
 impl Tokenizable for Expr {
     fn tokenize(&self) -> Vec<Token> {
-        vec![Token::CodeVariable(self.variable.name.clone())]
+        self.kind.tokenize()
+    }
+}
+
+impl Tokenizable for ExprKind {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            ExprKind::Variable(variable) => variable.tokenize(),
+            ExprKind::Function(function) => function.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for Variable {
+    fn tokenize(&self) -> Vec<Token> {
+        vec![Token::CodeVariable(self.name.clone())]
+    }
+}
+
+impl Tokenizable for Function {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            Function::NewUuid => vec![Token::CodeVariable("newUuid".to_string())],
+        }
     }
 }
 

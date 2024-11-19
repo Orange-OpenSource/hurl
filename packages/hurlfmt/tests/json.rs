@@ -85,7 +85,10 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                         value: String::new(),
                         source_info
                     },
-                    expr: Expr { variable },
+                    expr: Expr {
+                        kind: ExprKind::Variable(variable),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    },
                     space1: Whitespace {
                         value: String::new(),
                         source_info

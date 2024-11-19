@@ -526,10 +526,11 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                     },
                     expr: Expr {
-                        variable: Variable {
+                        kind: ExprKind::Variable(Variable {
                             name: "count".to_string(),
                             source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 11)),
-                        }
+                        }),
+                        source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 11)),
                     },
                     space1: Whitespace {
                         value: String::new(),

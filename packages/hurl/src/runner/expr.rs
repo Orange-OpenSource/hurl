@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::Expr;
+use hurl_core::ast::{Expr, ExprKind};
 
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
@@ -23,29 +23,39 @@ use crate::runner::VariableSet;
 
 /// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {
-    if let Some(value) = variables.get(expr.variable.name.as_str()) {
-        Ok(value.clone())
-    } else {
-        let kind = RunnerErrorKind::TemplateVariableNotDefined {
-            name: expr.variable.name.clone(),
-        };
-        Err(RunnerError::new(expr.variable.source_info, kind, false))
+    match &expr.kind {
+        ExprKind::Variable(variable) => {
+            if let Some(value) = variables.get(variable.name.as_str()) {
+                Ok(value.clone())
+            } else {
+                let kind = RunnerErrorKind::TemplateVariableNotDefined {
+                    name: variable.name.clone(),
+                };
+                Err(RunnerError::new(variable.source_info, kind, false))
+            }
+        }
+        ExprKind::Function(_function) => todo!(),
     }
 }
 
 /// Render the expression `expr` with `variables` map, returns a [`String`] on success or an [`RunnerError`] .
 pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerError> {
-    let source_info = expr.variable.source_info;
-    let name = &expr.variable.name;
-    let value = eval(expr, variables)?;
-    if value.is_renderable() {
-        Ok(value.to_string())
-    } else {
-        let kind = RunnerErrorKind::UnrenderableVariable {
-            name: name.to_string(),
-            value: value.to_string(),
-        };
-        Err(RunnerError::new(source_info, kind, false))
+    match &expr.kind {
+        ExprKind::Variable(variable) => {
+            let source_info = variable.source_info;
+            let name = &variable.name;
+            let value = eval(expr, variables)?;
+            if value.is_renderable() {
+                Ok(value.to_string())
+            } else {
+                let kind = RunnerErrorKind::UnrenderableVariable {
+                    name: name.to_string(),
+                    value: value.to_string(),
+                };
+                Err(RunnerError::new(source_info, kind, false))
+            }
+        }
+        ExprKind::Function(_) => todo!(),
     }
 }
 
@@ -53,7 +63,7 @@ pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerErro
 mod tests {
     use super::*;
     use hurl_core::{
-        ast::{SourceInfo, Variable},
+        ast::{ExprKind, SourceInfo, Variable},
         reader::Pos,
     };
 
@@ -62,10 +72,11 @@ mod tests {
         let mut variables = VariableSet::new();
         variables.insert("status".to_string(), Value::Bool(true));
         let expr = Expr {
-            variable: Variable {
+            kind: ExprKind::Variable(Variable {
                 name: "status".to_string(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+            }),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         assert_eq!(eval(&expr, &variables).unwrap(), Value::Bool(true));
         assert_eq!(render(&expr, &variables).unwrap(), "true");

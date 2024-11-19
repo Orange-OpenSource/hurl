@@ -220,10 +220,11 @@ mod tests {
                     TemplateElement::Placeholder(Placeholder {
                         space0: whitespace(),
                         expr: Expr {
-                            variable: Variable {
-                                name: String::from("base_url"),
+                            kind: ExprKind::Variable(Variable {
+                                name: "base_url".to_string(),
                                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
-                            },
+                            }),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
                         },
                         space1: whitespace(),
                     }),
@@ -301,13 +302,17 @@ mod tests {
                                 elements: vec![TemplateElement::Placeholder(Placeholder {
                                     space0: whitespace(),
                                     expr: Expr {
-                                        variable: Variable {
-                                            name: String::from("param1"),
+                                        kind: ExprKind::Variable(Variable {
+                                            name: "param1".to_string(),
                                             source_info: SourceInfo::new(
                                                 Pos::new(1, 7),
                                                 Pos::new(1, 15),
                                             ),
-                                        },
+                                        }),
+                                        source_info: SourceInfo::new(
+                                            Pos::new(1, 7),
+                                            Pos::new(1, 15),
+                                        ),
                                     },
                                     space1: whitespace(),
                                 })],

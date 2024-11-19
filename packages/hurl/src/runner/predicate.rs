@@ -1257,10 +1257,11 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                 },
                 expr: Expr {
-                    variable: Variable {
-                        name: String::from("base_url"),
+                    kind: ExprKind::Variable(Variable {
+                        name: "base_url".to_string(),
                         source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19)),
-                    },
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19)),
                 },
                 space1: Whitespace {
                     value: String::new(),

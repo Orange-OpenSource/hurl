@@ -215,7 +215,7 @@ error: Invalid XPath expression
     |       ^^^^ the XPath expression is not valid
     |
 
-error: Invalid variable type
+error: Invalid expression type
    --> tests_failed/runner_errors.hurl:142:12
     |
     | GET http://localhost:8000/runner_errors

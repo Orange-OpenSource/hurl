@@ -17,15 +17,31 @@
  */
 use crate::ast::*;
 use crate::parser::error::*;
+use crate::parser::function;
 use crate::parser::ParseResult;
 use crate::reader::Reader;
 
 /// Parse an expression
 ///
-/// Currently, an expression can only be found inside a template.
+/// Currently, an expression can only be found inside a placeholder
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
-    let variable = variable_name(reader)?;
-    Ok(Expr { variable })
+    let start = reader.cursor().pos;
+    let save_state = reader.cursor();
+    let kind = match function::parse(reader) {
+        Ok(function) => ExprKind::Function(function),
+        Err(e) => {
+            if e.recoverable {
+                reader.seek(save_state);
+                let variable = variable_name(reader)?;
+                ExprKind::Variable(variable)
+            } else {
+                return Err(e);
+            }
+        }
+    };
+    let end = reader.cursor().pos;
+    let source_info = SourceInfo::new(start, end);
+    Ok(Expr { source_info, kind })
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {

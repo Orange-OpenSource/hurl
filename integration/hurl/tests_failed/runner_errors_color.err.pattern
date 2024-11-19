@@ -215,7 +215,7 @@
 [1;34m    |[0m[1;31m       ^^^^ the XPath expression is not valid[0m
 [1;34m    |[0m
 
-[1;31merror[0m: [1mInvalid variable type[0m
+[1;31merror[0m: [1mInvalid expression type[0m
    [1;34m-->[0m tests_failed/runner_errors.hurl:142:12
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m

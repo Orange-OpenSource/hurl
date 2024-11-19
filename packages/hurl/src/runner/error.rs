@@ -71,6 +71,10 @@ pub enum RunnerErrorKind {
     AssertVersion {
         actual: String,
     },
+    ExpressionInvalidType {
+        value: String,
+        expecting: String,
+    },
     /// I/O read error on `path`.
     FileReadAccess {
         path: PathBuf,
@@ -104,11 +108,7 @@ pub enum RunnerErrorKind {
     TemplateVariableNotDefined {
         name: String,
     },
-    TemplateVariableInvalidType {
-        name: String,
-        value: String,
-        expecting: String,
-    },
+
     UnrenderableVariable {
         name: String,
         value: String,
@@ -133,7 +133,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::AssertHeaderValueError { .. } => "Assert header value".to_string(),
             RunnerErrorKind::AssertStatus { .. } => "Assert status code".to_string(),
             RunnerErrorKind::AssertVersion { .. } => "Assert HTTP version".to_string(),
-
+            RunnerErrorKind::ExpressionInvalidType { .. } => "Invalid expression type".to_string(),
             RunnerErrorKind::FileReadAccess { .. } => "File read access".to_string(),
             RunnerErrorKind::FileWriteAccess { .. } => "File write access".to_string(),
             RunnerErrorKind::FilterDecode { .. } => "Filter error".to_string(),
@@ -152,9 +152,7 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::QueryInvalidXml => "Invalid XML".to_string(),
             RunnerErrorKind::QueryInvalidXpathEval => "Invalid XPath expression".to_string(),
-            RunnerErrorKind::TemplateVariableInvalidType { .. } => {
-                "Invalid variable type".to_string()
-            }
+
             RunnerErrorKind::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
             RunnerErrorKind::UnauthorizedFileAccess { .. } => {
                 "Unauthorized file access".to_string()
@@ -208,7 +206,13 @@ impl DisplaySourceError for RunnerError {
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
-
+            RunnerErrorKind::ExpressionInvalidType {
+                value, expecting, ..
+            } => {
+                let message = &format!("expecting {expecting}, actual value is {value}");
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
             RunnerErrorKind::FileReadAccess { path } => {
                 let message = &format!("file {} can not be read", path.to_string_lossy());
                 let message = error::add_carets(message, self.source_info, content);
@@ -286,13 +290,6 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::QueryInvalidXpathEval => {
                 let message = "the XPath expression is not valid";
-                let message = error::add_carets(message, self.source_info, content);
-                color_red_multiline_string(&message)
-            }
-            RunnerErrorKind::TemplateVariableInvalidType {
-                value, expecting, ..
-            } => {
-                let message = &format!("expecting {expecting}, actual value is {value}");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
