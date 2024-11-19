@@ -65,7 +65,8 @@ raised by the test is a runtime error.
 Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` directory:
 
 - [`hurlfmt/tests_ok`]: every test there must be successful (exit code 0)
-- [`hurlfmt/tests_export`]: every hurl file has its own JSON and HTML version/export.
+- [`hurlfmt/tests_failed`]: every test must fail (exit code different from 0)
+- [`hurlfmt/tests_export`]: every Hurl file has its own JSON and HTML version/export. Hurl files are not linted.
 - [`hurlfmt/tests_error_lint`]: every test is syntactically correct, but is not formatted through `hurlfmt`. We test here the linting.
 
 

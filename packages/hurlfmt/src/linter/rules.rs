@@ -687,6 +687,7 @@ fn lint_option_kind(option_kind: &OptionKind) -> OptionKind {
         OptionKind::RetryInterval(duration) => {
             OptionKind::RetryInterval(lint_duration_option(duration, DurationUnit::MilliSecond))
         }
+        OptionKind::Variable(var_def) => OptionKind::Variable(lint_variable_definition(var_def)),
         _ => option_kind.clone(),
     }
 }
@@ -723,6 +724,14 @@ fn lint_filter_value(filter_value: &FilterValue) -> FilterValue {
             value: lint_regex_value(value),
         },
         f => f.clone(),
+    }
+}
+
+fn lint_variable_definition(var_def: &VariableDefinition) -> VariableDefinition {
+    VariableDefinition {
+        space0: empty_whitespace(),
+        space1: empty_whitespace(),
+        ..var_def.clone()
     }
 }
 

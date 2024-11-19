@@ -45,6 +45,7 @@ variable: status=true
 variable: count=2
 variable: score=7.7
 variable: name=Bob
+variable: name=Bob
 verbose: false
 very-verbose: false
 

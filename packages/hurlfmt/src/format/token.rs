@@ -884,6 +884,7 @@ impl Tokenizable for JsonObjectElement {
         tokens
     }
 }
+
 impl Tokenizable for EntryOption {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];

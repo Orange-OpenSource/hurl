@@ -271,8 +271,9 @@ impl HtmlFormatter {
 
     fn fmt_variable_definition(&mut self, option: &VariableDefinition) {
         self.buffer.push_str(option.name.as_str());
-        self.fmt_space(&option.space1);
+        self.fmt_space(&option.space0);
         self.buffer.push('=');
+        self.fmt_space(&option.space1);
         self.fmt_variable_value(&option.value);
     }
 
