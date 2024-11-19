@@ -875,6 +875,7 @@ pub enum DurationOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct VariableDefinition {
+    pub source_info: SourceInfo,
     pub name: String,
     pub space0: Whitespace,
     pub space1: Whitespace,

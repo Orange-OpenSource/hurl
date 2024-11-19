@@ -360,12 +360,19 @@ fn duration_option(reader: &mut Reader) -> ParseResult<DurationOption> {
 }
 
 fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
+    let start = reader.cursor();
     let name = variable_name(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     literal("=", reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     let value = variable_value(reader)?;
+    let end = reader.cursor();
+    let source_info = SourceInfo {
+        start: start.pos,
+        end: end.pos,
+    };
     Ok(VariableDefinition {
+        source_info,
         name,
         space0,
         space1,
@@ -631,20 +638,15 @@ mod tests {
         assert_eq!(
             variable_definition(&mut reader).unwrap(),
             VariableDefinition {
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
                 name: "a".to_string(),
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo {
-                        start: Pos { line: 1, column: 2 },
-                        end: Pos { line: 1, column: 2 },
-                    },
+                    source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo {
-                        start: Pos { line: 1, column: 3 },
-                        end: Pos { line: 1, column: 3 },
-                    },
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
                 value: VariableValue::Number(Number::Integer(1)),
             }
