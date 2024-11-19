@@ -31,6 +31,7 @@ Enhancements:
 * Categorise options in --help [#3339](https://github.com/Orange-OpenSource/hurl/issues/3339)
 * Support more JSON / XML "like" mimetypes with debug output [#3343](https://github.com/Orange-OpenSource/hurl/issues/3343)
 * Add curl debug command to --json and JSON report [#3374](https://github.com/Orange-OpenSource/hurl/issues/3374)
+* Add curl debug command to HTML report [#3386](https://github.com/Orange-OpenSource/hurl/issues/3386)
 
 
 Bugs Fixed:
@@ -41,6 +42,7 @@ Bugs Fixed:
 * Support case-insensitive Cookie Attributes [#3265](https://github.com/Orange-OpenSource/hurl/issues/3265)
 * Allow any string in Location Header when not following redirection [#3293](https://github.com/Orange-OpenSource/hurl/issues/3293)
 * Fix graceful shutdown of workers threads in --test [#3297](https://github.com/Orange-OpenSource/hurl/issues/3297)
+* Fix missing space in variable option HTML export [#3412](https://github.com/Orange-OpenSource/hurl/issues/3412)
 
 
 [5.0.1 (2024-08-30)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#5.0.1)
