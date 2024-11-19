@@ -1251,14 +1251,16 @@ mod tests {
         // {{base_url}}
         let template = Template {
             delimiter: Some('"'),
-            elements: vec![TemplateElement::Expression(Expr {
+            elements: vec![TemplateElement::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                 },
-                variable: Variable {
-                    name: String::from("base_url"),
-                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19)),
+                expr: Expr {
+                    variable: Variable {
+                        name: String::from("base_url"),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19)),
+                    },
                 },
                 space1: Whitespace {
                     value: String::new(),

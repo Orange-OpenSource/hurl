@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use crate::ast::{SourceInfo, TemplateElement};
+use crate::ast::{Placeholder, SourceInfo, TemplateElement};
+use crate::parser::primitives::zero_or_more_spaces;
 use crate::parser::{error, expr, ParseResult};
 use crate::reader::{Pos, Reader};
 
@@ -83,8 +84,15 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
             State::FirstCloseBracket => {
                 if s.as_str() == "}" {
                     let mut reader = Reader::with_pos(encoded.as_str(), expression_start.unwrap());
-                    let expression = expr::parse(&mut reader)?;
-                    elements.push(TemplateElement::Expression(expression));
+                    let space0 = zero_or_more_spaces(&mut reader)?;
+                    let expr = expr::parse(&mut reader)?;
+                    let space1 = zero_or_more_spaces(&mut reader)?;
+                    let placeholder = Placeholder {
+                        space0,
+                        expr,
+                        space1,
+                    };
+                    elements.push(TemplateElement::Placeholder(placeholder));
                     value = String::new();
                     encoded = String::new();
                     expression_start = None;
@@ -127,7 +135,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
 mod tests {
 
     use super::*;
-    use crate::ast::{Expr, Variable, Whitespace};
+    use crate::ast::{Expr, Placeholder, Variable, Whitespace};
 
     #[test]
     fn test_templatize_empty_string() {
@@ -221,14 +229,16 @@ mod tests {
                     value: "Hi ".to_string(),
                     encoded: "Hi\\u0020".to_string(),
                 },
-                TemplateElement::Expression(Expr {
+                TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                     },
-                    variable: Variable {
-                        name: "name".to_string(),
-                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 15)),
+                    expr: Expr {
+                        variable: Variable {
+                            name: "name".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 15)),
+                        }
                     },
                     space1: Whitespace {
                         value: String::new(),
@@ -258,14 +268,16 @@ mod tests {
         };
         assert_eq!(
             templatize(encoded_string).unwrap(),
-            vec![TemplateElement::Expression(Expr {
+            vec![TemplateElement::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
-                variable: Variable {
-                    name: "x".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
+                expr: Expr {
+                    variable: Variable {
+                        name: "x".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
+                    }
                 },
                 space1: Whitespace {
                     value: String::new(),

@@ -273,7 +273,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 
 fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let exp = placeholder::parse(reader)?;
-    Ok(JsonValue::Expression(exp))
+    Ok(JsonValue::Placeholder(exp))
 }
 
 fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
@@ -480,14 +480,16 @@ mod tests {
                     value: "Hello ".to_string(),
                     encoded: "Hello\\u0020".to_string(),
                 },
-                TemplateElement::Expression(Expr {
+                TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
-                    variable: Variable {
-                        name: "name".to_string(),
-                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                    expr: Expr {
+                        variable: Variable {
+                            name: "name".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                        },
                     },
                     space1: Whitespace {
                         value: String::new(),
@@ -774,14 +776,16 @@ mod tests {
         let mut reader = Reader::new("{{n}}");
         assert_eq!(
             expression_value(&mut reader).unwrap(),
-            JsonValue::Expression(Expr {
+            JsonValue::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3))
                 },
-                variable: Variable {
-                    name: "n".to_string(),
-                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4))
+                expr: Expr {
+                    variable: Variable {
+                        name: "n".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4))
+                    }
                 },
                 space1: Whitespace {
                     value: String::new(),

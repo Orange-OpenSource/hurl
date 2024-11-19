@@ -37,8 +37,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     loop {
         let start = reader.cursor();
         match placeholder::parse(reader) {
-            Ok(expr) => {
-                let element = TemplateElement::Expression(expr);
+            Ok(placeholder) => {
+                let element = TemplateElement::Placeholder(placeholder);
                 elements.push(element);
             }
             Err(e) => {

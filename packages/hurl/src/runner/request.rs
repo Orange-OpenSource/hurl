@@ -217,11 +217,13 @@ mod tests {
             space1: whitespace(),
             url: Template {
                 elements: vec![
-                    TemplateElement::Expression(Expr {
+                    TemplateElement::Placeholder(Placeholder {
                         space0: whitespace(),
-                        variable: Variable {
-                            name: String::from("base_url"),
-                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+                        expr: Expr {
+                            variable: Variable {
+                                name: String::from("base_url"),
+                                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+                            },
                         },
                         space1: whitespace(),
                     }),
@@ -296,14 +298,16 @@ mod tests {
                             },
                             Template {
                                 delimiter: None,
-                                elements: vec![TemplateElement::Expression(Expr {
+                                elements: vec![TemplateElement::Placeholder(Placeholder {
                                     space0: whitespace(),
-                                    variable: Variable {
-                                        name: String::from("param1"),
-                                        source_info: SourceInfo::new(
-                                            Pos::new(1, 7),
-                                            Pos::new(1, 15),
-                                        ),
+                                    expr: Expr {
+                                        variable: Variable {
+                                            name: String::from("param1"),
+                                            source_info: SourceInfo::new(
+                                                Pos::new(1, 7),
+                                                Pos::new(1, 15),
+                                            ),
+                                        },
                                     },
                                     space1: whitespace(),
                                 })],

@@ -80,12 +80,12 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                     encoded: "Hello\\u0020 ".to_string(),
                     value: "Hello ".to_string(),
                 },
-                TemplateElement::Expression(Expr {
+                TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info
                     },
-                    variable,
+                    expr: Expr { variable },
                     space1: Whitespace {
                         value: String::new(),
                         source_info

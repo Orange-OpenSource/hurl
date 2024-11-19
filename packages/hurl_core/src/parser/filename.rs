@@ -36,8 +36,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     loop {
         let start = reader.cursor();
         match placeholder::parse(reader) {
-            Ok(expr) => {
-                let element = TemplateElement::Expression(expr);
+            Ok(placeholder) => {
+                let element = TemplateElement::Placeholder(placeholder);
                 elements.push(element);
             }
             Err(e) => {
@@ -242,14 +242,16 @@ mod tests {
                         value: "foo_".to_string(),
                         encoded: "foo_".to_string(),
                     },
-                    TemplateElement::Expression(Expr {
+                    TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
-                        variable: Variable {
-                            name: "bar".to_string(),
-                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                        expr: Expr {
+                            variable: Variable {
+                                name: "bar".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                            }
                         },
                         space1: Whitespace {
                             value: String::new(),
@@ -271,14 +273,16 @@ mod tests {
                         value: "foo_".to_string(),
                         encoded: "foo_".to_string(),
                     },
-                    TemplateElement::Expression(Expr {
+                    TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
-                        variable: Variable {
-                            name: "bar".to_string(),
-                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                        expr: Expr {
+                            variable: Variable {
+                                name: "bar".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                            }
                         },
                         space1: Whitespace {
                             value: String::new(),

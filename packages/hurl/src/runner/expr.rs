@@ -53,7 +53,7 @@ pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerErro
 mod tests {
     use super::*;
     use hurl_core::{
-        ast::{SourceInfo, Variable, Whitespace},
+        ast::{SourceInfo, Variable},
         reader::Pos,
     };
 
@@ -62,16 +62,8 @@ mod tests {
         let mut variables = VariableSet::new();
         variables.insert("status".to_string(), Value::Bool(true));
         let expr = Expr {
-            space0: Whitespace {
-                value: String::new(),
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
             variable: Variable {
                 name: "status".to_string(),
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
-            space1: Whitespace {
-                value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         };

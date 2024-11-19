@@ -132,14 +132,16 @@ mod tests {
             CookiePath {
                 name: Template {
                     delimiter: None,
-                    elements: vec![TemplateElement::Expression(Expr {
+                    elements: vec![TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                         },
-                        variable: Variable {
-                            name: "name".to_string(),
-                            source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 7)),
+                        expr: Expr {
+                            variable: Variable {
+                                name: "name".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 7)),
+                            }
                         },
                         space1: Whitespace {
                             value: String::new(),

@@ -426,12 +426,12 @@ pub struct PredicateFunc {
 pub enum PredicateValue {
     Base64(Base64),
     Bool(bool),
-    Expression(Expr),
     File(File),
     Hex(Hex),
     MultilineString(MultilineString),
     Null,
     Number(Number),
+    Placeholder(Placeholder),
     Regex(Regex),
     String(Template),
 }
@@ -593,7 +593,7 @@ pub struct Template {
 pub enum TemplateElement {
     // TODO: explain the difference between value and encoded
     String { value: String, encoded: String },
-    Expression(Expr),
+    Placeholder(Placeholder),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -693,10 +693,15 @@ impl SourceInfo {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Expr {
+pub struct Placeholder {
     pub space0: Whitespace,
-    pub variable: Variable,
+    pub expr: Expr,
     pub space1: Whitespace,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Expr {
+    pub variable: Variable,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -847,25 +852,25 @@ impl OptionKind {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BooleanOption {
     Literal(bool),
-    Expression(Expr),
+    Placeholder(Placeholder),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum NaturalOption {
     Literal(u64),
-    Expression(Expr),
+    Placeholder(Placeholder),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CountOption {
     Literal(Count),
-    Expression(Expr),
+    Placeholder(Placeholder),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum DurationOption {
     Literal(Duration),
-    Expression(Expr),
+    Placeholder(Placeholder),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

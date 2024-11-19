@@ -299,7 +299,7 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
                 };
                 ParseError::new(e.pos, false, kind)
             })?;
-            Ok(BooleanOption::Expression(exp))
+            Ok(BooleanOption::Placeholder(exp))
         }
     }
 }
@@ -310,13 +310,13 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
         Ok(v) => Ok(NaturalOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
-            let exp = placeholder::parse(reader).map_err(|e| {
+            let placeholder = placeholder::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer >= 0".to_string(),
                 };
                 ParseError::new(e.pos, false, kind)
             })?;
-            Ok(NaturalOption::Expression(exp))
+            Ok(NaturalOption::Placeholder(placeholder))
         }
     }
 }
@@ -327,13 +327,13 @@ fn count_option(reader: &mut Reader) -> ParseResult<CountOption> {
         Ok(v) => Ok(CountOption::Literal(v)),
         Err(_) => {
             reader.seek(start);
-            let exp = placeholder::parse(reader).map_err(|e| {
+            let placeholder = placeholder::parse(reader).map_err(|e| {
                 let kind = ParseErrorKind::Expecting {
                     value: "integer >= -1".to_string(),
                 };
                 ParseError::new(e.pos, false, kind)
             })?;
-            Ok(CountOption::Expression(exp))
+            Ok(CountOption::Placeholder(placeholder))
         }
     }
 }
@@ -345,13 +345,13 @@ fn duration_option(reader: &mut Reader) -> ParseResult<DurationOption> {
         Err(e) => {
             if e.recoverable {
                 reader.seek(start);
-                let exp = placeholder::parse(reader).map_err(|e| {
+                let placeholder = placeholder::parse(reader).map_err(|e| {
                     let kind = ParseErrorKind::Expecting {
                         value: "integer".to_string(),
                     };
                     ParseError::new(e.pos, false, kind)
                 })?;
-                Ok(DurationOption::Expression(exp))
+                Ok(DurationOption::Placeholder(placeholder))
             } else {
                 Err(e)
             }

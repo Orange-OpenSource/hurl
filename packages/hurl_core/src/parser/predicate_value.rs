@@ -54,7 +54,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
                 Err(e) => Err(e),
             },
             |p1| match placeholder::parse(p1) {
-                Ok(value) => Ok(PredicateValue::Expression(value)),
+                Ok(value) => Ok(PredicateValue::Placeholder(value)),
                 Err(e) => Err(e),
             },
             |p1| match quoted_template(p1) {

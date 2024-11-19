@@ -363,7 +363,7 @@ impl ToJson for BooleanOption {
     fn to_json(&self) -> JValue {
         match self {
             BooleanOption::Literal(value) => JValue::Boolean(*value),
-            BooleanOption::Expression(expr) => expr.to_json(),
+            BooleanOption::Placeholder(placeholder) => placeholder.to_json(),
         }
     }
 }
@@ -372,7 +372,7 @@ impl ToJson for CountOption {
     fn to_json(&self) -> JValue {
         match self {
             CountOption::Literal(value) => value.to_json(),
-            CountOption::Expression(expr) => expr.to_json(),
+            CountOption::Placeholder(placeholder) => placeholder.to_json(),
         }
     }
 }
@@ -390,7 +390,7 @@ impl ToJson for DurationOption {
     fn to_json(&self) -> JValue {
         match self {
             DurationOption::Literal(value) => value.to_json(),
-            DurationOption::Expression(expr) => expr.to_json(),
+            DurationOption::Placeholder(placeholder) => placeholder.to_json(),
         }
     }
 }
@@ -654,7 +654,7 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
             let base64_string = general_purpose::STANDARD.encode(value.value);
             (JValue::String(base64_string), Some("base64".to_string()))
         }
-        PredicateValue::Expression(value) => (JValue::String(value.to_string()), None),
+        PredicateValue::Placeholder(value) => (JValue::String(value.to_string()), None),
         PredicateValue::Regex(value) => {
             (JValue::String(value.to_string()), Some("regex".to_string()))
         }
@@ -677,7 +677,7 @@ impl ToJson for JsonValue {
                     .map(|elem| (elem.name.to_string(), elem.value.to_json()))
                     .collect(),
             ),
-            JsonValue::Expression(exp) => JValue::String(format!("{{{{{exp}}}}}")),
+            JsonValue::Placeholder(exp) => JValue::String(format!("{{{{{exp}}}}}")),
         }
     }
 }
@@ -783,7 +783,7 @@ impl ToJson for FilterValue {
     }
 }
 
-impl ToJson for Expr {
+impl ToJson for Placeholder {
     fn to_json(&self) -> JValue {
         JValue::String(format!("{{{{{}}}}}", self))
     }
@@ -799,7 +799,7 @@ impl ToJson for NaturalOption {
     fn to_json(&self) -> JValue {
         match self {
             NaturalOption::Literal(value) => JValue::Number(value.to_string()),
-            NaturalOption::Expression(expr) => expr.to_json(),
+            NaturalOption::Placeholder(placeholder) => placeholder.to_json(),
         }
     }
 }

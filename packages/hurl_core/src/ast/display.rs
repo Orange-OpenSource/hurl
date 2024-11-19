@@ -74,7 +74,7 @@ impl fmt::Display for TemplateElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
             TemplateElement::String { value, .. } => value.clone(),
-            TemplateElement::Expression(value) => format!("{{{{{value}}}}}"),
+            TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}"),
         };
         write!(f, "{s}")
     }
@@ -96,9 +96,21 @@ impl fmt::Display for Float {
     }
 }
 
+impl fmt::Display for Placeholder {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.expr)
+    }
+}
+
 impl fmt::Display for Expr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.variable.name)
+        write!(f, "{}", self.variable)
+    }
+}
+
+impl fmt::Display for Variable {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name)
     }
 }
 
@@ -181,7 +193,7 @@ impl fmt::Display for BooleanOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             BooleanOption::Literal(v) => write!(f, "{}", v),
-            BooleanOption::Expression(v) => write!(f, "{}", v),
+            BooleanOption::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }
@@ -190,7 +202,7 @@ impl fmt::Display for NaturalOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             NaturalOption::Literal(v) => write!(f, "{}", v),
-            NaturalOption::Expression(v) => write!(f, "{}", v),
+            NaturalOption::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }
@@ -199,7 +211,7 @@ impl fmt::Display for CountOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             CountOption::Literal(v) => write!(f, "{}", v),
-            CountOption::Expression(v) => write!(f, "{}", v),
+            CountOption::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }
@@ -208,7 +220,7 @@ impl fmt::Display for DurationOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             DurationOption::Literal(v) => write!(f, "{}", v),
-            DurationOption::Expression(v) => write!(f, "{}", v),
+            DurationOption::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }
@@ -307,12 +319,14 @@ mod tests {
         }
     }
 
-    fn variable_expr() -> Expr {
-        Expr {
+    fn variable_placeholder() -> Placeholder {
+        Placeholder {
             space0: whitespace(),
-            variable: Variable {
-                name: "name".to_string(),
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            expr: Expr {
+                variable: Variable {
+                    name: "name".to_string(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
             },
             space1: whitespace(),
         }
@@ -326,7 +340,7 @@ mod tests {
                     value: "Hello ".to_string(),
                     encoded: "Hello ".to_string(),
                 },
-                TemplateElement::Expression(variable_expr()),
+                TemplateElement::Placeholder(variable_placeholder()),
                 TemplateElement::String {
                     value: "!".to_string(),
                     encoded: "!".to_string(),

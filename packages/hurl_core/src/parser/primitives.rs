@@ -631,14 +631,16 @@ mod tests {
                             value: "hello ".to_string(),
                             encoded: "hello ".to_string(),
                         },
-                        TemplateElement::Expression(Expr {
+                        TemplateElement::Placeholder(Placeholder {
                             space0: Whitespace {
                                 value: String::new(),
                                 source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 18)),
                             },
-                            variable: Variable {
-                                name: "name".to_string(),
-                                source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 22)),
+                            expr: Expr {
+                                variable: Variable {
+                                    name: "name".to_string(),
+                                    source_info: SourceInfo::new(Pos::new(1, 18), Pos::new(1, 22)),
+                                }
                             },
                             space1: Whitespace {
                                 value: String::new(),
@@ -683,14 +685,16 @@ mod tests {
                 },
                 key: Template {
                     delimiter: None,
-                    elements: vec![TemplateElement::Expression(Expr {
+                    elements: vec![TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                         },
-                        variable: Variable {
-                            name: "key".to_string(),
-                            source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 6))
+                        expr: Expr {
+                            variable: Variable {
+                                name: "key".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 6))
+                            }
                         },
                         space1: Whitespace {
                             value: String::new(),

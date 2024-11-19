@@ -17,7 +17,6 @@
  */
 use crate::ast::*;
 use crate::parser::error::*;
-use crate::parser::primitives::*;
 use crate::parser::ParseResult;
 use crate::reader::Reader;
 
@@ -25,14 +24,8 @@ use crate::reader::Reader;
 ///
 /// Currently, an expression can only be found inside a template.
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
-    let space0 = zero_or_more_spaces(reader)?;
     let variable = variable_name(reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    Ok(Expr {
-        space0,
-        variable,
-        space1,
-    })
+    Ok(Expr { variable })
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {

@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, NaturalOption,
-    Number as AstNumber, OptionKind, SectionValue, VariableDefinition, VariableValue,
+    Number as AstNumber, OptionKind, Placeholder, SectionValue, VariableDefinition, VariableValue,
 };
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
@@ -317,17 +317,19 @@ fn eval_boolean_option(
 ) -> Result<bool, RunnerError> {
     match boolean_value {
         BooleanOption::Literal(value) => Ok(*value),
-        BooleanOption::Expression(expr) => match expr::eval(expr, variables)? {
-            Value::Bool(value) => Ok(value),
-            v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
-                    value: v.format(),
-                    expecting: "boolean".to_string(),
-                };
-                Err(RunnerError::new(expr.variable.source_info, kind, false))
+        BooleanOption::Placeholder(Placeholder { expr, .. }) => {
+            match expr::eval(expr, variables)? {
+                Value::Bool(value) => Ok(value),
+                v => {
+                    let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                        name: expr.variable.name.clone(),
+                        value: v.format(),
+                        expecting: "boolean".to_string(),
+                    };
+                    Err(RunnerError::new(expr.variable.source_info, kind, false))
+                }
             }
-        },
+        }
     }
 }
 
@@ -337,28 +339,30 @@ fn eval_natural_option(
 ) -> Result<u64, RunnerError> {
     match natural_value {
         NaturalOption::Literal(value) => Ok(*value),
-        NaturalOption::Expression(expr) => match expr::eval(expr, variables)? {
-            Value::Number(Number::Integer(value)) => {
-                if value > 0 {
-                    Ok(value as u64)
-                } else {
+        NaturalOption::Placeholder(Placeholder { expr, .. }) => {
+            match expr::eval(expr, variables)? {
+                Value::Number(Number::Integer(value)) => {
+                    if value > 0 {
+                        Ok(value as u64)
+                    } else {
+                        let kind = RunnerErrorKind::TemplateVariableInvalidType {
+                            name: expr.variable.name.clone(),
+                            value: format!("integer <{value}>"),
+                            expecting: "integer > 0".to_string(),
+                        };
+                        Err(RunnerError::new(expr.variable.source_info, kind, false))
+                    }
+                }
+                v => {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
                         name: expr.variable.name.clone(),
-                        value: format!("integer <{value}>"),
-                        expecting: "integer > 0".to_string(),
+                        value: v.format(),
+                        expecting: "integer".to_string(),
                     };
                     Err(RunnerError::new(expr.variable.source_info, kind, false))
                 }
             }
-            v => {
-                let kind = RunnerErrorKind::TemplateVariableInvalidType {
-                    name: expr.variable.name.clone(),
-                    value: v.format(),
-                    expecting: "integer".to_string(),
-                };
-                Err(RunnerError::new(expr.variable.source_info, kind, false))
-            }
-        },
+        }
     }
 }
 
@@ -368,7 +372,7 @@ fn eval_count_option(
 ) -> Result<Count, RunnerError> {
     match count_value {
         CountOption::Literal(repeat) => Ok(*repeat),
-        CountOption::Expression(expr) => match expr::eval(expr, variables)? {
+        CountOption::Placeholder(Placeholder { expr, .. }) => match expr::eval(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value == -1 {
                     Ok(Count::Infinite)
@@ -411,7 +415,8 @@ fn eval_duration_option(
                 DurationUnit::Minute => value.value * 1000 * 60,
             }
         }
-        DurationOption::Expression(expr) => match expr::eval(expr, variables)? {
+        DurationOption::Placeholder(Placeholder { expr, .. }) => match expr::eval(expr, variables)?
+        {
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
                     let kind = RunnerErrorKind::TemplateVariableInvalidType {
@@ -466,7 +471,7 @@ fn eval_number(number: &AstNumber) -> Value {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
+    use hurl_core::ast::{Expr, Placeholder, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::{Duration, DurationUnit};
 
@@ -475,14 +480,16 @@ mod tests {
 
     fn verbose_option_template() -> BooleanOption {
         // {{verbose}}
-        BooleanOption::Expression(Expr {
+        BooleanOption::Placeholder(Placeholder {
             space0: Whitespace {
                 value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
-            variable: Variable {
-                name: "verbose".to_string(),
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            expr: Expr {
+                variable: Variable {
+                    name: "verbose".to_string(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
             },
             space1: Whitespace {
                 value: String::new(),
@@ -493,14 +500,16 @@ mod tests {
 
     fn retry_option_template() -> DurationOption {
         // {{retry}}
-        DurationOption::Expression(Expr {
+        DurationOption::Placeholder(Placeholder {
             space0: Whitespace {
                 value: String::new(),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
-            variable: Variable {
-                name: "retry".to_string(),
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            expr: Expr {
+                variable: Variable {
+                    name: "retry".to_string(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
             },
             space1: Whitespace {
                 value: String::new(),

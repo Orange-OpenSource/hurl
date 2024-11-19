@@ -258,7 +258,7 @@ impl HtmlFormatter {
     fn fmt_count_option(&mut self, count_option: &CountOption) {
         match count_option {
             CountOption::Literal(repeat) => self.fmt_count(*repeat),
-            CountOption::Expression(expr) => self.fmt_expr(expr),
+            CountOption::Placeholder(placeholder) => self.fmt_placeholder(placeholder),
         }
     }
 
@@ -549,7 +549,7 @@ impl HtmlFormatter {
             PredicateValue::File(value) => self.fmt_file(value),
             PredicateValue::Hex(value) => self.fmt_hex(value),
             PredicateValue::Base64(value) => self.fmt_base64(value),
-            PredicateValue::Expression(value) => self.fmt_expr(value),
+            PredicateValue::Placeholder(value) => self.fmt_placeholder(value),
             PredicateValue::Null => self.fmt_span("null", "null"),
             PredicateValue::Regex(value) => self.fmt_regex(value),
         };
@@ -685,14 +685,14 @@ impl HtmlFormatter {
     fn fmt_bool_option(&mut self, value: &BooleanOption) {
         match value {
             BooleanOption::Literal(value) => self.fmt_span("boolean", &value.to_string()),
-            BooleanOption::Expression(value) => self.fmt_expr(value),
+            BooleanOption::Placeholder(value) => self.fmt_placeholder(value),
         }
     }
 
     fn fmt_natural_option(&mut self, value: &NaturalOption) {
         match value {
             NaturalOption::Literal(value) => self.fmt_span("number", &value.to_string()),
-            NaturalOption::Expression(value) => self.fmt_expr(value),
+            NaturalOption::Placeholder(value) => self.fmt_placeholder(value),
         }
     }
 
@@ -704,7 +704,7 @@ impl HtmlFormatter {
                     self.fmt_span("unit", &unit.to_string());
                 }
             }
-            DurationOption::Expression(value) => self.fmt_expr(value),
+            DurationOption::Placeholder(value) => self.fmt_placeholder(value),
         }
     }
 
@@ -777,9 +777,9 @@ impl HtmlFormatter {
         self.fmt_string(&escape_xml(&s));
     }
 
-    fn fmt_expr(&mut self, expr: &Expr) {
-        let expr = format!("{{{{{}}}}}", &expr.to_string());
-        self.fmt_span("expr", &expr);
+    fn fmt_placeholder(&mut self, placeholder: &Placeholder) {
+        let placeholder = format!("{{{{{}}}}}", &placeholder.to_string());
+        self.fmt_span("expr", &placeholder);
     }
 
     fn fmt_filter(&mut self, filter: &Filter) {
@@ -879,7 +879,7 @@ impl Template {
         for element in self.elements.iter() {
             let elem_str = match element {
                 TemplateElement::String { encoded, .. } => encoded.to_string(),
-                TemplateElement::Expression(expr) => format!("{{{{{expr}}}}}"),
+                TemplateElement::Placeholder(expr) => format!("{{{{{expr}}}}}"),
             };
             s.push_str(elem_str.as_str());
         }

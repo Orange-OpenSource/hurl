@@ -21,11 +21,17 @@ use crate::parser::primitives::*;
 use crate::reader::Reader;
 
 /// Parse a placeholder {{ expr }}
-pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
+pub fn parse(reader: &mut Reader) -> ParseResult<Placeholder> {
     try_literal("{{", reader)?;
-    let expression = expr::parse(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let expr = expr::parse(reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
     literal("}}", reader)?;
-    Ok(expression)
+    Ok(Placeholder {
+        space0,
+        expr,
+        space1,
+    })
 }
 
 #[cfg(test)]
@@ -34,18 +40,20 @@ mod tests {
     use crate::{parser::ParseErrorKind, reader::Pos};
 
     #[test]
-    fn test_expr() {
+    fn test_ok() {
         let mut reader = Reader::new("{{ name}}");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Expr {
+            Placeholder {
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
-                variable: Variable {
-                    name: String::from("name"),
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 8)),
+                expr: Expr {
+                    variable: Variable {
+                        name: String::from("name"),
+                        source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 8)),
+                    },
                 },
                 space1: Whitespace {
                     value: String::new(),
@@ -56,7 +64,7 @@ mod tests {
     }
 
     #[test]
-    fn test_expr_error() {
+    fn test_error() {
         let mut reader = Reader::new("{{host>}}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
@@ -70,7 +78,7 @@ mod tests {
     }
 
     #[test]
-    fn test_expr_error_eof() {
+    fn test_error_eof() {
         let mut reader = Reader::new("{{host");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });

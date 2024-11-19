@@ -323,14 +323,16 @@ mod tests {
                         value: "hello ".to_string(),
                         encoded: "hello\\u{20}".to_string(),
                     },
-                    TemplateElement::Expression(Expr {
+                    TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 14)),
                         },
-                        variable: Variable {
-                            name: "name".to_string(),
-                            source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 18)),
+                        expr: Expr {
+                            variable: Variable {
+                                name: "name".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 18)),
+                            }
                         },
                         space1: Whitespace {
                             value: String::new(),

@@ -114,7 +114,7 @@ impl PredicateValue {
     }
 
     pub fn is_expression(&self) -> bool {
-        matches!(self, PredicateValue::Expression(_))
+        matches!(self, PredicateValue::Placeholder(_))
     }
 }
 
@@ -520,14 +520,16 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::Expression(Expr {
+                value: PredicateValue::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                     },
-                    variable: Variable {
-                        name: "count".to_string(),
-                        source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 11)),
+                    expr: Expr {
+                        variable: Variable {
+                            name: "count".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 11)),
+                        }
                     },
                     space1: Whitespace {
                         value: String::new(),

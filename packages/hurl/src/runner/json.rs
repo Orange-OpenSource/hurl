@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
+use hurl_core::ast::{
+    JsonListElement, JsonObjectElement, JsonValue, Placeholder, Template, TemplateElement,
+};
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number};
 use hurl_core::reader::Reader;
 
@@ -62,8 +64,8 @@ pub fn eval_json_value(
                 Ok(format!("{{{}}}", elems_string.join(",")))
             }
         }
-        JsonValue::Expression(exp) => {
-            let s = expr::render(exp, variables)?;
+        JsonValue::Placeholder(Placeholder { expr, .. }) => {
+            let s = expr::render(expr, variables)?;
 
             // The String can only be null, a bool, a number
             // It will be easier when your variables value have a type
@@ -81,7 +83,7 @@ pub fn eval_json_value(
                 return Ok(s);
             }
             let kind = RunnerErrorKind::InvalidJson { value: s };
-            Err(RunnerError::new(exp.variable.source_info, kind, false))
+            Err(RunnerError::new(expr.variable.source_info, kind, false))
         }
     }
 }
@@ -150,7 +152,7 @@ fn eval_json_template_element(
 ) -> Result<String, RunnerError> {
     match template_element {
         TemplateElement::String { encoded, .. } => Ok(encoded.clone()),
-        TemplateElement::Expression(expr) => {
+        TemplateElement::Placeholder(Placeholder { expr, .. }) => {
             let s = expr::render(expr, variables)?;
             Ok(encode_json_string(&s))
         }
@@ -190,14 +192,16 @@ mod tests {
                     value: "Hello ".to_string(),
                     encoded: "Hello\\u0020".to_string(),
                 },
-                TemplateElement::Expression(Expr {
+                TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
-                    variable: Variable {
-                        name: "name".to_string(),
-                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                    expr: Expr {
+                        variable: Variable {
+                            name: "name".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                        },
                     },
                     space1: Whitespace {
                         value: String::new(),
@@ -435,11 +439,13 @@ mod tests {
                             value: "Hello ".to_string(),
                             encoded: "Hello ".to_string(),
                         },
-                        TemplateElement::Expression(Expr {
+                        TemplateElement::Placeholder(Placeholder {
                             space0: whitespace(),
-                            variable: Variable {
-                                name: "quote".to_string(),
-                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            expr: Expr {
+                                variable: Variable {
+                                    name: "quote".to_string(),
+                                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                                },
                             },
                             space1: whitespace(),
                         }),

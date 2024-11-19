@@ -48,7 +48,7 @@ pub fn eval_predicate_value(
         }
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
-        PredicateValue::Expression(expr) => {
+        PredicateValue::Placeholder(Placeholder { expr, .. }) => {
             let value = eval(expr, variables)?;
             Ok(value)
         }

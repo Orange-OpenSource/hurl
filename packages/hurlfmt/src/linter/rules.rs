@@ -432,7 +432,7 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
         PredicateValue::File(value) => PredicateValue::File(lint_file(value)),
         PredicateValue::Hex(value) => PredicateValue::Hex(lint_hex(value)),
         PredicateValue::Base64(value) => PredicateValue::Base64(lint_base64(value)),
-        PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),
+        PredicateValue::Placeholder(value) => PredicateValue::Placeholder(value.clone()),
         PredicateValue::Regex(value) => PredicateValue::Regex(value.clone()),
     }
 }
@@ -699,7 +699,7 @@ fn lint_duration_option(
         DurationOption::Literal(duration) => {
             DurationOption::Literal(lint_duration(duration, default_unit))
         }
-        DurationOption::Expression(expr) => DurationOption::Expression(expr.clone()),
+        DurationOption::Placeholder(expr) => DurationOption::Placeholder(expr.clone()),
     }
 }
 

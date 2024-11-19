@@ -629,7 +629,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::File(value) => value.tokenize(),
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
-            PredicateValue::Expression(value) => value.tokenize(),
+            PredicateValue::Placeholder(value) => value.tokenize(),
             PredicateValue::Regex(value) => value.tokenize(),
         }
     }
@@ -752,7 +752,7 @@ impl Tokenizable for TemplateElement {
             TemplateElement::String { encoded, .. } => {
                 vec![Token::String(encoded.to_string())]
             }
-            TemplateElement::Expression(value) => {
+            TemplateElement::Placeholder(value) => {
                 let mut tokens: Vec<Token> = vec![];
                 tokens.append(&mut value.tokenize());
                 tokens
@@ -761,14 +761,20 @@ impl Tokenizable for TemplateElement {
     }
 }
 
-impl Tokenizable for Expr {
+impl Tokenizable for Placeholder {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::CodeDelimiter(String::from("{{"))];
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::CodeVariable(self.variable.name.clone()));
+        tokens.append(&mut self.expr.tokenize());
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::CodeDelimiter(String::from("}}")));
         tokens
+    }
+}
+
+impl Tokenizable for Expr {
+    fn tokenize(&self) -> Vec<Token> {
+        vec![Token::CodeVariable(self.variable.name.clone())]
     }
 }
 
@@ -847,7 +853,7 @@ impl Tokenizable for JsonValue {
             JsonValue::Null => {
                 tokens.push(Token::Keyword("null".to_string()));
             }
-            JsonValue::Expression(exp) => {
+            JsonValue::Placeholder(exp) => {
                 tokens.append(&mut exp.tokenize());
             }
         }
@@ -945,7 +951,7 @@ impl Tokenizable for BooleanOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             BooleanOption::Literal(value) => vec![Token::Boolean(value.to_string())],
-            BooleanOption::Expression(expr) => expr.tokenize(),
+            BooleanOption::Placeholder(expr) => expr.tokenize(),
         }
     }
 }
@@ -954,7 +960,7 @@ impl Tokenizable for NaturalOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             NaturalOption::Literal(value) => vec![Token::Number(value.to_string())],
-            NaturalOption::Expression(expr) => expr.tokenize(),
+            NaturalOption::Placeholder(expr) => expr.tokenize(),
         }
     }
 }
@@ -963,7 +969,7 @@ impl Tokenizable for CountOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             CountOption::Literal(retry) => retry.tokenize(),
-            CountOption::Expression(expr) => expr.tokenize(),
+            CountOption::Placeholder(expr) => expr.tokenize(),
         }
     }
 }
@@ -981,7 +987,7 @@ impl Tokenizable for DurationOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             DurationOption::Literal(value) => value.tokenize(),
-            DurationOption::Expression(expr) => expr.tokenize(),
+            DurationOption::Placeholder(expr) => expr.tokenize(),
         }
     }
 }
