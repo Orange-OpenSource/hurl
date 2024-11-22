@@ -21,6 +21,8 @@ use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
 use crate::runner::VariableSet;
 
+use super::function;
+
 /// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {
     match &expr.kind {
@@ -34,7 +36,7 @@ pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> 
                 Err(RunnerError::new(variable.source_info, kind, false))
             }
         }
-        ExprKind::Function(_function) => todo!(),
+        ExprKind::Function(fct) => function::eval(fct),
     }
 }
 

@@ -41,6 +41,7 @@ mod error;
 mod event;
 mod expr;
 mod filter;
+mod function;
 mod hurl_file;
 mod json;
 mod multiline;
