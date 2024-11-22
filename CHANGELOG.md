@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@cemoktra](https://github.com/cemoktra),
 [@zikani03](https://github.com/zikani03),
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@jmvargas](https://github.com/jmvargas),
@@ -19,6 +20,7 @@ Breaking Changes:
 
 Enhancements:
 
+* Implement function newUuid [#973](https://github.com/Orange-OpenSource/hurl/issues/973)
 * Implement --limit-rate from curl [#1222](https://github.com/Orange-OpenSource/hurl/issues/1222)
 * Add --curl option to export executed requests to curl commands [#2679](https://github.com/Orange-OpenSource/hurl/issues/2679)
 * Configure --connect-timeout per request [#3163](https://github.com/Orange-OpenSource/hurl/issues/3163)
