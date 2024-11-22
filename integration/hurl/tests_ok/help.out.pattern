@@ -16,19 +16,12 @@ HTTP options:
           CA certificate to verify peer against (PEM format)
   -E, --cert <CERTIFICATE[:PASSWORD]>
           Client certificate file and password
-      --key <KEY>
-          Private key file name
       --compressed
           Request compressed response (using deflate or gzip)
       --connect-timeout <SECONDS>
           Maximum time allowed for connection [default: 300]
       --connect-to <HOST1:PORT1:HOST2:PORT2>
           For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead
-  -L, --location
-          Follow redirects
-      --location-trusted
-          Follow redirects but allows sending the name + password to all hosts that the site may
-          redirect to
   -0, --http1.0
           Tell Hurl to use HTTP version 1.0
       --http1.1
@@ -45,8 +38,15 @@ HTTP options:
   -6, --ipv6
           Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
           IPv4
+      --key <KEY>
+          Private key file name
       --limit-rate <SPEED>
           Specify the maximum transfer rate in bytes/second, for both downloads and uploads
+  -L, --location
+          Follow redirects
+      --location-trusted
+          Follow redirects but allows sending the name + password to all hosts that the site may
+          redirect to
       --max-filesize <BYTES>
           Specify the maximum size in bytes of a file to download
       --max-redirs <NUM>
@@ -65,10 +65,10 @@ HTTP options:
           (Windows) Tell Hurl to disable certificate revocation checks
       --unix-socket <PATH>
           (HTTP) Connect through this Unix domain socket, instead of using the network
-  -A, --user-agent <NAME>
-          Specify the User-Agent string to send to the HTTP server
   -u, --user <USER:PASSWORD>
           Add basic Authentication header to each request
+  -A, --user-agent <NAME>
+          Specify the User-Agent string to send to the HTTP server
 
 Output options:
       --color                  Colorize output
@@ -102,6 +102,12 @@ Run options:
       --variable <NAME=VALUE>          Define a variable
       --variables-file <FILE>          Define a properties file in which you define your variables
 
+Report options:
+      --report-html <DIR>    Generate HTML report to DIR
+      --report-json <DIR>    Generate JSON report to DIR
+      --report-junit <FILE>  Write a JUnit XML report to FILE
+      --report-tap <FILE>    Write a TAP report to FILE
+
 Other options:
   -b, --cookie <FILE>      Read cookies from FILE
   -c, --cookie-jar <FILE>  Write cookies to FILE after running the session (only for one session)
@@ -111,9 +117,3 @@ Other options:
   -n, --netrc              Must read .netrc for username and password
       --netrc-file <FILE>  Specify FILE for .netrc
       --netrc-optional     Use either .netrc or the URL
-
-Report options:
-      --report-html <DIR>    Generate HTML report to DIR
-      --report-json <DIR>    Generate JSON report to DIR
-      --report-junit <FILE>  Write a JUnit XML report to FILE
-      --report-tap <FILE>    Write a TAP report to FILE
