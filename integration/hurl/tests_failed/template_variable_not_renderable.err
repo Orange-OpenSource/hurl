@@ -1,27 +1,27 @@
-error: Unrenderable variable
+error: Unrenderable expression
   --> tests_failed/template_variable_not_renderable.hurl:12:9
    |
    | GET http://localhost:8000/undefined
    | ...
 12 | list: {{list}}
-   |         ^^^^ variable <list> with value [1,2,3] can not be rendered
+   |         ^^^^ expression with value [1,2,3] can not be rendered
    |
 
-error: Unrenderable variable
+error: Unrenderable expression
   --> tests_failed/template_variable_not_renderable.hurl:17:11
    |
    | GET http://localhost:8000/undefined
    | ...
 17 | object: {{object}}
-   |           ^^^^^^ variable <object> with value Object() can not be rendered
+   |           ^^^^^^ expression with value Object() can not be rendered
    |
 
-error: Unrenderable variable
+error: Unrenderable expression
   --> tests_failed/template_variable_not_renderable.hurl:22:12
    |
    | GET http://localhost:8000/undefined
    | ...
 22 | nodeset: {{nodeset}}
-   |            ^^^^^^^ variable <nodeset> with value Nodeset(size=1) can not be rendered
+   |            ^^^^^^^ expression with value Nodeset(size=1) can not be rendered
    |
 

@@ -108,9 +108,7 @@ pub enum RunnerErrorKind {
     TemplateVariableNotDefined {
         name: String,
     },
-
-    UnrenderableVariable {
-        name: String,
+    UnrenderableExpression {
         value: String,
     },
     /// Unauthorized file access, check `--file-root` option.
@@ -157,7 +155,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::UnauthorizedFileAccess { .. } => {
                 "Unauthorized file access".to_string()
             }
-            RunnerErrorKind::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
+            RunnerErrorKind::UnrenderableExpression { .. } => "Unrenderable expression".to_string(),
         }
     }
 
@@ -306,8 +304,8 @@ impl DisplaySourceError for RunnerError {
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
-            RunnerErrorKind::UnrenderableVariable { name, value } => {
-                let message = &format!("variable <{name}> with value {value} can not be rendered");
+            RunnerErrorKind::UnrenderableExpression { value } => {
+                let message = &format!("expression with value {value} can not be rendered");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

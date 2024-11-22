@@ -248,12 +248,12 @@
 [1;34m    |[0m[1;31m      ^^^^^^^^^^ unauthorized access to file /root/file, check --file-root option[0m
 [1;34m    |[0m
 
-[1;31merror[0m: [1mUnrenderable variable[0m
+[1;31merror[0m: [1mUnrenderable expression[0m
    [1;34m-->[0m tests_failed/runner_errors.hurl:165:4
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m165 |[0m `{{list}}`
-[1;34m    |[0m[1;31m    ^^^^ variable <list> with value [1,2,3] can not be rendered[0m
+[1;34m    |[0m[1;31m    ^^^^ expression with value [1,2,3] can not be rendered[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mDecompression error[0m

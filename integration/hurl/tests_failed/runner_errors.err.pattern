@@ -248,12 +248,12 @@ error: Unauthorized file access
     |      ^^^^^^^^^^ unauthorized access to file /root/file, check --file-root option
     |
 
-error: Unrenderable variable
+error: Unrenderable expression
    --> tests_failed/runner_errors.hurl:165:4
     |
     | GET http://localhost:8000/runner_errors
 165 | `{{list}}`
-    |    ^^^^ variable <list> with value [1,2,3] can not be rendered
+    |    ^^^^ expression with value [1,2,3] can not be rendered
     |
 
 error: Decompression error

@@ -124,8 +124,7 @@ mod tests {
         );
         assert_eq!(
             error.kind,
-            RunnerErrorKind::UnrenderableVariable {
-                name: "name".to_string(),
+            RunnerErrorKind::UnrenderableExpression {
                 value: "[1,2]".to_string()
             }
         );

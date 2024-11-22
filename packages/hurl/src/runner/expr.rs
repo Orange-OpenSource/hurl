@@ -40,22 +40,15 @@ pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> 
 
 /// Render the expression `expr` with `variables` map, returns a [`String`] on success or an [`RunnerError`] .
 pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerError> {
-    match &expr.kind {
-        ExprKind::Variable(variable) => {
-            let source_info = variable.source_info;
-            let name = &variable.name;
-            let value = eval(expr, variables)?;
-            if value.is_renderable() {
-                Ok(value.to_string())
-            } else {
-                let kind = RunnerErrorKind::UnrenderableVariable {
-                    name: name.to_string(),
-                    value: value.to_string(),
-                };
-                Err(RunnerError::new(source_info, kind, false))
-            }
-        }
-        ExprKind::Function(_) => todo!(),
+    let source_info = expr.source_info;
+    let value = eval(expr, variables)?;
+    if value.is_renderable() {
+        Ok(value.to_string())
+    } else {
+        let kind = RunnerErrorKind::UnrenderableExpression {
+            value: value.to_string(),
+        };
+        Err(RunnerError::new(source_info, kind, false))
     }
 }
 
