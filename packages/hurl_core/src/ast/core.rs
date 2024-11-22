@@ -719,6 +719,7 @@ pub struct Variable {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Function {
+    NewDate,
     NewUuid,
 }
 

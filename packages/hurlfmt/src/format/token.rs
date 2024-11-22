@@ -796,6 +796,7 @@ impl Tokenizable for Variable {
 impl Tokenizable for Function {
     fn tokenize(&self) -> Vec<Token> {
         match self {
+            Function::NewDate => vec![Token::CodeVariable("newDate".to_string())],
             Function::NewUuid => vec![Token::CodeVariable("newUuid".to_string())],
         }
     }

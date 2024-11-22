@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/hello","query_string_params":[{"name":"uuid","value":"{{newUuid}}"}]}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/hello","query_string_params":[{"name":"uuid","value":"{{newUuid}}"},{"name":"now","value":"{{newDate}}"}]}}]}

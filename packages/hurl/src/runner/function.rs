@@ -1,3 +1,4 @@
+use chrono::Utc;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2024 Orange
@@ -24,6 +25,10 @@ use crate::runner::value::Value;
 /// Evaluates the function `function`, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(function: &Function) -> Result<Value, RunnerError> {
     match &function {
+        Function::NewDate => {
+            let now = Utc::now();
+            Ok(Value::Date(now))
+        }
         Function::NewUuid => {
             let uuid = Uuid::new_v4();
             Ok(Value::String(uuid.to_string()))

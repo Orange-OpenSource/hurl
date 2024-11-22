@@ -126,6 +126,7 @@ impl fmt::Display for Variable {
 impl fmt::Display for Function {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            Function::NewDate => write!(f, "newDate"),
             Function::NewUuid => write!(f, "newUuid"),
         }
     }

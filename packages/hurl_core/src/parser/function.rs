@@ -27,6 +27,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Function> {
     let start = reader.cursor();
     let function_name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
     match function_name.as_str() {
+        "newDate" => Ok(Function::NewDate),
         "newUuid" => Ok(Function::NewUuid),
         _ => Err(ParseError::new(
             start.pos,
