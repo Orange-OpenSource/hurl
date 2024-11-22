@@ -44,8 +44,8 @@ pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> 
 pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerError> {
     let source_info = expr.source_info;
     let value = eval(expr, variables)?;
-    if value.is_renderable() {
-        Ok(value.to_string())
+    if let Some(s) = value.render() {
+        Ok(s)
     } else {
         let kind = RunnerErrorKind::UnrenderableExpression {
             value: value.to_string(),
@@ -65,6 +65,7 @@ mod tests {
     #[test]
     fn test_render_expression() {
         let mut variables = VariableSet::new();
+
         variables.insert("status".to_string(), Value::Bool(true));
         let expr = Expr {
             kind: ExprKind::Variable(Variable {
@@ -75,5 +76,22 @@ mod tests {
         };
         assert_eq!(eval(&expr, &variables).unwrap(), Value::Bool(true));
         assert_eq!(render(&expr, &variables).unwrap(), "true");
+
+        let data_chrono = chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
+            .unwrap()
+            .into();
+        variables.insert("now".to_string(), Value::Date(data_chrono));
+        let expr = Expr {
+            kind: ExprKind::Variable(Variable {
+                name: "now".to_string(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            }),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+        };
+        assert_eq!(eval(&expr, &variables).unwrap(), Value::Date(data_chrono));
+        assert_eq!(
+            render(&expr, &variables).unwrap(),
+            "2023-01-10T08:29:52+00:00"
+        );
     }
 }

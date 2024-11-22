@@ -18,7 +18,6 @@
 use hurl_core::ast::*;
 
 use crate::runner::error::RunnerError;
-use crate::runner::Value;
 use crate::runner::{expr, VariableSet};
 
 /// Renders to string a `template` given a map of variables.
@@ -44,22 +43,13 @@ fn eval_template_element(
     }
 }
 
-impl Value {
-    pub fn is_renderable(&self) -> bool {
-        matches!(
-            self,
-            Value::Number(_) | Value::Bool(_) | Value::String(_) | Value::Null
-        )
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
 
     use super::*;
-    use crate::runner::{Number, RunnerErrorKind};
+    use crate::runner::{Number, RunnerErrorKind, Value};
 
     fn template_element_expression() -> TemplateElement {
         // {{name}}

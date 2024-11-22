@@ -114,6 +114,17 @@ impl Value {
     pub fn is_scalar(&self) -> bool {
         !matches!(self, Value::Nodeset(_) | Value::List(_))
     }
+
+    pub fn render(&self) -> Option<String> {
+        match self {
+            Value::Bool(v) => Some(v.to_string()),
+            Value::Date(d) => Some(d.to_rfc3339()),
+            Value::Null => Some("null".to_string()),
+            Value::Number(v) => Some(v.to_string()),
+            Value::String(s) => Some(s.clone()),
+            _ => None,
+        }
+    }
 }
 
 #[cfg(test)]
