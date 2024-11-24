@@ -34,6 +34,7 @@ Enhancements:
 * Support more JSON / XML "like" mimetypes with debug output [#3343](https://github.com/Orange-OpenSource/hurl/issues/3343)
 * Add curl debug command to --json and JSON report [#3374](https://github.com/Orange-OpenSource/hurl/issues/3374)
 * Add curl debug command to HTML report [#3386](https://github.com/Orange-OpenSource/hurl/issues/3386)
+* Render Date value [#3431](https://github.com/Orange-OpenSource/hurl/issues/3431)
 
 
 Bugs Fixed:
