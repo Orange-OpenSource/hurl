@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{SourceInfo, Template};
 use crate::combinator::one_or_more;
-use crate::parser::error::*;
-use crate::parser::primitives::*;
-use crate::parser::{template, ParseResult};
+use crate::parser::primitives::{hex_digit, literal, try_literal};
+use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 /// Steps:
@@ -241,10 +240,10 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
 
 #[cfg(test)]
 mod tests {
-    use std::time::SystemTime;
-
     use super::*;
+    use crate::ast::{Expr, ExprKind, Placeholder, TemplateElement, Variable, Whitespace};
     use crate::reader::Pos;
+    use std::time::SystemTime;
 
     #[test]
     fn test_unquoted_template_empty() {

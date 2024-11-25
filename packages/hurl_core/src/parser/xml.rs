@@ -22,8 +22,7 @@ use libxml::bindings::{
     xmlChar, xmlCreatePushParserCtxt, xmlFreeParserCtxt, xmlParseChunk, xmlSAXHandlerPtr,
 };
 
-use crate::parser::error::*;
-use crate::parser::ParseResult;
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 /// Parses a text buffer until a valid XML has been found.

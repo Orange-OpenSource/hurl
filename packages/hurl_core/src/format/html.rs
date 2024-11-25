@@ -15,10 +15,17 @@
  * limitations under the License.
  *
  */
-use std::fmt::Display;
-
-use crate::ast::*;
+use crate::ast::{
+    Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
+    CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FileParam,
+    FileValue, Filter, FilterValue, GraphQl, GraphQlVariables, Hex, HurlFile, JsonValue, KeyValue,
+    LineTerminator, Method, MultilineString, MultilineStringKind, MultipartParam, NaturalOption,
+    OptionKind, Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query,
+    QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, Template,
+    TemplateElement, VariableDefinition, VariableValue, Version, Whitespace,
+};
 use crate::typing::Count;
+use std::fmt::Display;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
@@ -945,6 +952,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{JsonObjectElement, SourceInfo, Text};
     use crate::reader::Pos;
 
     #[test]

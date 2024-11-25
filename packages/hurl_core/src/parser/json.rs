@@ -17,10 +17,9 @@
  */
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
 use crate::combinator::{choice, non_recover, ParseError as ParseErrorTrait};
-use crate::parser::error::*;
-use crate::parser::primitives::*;
-use crate::parser::template::*;
-use crate::parser::ParseResult;
+use crate::parser::primitives::{boolean, hex_digit, literal, try_literal};
+use crate::parser::template::EncodedString;
+use crate::parser::{templatize, JsonErrorVariant, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
 
 use super::placeholder;

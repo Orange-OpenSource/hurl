@@ -15,10 +15,13 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{
+    GraphQl, GraphQlVariables, MultilineString, MultilineStringAttribute, MultilineStringKind,
+    SourceInfo, Template, Text, Whitespace,
+};
 use crate::combinator::{choice, optional, zero_or_more};
 use crate::parser::json::object_value;
-use crate::parser::primitives::*;
+use crate::parser::primitives::{literal, newline, try_literal, zero_or_more_spaces};
 use crate::parser::string::escape_char;
 use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
@@ -266,6 +269,7 @@ fn multiline_string_value(reader: &mut Reader, escape: bool) -> ParseResult<Temp
 
 #[cfg(test)]
 mod tests {
+    use crate::ast::{JsonObjectElement, JsonValue, TemplateElement};
     use crate::reader::Pos;
 
     use super::*;

@@ -15,9 +15,14 @@
  * limitations under the License.
  *
  */
+use crate::ast::{
+    BooleanOption, CookieAttribute, CookieAttributeName, CookiePath, CountOption, DurationOption,
+    Expr, ExprKind, Float, Function, Hex, Method, MultilineString, MultilineStringAttribute,
+    MultilineStringKind, NaturalOption, Number, Placeholder, PredicateFuncValue, Regex, Status,
+    StatusValue, Template, TemplateElement, Variable, VariableDefinition, VariableValue, Version,
+    VersionValue,
+};
 use core::fmt;
-
-use crate::ast::core::*;
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -328,6 +333,7 @@ impl PredicateFuncValue {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{CookieAttributeName, SourceInfo, Whitespace};
     use crate::reader::Pos;
 
     fn whitespace() -> Whitespace {

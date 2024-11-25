@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use std::cmp::Ordering;
-
-use hurl_core::ast::*;
+use hurl_core::ast::{Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo};
 use hurl_core::reader::Pos;
+use std::cmp::Ordering;
 
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
@@ -935,9 +934,11 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
-
     use super::{AssertResult, *};
+    use hurl_core::ast::{
+        Expr, ExprKind, Float, Placeholder, Regex, Template, TemplateElement, Variable, Whitespace,
+    };
+    use std::path::Path;
 
     fn whitespace() -> Whitespace {
         Whitespace {

@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{CertificateAttributeName, Query, QueryValue, RegexValue, SourceInfo};
 use crate::combinator::{choice, ParseError as ParseErrorTrait};
 use crate::parser::cookiepath::cookiepath;
-use crate::parser::primitives::*;
-use crate::parser::string::*;
+use crate::parser::primitives::{literal, one_or_more_spaces, regex, try_literal};
+use crate::parser::string::{quoted_oneline_string, quoted_template};
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
 
@@ -213,6 +213,10 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{
+        CookieAttribute, CookieAttributeName, CookiePath, Filter, FilterValue, Template,
+        TemplateElement, Whitespace,
+    };
     use crate::parser::filter::filters;
     use crate::reader::Pos;
 

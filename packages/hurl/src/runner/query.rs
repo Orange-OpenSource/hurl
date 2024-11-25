@@ -15,7 +15,10 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{
+    CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath, Query, QueryValue,
+    RegexValue, SourceInfo, Template,
+};
 use regex::Regex;
 use sha2::Digest;
 
@@ -448,7 +451,7 @@ impl Value {
 #[cfg(test)]
 pub mod tests {
     use hex_literal::hex;
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
     use super::*;

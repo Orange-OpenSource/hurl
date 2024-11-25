@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::Capture;
 
 use crate::http;
 use crate::runner::cache::BodyCache;
@@ -74,7 +74,9 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{
+        LineTerminator, Query, QueryValue, SourceInfo, Template, TemplateElement, Whitespace,
+    };
     use hurl_core::reader::Pos;
 
     use self::super::super::query;

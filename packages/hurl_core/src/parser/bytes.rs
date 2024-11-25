@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::Bytes;
 use crate::combinator::choice;
 use crate::parser::json::parse as parse_json;
 use crate::parser::multiline::multiline_string;
-use crate::parser::primitives::*;
 use crate::parser::string::backtick_template;
-use crate::parser::{xml, ParseResult};
+use crate::parser::{primitives, xml, ParseResult};
 use crate::reader::Reader;
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<Bytes> {
@@ -54,15 +53,15 @@ fn json_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
 }
 
 fn file_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
-    file(reader).map(Bytes::File)
+    primitives::file(reader).map(Bytes::File)
 }
 
 fn base64_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
-    base64(reader).map(Bytes::Base64)
+    primitives::base64(reader).map(Bytes::Base64)
 }
 
 fn hex_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
-    hex(reader).map(Bytes::Hex)
+    primitives::hex(reader).map(Bytes::Hex)
 }
 
 pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
@@ -77,6 +76,7 @@ fn string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
 mod tests {
     use super::super::error::*;
     use super::*;
+    use crate::ast::{JsonListElement, JsonValue, SourceInfo, Template, TemplateElement};
     use crate::reader::Pos;
 
     #[test]

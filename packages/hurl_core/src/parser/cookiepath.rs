@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{CookieAttribute, CookieAttributeName, CookiePath};
 use crate::combinator::optional;
-use crate::parser::error::*;
-use crate::parser::primitives::*;
-use crate::parser::string::*;
-use crate::parser::ParseResult;
+use crate::parser::primitives::{literal, try_literal, zero_or_more_spaces};
+use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
@@ -30,7 +28,7 @@ pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
     // relative tho the main reader.
     let s = reader.read_while(|c| c != '[');
     let mut template_reader = Reader::with_pos(s.as_str(), start);
-    let name = unquoted_template(&mut template_reader)?;
+    let name = string::unquoted_template(&mut template_reader)?;
     let attribute = optional(cookiepath_attribute, reader)?;
     Ok(CookiePath { name, attribute })
 }
@@ -71,7 +69,9 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttribute
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::SourceInfo;
+    use crate::ast::{
+        Expr, ExprKind, Placeholder, SourceInfo, Template, TemplateElement, Variable, Whitespace,
+    };
     use crate::reader::Pos;
 
     #[test]

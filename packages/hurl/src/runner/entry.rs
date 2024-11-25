@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{Entry, SourceInfo};
 
 use crate::http;
 use crate::http::{ClientOptions, CurlCmd};

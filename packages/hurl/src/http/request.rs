@@ -17,9 +17,9 @@
  */
 use std::fmt;
 
-use crate::http::core::*;
 use crate::http::header::{HeaderVec, COOKIE};
 use crate::http::url::Url;
+use crate::http::RequestCookie;
 
 /// Represents a runtime HTTP request.
 /// This is a real request, that has been executed by our HTTP client.

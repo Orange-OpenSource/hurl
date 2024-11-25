@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{Number, Placeholder, PredicateValue};
 
 use crate::runner::body::eval_file; // TODO move function out of body module
 use crate::runner::error::RunnerError;

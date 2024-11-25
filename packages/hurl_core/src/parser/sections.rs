@@ -15,15 +15,20 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{
+    Assert, Capture, Cookie, FileParam, FileValue, MultipartParam, Section, SectionValue,
+    SourceInfo, Whitespace,
+};
 use crate::combinator::{optional, recover, zero_or_more};
-use crate::parser::error::*;
 use crate::parser::filter::filters;
 use crate::parser::predicate::predicate;
-use crate::parser::primitives::*;
+use crate::parser::primitives::{
+    key_value, line_terminator, literal, one_or_more_spaces, optional_line_terminators,
+    try_literal, zero_or_more_spaces,
+};
 use crate::parser::query::query;
-use crate::parser::string::*;
-use crate::parser::{filename, key_string, option, ParseResult};
+use crate::parser::string::unquoted_template;
+use crate::parser::{filename, key_string, option, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
@@ -323,6 +328,10 @@ fn assert(reader: &mut Reader) -> ParseResult<Assert> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{
+        KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
+        PredicateValue, Query, QueryValue, Template, TemplateElement,
+    };
 
     #[test]
     fn test_section_name() {

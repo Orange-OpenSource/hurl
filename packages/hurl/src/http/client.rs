@@ -30,19 +30,19 @@ use encoding::{DecoderTrap, Encoding};
 use hurl_core::typing::Count;
 
 use crate::http::certificate::Certificate;
-use crate::http::core::*;
 use crate::http::curl_cmd::CurlCmd;
 use crate::http::debug::log_body;
 use crate::http::header::{
     HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
 };
 use crate::http::options::ClientOptions;
-use crate::http::request::*;
-use crate::http::request_spec::*;
-use crate::http::response::*;
 use crate::http::timings::Timings;
 use crate::http::url::Url;
-use crate::http::{easy_ext, Call, Header, HttpError, Verbosity};
+use crate::http::{
+    easy_ext, Call, Cookie, FileParam, Header, HttpError, HttpVersion, IpResolve, Method,
+    MultipartParam, Param, Request, RequestCookie, RequestSpec, RequestedHttpVersion, Response,
+    Verbosity,
+};
 use crate::runner::Output;
 use crate::util::logger::Logger;
 use crate::util::path::ContextDir;

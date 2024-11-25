@@ -15,14 +15,19 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{
+    is_variable_reserved, BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption,
+    OptionKind, SourceInfo, VariableDefinition, VariableValue,
+};
 use crate::combinator::{choice, non_recover};
 use crate::parser::duration::duration;
-use crate::parser::error::*;
 use crate::parser::number::{integer, natural, number};
-use crate::parser::primitives::*;
-use crate::parser::string::*;
-use crate::parser::{filename, filename_password, ParseResult};
+use crate::parser::primitives::{
+    boolean, line_terminator, literal, null, optional_line_terminators, try_literal,
+    zero_or_more_spaces,
+};
+use crate::parser::string::{quoted_template, unquoted_template};
+use crate::parser::{filename, filename_password, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::typing::Count;
 
@@ -434,6 +439,7 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace};
     use crate::reader::Pos;
 
     #[test]

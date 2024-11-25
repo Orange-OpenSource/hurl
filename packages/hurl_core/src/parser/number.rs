@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
-use crate::parser::error::*;
+use crate::ast::{Float, Number};
 use crate::parser::primitives::try_literal;
-use crate::parser::ParseResult;
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<u64> {

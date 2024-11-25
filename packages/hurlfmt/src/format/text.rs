@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::HurlFile;
 use hurl_core::text::{Format, Style, StyledString};
 
-use crate::format::token::*;
+use crate::format::{Token, Tokenizable};
 
 pub fn format(hurl_file: &HurlFile, color: bool) -> String {
     let mut buffer = String::new();

@@ -18,7 +18,7 @@
 use std::ffi::OsStr;
 use std::path::Path;
 
-use hurl_core::ast::*;
+use hurl_core::ast::{FileParam, FileValue, KeyValue, MultipartParam};
 
 use crate::http;
 use crate::runner::body::eval_file;
@@ -93,7 +93,7 @@ pub fn file_value_content_type(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{LineTerminator, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
     use super::*;

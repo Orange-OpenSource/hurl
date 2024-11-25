@@ -16,7 +16,14 @@
  *
  */
 use crate::linter::{LinterError, LinterErrorKind};
-use hurl_core::ast::*;
+use hurl_core::ast::{
+    Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
+    CookiePath, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, GraphQl,
+    Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
+    MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
+    PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
+    SourceInfo, Template, Text, VariableDefinition, Whitespace,
+};
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
 

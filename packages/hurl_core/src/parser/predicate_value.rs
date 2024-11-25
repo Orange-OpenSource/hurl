@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::PredicateValue;
 use crate::combinator::choice;
 use crate::parser::multiline::multiline_string;
 use crate::parser::number::number;
-use crate::parser::primitives::*;
-use crate::parser::string::*;
+use crate::parser::primitives::{base64, boolean, file, hex, null, regex};
+use crate::parser::string::{backtick_template, quoted_template};
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
@@ -88,8 +88,8 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+    use crate::ast::{Float, Number};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
 

@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
-use crate::parser::error::*;
+use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
-use crate::parser::{string, ParseResult};
+use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 use super::placeholder;

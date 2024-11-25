@@ -1,4 +1,6 @@
 use super::{expr, ParseResult};
+use crate::ast::Placeholder;
+use crate::parser::primitives::{literal, try_literal, zero_or_more_spaces};
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2024 Orange
@@ -16,8 +18,6 @@ use super::{expr, ParseResult};
  * limitations under the License.
  *
  */
-use crate::ast::*;
-use crate::parser::primitives::*;
 use crate::reader::Reader;
 
 /// Parse a placeholder {{ expr }}
@@ -37,6 +37,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Placeholder> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
     use crate::{parser::ParseErrorKind, reader::Pos};
 
     #[test]

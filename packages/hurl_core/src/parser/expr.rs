@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
-use crate::parser::error::*;
-use crate::parser::function;
+use crate::ast::{Expr, ExprKind, SourceInfo, Variable};
 use crate::parser::ParseResult;
+use crate::parser::{function, ParseError, ParseErrorKind};
 use crate::reader::Reader;
 
 /// Parse an expression

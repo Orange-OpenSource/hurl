@@ -15,7 +15,17 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{
+    Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
+    CookieAttribute, CookiePath, CountOption, DurationOption, EncodedString, Entry, EntryOption,
+    Expr, ExprKind, File, FileParam, FileValue, Filter, FilterValue, Function, GraphQl,
+    GraphQlVariables, Hex, HurlFile, JsonListElement, JsonObjectElement, JsonValue, KeyValue,
+    LineTerminator, Method, MultilineString, MultilineStringAttribute, MultilineStringKind,
+    MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFunc,
+    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
+    Section, SectionValue, Status, StatusValue, Template, TemplateElement, Text, Variable,
+    VariableDefinition, VariableValue, Version, Whitespace,
+};
 use hurl_core::typing::{Count, Duration};
 
 #[derive(Clone, Debug, PartialEq, Eq)]

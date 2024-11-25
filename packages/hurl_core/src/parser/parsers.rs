@@ -16,17 +16,21 @@
  *
  */
 use crate::ast::VersionValue::VersionAny;
-use crate::ast::*;
+use crate::ast::{
+    Body, Entry, HurlFile, Method, Request, Response, SourceInfo, Status, StatusValue, Version,
+    VersionValue,
+};
 use crate::combinator::{optional, zero_or_more};
-use crate::parser::bytes::*;
-use crate::parser::error::*;
+use crate::parser::bytes::bytes;
 use crate::parser::number::natural;
-use crate::parser::primitives::*;
-use crate::parser::sections::*;
-use crate::parser::ParseResult;
+use crate::parser::primitives::{
+    eof, key_value, line_terminator, one_or_more_spaces, optional_line_terminators, try_literal,
+    zero_or_more_spaces,
+};
+use crate::parser::sections::{request_sections, response_sections};
+use crate::parser::string::unquoted_template;
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-
-use super::string::unquoted_template;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
     let entries = zero_or_more(entry, reader)?;
@@ -195,6 +199,10 @@ fn body(reader: &mut Reader) -> ParseResult<Body> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{
+        Bytes, Comment, JsonListElement, JsonValue, LineTerminator, MultilineString,
+        MultilineStringKind, Template, TemplateElement, Text, Whitespace,
+    };
     use crate::reader::Pos;
 
     #[test]
@@ -485,17 +493,11 @@ mod tests {
     #[test]
     fn test_version() {
         let mut reader = Reader::new("HTTP 200");
-        assert_eq!(
-            version(&mut reader).unwrap().value,
-            VersionValue::VersionAny
-        );
+        assert_eq!(version(&mut reader).unwrap().value, VersionAny);
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("HTTP\t200");
-        assert_eq!(
-            version(&mut reader).unwrap().value,
-            VersionValue::VersionAny
-        );
+        assert_eq!(version(&mut reader).unwrap().value, VersionAny);
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("HTTP/1.1 200");

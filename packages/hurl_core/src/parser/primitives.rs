@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{
+    Base64, Comment, File, Hex, KeyValue, LineTerminator, Regex, SourceInfo, Whitespace,
+};
 use crate::combinator::{one_or_more, optional, recover, zero_or_more};
-use crate::parser::error::*;
-use crate::parser::string::*;
-use crate::parser::{base64, filename, key_string, ParseResult};
+use crate::parser::string::unquoted_template;
+use crate::parser::{base64, filename, key_string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
@@ -69,7 +70,6 @@ pub fn zero_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 pub fn line_terminator(reader: &mut Reader) -> ParseResult<LineTerminator> {
-    // let start = p.state.clone();
     let space0 = zero_or_more_spaces(reader)?;
     let comment = optional(comment, reader)?;
     let nl = if reader.is_eof() {
@@ -440,6 +440,7 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{Expr, ExprKind, Placeholder, Template, TemplateElement, Variable};
     use crate::reader::Pos;
 
     #[test]
@@ -745,7 +746,7 @@ mod tests {
         assert!(error.recoverable);
         assert_eq!(reader.cursor().index, 5); // does not reset cursor
 
-        let mut reader = Reader::new("GET http://google.fr");
+        let mut reader = Reader::new("GET ®http://google.fr");
         let error = key_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(error.recoverable);

@@ -19,7 +19,9 @@ use std::str::FromStr;
 
 use base64::engine::general_purpose;
 use base64::Engine;
-use hurl_core::ast::*;
+use hurl_core::ast::{
+    Body, Bytes, Method, MultilineString, MultilineStringKind, Request, Template,
+};
 
 use crate::http;
 use crate::http::{HeaderVec, HttpError, Url, AUTHORIZATION};
@@ -191,7 +193,10 @@ fn eval_method(method: &Method) -> http::Method {
 #[cfg(test)]
 mod tests {
     use crate::runner::Value;
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{
+        Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, Section, SectionValue,
+        SourceInfo, TemplateElement, Variable, Whitespace,
+    };
     use hurl_core::reader::Pos;
 
     use super::super::error::RunnerErrorKind;

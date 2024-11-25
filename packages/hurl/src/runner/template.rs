@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{Placeholder, Template, TemplateElement};
 
 use crate::runner::error::RunnerError;
 use crate::runner::{expr, VariableSet};
@@ -45,7 +45,7 @@ fn eval_template_element(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
 
     use super::*;

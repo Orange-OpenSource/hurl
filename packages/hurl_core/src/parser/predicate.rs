@@ -15,12 +15,15 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
+use crate::ast::{
+    Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo, Whitespace,
+};
 use crate::combinator::choice;
-use crate::parser::error::*;
 use crate::parser::predicate_value::predicate_value;
-use crate::parser::primitives::*;
-use crate::parser::ParseResult;
+use crate::parser::primitives::{
+    one_or_more_spaces, try_literal, try_literals, zero_or_more_spaces,
+};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
@@ -382,6 +385,9 @@ fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{
+        Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable,
+    };
     use crate::reader::Pos;
 
     #[test]

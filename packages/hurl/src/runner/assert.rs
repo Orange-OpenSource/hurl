@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::*;
+use hurl_core::ast::{Assert, SourceInfo};
 use hurl_core::reader::Pos;
 
 use crate::http;
@@ -210,7 +210,10 @@ pub fn eval_explicit_assert(
 pub mod tests {
     use std::path::Path;
 
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{
+        Filter, FilterValue, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
+        PredicateValue, SourceInfo, Whitespace,
+    };
     use hurl_core::reader::Pos;
 
     use super::super::query;

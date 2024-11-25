@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
-use crate::parser::error::*;
+use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
-use crate::parser::{string, ParseResult};
+use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 use super::placeholder;
@@ -149,6 +148,7 @@ fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::{Expr, ExprKind, Placeholder, Variable, Whitespace};
     use crate::reader::Pos;
 
     #[test]

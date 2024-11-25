@@ -15,12 +15,18 @@
  * limitations under the License.
  *
  */
+use crate::format::serialize_json::JValue;
 use base64::engine::general_purpose;
 use base64::Engine;
-use hurl_core::ast::*;
+use hurl_core::ast::{
+    Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
+    CountOption, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, Header,
+    Hex, HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString, MultilineStringKind,
+    MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFuncValue,
+    PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, StatusValue,
+    VersionValue,
+};
 use hurl_core::typing::{Count, Duration};
-
-use super::serialize_json::*;
 
 pub fn format(hurl_file: &HurlFile) -> String {
     hurl_file.to_json().format()
@@ -805,6 +811,10 @@ impl ToJson for NaturalOption {
 }
 #[cfg(test)]
 pub mod tests {
+    use hurl_core::ast::{
+        LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
+        TemplateElement, Version, Whitespace,
+    };
     use hurl_core::reader::Pos;
 
     use super::*;

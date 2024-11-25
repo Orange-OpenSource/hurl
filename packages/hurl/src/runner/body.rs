@@ -17,7 +17,7 @@
  */
 use std::path::PathBuf;
 
-use hurl_core::ast::*;
+use hurl_core::ast::{Base64, Body, Bytes, File, Hex, Template};
 
 use crate::http;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
@@ -91,7 +91,7 @@ pub fn eval_file(
 mod tests {
     use std::path::Path;
 
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
     use super::*;

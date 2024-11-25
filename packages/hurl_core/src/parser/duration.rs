@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
-use crate::parser::error::*;
 use crate::parser::number::natural;
-use crate::parser::ParseResult;
+use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::typing::{Duration, DurationUnit};
 use std::str::FromStr;
