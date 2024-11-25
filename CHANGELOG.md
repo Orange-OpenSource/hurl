@@ -16,6 +16,7 @@ Thanks to
 Breaking Changes:
 
 * Check that variables do not conflict with existing functions [#3229](https://github.com/Orange-OpenSource/hurl/issues/3229)
+* Change API for setting variable in hurl::runner::run [#3440](https://github.com/Orange-OpenSource/hurl/issues/3440)
 
 
 Enhancements:
