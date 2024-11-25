@@ -36,6 +36,7 @@ Enhancements:
 * Add curl debug command to --json and JSON report [#3374](https://github.com/Orange-OpenSource/hurl/issues/3374)
 * Add curl debug command to HTML report [#3386](https://github.com/Orange-OpenSource/hurl/issues/3386)
 * Render Date value [#3431](https://github.com/Orange-OpenSource/hurl/issues/3431)
+* Add newDate generator [#3443](https://github.com/Orange-OpenSource/hurl/issues/3443)
 
 
 Bugs Fixed:
