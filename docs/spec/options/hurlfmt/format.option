@@ -1,7 +1,0 @@
-name: format
-long: format
-value: FORMAT
-help: Specify output format: hurl, json or html
-deprecated: true
----
-Specify output format: hurl, json or html.

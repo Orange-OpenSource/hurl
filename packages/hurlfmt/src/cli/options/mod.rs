@@ -73,7 +73,6 @@ pub fn parse() -> Result<Options, OptionsError> {
         .about("Format Hurl files")
         .arg(commands::check())
         .arg(commands::color())
-        .arg(commands::format())
         .arg(commands::in_place())
         .arg(commands::input_files())
         .arg(commands::input_format())

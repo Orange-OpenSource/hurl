@@ -30,7 +30,6 @@ pub fn check() -> clap::Arg {
     clap::Arg::new("check")
         .long("check")
         .help("Run in check mode")
-        .conflicts_with("format")
         .conflicts_with("output")
         .action(clap::ArgAction::SetTrue)
 }
@@ -42,15 +41,6 @@ pub fn color() -> clap::Arg {
         .conflicts_with("no_color")
         .conflicts_with("in_place")
         .action(clap::ArgAction::SetTrue)
-}
-
-pub fn format() -> clap::Arg {
-    clap::Arg::new("format")
-        .long("format")
-        .value_name("FORMAT")
-        .help("Specify output format: hurl, json or html")
-        .num_args(1)
-        .hide(true)
 }
 
 pub fn in_place() -> clap::Arg {

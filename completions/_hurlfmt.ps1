@@ -22,7 +22,6 @@ Register-ArgumentCompleter -Native -CommandName 'hurlfmt' -ScriptBlock {
         'hurlfmt'
          {[CompletionResult]::new('--check', 'check', [CompletionResultType]::ParameterName, 'Run in check mode')
             [CompletionResult]::new('--color', 'color', [CompletionResultType]::ParameterName, 'Colorize Output')
-            [CompletionResult]::new('--format', 'format', [CompletionResultType]::ParameterName, 'Specify output format: hurl, json or html')
             [CompletionResult]::new('--in-place', 'in-place', [CompletionResultType]::ParameterName, 'Modify files in place')
             [CompletionResult]::new('--in', 'in', [CompletionResultType]::ParameterName, 'Specify input format: hurl or curl')
             [CompletionResult]::new('--no-color', 'no-color', [CompletionResultType]::ParameterName, 'Do not colorize output')

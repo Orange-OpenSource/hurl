@@ -17,7 +17,6 @@ _hurlfmt() {
     _arguments "${_arguments_options[@]}" \
     '--check[Run in check mode]' \
     '--color[Colorize Output]' \
-    '--format[Specify output format: hurl, json or html]: :' \
     '--in-place[Modify files in place]' \
     '--in[Specify input format: hurl or curl]: :' \
     '--no-color[Do not colorize output]' \

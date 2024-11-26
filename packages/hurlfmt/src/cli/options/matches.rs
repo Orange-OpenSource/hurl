@@ -19,7 +19,6 @@ use std::io;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
-use clap::parser::ValueSource;
 use clap::ArgMatches;
 use hurl_core::input::Input;
 
@@ -49,17 +48,6 @@ pub fn input_format(arg_matches: &ArgMatches) -> Result<InputFormat, OptionsErro
 }
 
 pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsError> {
-    // Deprecated --format option
-    if arg_matches.value_source("format") == Some(ValueSource::CommandLine) {
-        eprintln!("--format is deprecated. use --out instead.");
-        return match get_string(arg_matches, "format").unwrap().as_str() {
-            "hurl" => Ok(OutputFormat::Hurl),
-            "json" => Ok(OutputFormat::Json),
-            "html" => Ok(OutputFormat::Html),
-            v => Err(OptionsError::Error(format!("Invalid output format {v}"))),
-        };
-    }
-
     match get_string(arg_matches, "output_format").unwrap().as_str() {
         "hurl" => Ok(OutputFormat::Hurl),
         "json" => Ok(OutputFormat::Json),
