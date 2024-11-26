@@ -238,9 +238,8 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::glob())
         .arg(commands::netrc())
         .arg(commands::netrc_file())
-        .arg(commands::netrc_optional())
-        // Deprecated options
-        .arg(commands::fail_at_end());
+        .arg(commands::netrc_optional());
+
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
 
     // If we've no file input (either from the standard input or from the command line arguments),

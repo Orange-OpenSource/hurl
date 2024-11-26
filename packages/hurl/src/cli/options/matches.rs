@@ -111,10 +111,6 @@ pub fn connects_to(arg_matches: &ArgMatches) -> Vec<String> {
 }
 
 pub fn continue_on_error(arg_matches: &ArgMatches) -> bool {
-    if has_flag(arg_matches, "fail_at_end") {
-        eprintln!("The option fail-at-end is deprecated. Use continue-on-error instead");
-        return true;
-    }
     has_flag(arg_matches, "continue_on_error")
 }
 

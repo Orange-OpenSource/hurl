@@ -158,15 +158,6 @@ pub fn error_format() -> clap::Arg {
         .num_args(1)
 }
 
-pub fn fail_at_end() -> clap::Arg {
-    clap::Arg::new("fail_at_end")
-        .long("fail-at-end")
-        .help("Fail at end")
-        .help_heading("Run options")
-        .action(clap::ArgAction::SetTrue)
-        .hide(true)
-}
-
 pub fn file_root() -> clap::Arg {
     clap::Arg::new("file_root")
         .long("file-root")

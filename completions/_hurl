@@ -29,7 +29,6 @@ _hurl() {
     '--curl[Export each request to a list of curl commands]: :_files' \
     '--delay[Sets delay before each request]: :' \
     '--error-format[Control the format of error messages]: :' \
-    '--fail-at-end[Fail at end]' \
     '--file-root[Set root directory to import files \[default: input file directory\]]: :' \
     '(-L --location)'{-L,--location}'[Follow redirects]' \
     '--location-trusted[Follow redirects but allows sending the name + password to all hosts that the site may redirect to]' \

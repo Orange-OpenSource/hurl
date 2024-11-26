@@ -12,7 +12,6 @@ complete -c hurl -l cookie-jar -d 'Write cookies to FILE after running the sessi
 complete -c hurl -l curl -d 'Export each request to a list of curl commands'
 complete -c hurl -l delay -d 'Sets delay before each request'
 complete -c hurl -l error-format -d 'Control the format of error messages'
-complete -c hurl -l fail-at-end -d 'Fail at end'
 complete -c hurl -l file-root -d 'Set root directory to import files [default: input file directory]'
 complete -c hurl -l location -d 'Follow redirects'
 complete -c hurl -l location-trusted -d 'Follow redirects but allows sending the name + password to all hosts that the site may redirect to'
