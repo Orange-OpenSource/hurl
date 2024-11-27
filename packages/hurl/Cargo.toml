@@ -14,7 +14,9 @@ rust-version = "1.82.0"
 name = "hurl"
 
 [features]
-vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
+# Re-export of curl/static-ssl: use a bundled OpenSSL version and statically link to it. Only applies on platforms that
+# use OpenSSL
+static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
 base64 = "0.22.1"
