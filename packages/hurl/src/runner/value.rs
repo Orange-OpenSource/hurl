@@ -94,6 +94,8 @@ impl fmt::Display for Value {
     }
 }
 
+const FORMAT_ISO: &str = "%Y-%m-%dT%H:%M:%S.%6fZ";
+
 impl Value {
     pub fn _type(&self) -> String {
         match self {
@@ -118,7 +120,7 @@ impl Value {
     pub fn render(&self) -> Option<String> {
         match self {
             Value::Bool(v) => Some(v.to_string()),
-            Value::Date(d) => Some(d.to_rfc3339()),
+            Value::Date(d) => Some(d.format(FORMAT_ISO).to_string()),
             Value::Null => Some("null".to_string()),
             Value::Number(v) => Some(v.to_string()),
             Value::String(s) => Some(s.clone()),
@@ -129,11 +131,47 @@ impl Value {
 
 #[cfg(test)]
 mod tests {
+
+    use chrono::{DateTime, NaiveDate, Utc};
+
     use super::*;
 
     #[test]
     fn test_is_scalar() {
         assert!(Value::Number(Number::Integer(1)).is_scalar());
         assert!(!Value::List(vec![]).is_scalar());
+    }
+
+    #[test]
+    fn test_format_iso() {
+        let datetime_naive = NaiveDate::from_ymd_opt(2000, 1, 1)
+            .unwrap()
+            .and_hms_micro_opt(12, 0, 0, 123000)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(datetime_naive, Utc);
+        assert_eq!(
+            datetime_utc.format(FORMAT_ISO).to_string(),
+            "2000-01-01T12:00:00.123000Z"
+        );
+
+        let naive_datetime = NaiveDate::from_ymd_opt(2000, 2, 1)
+            .unwrap()
+            .and_hms_micro_opt(12, 0, 0, 123456)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(naive_datetime, Utc);
+        assert_eq!(
+            datetime_utc.format(FORMAT_ISO).to_string(),
+            "2000-02-01T12:00:00.123456Z"
+        );
+
+        let naive_datetime = NaiveDate::from_ymd_opt(2000, 2, 1)
+            .unwrap()
+            .and_hms_nano_opt(12, 0, 0, 123456789)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(naive_datetime, Utc);
+        assert_eq!(
+            datetime_utc.format(FORMAT_ISO).to_string(),
+            "2000-02-01T12:00:00.123456Z"
+        );
     }
 }

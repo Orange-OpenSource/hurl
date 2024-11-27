@@ -94,7 +94,7 @@ mod tests {
         assert_eq!(eval(&expr, &variables).unwrap(), Value::Date(data_chrono));
         assert_eq!(
             render(&expr, &variables).unwrap(),
-            "2023-01-10T08:29:52+00:00"
+            "2023-01-10T08:29:52.000000Z"
         );
     }
 }
