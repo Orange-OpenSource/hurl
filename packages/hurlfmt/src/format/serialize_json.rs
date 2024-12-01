@@ -50,7 +50,13 @@ impl JValue {
             JValue::Object(key_values) => {
                 let s = key_values
                     .iter()
-                    .map(|(k, v)| format!("\"{}\":{}", k, v.format()))
+                    .map(|(k, v)| {
+                        format!(
+                            "\"{}\":{}",
+                            k.chars().map(format_char).collect::<String>(),
+                            v.format()
+                        )
+                    })
                     .collect::<Vec<String>>()
                     .join(",");
                 format!("{{{s}}}")
@@ -117,6 +123,18 @@ pub mod tests {
             ])
             .format(),
             "[1,2,3]"
+        );
+    }
+    #[test]
+    pub fn test_format_special_characters() {
+        let value = JValue::Object(vec![(
+            "sp\"ecial\\key".to_string(),
+            JValue::String("sp\nvalue\twith\x08control".to_string()),
+        )]);
+
+        assert_eq!(
+            value.format(),
+            r#"{"sp\"ecial\\key":"sp\nvalue\twith\bcontrol"}"#
         );
     }
 
