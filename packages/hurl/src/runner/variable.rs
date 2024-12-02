@@ -104,6 +104,9 @@ impl VariableSet {
         Ok(())
     }
 
+    #[deprecated(
+        note = "This method is not yet ready for use: secret/private variables are still under development"
+    )]
     /// Inserts a secret variable named `name` with `value` into the variable set.
     ///
     /// Contrary to [`VariableSet::insert`], this method can not fail: a secret can override a
@@ -141,6 +144,7 @@ mod test {
     use crate::runner::Number::{Float, Integer};
     use crate::runner::{Value, VariableSet};
 
+    #[allow(deprecated)]
     #[test]
     fn simple_variable_set() {
         let mut variables = VariableSet::new();
@@ -203,6 +207,7 @@ mod test {
         }
     }
 
+    #[allow(deprecated)]
     #[test]
     fn secret_cant_be_reassigned() {
         let mut variables = VariableSet::new();
