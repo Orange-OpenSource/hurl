@@ -12,11 +12,15 @@ Thanks to
 [@niklasweimann](https://github.com/niklasweimann),
 [@infogulch](https://github.com/infogulch),
 [@orlandow](https://github.com/orlandow),
+[@bp7968h](https://github.com/bp7968h),
 
 Breaking Changes:
 
 * Check that variables do not conflict with existing functions [#3229](https://github.com/Orange-OpenSource/hurl/issues/3229)
+* Remove deprecated --fail-at-end option [#3430](https://github.com/Orange-OpenSource/hurl/issues/3430)
 * Change API for setting variable in hurl::runner::run [#3440](https://github.com/Orange-OpenSource/hurl/issues/3440)
+* Remove hurlfmt deprecated --format option [#3445](https://github.com/Orange-OpenSource/hurl/issues/3445)
+* Rename feature flag from vendored-openssl to static-openssl [#3460](https://github.com/Orange-OpenSource/hurl/issues/3460)
 
 
 Enhancements:
