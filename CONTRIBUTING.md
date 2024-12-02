@@ -35,7 +35,7 @@ relevant to you and we understand it; that's said, we try to reflect on every as
 
 - [Create a new Git branch], don't use `master` branch for PR.
 - All Git commits are [required to be signed] and marked as "Verified": signed with a GPG, SSH, or S/MIME that is successfully verified by GitHub.
-- Commit messages are simple phrases don't use [Semantic Commit Messages] nor [Conventional Commits]
+- Commit messages are simple phrases, don't use [Semantic Commit Messages] nor [Conventional Commits]
   - ❌ `fix: missing space in variable option HTML export`
   - ✅ `Fix missing space in variable option HTML export`
 - All tests must be green before merge. Our CI/CD will run [a test suite] to insure everything is OK.
