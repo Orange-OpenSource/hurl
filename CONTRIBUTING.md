@@ -35,6 +35,9 @@ relevant to you and we understand it; that's said, we try to reflect on every as
 
 - [Create a new Git branch], don't use `master` branch for PR.
 - All Git commits are [required to be signed] and marked as "Verified": signed with a GPG, SSH, or S/MIME that is successfully verified by GitHub.
+- Commit messages are simple phrases don't use [Semantic Commit Messages] nor [Conventional Commits]
+  - ❌ `fix: missing space in variable option HTML export`
+  - ✅ `Fix missing space in variable option HTML export`
 - All tests must be green before merge. Our CI/CD will run [a test suite] to insure everything is OK.
 - Hurl Git history is linear, so we may rebase your PR on your fork before final merge.
 
@@ -117,3 +120,5 @@ Et voilà 🎉!
 [required to be signed]: https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification
 [integration tests]: https://github.com/Orange-OpenSource/hurl/tree/master/integration
 [the integration `README`]: /integration/README.md
+[Conventional Commits]: https://www.conventionalcommits.org
+[Semantic Commit Messages]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
