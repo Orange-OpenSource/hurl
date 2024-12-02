@@ -3,15 +3,16 @@
 ## Variables
 
 In Hurl file, you can generate value using two curly braces, i.e `{{my_variable}}`. For instance, if you want to reuse a
-value from an HTTP response in the next entries, you can capture this value in a variable and reuse it in a template.
+value from an HTTP response in the next entries, you can capture this value in a variable and reuse it in a placeholder.
+
+In this example, we capture the value of a [CSRF token] from the body of the first response, and inject it
+as a header in the next POST request:
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
-
 
 # Do the login !
 POST https://acmecorp.net/login?user=toto&password=1234
@@ -19,30 +20,67 @@ X-CSRF-TOKEN: {{csrf_token}}
 HTTP 302
 ```
 
-In this example, we capture the value of the [CSRF token] from the body of the first response, and inject it
-as a header in the next POST request.
+In this second example, we capture the body in a variable `index`, and reuse this value in the query
+`jsonpath "$.errors[{{index}}].id"`:
+
 
 ```hurl
 GET https://example.org/api/index
-
 HTTP 200
 [Captures]
 index: body
 
-
 GET https://example.org/api/status
-
 HTTP 200
 [Asserts]
 jsonpath "$.errors[{{index}}].id" == "error"
 ```
 
-In this second example, we capture the body in a variable `index`, and reuse this value in the query
-`jsonpath "$.errors[{{index}}].id"`.
+
+## Functions
+
+Besides variables, functions can be used to generate dynamic values. Current functions are:
+
+| Function  | Description                                                 |
+|-----------|-------------------------------------------------------------|
+| `newUuid` | Generates an [UUID v4 random string]                        |
+| `newDate` | Generates a [RFC 3339] UTC date string, at the current time |
+
+In the following example, we use `newDate` to generate a dynamic query parameter:
+
+```hurl
+GET https://example.org/api/foo
+[QueryStringParams]
+date: {{newDate}}
+HTTP 200
+```
+
+We run a `GET` request to `https://example.org/api/foo?date=2024%2D12%2D02T10%3A35%3A44%2E461731Z` where the `date`
+query parameter value is `2024-12-02T10:35:44.461731Z` URL encoded.
+
+In this second example, we use `newUuid` function to generate an email dynamically:
+
+```hurl
+POST https://example.org/api/foo
+{
+  "name": "foo",
+  "email": "{{newUuid}}@test.com"
+}
+```
+
+When run, the request body will be:
+
+```
+{
+  "name": "foo",
+  "email": "0531f78f-7f87-44be-a7f2-969a1c4e6d97@test.com"
+}
+```
+
 
 ## Types
 
-Variables are typed, and can be either string, bool, number, `null` or collections. Depending on the variable type,
+Values generated from function and variables are typed, and can be either string, bool, number, `null` or collections. Depending on the value type,
 templates can be rendered differently. Let's say we have captured an integer value into a variable named
 `count`:
 
@@ -108,7 +146,7 @@ If you're interested in the string representation of a variable, you can surroun
 
 ## Injecting Variables
 
-Variables can also be injected in a Hurl file:
+Variables can be injected in a Hurl file:
 
 - by using [`--variable` option]
 - by using [`--variables-file` option]
@@ -177,7 +215,7 @@ HTTP 200
 
 ## Templating Body
 
-Variables can be used in [JSON body]:
+Variables and functions can be used in [JSON body]:
 
 ~~~hurl
 PUT https://example.org/api/hits
@@ -185,13 +223,16 @@ PUT https://example.org/api/hits
     "key0": "{{a_string}}",
     "key1": {{a_bool}},
     "key2": {{a_null}},
-    "key3": {{a_number}}
+    "key3": {{a_number}},
+    "key4": "{{newDate}}"
 }
 ~~~
 
-Note that [XML body] can't use variables directly, for the moment. In order to templatize a XML body, you can use 
-[multiline string body] with variables. The multiline string body allows to templatize any text based body (JSON, XML, 
-CSV etc...):
+Note that we're writing a kind of JSON body directly without any delimitation marker. For the moment, [XML body] can't 
+use variables directly. In order to templatize a XML body, you can use [multiline string body] with variables and 
+functions. The multiline string body allows to templatize any text based body (JSON, XML, CSV etc...):
+
+Multiline string body delimited by `` ``` ``:
 
 ~~~hurl
 PUT https://example.org/api/hits
@@ -201,7 +242,8 @@ Content-Type: application/json
     "key0": "{{a_string}}",
     "key1": {{a_bool}},
     "key2": {{a_null}},
-    "key3": {{a_number}}
+    "key3": {{a_number}},
+    "key4: "{{newDate}}"
 }
 ```
 ~~~
@@ -219,7 +261,8 @@ Resulting in a PUT request with the following JSON body:
     "key0": "apple",
     "key1": true,
     "key2": null,
-    "key3": 42
+    "key3": 42,
+    "key4": "2024-12-02T13:39:45.936643Z"
 }
 ```
 
@@ -231,3 +274,5 @@ Resulting in a PUT request with the following JSON body:
 [XML body]: /docs/request.md#xml-body
 [multiline string body]: /docs/request.md#multiline-string-body
 [options]: /docs/request.md#options
+[UUID v4 random string]: https://en.wikipedia.org/wiki/Universally_unique_identifier
+[RFC 3339]: https://www.rfc-editor.org/rfc/rfc3339

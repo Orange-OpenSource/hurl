@@ -51,20 +51,23 @@ HTTP 302
 2. Run `login.hurl`:
 
 ```shell
-[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
+$ hurl --test login.hurl
 [1;31merror[0m: [1mAssert status code[0m
   [1;34m-->[0m login.hurl:5:6
-   [1;34m|[0m
-[1;34m 5[0m [1;34m|[0m HTTP 302
-   [1;34m|[0m      [1;31m^^^[0m [1;31mactual value is <403>[0m
-   [1;34m|[0m
+[1;34m   |[0m
+[1;34m   |[0m [90mPOST http://localhost:3000/login[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 5 |[0m HTTP 302
+[1;34m   |[0m[1;31m      ^^^ actual value is <403>[0m
+[1;34m   |[0m
 
 [1mlogin.hurl[0m: [1;31mFailure[0m (1 request(s) in 9 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 0 (0.0%)
-Failed files:    1 (100.0%)
-Duration:        10 ms
+Executed files:    1
+Executed requests: 1 (90.9/s)
+Succeeded files:   0 (0.0%)
+Failed files:      1 (100.0%)
+Duration:          11 ms
 ```
 
 This is unexpected! Our test is failing, we're not redirected to the favorite movies page.
@@ -146,13 +149,13 @@ HTTP 302
 
 ```shell
 $ hurl --test login.hurl
-[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
 [1mlogin.hurl[0m: [1;32mSuccess[0m (2 request(s) in 14 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        16 ms
+Executed files:    1
+Executed requests: 2 (142.9/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          14 ms
 ```
 
 ## Follow Redirections
@@ -202,13 +205,13 @@ xpath "string(//title)" == "My Movies"
 
 ```shell
 $ hurl --test login.hurl
-[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
-[1mlogin.hurl[0m: [1;32mSuccess[0m (3 request(s) in 17 ms)
+[1mlogin.hurl[0m: [1;32mSuccess[0m (3 request(s) in 28 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        19 ms
+Executed files:    1
+Executed requests: 3 (107.1/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          28 ms
 ```
 
 > You can force Hurl to follow redirection by using [`-L / --location` option] or using an [`[Options]` section][options].

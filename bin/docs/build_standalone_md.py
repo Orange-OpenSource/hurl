@@ -13,9 +13,11 @@ import os
 import re
 import sys
 import unicodedata
+from datetime import datetime
 from pathlib import Path
 
 import markdown
+import tomllib
 from markdown import Header, MarkdownDoc, Paragraph, RefLink, Table, Whitespace
 
 
@@ -211,6 +213,13 @@ def inline_ref_link(md: MarkdownDoc):
 
 
 def main() -> int:
+    # Identify version
+    with open("packages/hurl/Cargo.toml", "rb") as f:
+        data = tomllib.load(f)
+    version = data["package"]["version"]
+    version = version.replace("-SNAPSHOT", "")
+    sys.stderr.write(f"version:{version}\n")
+
     standalone_md = MarkdownDoc()
 
     add_sections(
@@ -266,19 +275,20 @@ def main() -> int:
     standalone_md.children.insert(0, title)
     ws = Whitespace(content="\n")
     standalone_md.children.insert(1, ws)
-    title = Header(title="Version 5.0.1 - 18/09/2024", level=2)
+    date = datetime.today().strftime("%d-%m-%Y")
+    title = Header(title=f"Version {version} - {date}", level=2)
     standalone_md.children.insert(2, title)
     ws = Whitespace(content="\n")
     standalone_md.children.insert(3, ws)
 
     standalone = standalone_md.to_text()
-    standalone = rewrite_content(standalone)
+    standalone = rewrite_content(text=standalone, version=version)
 
     print(standalone)
     return os.EX_OK
 
 
-def rewrite_content(text: str) -> str:
+def rewrite_content(text: str, version: str) -> str:
     """Some hardcoded replacement."""
     return (
         text.replace("/docs/assets/img/", "https://hurl.dev/assets/img/")
@@ -293,7 +303,7 @@ def rewrite_content(text: str) -> str:
             "[Documentation](https://hurl.dev)",
         )
         .replace(
-            " (download [HTML](/docs/standalone/hurl-5.0.1.html), [PDF](/docs/standalone/hurl-5.0.1.pdf), [Markdown](/docs/standalone/hurl-5.0.1.md))",
+            f" (download [HTML](/docs/standalone/hurl-{version}.html), [PDF](/docs/standalone/hurl-{version}.pdf), [Markdown](/docs/standalone/hurl-{version}.md))",
             "",
         )
         .replace("/docs/asserting-response.html#", "#file-format-asserting-response-")
@@ -311,8 +321,12 @@ def rewrite_content(text: str) -> str:
             '<a href="#file-format-request-headers">HTTP request headers</a>',
         )
         .replace(
-            '<a href="#query-parameters">Query strings</a>',
-            '<a href="#file-format-request-query-parameters">Query strings</a>',
+            '<a href="#options">Options</a>',
+            '<a href="#file-format-options">Options</a>',
+        )
+        .replace(
+            '<a href="#query-parameters">query strings</a>',
+            '<a href="#file-format-request-query-parameters">query strings</a>',
         )
         .replace(
             '<a href="#form-parameters">form params</a>',
@@ -329,6 +343,14 @@ def rewrite_content(text: str) -> str:
         .replace(
             '<a href="#body">HTTP request body</a>',
             '<a href="#file-format-request-body">HTTP request body</a>',
+        )
+        .replace(
+            "[UUID v4 random string]",
+            "[UUID v4 random string](https://en.wikipedia.org/wiki/Universally_unique_identifier)",
+        )
+        .replace(
+            "[RFC 3339]",
+            "[RFC 3339](https://www.rfc-editor.org/rfc/rfc3339)",
         )
     )
 

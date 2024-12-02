@@ -176,13 +176,13 @@ test output:
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 25 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 24 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        27 ms
+Executed files:    1
+Executed requests: 1 (41.7/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          24 ms
 ```
 
 6. Modify `basic.hurl` to test a different HTTP response status code:
@@ -197,20 +197,21 @@ HTTP 500
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
 [1;31merror[0m: [1mAssert status code[0m
   [1;34m-->[0m basic.hurl:2:6
-   [1;34m|[0m
-[1;34m 2[0m [1;34m|[0m HTTP 500
-   [1;34m|[0m      [1;31m^^^[0m [1;31mactual value is <200>[0m
-   [1;34m|[0m
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:3000[0m
+[1;34m 2 |[0m HTTP 500
+[1;34m   |[0m[1;31m      ^^^ actual value is <200>[0m
+[1;34m   |[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 20 ms)
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 10 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 0 (0.0%)
-Failed files:    1 (100.0%)
-Duration:        21 ms
+Executed files:    1
+Executed requests: 1 (83.3/s)
+Succeeded files:   0 (0.0%)
+Failed files:      1 (100.0%)
+Duration:          12 ms
 ```
 
 8. Revert your changes and finally add a comment at the beginning of the file:

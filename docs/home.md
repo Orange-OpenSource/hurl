@@ -191,6 +191,6 @@ HTTP 200
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
-[HTML]: /docs/standalone/hurl-5.0.1.html
-[PDF]: /docs/standalone/hurl-5.0.1.pdf
-[Markdown]: /docs/standalone/hurl-5.0.1.md
+[HTML]: /docs/standalone/hurl-6.0.0.html
+[PDF]: /docs/standalone/hurl-6.0.0.pdf
+[Markdown]: /docs/standalone/hurl-6.0.0.md

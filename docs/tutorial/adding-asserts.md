@@ -41,7 +41,6 @@ going to use the [XPath expression] `string(//head/title)`.
 # Our first Hurl file, just checking
 # that our server is up and running.
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -51,13 +50,14 @@ xpath "string(//head/title)" == "Movies Box"
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 19 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 10 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        19 ms
+Executed files:    1
+Executed requests: 1 (100.0/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          10 ms
+
 ```
 
 There is no error so everything is good!
@@ -68,7 +68,6 @@ There is no error so everything is good!
 # Our first Hurl file, just checking
 # that our server is up and running.
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Bax"
@@ -78,21 +77,23 @@ xpath "string(//head/title)" == "Movies Bax"
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
 [1;31merror[0m: [1mAssert failure[0m
-  [1;34m-->[0m basic.hurl:7:0
-   [1;34m|[0m
-[1;34m 7[0m [1;34m|[0m xpath "string(//head/title)" == "Movies Bax"
-   [1;34m|[0m   [1;31mactual:   string <Movies Box>[0m
-   [1;34m|[0m   [1;31mexpected: string <Movies Bax>[0m
-   [1;34m|[0m
+  [1;34m-->[0m basic.hurl:6:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:3000[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 6 |[0m xpath "string(//head/title)" == "Movies Bax"
+[1;34m   |[0m[1;31m   actual:   string <Movies Box>[0m
+[1;34m   |[0m[1;31m   expected: string <Movies Bax>[0m
+[1;34m   |[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 22 ms)
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 7 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 0 (0.0%)
-Failed files:    1 (100.0%)
-Duration:        23 ms
+Executed files:    1
+Executed requests: 1 (125.0/s)
+Succeeded files:   0 (0.0%)
+Failed files:      1 (100.0%)
+Duration:          8 ms
 ```
 
 Hurl has failed now and provides information on which assert is not valid.
@@ -122,7 +123,6 @@ with [`count`]:
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -134,7 +134,6 @@ xpath "//h3" count == 2
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -151,13 +150,13 @@ xpath "string((//h3)[2])" contains "Featured Today"
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 10 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        15 ms
+Executed files:    1
+Executed requests: 1 (100.0/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          10 ms
 ```
 
 
@@ -171,7 +170,6 @@ As our endpoint is serving UTF-8 encoded HTML content, we can check the value of
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -196,7 +194,6 @@ while the explicit one allows you to use other [predicates] (like `contains`, `s
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 # Implicitly testing response headers:
 Content-Type: text/html; charset=utf-8
@@ -226,7 +223,6 @@ So to test it, we can modify our Hurl file with another header assert.
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -253,7 +249,6 @@ So to test that our server is responding with a `HttpOnly` session cookie, we ca
 ```hurl
 # Checking our home page:
 GET http://localhost:3000
-
 HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Movies Box"
@@ -270,13 +265,13 @@ cookie "x-session-id[HttpOnly]" exists
 
 ```shell
 $ hurl --test basic.hurl
-[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 7 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        20 ms
+Executed files:    1
+Executed requests: 1 (125.0/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          8 ms
 ```
 
 ## Performance Test

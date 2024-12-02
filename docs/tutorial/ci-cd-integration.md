@@ -58,24 +58,47 @@ This way, our host is not hardcoded any more and we can run our tests in various
 
 ```shell
 $ hurl --variable host=http://localhost:3000 --test *.hurl
-Running Hurl tests
-[1mintegration/basic.hurl[0m: [1;36mRunning[0m [1/2]
-[1mintegration/basic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 18 ms)
-[1mintegration/login.hurl[0m: [1;36mRunning[0m [2/2]
-[1mintegration/login.hurl[0m: [1;32mSuccess[0m (6 request(s) in 18 ms)
+[1mlogin.hurl[0m: [1;32mSuccess[0m (3 request(s) in 33 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 34 ms)
+[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 53 ms)
 --------------------------------------------------------------------------------
-Executed files:  2
-Succeeded files: 2 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        48 ms
+Executed files:    3
+Executed requests: 15 (283.0/s)
+Succeeded files:   3 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          53 ms
 ```
 
-Now, we're ready to write our integration script.
+Note that the output of the executed files can differ from the input order. In test mode, Hurl run files _in parallel_ 
+whereas in normal mode (without `--test`) files are executed in the order they are provided. This is because in normal 
+mode, Hurl is usually used to get response, and we want the response to be is in the same order as the input files.
+
+To sum up, this command executes `login.hurl`, `basic.hurl`, `signup.hurl` sequentially:
+
+```shell
+$ hurl login.hurl basic.hurl signup.hurl
+```
+
+Whereas this command executes `login.hurl`, `basic.hurl`, `signup.hurl` in parallel.
+
+```shell
+$ hurl --test login.hurl basic.hurl signup.hurl
+```
+
+> Usually, tests should not be dependant of the input order, but sometimes we need to execute tests sequentially (for 
+> instance, if some of our tests modify the same server state). In this case, we can limit the number of files executed
+> in parallel with [`--jobs 1`] option:
+> 
+> ```shell
+> $ hurl --jobs 1 --test login.hurl basic.hurl signup.hurl
+> ```
+
+That said, now we're ready to write our integration script.
 
 ## Integration Script
 
-1. First, create a directory name `movies-project`, add [`integration/basic.hurl`]
-   and [`integration/create-quiz.hurl`] from the previous tutorial to the directory.
+1. First, create a directory name `movies-project`, add [`integration/basic.hurl`],
+   [`integration/login.hurl`] and [`integration/signup.hurl`] from the previous tutorial to the directory.
 
 <pre><code class="language-shell"><!-- no-escape -->$ mkdir movies-project
 $ cd movies-project
@@ -188,15 +211,15 @@ Starting container
 Waiting server to be ready
 Testing http://localhost:3000
 Running Hurl tests
-[1mintegration/basic.hurl[0m: [1;36mRunning[0m [1/2]
-[1mintegration/basic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 18 ms)
-[1mintegration/login.hurl[0m: [1;36mRunning[0m [2/2]
-[1mintegration/login.hurl[0m: [1;32mSuccess[0m (6 request(s) in 18 ms)
+[1mlogin.hurl[0m: [1;32mSuccess[0m (3 request(s) in 34 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 35 ms)
+[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 53 ms)
 --------------------------------------------------------------------------------
-Executed files:  2
-Succeeded files: 2 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        48 ms
+Executed files:    3
+Executed requests: 15 (283.0/s)
+Succeeded files:   3 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          53 ms
 
 Stopping container
 movies
@@ -412,8 +435,9 @@ In less than half an hour, we have added a full CI/CD pipeline to our project.
 Now, we can add more Hurl tests and start developing new features with confidence!
 
 
-[`integration/basic.hurl`]: https://raw.githubusercontent.com/jcamiel/quiz/master/integration/basic.hurl
-[`integration/create-quiz.hurl`]: https://raw.githubusercontent.com/jcamiel/quiz/master/integration/create-quiz.hurl
+[`integration/basic.hurl`]: https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/basic.hurl
+[`integration/login.hurl`]: https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/login.hurl
+[`integration/signup.hurl`]: https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/signup.hurl
 [GitHub Actions]: https://github.com/features/actions
 [GitLab CI/CD pipelines]: https://docs.gitlab.com/ee/ci/pipelines/
 [`bin/integration.sh`]: https://github.com/jcamiel/quiz/blob/master/bin/integration.sh
@@ -425,3 +449,5 @@ Now, we can add more Hurl tests and start developing new features with confidenc
 [chaining requests]: /docs/tutorial/chaining-requests.md
 [Docker-In-Docker service]: https://docs.gitlab.com/ee/ci/docker/
 [`--variable`]: /docs/manual.md#variable
+[`--jobs 1`]: /docs/manual.md#jobs
+

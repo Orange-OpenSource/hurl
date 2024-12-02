@@ -4,7 +4,7 @@
 
 Request describes an HTTP request: a mandatory [method] and [URL], followed by optional [headers].
 
-Then, [query parameters], [form parameters], [multipart form data], [cookies], [basic authentication] and [options]
+Then, [options], [query parameters], [form parameters], [multipart form data], [cookies], and [basic authentication]
 can be used to configure the HTTP request.
 
 Finally, an optional [body] can be used to configure the HTTP request body.
@@ -29,6 +29,9 @@ alice: secret
         </div>
         <div class="hurl-part-1">
             accept: */*<br>x-powered-by: Express<br>user-agent: Test
+        </div>
+        <div class="hurl-part-2">
+            [Options]<br>...
         </div>
         <div class="hurl-part-2">
             [QueryStringParams]<br>...
@@ -72,7 +75,7 @@ alice: secret
             <br>
         </div>
         <div class="hurl-request-explanation-part-2">
-            <a href="#query-parameters">Query strings</a>, <a href="#form-parameters">form params</a>, <a href="#cookies">cookies</a>, <a href="#basic-authentication">authentication</a> ...<br>(optional sections, unordered)
+            <a href="#options">Options</a>, <a href="#query-parameters">query strings</a>, <a href="#form-parameters">form params</a>, <a href="#cookies">cookies</a>, <a href="#basic-authentication">authentication</a> ...<br>(optional sections, unordered)
         </div>
         <div class="hurl-request-explanation-part-2">
             <br>
@@ -186,6 +189,49 @@ If-Match: "e0023aa4e"
 `If-Match` request header will be sent will the following value `"e0023aa4e"` (started and ended with double quotes).
 
 Headers must follow directly after the [method] and [URL].
+
+### Options
+
+Options used to execute this request.
+
+Options such as [`--location`], [`--verbose`], [`--insecure`] can be used at the command line and applied to every
+request of an Hurl file. An `[Options]` section can be used to apply option to only one request (without passing options
+to the command line), while other requests are unaffected.
+
+```hurl
+GET https://example.org
+# An options section, each option is optional and applied only to this request...
+[Options]
+aws-sigv4: aws:amz:sts     # generate AWS SigV4 Authorization header
+cacert: /etc/cert.pem      # custom certificate file
+cert: /etc/client-cert.pem # client authentication certificate
+key: /etc/client-cert.key  # client authentication certificate key
+compressed: true           # request a compressed response
+connect-timeout: 20s       # connect timeout
+delay: 3s                  # delay for this request
+http3: true                # use HTTP/3 protocol version
+insecure: true             # allow insecure SSL connections and transfers
+ipv6: true                 # use IPv6 addresses
+limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
+location: true             # follow redirection for this request
+max-redirs: 10             # maximum number of redirections
+output: out.html           # dump the response to this file
+path-as-is: true           # do not handle sequences of /../ or /./ in URL path
+retry: 10                  # number of retry if HTTP/asserts errors
+retry-interval: 500ms      # interval between retry
+skip: false                # skip this request
+unix-socket: sock          # use Unix socket for transfer
+user: bob:secret           # use basic authentication
+proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
+variable: country=Italy    # define variable country
+variable: planet=Earth     # define variable planet
+verbose: true              # allow verbose output
+very-verbose: true         # allow more verbose output    
+```
+
+> Variable defined in an `[Options]` section are defined also for the next entries. This is
+> the exception, all other options are defined only for the current request.
+
 
 ### Query parameters
 
@@ -624,48 +670,6 @@ file,data.bin;
 
 File are relative to the input Hurl file, and cannot contain implicit parent directory (`..`). You can use  
 [`--file-root` option] to specify the root directory of all file nodes.
-
-### Options
-
-Options used to execute this request. 
-
-Options such as [`--location`], [`--verbose`], [`--insecure`] can be used at the command line and applied to every 
-request of an Hurl file. An `[Options]` section can be used to apply option to only one request (without passing options 
-to the command line), while other requests are unaffected.
-
-```hurl
-GET https://example.org
-# An options section, each option is optional and applied only to this request...
-[Options]
-aws-sigv4: aws:amz:sts     # generate AWS SigV4 Authorization header
-cacert: /etc/cert.pem      # custom certificate file
-cert: /etc/client-cert.pem # client authentication certificate
-key: /etc/client-cert.key  # client authentication certificate key
-compressed: true           # request a compressed response
-connect-timeout: 20s       # connect timeout
-delay: 3s                  # delay for this request
-http3: true                # use HTTP/3 protocol version
-insecure: true             # allow insecure SSL connections and transfers
-ipv6: true                 # use IPv6 addresses
-limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
-location: true             # follow redirection for this request
-max-redirs: 10             # maximum number of redirections
-output: out.html           # dump the response to this file
-path-as-is: true           # do not handle sequences of /../ or /./ in URL path
-retry: 10                  # number of retry if HTTP/asserts errors
-retry-interval: 500ms      # interval between retry
-skip: false                # skip this request
-unix-socket: sock          # use Unix socket for transfer
-user: bob:secret           # use basic authentication
-proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
-variable: country=Italy    # define variable country
-variable: planet=Earth     # define variable planet
-verbose: true              # allow verbose output
-very-verbose: true         # allow more verbose output    
-```
-
-> Variable defined in an `[Options]` section are defined also for the next entries. This is 
-> the exception, all other options are defined only for the current request.
 
 [method]: #method
 [URL]: #url

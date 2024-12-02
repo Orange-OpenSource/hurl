@@ -120,13 +120,13 @@ instead of a `302 Found`. We can also use an [`url` assert] to check what's the 
 
 ```shell
 $ hurl --test signup.hurl
-[1msignup.hurl[0m: [1;36mRunning[0m [1/1]
-[1msignup.hurl[0m: [1;32mSuccess[0m (4 request(s) in 16 ms)
+[1msignup.hurl[0m: [1;32mSuccess[0m (4 request(s) in 26 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        18 ms
+Executed files:    1
+Executed requests: 4 (148.1/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          27 ms
 ```
 
 ### Invalid user creation
@@ -196,13 +196,13 @@ created and sent and you don't test that your backend has CSRF protection.
 
 ```shell
 $ hurl --test signup.hurl
-[1msignup.hurl[0m: [1;36mRunning[0m [1/1]
-[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 28 ms)
+[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 38 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        35 ms
+Executed files:    1
+Executed requests: 8 (205.1/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          39 ms
 ```
 
 ## Comments
@@ -243,13 +243,13 @@ xpath "//comment" count == 0     # Check that we don't leak comments
 
 ```shell
 $ hurl --test signup.hurl
-[1msignup.hurl[0m: [1;36mRunning[0m [1/1]
-[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 28 ms)
+[1msignup.hurl[0m: [1;32mSuccess[0m (8 request(s) in 47 ms)
 --------------------------------------------------------------------------------
-Executed files:  1
-Succeeded files: 1 (100.0%)
-Failed files:    0 (0.0%)
-Duration:        31 ms
+Executed files:    1
+Executed requests: 8 (166.7/s)
+Succeeded files:   1 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          48 ms
 ```
 
 ## Recap
