@@ -41,10 +41,10 @@ jsonpath "$.errors[{{index}}].id" == "error"
 
 Besides variables, functions can be used to generate dynamic values. Current functions are:
 
-| Function  | Description                                                 |
-|-----------|-------------------------------------------------------------|
-| `newUuid` | Generates an [UUID v4 random string]                        |
-| `newDate` | Generates a [RFC 3339] UTC date string, at the current time |
+| Function  | Description                                                  |
+|-----------|--------------------------------------------------------------|
+| `newUuid` | Generates an [UUID v4 random string]                         |
+| `newDate` | Generates an [RFC 3339] UTC date string, at the current time |
 
 In the following example, we use `newDate` to generate a dynamic query parameter:
 
