@@ -191,6 +191,7 @@ HTTP 200
         * [Templating a JSON Body](#templating-a-json-body)
         * [Templating a XML Body](#templating-a-xml-body)
         * [Using GraphQL Query](#using-graphql-query)
+        * [Using Dynamic Datas](#using-dynamic-datas)
     * [Testing Response](#testing-response)
         * [Testing Status Code](#testing-status-code)
         * [Testing Response Headers](#testing-response-headers)
@@ -585,6 +586,32 @@ variables {
 GraphQL queries can also use [Hurl templates].
 
 [Doc](https://hurl.dev/docs/request.html#graphql-body)
+
+### Using Dynamic Datas
+
+[Functions] like `newUuid` and `newDate` can be used in templates to create dynamic datas:
+
+
+A file that creates a dynamic email (i.e `0531f78f-7f87-44be-a7f2-969a1c4e6d97@test.com`):
+
+```hurl
+POST https://example.org/api/foo
+{
+  "name": "foo",
+  "email": "{{newUuid}}@test.com"
+}
+```
+
+A file that creates a dynamic query parameter (i.e `2024-12-02T10:35:44.461731Z`):
+
+```hurl
+GET https://example.org/api/foo
+[QueryStringParams]
+date: {{newDate}}
+HTTP 200
+```
+
+[Doc](https://hurl.dev/docs/templates.html#functions)
 
 ## Testing Response
 
@@ -1329,7 +1356,7 @@ Precompiled binary is available at [Hurl latest GitHub release]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ VERSION=5.0.1
+$ VERSION=6.0.0
 $ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
 $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 ```
@@ -1339,7 +1366,7 @@ $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ VERSION=5.0.1
+$ VERSION=6.0.0
 $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl_${VERSION}_amd64.deb
 $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 ```
@@ -1524,9 +1551,9 @@ Please follow the [contrib on Windows section].
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
-[HTML]: /docs/standalone/hurl-5.0.1.html
-[PDF]: /docs/standalone/hurl-5.0.1.pdf
-[Markdown]: /docs/standalone/hurl-5.0.1.md
+[HTML]: /docs/standalone/hurl-6.0.0.html
+[PDF]: /docs/standalone/hurl-6.0.0.pdf
+[Markdown]: https://hurl.dev/docs/standalone/hurl-6.0.0.html
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
 [XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
@@ -1548,6 +1575,7 @@ Please follow the [contrib on Windows section].
 [`--json` option]: https://hurl.dev/docs/manual.html#json
 [`--resolve`]: https://hurl.dev/docs/manual.html#resolve
 [`--connect-to`]: https://hurl.dev/docs/manual.html#connect-to
+[Functions]: https://hurl.dev/docs/templates.html#functions
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
 [Visual C++ Redistributable Package]: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version
