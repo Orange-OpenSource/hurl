@@ -18,7 +18,7 @@ fi
 echo "version=$version"
 echo "date=$date"
 changelog=$(bin/release/changelog_extract.py "$version" | grep '^\* ')
-issues=$(bin/release/get_release_note.py "$version" | grep '^\* ')
+issues=$(bin/release/get_release_note.py --token "$GITHUB_TOKEN" "$version" | grep '^\* ')
 
 if [ "$changelog" != "$issues" ];  then
     echo "Diff in issues in CHANGELOG"
