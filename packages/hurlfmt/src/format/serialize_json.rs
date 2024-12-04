@@ -36,7 +36,12 @@ impl JValue {
     pub fn format(&self) -> String {
         match self {
             JValue::Null => "null".to_string(),
-            JValue::Number(n) => n.to_string(),
+            JValue::Number(n) => {
+                // Validate the number without altering its original representation
+                n.parse::<f64>()
+                    .expect("Invalid numeric string in JValue::Number");
+                n.clone() // this will return the original string to preserve the exact format
+            }
             JValue::String(s) => format!("\"{}\"", s.chars().map(format_char).collect::<String>()),
             JValue::Boolean(b) => b.to_string(),
             JValue::List(elem) => {
@@ -148,5 +153,18 @@ pub mod tests {
             .format(),
             r#"{"name":"Bob","age":20}"#
         );
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid numeric string in JValue::Number")]
+    pub fn test_invalid_number_panics() {
+        let invalid_number = JValue::Number("not_a_number".to_string());
+        invalid_number.format();
+    }
+
+    #[test]
+    pub fn test_valid_number_format() {
+        let valid_number = JValue::Number("123".to_string());
+        assert_eq!(valid_number.format(), "123");
     }
 }
