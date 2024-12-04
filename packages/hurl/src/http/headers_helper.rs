@@ -124,7 +124,7 @@ mod tests {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Host", "localhost:8000"));
 
-        let raw_headers = &["User-Agent: hurl/6.0.0", "Invalid-Header"];
+        let raw_headers = &["User-Agent: hurl/6.1.0", "Invalid-Header"];
         let aggregated = headers.aggregate_raw_headers(raw_headers);
 
         assert_eq!(
