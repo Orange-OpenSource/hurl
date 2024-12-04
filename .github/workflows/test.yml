@@ -430,7 +430,7 @@ jobs:
         wsl --update
         wsl --version
     - name: Setup wsl Ubuntu
-      uses: Vampire/setup-wsl@v3.1.3
+      uses: Vampire/setup-wsl@v3.1.4
       with:
         distribution: Ubuntu-22.04
     - name: Convert to wsl2
