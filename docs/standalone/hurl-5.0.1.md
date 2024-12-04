@@ -1981,9 +1981,7 @@ POST http://localhost:3000/api/login
 With [curl](https://curl.haxx.se):
 
 ```
-curl --header "Content-Type: application/json" \
-     --request POST \
-     --data '{"username": "xyz","password": "xyz"}' \
+curl --json --data '{"username": "xyz","password": "xyz"}' \
      http://localhost:3000/api/login
 ``` 
 
