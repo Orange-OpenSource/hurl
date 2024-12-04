@@ -38,16 +38,18 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     }
 
     let save = reader.cursor();
-    let s = reader.read_while(|c| c.is_ascii_digit());
+    let s = reader.read_while(|c| c.is_ascii_digit() || c == '_');
 
-    // if the first digit is zero, you should not have any more digits
-    if first_digit == '0' && !s.is_empty() {
+    
+    if first_digit == '0' && s.chars().any(|c| c.is_ascii_digit()) {
         let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
         };
         return Err(ParseError::new(save.pos, false, kind));
     }
-    match format!("{first_digit}{s}").parse() {
+
+    let sanitized = format!("{first_digit}{s}").replace('_', ""); 
+    match sanitized.parse() {
         Ok(value) => Ok(value),
         Err(_) => {
             let kind = ParseErrorKind::Expecting {
@@ -73,14 +75,14 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         Err(_) => "",
         Ok(_) => "-",
     };
-    let integer_digits = reader.read_while(|c| c.is_ascii_digit());
+    let integer_digits = reader.read_while(|c| c.is_ascii_digit() || c == '_');
     if integer_digits.is_empty() {
         let kind = ParseErrorKind::Expecting {
             value: "number".to_string(),
         };
         return Err(ParseError::new(reader.cursor().pos, true, kind));
 
-        // if the first digit is zero, you should not have any more digits
+        
     } else if integer_digits.len() > 1 && integer_digits.starts_with('0') {
         let save = reader.cursor();
         let kind = ParseErrorKind::Expecting {
@@ -92,14 +94,16 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     // Float
     if try_literal(".", reader).is_ok() {
         let save = reader.cursor();
-        let decimal_digits = reader.read_while(|c| c.is_ascii_digit());
+        let decimal_digits = reader.read_while(|c| c.is_ascii_digit() || c == '_');
         if decimal_digits.is_empty() {
             let kind = ParseErrorKind::Expecting {
                 value: String::from("decimal digits"),
             };
             return Err(ParseError::new(save.pos, false, kind));
         }
-        match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
+        let sanitized_integer = integer_digits.replace('_', ""); 
+        let sanitized_decimal = decimal_digits.replace('_', "");
+        match format!("{sign}{sanitized_integer}.{sanitized_decimal}").parse() {
             Ok(value) => {
                 let encoded = reader.read_from(start.index);
                 Ok(Number::Float(Float { value, encoded }))
@@ -114,9 +118,10 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 
     // Integer or BigInteger
     } else {
-        match format!("{sign}{integer_digits}").parse() {
+        let sanitized_integer = integer_digits.replace('_', ""); 
+        match format!("{sign}{sanitized_integer}").parse() {
             Ok(value) => Ok(Number::Integer(value)),
-            Err(_) => Ok(Number::BigInteger(integer_digits)),
+            Err(_) => Ok(Number::BigInteger(sanitized_integer)),
         }
     }
 }
@@ -325,5 +330,107 @@ mod tests {
             }
         );
         assert!(!error.recoverable);
+    }
+
+    #[test]
+    fn test_natural_with_underscores() {
+        let mut reader = Reader::new("1_000");
+        assert_eq!(natural(&mut reader).unwrap(), 1000);
+        assert_eq!(reader.cursor().index, 5);
+
+        let mut reader = Reader::new("32_000");
+        assert_eq!(natural(&mut reader).unwrap(), 32000);
+        assert_eq!(reader.cursor().index, 6);
+
+        let mut reader = Reader::new("0");
+        assert_eq!(natural(&mut reader).unwrap(), 0);
+        assert_eq!(reader.cursor().index, 1);
+    }
+
+    #[test]
+    fn test_natural_error_with_underscores() {
+        let mut reader = Reader::new("01_000");
+        let error = natural(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 2 });
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: String::from("natural")
+            }
+        );
+        assert!(!error.recoverable);
+
+        let mut reader = Reader::new("_1000");
+        let error = natural(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: String::from("natural")
+            }
+        );
+        assert!(error.recoverable);
+    }
+
+    #[test]
+    fn test_integer_with_underscores() {
+        let mut reader = Reader::new("1_000");
+        assert_eq!(integer(&mut reader).unwrap(), 1000);
+        assert_eq!(reader.cursor().index, 5);
+
+        let mut reader = Reader::new("-1_000");
+        assert_eq!(integer(&mut reader).unwrap(), -1000);
+        assert_eq!(reader.cursor().index, 6);
+
+        let mut reader = Reader::new("0");
+        assert_eq!(integer(&mut reader).unwrap(), 0);
+        assert_eq!(reader.cursor().index, 1);
+    }
+
+    #[test]
+    fn test_integer_error_with_underscores() {
+        let mut reader = Reader::new("-_1000");
+        let error = integer(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 2 });
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Expecting {
+                value: String::from("natural")
+            }
+        );
+        assert!(error.recoverable);
+    }
+
+    #[test]
+    fn test_float_with_underscores() {
+        let mut reader = Reader::new("1_000.5_00");
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Float(Float {
+                value: 1000.5,
+                encoded: "1_000.5_00".to_string()
+            })
+        );
+        assert_eq!(reader.cursor().index, 10);
+
+        let mut reader = Reader::new("-1_000.50");
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Float(Float {
+                value: -1000.5,
+                encoded: "-1_000.50".to_string()
+            })
+        );
+        assert_eq!(reader.cursor().index, 9);
+
+        let mut reader = Reader::new("0.1_2_3");
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Float(Float {
+                value: 0.123,
+                encoded: "0.1_2_3".to_string()
+            })
+        );
+        assert_eq!(reader.cursor().index, 7);
     }
 }
