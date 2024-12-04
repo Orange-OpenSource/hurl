@@ -20,7 +20,7 @@ use encoding::EncodingRef;
 
 use crate::http::header::CONTENT_ENCODING;
 use crate::http::response_decoding::ContentEncoding;
-use crate::http::{mimetype, HeaderVec, HttpError, CONTENT_TYPE};
+use crate::http::{mimetype, Header, HeaderVec, HttpError, CONTENT_TYPE};
 
 impl HeaderVec {
     /// Returns optional Content-type header value.
@@ -59,6 +59,19 @@ impl HeaderVec {
             }
         }
         Ok(vec![])
+    }
+
+    /// Aggregates the headers from `self` and `raw_headers`
+    ///
+    /// Returns the aggregated `HeaderVec`
+    #[allow(dead_code)]
+    pub fn aggregate_raw_headers(&self, raw_headers: &[&str]) -> HeaderVec {
+        let mut headers = self.clone();
+        let to_aggregate = raw_headers.iter().filter_map(|h| Header::parse(h));
+        for header in to_aggregate {
+            headers.push(header);
+        }
+        headers
     }
 }
 
@@ -104,5 +117,24 @@ mod tests {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("content-type", "text/plain"));
         assert_eq!(headers.character_encoding().unwrap().name(), "utf-8");
+    }
+
+    #[test]
+    fn aggregate_raw_headers() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Host", "localhost:8000"));
+
+        let raw_headers = &["User-Agent: hurl/6.0.0", "Invalid-Header"];
+        let aggregated = headers.aggregate_raw_headers(raw_headers);
+
+        assert_eq!(
+            aggregated.get("Host"),
+            Some(&Header::new("Host", "localhost:8000"))
+        );
+        assert_eq!(
+            aggregated.get("User-Agent"),
+            Some(&Header::new("User-Agent", "hurl/6.1.0"))
+        );
+        assert_eq!(aggregated.get("Invalid-Header"), None);
     }
 }

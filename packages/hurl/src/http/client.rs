@@ -488,7 +488,12 @@ impl Client {
         self.set_multipart(&request_spec.multipart)?;
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
-        self.set_headers(request_spec, options)?;
+        let headers_spec = &request_spec.headers;
+        self.set_headers(
+            headers_spec,
+            request_spec.implicit_content_type.as_deref(),
+            options,
+        )?;
         if let Some(aws_sigv4) = &options.aws_sigv4 {
             if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
                 return match e.code() {
@@ -533,19 +538,20 @@ impl Client {
     /// Sets HTTP headers.
     fn set_headers(
         &mut self,
-        request_spec: &RequestSpec,
+        headers_spec: &HeaderVec,
+        implicit_content_type: Option<&str>,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
         let mut list = List::new();
 
-        for header in &request_spec.headers {
+        for header in headers_spec {
             list.append(&format!("{}: {}", header.name, header.value))?;
         }
 
         // If request has no Content-Type header, we set it if the content type has been set
         // implicitly on this request.
-        if !request_spec.headers.contains_key(CONTENT_TYPE) {
-            if let Some(s) = &request_spec.implicit_content_type {
+        if !headers_spec.contains_key(CONTENT_TYPE) {
+            if let Some(s) = implicit_content_type {
                 list.append(&format!("{}: {s}", CONTENT_TYPE))?;
             } else {
                 // We remove default Content-Type headers added by curl because we want
@@ -560,13 +566,13 @@ impl Client {
         // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
         // present, causing some APIs to reject the request.
         // Therefore, we only remove this header when not in aws_sigv4 mode.
-        if !request_spec.headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
+        if !headers_spec.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
             list.append(&format!("{}:", EXPECT))?;
         }
 
-        if !request_spec.headers.contains_key(USER_AGENT) {
+        if !headers_spec.contains_key(USER_AGENT) {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
@@ -586,12 +592,12 @@ impl Client {
             } else {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
-                if !request_spec.headers.contains_key(AUTHORIZATION) {
+                if !headers_spec.contains_key(AUTHORIZATION) {
                     list.append(&format!("{}: Basic {authorization}", AUTHORIZATION))?;
                 }
             }
         }
-        if options.compressed && !request_spec.headers.contains_key(ACCEPT_ENCODING) {
+        if options.compressed && !headers_spec.contains_key(ACCEPT_ENCODING) {
             list.append(&format!("{}: gzip, deflate, br", ACCEPT_ENCODING))?;
         }
 
