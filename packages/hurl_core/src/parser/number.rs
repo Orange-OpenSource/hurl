@@ -40,7 +40,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let save = reader.cursor();
     let s = reader.read_while(|c| c.is_ascii_digit() || c == '_');
 
-    
+    // if the first digit is zero, you should not have any more digits (except underscores)
     if first_digit == '0' && s.chars().any(|c| c.is_ascii_digit()) {
         let kind = ParseErrorKind::Expecting {
             value: String::from("natural"),
@@ -48,7 +48,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
         return Err(ParseError::new(save.pos, false, kind));
     }
 
-    let sanitized = format!("{first_digit}{s}").replace('_', ""); 
+    let sanitized = format!("{first_digit}{s}").replace('_', "");
     match sanitized.parse() {
         Ok(value) => Ok(value),
         Err(_) => {
@@ -82,7 +82,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         };
         return Err(ParseError::new(reader.cursor().pos, true, kind));
 
-        
+        // if the first digit is zero, you should not have any more digits (except underscores)
     } else if integer_digits.len() > 1 && integer_digits.starts_with('0') {
         let save = reader.cursor();
         let kind = ParseErrorKind::Expecting {
@@ -101,7 +101,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
             };
             return Err(ParseError::new(save.pos, false, kind));
         }
-        let sanitized_integer = integer_digits.replace('_', ""); 
+        let sanitized_integer = integer_digits.replace('_', "");
         let sanitized_decimal = decimal_digits.replace('_', "");
         match format!("{sign}{sanitized_integer}.{sanitized_decimal}").parse() {
             Ok(value) => {
@@ -118,7 +118,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 
     // Integer or BigInteger
     } else {
-        let sanitized_integer = integer_digits.replace('_', ""); 
+        let sanitized_integer = integer_digits.replace('_', "");
         match format!("{sign}{sanitized_integer}").parse() {
             Ok(value) => Ok(Number::Integer(value)),
             Err(_) => Ok(Number::BigInteger(sanitized_integer)),
