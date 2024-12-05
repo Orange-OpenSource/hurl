@@ -1,4 +1,4 @@
-.TH hurl 1 "30 Aug 2024" "hurl 5.0.1" " Hurl Manual"
+.TH hurl 1 "04 Dec 2024" "hurl 6.0.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -163,8 +163,6 @@ You can specify time units in the connect timeout expression. Set Hurl to use a 
 
 See also \fI-m, --max-time\fP.
 
-This is a cli-only option.
-
 .IP "--connect-to <HOST1:PORT1:HOST2:PORT2> "
 
 For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.
@@ -196,6 +194,12 @@ Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
 Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
+
+.IP "--curl <FILE> "
+
+Export each request to a list of curl commands.
 
 This is a cli-only option.
 
@@ -302,6 +306,11 @@ This is a cli-only option.
 
 Private key file name.
 
+.IP "--limit-rate <SPEED> "
+
+Specify the maximum transfer rate you want Hurl to use, for both downloads and uploads. This feature is useful if you have a limited pipe and you would like your transfer not to use your entire bandwidth. To make it slower than it otherwise would be.
+The given speed is measured in bytes/second.
+
 .IP "-L, --location "
 
 Follow redirect. To limit the amount of redirects to follow use the \fI--max-redirs\fP option
@@ -313,7 +322,7 @@ This may or may not introduce a security breach if the site redirects you to a s
 
 .IP "--max-filesize <BYTES> "
 
-Specify the maximum size (in bytes) of a file to download. If the file requested is larger than this value, the transfer does not start.
+Specify the maximum size in bytes of a file to download. If the file requested is larger than this value, the transfer does not start.
 
 This is a cli-only option.
 
