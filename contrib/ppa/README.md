@@ -40,6 +40,7 @@ gpg --armor --export "${gpg_keyid}" > /tmp/gpg/mypublickey.asc
 gpg --armor --export-secret-keys "${gpg_keyid}" > /tmp/gpg/myprivatekey.asc
 
 ```
+
 ## Choose Hurl version and Ubuntu codename
 
 ```
@@ -74,7 +75,7 @@ gpg --import /tmp/myprivatekey.asc
 
 ```
 
-## Clone hurl
+## Clone Hurl
 
 ```
 rm -fr /tmp/ppa || true
@@ -218,6 +219,8 @@ rm -fr hurl_"${hurl_version}"*
 
 # Test Hurl from published PPA
 
+## Choose Hurl version and Ubuntu codename
+
 ```shell
 echo -n "hurl_version=" && read -r hurl_version
 echo -n "Ubuntu codename=" && read -r codename
@@ -225,6 +228,7 @@ docker run -it --rm --env hurl_version="${hurl_version}" --env codename="${coden
 
 ```
 
+## Install Hurl
 ```
 export DEBIAN_FRONTEND=noninteractive
 yes | unminimize
@@ -235,16 +239,25 @@ apt install -y git sudo man-db curl software-properties-common && \
     apt install -y hurl="${hurl_version}"*
 ```
 
+
+## Check Hurl installed version
+
 ```
 hurl --version
 hurlfmt --version
 man hurl | head -1
 man hurlfmt | head -1
-git clone --depth 1 --branch "${hurl_version}" https://github.com/Orange-OpenSource/hurl.git /tmp/hurl-"${hurl_version}"
-cd /tmp/hurl-"${hurl_version}" && \
-    ./bin/install_prerequisites_ubuntu.sh && \
-    ./bin/install_python3_venv.sh && \
-    ./bin/test/test_prerequisites.sh && \
-    ./bin/test/test_integ.sh
+```
 
+## Run Hurl from STDIN
+
+```
+echo -e "GET https://hurl.dev\n\nHTTP 200" | hurl --test --color
+```
+
+## Run  Hurl from FILE
+
+```
+echo -e "GET https://hurl.dev\n\nHTTP 200" > /tmp/test.hurl
+hurl --test --color /tmp/test.hurl
 ```
