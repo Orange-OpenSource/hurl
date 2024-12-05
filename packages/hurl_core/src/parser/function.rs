@@ -21,7 +21,6 @@ use crate::reader::Reader;
 
 /// Parse a function
 ///
-
 pub fn parse(reader: &mut Reader) -> ParseResult<Function> {
     let start = reader.cursor();
     let function_name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');

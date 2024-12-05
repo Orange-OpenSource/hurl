@@ -20,7 +20,6 @@
  * Serde-json can not be easily used for serialization here because of the orphan rule.
  * It seems easier just to reimplement it from scratch (around 50 lines of code)
  */
-
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum JValue {

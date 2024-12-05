@@ -22,7 +22,6 @@ use crate::reader::Reader;
 ///
 /// Encoded
 /// YW55IGNhcm5hbCBwbGVhcw==    any carnal pleas   # [97, 110, 121, 32, 99, 97, 114, 110, 97, 108, 32, 112, 108, 101, 97, 115]
-
 pub fn parse(reader: &mut Reader) -> Vec<u8> {
     let mut bytes = vec![];
     let mut buf = vec![]; // base64 text

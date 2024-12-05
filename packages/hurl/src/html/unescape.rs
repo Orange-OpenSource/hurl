@@ -101,12 +101,12 @@ lazy_static! {
 ///
 /// See MDN decoder tool: <https://mothereff.in/html-entities>
 pub fn html_unescape(text: &str) -> String {
-    return if text.chars().any(|c| c == '&') {
+    if text.chars().any(|c| c == '&') {
         CHAR_REF
             .replace_all(text, |caps: &Captures| {
                 let s = &caps[1];
                 let s0 = s.chars().next().unwrap();
-                return if s0 == '#' {
+                if s0 == '#' {
                     // Numeric charref
                     let s1 = s.chars().nth(1).unwrap();
                     let num = if s1 == 'x' || s1 == 'X' {
@@ -144,12 +144,12 @@ pub fn html_unescape(text: &str) -> String {
                         }
                     }
                     format!("&{s}")
-                };
+                }
             })
             .to_string()
     } else {
         text.to_string()
-    };
+    }
 }
 
 #[cfg(test)]

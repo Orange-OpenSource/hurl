@@ -15,17 +15,11 @@
  * limitations under the License.
  *
  */
+//! This module defines an HTTP ResponseCookie,
+//! namely the cookie returned from the response Set-Cookie header
 
-///
-/// This module defines a HTTP ResponseCookie,
-/// namely the cookie returned from the response Set-Cookie header
-///
-///
-
-///
-/// Cookie return from HTTP Response
+/// Cookie returned from HTTP Response
 /// It contains arbitrary attributes.
-///
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ResponseCookie {
     pub name: String,
