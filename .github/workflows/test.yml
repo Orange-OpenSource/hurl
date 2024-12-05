@@ -425,17 +425,13 @@ jobs:
       uses: actions/checkout@v4.2.2
       with:
        ref: ${{ inputs.branch }}
-    - name: Update wsl
-      run: |
-        wsl --update
-        wsl --version
     - name: Setup wsl Ubuntu
       uses: Vampire/setup-wsl@v4.0.0
       with:
         distribution: Ubuntu-22.04
-    - name: Convert to wsl2
+        wsl-version: 2
+    - name: List wsl distribution
       run: |
-        wsl --set-version Ubuntu 2
         wsl --list --verbose --all
     - shell: wsl-bash {0}
       run: |
