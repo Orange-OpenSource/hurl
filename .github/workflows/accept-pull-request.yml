@@ -287,21 +287,3 @@ jobs:
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
-
-      - name: Close pull request
-        if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
-        run: |
-          if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
-            comment="✅ Pull request merged without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
-          else
-            comment="✅ Pull request merged and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
-          fi
-          gh pr close "${PR_NUMBER}" --delete-branch --comment "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.NEW_COMMITS_FILE }})" && exit_code=0 || exit_code=1
-          if [ ${exit_code} -eq 0 ] ; then
-            echo "  - ${comment}"
-          else
-            comment="❌ A problem occurred when closing pull request and/or deleting branch."
-            echo "  - ${comment}"
-            #gh pr comment "${PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-            #exit 1
-          fi
