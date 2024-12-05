@@ -229,10 +229,10 @@ docker run -it --rm --env hurl_version="${hurl_version}" --env codename="${coden
 export DEBIAN_FRONTEND=noninteractive
 yes | unminimize
 # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1550DC447B95F03B
-apt list --all-versions
 apt install -y git sudo man-db curl software-properties-common && \
     apt-add-repository -y ppa:lepapareil/hurl && \
-    apt install -y hurl="${hurl_version}"
+    apt list --all-versions hurl && \
+    apt install -y hurl="${hurl_version}"*
 ```
 
 ```
