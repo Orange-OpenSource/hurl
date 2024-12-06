@@ -18,9 +18,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
 
-    - name: Environment
-      run: bin/environment.sh
-
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
 
@@ -30,11 +27,11 @@ jobs:
     - name: Install Grcov
       run: bin/install_grcov.sh
 
+    - name: Environment
+      run: bin/environment.sh
+
     - name: Build
       run: cargo build
-
-    - name: Test Prerequisites
-      run: bin/test/test_prerequisites.sh
 
     - name: Run Coverage
       run: bin/coverage_run.sh

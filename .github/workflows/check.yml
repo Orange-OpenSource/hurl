@@ -44,6 +44,11 @@ jobs:
       if: always()
       run: bin/check/hadolint.sh ./contrib/docker/Dockerfile
 
+    - name: Install Python 3.12
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.12'
+
     - name: Install prerequisites
       if: always()
       run: |

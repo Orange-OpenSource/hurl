@@ -22,10 +22,12 @@ jobs:
       uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
-    - name: Install Python 3.10
+    - name: Install prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Python 3.11
       uses: actions/setup-python@v5.3.0
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
@@ -34,10 +36,10 @@ jobs:
         which python3
         python3 --version
         pip --version
-    - name: Install
-      run: |
-        bin/install_prerequisites_ubuntu.sh
-        bin/install_rust.sh
+    - name : Environment
+      run: bin/environment.sh
+    - name: Install rust
+      run: bin/install_rust.sh
     - name: Build
       run: |
         bin/release/release.sh
@@ -120,28 +122,30 @@ jobs:
     - name: Install package and tests integ
       uses: addnab/docker-run-action@v3
       with:
-        image: ubuntu
+        image: ubuntu:22.04
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
         run: |
           set -e
-          echo "::group::Install system prerequisites"
+          echo "::group::Install Prerequisites"
             bin/install_prerequisites_ubuntu.sh
           echo "::endgroup::"
-          echo "::group::Install python3 venv"
+          echo "::group::Install python 3.11"
+            bin/install_pythonx_for_ubuntu.sh 11
             bin/install_python3_venv.sh
             export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
+          echo "::endgroup::"
+          echo "::group::Install Rust"
+            bin/install_rust.sh
+            . "$HOME/.cargo/env"
           echo "::endgroup::"
           echo "::group::Environment"
             bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install generic linux package"
             bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
+            export PATH="/tmp/hurl-generic-linux/bin:$PATH"
           echo "::endgroup::"
-          echo "::group::Install tests prerequisites"
+          echo "::group::Install tests integ prerequisistes"
             bin/test/test_prerequisites.sh
           echo "::endgroup::"
           echo "::group::Tests"
@@ -176,7 +180,7 @@ jobs:
         run: |
           set -e
           echo "::group::Install system prerequisites"
-            bin/install_prerequisites_ubuntu.sh
+            bin/install_prerequisites_debian.sh
           echo "::endgroup::"
           echo "::group::Install python3 venv"
             bin/install_python3_venv.sh
@@ -389,12 +393,12 @@ jobs:
       uses: actions/checkout@v4.2.2
       with:
         ref: ${{ inputs.branch }}
-    - name: Install Python 3.10
-      uses: actions/setup-python@v5.3.0
-      with:
-        python-version: '3.10'
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Python 3.11
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
