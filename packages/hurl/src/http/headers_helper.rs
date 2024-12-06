@@ -124,7 +124,12 @@ mod tests {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Host", "localhost:8000"));
 
-        let raw_headers = &["User-Agent: hurl/6.1.0", "Invalid-Header"];
+        let raw_headers = &[
+            "User-Agent: hurl/6.1.0",
+            "Invalid-Header",
+            "Repeated-Header: content-1",
+            "Repeated-Header: content-2",
+        ];
         let aggregated = headers.aggregate_raw_headers(raw_headers);
 
         assert_eq!(
@@ -136,5 +141,12 @@ mod tests {
             Some(&Header::new("User-Agent", "hurl/6.1.0"))
         );
         assert_eq!(aggregated.get("Invalid-Header"), None);
+        assert_eq!(
+            aggregated.get_all("Repeated-Header"),
+            vec![
+                &Header::new("Repeated-Header", "content-1"),
+                &Header::new("Repeated-Header", "content-2")
+            ]
+        );
     }
 }
