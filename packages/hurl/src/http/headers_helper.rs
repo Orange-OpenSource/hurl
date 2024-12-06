@@ -123,12 +123,13 @@ mod tests {
     fn aggregate_raw_headers() {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Host", "localhost:8000"));
+        headers.push(Header::new("Repeated-Header", "original"));
 
         let raw_headers = &[
             "User-Agent: hurl/6.1.0",
             "Invalid-Header",
-            "Repeated-Header: content-1",
-            "Repeated-Header: content-2",
+            "Repeated-Header: aggregated-1",
+            "Repeated-Header: aggregated-2",
         ];
         let aggregated = headers.aggregate_raw_headers(raw_headers);
 
@@ -144,8 +145,9 @@ mod tests {
         assert_eq!(
             aggregated.get_all("Repeated-Header"),
             vec![
-                &Header::new("Repeated-Header", "content-1"),
-                &Header::new("Repeated-Header", "content-2")
+                &Header::new("Repeated-Header", "original"),
+                &Header::new("Repeated-Header", "aggregated-1"),
+                &Header::new("Repeated-Header", "aggregated-2")
             ]
         );
     }
