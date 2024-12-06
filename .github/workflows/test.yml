@@ -400,10 +400,14 @@ jobs:
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-test-windows-x64
-    - name: Environment
-      run: .\bin\environment.ps1
     - name: Install Prerequisites
       run: .\bin\install_prerequisites_windows.ps1
+    - name: Install Python 3.11
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
+    - name: Environment
+      run: .\bin\environment.ps1
     - name: Build and test
       run: .\bin\test\test.ps1
     - name: Archive production artifacts

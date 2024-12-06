@@ -21,8 +21,10 @@ Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
 $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")
 if ($LASTEXITCODE) { Throw }
 
-# update pip
-python -m pip install --upgrade pip --quiet
+# install python 3.11
+choco install --confirm python311
+if ($LASTEXITCODE) { Throw }
+python3 -m pip install --upgrade pip --quiet
 if ($LASTEXITCODE) { Throw }
 
 # install proxy
