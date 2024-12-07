@@ -315,7 +315,7 @@ jobs:
         path: |
           ./**/*.log
 
-  test-docker-x64-packages:
+  test-dockerfile-x64:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository

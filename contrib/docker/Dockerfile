@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM alpine:3.17 AS builder
+FROM alpine:3.21 AS builder
 ARG TARGETPLATFORM
 WORKDIR /tmp/hurl-docker
 COPY . /tmp/hurl-docker
@@ -11,7 +11,7 @@ RUN apk add --no-cache bash git && \
     bash -c "bin/install_rust.sh" && \
     bash -c "./bin/release/release.sh"
 
-FROM --platform=$TARGETPLATFORM alpine:3.17 AS runner
+FROM alpine:3.21 AS runner
 ARG docker_build_date
 ARG docker_build_tag
 LABEL "org.opencontainers.image.source"="https://github.com/Orange-OpenSource/hurl"
@@ -27,10 +27,14 @@ LABEL "com.orange.hurl.vendor"="Orange-OpenSource"
 LABEL "com.orange.hurl.licenses"="Apache-2.0"
 LABEL "com.orange.hurl.title"="Hurl"
 LABEL "com.orange.hurl.description"="Hurl is a command line tool that runs HTTP requests defined in a simple plain text format"
-LABEL "com.orange.hurl.base.name"="alpine:3.17"
+LABEL "com.orange.hurl.base.name"="alpine:3.21"
 COPY --from=builder /tmp/hurl-docker/target/release/hurl /usr/bin/
 COPY --from=builder /tmp/hurl-docker/target/release/hurlfmt /usr/bin/
 COPY --from=builder /usr/lib/libcurl.so.* /usr/lib/
+COPY --from=builder /usr/lib/libcares.so.* /usr/lib/
+COPY --from=builder /usr/lib/libpsl.so.* /usr/lib/
+COPY --from=builder /usr/lib/libzstd.so.* /usr/lib/
+COPY --from=builder /usr/lib/libunistring.so.* /usr/lib/
 COPY --from=builder /usr/lib/libnghttp2.so.* /usr/lib/
 COPY --from=builder /usr/lib/libbrotli*.so.* /usr/lib/
 COPY --from=builder /usr/lib/libxml2.so.* /usr/lib/
