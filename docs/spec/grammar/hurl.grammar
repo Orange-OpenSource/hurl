@@ -497,7 +497,9 @@ json-string-text: ~["\\]
 json-string-escaped-char:
     "\\" ("\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "u" hexdigit hexdigit hexdigit hexdigit)
 
-json-number: integer fraction? exponent?
+json-number: [-]? json-integer fraction? exponent?
+
+json-integer: "0" | [1-9] digit*
 
 
 #  Expression

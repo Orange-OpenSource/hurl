@@ -213,44 +213,53 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
 }
 
 pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let start = reader.cursor();
-
     let sign = match try_literal("-", reader) {
         Err(_) => String::new(),
         Ok(_) => "-".to_string(),
     };
+    let int = integer(reader)?;
+    let frac = fraction(reader)?;
+    let exp = exponent(reader)?;
+    Ok(JsonValue::Number(format!("{sign}{int}{frac}{exp}")))
+}
 
-    let integer = match try_literal("0", reader) {
+fn integer(reader: &mut Reader) -> ParseResult<String> {
+    let start = reader.cursor();
+    match try_literal("0", reader) {
         Err(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
                 let kind = ParseErrorKind::Expecting {
                     value: "number".to_string(),
                 };
-                return Err(ParseError::new(start.pos, true, kind));
+                Err(ParseError::new(start.pos, true, kind))
             } else {
-                digits
+                Ok(digits)
             }
         }
-        Ok(_) => "0".to_string(),
-    };
+        Ok(_) => Ok("0".to_string()),
+    }
+}
 
-    let fraction = match try_literal(".", reader) {
+fn fraction(reader: &mut Reader) -> ParseResult<String> {
+    match try_literal(".", reader) {
         Ok(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
                 let kind = ParseErrorKind::Expecting {
                     value: "digits".to_string(),
                 };
-                return Err(ParseError::new(reader.cursor().pos, false, kind));
+                Err(ParseError::new(reader.cursor().pos, false, kind))
             } else {
-                format!(".{digits}")
+                Ok(format!(".{digits}"))
             }
         }
-        Err(_) => String::new(),
-    };
+        Err(_) => Ok(String::new()),
+    }
+}
 
-    let exponent = if reader.peek() == Some('e') || reader.peek() == Some('E') {
+fn exponent(reader: &mut Reader) -> ParseResult<String> {
+    if reader.peek() == Some('e') || reader.peek() == Some('E') {
         reader.read();
         let exponent_sign = match try_literal("-", reader) {
             Ok(_) => "-".to_string(),
@@ -260,14 +269,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             },
         };
         let exponent_digits = reader.read_while(|c| c.is_ascii_digit());
-        format!("e{exponent_sign}{exponent_digits}")
+        Ok(format!("e{exponent_sign}{exponent_digits}"))
     } else {
-        String::new()
-    };
-
-    Ok(JsonValue::Number(format!(
-        "{sign}{integer}{fraction}{exponent}"
-    )))
+        Ok(String::new())
+    }
 }
 
 fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
@@ -447,6 +452,35 @@ mod tests {
             }
         );
         assert!(error.recoverable);
+    }
+
+    #[test]
+    fn test_integer() {
+        let mut reader = Reader::new("0");
+        assert_eq!(integer(&mut reader).unwrap(), "0".to_string());
+        assert_eq!(reader.cursor().index, 1);
+
+        let mut reader = Reader::new("123");
+        assert_eq!(integer(&mut reader).unwrap(), "123".to_string());
+        assert_eq!(reader.cursor().index, 3);
+
+        let mut reader = Reader::new("0123");
+        assert_eq!(integer(&mut reader).unwrap(), "0".to_string());
+        assert_eq!(reader.cursor().index, 1);
+    }
+
+    #[test]
+    fn test_fraction() {
+        let mut reader = Reader::new(".5");
+        assert_eq!(fraction(&mut reader).unwrap(), ".5".to_string());
+        assert_eq!(reader.cursor().index, 2);
+    }
+
+    #[test]
+    fn test_exponent() {
+        let mut reader = Reader::new("e2");
+        assert_eq!(exponent(&mut reader).unwrap(), "e2".to_string());
+        assert_eq!(reader.cursor().index, 2);
     }
 
     #[test]
