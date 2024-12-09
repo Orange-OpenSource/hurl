@@ -1374,7 +1374,7 @@ $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 
 For Ubuntu (bionic, focal, jammy, noble), Hurl can be installed from `ppa:lepapareil/hurl`
 
-```
+```shell
 $ VERSION=6.0.0
 $ sudo apt-add-repository -y ppa:lepapareil/hurl
 $ sudo apt install hurl="${VERSION}"*
