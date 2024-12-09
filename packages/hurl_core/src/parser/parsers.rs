@@ -22,7 +22,6 @@ use crate::ast::{
 };
 use crate::combinator::{optional, zero_or_more};
 use crate::parser::bytes::bytes;
-use crate::parser::number::natural;
 use crate::parser::primitives::{
     eof, key_value, line_terminator, one_or_more_spaces, optional_line_terminators, try_literal,
     zero_or_more_spaces,
@@ -170,10 +169,24 @@ fn status(reader: &mut Reader) -> ParseResult<Status> {
     let start = reader.cursor();
     let value = match try_literal("*", reader) {
         Ok(_) => StatusValue::Any,
-        Err(_) => match natural(reader) {
-            Ok(value) => StatusValue::Specific(value),
-            Err(_) => return Err(ParseError::new(start.pos, false, ParseErrorKind::Status)),
-        },
+        Err(_) => {
+            if reader.is_eof() {
+                let kind = ParseErrorKind::Status;
+                return Err(ParseError::new(start.pos, false, kind));
+            }
+            let s = reader.read_while(|c| c.is_ascii_digit());
+            if s.is_empty() {
+                let kind = ParseErrorKind::Status;
+                return Err(ParseError::new(start.pos, false, kind));
+            }
+            match s.to_string().parse() {
+                Ok(value) => StatusValue::Specific(value),
+                Err(_) => {
+                    let kind = ParseErrorKind::Status;
+                    return Err(ParseError::new(start.pos, false, kind));
+                }
+            }
+        }
     };
     let end = reader.cursor();
     Ok(Status {
