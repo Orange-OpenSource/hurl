@@ -813,7 +813,7 @@ impl ToJson for NaturalOption {
 pub mod tests {
     use hurl_core::ast::{
         LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
-        TemplateElement, Version, Whitespace,
+        TemplateElement, Version, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
 
@@ -1007,7 +1007,10 @@ pub mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
-                    value: PredicateValue::Number(Number::Integer(value)),
+                    value: PredicateValue::Number(Number::Integer(I64::new(
+                        value,
+                        value.to_string(),
+                    ))),
                     operator: false,
                 },
             },

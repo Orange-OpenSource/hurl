@@ -89,7 +89,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Float, Number};
+    use crate::ast::{Float, Number, I64};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
 
@@ -104,7 +104,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Number(Number::Integer(1))
+            PredicateValue::Number(Number::Integer(I64::new(1, "1".to_string())))
         );
 
         let mut reader = Reader::new("1.1");

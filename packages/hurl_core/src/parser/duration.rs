@@ -47,6 +47,7 @@ fn duration_unit(reader: &mut Reader) -> ParseResult<Option<DurationUnit>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::U64;
     use crate::reader::Pos;
 
     use crate::typing::DurationUnit;
@@ -88,16 +89,22 @@ mod tests {
     #[test]
     fn test_duration() {
         let mut reader = Reader::new("10");
-        assert_eq!(duration(&mut reader).unwrap(), Duration::new(10, None));
+        assert_eq!(
+            duration(&mut reader).unwrap(),
+            Duration::new(U64::new(10, "10".to_string()), None)
+        );
         let mut reader = Reader::new("10s");
         assert_eq!(
             duration(&mut reader).unwrap(),
-            Duration::new(10, Some(DurationUnit::Second))
+            Duration::new(U64::new(10, "10".to_string()), Some(DurationUnit::Second))
         );
         let mut reader = Reader::new("10000ms");
         assert_eq!(
             duration(&mut reader).unwrap(),
-            Duration::new(10000, Some(DurationUnit::MilliSecond))
+            Duration::new(
+                U64::new(10000, "10000".to_string()),
+                Some(DurationUnit::MilliSecond)
+            )
         );
     }
 

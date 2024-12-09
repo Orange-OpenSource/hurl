@@ -344,7 +344,7 @@ fn eval_natural_option(
     variables: &VariableSet,
 ) -> Result<u64, RunnerError> {
     match natural_value {
-        NaturalOption::Literal(value) => Ok(*value),
+        NaturalOption::Literal(value) => Ok(value.as_u64()),
         NaturalOption::Placeholder(Placeholder { expr, .. }) => {
             match expr::eval(expr, variables)? {
                 Value::Number(Number::Integer(value)) => {
@@ -408,13 +408,13 @@ fn eval_duration_option(
     default_unit: DurationUnit,
 ) -> Result<std::time::Duration, RunnerError> {
     let millis = match duration_value {
-        DurationOption::Literal(value) => {
-            let unit = value.unit.unwrap_or(default_unit);
+        DurationOption::Literal(literal) => {
+            let unit = literal.unit.unwrap_or(default_unit);
 
             match unit {
-                DurationUnit::MilliSecond => value.value,
-                DurationUnit::Second => value.value * 1000,
-                DurationUnit::Minute => value.value * 1000 * 60,
+                DurationUnit::MilliSecond => literal.value.as_u64(),
+                DurationUnit::Second => literal.value.as_u64() * 1000,
+                DurationUnit::Minute => literal.value.as_u64() * 1000 * 60,
             }
         }
         DurationOption::Placeholder(Placeholder { expr, .. }) => match expr::eval(expr, variables)?
@@ -464,14 +464,14 @@ fn eval_variable_value(
 fn eval_number(number: &AstNumber) -> Value {
     match number {
         AstNumber::Float(Float { value, .. }) => Value::Number(Number::Float(*value)),
-        AstNumber::Integer(value) => Value::Number(Number::Integer(*value)),
+        AstNumber::Integer(value) => Value::Number(Number::Integer(value.as_i64())),
         AstNumber::BigInteger(value) => Value::Number(Number::BigInteger(value.clone())),
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace};
+    use hurl_core::ast::{Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace, U64};
     use hurl_core::reader::Pos;
     use hurl_core::typing::{Duration, DurationUnit};
 
@@ -565,7 +565,10 @@ mod tests {
         let mut variables = VariableSet::default();
         assert_eq!(
             eval_duration_option(
-                &DurationOption::Literal(Duration::new(1, Some(DurationUnit::Second))),
+                &DurationOption::Literal(Duration::new(
+                    U64::new(1, "1".to_string()),
+                    Some(DurationUnit::Second)
+                )),
                 &variables,
                 DurationUnit::MilliSecond
             )

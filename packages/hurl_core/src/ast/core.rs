@@ -1,3 +1,5 @@
+use std::fmt;
+
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2024 Orange
@@ -619,7 +621,7 @@ pub struct Whitespace {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Number {
     Float(Float),
-    Integer(i64),
+    Integer(I64),
     BigInteger(String),
 }
 
@@ -631,6 +633,49 @@ pub enum Number {
 pub struct Float {
     pub value: f64,
     pub encoded: String, // as defined in Hurl
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct U64 {
+    value: u64,
+    encoded: String, // as defined in Hurl
+}
+
+impl U64 {
+    pub fn new(value: u64, encoded: String) -> U64 {
+        U64 { value, encoded }
+    }
+
+    pub fn as_u64(&self) -> u64 {
+        self.value
+    }
+}
+
+impl fmt::Display for U64 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.encoded)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct I64 {
+    value: i64,
+    encoded: String, // as defined in Hurl
+}
+
+impl I64 {
+    pub fn new(value: i64, encoded: String) -> I64 {
+        I64 { value, encoded }
+    }
+
+    pub fn as_i64(&self) -> i64 {
+        self.value
+    }
+}
+
+impl fmt::Display for I64 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.encoded)
+    }
 }
 
 impl PartialEq for Float {
@@ -870,7 +915,7 @@ pub enum BooleanOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum NaturalOption {
-    Literal(u64),
+    Literal(U64),
     Placeholder(Placeholder),
 }
 
@@ -930,7 +975,7 @@ pub enum FilterValue {
     },
     Nth {
         space0: Whitespace,
-        n: u64,
+        n: U64,
     },
     Regex {
         space0: Whitespace,

@@ -212,7 +212,7 @@ pub mod tests {
 
     use hurl_core::ast::{
         Filter, FilterValue, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
-        PredicateValue, SourceInfo, Whitespace,
+        PredicateValue, SourceInfo, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
 
@@ -234,7 +234,10 @@ pub mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 24)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(3)),
+                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
+                        3,
+                        "3".to_string(),
+                    ))),
                     operator: true,
                 },
             },

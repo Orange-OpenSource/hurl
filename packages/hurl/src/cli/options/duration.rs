@@ -16,26 +16,25 @@
  *
  */
 
-use hurl_core::typing::{Duration, DurationUnit};
+use hurl_core::{
+    ast::U64,
+    typing::{Duration, DurationUnit},
+};
 use regex::Regex;
 use std::str::FromStr;
 
 pub fn parse(_s: &str) -> Result<Duration, String> {
     let re = Regex::new(r"^(\d+)([a-zA-Z]*)$").unwrap();
     if let Some(caps) = re.captures(_s) {
-        let value = caps
-            .get(1)
-            .unwrap()
-            .as_str()
-            .to_string()
-            .parse::<u64>()
-            .unwrap();
+        let encoded = caps.get(1).unwrap().as_str().to_string();
+        let value = encoded.parse::<u64>().unwrap();
         let unit = caps.get(2).unwrap().as_str();
         let unit = if unit.is_empty() {
             None
         } else {
             Some(DurationUnit::from_str(unit)?)
         };
+        let value = U64::new(value, encoded);
         Ok(Duration { value, unit })
     } else {
         Err("Invalid duration".to_string())
@@ -62,28 +61,28 @@ mod tests {
         assert_eq!(
             parse("10").unwrap(),
             Duration {
-                value: 10,
+                value: U64::new(10, "10".to_string()),
                 unit: None
             }
         );
         assert_eq!(
             parse("10s").unwrap(),
             Duration {
-                value: 10,
+                value: U64::new(10, "10".to_string()),
                 unit: Some(DurationUnit::Second)
             }
         );
         assert_eq!(
             parse("10000ms").unwrap(),
             Duration {
-                value: 10000,
+                value: U64::new(10000, "10000".to_string()),
                 unit: Some(DurationUnit::MilliSecond)
             }
         );
         assert_eq!(
             parse("5m").unwrap(),
             Duration {
-                value: 5,
+                value: U64::new(5, "5".to_string()),
                 unit: Some(DurationUnit::Minute)
             }
         );

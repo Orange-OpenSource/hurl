@@ -24,7 +24,7 @@ use hurl_core::ast::{
     MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFunc,
     PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
     Section, SectionValue, Status, StatusValue, Template, TemplateElement, Text, Variable,
-    VariableDefinition, VariableValue, Version, Whitespace,
+    VariableDefinition, VariableValue, Version, Whitespace, I64, U64,
 };
 use hurl_core::typing::{Count, Duration};
 
@@ -994,9 +994,21 @@ impl Tokenizable for BooleanOption {
 impl Tokenizable for NaturalOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            NaturalOption::Literal(value) => vec![Token::Number(value.to_string())],
+            NaturalOption::Literal(value) => value.tokenize(),
             NaturalOption::Placeholder(expr) => expr.tokenize(),
         }
+    }
+}
+
+impl Tokenizable for U64 {
+    fn tokenize(&self) -> Vec<Token> {
+        vec![Token::Number(self.to_string())]
+    }
+}
+
+impl Tokenizable for I64 {
+    fn tokenize(&self) -> Vec<Token> {
+        vec![Token::Number(self.to_string())]
     }
 }
 

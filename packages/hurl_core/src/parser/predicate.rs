@@ -386,7 +386,7 @@ fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 mod tests {
     use super::*;
     use crate::ast::{
-        Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable,
+        Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable, I64,
     };
     use crate::reader::Pos;
 
@@ -490,7 +490,7 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::Number(Number::Integer(2)),
+                value: PredicateValue::Number(Number::Integer(I64::new(2, "2".to_string()))),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),

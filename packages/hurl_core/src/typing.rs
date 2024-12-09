@@ -16,6 +16,7 @@
  *
  */
 //! Hurl common types.
+use crate::ast::U64;
 use core::fmt;
 use std::str::FromStr;
 
@@ -27,14 +28,14 @@ pub enum Count {
 }
 
 /// Represent a duration
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Duration {
-    pub value: u64,
+    pub value: U64,
     pub unit: Option<DurationUnit>,
 }
 
 impl Duration {
-    pub fn new(value: u64, unit: Option<DurationUnit>) -> Duration {
+    pub fn new(value: U64, unit: Option<DurationUnit>) -> Duration {
         Duration { value, unit }
     }
 }

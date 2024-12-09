@@ -46,7 +46,7 @@ pub fn eval_nth(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace, U64};
     use hurl_core::reader::Pos;
 
     use crate::runner::filter::eval::eval_filter;
@@ -58,7 +58,7 @@ pub mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Nth {
-                n: 2,
+                n: U64::new(2, "2".to_string()),
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

@@ -85,7 +85,7 @@ pub fn eval_filter(
         FilterValue::Regex {
             value: regex_value, ..
         } => eval_regex(value, regex_value, variables, filter.source_info, in_assert),
-        FilterValue::Nth { n, .. } => eval_nth(value, filter.source_info, in_assert, *n),
+        FilterValue::Nth { n, .. } => eval_nth(value, filter.source_info, in_assert, n.as_u64()),
         FilterValue::Replace {
             old_value,
             new_value,

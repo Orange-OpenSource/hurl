@@ -712,7 +712,7 @@ fn lint_duration_option(
 }
 
 fn lint_duration(duration: &Duration, default_unit: DurationUnit) -> Duration {
-    let value = duration.value;
+    let value = duration.value.clone();
     let unit = Some(duration.unit.unwrap_or(default_unit));
     Duration { value, unit }
 }

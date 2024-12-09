@@ -330,7 +330,7 @@ mod tests {
     use super::*;
     use crate::ast::{
         KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
-        PredicateValue, Query, QueryValue, Template, TemplateElement,
+        PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
     };
 
     #[test]
@@ -729,7 +729,10 @@ mod tests {
                             value: String::from(" "),
                             source_info: SourceInfo::new(Pos::new(1, 23), Pos::new(1, 24)),
                         },
-                        value: PredicateValue::Number(Number::Integer(5)),
+                        value: PredicateValue::Number(Number::Integer(I64::new(
+                            5,
+                            "5".to_string()
+                        ))),
                         operator: true,
                     },
                 },

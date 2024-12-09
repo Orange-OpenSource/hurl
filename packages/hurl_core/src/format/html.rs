@@ -706,9 +706,9 @@ impl HtmlFormatter {
 
     fn fmt_duration_option(&mut self, value: &DurationOption) {
         match value {
-            DurationOption::Literal(value) => {
-                self.fmt_span("number", &value.value.to_string());
-                if let Some(unit) = value.unit {
+            DurationOption::Literal(literal) => {
+                self.fmt_span("number", &literal.value.to_string());
+                if let Some(unit) = literal.unit {
                     self.fmt_span("unit", &unit.to_string());
                 }
             }

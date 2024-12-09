@@ -15,56 +15,78 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Float, Number};
+use crate::ast::U64;
+use crate::ast::{Float, Number, I64};
 use crate::parser::primitives::try_literal;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
-pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
+pub fn natural(reader: &mut Reader) -> ParseResult<U64> {
     let start = reader.cursor();
-
-    if reader.is_eof() {
-        let kind = ParseErrorKind::Expecting {
-            value: String::from("natural"),
-        };
-        return Err(ParseError::new(start.pos, true, kind));
-    }
-    let first_digit = reader.read().unwrap();
-    if !first_digit.is_ascii_digit() {
-        let kind = ParseErrorKind::Expecting {
-            value: String::from("natural"),
-        };
-        return Err(ParseError::new(start.pos, true, kind));
-    }
-
-    let save = reader.cursor();
-    let s = reader.read_while(|c| c.is_ascii_digit());
-
-    // if the first digit is zero, you should not have any more digits
-    if first_digit == '0' && !s.is_empty() {
-        let kind = ParseErrorKind::Expecting {
-            value: String::from("natural"),
-        };
-        return Err(ParseError::new(save.pos, false, kind));
-    }
-    match format!("{first_digit}{s}").parse() {
-        Ok(value) => Ok(value),
+    let s = parse_natural_str(reader, "natural")?;
+    match s.parse() {
+        Ok(value) => {
+            let encoded = reader.read_from(start.index);
+            Ok(U64::new(value, encoded))
+        }
         Err(_) => {
             let kind = ParseErrorKind::Expecting {
                 value: String::from("natural"),
             };
-            Err(ParseError::new(save.pos, false, kind))
+            Err(ParseError::new(start.pos, false, kind))
         }
     }
 }
 
-pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
+pub fn integer(reader: &mut Reader) -> ParseResult<I64> {
+    let start = reader.cursor();
     let sign = match try_literal("-", reader) {
         Err(_) => 1,
         Ok(_) => -1,
     };
-    let nat = natural(reader)?;
-    Ok(sign * (nat as i64))
+    let s = parse_natural_str(reader, "integer")?;
+    match s.to_string().parse::<i64>() {
+        Ok(value) => {
+            let value = sign * value;
+            let encoded = reader.read_from(start.index);
+            Ok(I64::new(value, encoded))
+        }
+        Err(_) => {
+            let kind = ParseErrorKind::Expecting {
+                value: String::from("integer"),
+            };
+            Err(ParseError::new(start.pos, false, kind))
+        }
+    }
+}
+
+/// Parses a natural string.
+/// This is common code between natural and integer parsers.
+fn parse_natural_str(reader: &mut Reader, expecting: &str) -> ParseResult<String> {
+    let mut save = reader.cursor();
+    if reader.is_eof() {
+        let kind = ParseErrorKind::Expecting {
+            value: expecting.to_string(),
+        };
+        return Err(ParseError::new(save.pos, true, kind));
+    }
+    let first_digit = reader.read().unwrap();
+    if !first_digit.is_ascii_digit() {
+        let kind = ParseErrorKind::Expecting {
+            value: expecting.to_string(),
+        };
+        return Err(ParseError::new(save.pos, true, kind));
+    }
+    save.pos = reader.cursor().pos;
+    let s = reader.read_while(|c| c.is_ascii_digit());
+    // if the first digit is zero, you should not have any more digits
+    if first_digit == '0' && !s.is_empty() {
+        let kind = ParseErrorKind::Expecting {
+            value: expecting.to_string(),
+        };
+        return Err(ParseError::new(save.pos, false, kind));
+    }
+    Ok(format!("{first_digit}{s}"))
 }
 
 pub fn number(reader: &mut Reader) -> ParseResult<Number> {
@@ -114,8 +136,12 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 
     // Integer or BigInteger
     } else {
-        match format!("{sign}{integer_digits}").parse() {
-            Ok(value) => Ok(Number::Integer(value)),
+        match format!("{sign}{integer_digits}").parse::<i64>() {
+            Ok(value) => {
+                let encoded = reader.read_from(start.index);
+                let integer = I64::new(value, encoded);
+                Ok(Number::Integer(integer))
+            }
             Err(_) => Ok(Number::BigInteger(integer_digits)),
         }
     }
@@ -129,11 +155,14 @@ mod tests {
     #[test]
     fn test_natural() {
         let mut reader = Reader::new("0");
-        assert_eq!(natural(&mut reader).unwrap(), 0);
+        assert_eq!(natural(&mut reader).unwrap(), U64::new(0, "0".to_string()));
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
-        assert_eq!(natural(&mut reader).unwrap(), 10);
+        assert_eq!(
+            natural(&mut reader).unwrap(),
+            U64::new(10, "10".to_string())
+        );
         assert_eq!(reader.cursor().index, 2);
     }
 
@@ -176,23 +205,35 @@ mod tests {
     #[test]
     fn test_integer() {
         let mut reader = Reader::new("0");
-        assert_eq!(integer(&mut reader).unwrap(), 0);
+        assert_eq!(integer(&mut reader).unwrap(), I64::new(0, "0".to_string()));
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("-1");
-        assert_eq!(integer(&mut reader).unwrap(), -1);
+        assert_eq!(
+            integer(&mut reader).unwrap(),
+            I64::new(-1, "-1".to_string())
+        );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("0");
-        assert_eq!(number(&mut reader).unwrap(), Number::Integer(0));
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Integer(I64::new(0, "0".to_string()))
+        );
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
-        assert_eq!(number(&mut reader).unwrap(), Number::Integer(10));
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Integer(I64::new(10, "10".to_string()))
+        );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("-10x");
-        assert_eq!(number(&mut reader).unwrap(), Number::Integer(-10));
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Integer(I64::new(-10, "-10".to_string()))
+        );
         assert_eq!(reader.cursor().index, 3);
     }
 

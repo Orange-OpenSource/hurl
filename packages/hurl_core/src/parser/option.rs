@@ -280,10 +280,10 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn count(reader: &mut Reader) -> ParseResult<Count> {
     let start = reader.cursor();
     let value = non_recover(integer, reader)?;
-    if value == -1 {
+    if value.as_i64() == -1 {
         Ok(Count::Infinite)
-    } else if value >= 0 {
-        Ok(Count::Finite(value as usize))
+    } else if value.as_i64() >= 0 {
+        Ok(Count::Finite(value.as_i64() as usize))
     } else {
         let kind = ParseErrorKind::Expecting {
             value: "Expecting a count value".to_string(),
@@ -439,7 +439,7 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace};
+    use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace, I64};
     use crate::reader::Pos;
 
     #[test]
@@ -654,7 +654,7 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
-                value: VariableValue::Number(Number::Integer(1)),
+                value: VariableValue::Number(Number::Integer(I64::new(1, "1".to_string()))),
             }
         );
     }
@@ -673,7 +673,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
-            VariableValue::Number(Number::Integer(1))
+            VariableValue::Number(Number::Integer(I64::new(1, "1".to_string())))
         );
 
         let mut reader = Reader::new("toto");

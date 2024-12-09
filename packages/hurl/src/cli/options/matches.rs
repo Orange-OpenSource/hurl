@@ -574,9 +574,9 @@ fn get_duration(s: &str, default_unit: DurationUnit) -> Result<Duration, CliOpti
     let duration = duration::parse(s).map_err(CliOptionsError::Error)?;
     let unit = duration.unit.unwrap_or(default_unit);
     let millis = match unit {
-        DurationUnit::MilliSecond => duration.value,
-        DurationUnit::Second => duration.value * 1000,
-        DurationUnit::Minute => duration.value * 1000 * 60,
+        DurationUnit::MilliSecond => duration.value.as_u64(),
+        DurationUnit::Second => duration.value.as_u64() * 1000,
+        DurationUnit::Minute => duration.value.as_u64() * 1000 * 60,
     };
     Ok(Duration::from_millis(millis))
 }
