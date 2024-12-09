@@ -27,7 +27,7 @@ use hurl::runner::Value;
 use hurl_core::input::Input;
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
-use crate::cli::options::variables::{parse as parse_variable, parse_value};
+use crate::cli::options::variables;
 use crate::cli::options::{duration, CliOptionsError};
 use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
@@ -408,6 +408,18 @@ pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsEr
     get_duration(&s, DurationUnit::MilliSecond)
 }
 
+pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOptionsError> {
+    let mut secrets = HashMap::new();
+    if let Some(secret) = get_strings(matches, "variable") {
+        for s in secret {
+            let (name, value) = variables::parse(&s)?;
+            secrets.insert(name.to_string(), value);
+        }
+    }
+
+    Ok(secrets)
+}
+
 pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "ssl_no_revoke")
 }
@@ -448,7 +460,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
     // Use environment variables prefix by HURL_
     for (env_name, env_value) in env::vars() {
         if let Some(name) = env_name.strip_prefix("HURL_") {
-            let value = parse_value(env_value.as_str())?;
+            let value = variables::parse_value(env_value.as_str())?;
             variables.insert(name.to_string(), value);
         }
     }
@@ -480,7 +492,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
                 if line.starts_with('#') || line.is_empty() {
                     continue;
                 }
-                let (name, value) = parse_variable(line)?;
+                let (name, value) = variables::parse(line)?;
                 variables.insert(name.to_string(), value);
             }
         }
@@ -488,7 +500,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
 
     if let Some(input) = get_strings(matches, "variable") {
         for s in input {
-            let (name, value) = parse_variable(&s)?;
+            let (name, value) = variables::parse(&s)?;
             variables.insert(name.to_string(), value);
         }
     }

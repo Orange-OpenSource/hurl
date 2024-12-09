@@ -535,6 +535,17 @@ pub fn retry_interval() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn secret() -> clap::Arg {
+    clap::Arg::new("secret")
+        .long("secret")
+        .value_name("NAME=VALUE")
+        .help("Define a secret value")
+        .help_heading("Run options")
+        .num_args(1)
+        .action(clap::ArgAction::Append)
+        .hide(true)
+}
+
 pub fn ssl_no_revoke() -> clap::Arg {
     clap::Arg::new("ssl_no_revoke")
         .long("ssl-no-revoke")

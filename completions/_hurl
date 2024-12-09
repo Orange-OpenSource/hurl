@@ -69,6 +69,7 @@ _hurl() {
     '*--resolve[Provide a custom address for a specific HOST and PORT pair]: :' \
     '--retry[Maximum number of retries, 0 for no retries, -1 for unlimited retries]: :' \
     '--retry-interval[Interval in milliseconds before a retry]: :' \
+    '*--secret[Define a secret value]: :' \
     '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks]' \
     '--test[Activate test mode (use parallel execution)]' \
     '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]: :' \

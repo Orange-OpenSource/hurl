@@ -90,6 +90,7 @@ pub struct CliOptions {
     pub resolves: Vec<String>,
     pub retry: Option<Count>,
     pub retry_interval: Duration,
+    pub secrets: HashMap<String, Value>,
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,
     pub test: bool,
@@ -224,6 +225,7 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::repeat())
         .arg(commands::retry())
         .arg(commands::retry_interval())
+        .arg(commands::secret())
         .arg(commands::test())
         .arg(commands::to_entry())
         .arg(commands::variable())
@@ -293,6 +295,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let insecure = matches::insecure(arg_matches);
     let interactive = matches::interactive(arg_matches);
     let ip_resolve = matches::ip_resolve(arg_matches);
+    let jobs = matches::jobs(arg_matches);
     let json_report_dir = matches::json_report_dir(arg_matches)?;
     let junit_file = matches::junit_file(arg_matches);
     let limit_rate = matches::limit_rate(arg_matches);
@@ -312,6 +315,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches)?;
+    let secrets = matches::secret(arg_matches)?;
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
     let tap_file = matches::tap_file(arg_matches);
     let test = matches::test(arg_matches);
@@ -323,7 +327,6 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let variables = matches::variables(arg_matches)?;
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
-    let jobs = matches::jobs(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
         cacert_file,
@@ -371,6 +374,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         resolves,
         retry,
         retry_interval,
+        secrets,
         ssl_no_revoke,
         tap_file,
         test,
