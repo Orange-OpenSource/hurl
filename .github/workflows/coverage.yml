@@ -21,6 +21,14 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
 
+    - name: Install Python 3.11
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
+
+    - name: Tests prerequisites
+      run: bin/test/test_prerequisites.sh
+
     - name: Install Rust
       run: bin/install_rust.sh
 
