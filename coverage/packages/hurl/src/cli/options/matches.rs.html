@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-warning">
-                <abbr title="267 / 320">83.44 %</abbr></p>
+                <abbr title="274 / 327">83.79 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="76 / 76">100 %</abbr></p>
+                <abbr title="77 / 77">100 %</abbr></p>
         </div>
     </div>
 
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::cli::options::variables::{parse as parse_variable, parse_value};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::cli::options::variables;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4864,8 +4864,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                role="cell" aria-label="819">
+                819
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4880,8 +4880,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="821">
-                821
+                role="cell" aria-label="824">
+                824
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -6613,7 +6613,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn ssl_no_revoke(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn secret(matches: &amp;ArgMatches) -&gt; Result&lt;HashMap&lt;String, Value&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6629,7 +6629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;ssl_no_revoke&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut secrets = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6639,13 +6639,13 @@
                 <a href="#413">413</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="819">
+                819
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    if let Some(secret) = get_strings(matches, &quot;variable&quot;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6655,13 +6655,13 @@
                 <a href="#414">414</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="54">
+                54
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        for s in secret {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6672,12 +6672,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="33">
+                33
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn tap_file(arg_matches: &amp;ArgMatches) -&gt; Option&lt;PathBuf&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            let (name, value) = variables::parse(&amp;s)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6688,12 +6688,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;report_tap&quot;).map(PathBuf::from)</pre>
+                <pre class="has-background-success-light py-0 px-2">            secrets.insert(name.to_string(), value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6709,7 +6709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6725,7 +6725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6735,13 +6735,13 @@
                 <a href="#419">419</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2382">
-                2382
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn test(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6752,12 +6752,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2382">
-                2382
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;test&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(secrets)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6800,12 +6800,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn timeout(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Duration, CliOptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn ssl_no_revoke(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6816,12 +6816,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let s = get::&lt;String&gt;(arg_matches, &quot;max_time&quot;).unwrap_or_default();</pre>
+                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;ssl_no_revoke&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6831,13 +6831,13 @@
                 <a href="#425">425</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get_duration(&amp;s, DurationUnit::Second)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6853,7 +6853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6863,13 +6863,13 @@
                 <a href="#427">427</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn tap_file(arg_matches: &amp;ArgMatches) -&gt; Option&lt;PathBuf&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6880,12 +6880,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn to_entry(arg_matches: &amp;ArgMatches) -&gt; Option&lt;usize&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;report_tap&quot;).map(PathBuf::from)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6895,13 +6895,13 @@
                 <a href="#429">429</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="821">
-                821
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get::&lt;u32&gt;(arg_matches, &quot;to_entry&quot;).map(|x| x as usize)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6917,7 +6917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6927,13 +6927,13 @@
                 <a href="#431">431</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="2379">
+                2379
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn test(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6944,12 +6944,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="2379">
+                2379
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn unix_socket(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;test&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6959,13 +6959,13 @@
                 <a href="#433">433</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;unix_socket&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6981,7 +6981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6991,13 +6991,13 @@
                 <a href="#435">435</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn timeout(arg_matches: &amp;ArgMatches) -&gt; Result&lt;Duration, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7008,12 +7008,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn user(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let s = get::&lt;String&gt;(arg_matches, &quot;max_time&quot;).unwrap_or_default();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7024,12 +7024,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;user&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    get_duration(&amp;s, DurationUnit::Second)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7072,12 +7072,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn user_agent(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn to_entry(arg_matches: &amp;ArgMatches) -&gt; Option&lt;usize&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7088,12 +7088,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="818">
+                818
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;user_agent&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    get::&lt;u32&gt;(arg_matches, &quot;to_entry&quot;).map(|x| x as usize)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7135,13 +7135,13 @@
                 <a href="#444">444</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns a map of variables from the command line options `matches`.</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn unix_socket(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7152,12 +7152,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn variables(matches: &amp;ArgMatches) -&gt; Result&lt;HashMap&lt;String, Value&gt;, CliOptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;unix_socket&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7167,13 +7167,13 @@
                 <a href="#446">446</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7199,13 +7199,13 @@
                 <a href="#448">448</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Use environment variables prefix by HURL_</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn user(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7216,12 +7216,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="107292">
-                107292
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    for (env_name, env_value) in env::vars() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;user&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7231,13 +7231,13 @@
                 <a href="#450">450</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="106473">
-                106473
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(name) = env_name.strip_prefix(&quot;HURL_&quot;) {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7247,13 +7247,13 @@
                 <a href="#451">451</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let value = parse_value(env_value.as_str())?;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7264,12 +7264,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            variables.insert(name.to_string(), value);</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn user_agent(arg_matches: &amp;ArgMatches) -&gt; Option&lt;String&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7279,13 +7279,13 @@
                 <a href="#453">453</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">    get::&lt;String&gt;(arg_matches, &quot;user_agent&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7301,7 +7301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7327,9 +7327,201 @@
                 <a href="#456">456</a>
             </div>
             <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns a map of variables from the command line options `matches`.</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="457"
+                role="cell">
+                <a href="#457">457</a>
+            </div>
+            <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                role="cell" aria-label="816">
+                816
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn variables(matches: &amp;ArgMatches) -&gt; Result&lt;HashMap&lt;String, Value&gt;, CliOptionsError&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="458"
+                role="cell">
+                <a href="#458">458</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let mut variables = HashMap::new();</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="459"
+                role="cell">
+                <a href="#459">459</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="460"
+                role="cell">
+                <a href="#460">460</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Use environment variables prefix by HURL_</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="461"
+                role="cell">
+                <a href="#461">461</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="106899">
+                106899
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    for (env_name, env_value) in env::vars() {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="462"
+                role="cell">
+                <a href="#462">462</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="106083">
+                106083
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        if let Some(name) = env_name.strip_prefix(&quot;HURL_&quot;) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="463"
+                role="cell">
+                <a href="#463">463</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            let value = variables::parse_value(env_value.as_str())?;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="464"
+                role="cell">
+                <a href="#464">464</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            variables.insert(name.to_string(), value);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="465"
+                role="cell">
+                <a href="#465">465</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="466"
+                role="cell">
+                <a href="#466">466</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="467"
+                role="cell">
+                <a href="#467">467</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="468"
+                role="cell">
+                <a href="#468">468</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -7338,9 +7530,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="457"
+                id="469"
                 role="cell">
-                <a href="#457">457</a>
+                <a href="#469">469</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7354,9 +7546,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="458"
+                id="470"
                 role="cell">
-                <a href="#458">458</a>
+                <a href="#470">470</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7370,9 +7562,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="459"
+                id="471"
                 role="cell">
-                <a href="#459">459</a>
+                <a href="#471">471</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7382,198 +7574,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">            if !path.exists() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="460"
-                role="cell">
-                <a href="#460">460</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                return Err(CliOptionsError::Error(format!(</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="461"
-                role="cell">
-                <a href="#461">461</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    &quot;Properties file {} does not exist&quot;,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="462"
-                role="cell">
-                <a href="#462">462</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    path.display()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="463"
-                role="cell">
-                <a href="#463">463</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                )));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="464"
-                role="cell">
-                <a href="#464">464</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="465"
-                role="cell">
-                <a href="#465">465</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="466"
-                role="cell">
-                <a href="#466">466</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let file = File::open(path).unwrap();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="467"
-                role="cell">
-                <a href="#467">467</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let reader = BufReader::new(file);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="468"
-                role="cell">
-                <a href="#468">468</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            for (index, line) in reader.lines().enumerate() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="469"
-                role="cell">
-                <a href="#469">469</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let line = match line {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="470"
-                role="cell">
-                <a href="#470">470</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    Ok(s) =&gt; s,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="471"
-                role="cell">
-                <a href="#471">471</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    Err(_) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7589,7 +7589,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(format!(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7605,7 +7605,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            &quot;Can not parse line {} of {}&quot;,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    &quot;Properties file {} does not exist&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7621,7 +7621,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            index + 1,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    path.display()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7637,7 +7637,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            path.display()</pre>
+                <pre class="has-background-danger-light py-0 px-2">                )));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7647,13 +7647,13 @@
                 <a href="#476">476</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        )))</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7663,13 +7663,13 @@
                 <a href="#477">477</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }</pre>
+                <pre class="has-background-success-light py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7679,13 +7679,13 @@
                 <a href="#478">478</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                };</pre>
+                <pre class="has-background-success-light py-0 px-2">            let file = File::open(path).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7696,12 +7696,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let line = line.trim();</pre>
+                <pre class="has-background-success-light py-0 px-2">            let reader = BufReader::new(file);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7717,7 +7717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                if line.starts_with(&#x27;#&#x27;) || line.is_empty() {</pre>
+                <pre class="has-background-success-light py-0 px-2">            for (index, line) in reader.lines().enumerate() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7728,12 +7728,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    continue;</pre>
+                <pre class="has-background-success-light py-0 px-2">                let line = match line {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7743,13 +7743,13 @@
                 <a href="#482">482</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="30">
+                30
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    Ok(s) =&gt; s,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7759,13 +7759,13 @@
                 <a href="#483">483</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let (name, value) = parse_variable(line)?;</pre>
+                <pre class="has-background-white py-0 px-2">                    Err(_) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7775,13 +7775,13 @@
                 <a href="#484">484</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                variables.insert(name.to_string(), value);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7791,13 +7791,13 @@
                 <a href="#485">485</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            &quot;Can not parse line {} of {}&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7807,13 +7807,13 @@
                 <a href="#486">486</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            index + 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7823,13 +7823,13 @@
                 <a href="#487">487</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            path.display()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7839,13 +7839,13 @@
                 <a href="#488">488</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">                        )))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7855,13 +7855,13 @@
                 <a href="#489">489</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if let Some(input) = get_strings(matches, &quot;variable&quot;) {</pre>
+                <pre class="has-background-white py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7871,13 +7871,13 @@
                 <a href="#490">490</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="54">
-                54
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        for s in input {</pre>
+                <pre class="has-background-white py-0 px-2">                };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7888,12 +7888,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="33">
-                33
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let (name, value) = parse_variable(&amp;s)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">                let line = line.trim();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7909,7 +7909,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            variables.insert(name.to_string(), value);</pre>
+                <pre class="has-background-success-light py-0 px-2">                if line.starts_with(&#x27;#&#x27;) || line.is_empty() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7919,13 +7919,13 @@
                 <a href="#493">493</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    continue;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7941,7 +7941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7951,13 +7951,13 @@
                 <a href="#495">495</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="18">
+                18
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">                let (name, value) = variables::parse(line)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7968,12 +7968,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                role="cell" aria-label="18">
+                18
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(variables)</pre>
+                <pre class="has-background-success-light py-0 px-2">                variables.insert(name.to_string(), value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7989,7 +7989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8005,7 +8005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8015,13 +8015,13 @@
                 <a href="#499">499</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn verbose(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8031,13 +8031,13 @@
                 <a href="#500">500</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;verbose&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8047,13 +8047,13 @@
                 <a href="#501">501</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    if let Some(input) = get_strings(matches, &quot;variable&quot;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8063,13 +8063,13 @@
                 <a href="#502">502</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="48">
+                48
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        for s in input {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8080,12 +8080,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                role="cell" aria-label="27">
+                27
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn very_verbose(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
+                <pre class="has-background-success-light py-0 px-2">            let (name, value) = variables::parse(&amp;s)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8096,12 +8096,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="816">
-                816
+                role="cell" aria-label="27">
+                27
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;very_verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">            variables.insert(name.to_string(), value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8117,7 +8117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8133,7 +8133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8149,7 +8149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns a list of path names from the command line options `matches`.</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8160,12 +8160,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="825">
-                825
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn glob_files(matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;Input&gt;, CliOptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(variables)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8175,13 +8175,13 @@
                 <a href="#509">509</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="825">
-                825
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut all_files = vec![];</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8191,13 +8191,13 @@
                 <a href="#510">510</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="825">
-                825
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if let Some(exprs) = get_strings(matches, &quot;glob&quot;) {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8208,12 +8208,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="21">
-                21
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        for expr in exprs {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn verbose(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8224,12 +8224,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="816">
+                816
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let paths = match glob::glob(&amp;expr) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;verbose&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8239,13 +8239,13 @@
                 <a href="#513">513</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Ok(paths) =&gt; paths,</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8261,7 +8261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Err(_) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8271,13 +8271,13 @@
                 <a href="#515">515</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    return Err(CliOptionsError::Error(</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn very_verbose(arg_matches: &amp;ArgMatches) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8287,13 +8287,13 @@
                 <a href="#516">516</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="816">
+                816
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        &quot;Failed to read glob pattern&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">    has_flag(arg_matches, &quot;very_verbose&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8303,13 +8303,13 @@
                 <a href="#517">517</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    ))</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8325,7 +8325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8341,7 +8341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            };</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns a list of path names from the command line options `matches`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8352,12 +8352,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="825">
+                825
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let mut files = vec![];</pre>
+                <pre class="has-background-success-light py-0 px-2">fn glob_files(matches: &amp;ArgMatches) -&gt; Result&lt;Vec&lt;Input&gt;, CliOptionsError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8368,12 +8368,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                role="cell" aria-label="825">
+                825
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            for entry in paths {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut all_files = vec![];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8384,12 +8384,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
+                role="cell" aria-label="825">
+                825
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                match entry {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if let Some(exprs) = get_strings(matches, &quot;glob&quot;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8400,12 +8400,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
+                role="cell" aria-label="21">
+                21
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    Ok(path) =&gt; files.push(Input::from(path)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        for expr in exprs {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8415,13 +8415,13 @@
                 <a href="#524">524</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Err(_) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            let paths = match glob::glob(&amp;expr) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8431,13 +8431,13 @@
                 <a href="#525">525</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(</pre>
+                <pre class="has-background-success-light py-0 px-2">                Ok(paths) =&gt; paths,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8447,13 +8447,13 @@
                 <a href="#526">526</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            &quot;Failed to read glob pattern&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                Err(_) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8469,7 +8469,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        ))</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8479,13 +8479,13 @@
                 <a href="#528">528</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        &quot;Failed to read glob pattern&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8495,13 +8495,13 @@
                 <a href="#529">529</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    ))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8517,7 +8517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8527,13 +8527,13 @@
                 <a href="#531">531</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if files.is_empty() {</pre>
+                <pre class="has-background-white py-0 px-2">            };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8544,12 +8544,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                return Err(CliOptionsError::InvalidInputFile(PathBuf::from(&amp;expr)));</pre>
+                <pre class="has-background-success-light py-0 px-2">            let mut files = vec![];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8559,13 +8559,13 @@
                 <a href="#533">533</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="42">
+                42
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">            for entry in paths {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8576,12 +8576,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
+                role="cell" aria-label="27">
+                27
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            all_files.extend(files);</pre>
+                <pre class="has-background-success-light py-0 px-2">                match entry {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8591,13 +8591,13 @@
                 <a href="#535">535</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    Ok(path) =&gt; files.push(Input::from(path)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8613,7 +8613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                    Err(_) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8623,13 +8623,13 @@
                 <a href="#537">537</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="819">
-                819
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(all_files)</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        return Err(CliOptionsError::Error(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8639,13 +8639,13 @@
                 <a href="#538">538</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            &quot;Failed to read glob pattern&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8655,13 +8655,13 @@
                 <a href="#539">539</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">                        ))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8677,7 +8677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an optional value of type `T` from the command line `matches` given the option `name`.</pre>
+                <pre class="has-background-white py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8687,13 +8687,13 @@
                 <a href="#541">541</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="25494">
-                25494
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn get&lt;T: Clone + Send + Sync + &#x27;static&gt;(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;T&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8703,13 +8703,13 @@
                 <a href="#542">542</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="25494">
-                25494
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;T&gt;(name).cloned()</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8719,13 +8719,13 @@
                 <a href="#543">543</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">            if files.is_empty() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8735,13 +8735,13 @@
                 <a href="#544">544</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">                return Err(CliOptionsError::InvalidInputFile(PathBuf::from(&amp;expr)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8751,13 +8751,13 @@
                 <a href="#545">545</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24537">
-                24537
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn has_flag(matches: &amp;ArgMatches, name: &amp;str) -&gt; bool {</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8768,12 +8768,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24537">
-                24537
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;bool&gt;(name) == Some(&amp;true)</pre>
+                <pre class="has-background-success-light py-0 px-2">            all_files.extend(files);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8789,7 +8789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8805,7 +8805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8816,12 +8816,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="828">
-                828
+                role="cell" aria-label="819">
+                819
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn get_string(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;String&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(all_files)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8831,13 +8831,13 @@
                 <a href="#550">550</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="832">
-                832
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;String&gt;(name).map(|x| x.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8853,7 +8853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8869,7 +8869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an optional value of type `T` from the command line `matches` given the option `name`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8879,13 +8879,13 @@
                 <a href="#553">553</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="25479">
+                25479
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an optional list of `String` from the command line `matches` given the option `name`.</pre>
+                <pre class="has-background-success-light py-0 px-2">fn get&lt;T: Clone + Send + Sync + &#x27;static&gt;(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;T&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8896,12 +8896,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6609">
-                6609
+                role="cell" aria-label="25479">
+                25479
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn get_strings(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;Vec&lt;String&gt;&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;T&gt;(name).cloned()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8911,13 +8911,13 @@
                 <a href="#555">555</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6609">
-                6609
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    matches</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8927,13 +8927,13 @@
                 <a href="#556">556</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6609">
-                6609
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .get_many::&lt;String&gt;(name)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8944,12 +8944,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="7638">
-                7638
+                role="cell" aria-label="24531">
+                24531
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .map(|v| v.map(|x| x.to_string()).collect())</pre>
+                <pre class="has-background-success-light py-0 px-2">fn has_flag(matches: &amp;ArgMatches, name: &amp;str) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8959,13 +8959,13 @@
                 <a href="#558">558</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24531">
+                24531
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;bool&gt;(name) == Some(&amp;true)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8981,7 +8981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8997,7 +8997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Get duration from input string `s` and `default_unit`</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9008,12 +9008,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3294">
-                3294
+                role="cell" aria-label="828">
+                828
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn get_duration(s: &amp;str, default_unit: DurationUnit) -&gt; Result&lt;Duration, CliOptionsError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn get_string(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;String&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9024,12 +9024,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3294">
-                3294
+                role="cell" aria-label="832">
+                832
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let duration = duration::parse(s).map_err(CliOptionsError::Error)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;String&gt;(name).map(|x| x.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9039,13 +9039,13 @@
                 <a href="#563">563</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3294">
-                3294
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let unit = duration.unit.unwrap_or(default_unit);</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9055,13 +9055,13 @@
                 <a href="#564">564</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3294">
-                3294
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let millis = match unit {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9071,13 +9071,13 @@
                 <a href="#565">565</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1647">
-                1647
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        DurationUnit::MilliSecond =&gt; duration.value,</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an optional list of `String` from the command line `matches` given the option `name`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9088,12 +9088,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1647">
-                1647
+                role="cell" aria-label="7422">
+                7422
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        DurationUnit::Second =&gt; duration.value * 1000,</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn get_strings(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;Vec&lt;String&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9103,13 +9103,13 @@
                 <a href="#567">567</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="7422">
+                7422
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        DurationUnit::Minute =&gt; duration.value * 1000 * 60,</pre>
+                <pre class="has-background-success-light py-0 px-2">    matches</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9119,13 +9119,13 @@
                 <a href="#568">568</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="7422">
+                7422
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    };</pre>
+                <pre class="has-background-success-light py-0 px-2">        .get_many::&lt;String&gt;(name)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9136,12 +9136,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3294">
-                3294
+                role="cell" aria-label="8460">
+                8460
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(Duration::from_millis(millis))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .map(|v| v.map(|x| x.to_string()).collect())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9189,7 +9189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Whether or not this running in a Continuous Integration environment.</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Get duration from input string `s` and `default_unit`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9197,6 +9197,198 @@
                 id="573"
                 role="cell">
                 <a href="#573">573</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3291">
+                3291
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">fn get_duration(s: &amp;str, default_unit: DurationUnit) -&gt; Result&lt;Duration, CliOptionsError&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="574"
+                role="cell">
+                <a href="#574">574</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3291">
+                3291
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let duration = duration::parse(s).map_err(CliOptionsError::Error)?;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="575"
+                role="cell">
+                <a href="#575">575</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3291">
+                3291
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let unit = duration.unit.unwrap_or(default_unit);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="576"
+                role="cell">
+                <a href="#576">576</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3291">
+                3291
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let millis = match unit {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="577"
+                role="cell">
+                <a href="#577">577</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1647">
+                1647
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        DurationUnit::MilliSecond =&gt; duration.value,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="578"
+                role="cell">
+                <a href="#578">578</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1644">
+                1644
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        DurationUnit::Second =&gt; duration.value * 1000,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="579"
+                role="cell">
+                <a href="#579">579</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">        DurationUnit::Minute =&gt; duration.value * 1000 * 60,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="580"
+                role="cell">
+                <a href="#580">580</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="581"
+                role="cell">
+                <a href="#581">581</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3291">
+                3291
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    Ok(Duration::from_millis(millis))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="582"
+                role="cell">
+                <a href="#582">582</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="583"
+                role="cell">
+                <a href="#583">583</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="584"
+                role="cell">
+                <a href="#584">584</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Whether or not this running in a Continuous Integration environment.</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="585"
+                role="cell">
+                <a href="#585">585</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9210,9 +9402,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="574"
+                id="586"
                 role="cell">
-                <a href="#574">574</a>
+                <a href="#586">586</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -9226,9 +9418,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="575"
+                id="587"
                 role="cell">
-                <a href="#575">575</a>
+                <a href="#587">587</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -9242,9 +9434,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="576"
+                id="588"
                 role="cell">
-                <a href="#576">576</a>
+                <a href="#588">588</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9259,7 +9451,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-12-10 12:51</p>
+                <p class="heading">Date: 2024-12-11 08:12</p>
             </div>
         </footer>
     </body>
