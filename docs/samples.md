@@ -690,7 +690,7 @@ jsonpath "$.state" == "COMPLETED"
 Add delay for every request, or a particular request:
 
 ```hurl
-# Delaying this request by 5 seconds
+# Delaying this request by 5 seconds (aka sleep)
 GET https://example.org/turtle
 [Options]
 delay: 5s

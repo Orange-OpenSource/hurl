@@ -160,7 +160,7 @@ skip: true
 HTTP 200
 ```
 
-Additionally, a `delay` can be inserted between requests, to add a delay before execution of a request.
+Additionally, a `delay` can be inserted between requests, to add a delay before execution of a request (aka sleep).
 
 ```hurl
 # A 5 seconds delayed request 

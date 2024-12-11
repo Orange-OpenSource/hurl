@@ -208,7 +208,7 @@ cert: /etc/client-cert.pem # client authentication certificate
 key: /etc/client-cert.key  # client authentication certificate key
 compressed: true           # request a compressed response
 connect-timeout: 20s       # connect timeout
-delay: 3s                  # delay for this request
+delay: 3s                  # delay for this request (aka sleep)
 http3: true                # use HTTP/3 protocol version
 insecure: true             # allow insecure SSL connections and transfers
 ipv6: true                 # use IPv6 addresses

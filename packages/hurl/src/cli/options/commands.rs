@@ -142,7 +142,7 @@ pub fn delay() -> clap::Arg {
         .long("delay")
         .value_name("MILLISECONDS")
         .default_value("0")
-        .help("Sets delay before each request")
+        .help("Sets delay before each request (aka sleep)")
         .help_heading("Run options")
         .num_args(1)
 }

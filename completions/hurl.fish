@@ -10,7 +10,7 @@ complete -c hurl -l continue-on-error -d 'Continue executing requests even if an
 complete -c hurl -l cookie -d 'Read cookies from FILE'
 complete -c hurl -l cookie-jar -d 'Write cookies to FILE after running the session (only for one session)'
 complete -c hurl -l curl -d 'Export each request to a list of curl commands'
-complete -c hurl -l delay -d 'Sets delay before each request'
+complete -c hurl -l delay -d 'Sets delay before each request (aka sleep)'
 complete -c hurl -l error-format -d 'Control the format of error messages'
 complete -c hurl -l file-root -d 'Set root directory to import files [default: input file directory]'
 complete -c hurl -l location -d 'Follow redirects'
