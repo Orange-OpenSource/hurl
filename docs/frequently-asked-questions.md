@@ -19,10 +19,10 @@ but also as a test tool for HTTP sessions, or even as documentation.
 Having a text based [file format] is another advantage. The Hurl format is simple,
 focused on the HTTP domain, can serve as documentation and can be read or written by non-technical people.
 
-For instance posting JSON data with Hurl can be done with this simple file:
+For instance putting JSON data with Hurl can be done with this simple file:
 
 ``` 
-POST http://localhost:3000/api/login
+PUT http://localhost:3000/api/login
 {
   "username": "xyz",
   "password": "xyz"
@@ -33,7 +33,7 @@ With [curl]:
 
 ```
 curl --header "Content-Type: application/json" \
-     --request POST \
+     --request PUT \
      --data '{"username": "xyz","password": "xyz"}' \
      http://localhost:3000/api/login
 ``` 
