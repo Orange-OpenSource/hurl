@@ -15,42 +15,52 @@
  * limitations under the License.
  *
  */
-
 use colored::Colorize;
 
 use crate::text::style::{Color, Style};
 
-/// A String with style
+/// A String with style.
+///
+/// A styled string can be composed of styled parts (tokens). A token has a style (an optional
+/// foreground color with a bold attribute) and a string content.
+///
+/// A styled string can be rendered as plain text, or as a string with
+/// [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code). It's useful to make text
+/// that can be colored or plain at runtime.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-#[allow(unused)]
 pub struct StyledString {
+    /// A list of tokens (styled parts).
     tokens: Vec<Token>,
 }
 
-#[allow(unused)]
+/// Represents part of a [`StyledString`].
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct Token {
+    /// The string content of the token.
+    content: String,
+    /// The style of the token, a foreground color with a bold attribute.
+    style: Style,
+}
+
+/// The format in which a [`StyledString`] can be rendered.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Format {
     Plain,
     Ansi,
 }
 
-#[allow(unused)]
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct Token {
-    content: String,
-    style: Style,
-}
-
-#[allow(unused)]
 impl StyledString {
+    /// Creates an empty instance of a styled string.
     pub fn new() -> StyledString {
         StyledString { tokens: vec![] }
     }
 
+    /// Appends a given `content` without any style onto this end of this `StyledString`
     pub fn push(&mut self, content: &str) {
         self.push_with(content, Style::new());
     }
 
+    /// Appends a given `content` with a specific `style`.
     pub fn push_with(&mut self, content: &str, style: Style) {
         let token = Token::new(content, style);
         self.push_token(token);
@@ -67,6 +77,7 @@ impl StyledString {
         self.tokens.push(token);
     }
 
+    /// Renders a styled string given a `format`.
     pub fn to_string(&self, format: Format) -> String {
         self.tokens
             .iter()
@@ -75,12 +86,14 @@ impl StyledString {
             .join("")
     }
 
+    /// Appends a styled string.
     pub fn append(&mut self, other: StyledString) {
         for token in other.tokens {
             self.push_token(token);
         }
     }
 
+    /// Splits a styled string to a given list of [`StyledString`], given a `delimiter`.
     pub fn split(&self, delimiter: char) -> Vec<StyledString> {
         let mut items = vec![];
         let mut item = StyledString::new();
@@ -102,6 +115,7 @@ impl StyledString {
         items
     }
 
+    /// Tests if this styled string ends with a given `value`, no matter what's the style of the string.
     pub fn ends_with(&self, value: &str) -> bool {
         self.to_string(Format::Plain).ends_with(value)
     }
@@ -154,13 +168,14 @@ impl StyledString {
     }
 }
 
+/// Represents part of a styled string.
 impl Token {
-    pub fn new(content: &str, style: Style) -> Token {
+    fn new(content: &str, style: Style) -> Token {
         let content = content.to_string();
         Token { content, style }
     }
 
-    pub fn to_string(&self, format: Format) -> String {
+    fn to_string(&self, format: Format) -> String {
         match format {
             Format::Plain => self.plain(),
             Format::Ansi => self.ansi(),
