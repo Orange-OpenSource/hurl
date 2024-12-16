@@ -800,7 +800,7 @@ impl Client {
                     Ok(Some(value))
                 }
                 Err(message) => {
-                    logger.error(&format!("can not parse certificate - {message}"));
+                    logger.warning(&format!("Can not parse certificate - {message}"));
                     Ok(None)
                 }
             }

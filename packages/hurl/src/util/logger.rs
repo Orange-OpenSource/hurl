@@ -254,15 +254,6 @@ impl Logger {
         self.stderr.eprintln(&s.to_string(fmt));
     }
 
-    pub fn error(&mut self, message: &str) {
-        let fmt = self.format();
-        let mut s = StyledString::new();
-        s.push_with("error", Style::new().red().bold());
-        s.push(": ");
-        s.push_with(message, Style::new().bold());
-        self.stderr.eprintln(&s.to_string(fmt));
-    }
-
     pub fn error_parsing_rich<E: DisplaySourceError>(
         &mut self,
         content: &str,
