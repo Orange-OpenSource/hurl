@@ -13093,7 +13093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        TemplateElement, Version, Whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">        TemplateElement, Version, Whitespace, I64,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16197,7 +16197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Number(Number::Integer(value)),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Number(Number::Integer(I64::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16213,7 +16213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    operator: false,</pre>
+                <pre class="has-background-white py-0 px-2">                        value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16229,7 +16229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                        value.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16245,7 +16245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">                    ))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16261,7 +16261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">                    operator: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16277,7 +16277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16293,7 +16293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16309,7 +16309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16325,7 +16325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_query() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16341,7 +16341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16357,7 +16357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            header_query().to_json(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16373,7 +16373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_query() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16389,7 +16389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16405,7 +16405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (</pre>
+                <pre class="has-background-white py-0 px-2">            header_query().to_json(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16421,7 +16421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;name&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16437,7 +16437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    JValue::String(&quot;Content-Length&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">                (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16453,7 +16453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ),</pre>
+                <pre class="has-background-white py-0 px-2">                (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16469,7 +16469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ])</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;name&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16485,7 +16485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                    JValue::String(&quot;Content-Length&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16501,7 +16501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16517,7 +16517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16533,7 +16533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16549,7 +16549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_capture() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16565,7 +16565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16581,7 +16581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            header_capture().to_json(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16597,7 +16597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_capture() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16613,7 +16613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (&quot;name&quot;.to_string(), JValue::String(&quot;size&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16629,7 +16629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (</pre>
+                <pre class="has-background-white py-0 px-2">            header_capture().to_json(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16645,7 +16645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;query&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16661,7 +16661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">                (&quot;name&quot;.to_string(), JValue::String(&quot;size&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16677,7 +16677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">                (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16693,7 +16693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;query&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16709,7 +16709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            &quot;name&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16725,7 +16725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            JValue::String(&quot;Content-Length&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16741,7 +16741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        ),</pre>
+                <pre class="has-background-white py-0 px-2">                        (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16757,7 +16757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ])</pre>
+                <pre class="has-background-white py-0 px-2">                            &quot;name&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16773,7 +16773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ),</pre>
+                <pre class="has-background-white py-0 px-2">                            JValue::String(&quot;Content-Length&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16789,7 +16789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ])</pre>
+                <pre class="has-background-white py-0 px-2">                        ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16805,7 +16805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                    ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16821,7 +16821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16837,7 +16837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16853,7 +16853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16869,7 +16869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_predicate() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16885,7 +16885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16901,7 +16901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            equal_int_predicate(10).to_json(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16917,7 +16917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_predicate() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16933,7 +16933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (&quot;type&quot;.to_string(), JValue::String(&quot;equal&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16949,7 +16949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (&quot;value&quot;.to_string(), JValue::Number(&quot;10&quot;.to_string()))</pre>
+                <pre class="has-background-white py-0 px-2">            equal_int_predicate(10).to_json(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16965,7 +16965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ]),</pre>
+                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16981,7 +16981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                (&quot;type&quot;.to_string(), JValue::String(&quot;equal&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16997,7 +16997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                (&quot;value&quot;.to_string(), JValue::Number(&quot;10&quot;.to_string()))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17013,7 +17013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            ]),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17029,7 +17029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17045,7 +17045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_assert() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17061,7 +17061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17077,7 +17077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            header_assert().to_json(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17093,7 +17093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_assert() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17109,7 +17109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17125,7 +17125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;query&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            header_assert().to_json(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17141,7 +17141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">            JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17157,7 +17157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">                (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17173,7 +17173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;query&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17189,7 +17189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            &quot;name&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17205,7 +17205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            JValue::String(&quot;Content-Length&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;header&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17221,7 +17221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        ),</pre>
+                <pre class="has-background-white py-0 px-2">                        (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17237,7 +17237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ])</pre>
+                <pre class="has-background-white py-0 px-2">                            &quot;name&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17253,7 +17253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ),</pre>
+                <pre class="has-background-white py-0 px-2">                            JValue::String(&quot;Content-Length&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17269,7 +17269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                (</pre>
+                <pre class="has-background-white py-0 px-2">                        ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17285,7 +17285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;predicate&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17301,7 +17301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
+                <pre class="has-background-white py-0 px-2">                ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17317,7 +17317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;equal&quot;.to_string())),</pre>
+                <pre class="has-background-white py-0 px-2">                (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17333,7 +17333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        (&quot;value&quot;.to_string(), JValue::Number(&quot;10&quot;.to_string()))</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;predicate&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17349,7 +17349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ])</pre>
+                <pre class="has-background-white py-0 px-2">                    JValue::Object(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17365,7 +17365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )</pre>
+                <pre class="has-background-white py-0 px-2">                        (&quot;type&quot;.to_string(), JValue::String(&quot;equal&quot;.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17381,7 +17381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ]),</pre>
+                <pre class="has-background-white py-0 px-2">                        (&quot;value&quot;.to_string(), JValue::Number(&quot;10&quot;.to_string()))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17397,7 +17397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                    ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17413,7 +17413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17429,13 +17429,61 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">            ]),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1088"
+                role="cell">
+                <a href="#1088">1088</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1089"
+                role="cell">
+                <a href="#1089">1089</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1090"
+                role="cell">
+                <a href="#1090">1090</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-12-15 08:10</p>
+                <p class="heading">Date: 2024-12-16 08:12</p>
             </div>
         </footer>
     </body>
