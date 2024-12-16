@@ -539,11 +539,10 @@ pub fn secret() -> clap::Arg {
     clap::Arg::new("secret")
         .long("secret")
         .value_name("NAME=VALUE")
-        .help("Define a secret value")
+        .help("Define a variable which value is secret")
         .help_heading("Run options")
         .num_args(1)
         .action(clap::ArgAction::Append)
-        .hide(true)
 }
 
 pub fn ssl_no_revoke() -> clap::Arg {

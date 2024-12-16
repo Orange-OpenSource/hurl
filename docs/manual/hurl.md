@@ -480,6 +480,10 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
 
+### --secret <NAME=VALUE> {#secret}
+
+Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
 ### --ssl-no-revoke {#ssl-no-revoke}
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
