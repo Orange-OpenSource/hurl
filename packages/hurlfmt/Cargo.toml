@@ -17,7 +17,7 @@ hurl_core = { version = "6.1.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.11.1"
 
 [dev-dependencies]
-proptest = "1.5.0"
+proptest = "1.6.0"
 
 [lints]
 workspace = true
