@@ -57,7 +57,11 @@ pub fn run_seq(
                 return Err(error);
             }
         };
-        let variables = VariableSet::from(&options.variables);
+        let mut variables = VariableSet::from(&options.variables);
+        options
+            .secrets
+            .iter()
+            .for_each(|(name, value)| variables.insert_secret(name.clone(), value.clone()));
         let runner_options = options.to_runner_options(&filename, current_dir);
         let logger_options = options.to_logger_options();
 
@@ -175,7 +179,11 @@ pub fn run_par(
         Some(Count::Infinite) => workers_count,
         None => min(files.len(), workers_count),
     };
-    let variables = VariableSet::from(&options.variables);
+    let mut variables = VariableSet::from(&options.variables);
+    options
+        .secrets
+        .iter()
+        .for_each(|(name, value)| variables.insert_secret(name.clone(), value.clone()));
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);

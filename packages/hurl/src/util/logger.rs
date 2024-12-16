@@ -16,13 +16,13 @@
  *
  */
 //! Log utilities.
-
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
+use crate::util::redacted::RedactedString;
 use crate::util::term::Stderr;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -54,6 +54,7 @@ pub struct Logger {
     pub(crate) error_format: ErrorFormat,
     pub(crate) verbosity: Option<Verbosity>,
     pub(crate) stderr: Stderr,
+    pub(crate) secrets: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -117,12 +118,13 @@ impl Default for LoggerOptionsBuilder {
 
 impl Logger {
     /// Creates a new instance.
-    pub fn new(options: &LoggerOptions, term: Stderr) -> Self {
+    pub fn new(options: &LoggerOptions, term: Stderr, secrets: &[String]) -> Self {
         Logger {
             color: options.color,
             error_format: options.error_format,
             verbosity: options.verbosity,
             stderr: term,
+            secrets: secrets.to_vec(),
         }
     }
 
@@ -134,10 +136,14 @@ impl Logger {
         }
     }
 
+    /// Prints a given message to this logger [`Stderr`] instance, no matter what is the verbosity.
     pub fn info(&mut self, message: &str) {
         self.stderr.eprintln(message);
     }
 
+    /// Prints a given debug message to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    ///
+    /// Displayed debug messages start with `*`.
     pub fn debug(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
@@ -149,9 +155,12 @@ impl Logger {
             s.push(" ");
             s.push(message);
         }
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints a given debug message in bold to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    ///
+    /// Displayed debug messages start with `*`.
     pub fn debug_important(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
@@ -163,9 +172,12 @@ impl Logger {
             s.push(" ");
             s.push_with(message, Style::new().bold());
         }
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints a given debug message from libcurl to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    ///
+    /// Displayed libcurl debug messages start with `**`.
     pub fn debug_curl(&mut self, message: &str) {
         if self.verbosity.is_none() {
             return;
@@ -177,9 +189,10 @@ impl Logger {
             s.push(" ");
             s.push(message);
         }
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints an error (syntax error or runtime error) to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn debug_error<E: DisplaySourceError>(
         &mut self,
         content: &str,
@@ -200,6 +213,9 @@ impl Logger {
         message.lines().for_each(|l| self.debug(l));
     }
 
+    /// Prints a HTTP response header to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    ///
+    /// Response HTTP headers start with `>`.
     pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {
         if self.verbosity.is_none() {
             return;
@@ -212,11 +228,14 @@ impl Logger {
             s.push_with(name, Style::new().cyan().bold());
             s.push(": ");
             s.push(value);
-            self.stderr.eprintln(&s.to_string(fmt));
+            self.eprintln(&s.to_string(fmt));
         }
-        self.stderr.eprintln("<");
+        self.eprintln("<");
     }
 
+    /// Prints a HTTP request header to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    ///
+    /// Request HTTP headers start with `>`.
     pub fn debug_headers_out(&mut self, headers: &[(&str, &str)]) {
         if self.verbosity.is_none() {
             return;
@@ -229,11 +248,12 @@ impl Logger {
             s.push_with(name, Style::new().cyan().bold());
             s.push(": ");
             s.push(value);
-            self.stderr.eprintln(&s.to_string(fmt));
+            self.eprintln(&s.to_string(fmt));
         }
-        self.stderr.eprintln(">");
+        self.eprintln(">");
     }
 
+    /// Prints a HTTP response status code to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn debug_status_version_in(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
@@ -242,16 +262,19 @@ impl Logger {
         let mut s = StyledString::new();
         s.push("< ");
         s.push_with(line, Style::new().green().bold());
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints a warning given message to this logger [`Stderr`] instance, no matter what is the verbosity.
+    ///
+    /// Displayed warning messages start with `warning:`.
     pub fn warning(&mut self, message: &str) {
         let fmt = self.format();
         let mut s = StyledString::new();
         s.push_with("warning", Style::new().yellow().bold());
         s.push(": ");
         s.push_with(message, Style::new().bold());
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
     pub fn error_parsing_rich<E: DisplaySourceError>(
@@ -267,6 +290,7 @@ impl Logger {
         self.error_rich(&message);
     }
 
+    /// Prints a runtime error to this logger [`Stderr`] instance, no matter what is the verbosity.
     pub fn error_runtime_rich<E: DisplaySourceError>(
         &mut self,
         content: &str,
@@ -291,9 +315,10 @@ impl Logger {
         s.push(": ");
         s.push(message);
         s.push("\n");
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints the request method and HTTP  version to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn debug_method_version_out(&mut self, line: &str) {
         if self.verbosity.is_none() {
             return;
@@ -302,9 +327,10 @@ impl Logger {
         let mut s = StyledString::new();
         s.push("> ");
         s.push_with(line, Style::new().purple().bold());
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
+    /// Prints a capture to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn capture(&mut self, name: &str, value: &Value) {
         if self.verbosity.is_none() {
             return;
@@ -317,10 +343,17 @@ impl Logger {
         s.push_with(name, Style::new().yellow().bold());
         s.push(": ");
         s.push(&value);
-        self.stderr.eprintln(&s.to_string(fmt));
+        self.eprintln(&s.to_string(fmt));
     }
 
-    pub fn stderr(&self) -> &Stderr {
-        &self.stderr
+    fn eprintln(&mut self, message: &str) {
+        if self.secrets.is_empty() {
+            self.stderr.eprintln(message);
+            return;
+        }
+        let secrets = self.secrets.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
+        let mut redacted = RedactedString::new(&secrets);
+        redacted.push_str(message);
+        self.stderr.eprintln(&redacted);
     }
 }

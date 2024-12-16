@@ -95,7 +95,12 @@ pub fn run(
 
     // We also create a common logger for this run (logger verbosity can eventually be mutated on
     // each entry).
-    let mut logger = Logger::new(logger_options, stderr);
+    let secrets = variables
+        .iter()
+        .filter(|(_, var)| var.is_secret())
+        .map(|(_, var)| var.value().to_string())
+        .collect::<Vec<_>>();
+    let mut logger = Logger::new(logger_options, stderr, &secrets);
 
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
@@ -514,10 +519,14 @@ fn log_run_info(
         }
     }
 
+    let variables = variables
+        .iter()
+        .filter(|(_, variable)| !variable.is_secret())
+        .collect::<Vec<_>>();
     if !variables.is_empty() {
         logger.debug_important("Variables:");
-        for (name, value) in variables.iter() {
-            logger.debug(&format!("    {name}: {value}"));
+        for (name, var) in variables.iter() {
+            logger.debug(&format!("    {name}: {}", var.value()));
         }
     }
     if let Some(to_entry) = runner_options.to_entry {

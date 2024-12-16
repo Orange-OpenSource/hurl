@@ -27,8 +27,8 @@ use super::function;
 pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {
     match &expr.kind {
         ExprKind::Variable(variable) => {
-            if let Some(value) = variables.get(variable.name.as_str()) {
-                Ok(value.clone())
+            if let Some(variable) = variables.get(variable.name.as_str()) {
+                Ok(variable.value().clone())
             } else {
                 let kind = RunnerErrorKind::TemplateVariableNotDefined {
                     name: variable.name.clone(),
