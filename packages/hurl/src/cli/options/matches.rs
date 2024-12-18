@@ -408,15 +408,17 @@ pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsEr
     get_duration(&s, DurationUnit::MilliSecond)
 }
 
-pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOptionsError> {
+pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut secrets = HashMap::new();
     if let Some(secret) = get_strings(matches, "secret") {
         for s in secret {
             let (name, value) = variables::parse(&s)?;
-            secrets.insert(name.to_string(), value);
+            // Secrets can only be string.
+            if let Value::String(value) = value {
+                secrets.insert(name, value);
+            }
         }
     }
-
     Ok(secrets)
 }
 

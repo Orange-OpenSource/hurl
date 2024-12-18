@@ -108,15 +108,17 @@ impl VariableSet {
             return Err(Error::ReadOnlySecret(name));
         }
         let variable = Variable::new(value, VariableKind::Public);
-        self.variables.insert(name.to_string(), variable);
+        self.variables.insert(name, variable);
         Ok(())
     }
 
-    /// Inserts a secret variable named `name` with `value` into the variable set.
+    /// Inserts a secret variable named `name` with a string `value` into the variable set.
     ///
     /// Contrary to [`VariableSet::insert`], this method can not fail: a secret can override a
-    /// public variable and a secret variable.
-    pub fn insert_secret(&mut self, name: String, value: Value) {
+    /// public variable and a secret variable. Secret are only string, that's why `value` is a
+    /// `String` and not a `[Value::String]`.
+    pub fn insert_secret(&mut self, name: String, value: String) {
+        let value = Value::String(value.to_string());
         let variable = Variable::new(value, VariableKind::Secret);
         self.variables.insert(name, variable);
     }
@@ -126,19 +128,9 @@ impl VariableSet {
         self.variables.get(name)
     }
 
-    /// Returns true if the variable set contains no variables.
-    pub fn is_empty(&self) -> bool {
-        self.variables.is_empty()
-    }
-
     /// Returns an iterator over all the variables values.
     pub fn iter(&self) -> impl Iterator<Item = (&String, &Variable)> {
         self.variables.iter()
-    }
-
-    /// Returns the number of variables in the set.
-    pub fn len(&self) -> usize {
-        self.variables.len()
     }
 }
 
@@ -151,7 +143,6 @@ mod test {
     #[test]
     fn simple_variable_set() {
         let mut variables = VariableSet::new();
-        assert!(variables.is_empty());
 
         variables
             .insert("foo".to_string(), Value::String("xxx".to_string()))
@@ -165,9 +156,7 @@ mod test {
         variables
             .insert("baz".to_string(), Value::Number(Float(1.0)))
             .unwrap();
-        variables.insert_secret("quic".to_string(), Value::Number(Integer(42)));
-
-        assert_eq!(variables.len(), 4);
+        variables.insert_secret("quic".to_string(), "42".to_string());
 
         assert_eq!(
             variables.get("foo"),
@@ -191,7 +180,7 @@ mod test {
         assert_eq!(
             variables.get("quic"),
             Some(&Variable::new(
-                Value::Number(Integer(42)),
+                Value::String("42".to_string()),
                 VariableKind::Secret
             ))
         );
@@ -232,7 +221,7 @@ mod test {
     #[test]
     fn secret_cant_be_reassigned() {
         let mut variables = VariableSet::new();
-        variables.insert_secret("foo".to_string(), Value::Number(Integer(42)));
+        variables.insert_secret("foo".to_string(), "42".to_string());
         assert!(variables
             .insert("foo".to_string(), Value::String("xxx".to_string()))
             .is_err());

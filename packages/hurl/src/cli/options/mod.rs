@@ -90,7 +90,7 @@ pub struct CliOptions {
     pub resolves: Vec<String>,
     pub retry: Option<Count>,
     pub retry_interval: Duration,
-    pub secrets: HashMap<String, Value>,
+    pub secrets: HashMap<String, String>,
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,
     pub test: bool,
