@@ -24,8 +24,8 @@ use crate::runner::RunnerError;
 
 impl Testcase {
     /// Returns the HTML string of the Hurl source file (syntax colored and errors).
-    pub fn get_source_html(&self, hurl_file: &HurlFile, content: &str) -> String {
-        let nav = self.get_nav_html(content, Tab::Source);
+    pub fn get_source_html(&self, hurl_file: &HurlFile, content: &str, secrets: &[&str]) -> String {
+        let nav = self.get_nav_html(content, Tab::Source, secrets);
         let nav_css = include_str!("resources/nav.css");
         let source_div = hurl_core::format::format_html(hurl_file, false);
         let source_div = underline_errors(&source_div, &self.errors);

@@ -30,12 +30,12 @@ pub use testcase::Testcase;
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct HTMLResult {
     /// Original filename, as given in the run execution
-    pub filename: String,
+    filename: String,
     /// The id of the corresponding [`Testcase`]
-    pub id: String,
-    pub time_in_ms: u128,
-    pub success: bool,
-    pub timestamp: i64,
+    id: String,
+    time_in_ms: u128,
+    success: bool,
+    timestamp: i64,
 }
 
 impl HTMLResult {

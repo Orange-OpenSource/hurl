@@ -63,11 +63,14 @@ impl Testcase {
     /// - an HTML view of the Hurl source file (with potential errors and syntax colored),
     /// - an HTML timeline view of the executed entries (with potential errors, waterfall)
     /// - an HTML view of the executed run (headers, cookies, etc...)
+    ///
+    /// `secrets` strings are redacted from teh produced HTML.
     pub fn write_html(
         &self,
         content: &str,
         entries: &[EntryResult],
         dir: &Path,
+        secrets: &[&str],
     ) -> Result<(), crate::report::ReportError> {
         // We parse the content as we'll reuse the AST to construct the HTML source file, and
         // the waterfall.
@@ -77,19 +80,19 @@ impl Testcase {
         // We create the timeline view.
         let output_file = dir.join(self.timeline_filename());
         let mut file = File::create(output_file)?;
-        let html = self.get_timeline_html(&hurl_file, content, entries);
+        let html = self.get_timeline_html(&hurl_file, content, entries, secrets);
         file.write_all(html.as_bytes())?;
 
         // Then create the run view.
         let output_file = dir.join(self.run_filename());
         let mut file = File::create(output_file)?;
-        let html = self.get_run_html(&hurl_file, content, entries);
+        let html = self.get_run_html(&hurl_file, content, entries, secrets);
         file.write_all(html.as_bytes())?;
 
         // And create the source view.
         let output_file = dir.join(self.source_filename());
         let mut file = File::create(output_file)?;
-        let html = self.get_source_html(&hurl_file, content);
+        let html = self.get_source_html(&hurl_file, content, secrets);
         file.write_all(html.as_bytes())?;
 
         Ok(())

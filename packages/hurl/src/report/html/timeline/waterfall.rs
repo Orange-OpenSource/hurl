@@ -35,6 +35,7 @@ use crate::report::html::timeline::util::{
 };
 use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT, CALL_INSET};
 use crate::report::html::Testcase;
+use crate::util::redacted::RedactedString;
 
 /// Returns the start and end date for these entries.
 fn get_times_interval(calls: &[&Call]) -> Option<Interval<DateTime<Utc>>> {
@@ -52,7 +53,12 @@ fn get_times_interval(calls: &[&Call]) -> Option<Interval<DateTime<Utc>>> {
 
 impl Testcase {
     /// Returns the SVG string of this list of `calls`.
-    pub fn get_waterfall_svg(&self, calls: &[&Call], call_ctxs: &[CallContext]) -> String {
+    pub fn get_waterfall_svg(
+        &self,
+        calls: &[&Call],
+        call_ctxs: &[CallContext],
+        secrets: &[&str],
+    ) -> String {
         // Compute our scale (transform 0 based microsecond to 0 based pixels):
         let times = get_times_interval(calls);
         let times = match times {
@@ -100,8 +106,9 @@ impl Testcase {
         );
         root.add_child(grid);
 
-        let elts = zip(calls, call_ctxs)
-            .map(|(call, call_ctx)| new_call(call, call_ctx, times, scale_x, pixels_x, pixels_y));
+        let elts = zip(calls, call_ctxs).map(|(call, call_ctx)| {
+            new_call(call, call_ctx, times, scale_x, pixels_x, pixels_y, secrets)
+        });
 
         // We construct SVG calls from last to first so the detail of any call is not overridden
         // by the next call.
@@ -203,13 +210,14 @@ fn new_call(
     scale_x: Scale,
     pixels_x: Interval<Pixel>,
     pixels_y: Interval<Pixel>,
+    secrets: &[&str],
 ) -> Element {
     let mut call_elt = svg::new_group();
 
     let summary = new_call_timings(call, call_ctx, times, scale_x, pixels_y);
     call_elt.add_child(summary);
 
-    let detail = new_call_tooltip(call, call_ctx, times, scale_x, pixels_x, pixels_y);
+    let detail = new_call_tooltip(call, call_ctx, times, scale_x, pixels_x, pixels_y, secrets);
     call_elt.add_child(detail);
 
     call_elt
@@ -306,6 +314,7 @@ fn new_call_tooltip(
     scale_x: Scale,
     pixels_x: Interval<Pixel>,
     pixels_y: Interval<Pixel>,
+    secrets: &[&str],
 ) -> Element {
     let mut group = svg::new_group();
     group.add_attr(Class("call-detail".to_string()));
@@ -360,7 +369,10 @@ fn new_call_tooltip(
     elt.add_attr(Height("20".to_string()));
     legend.add_child(elt);
 
-    let text = format!("{} {}", call.request.method, call.request.url);
+    let url = call.request.url.to_string();
+    let mut rs = RedactedString::new(secrets);
+    rs.push_str(&url);
+    let text = format!("{} {}", call.request.method, &rs);
     let text = trunc_str(&text, 54);
     let text = format!("{text}  {}", call.response.status);
     let mut elt = svg::new_text(x.0 + 30.0, y.0 + 16.0, &text);

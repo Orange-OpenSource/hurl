@@ -61,6 +61,7 @@ impl Testcase {
         hurl_file: &HurlFile,
         content: &str,
         entries: &[EntryResult],
+        secrets: &[&str],
     ) -> String {
         let calls = entries
             .iter()
@@ -69,10 +70,10 @@ impl Testcase {
 
         let call_ctxs = self.get_call_contexts(hurl_file, entries);
         let timeline_css = include_str!("../resources/timeline.css");
-        let nav = self.get_nav_html(content, Tab::Timeline);
+        let nav = self.get_nav_html(content, Tab::Timeline, secrets);
         let nav_css = include_str!("../resources/nav.css");
-        let calls_svg = self.get_calls_svg(&calls, &call_ctxs);
-        let waterfall_svg = self.get_waterfall_svg(&calls, &call_ctxs);
+        let calls_svg = self.get_calls_svg(&calls, &call_ctxs, secrets);
+        let waterfall_svg = self.get_waterfall_svg(&calls, &call_ctxs, secrets);
         format!(
             include_str!("../resources/timeline.html"),
             calls = calls_svg,

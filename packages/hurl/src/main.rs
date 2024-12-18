@@ -138,6 +138,13 @@ fn export_results(
     opts: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<(), CliError> {
+    // Compute secrets
+    let secrets = opts
+        .secrets
+        .values()
+        .map(|v| v.as_ref())
+        .collect::<Vec<_>>();
+
     if let Some(file) = &opts.curl_file {
         create_curl_export(runs, file)?;
     }
@@ -151,7 +158,7 @@ fn export_results(
     }
     if let Some(dir) = &opts.html_dir {
         logger.debug(&format!("Writing HTML report to {}", dir.display()));
-        create_html_report(runs, dir)?;
+        create_html_report(runs, dir, &secrets)?;
     }
     if let Some(dir) = &opts.json_report_dir {
         logger.debug(&format!("Writing JSON report to {}", dir.display()));
@@ -192,7 +199,7 @@ fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> 
 }
 
 /// Creates an HTML report for this run.
-fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
+fn create_html_report(runs: &[HurlRun], dir_path: &Path, secrets: &[&str]) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
     let store_path = dir_path.join("store");
     std::fs::create_dir_all(&store_path)?;
@@ -201,7 +208,7 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError>
     for run in runs.iter() {
         let result = &run.hurl_result;
         let testcase = html::Testcase::from(result, &run.filename);
-        testcase.write_html(&run.content, &result.entries, &store_path)?;
+        testcase.write_html(&run.content, &result.entries, &store_path, secrets)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;

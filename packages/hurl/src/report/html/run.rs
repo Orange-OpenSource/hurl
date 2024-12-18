@@ -21,6 +21,7 @@ use crate::http::Call;
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
 use crate::runner::EntryResult;
+use crate::util::redacted::RedactedString;
 
 impl Testcase {
     /// Creates an HTML view of a run (HTTP status code, response header etc...)
@@ -29,8 +30,9 @@ impl Testcase {
         hurl_file: &HurlFile,
         content: &str,
         entries: &[EntryResult],
+        secrets: &[&str],
     ) -> String {
-        let nav = self.get_nav_html(content, Tab::Run);
+        let nav = self.get_nav_html(content, Tab::Run, secrets);
         let nav_css = include_str!("resources/nav.css");
         let run_css = include_str!("resources/run.css");
 
@@ -42,7 +44,7 @@ impl Testcase {
             let source = self.source_filename();
 
             run.push_str("<details open>");
-            let info = get_entry_html(e, entry_index + 1);
+            let info = get_entry_html(e, entry_index + 1, secrets);
             run.push_str(&info);
 
             for (call_index, c) in e.calls.iter().enumerate() {
@@ -53,6 +55,7 @@ impl Testcase {
                     &self.filename,
                     &source,
                     line,
+                    secrets,
                 );
                 run.push_str(&info);
             }
@@ -72,12 +75,12 @@ impl Testcase {
 }
 
 /// Returns an HTML view of an `entry` information as HTML (title, `entry_index` and captures).
-fn get_entry_html(entry: &EntryResult, entry_index: usize) -> String {
+fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> String {
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
     let cmd = entry.curl_cmd.to_string();
-    let table = new_table("Debug", &[("Command", &cmd)]);
+    let table = new_table("Debug", &[("Command", &cmd)], secrets);
     text.push_str(&table);
 
     if !entry.captures.is_empty() {
@@ -87,7 +90,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize) -> String {
             .map(|c| (&c.name, c.value.to_string()))
             .collect::<Vec<(&String, String)>>();
         values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-        let table = new_table("Captures", &values);
+        let table = new_table("Captures", &values, secrets);
         text.push_str(&table);
     }
 
@@ -102,6 +105,7 @@ fn get_call_html(
     filename: &str,
     source: &str,
     line: usize,
+    secrets: &[&str],
 ) -> String {
     let mut text = String::new();
     let id = format!("e{entry_index}:c{call_index}");
@@ -120,7 +124,7 @@ fn get_call_html(
         ("Status code", status.as_str()),
         ("Source", source.as_str()),
     ];
-    let table = new_table("General", &values);
+    let table = new_table("General", &values, secrets);
     text.push_str(&table);
 
     // Certificate
@@ -134,7 +138,7 @@ fn get_call_html(
             ("Expire Date", end_date.as_str()),
             ("Serial Number", certificate.serial_number.as_str()),
         ];
-        let table = new_table("Certificate", &values);
+        let table = new_table("Certificate", &values, secrets);
         text.push_str(&table);
     }
 
@@ -145,7 +149,7 @@ fn get_call_html(
         .map(|h| (h.name.as_str(), h.value.as_str()))
         .collect::<Vec<(&str, &str)>>();
     values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-    let table = new_table("Request Headers", &values);
+    let table = new_table("Request Headers", &values, secrets);
     text.push_str(&table);
 
     let mut values = call
@@ -155,22 +159,29 @@ fn get_call_html(
         .map(|h| (h.name.as_str(), h.value.as_str()))
         .collect::<Vec<(&str, &str)>>();
     values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-    let table = new_table("Response Headers", &values);
+    let table = new_table("Response Headers", &values, secrets);
     text.push_str(&table);
 
     text
 }
 
-fn new_table<T: AsRef<str>, U: AsRef<str>>(title: &str, data: &[(T, U)]) -> String {
+/// Returns an HTML table with a `title` and a list of key/values. Values are redacted using `secrets`.
+fn new_table<T: AsRef<str>, U: AsRef<str>>(
+    title: &str,
+    data: &[(T, U)],
+    secrets: &[&str],
+) -> String {
     let mut text = String::new();
     text.push_str(&format!(
         "<table><thead><tr><th colspan=\"2\">{title}</tr></th></thead><tbody>"
     ));
     data.iter().for_each(|(name, value)| {
+        let mut rs = RedactedString::new(secrets);
+        rs.push_str(value.as_ref());
         text.push_str(&format!(
             "<tr><td class=\"name\">{}</td><td class=\"value\">{}</td></tr>",
             name.as_ref(),
-            value.as_ref()
+            rs
         ));
     });
     text.push_str("</tbody></table>");

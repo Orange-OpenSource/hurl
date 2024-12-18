@@ -33,7 +33,7 @@ pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Repor
         let html_result = HTMLResult::from(testcase);
         results.push(html_result);
     }
-    let now: DateTime<Local> = Local::now();
+    let now = Local::now();
     let s = create_html_index(&now.to_rfc2822(), &results);
 
     let file_path = index_path;

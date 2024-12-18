@@ -60,6 +60,12 @@ impl Deref for RedactedString<'_> {
     }
 }
 
+impl AsRef<str> for RedactedString<'_> {
+    fn as_ref(&self) -> &str {
+        &self.value
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::util::redacted::RedactedString;

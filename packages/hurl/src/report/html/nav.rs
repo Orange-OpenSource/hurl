@@ -20,6 +20,7 @@ use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
+use crate::util::redacted::RedactedString;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -31,9 +32,9 @@ pub enum Tab {
 impl Testcase {
     /// Returns the HTML navigation component for a `tab`.
     /// This common component is used to get source information and errors.
-    pub fn get_nav_html(&self, content: &str, tab: Tab) -> String {
+    pub fn get_nav_html(&self, content: &str, tab: Tab, secrets: &[&str]) -> String {
         let status = get_status_html(self.success);
-        let errors = self.get_errors_html(content);
+        let errors = self.get_errors_html(content, secrets);
         let errors_count = if !self.errors.is_empty() {
             self.errors.len().to_string()
         } else {
@@ -56,7 +57,7 @@ impl Testcase {
     }
 
     /// Formats a list of Hurl errors to HTML snippet.
-    fn get_errors_html(&self, content: &str) -> String {
+    fn get_errors_html(&self, content: &str, secrets: &[&str]) -> String {
         self.errors
             .iter()
             .map(|(error, entry_src_info)| {
@@ -66,6 +67,7 @@ impl Testcase {
                     content,
                     &self.filename,
                     &self.source_filename(),
+                    secrets,
                 );
                 format!("<div class=\"error\"><div class=\"error-desc\">{error}</div></div>")
             })
@@ -89,6 +91,7 @@ fn error_to_html(
     content: &str,
     filename: &str,
     source_filename: &str,
+    secrets: &[&str],
 ) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
@@ -98,7 +101,9 @@ fn error_to_html(
         Some(entry_src_info),
         OutputFormat::Terminal(false),
     );
-    let message = html_escape(&message);
+    let mut rs = RedactedString::new(secrets);
+    rs.push_str(&message);
+    let message = html_escape(&rs);
     // We override the first part of the error string to add an anchor to
     // the error context.
     let old = format!("{filename}:{line}:{column}");
@@ -140,7 +145,14 @@ mod tests {
                       ";
         let filename = "a/b/c/foo.hurl";
         let source_filename = "abc-source.hurl";
-        let html = error_to_html(&error, entry_src_info, content, filename, source_filename);
+        let html = error_to_html(
+            &error,
+            entry_src_info,
+            content,
+            filename,
+            source_filename,
+            &[],
+        );
         assert_eq!(
             html,
             r##"<pre><code>Assert failure
