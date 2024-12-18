@@ -20,9 +20,7 @@ use crate::ast::{
 };
 use crate::combinator::choice;
 use crate::parser::predicate_value::predicate_value;
-use crate::parser::primitives::{
-    one_or_more_spaces, try_literal, try_literals, zero_or_more_spaces,
-};
+use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
@@ -122,59 +120,26 @@ impl PredicateValue {
 }
 
 fn equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("equals", "==", reader)? == "==";
-    if !operator {
-        eprintln!("'equals' predicate is now deprecated. Use '==' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal("==", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let value = predicate_value(reader)?;
-    Ok(PredicateFuncValue::Equal {
-        space0,
-        value,
-        operator,
-    })
+    Ok(PredicateFuncValue::Equal { space0, value })
 }
 
 fn not_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("notEquals", "!=", reader)? == "!=";
-    if !operator {
-        eprintln!("'notEquals' predicate is now deprecated. Use '!=' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal("!=", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let value = predicate_value(reader)?;
-    Ok(PredicateFuncValue::NotEqual {
-        space0,
-        value,
-        operator,
-    })
+    Ok(PredicateFuncValue::NotEqual { space0, value })
 }
 
 fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("greaterThan", ">", reader)? == ">";
-    if !operator {
-        eprintln!("'greaterThan' predicate is now deprecated. Use '>' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal(">", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
-        Ok(PredicateFuncValue::GreaterThan {
-            space0,
-            value,
-            operator,
-        })
+        Ok(PredicateFuncValue::GreaterThan { space0, value })
     } else {
         Err(ParseError::new(
             start.pos,
@@ -185,23 +150,12 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 }
 
 fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("greaterThanOrEquals", ">=", reader)? == ">=";
-    if !operator {
-        eprintln!("'greaterThanOrEquals' predicate is now deprecated. Use '>=' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal(">=", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
-        Ok(PredicateFuncValue::GreaterThanOrEqual {
-            space0,
-            value,
-            operator,
-        })
+        Ok(PredicateFuncValue::GreaterThanOrEqual { space0, value })
     } else {
         Err(ParseError::new(
             start.pos,
@@ -212,23 +166,12 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncV
 }
 
 fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("lessThan", "<", reader)? == "<";
-    if !operator {
-        eprintln!("'lessThan' predicate is now deprecated. Use '<' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal("<", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
-        Ok(PredicateFuncValue::LessThan {
-            space0,
-            value,
-            operator,
-        })
+        Ok(PredicateFuncValue::LessThan { space0, value })
     } else {
         Err(ParseError::new(
             start.pos,
@@ -239,23 +182,12 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 }
 
 fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    let operator = try_literals("lessThanOrEquals", "<=", reader)? == "<=";
-    if !operator {
-        eprintln!("'lessThanOrEquals' predicate is now deprecated. Use '<=' instead");
-    }
-    let space0 = if operator {
-        zero_or_more_spaces(reader)?
-    } else {
-        one_or_more_spaces(reader)?
-    };
+    try_literal("<=", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     let start = reader.cursor();
     let value = predicate_value(reader)?;
     if value.is_number() || value.is_string() || value.is_expression() {
-        Ok(PredicateFuncValue::LessThanOrEqual {
-            space0,
-            value,
-            operator,
-        })
+        Ok(PredicateFuncValue::LessThanOrEqual { space0, value })
     } else {
         Err(ParseError::new(
             start.pos,
@@ -438,7 +370,6 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                         },
                         value: PredicateValue::Bool(true),
-                        operator: true,
                     },
                 },
             }
@@ -465,8 +396,6 @@ mod tests {
                     value: String::from("  "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 5)),
                 },
-
-                operator: true,
             }
         );
 
@@ -482,7 +411,6 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
-                operator: true,
             }
         );
 
@@ -495,7 +423,6 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
-                operator: true,
             },
         );
 
@@ -515,7 +442,6 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
-                operator: true,
             }
         );
     }
@@ -547,7 +473,6 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
-                operator: true,
             }
         );
     }

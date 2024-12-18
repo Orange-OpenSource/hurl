@@ -929,7 +929,7 @@ impl GraphQlVariables {
     }
 }
 
-fn encode_html(s: String) -> String {
+fn encode_html(s: &str) -> String {
     s.replace('>', "&gt;").replace('<', "&lt;")
 }
 

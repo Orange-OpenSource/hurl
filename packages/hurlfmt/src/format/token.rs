@@ -536,92 +536,92 @@ impl Tokenizable for PredicateFunc {
 impl Tokenizable for PredicateFuncValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
+        let name = self.name().to_string();
         match self {
             PredicateFuncValue::Equal { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::NotEqual { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::GreaterThan { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::GreaterThanOrEqual { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::LessThan { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::LessThanOrEqual { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::StartWith { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::EndWith { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Contain { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Include { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Match { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
-
             PredicateFuncValue::IsInteger => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsFloat => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsBoolean => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsString => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsCollection => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsDate => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsIsoDate => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::Exist => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsEmpty => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
             PredicateFuncValue::IsNumber => {
-                tokens.push(Token::PredicateType(self.name()));
+                tokens.push(Token::PredicateType(name));
             }
         }
         tokens

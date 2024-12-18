@@ -1011,7 +1011,6 @@ pub mod tests {
                         value,
                         value.to_string(),
                     ))),
-                    operator: false,
                 },
             },
         }

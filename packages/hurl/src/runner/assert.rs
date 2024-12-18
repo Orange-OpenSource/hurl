@@ -238,7 +238,6 @@ pub mod tests {
                         3,
                         "3".to_string(),
                     ))),
-                    operator: true,
                 },
             },
         };

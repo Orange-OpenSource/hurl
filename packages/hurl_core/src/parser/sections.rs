@@ -414,7 +414,6 @@ mod tests {
                                     }],
                                     source_info: SourceInfo::new(Pos::new(2, 22), Pos::new(2, 41)),
                                 }),
-                                operator: true,
                             },
                         },
                     },
@@ -733,7 +732,6 @@ mod tests {
                             5,
                             "5".to_string()
                         ))),
-                        operator: true,
                     },
                 },
             }

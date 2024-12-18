@@ -981,7 +981,6 @@ mod tests {
                         10,
                         "10".to_string(),
                     ))),
-                    operator: false,
                 },
                 source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 12)),
             },
@@ -1459,7 +1458,6 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
-                    operator: false,
                     value: PredicateValue::Null,
                 },
             },
@@ -1551,7 +1549,6 @@ mod tests {
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     value: PredicateValue::Null,
-                    operator: false,
                 },
             },
         };
@@ -1576,7 +1573,6 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
-                    operator: false,
                     value: PredicateValue::Null,
                 },
             },

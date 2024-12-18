@@ -267,65 +267,29 @@ impl fmt::Display for VariableValue {
 }
 
 impl PredicateFuncValue {
-    pub fn name(&self) -> String {
+    pub fn name(&self) -> &str {
         match self {
-            PredicateFuncValue::Equal { operator, .. } => {
-                if *operator {
-                    "==".to_string()
-                } else {
-                    "equals".to_string()
-                }
-            }
-            PredicateFuncValue::NotEqual { operator, .. } => {
-                if *operator {
-                    "!=".to_string()
-                } else {
-                    "notEquals".to_string()
-                }
-            }
-            PredicateFuncValue::GreaterThan { operator, .. } => {
-                if *operator {
-                    ">".to_string()
-                } else {
-                    "greaterThan".to_string()
-                }
-            }
-            PredicateFuncValue::GreaterThanOrEqual { operator, .. } => {
-                if *operator {
-                    ">=".to_string()
-                } else {
-                    "greaterThanOrEquals".to_string()
-                }
-            }
-            PredicateFuncValue::LessThan { operator, .. } => {
-                if *operator {
-                    "<".to_string()
-                } else {
-                    "lessThan".to_string()
-                }
-            }
-            PredicateFuncValue::LessThanOrEqual { operator, .. } => {
-                if *operator {
-                    "<=".to_string()
-                } else {
-                    "lessThanOrEquals".to_string()
-                }
-            }
-            PredicateFuncValue::StartWith { .. } => "startsWith".to_string(),
-            PredicateFuncValue::EndWith { .. } => "endsWith".to_string(),
-            PredicateFuncValue::Contain { .. } => "contains".to_string(),
-            PredicateFuncValue::Include { .. } => "includes".to_string(),
-            PredicateFuncValue::Match { .. } => "matches".to_string(),
-            PredicateFuncValue::IsInteger => "isInteger".to_string(),
-            PredicateFuncValue::IsFloat => "isFloat".to_string(),
-            PredicateFuncValue::IsBoolean => "isBoolean".to_string(),
-            PredicateFuncValue::IsString => "isString".to_string(),
-            PredicateFuncValue::IsCollection => "isCollection".to_string(),
-            PredicateFuncValue::IsDate => "isDate".to_string(),
-            PredicateFuncValue::IsIsoDate => "isIsoDate".to_string(),
-            PredicateFuncValue::Exist => "exists".to_string(),
-            PredicateFuncValue::IsEmpty => "isEmpty".to_string(),
-            PredicateFuncValue::IsNumber => "isNumber".to_string(),
+            PredicateFuncValue::Equal { .. } => "==",
+            PredicateFuncValue::NotEqual { .. } => "!=",
+            PredicateFuncValue::GreaterThan { .. } => ">",
+            PredicateFuncValue::GreaterThanOrEqual { .. } => ">=",
+            PredicateFuncValue::LessThan { .. } => "<",
+            PredicateFuncValue::LessThanOrEqual { .. } => "<=",
+            PredicateFuncValue::StartWith { .. } => "startsWith",
+            PredicateFuncValue::EndWith { .. } => "endsWith",
+            PredicateFuncValue::Contain { .. } => "contains",
+            PredicateFuncValue::Include { .. } => "includes",
+            PredicateFuncValue::Match { .. } => "matches",
+            PredicateFuncValue::IsInteger => "isInteger",
+            PredicateFuncValue::IsFloat => "isFloat",
+            PredicateFuncValue::IsBoolean => "isBoolean",
+            PredicateFuncValue::IsString => "isString",
+            PredicateFuncValue::IsCollection => "isCollection",
+            PredicateFuncValue::IsDate => "isDate",
+            PredicateFuncValue::IsIsoDate => "isIsoDate",
+            PredicateFuncValue::Exist => "exists",
+            PredicateFuncValue::IsEmpty => "isEmpty",
+            PredicateFuncValue::IsNumber => "isNumber",
         }
     }
 }

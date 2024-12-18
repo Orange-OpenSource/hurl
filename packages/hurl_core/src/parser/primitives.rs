@@ -167,27 +167,6 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     }
 }
 
-/// Returns the literal string
-pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.cursor();
-    match literal(s1, reader) {
-        Ok(_) => Ok(s1.to_string()),
-        Err(_) => {
-            reader.seek(start);
-            match literal(s2, reader) {
-                Ok(_) => Ok(s2.to_string()),
-                Err(_) => {
-                    reader.seek(start);
-                    let kind = ParseErrorKind::Expecting {
-                        value: format!("<{s1}> or <{s2}>"),
-                    };
-                    Err(ParseError::new(start.pos, true, kind))
-                }
-            }
-        }
-    }
-}
-
 pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.cursor();
     match try_literal("\r\n", reader) {

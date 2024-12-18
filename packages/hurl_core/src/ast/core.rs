@@ -444,32 +444,26 @@ pub enum PredicateFuncValue {
     Equal {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     NotEqual {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     GreaterThan {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     GreaterThanOrEqual {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     LessThan {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     LessThanOrEqual {
         space0: Whitespace,
         value: PredicateValue,
-        operator: bool,
     },
     StartWith {
         space0: Whitespace,

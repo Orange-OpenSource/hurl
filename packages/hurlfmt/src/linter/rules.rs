@@ -363,34 +363,28 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
         PredicateFuncValue::Equal { value, .. } => PredicateFuncValue::Equal {
             space0: one_whitespace(),
             value: lint_predicate_value(value),
-            operator: true,
         },
         PredicateFuncValue::NotEqual { value, .. } => PredicateFuncValue::NotEqual {
             space0: one_whitespace(),
             value: lint_predicate_value(value),
-            operator: true,
         },
         PredicateFuncValue::GreaterThan { value, .. } => PredicateFuncValue::GreaterThan {
             space0: one_whitespace(),
             value: lint_predicate_value(value),
-            operator: true,
         },
         PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
             PredicateFuncValue::GreaterThanOrEqual {
                 space0: one_whitespace(),
                 value: lint_predicate_value(value),
-                operator: true,
             }
         }
         PredicateFuncValue::LessThan { value, .. } => PredicateFuncValue::LessThan {
             space0: one_whitespace(),
             value: lint_predicate_value(value),
-            operator: true,
         },
         PredicateFuncValue::LessThanOrEqual { value, .. } => PredicateFuncValue::LessThanOrEqual {
             space0: one_whitespace(),
             value: lint_predicate_value(value),
-            operator: true,
         },
         PredicateFuncValue::Contain { value, .. } => PredicateFuncValue::Contain {
             space0: one_whitespace(),
