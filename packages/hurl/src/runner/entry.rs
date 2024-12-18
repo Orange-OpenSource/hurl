@@ -63,13 +63,13 @@ pub fn run(
     use std::str::FromStr;
     if let Some(s) = request::cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
-            http_client.add_cookie(&cookie, &client_options);
+            http_client.add_cookie(&cookie, logger);
         } else {
             logger.warning(&format!("Cookie string can not be parsed: '{s}'"));
         }
     }
     if request::cookie_storage_clear(&entry.request) {
-        http_client.clear_cookie_storage(&client_options);
+        http_client.clear_cookie_storage(logger);
     }
 
     let curl_cmd = http_client.curl_command_line(
@@ -77,6 +77,7 @@ pub fn run(
         context_dir,
         runner_options.output.as_ref(),
         &client_options,
+        logger,
     );
 
     log_request(http_client, &curl_cmd, &http_request, logger);
@@ -257,7 +258,7 @@ fn log_request(
 ) {
     logger.debug("");
     logger.debug_important("Cookie store:");
-    for cookie in &http_client.cookie_storage() {
+    for cookie in &http_client.cookie_storage(logger) {
         logger.debug(&cookie.to_string());
     }
 

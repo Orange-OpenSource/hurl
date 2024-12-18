@@ -739,7 +739,7 @@ impl Client {
     }
 
     /// Returns cookie storage.
-    pub fn cookie_storage(&mut self) -> Vec<Cookie> {
+    pub fn cookie_storage(&mut self, logger: &mut Logger) -> Vec<Cookie> {
         let list = self.handle.cookies().unwrap();
         let mut cookies = vec![];
         for cookie in list.iter() {
@@ -747,27 +747,23 @@ impl Client {
             if let Ok(cookie) = Cookie::from_str(line) {
                 cookies.push(cookie);
             } else {
-                eprintln!("warning: line <{line}> can not be parsed as cookie");
+                logger.warning(&format!("Line <{line}> can not be parsed as cookie"));
             }
         }
         cookies
     }
 
     /// Adds a cookie to the cookie jar.
-    pub fn add_cookie(&mut self, cookie: &Cookie, options: &ClientOptions) {
-        if options.verbosity.is_some() {
-            eprintln!("* add to cookie store: {cookie}");
-        }
+    pub fn add_cookie(&mut self, cookie: &Cookie, logger: &mut Logger) {
+        logger.debug(&format!("Add to cookie store <{cookie}> (experimental)"));
         self.handle
             .cookie_list(cookie.to_string().as_str())
             .unwrap();
     }
 
     /// Clears cookie storage.
-    pub fn clear_cookie_storage(&mut self, options: &ClientOptions) {
-        if options.verbosity.is_some() {
-            eprintln!("* clear cookie storage");
-        }
+    pub fn clear_cookie_storage(&mut self, logger: &mut Logger) {
+        logger.debug("Clear cookie storage (experimental)");
         self.handle.cookie_list("ALL").unwrap();
     }
 
@@ -778,8 +774,9 @@ impl Client {
         context_dir: &ContextDir,
         output: Option<&Output>,
         options: &ClientOptions,
+        logger: &mut Logger,
     ) -> CurlCmd {
-        let cookies = self.cookie_storage();
+        let cookies = self.cookie_storage(logger);
         CurlCmd::new(request_spec, &cookies, context_dir, output, options)
     }
 
@@ -983,10 +980,11 @@ impl From<IpResolve> for easy::IpResolve {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use crate::util::logger::ErrorFormat;
+    use crate::util::term::{Stderr, WriteMode};
     use std::default::Default;
     use std::path::PathBuf;
-
-    use super::*;
 
     #[test]
     fn test_parse_header() {
@@ -1176,7 +1174,15 @@ mod tests {
             ..Default::default()
         };
 
-        let cmd = client.curl_command_line(&request, &context_dir, output, &options);
+        let mut logger = Logger {
+            color: false,
+            error_format: ErrorFormat::Short,
+            verbosity: None,
+            stderr: Stderr::new(WriteMode::Immediate),
+            secrets: vec![],
+        };
+
+        let cmd = client.curl_command_line(&request, &context_dir, output, &options, &mut logger);
         assert_eq!(
             cmd.to_string(),
             "curl \
