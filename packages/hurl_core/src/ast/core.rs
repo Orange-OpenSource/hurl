@@ -26,8 +26,78 @@ use crate::typing::{Count, Duration};
 ///
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlFile {
-    pub entries: Vec<Entry>,
+    pub entries: Vec<EntryOrDirective>,
     pub line_terminators: Vec<LineTerminator>,
+}
+
+impl HurlFile {
+    /// Iterates over the available entries
+    pub fn entries(&self) -> impl Iterator<Item = &Entry> {
+        self.entries
+            .iter()
+            .filter_map(|entry_or_directive| match entry_or_directive {
+                EntryOrDirective::Entry(e) => Some(e),
+                _ => None,
+            })
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum EntryOrDirective {
+    Entry(Entry),
+    Directive(Directive),
+}
+
+impl EntryOrDirective {
+    pub fn source_info(&self) -> SourceInfo {
+        match self {
+            EntryOrDirective::Entry(e) => e.source_info(),
+            EntryOrDirective::Directive(d) => d.source_info(),
+        }
+    }
+}
+
+impl From<Entry> for EntryOrDirective {
+    fn from(v: Entry) -> Self {
+        EntryOrDirective::Entry(v)
+    }
+}
+
+impl From<Directive> for EntryOrDirective {
+    fn from(v: Directive) -> Self {
+        EntryOrDirective::Directive(v)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Directive {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub line_terminator0: LineTerminator,
+    pub value: DirectiveValue,
+    pub source_info: SourceInfo,
+}
+
+impl Directive {
+    /// Returns the source information for this directive.
+    pub fn source_info(&self) -> SourceInfo {
+        self.space0.source_info
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum DirectiveValue {
+    Include(Include),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Include {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub path: Template,
+    pub line_terminator0: LineTerminator,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

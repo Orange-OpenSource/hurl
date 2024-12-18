@@ -33,6 +33,8 @@ pub struct ParseError {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ParseErrorKind {
+    DirectiveSection,
+    DirectiveSectionName { name: String },
     DuplicateSection,
     EscapeChar,
     Expecting { value: String },
@@ -96,6 +98,10 @@ impl DisplaySourceError for ParseError {
 
     fn description(&self) -> String {
         match self.kind {
+            ParseErrorKind::DirectiveSection => "Parsing section".to_string(),
+            ParseErrorKind::DirectiveSectionName { .. } => {
+                "Parsing directive section name".to_string()
+            }
             ParseErrorKind::DuplicateSection => "Parsing section".to_string(),
             ParseErrorKind::EscapeChar => "Parsing escape character".to_string(),
             ParseErrorKind::Expecting { .. } => "Parsing literal".to_string(),
@@ -136,6 +142,13 @@ impl DisplaySourceError for ParseError {
 
     fn fixme(&self, content: &[&str]) -> StyledString {
         let message = match &self.kind {
+            ParseErrorKind::DirectiveSection => "this is not a valid directive section".to_string(),
+            ParseErrorKind::DirectiveSectionName { name } => {
+                let valid_values = ["Include"];
+                let default = format!("Valid values are {}", valid_values.join(", "));
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
+                format!("the section is not valid. {did_you_mean}")
+            }
             ParseErrorKind::DuplicateSection => "the section is already defined".to_string(),
             ParseErrorKind::EscapeChar => "the escaping sequence is not valid".to_string(),
             ParseErrorKind::Expecting { value } => format!("expecting '{value}'"),

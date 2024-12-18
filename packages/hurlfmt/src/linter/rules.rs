@@ -18,11 +18,11 @@
 use crate::linter::{LinterError, LinterErrorKind};
 use hurl_core::ast::{
     Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
-    CookiePath, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, GraphQl,
-    Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
-    MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
-    PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
-    SourceInfo, Template, Text, VariableDefinition, Whitespace,
+    CookiePath, DurationOption, Entry, EntryOption, EntryOrDirective, File, FileParam, Filter,
+    FilterValue, GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString,
+    MultilineStringAttribute, MultilineStringKind, MultipartParam, OptionKind, Predicate,
+    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryValue, RegexValue, Request,
+    Response, Section, SectionValue, SourceInfo, Template, Text, VariableDefinition, Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -40,19 +40,29 @@ pub fn lint_hurl_file(hurl_file: &HurlFile) -> HurlFile {
     }
 }
 
-fn check_entry(entry: &Entry) -> Vec<LinterError> {
+fn check_entry(entry: &EntryOrDirective) -> Vec<LinterError> {
     let mut errors = vec![];
-    errors.append(&mut check_request(&entry.request));
-    if let Some(response) = &entry.response {
-        errors.append(&mut check_response(response));
+    match entry {
+        EntryOrDirective::Entry(e) => {
+            errors.append(&mut check_request(&e.request));
+            if let Some(response) = &e.response {
+                errors.append(&mut check_response(response));
+            }
+        }
+        _ => {}
     }
     errors
 }
 
-fn lint_entry(entry: &Entry) -> Entry {
-    let request = lint_request(&entry.request);
-    let response = entry.response.as_ref().map(lint_response);
-    Entry { request, response }
+fn lint_entry(entry: &EntryOrDirective) -> EntryOrDirective {
+    match entry {
+        EntryOrDirective::Entry(e) => {
+            let request = lint_request(&e.request);
+            let response = e.response.as_ref().map(lint_response);
+            Entry { request, response }.into()
+        }
+        EntryOrDirective::Directive(d) => d.to_owned().into(),
+    }
 }
 
 fn check_request(request: &Request) -> Vec<LinterError> {

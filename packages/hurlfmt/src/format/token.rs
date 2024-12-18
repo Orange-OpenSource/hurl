@@ -17,14 +17,14 @@
  */
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
-    CookieAttribute, CookiePath, CountOption, DurationOption, EncodedString, Entry, EntryOption,
-    Expr, ExprKind, File, FileParam, FileValue, Filter, FilterValue, Function, GraphQl,
-    GraphQlVariables, Hex, HurlFile, JsonListElement, JsonObjectElement, JsonValue, KeyValue,
-    LineTerminator, Method, MultilineString, MultilineStringAttribute, MultilineStringKind,
-    MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFunc,
-    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    Section, SectionValue, Status, StatusValue, Template, TemplateElement, Text, Variable,
-    VariableDefinition, VariableValue, Version, Whitespace, I64, U64,
+    CookieAttribute, CookiePath, CountOption, Directive, DurationOption, EncodedString, Entry,
+    EntryOption, EntryOrDirective, Expr, ExprKind, File, FileParam, FileValue, Filter, FilterValue,
+    Function, GraphQl, GraphQlVariables, Hex, HurlFile, JsonListElement, JsonObjectElement,
+    JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultilineStringAttribute,
+    MultilineStringKind, MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate,
+    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue,
+    Request, Response, Section, SectionValue, Status, StatusValue, Template, TemplateElement, Text,
+    Variable, VariableDefinition, VariableValue, Version, Whitespace, I64, U64,
 };
 use hurl_core::typing::{Count, Duration};
 
@@ -71,6 +71,21 @@ impl Tokenizable for HurlFile {
                 .collect(),
         );
         tokens
+    }
+}
+
+impl Tokenizable for EntryOrDirective {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            EntryOrDirective::Entry(e) => e.tokenize(),
+            EntryOrDirective::Directive(d) => d.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for Directive {
+    fn tokenize(&self) -> Vec<Token> {
+        todo!("To be done once the rest is accepted")
     }
 }
 

@@ -17,8 +17,8 @@
  */
 use crate::ast::VersionValue::VersionAny;
 use crate::ast::{
-    Body, Entry, HurlFile, Method, Request, Response, SourceInfo, Status, StatusValue, Version,
-    VersionValue,
+    Body, Entry, EntryOrDirective, HurlFile, Method, Request, Response, SourceInfo, Status,
+    StatusValue, Version, VersionValue,
 };
 use crate::combinator::{optional, zero_or_more};
 use crate::parser::bytes::bytes;
@@ -26,19 +26,30 @@ use crate::parser::primitives::{
     eof, key_value, line_terminator, one_or_more_spaces, optional_line_terminators, try_literal,
     zero_or_more_spaces,
 };
-use crate::parser::sections::{request_sections, response_sections};
+use crate::parser::sections::{directive, request_sections, response_sections};
 use crate::parser::string::unquoted_template;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
-    let entries = zero_or_more(entry, reader)?;
+    let entries = zero_or_more(entry_or_directive, reader)?;
     let line_terminators = optional_line_terminators(reader)?;
     eof(reader)?;
     Ok(HurlFile {
         entries,
         line_terminators,
     })
+}
+
+fn entry_or_directive(reader: &mut Reader) -> ParseResult<EntryOrDirective> {
+    let next_c = reader.peek();
+
+    let entry_or_directive = match next_c {
+        Some('[') => directive(reader)?.into(),
+        _ => entry(reader)?.into(),
+    };
+
+    Ok(entry_or_directive)
 }
 
 fn entry(reader: &mut Reader) -> ParseResult<Entry> {

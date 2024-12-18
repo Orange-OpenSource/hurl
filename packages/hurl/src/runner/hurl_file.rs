@@ -112,9 +112,11 @@ pub fn run(
         }
     };
 
+    // TODO: resolve the file here
+
     // Now, we have a syntactically correct HurlFile instance, we can run it.
     let result = run_entries(
-        &hurl_file.entries,
+        &hurl_file.entries().collect::<Vec<_>>(),
         content,
         filename,
         runner_options,
@@ -140,7 +142,7 @@ pub fn run(
 /// New entry run events are reported to `progress` and are usually used to display a progress bar
 /// in test mode.
 pub fn run_entries(
-    entries: &[Entry],
+    entries: &[&Entry],
     content: &str,
     filename: Option<&Input>,
     runner_options: &RunnerOptions,
@@ -504,7 +506,7 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
 
 /// Logs various debug information at the start of `hurl_file` run.
 fn log_run_info(
-    entries: &[Entry],
+    entries: &[&Entry],
     runner_options: &RunnerOptions,
     variables: &VariableSet,
     logger: &mut Logger,

@@ -76,7 +76,7 @@ impl HtmlFormatter {
     pub fn fmt_hurl_file(&mut self, hurl_file: &HurlFile) -> &str {
         self.buffer.clear();
         self.fmt_pre_open("language-hurl");
-        hurl_file.entries.iter().for_each(|e| self.fmt_entry(e));
+        hurl_file.entries().for_each(|e| self.fmt_entry(e));
         self.fmt_lts(&hurl_file.line_terminators);
         self.fmt_pre_close();
         &self.buffer

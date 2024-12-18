@@ -120,7 +120,7 @@ impl Worker {
 
             // Now, we have a syntactically correct HurlFile instance, we can run it.
             let result = runner::run_entries(
-                &hurl_file.entries,
+                &hurl_file.entries().collect::<Vec<_>>(),
                 &content,
                 Some(&job.filename),
                 &job.runner_options,

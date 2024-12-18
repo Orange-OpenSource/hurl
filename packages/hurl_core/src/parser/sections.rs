@@ -16,8 +16,8 @@
  *
  */
 use crate::ast::{
-    Assert, Capture, Cookie, FileParam, FileValue, MultipartParam, Section, SectionValue,
-    SourceInfo, Whitespace,
+    Assert, Capture, Cookie, Directive, DirectiveValue, FileParam, FileValue, Include,
+    MultipartParam, Section, SectionValue, SourceInfo, Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
@@ -30,6 +30,51 @@ use crate::parser::query::query;
 use crate::parser::string::unquoted_template;
 use crate::parser::{filename, key_string, option, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
+
+pub fn directive(reader: &mut Reader) -> ParseResult<Directive> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let start = reader.cursor();
+    let name = section_name(reader)?;
+    let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
+
+    let line_terminator0 = line_terminator(reader)?;
+    let value = match name.as_str() {
+        "Include" => directive_value_include(reader)?,
+        _ => {
+            let kind = ParseErrorKind::DirectiveSectionName { name: name.clone() };
+            let pos = Pos::new(start.pos.line, start.pos.column + 1);
+            return Err(ParseError::new(pos, false, kind));
+        }
+    };
+
+    Ok(Directive {
+        line_terminators,
+        space0,
+        line_terminator0,
+        value,
+        source_info,
+    })
+}
+
+fn directive_value_include(reader: &mut Reader) -> ParseResult<DirectiveValue> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("path", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    recover(|reader1| literal(":", reader1), reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let path = filename::parse(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+    Ok(DirectiveValue::Include(Include {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        path,
+        line_terminator0,
+    }))
+}
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;

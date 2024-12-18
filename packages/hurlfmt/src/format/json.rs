@@ -40,7 +40,7 @@ impl ToJson for HurlFile {
     fn to_json(&self) -> JValue {
         JValue::Object(vec![(
             "entries".to_string(),
-            JValue::List(self.entries.iter().map(|e| e.to_json()).collect()),
+            JValue::List(self.entries().map(|e| e.to_json()).collect()),
         )])
     }
 }
