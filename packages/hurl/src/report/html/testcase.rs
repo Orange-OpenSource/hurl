@@ -19,19 +19,22 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
+use crate::runner::{EntryResult, HurlResult, RunnerError};
+use hurl_core::ast::SourceInfo;
 use hurl_core::input::Input;
 use hurl_core::parser;
 use uuid::Uuid;
 
-use crate::runner::{EntryResult, HurlResult, RunnerError};
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
+    /// Unique identifier of this testcase.
     pub id: String,
+    /// Source file name.
     pub filename: String,
     pub success: bool,
     pub time_in_ms: u128,
-    pub errors: Vec<RunnerError>,
+    /// The runtime errors, and the source information of the entry throwing this error.
+    pub errors: Vec<(RunnerError, SourceInfo)>,
     pub timestamp: i64,
 }
 
@@ -42,7 +45,7 @@ impl Testcase {
         let errors = hurl_result
             .errors()
             .into_iter()
-            .map(|(e, _)| e.clone())
+            .map(|(error, entry_src_info)| (error.clone(), entry_src_info))
             .collect();
         Testcase {
             id: id.to_string(),

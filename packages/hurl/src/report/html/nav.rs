@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::SourceInfo;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 use crate::report::html::Testcase;
@@ -58,8 +59,14 @@ impl Testcase {
     fn get_errors_html(&self, content: &str) -> String {
         self.errors
             .iter()
-            .map(|e| {
-                let error = error_to_html(e, content, &self.filename, &self.source_filename());
+            .map(|(error, entry_src_info)| {
+                let error = error_to_html(
+                    error,
+                    *entry_src_info,
+                    content,
+                    &self.filename,
+                    &self.source_filename(),
+                );
                 format!("<div class=\"error\"><div class=\"error-desc\">{error}</div></div>")
             })
             .collect::<Vec<_>>()
@@ -78,6 +85,7 @@ fn get_status_html(success: bool) -> &'static str {
 /// Returns an HTML `<pre>` tag representing this `error`.
 fn error_to_html(
     error: &RunnerError,
+    entry_src_info: SourceInfo,
     content: &str,
     filename: &str,
     source_filename: &str,
@@ -87,7 +95,7 @@ fn error_to_html(
     let message = error.to_string(
         filename,
         content,
-        Some(error.source_info),
+        Some(entry_src_info),
         OutputFormat::Terminal(false),
     );
     let message = html_escape(&message);
@@ -115,6 +123,7 @@ mod tests {
 
     #[test]
     fn test_error_html() {
+        let entry_src_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 39));
         let error = RunnerError::new(
             SourceInfo::new(Pos::new(4, 1), Pos::new(4, 9)),
             RunnerErrorKind::AssertFailure {
@@ -131,21 +140,18 @@ mod tests {
                       ";
         let filename = "a/b/c/foo.hurl";
         let source_filename = "abc-source.hurl";
-        let html = error_to_html(&error, content, filename, source_filename);
+        let html = error_to_html(&error, entry_src_info, content, filename, source_filename);
         assert_eq!(
             html,
-            "\
-<pre>\
-  <code>\
-Assert failure\n  \
-  --&gt; <a href=\"abc-source.hurl#l4\">a/b/c/foo.hurl:4:1</a>\n   \
-   |\n \
- 4 | `Hello World`\n   \
-   |   actual:   &lt;script&gt;alert('Hi')&lt;/script&gt;\n   \
-   |   expected: Hello world\n   \
-   |\
-  </code>\
-</pre>"
+            r##"<pre><code>Assert failure
+  --&gt; <a href="abc-source.hurl#l4">a/b/c/foo.hurl:4:1</a>
+   |
+   | GET http://localhost:8000/inline-script
+   | ...
+ 4 | `Hello World`
+   |   actual:   &lt;script&gt;alert('Hi')&lt;/script&gt;
+   |   expected: Hello world
+   |</code></pre>"##
         );
     }
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::HurlFile;
+use hurl_core::ast::{HurlFile, SourceInfo};
 use regex::{Captures, Regex};
 
 use crate::report::html::nav::Tab;
@@ -60,14 +60,14 @@ fn get_numbered_lines(content: &str) -> String {
 }
 
 /// Adds error class to `content` lines that triggers `errors`.
-fn underline_errors(content: &str, errors: &[RunnerError]) -> String {
+fn underline_errors(content: &str, errors: &[(RunnerError, SourceInfo)]) -> String {
     // In nutshell, we're replacing line `<span class="line">...</span>`
     // with `<span class="line line-error">...</span>`.
     let re = Regex::new("<span class=\"line\">").unwrap();
     let mut line = 0;
     let error_lines = errors
         .iter()
-        .map(|e| e.source_info.start.line - 1)
+        .map(|(error, _)| error.source_info.start.line - 1)
         .collect::<Vec<_>>();
     re.replace_all(content, |_: &Captures| {
         let str = if error_lines.contains(&line) {
@@ -137,12 +137,13 @@ mod tests {
             </code>
         </pre>"#;
 
-        let errors = vec![RunnerError {
+        let error = RunnerError {
             source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 4)),
             kind: QueryHeaderNotFound,
             assert: true,
-        }];
-
+        };
+        let entry_src_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
+        let errors = [(error, entry_src_info)];
         assert_eq!(underlined_content, underline_errors(content, &errors));
     }
 }
