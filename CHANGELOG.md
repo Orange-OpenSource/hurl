@@ -1,3 +1,24 @@
+[6.1.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.0)
+========================================================================================================================
+
+Thanks to
+[@theoforger](https://github.com/theoforger),
+
+Breaking Changes:
+
+* Remove deprecated predicates in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
+
+
+Enhancements:
+
+* Add curl -H/--header option to globally add headers to all requests [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
+
+
+Bugs Fixed:
+
+* Fix missing request line errors in HTML report [#3534](https://github.com/Orange-OpenSource/hurl/issues/3534)
+
+
 [6.0.0 (2024-12-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
 ========================================================================================================================
 
