@@ -163,6 +163,7 @@ impl DisplaySourceError for ParseError {
                     "connect-to",
                     "delay",
                     "insecure",
+                    "header",
                     "http1.0",
                     "http1.1",
                     "http2",

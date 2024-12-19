@@ -13,6 +13,7 @@ delay: 1000ms
 delay: 1s
 location: false
 location-trusted: false
+header: key: value
 http1.0: false
 http1.1: false
 http2: false
@@ -61,6 +62,7 @@ connect-timeout: {{connect-timeout}}
 delay: {{delay}}
 location: {{location}}
 location-trusted: {{location-trusted}}
+header: {{header}}
 http1.0: {{http10}}
 http1.1: {{http11}}
 http2: {{http2}}

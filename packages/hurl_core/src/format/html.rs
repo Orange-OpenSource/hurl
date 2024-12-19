@@ -232,6 +232,7 @@ impl HtmlFormatter {
             OptionKind::Delay(value) => self.fmt_duration_option(value),
             OptionKind::FollowLocation(value) => self.fmt_bool_option(value),
             OptionKind::FollowLocationTrusted(value) => self.fmt_bool_option(value),
+            OptionKind::Header(value) => self.fmt_template(value),
             OptionKind::Http10(value) => self.fmt_bool_option(value),
             OptionKind::Http11(value) => self.fmt_bool_option(value),
             OptionKind::Http2(value) => self.fmt_bool_option(value),

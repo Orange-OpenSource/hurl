@@ -5,7 +5,6 @@ value: HEADER
 help: Pass custom header(s) to server
 help_heading: HTTP options
 multi: append
-cli_only: true
 ---
 Add an extra header to include in information sent. Can be used several times in a command
 

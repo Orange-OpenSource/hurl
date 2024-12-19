@@ -262,8 +262,6 @@ Add an extra header to include in information sent. Can be used several times in
 
 Do not add newlines or carriage returns
 
-This is a cli-only option.
-
 ### -0, --http1.0 {#http10}
 
 Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.

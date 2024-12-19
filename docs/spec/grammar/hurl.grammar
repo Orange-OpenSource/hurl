@@ -126,6 +126,7 @@ option:
   | delay-option
   | follow-redirect-option
   | follow-redirect-trusted-option
+  | header-option
   | http10-option
   | http11-option
   | http2-option
@@ -172,6 +173,8 @@ delay-option: "delay" ":" duration-option lt
 follow-redirect-option: "location" ":" boolean-option lt
 
 follow-redirect-trusted-option: "location-trusted" ":" boolean-option lt
+
+header-option: "header" ":" value-string lt
 
 http10-option: "http1.0" ":" boolean-option lt
 

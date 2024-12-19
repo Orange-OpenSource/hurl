@@ -90,6 +90,10 @@ pub fn get_entry_options(
                             eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
                         entry_options.delay = value;
                     }
+                    OptionKind::Header(value) => {
+                        let value = eval_template(value, variables)?;
+                        entry_options.headers.push(value);
+                    }
                     // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
                     // through a flag. In an `[Options]` section, the signification of such a flag is:
                     //

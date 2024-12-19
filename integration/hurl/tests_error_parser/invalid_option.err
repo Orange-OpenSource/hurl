@@ -2,6 +2,6 @@ error: Parsing option
   --> tests_error_parser/invalid_option.hurl:3:1
    |
  3 | foo: true
-   | ^ the option name is not valid. Valid values are aws-sigv4, cacert, cert, compressed, connect-to, delay, insecure, http1.0, http1.1, http2, http3, ipv4, ipv6, key, location, max-redirs, output, path-as-is, proxy, resolve, retry, retry-interval, skip, unix-socket, variable, verbose, very-verbose
+   | ^ the option name is not valid. Valid values are aws-sigv4, cacert, cert, compressed, connect-to, delay, insecure, header, http1.0, http1.1, http2, http3, ipv4, ipv6, key, location, max-redirs, output, path-as-is, proxy, resolve, retry, retry-interval, skip, unix-socket, variable, verbose, very-verbose
    |
 

@@ -55,6 +55,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "connect-timeout" => option_connect_timeout(reader)?,
         "delay" => option_delay(reader)?,
         "insecure" => option_insecure(reader)?,
+        "header" => option_header(reader)?,
         "http1.0" => option_http_10(reader)?,
         "http1.1" => option_http_11(reader)?,
         "http2" => option_http_2(reader)?,
@@ -145,6 +146,11 @@ fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_follow_location_trusted(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::FollowLocationTrusted(value))
+}
+
+fn option_header(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::Header(value))
 }
 
 fn option_http_10(reader: &mut Reader) -> ParseResult<OptionKind> {
