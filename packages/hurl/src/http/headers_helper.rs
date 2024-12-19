@@ -66,6 +66,8 @@ impl HeaderVec {
     /// Returns the aggregated `HeaderVec`
     pub fn aggregate_raw_headers(&self, raw_headers: &[&str]) -> HeaderVec {
         let mut headers = self.clone();
+        // TODO: use another function that [`Header::parse`] because [`Header::parse`] is for
+        // parsing headers line coming from a server (and not from options header)
         let to_aggregate = raw_headers.iter().filter_map(|h| Header::parse(h));
         for header in to_aggregate {
             headers.push(header);

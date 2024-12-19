@@ -488,6 +488,10 @@ impl Client {
         self.set_multipart(&request_spec.multipart)?;
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
+        // TODO: do we want to manage the headers with no content? There are two type of no-content
+        // headers: `foo:` and `foo;`. The first one can be used to remove libcurl headers (`Host:`)
+        // while the second one is used to send an empty header.
+        // See <https://github.com/Orange-OpenSource/hurl/issues/3536>
         let options_headers = options
             .headers
             .iter()
@@ -553,27 +557,29 @@ impl Client {
             list.append(&format!("{}: {}", header.name, header.value))?;
         }
 
-        // If request has no Content-Type header, we set it if the content type has been set
+        // If request has no `Content-Type` header, we set it if the content type has been set
         // implicitly on this request.
         if !headers.contains_key(CONTENT_TYPE) {
             if let Some(s) = implicit_content_type {
                 list.append(&format!("{}: {s}", CONTENT_TYPE))?;
             } else {
-                // We remove default Content-Type headers added by curl because we want
-                // to explicitly manage this header.
-                // For instance, with --data option, curl will send a 'Content-type: application/x-www-form-urlencoded'
-                // header.
+                // We remove default `Content-Type` headers added by curl because we want to
+                // explicitly manage this header.
+                // For instance, with --data option, curl will send a `Content-type: application/x-www-form-urlencoded`
+                // header. From <https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html>, we can delete
+                // the headers added by libcurl by adding a header with no content.
                 list.append(&format!("{}:", CONTENT_TYPE))?;
             }
         }
 
-        // Workaround for libcurl issue #11664: When Hurl explicitly sets `Expect:` to remove the header,
-        // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
-        // present, causing some APIs to reject the request.
+        // Workaround for libcurl issue <https://github.com/curl/curl/issues/11664>:
+        // When Hurl explicitly sets `Expect:` to remove the header, libcurl will generate
+        // `SignedHeaders` that include `expect` even though the header is not present, causing
+        // some APIs to reject the request.
         // Therefore, we only remove this header when not in aws_sigv4 mode.
         if !headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
-            // We remove default Expect headers added by curl because we want
-            // to explicitly manage this header.
+            // We remove default Expect headers added by curl because we want to explicitly manage
+            // this header.
             list.append(&format!("{}:", EXPECT))?;
         }
 
