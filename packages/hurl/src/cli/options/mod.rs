@@ -158,9 +158,10 @@ impl From<IpResolve> for http::IpResolve {
 
 fn get_version() -> String {
     let libcurl_version = http::libcurl_version_info();
+    let pkg_version = env!("CARGO_PKG_VERSION");
     format!(
         "{} ({}) {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
-        clap::crate_version!(),
+        pkg_version,
         libcurl_version.host,
         libcurl_version.libraries.join(" "),
         libcurl_version.features.join(" ")

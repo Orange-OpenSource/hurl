@@ -586,7 +586,10 @@ impl Client {
         if !headers.contains_key(USER_AGENT) {
             let user_agent = match options.user_agent {
                 Some(ref u) => u.clone(),
-                None => format!("hurl/{}", clap::crate_version!()),
+                None => {
+                    let pkg_version = env!("CARGO_PKG_VERSION");
+                    format!("hurl/{pkg_version}")
+                }
             };
             list.append(&format!("{}: {user_agent}", USER_AGENT))?;
         }
