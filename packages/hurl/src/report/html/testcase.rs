@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-use std::fs::File;
-use std::io::Write;
+use std::fs;
 use std::path::Path;
 
 use crate::runner::{EntryResult, HurlResult, RunnerError};
@@ -79,21 +78,18 @@ impl Testcase {
 
         // We create the timeline view.
         let output_file = dir.join(self.timeline_filename());
-        let mut file = File::create(output_file)?;
         let html = self.get_timeline_html(&hurl_file, content, entries, secrets);
-        file.write_all(html.as_bytes())?;
+        fs::write(output_file, html.as_bytes())?;
 
         // Then create the run view.
         let output_file = dir.join(self.run_filename());
-        let mut file = File::create(output_file)?;
         let html = self.get_run_html(&hurl_file, content, entries, secrets);
-        file.write_all(html.as_bytes())?;
+        fs::write(output_file, html.as_bytes())?;
 
         // And create the source view.
         let output_file = dir.join(self.source_filename());
-        let mut file = File::create(output_file)?;
         let html = self.get_source_html(&hurl_file, content, secrets);
-        file.write_all(html.as_bytes())?;
+        fs::write(output_file, html.as_bytes())?;
 
         Ok(())
     }

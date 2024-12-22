@@ -16,6 +16,7 @@
  *
  */
 use hurl_core::ast::{HurlFile, SourceInfo};
+use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 
 use crate::report::html::nav::Tab;
@@ -59,26 +60,30 @@ fn get_numbered_lines(content: &str) -> String {
     lines
 }
 
+lazy_static! {
+    static ref LINES_RE: Regex = Regex::new("<span class=\"line\">").unwrap();
+}
+
 /// Adds error class to `content` lines that triggers `errors`.
 fn underline_errors(content: &str, errors: &[(RunnerError, SourceInfo)]) -> String {
     // In nutshell, we're replacing line `<span class="line">...</span>`
     // with `<span class="line line-error">...</span>`.
-    let re = Regex::new("<span class=\"line\">").unwrap();
     let mut line = 0;
     let error_lines = errors
         .iter()
         .map(|(error, _)| error.source_info.start.line - 1)
         .collect::<Vec<_>>();
-    re.replace_all(content, |_: &Captures| {
-        let str = if error_lines.contains(&line) {
-            "<span class=\"line line-error\">"
-        } else {
-            "<span class=\"line\">"
-        };
-        line += 1;
-        str
-    })
-    .to_string()
+    LINES_RE
+        .replace_all(content, |_: &Captures| {
+            let str = if error_lines.contains(&line) {
+                "<span class=\"line line-error\">"
+            } else {
+                "<span class=\"line\">"
+            };
+            line += 1;
+            str
+        })
+        .to_string()
 }
 
 #[cfg(test)]
