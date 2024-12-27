@@ -15,10 +15,12 @@ vcpkg --version
 if ($LASTEXITCODE) { Throw }
 
 write-host "# python"
-(Get-Command -Name python -CommandType Application).Source
+Get-command python | Format-Table -Wrap -Autosize
 python -V
 if ($LASTEXITCODE) { Throw }
-(Get-Command -Name pip -CommandType Application).Source
+
+write-host "# pip"
+Get-command pip | Format-Table -Wrap -Autosize
 pip --version
 if ($LASTEXITCODE) { Throw }
 

@@ -24,8 +24,6 @@ if ($LASTEXITCODE) { Throw }
 # install python 3.11
 choco install --confirm python311
 if ($LASTEXITCODE) { Throw }
-python3 -m pip install --upgrade pip --quiet
-if ($LASTEXITCODE) { Throw }
 
 # install proxy
 echo "==== install Squid"

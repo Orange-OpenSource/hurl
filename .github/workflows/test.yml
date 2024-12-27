@@ -28,9 +28,9 @@ jobs:
       uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
-    - name: Install python3 venv
+    - name: Activate python3 venv
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
     - name: Install Rust
       run: bin/install_rust.sh
@@ -82,9 +82,9 @@ jobs:
       uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
-    - name: Install python3 venv
+    - name: Activate python3 venv
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
         echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install Rust
@@ -126,9 +126,9 @@ jobs:
       uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
-    - name: Install python3 venv
+    - name: Activate python3 venv
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
         echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Install Rust
@@ -171,8 +171,8 @@ jobs:
           echo "::group::Install Prerequisites"
             bin/install_prerequisites_archlinux.sh
           echo "::endgroup::"
-          echo "::group::Install python3 venv"
-            bin/install_python3_venv.sh
+          echo "::group::Activate python3 venv"
+            bin/activate_python3_venv.sh
             export PATH=/tmp/hurl-python3-venv/bin:$PATH
             which python3
             python3 --version
@@ -215,8 +215,8 @@ jobs:
           echo "::group::Install Prerequisites"
             bin/install_prerequisites_fedora.sh
           echo "::endgroup::"
-          echo "::group::Install python3 venv"
-            bin/install_python3_venv.sh
+          echo "::group::Activate python3 venv"
+            bin/activate_python3_venv.sh
             export PATH=/tmp/hurl-python3-venv/bin:$PATH
             which python3
             python3 --version
@@ -262,8 +262,8 @@ jobs:
           echo "::group::Install Prerequisites"
             bin/install_prerequisites_alpine.sh
           echo "::endgroup::"
-          echo "::group::Install python3 venv"
-            bin/install_python3_venv.sh
+          echo "::group::Activate python3 venv"
+            bin/activate_python3_venv.sh
             export PATH=/tmp/hurl-python3-venv/bin:$PATH
             which python3
             python3 --version
@@ -304,9 +304,9 @@ jobs:
       run: |
         bin/install_prerequisites_macos.sh
         echo "PATH=$PATH" >> $GITHUB_ENV
-    - name: Install python3 venv
+    - name: Activate python3 venv
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
         echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
@@ -352,9 +352,9 @@ jobs:
       run: |
         bin/install_prerequisites_macos.sh
         echo "PATH=$PATH" >> $GITHUB_ENV
-    - name: Install python3 venv
+    - name: Activate python3 venv
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
         echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
@@ -388,9 +388,6 @@ jobs:
 
   test-windows-x64:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        rust: [stable]
     env:
       VCPKGRS_DYNAMIC: 1
     steps:
@@ -410,16 +407,20 @@ jobs:
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-test-windows-x64
-    - name: Install Prerequisites
+    - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
       uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Environment
-      run: .\bin\environment.ps1
+      run: |
+        .\bin\activate_python3_venv.ps1
+        .\bin\environment.ps1
     - name: Build and test
-      run: .\bin\test\test.ps1
+      run: |
+        .\bin\activate_python3_venv.ps1
+        .\bin\test\test.ps1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v4.5.0
       if: ${{ always() }}
@@ -468,7 +469,7 @@ jobs:
         echo "::endgroup::"
         echo "::group::Install python 3.11"
           bin/install_pythonx_for_ubuntu.sh 11
-          bin/install_python3_venv.sh
+          bin/activate_python3_venv.sh
           export PATH=/tmp/hurl-python3-venv/bin:$PATH
         echo "::endgroup::"
         echo "::group::Install tests integ prerequisistes"

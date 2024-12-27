@@ -10,5 +10,4 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     python3."${python_version}"-venv
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3."${python_version}" 1 || true
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3."${python_version}" 1 || true
-sudo curl -sS https://bootstrap.pypa.io/get-pip.py | python3."${python_version}"
 

@@ -74,7 +74,7 @@ bin/release/create_tarball.sh linux
 ```
 bin/release/install_generic_linux_package.sh
 export PATH="/tmp/hurl-generic-linux:${PATH}"
-bin/install_python3_venv.sh
+bin/activate_python3_venv.sh
 export PATH=/tmp/hurl-python3-venv/bin:$PATH
 bin/test/test_prerequisites.sh
 bin/test/test_integ.sh

@@ -13,10 +13,16 @@ echo "# python3"
 if command -V python3 ; then
     which python3
     python3 -V 
+else
+    echo "No python3 installed"
+fi
+
+echo "# pip"
+if command -V pip ; then
     which pip
     pip --version
 else
-    echo "No python3 installed"
+    echo "No pip installed"
 fi
 
 echo "# curl"

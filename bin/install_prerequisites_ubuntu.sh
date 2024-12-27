@@ -13,6 +13,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     expect \
     curl \
     net-tools \
+    build-essential \
     g++-aarch64-linux-gnu \
     libc6-dev-arm64-cross \
     libxml2-dev \
@@ -22,7 +23,6 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libxml2-dev \
     libssl-dev \
     python3 \
-    python3-pip \
     python3-venv \
     netcat-openbsd \
     squid \

@@ -9,7 +9,6 @@ pacman -Syu --noconfirm \
     expect \
     openssl \
     python3 \
-    python-pip \
     python-lxml \
     icu \
     base-devel \
@@ -18,8 +17,9 @@ pacman -Syu --noconfirm \
     openbsd-netcat \
     squid \
     jq
-# Temporary install to patch a python3/pip crash
-pacman -Syu --noconfirm expat
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+# Temporary install to patch a python3/pip crash
+pacman -Syu --noconfirm expat
 

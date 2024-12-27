@@ -18,7 +18,6 @@ apk add --quiet \
     openssl-dev \
     python3 \
     python3-dev \
-    py3-pip \
     cargo \
     squid \
     jq

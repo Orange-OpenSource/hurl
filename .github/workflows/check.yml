@@ -52,7 +52,7 @@ jobs:
     - name: Install prerequisites
       if: always()
       run: |
-        bin/install_python3_venv.sh
+        bin/activate_python3_venv.sh
         export PATH="/tmp/hurl-python3-venv/bin:$PATH"
         echo "PATH=$PATH" >> $GITHUB_ENV
         which python3
