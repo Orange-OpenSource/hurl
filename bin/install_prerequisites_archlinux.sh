@@ -10,6 +10,7 @@ pacman -Syu --noconfirm \
     openssl \
     python3 \
     python-pip \
+    python-lxml \
     icu \
     base-devel \
     libxml2 \
