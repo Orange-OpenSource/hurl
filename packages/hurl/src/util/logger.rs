@@ -22,7 +22,7 @@ use hurl_core::input::Input;
 use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
-use crate::util::redacted::RedactedString;
+use crate::util::redacted::Redact;
 use crate::util::term::Stderr;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -351,9 +351,7 @@ impl Logger {
             self.stderr.eprintln(message);
             return;
         }
-        let secrets = self.secrets.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
-        let mut redacted = RedactedString::new(&secrets);
-        redacted.push_str(message);
+        let redacted = message.redact(&self.secrets);
         self.stderr.eprintln(&redacted);
     }
 }

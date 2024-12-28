@@ -20,7 +20,7 @@ use hurl_core::error::{DisplaySourceError, OutputFormat};
 
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
-use crate::util::redacted::RedactedString;
+use crate::util::redacted::Redact;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tab {
@@ -101,9 +101,8 @@ fn error_to_html(
         Some(entry_src_info),
         OutputFormat::Terminal(false),
     );
-    let mut rs = RedactedString::new(secrets);
-    rs.push_str(&message);
-    let message = html_escape(&rs);
+    let message = message.redact(secrets);
+    let message = html_escape(&message);
     // We override the first part of the error string to add an anchor to
     // the error context.
     let old = format!("{filename}:{line}:{column}");

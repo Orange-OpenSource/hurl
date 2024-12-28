@@ -15,60 +15,29 @@
  * limitations under the License.
  *
  */
-use std::fmt;
-use std::fmt::Formatter;
-use std::ops::Deref;
+use std::fmt::Display;
 
-/// A redacted string.
-///
-/// This string redacts a list of secrets value.
-pub struct RedactedString<'input> {
-    value: String,
-    secrets: &'input [&'input str],
+pub trait Redact {
+    /// Redacts this given a list of secrets.
+    fn redact(&self, secrets: &[impl AsRef<str>]) -> String;
 }
 
-impl<'input> RedactedString<'input> {
-    /// Creates a new redacted string given a list of secrets.
-    pub fn new(secrets: &'input [&str]) -> Self {
-        let value = String::new();
-        RedactedString { value, secrets }
-    }
-}
-
-impl RedactedString<'_> {
-    /// Appends a given string slice onto the end of this `RedactedString`.
-    pub fn push_str(&mut self, string: &str) {
-        let mut value = string.to_string();
-        for s in self.secrets {
-            value = value.replace(s, "***");
+impl<T> Redact for T
+where
+    T: Display,
+{
+    fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
+        let mut value = self.to_string();
+        for s in secrets {
+            value = value.replace(s.as_ref(), "***");
         }
-        self.value.push_str(&value);
-    }
-}
-
-impl fmt::Display for RedactedString<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-impl Deref for RedactedString<'_> {
-    type Target = str;
-
-    fn deref(&self) -> &str {
-        self.value.deref()
-    }
-}
-
-impl AsRef<str> for RedactedString<'_> {
-    fn as_ref(&self) -> &str {
-        &self.value
+        value
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::util::redacted::RedactedString;
+    use crate::util::redacted::Redact;
 
     #[test]
     fn redacted_string_hides_secret() {
@@ -77,15 +46,11 @@ mod tests {
             assert_eq!(left, right);
         }
         let secrets = ["foo", "bar", "baz"];
-        let mut rs = RedactedString::new(&secrets);
-        rs.push_str("Hello, here are secrets values: foo, ");
-        rs.push_str("bar, ");
-        rs.push_str("baz. ");
-        rs.push_str("Baz is not secret");
-
         assert_eq(
-            &rs,
-            "Hello, here are secrets values: ***, ***, ***. Baz is not secret",
-        )
+            &"Hello, here are secrets values: foo".redact(&secrets),
+            "Hello, here are secrets values: ***",
+        );
+        assert_eq(&"bar".redact(&secrets), "***");
+        assert_eq(&"Baz is not secret".redact(&secrets), "Baz is not secret");
     }
 }

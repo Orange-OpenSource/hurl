@@ -28,7 +28,7 @@ use crate::report::html::timeline::util::{
 };
 use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT};
 use crate::report::html::Testcase;
-use crate::util::redacted::RedactedString;
+use crate::util::redacted::Redact;
 
 impl Testcase {
     /// Returns a SVG view of `calls` list using contexts `call_ctxs`.
@@ -130,10 +130,7 @@ fn new_calls(
             x += 12.px();
 
             // URL
-            let url = call.request.url.to_string();
-            let mut rs = RedactedString::new(secrets);
-            rs.push_str(&url);
-            let url = &rs;
+            let url = &call.request.url.redact(secrets);
             let url = url.strip_prefix("http://").unwrap_or(url);
             let url = url.strip_prefix("https://").unwrap_or(url);
             let text = format!("{} {url}", call.request.method);

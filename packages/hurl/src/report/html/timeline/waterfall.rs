@@ -35,7 +35,7 @@ use crate::report::html::timeline::util::{
 };
 use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT, CALL_INSET};
 use crate::report::html::Testcase;
-use crate::util::redacted::RedactedString;
+use crate::util::redacted::Redact;
 
 /// Returns the start and end date for these entries.
 fn get_times_interval(calls: &[&Call]) -> Option<Interval<DateTime<Utc>>> {
@@ -369,10 +369,8 @@ fn new_call_tooltip(
     elt.add_attr(Height("20".to_string()));
     legend.add_child(elt);
 
-    let url = call.request.url.to_string();
-    let mut rs = RedactedString::new(secrets);
-    rs.push_str(&url);
-    let text = format!("{} {}", call.request.method, &rs);
+    let url = call.request.url.redact(secrets);
+    let text = format!("{} {}", call.request.method, url);
     let text = trunc_str(&text, 54);
     let text = format!("{text}  {}", call.response.status);
     let mut elt = svg::new_text(x.0 + 30.0, y.0 + 16.0, &text);

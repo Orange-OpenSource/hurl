@@ -21,7 +21,7 @@ use crate::http::Call;
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
 use crate::runner::EntryResult;
-use crate::util::redacted::RedactedString;
+use crate::util::redacted::Redact;
 
 impl Testcase {
     /// Creates an HTML view of a run (HTTP status code, response header etc...)
@@ -79,18 +79,18 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
-    let cmd = entry.curl_cmd.to_string();
-    let table = new_table("Debug", &[("Command", &cmd)], secrets);
+    let cmd = entry.curl_cmd.redact(secrets);
+    let table = new_table("Debug", &[("Command", &cmd)]);
     text.push_str(&table);
 
     if !entry.captures.is_empty() {
         let mut values = entry
             .captures
             .iter()
-            .map(|c| (&c.name, c.value.to_string()))
+            .map(|c| (&c.name, c.value.redact(secrets)))
             .collect::<Vec<(&String, String)>>();
         values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-        let table = new_table("Captures", &values, secrets);
+        let table = new_table("Captures", &values);
         text.push_str(&table);
     }
 
@@ -114,7 +114,7 @@ fn get_call_html(
     // General
     let status = call.response.status.to_string();
     let version = call.response.version.to_string();
-    let url = &call.request.url;
+    let url = &call.request.url.redact(secrets);
     let url = format!("<a href=\"{url}\">{url}</a>");
     let source = format!("<a href=\"{source}#l{line}\">{filename}:{line}</a>");
     let values = vec![
@@ -124,7 +124,7 @@ fn get_call_html(
         ("Status code", status.as_str()),
         ("Source", source.as_str()),
     ];
-    let table = new_table("General", &values, secrets);
+    let table = new_table("General", &values);
     text.push_str(&table);
 
     // Certificate
@@ -138,7 +138,7 @@ fn get_call_html(
             ("Expire Date", end_date.as_str()),
             ("Serial Number", certificate.serial_number.as_str()),
         ];
-        let table = new_table("Certificate", &values, secrets);
+        let table = new_table("Certificate", &values);
         text.push_str(&table);
     }
 
@@ -146,42 +146,39 @@ fn get_call_html(
         .request
         .headers
         .iter()
-        .map(|h| (h.name.as_str(), h.value.as_str()))
-        .collect::<Vec<(&str, &str)>>();
+        .map(|h| (h.name.as_str(), h.value.redact(secrets)))
+        .collect::<Vec<(&str, String)>>();
     values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-    let table = new_table("Request Headers", &values, secrets);
+    let table = new_table("Request Headers", &values);
     text.push_str(&table);
 
     let mut values = call
         .response
         .headers
         .iter()
-        .map(|h| (h.name.as_str(), h.value.as_str()))
-        .collect::<Vec<(&str, &str)>>();
+        .map(|h| (h.name.as_str(), h.value.redact(secrets)))
+        .collect::<Vec<(&str, String)>>();
     values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
-    let table = new_table("Response Headers", &values, secrets);
+    let table = new_table("Response Headers", &values);
     text.push_str(&table);
 
     text
 }
 
 /// Returns an HTML table with a `title` and a list of key/values. Values are redacted using `secrets`.
-fn new_table<T: AsRef<str>, U: AsRef<str>>(
+fn new_table<T: AsRef<str>, U: AsRef<str> + std::fmt::Display>(
     title: &str,
     data: &[(T, U)],
-    secrets: &[&str],
 ) -> String {
     let mut text = String::new();
     text.push_str(&format!(
         "<table><thead><tr><th colspan=\"2\">{title}</tr></th></thead><tbody>"
     ));
     data.iter().for_each(|(name, value)| {
-        let mut rs = RedactedString::new(secrets);
-        rs.push_str(value.as_ref());
         text.push_str(&format!(
             "<tr><td class=\"name\">{}</td><td class=\"value\">{}</td></tr>",
             name.as_ref(),
-            rs
+            value
         ));
     });
     text.push_str("</tbody></table>");
