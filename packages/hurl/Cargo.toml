@@ -26,7 +26,7 @@ clap = { version = "4.5.23", features = ["cargo", "string", "wrap_help"] }
 curl = "0.4.47"
 curl-sys = "0.4.78"
 encoding = "0.2.33"
-glob = "0.3.1"
+glob = "0.3.2"
 hex = "0.4.3"
 hex-literal = "0.4.1"
 hurl_core = { version = "6.1.0-SNAPSHOT", path = "../hurl_core" }
@@ -35,7 +35,7 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.11.1"
-serde = { version = "1.0.216", features = ["derive"] }
+serde = { version = "1.0.217", features = ["derive"] }
 serde_json = { version = "1.0.134", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.4"
@@ -53,7 +53,7 @@ termion = "4.0.3"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.5"
+cc = "1.2.6"
 
 [lints]
 workspace = true
