@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="182 / 187">97.33 %</abbr></p>
+                <abbr title="180 / 185">97.3 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="29 / 29">100 %</abbr></p>
+                <abbr title="28 / 28">100 %</abbr></p>
         </div>
     </div>
 
@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::util::redacted::RedactedString;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::util::redacted::Redact;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2384,8 +2384,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="62766">
-                62766
+                role="cell" aria-label="62829">
+                62829
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2400,8 +2400,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="62766">
-                62766
+                role="cell" aria-label="62829">
+                62829
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2416,8 +2416,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="55497">
-                55497
+                role="cell" aria-label="55560">
+                55560
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2656,8 +2656,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="29757">
-                29757
+                role="cell" aria-label="29775">
+                29775
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2672,8 +2672,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="29757">
-                29757
+                role="cell" aria-label="29775">
+                29775
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2688,8 +2688,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="26223">
-                26223
+                role="cell" aria-label="26241">
+                26241
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5696,12 +5696,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1368">
-                1368
+                role="cell" aria-label="414">
+                414
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let secrets = self.secrets.iter().map(|s| s.as_ref()).collect::&lt;Vec&lt;_&gt;&gt;();</pre>
+                <pre class="has-background-success-light py-0 px-2">        let redacted = message.redact(&amp;self.secrets);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5717,7 +5717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut redacted = RedactedString::new(&amp;secrets);</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.stderr.eprintln(&amp;redacted);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5725,38 +5725,6 @@
                 id="356"
                 role="cell">
                 <a href="#356">356</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="414">
-                414
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        redacted.push_str(message);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="357"
-                role="cell">
-                <a href="#357">357</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="414">
-                414
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.stderr.eprintln(&amp;redacted);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="358"
-                role="cell">
-                <a href="#358">358</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -5770,9 +5738,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="359"
+                id="357"
                 role="cell">
-                <a href="#359">359</a>
+                <a href="#357">357</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -5787,7 +5755,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2024-12-29 08:10</p>
+                <p class="heading">Date: 2024-12-30 08:11</p>
             </div>
         </footer>
     </body>
