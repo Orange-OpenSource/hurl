@@ -41,7 +41,7 @@ pub fn eval_xpath(
             eval_xpath_doc(&doc, expr, variables)
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

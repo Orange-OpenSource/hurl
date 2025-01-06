@@ -35,7 +35,7 @@ pub fn eval_format(
             Ok(Some(Value::String(formatted)))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

@@ -30,7 +30,7 @@ pub fn eval_count(
         Value::Bytes(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Nodeset(size) => Ok(Some(Value::Number(Number::Integer(*size as i64)))),
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

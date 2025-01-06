@@ -48,6 +48,22 @@ pub enum Value {
     Unit,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ValueKind {
+    Bool,
+    Bytes,
+    Date,
+    Float,
+    Integer,
+    List,
+    Nodeset,
+    Null,
+    Object,
+    Regex,
+    String,
+    Unit,
+}
+
 // You must implement it yourself because of the Regex Value
 impl PartialEq for Value {
     fn eq(&self, other: &Self) -> bool {
@@ -97,19 +113,22 @@ impl fmt::Display for Value {
 const FORMAT_ISO: &str = "%Y-%m-%dT%H:%M:%S.%6fZ";
 
 impl Value {
-    pub fn _type(&self) -> String {
+    pub fn kind(&self) -> ValueKind {
         match self {
-            Value::Bool(_) => "boolean".to_string(),
-            Value::Bytes(_) => "bytes".to_string(),
-            Value::Date(_) => "date".to_string(),
-            Value::Number(v) => v._type(),
-            Value::List(_) => "list".to_string(),
-            Value::Nodeset(_) => "nodeset".to_string(),
-            Value::Null => "null".to_string(),
-            Value::Object(_) => "object".to_string(),
-            Value::Regex(_) => "regex".to_string(),
-            Value::String(_) => "string".to_string(),
-            Value::Unit => "unit".to_string(),
+            Value::Bool(_) => ValueKind::Bool,
+            Value::Bytes(_) => ValueKind::Bool,
+            Value::Date(_) => ValueKind::Bool,
+            Value::Number(Number::Float(_)) => ValueKind::Float,
+            Value::Number(Number::Integer(_)) | Value::Number(Number::BigInteger(_)) => {
+                ValueKind::Integer
+            }
+            Value::List(_) => ValueKind::List,
+            Value::Nodeset(_) => ValueKind::Nodeset,
+            Value::Null => ValueKind::Null,
+            Value::Object(_) => ValueKind::Object,
+            Value::Regex(_) => ValueKind::Regex,
+            Value::String(_) => ValueKind::String,
+            Value::Unit => ValueKind::Unit,
         }
     }
 
@@ -125,6 +144,25 @@ impl Value {
             Value::Number(v) => Some(v.to_string()),
             Value::String(s) => Some(s.clone()),
             _ => None,
+        }
+    }
+}
+
+impl fmt::Display for ValueKind {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ValueKind::Bool => write!(f, "boolean"),
+            ValueKind::Bytes => write!(f, "bytes"),
+            ValueKind::Date => write!(f, "date"),
+            ValueKind::Float => write!(f, "float"),
+            ValueKind::Integer => write!(f, "integer"),
+            ValueKind::List => write!(f, "list"),
+            ValueKind::Nodeset => write!(f, "nodeset"),
+            ValueKind::Null => write!(f, "null"),
+            ValueKind::Object => write!(f, "object"),
+            ValueKind::Regex => write!(f, "regex"),
+            ValueKind::String => write!(f, "string"),
+            ValueKind::Unit => write!(f, "unit"),
         }
     }
 }

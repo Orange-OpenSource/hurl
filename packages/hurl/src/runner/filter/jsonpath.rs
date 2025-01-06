@@ -43,7 +43,7 @@ pub fn eval_jsonpath(
             eval_jsonpath_json(&json, expr, variables)
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

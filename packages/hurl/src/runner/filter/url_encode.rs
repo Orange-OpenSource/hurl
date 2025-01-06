@@ -40,7 +40,7 @@ pub fn eval_url_encode(
             Ok(Some(Value::String(encoded)))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v._type());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

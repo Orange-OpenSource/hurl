@@ -61,16 +61,6 @@ fn format_float(value: f64) -> String {
     }
 }
 
-impl Number {
-    pub fn _type(&self) -> String {
-        match self {
-            Number::Float(_) => "float".to_string(),
-            Number::Integer(_) => "integer".to_string(),
-            Number::BigInteger(_) => "string".to_string(),
-        }
-    }
-}
-
 impl From<f64> for Number {
     fn from(value: f64) -> Self {
         Number::Float(value)
