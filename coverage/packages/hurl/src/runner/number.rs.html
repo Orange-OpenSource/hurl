@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="42 / 61">68.85 %</abbr></p>
+                <abbr title="39 / 56">69.64 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="10 / 10">100 %</abbr></p>
+                <abbr title="9 / 9">100 %</abbr></p>
         </div>
     </div>
 
@@ -1061,7 +1061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Number {</pre>
+                <pre class="has-background-white py-0 px-2">impl From&lt;f64&gt; for Number {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1072,12 +1072,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="63">
-                63
+                role="cell" aria-label="483">
+                483
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn _type(&amp;self) -&gt; String {</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn from(value: f64) -&gt; Self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1088,12 +1088,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="63">
-                63
+                role="cell" aria-label="483">
+                483
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
+                <pre class="has-background-success-light py-0 px-2">        Number::Float(value)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1103,13 +1103,13 @@
                 <a href="#67">67</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Number::Float(_) =&gt; &quot;float&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1119,13 +1119,13 @@
                 <a href="#68">68</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="63">
-                63
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Number::Integer(_) =&gt; &quot;integer&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1135,13 +1135,13 @@
                 <a href="#69">69</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Number::BigInteger(_) =&gt; &quot;string&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1157,7 +1157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">impl From&lt;i64&gt; for Number {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1167,13 +1167,13 @@
                 <a href="#71">71</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="120261">
+                120261
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn from(value: i64) -&gt; Self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1183,13 +1183,13 @@
                 <a href="#72">72</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="120261">
+                120261
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        Number::Integer(value)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1205,7 +1205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1221,7 +1221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl From&lt;f64&gt; for Number {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1229,70 +1229,6 @@
                 id="75"
                 role="cell">
                 <a href="#75">75</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="483">
-                483
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn from(value: f64) -&gt; Self {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="76"
-                role="cell">
-                <a href="#76">76</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="483">
-                483
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Number::Float(value)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="77"
-                role="cell">
-                <a href="#77">77</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="78"
-                role="cell">
-                <a href="#78">78</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="79"
-                role="cell">
-                <a href="#79">79</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1306,9 +1242,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="80"
+                id="76"
                 role="cell">
-                <a href="#80">80</a>
+                <a href="#76">76</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1317,7 +1253,71 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl From&lt;i64&gt; for Number {</pre>
+                <pre class="has-background-white py-0 px-2">impl Number {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="77"
+                role="cell">
+                <a href="#77">77</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1563">
+                1563
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    pub fn cmp_value(&amp;self, other: &amp;Number) -&gt; Ordering {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="78"
+                role="cell">
+                <a href="#78">78</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1563">
+                1563
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        match (self, other) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="79"
+                role="cell">
+                <a href="#79">79</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1224">
+                1224
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            (Number::Integer(i1), Number::Integer(i2)) =&gt; i1.cmp(i2),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="80"
+                role="cell">
+                <a href="#80">80</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="237">
+                237
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            (Number::Float(f1), Number::Float(f2)) =&gt; compare_float(*f1, *f2),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1328,12 +1328,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="120261">
-                120261
+                role="cell" aria-label="21">
+                21
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn from(value: i64) -&gt; Self {</pre>
+                <pre class="has-background-success-light py-0 px-2">            (Number::Integer(i1), Number::Float(f2)) =&gt; compare_float(*i1 as f64, *f2),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1344,12 +1344,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="120261">
-                120261
+                role="cell" aria-label="57">
+                57
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Number::Integer(value)</pre>
+                <pre class="has-background-success-light py-0 px-2">            (Number::Float(f1), Number::Integer(i2)) =&gt; compare_float(*f1, *i2 as f64),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1359,13 +1359,13 @@
                 <a href="#83">83</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">            (n1, n2) =&gt; compare_number_string(&amp;n1.to_string(), &amp;n2.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1381,7 +1381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1397,7 +1397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1413,7 +1413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Number {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1423,13 +1423,13 @@
                 <a href="#87">87</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1563">
-                1563
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn cmp_value(&amp;self, other: &amp;Number) -&gt; Ordering {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1440,12 +1440,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1563">
-                1563
+                role="cell" aria-label="315">
+                315
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match (self, other) {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn compare_float(f1: f64, f2: f64) -&gt; Ordering {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1456,12 +1456,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1224">
-                1224
+                role="cell" aria-label="315">
+                315
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (Number::Integer(i1), Number::Integer(i2)) =&gt; i1.cmp(i2),</pre>
+                <pre class="has-background-success-light py-0 px-2">    if f1 &gt; f2 {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1472,12 +1472,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="237">
-                237
+                role="cell" aria-label="39">
+                39
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (Number::Float(f1), Number::Float(f2)) =&gt; compare_float(*f1, *f2),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Ordering::Greater</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1488,12 +1488,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="21">
-                21
+                role="cell" aria-label="276">
+                276
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (Number::Integer(i1), Number::Float(f2)) =&gt; compare_float(*i1 as f64, *f2),</pre>
+                <pre class="has-background-success-light py-0 px-2">    } else if f1 &lt; f2 {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1509,7 +1509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (Number::Float(f1), Number::Integer(i2)) =&gt; compare_float(*f1, *i2 as f64),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Ordering::Less</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1519,13 +1519,13 @@
                 <a href="#93">93</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (n1, n2) =&gt; compare_number_string(&amp;n1.to_string(), &amp;n2.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">    } else {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1535,13 +1535,13 @@
                 <a href="#94">94</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="219">
+                219
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">        Ordering::Equal</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1600,12 +1600,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="315">
-                315
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn compare_float(f1: f64, f2: f64) -&gt; Ordering {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn compare_number_string(n1: &amp;str, n2: &amp;str) -&gt; Ordering {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1616,12 +1616,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="315">
-                315
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if f1 &gt; f2 {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let (neg1, i1, d1) = number_components(n1);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1632,12 +1632,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="39">
-                39
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Ordering::Greater</pre>
+                <pre class="has-background-success-light py-0 px-2">    let (neg2, i2, d2) = number_components(n2);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1648,12 +1648,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="276">
-                276
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    } else if f1 &lt; f2 {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if neg1 == neg2 {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1664,12 +1664,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="57">
-                57
+                role="cell" aria-label="24">
+                24
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Ordering::Less</pre>
+                <pre class="has-background-success-light py-0 px-2">        match i1.cmp(i2) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1679,13 +1679,13 @@
                 <a href="#103">103</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    } else {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ordering::Less =&gt; Ordering::Less,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1695,13 +1695,13 @@
                 <a href="#104">104</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="219">
-                219
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Ordering::Equal</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ordering::Greater =&gt; Ordering::Greater,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1711,13 +1711,13 @@
                 <a href="#105">105</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">            Ordering::Equal =&gt; d1.cmp(d2),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1733,7 +1733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1741,166 +1741,6 @@
                 id="107"
                 role="cell">
                 <a href="#107">107</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="108"
-                role="cell">
-                <a href="#108">108</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn compare_number_string(n1: &amp;str, n2: &amp;str) -&gt; Ordering {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="109"
-                role="cell">
-                <a href="#109">109</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let (neg1, i1, d1) = number_components(n1);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="110"
-                role="cell">
-                <a href="#110">110</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let (neg2, i2, d2) = number_components(n2);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="111"
-                role="cell">
-                <a href="#111">111</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if neg1 == neg2 {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="112"
-                role="cell">
-                <a href="#112">112</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match i1.cmp(i2) {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="113"
-                role="cell">
-                <a href="#113">113</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ordering::Less =&gt; Ordering::Less,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="114"
-                role="cell">
-                <a href="#114">114</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ordering::Greater =&gt; Ordering::Greater,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="115"
-                role="cell">
-                <a href="#115">115</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ordering::Equal =&gt; d1.cmp(d2),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="116"
-                role="cell">
-                <a href="#116">116</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="117"
-                role="cell">
-                <a href="#117">117</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1914,9 +1754,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="118"
+                id="108"
                 role="cell">
-                <a href="#118">118</a>
+                <a href="#108">108</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1930,9 +1770,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="119"
+                id="109"
                 role="cell">
-                <a href="#119">119</a>
+                <a href="#109">109</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1942,6 +1782,166 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">    } else {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="110"
+                role="cell">
+                <a href="#110">110</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">        Ordering::Greater</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="111"
+                role="cell">
+                <a href="#111">111</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="112"
+                role="cell">
+                <a href="#112">112</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="113"
+                role="cell">
+                <a href="#113">113</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="114"
+                role="cell">
+                <a href="#114">114</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; return triple (negative, integer, decimals)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="115"
+                role="cell">
+                <a href="#115">115</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="48">
+                48
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">fn number_components(s: &amp;str) -&gt; (bool, &amp;str, &amp;str) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="116"
+                role="cell">
+                <a href="#116">116</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="48">
+                48
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    match s.strip_prefix(&#x27;-&#x27;) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="117"
+                role="cell">
+                <a href="#117">117</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="48">
+                48
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        None =&gt; match s.find(&#x27;.&#x27;) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="118"
+                role="cell">
+                <a href="#118">118</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="48">
+                48
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            None =&gt; (false, s.trim_start_matches(&#x27;0&#x27;), &quot;&quot;),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="119"
+                role="cell">
+                <a href="#119">119</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">            Some(index) =&gt; (</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Ordering::Greater</pre>
+                <pre class="has-background-danger-light py-0 px-2">                false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1967,13 +1967,13 @@
                 <a href="#121">121</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                (s[..index].trim_start_matches(&#x27;0&#x27;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1983,13 +1983,13 @@
                 <a href="#122">122</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-danger-light py-0 px-2">                (s[(index + 1)..].trim_end_matches(&#x27;0&#x27;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1999,13 +1999,13 @@
                 <a href="#123">123</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; return triple (negative, integer, decimals)</pre>
+                <pre class="has-background-white py-0 px-2">        },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2031,13 +2031,13 @@
                 <a href="#125">125</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="48">
-                48
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn number_components(s: &amp;str) -&gt; (bool, &amp;str, &amp;str) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Some(s) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2047,13 +2047,13 @@
                 <a href="#126">126</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="48">
-                48
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    match s.strip_prefix(&#x27;-&#x27;) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            let (_, integer, decimal) = number_components(s);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2063,13 +2063,13 @@
                 <a href="#127">127</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="48">
-                48
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        None =&gt; match s.find(&#x27;.&#x27;) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            (true, integer, decimal)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2079,13 +2079,13 @@
                 <a href="#128">128</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="48">
-                48
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            None =&gt; (false, s.trim_start_matches(&#x27;0&#x27;), &quot;&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2095,13 +2095,13 @@
                 <a href="#129">129</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Some(index) =&gt; (</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2111,13 +2111,13 @@
                 <a href="#130">130</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                false,</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2127,13 +2127,13 @@
                 <a href="#131">131</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                (s[..index].trim_start_matches(&#x27;0&#x27;)),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2143,13 +2143,13 @@
                 <a href="#132">132</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                (s[(index + 1)..].trim_end_matches(&#x27;0&#x27;)),</pre>
+                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2159,13 +2159,13 @@
                 <a href="#133">133</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">mod tests {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        },</pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2191,13 +2191,13 @@
                 <a href="#135">135</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        Some(s) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2207,13 +2207,13 @@
                 <a href="#136">136</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            let (_, integer, decimal) = number_components(s);</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2223,13 +2223,13 @@
                 <a href="#137">137</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            (true, integer, decimal)</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_to_string() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2245,7 +2245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::Float(1.0).to_string(), &quot;1.0&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::Float(1.1).to_string(), &quot;1.1&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::from(1.0).to_string(), &quot;1.0&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::from(1.1).to_string(), &quot;1.1&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2325,7 +2325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod tests {</pre>
+                <pre class="has-background-white py-0 px-2">            Number::BigInteger(&quot;1.1&quot;.to_string()).to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;1.1&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2357,7 +2357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_to_string() {</pre>
+                <pre class="has-background-white py-0 px-2">            Number::BigInteger(&quot;1&quot;.to_string()).to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::Float(1.0).to_string(), &quot;1.0&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;1&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::Float(1.1).to_string(), &quot;1.1&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::from(1.0).to_string(), &quot;1.0&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(Number::from(1.1).to_string(), &quot;1.1&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Number::BigInteger(&quot;1.1&quot;.to_string()).to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_cmp_value() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2501,7 +2501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;1.1&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_zero = Number::from(0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,7 +2517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_minus_one = Number::from(-1);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2533,7 +2533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_one = Number::from(1);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2549,7 +2549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Number::BigInteger(&quot;1&quot;.to_string()).to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_two = Number::from(2);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;1&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_max = Number::from(i64::max_value());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2581,7 +2581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        let integer_min = Number::from(i64::min_value());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2597,7 +2597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2613,7 +2613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let float_zero = Number::from(0.0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2629,7 +2629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let float_one = Number::from(1.0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2645,7 +2645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_cmp_value() {</pre>
+                <pre class="has-background-white py-0 px-2">        let float_one_plus_epsilon = Number::from(1.000_000_000_000_000_100);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2661,7 +2661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_zero = Number::from(0);</pre>
+                <pre class="has-background-white py-0 px-2">        let float_one_plus_plus_epsilon = Number::from(1.000_000_000_000_001);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2677,7 +2677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_minus_one = Number::from(-1);</pre>
+                <pre class="has-background-white py-0 px-2">        let float_two = Number::from(2.0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_one = Number::from(1);</pre>
+                <pre class="has-background-white py-0 px-2">        let float_min = Number::from(f64::MIN);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2709,7 +2709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_two = Number::from(2);</pre>
+                <pre class="has-background-white py-0 px-2">        let float_max = Number::from(f64::MAX);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2725,7 +2725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_max = Number::from(i64::max_value());</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2741,7 +2741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let integer_min = Number::from(i64::min_value());</pre>
+                <pre class="has-background-white py-0 px-2">        let number_one = Number::BigInteger(&quot;1&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2757,7 +2757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let number_two = Number::BigInteger(&quot;2&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2773,7 +2773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_zero = Number::from(0.0);</pre>
+                <pre class="has-background-white py-0 px-2">        let number_two_with_decimal = Number::BigInteger(&quot;2.0&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2789,7 +2789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_one = Number::from(1.0);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2805,7 +2805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_one_plus_epsilon = Number::from(1.000_000_000_000_000_100);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_minus_one.cmp_value(&amp;integer_zero), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_one_plus_plus_epsilon = Number::from(1.000_000_000_000_001);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2837,7 +2837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_two = Number::from(2.0);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_one), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_min = Number::from(f64::MIN);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;number_one), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2869,7 +2869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let float_max = Number::from(f64::MAX);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_one), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2885,7 +2885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_zero), Ordering::Greater);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2901,7 +2901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let number_one = Number::BigInteger(&quot;1&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_zero), Ordering::Greater);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2917,7 +2917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let number_two = Number::BigInteger(&quot;2&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_two), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2933,7 +2933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let number_two_with_decimal = Number::BigInteger(&quot;2.0&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_two), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2949,7 +2949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;number_two), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2965,7 +2965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_minus_one.cmp_value(&amp;integer_zero), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2981,7 +2981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            integer_one.cmp_value(&amp;number_two_with_decimal),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2997,7 +2997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_one), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">            Ordering::Less</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3013,7 +3013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;number_one), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3029,7 +3029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_one), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3045,7 +3045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_zero), Ordering::Greater);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_min.cmp_value(&amp;float_min), Ordering::Greater);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3061,7 +3061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_zero), Ordering::Greater);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_max.cmp_value(&amp;float_max), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3077,7 +3077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;integer_two), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;float_two), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(float_one.cmp_value(&amp;float_one), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3109,7 +3109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_one.cmp_value(&amp;number_two), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3125,7 +3125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            float_one.cmp_value(&amp;float_one_plus_epsilon),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3141,7 +3141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            integer_one.cmp_value(&amp;number_two_with_decimal),</pre>
+                <pre class="has-background-white py-0 px-2">            Ordering::Equal</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3157,7 +3157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Ordering::Less</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3173,7 +3173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3189,7 +3189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            float_one.cmp_value(&amp;float_one_plus_plus_epsilon),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3205,7 +3205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_min.cmp_value(&amp;float_min), Ordering::Greater);</pre>
+                <pre class="has-background-white py-0 px-2">            Ordering::Less</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3221,7 +3221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(integer_max.cmp_value(&amp;float_max), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3253,7 +3253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(float_one.cmp_value(&amp;float_one), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; edge cases</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3269,7 +3269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; the integer 9_007_199_254_740_993 can not be represented by f64</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3285,7 +3285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            float_one.cmp_value(&amp;float_one_plus_epsilon),</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; it will be casted to 9_007_199_254_740_992 for comparison</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3301,7 +3301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Ordering::Equal</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3317,7 +3317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            Number::from(9_007_199_254_740_992.0).cmp_value(&amp;Number::from(9_007_199_254_740_993)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3333,7 +3333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            Ordering::Equal</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3349,7 +3349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            float_one.cmp_value(&amp;float_one_plus_plus_epsilon),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Ordering::Less</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3381,7 +3381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3397,7 +3397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3413,7 +3413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; edge cases</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_cmp_number_string() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3429,7 +3429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; the integer 9_007_199_254_740_993 can not be represented by f64</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;1&quot;), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3445,7 +3445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; it will be casted to 9_007_199_254_740_992 for comparison</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;1.0&quot;), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3461,7 +3461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1.000&quot;, &quot;1.0&quot;), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3477,7 +3477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Number::from(9_007_199_254_740_992.0).cmp_value(&amp;Number::from(9_007_199_254_740_993)),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;2&quot;), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3493,7 +3493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Ordering::Equal</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1.1&quot;, &quot;2&quot;), Ordering::Less);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3509,7 +3509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;-001.1000&quot;, &quot;-1.1&quot;), Ordering::Equal);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3573,7 +3573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_cmp_number_string() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_number_components() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3589,7 +3589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;1&quot;), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3605,7 +3605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;1.0&quot;), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.0&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3621,7 +3621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1.000&quot;, &quot;1.0&quot;), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;01&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3637,7 +3637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1&quot;, &quot;2&quot;), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3653,7 +3653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;1.1&quot;, &quot;2&quot;), Ordering::Less);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.1&quot;), (false, &quot;1&quot;, &quot;1&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3669,7 +3669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(compare_number_string(&quot;-001.1000&quot;, &quot;-1.1&quot;), Ordering::Equal);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.100&quot;), (false, &quot;1&quot;, &quot;1&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3685,7 +3685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3701,7 +3701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;-1.1&quot;), (true, &quot;1&quot;, &quot;1&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3717,7 +3717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;-01.100&quot;), (true, &quot;1&quot;, &quot;1&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3733,7 +3733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_number_components() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3749,173 +3749,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="233"
-                role="cell">
-                <a href="#233">233</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.0&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="234"
-                role="cell">
-                <a href="#234">234</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;01&quot;), (false, &quot;1&quot;, &quot;&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="235"
-                role="cell">
-                <a href="#235">235</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="236"
-                role="cell">
-                <a href="#236">236</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.1&quot;), (false, &quot;1&quot;, &quot;1&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="237"
-                role="cell">
-                <a href="#237">237</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;1.100&quot;), (false, &quot;1&quot;, &quot;1&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="238"
-                role="cell">
-                <a href="#238">238</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="239"
-                role="cell">
-                <a href="#239">239</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;-1.1&quot;), (true, &quot;1&quot;, &quot;1&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="240"
-                role="cell">
-                <a href="#240">240</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(number_components(&quot;-01.100&quot;), (true, &quot;1&quot;, &quot;1&quot;));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="241"
-                role="cell">
-                <a href="#241">241</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="242"
-                role="cell">
-                <a href="#242">242</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-06 08:11</p>
+                <p class="heading">Date: 2025-01-07 08:11</p>
             </div>
         </footer>
     </body>
