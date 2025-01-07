@@ -46,8 +46,8 @@ pub trait DisplaySourceError {
     ///
     /// ```text
     /// jsonpath "$.count" >= 5
-    ///   actual:   int <2>
-    ///   expected: greater than int <5>
+    ///   actual:   integer <2>
+    ///   expected: greater than integer <5>
     /// ```
     ///
     /// ```text

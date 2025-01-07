@@ -447,8 +447,8 @@ mod tests {
                 predicate_result: Some(Err(RunnerError::new(
                     SourceInfo::new(Pos::new(1, 0), Pos::new(1, 0)),
                     RunnerErrorKind::AssertFailure {
-                        actual: "int <2>".to_string(),
-                        expected: "int <3>".to_string(),
+                        actual: "integer <2>".to_string(),
+                        expected: "integer <3>".to_string(),
                         type_mismatch: false,
                     },
                     true

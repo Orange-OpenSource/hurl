@@ -31,12 +31,12 @@ pub fn eval_to_int(
         Value::String(v) => match v.parse::<i64>() {
             Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
             _ => {
-                let kind = RunnerErrorKind::FilterInvalidInput(value.display());
+                let kind = RunnerErrorKind::FilterInvalidInput(value.repr());
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -117,7 +117,7 @@ pub mod tests {
             .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput("bool <true>".to_string())
+            RunnerErrorKind::FilterInvalidInput("boolean <true>".to_string())
         );
     }
 }

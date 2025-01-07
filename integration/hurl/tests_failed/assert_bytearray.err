@@ -4,8 +4,8 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-bytearray
    | ...
  4 | bytes == hex,00;
-   |   actual:   byte array <ff>
-   |   expected: byte array <00>
+   |   actual:   bytes <ff>
+   |   expected: bytes <00>
    |
 
 error: Assert failure
@@ -14,7 +14,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-bytearray
    | ...
  5 | sha256 == hex,a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88;
-   |   actual:   byte array <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89>
-   |   expected: byte array <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88>
+   |   actual:   bytes <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89>
+   |   expected: bytes <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88>
    |
 

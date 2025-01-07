@@ -540,8 +540,8 @@ jsonpath "$.count" >= 5
         let error = RunnerError {
             source_info: error_source_info,
             kind: RunnerErrorKind::AssertFailure {
-                actual: "int <2>".to_string(),
-                expected: "greater than int <5>".to_string(),
+                actual: "integer <2>".to_string(),
+                expected: "greater than integer <5>".to_string(),
                 type_mismatch: false,
             },
             assert: true,
@@ -551,8 +551,8 @@ jsonpath "$.count" >= 5
             error.message(&lines).to_string(Format::Plain),
             r#"
  4 | jsonpath "$.count" >= 5
-   |   actual:   int <2>
-   |   expected: greater than int <5>
+   |   actual:   integer <2>
+   |   expected: greater than integer <5>
    |"#
         );
 
@@ -569,8 +569,8 @@ jsonpath "$.count" >= 5
    | GET http://api
    | ...
  4 | jsonpath "$.count" >= 5
-   |   actual:   int <2>
-   |   expected: greater than int <5>
+   |   actual:   integer <2>
+   |   expected: greater than integer <5>
    |"#
         );
     }

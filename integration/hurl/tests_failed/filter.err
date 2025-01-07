@@ -13,7 +13,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
  5 | jsonpath "$.status" toInt == 0
-   |                     ^^^^^ invalid filter input: bool <true>
+   |                     ^^^^^ invalid filter input: boolean <true>
    |
 
 error: Filter error
@@ -139,7 +139,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 19 | jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
-   |                     ^^^^^^^^^^^^^^^^ invalid filter input: int <42>
+   |                     ^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -148,7 +148,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 20 | jsonpath "$.number" split ", " count == 3
-   |                     ^^^^^^^^^^ invalid filter input: int <42>
+   |                     ^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -157,7 +157,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 21 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
-   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: int <42>
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error

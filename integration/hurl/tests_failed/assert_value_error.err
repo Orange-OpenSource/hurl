@@ -34,8 +34,8 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-value
    | ...
  7 | jsonpath "$.values" includes 100
-   |   actual:   [int <1>, int <2>, int <3>]
-   |   expected: includes int <100>
+   |   actual:   list <[1,2,3]>
+   |   expected: includes integer <100>
    |
 
 error: Assert failure
@@ -44,7 +44,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-value
    | ...
  8 | jsonpath "$.values" not contains "Hello"
-   |   actual:   [int <1>, int <2>, int <3>]
+   |   actual:   list <[1,2,3]>
    |   expected: not contains string <Hello>
    |   >>> types between actual and expected are not consistent
    |
@@ -55,8 +55,8 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-value
    | ...
  9 | jsonpath "$.count" > 5
-   |   actual:   int <2>
-   |   expected: greater than int <5>
+   |   actual:   integer <2>
+   |   expected: greater than integer <5>
    |
 
 error: Assert failure
@@ -65,7 +65,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-value
    | ...
 10 | jsonpath "$.count" isFloat
-   |   actual:   int <2>
+   |   actual:   integer <2>
    |   expected: float
    |
 
@@ -87,7 +87,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-value
    | ...
 12 | bytes contains hex,00;
-   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>
-   |   expected: contains byte array <00>
+   |   actual:   bytes <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>
+   |   expected: contains bytes <00>
    |
 

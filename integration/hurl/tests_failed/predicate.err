@@ -4,7 +4,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
  4 | jsonpath "$.status" == "true"
-   |   actual:   bool <true>
+   |   actual:   boolean <true>
    |   expected: string <true>
    |
 
@@ -14,8 +14,8 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
  5 | jsonpath "$.count" == 0
-   |   actual:   int <1>
-   |   expected: int <0>
+   |   actual:   integer <1>
+   |   expected: integer <0>
    |
 
 error: Assert failure
@@ -25,7 +25,7 @@ error: Assert failure
    | ...
  6 | jsonpath "$.message" == 0
    |   actual:   string <0>
-   |   expected: int <0>
+   |   expected: integer <0>
    |
 
 error: Assert failure
@@ -35,7 +35,7 @@ error: Assert failure
    | ...
  7 | jsonpath "$.empty" == 0
    |   actual:   string <>
-   |   expected: int <0>
+   |   expected: integer <0>
    |
 
 error: Assert failure
@@ -54,7 +54,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
  9 | jsonpath "$.count" startsWith "0"
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: starts with string <0>
    |   >>> types between actual and expected are not consistent
    |
@@ -65,7 +65,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 10 | jsonpath "$.count" endsWith "0"
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: ends with string <0>
    |   >>> types between actual and expected are not consistent
    |
@@ -76,7 +76,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 11 | jsonpath "$.count" matches "hi"
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: matches regex <hi>
    |   >>> types between actual and expected are not consistent
    |
@@ -87,7 +87,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 12 | jsonpath "$.count" isEmpty
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: count equals to 0
    |   >>> types between actual and expected are not consistent
    |
@@ -98,7 +98,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 13 | jsonpath "$.count" includes "foo"
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: includes string <foo>
    |   >>> types between actual and expected are not consistent
    |
@@ -109,7 +109,7 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 14 | jsonpath "$.count" isIsoDate
-   |   actual:   int <1>
+   |   actual:   integer <1>
    |   expected: string
    |   >>> types between actual and expected are not consistent
    |
@@ -218,8 +218,8 @@ error: Assert failure
    | GET http://localhost:8000/predicate/error/type
    | ...
 25 | jsonpath "$.list" count == 2
-   |   actual:   int <3>
-   |   expected: int <2>
+   |   actual:   integer <3>
+   |   expected: integer <2>
    |
 
 error: Assert failure

@@ -329,7 +329,7 @@ fn eval_boolean_option(
                 Value::Bool(value) => Ok(value),
                 v => {
                     let kind = RunnerErrorKind::ExpressionInvalidType {
-                        value: v.format(),
+                        value: v.repr(),
                         expecting: "boolean".to_string(),
                     };
                     Err(RunnerError::new(expr.source_info, kind, false))
@@ -360,7 +360,7 @@ fn eval_natural_option(
                 }
                 v => {
                     let kind = RunnerErrorKind::ExpressionInvalidType {
-                        value: v.format(),
+                        value: v.repr(),
                         expecting: "integer".to_string(),
                     };
                     Err(RunnerError::new(expr.source_info, kind, false))
@@ -392,7 +392,7 @@ fn eval_count_option(
             }
             v => {
                 let kind = RunnerErrorKind::ExpressionInvalidType {
-                    value: v.format(),
+                    value: v.repr(),
                     expecting: "integer".to_string(),
                 };
                 Err(RunnerError::new(expr.source_info, kind, false))
@@ -436,7 +436,7 @@ fn eval_duration_option(
             }
             v => {
                 let kind = RunnerErrorKind::ExpressionInvalidType {
-                    value: v.format(),
+                    value: v.repr(),
                     expecting: "positive integer".to_string(),
                 };
                 return Err(RunnerError::new(expr.source_info, kind, false));

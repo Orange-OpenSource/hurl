@@ -33,8 +33,8 @@
 [1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
 [1;34m   |[0m[90m ...[0m
 [1;34m11 |[0m xpath "//title" count == 2
-[1;34m   |[0m[1;31m   actual:   int <1>[0m
-[1;34m   |[0m[1;31m   expected: int <2>[0m
+[1;34m   |[0m[1;31m   actual:   integer <1>[0m
+[1;34m   |[0m[1;31m   expected: integer <2>[0m
 [1;34m   |[0m
 
 [1;32mHTTP/1.1 200
@@ -53,8 +53,8 @@
 [1;34m   |[0m [90mGET http://localhost:8000/error-format-long/json[0m
 [1;34m   |[0m[90m ...[0m
 [1;34m18 |[0m jsonpath "$.books" count == 12
-[1;34m   |[0m[1;31m   actual:   int <2>[0m
-[1;34m   |[0m[1;31m   expected: int <12>[0m
+[1;34m   |[0m[1;31m   actual:   integer <2>[0m
+[1;34m   |[0m[1;31m   expected: integer <12>[0m
 [1;34m   |[0m
 
 [1;32mHTTP/1.1 200
@@ -162,7 +162,7 @@ Bytes <deadbeef...>
 [1;34m   |[0m [90mGET http://localhost:8000/error-format-long/bytes[0m
 [1;34m   |[0m[90m ...[0m
 [1;34m50 |[0m bytes == hex,beef;
-[1;34m   |[0m[1;31m   actual:   byte array <deadbeef>[0m
-[1;34m   |[0m[1;31m   expected: byte array <beef>[0m
+[1;34m   |[0m[1;31m   actual:   bytes <deadbeef>[0m
+[1;34m   |[0m[1;31m   expected: bytes <beef>[0m
 [1;34m   |[0m
 

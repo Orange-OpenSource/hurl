@@ -4,6 +4,6 @@ error: Assert body value
    | GET http://localhost:8000/error-assert-file
    | ...
  8 | file,data.txt;
-   | ^ actual value is <hex, 48656c6c6f;>
+   | ^ actual value is <48656c6c6f>
    |
 

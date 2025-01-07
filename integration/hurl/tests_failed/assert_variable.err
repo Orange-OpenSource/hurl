@@ -23,7 +23,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-variable
    | ...
 10 | variable "status" == {{type}}
-   |   actual:   int <200>
+   |   actual:   integer <200>
    |   expected: string <text/html; charset=utf-8>
    |
 
@@ -33,7 +33,7 @@ error: Assert failure
    | GET http://localhost:8000/error-assert-variable
    | ...
 11 | variable "status" == {{length}}
-   |   actual:   int <200>
+   |   actual:   integer <200>
    |   expected: string <0>
    |
 

@@ -89,7 +89,7 @@ impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
             Value::Bool(x) => x.to_string(),
-            Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
+            Value::Bytes(v) => hex::encode(v).to_string(),
             Value::Date(v) => v.to_string(),
             Value::Number(v) => v.to_string(),
             Value::List(values) => {
@@ -116,8 +116,8 @@ impl Value {
     pub fn kind(&self) -> ValueKind {
         match self {
             Value::Bool(_) => ValueKind::Bool,
-            Value::Bytes(_) => ValueKind::Bool,
-            Value::Date(_) => ValueKind::Bool,
+            Value::Bytes(_) => ValueKind::Bytes,
+            Value::Date(_) => ValueKind::Date,
             Value::Number(Number::Float(_)) => ValueKind::Float,
             Value::Number(Number::Integer(_)) | Value::Number(Number::BigInteger(_)) => {
                 ValueKind::Integer
@@ -129,6 +129,15 @@ impl Value {
             Value::Regex(_) => ValueKind::Regex,
             Value::String(_) => ValueKind::String,
             Value::Unit => ValueKind::Unit,
+        }
+    }
+
+    /// returns a printable representation of the Value incuding its type
+    pub fn repr(&self) -> String {
+        if self.kind() == ValueKind::Unit {
+            self.kind().to_string()
+        } else {
+            format!("{} <{}>", self.kind(), self)
         }
     }
 
@@ -170,9 +179,54 @@ impl fmt::Display for ValueKind {
 #[cfg(test)]
 mod tests {
 
-    use chrono::{DateTime, NaiveDate, Utc};
-
     use super::*;
+    use chrono::{DateTime, NaiveDate, Utc};
+    use regex::Regex;
+
+    #[test]
+    fn test_repr() {
+        assert_eq!(Value::Bool(true).repr(), "boolean <true>".to_string());
+        assert_eq!(
+            Value::Bytes(vec![1, 2, 3]).repr(),
+            "bytes <010203>".to_string()
+        );
+        let datetime_naive = NaiveDate::from_ymd_opt(2000, 1, 1)
+            .unwrap()
+            .and_hms_micro_opt(12, 0, 0, 123000)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(datetime_naive, Utc);
+        assert_eq!(
+            Value::Date(datetime_utc).repr(),
+            "date <2000-01-01 12:00:00.123 UTC>".to_string()
+        );
+        assert_eq!(Value::List(vec![]).repr(), "list <[]>".to_string());
+        assert_eq!(
+            Value::Nodeset(5).repr(),
+            "nodeset <Nodeset(size=5)>".to_string()
+        );
+        assert_eq!(Value::Null.repr(), "null <null>".to_string());
+        assert_eq!(
+            Value::Number(Number::Integer(1)).repr(),
+            "integer <1>".to_string()
+        );
+        assert_eq!(
+            Value::Number(Number::Float(1.0)).repr(),
+            "float <1.0>".to_string()
+        );
+        assert_eq!(
+            Value::Object(vec![]).repr(),
+            "object <Object()>".to_string()
+        );
+        assert_eq!(
+            Value::Regex(Regex::new(r"[0-9]+").unwrap()).repr(),
+            "regex </[0-9]+/>"
+        );
+        assert_eq!(
+            Value::String("Hello".to_string()).repr(),
+            "string <Hello>".to_string()
+        );
+        assert_eq!(Value::Unit.repr(), "unit".to_string());
+    }
 
     #[test]
     fn test_is_scalar() {

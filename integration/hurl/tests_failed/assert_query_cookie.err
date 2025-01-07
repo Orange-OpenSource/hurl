@@ -5,7 +5,7 @@ error: Assert failure
    | ...
  7 | cookie "cookie1[Secure]" == false      # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   none
-   |   expected: bool <false>
+   |   expected: boolean <false>
    |
 
 error: Assert failure
@@ -15,7 +15,7 @@ error: Assert failure
    | ...
 11 | cookie "cookie2[Secure]" == true       # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   unit
-   |   expected: bool <true>
+   |   expected: boolean <true>
    |   >>> types between actual and expected are not consistent
    |
 
@@ -26,7 +26,7 @@ error: Assert failure
    | ...
 12 | cookie "cookie2[Secure]" not == true   # This is not valid, Secure attribute exists or not but does have a value
    |   actual:   unit
-   |   expected: not bool <true>
+   |   expected: not boolean <true>
    |   >>> types between actual and expected are not consistent
    |
 

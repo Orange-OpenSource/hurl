@@ -38,7 +38,7 @@ pub fn eval_nth(
             Some(value) => Ok(Some(value.clone())),
         },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.display());
+            let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

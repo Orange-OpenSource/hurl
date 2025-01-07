@@ -33,8 +33,8 @@ error: Assert failure
    | GET http://localhost:8000/error-format-long/html
    | ...
 11 | xpath "//title" count == 2
-   |   actual:   int <1>
-   |   expected: int <2>
+   |   actual:   integer <1>
+   |   expected: integer <2>
    |
 
 HTTP/1.1 200
@@ -53,8 +53,8 @@ error: Assert failure
    | GET http://localhost:8000/error-format-long/json
    | ...
 18 | jsonpath "$.books" count == 12
-   |   actual:   int <2>
-   |   expected: int <12>
+   |   actual:   integer <2>
+   |   expected: integer <12>
    |
 
 HTTP/1.1 200
@@ -162,7 +162,7 @@ error: Assert failure
    | GET http://localhost:8000/error-format-long/bytes
    | ...
 50 | bytes == hex,beef;
-   |   actual:   byte array <deadbeef>
-   |   expected: byte array <beef>
+   |   actual:   bytes <deadbeef>
+   |   expected: bytes <beef>
    |
 
