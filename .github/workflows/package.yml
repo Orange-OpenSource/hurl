@@ -66,7 +66,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3.2.0
+      uses: docker/setup-qemu-action@v3.3.0
     - name: Create package
       uses: addnab/docker-run-action@v3
       with:
