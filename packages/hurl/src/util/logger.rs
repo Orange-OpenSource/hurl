@@ -138,7 +138,7 @@ impl Logger {
 
     /// Prints a given message to this logger [`Stderr`] instance, no matter what is the verbosity.
     pub fn info(&mut self, message: &str) {
-        self.stderr.eprintln(message);
+        self.eprintln(message);
     }
 
     /// Prints a given debug message to this logger [`Stderr`] instance, in verbose and very verbose mode.

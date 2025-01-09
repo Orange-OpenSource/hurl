@@ -63,7 +63,7 @@ impl Testcase {
     /// - an HTML timeline view of the executed entries (with potential errors, waterfall)
     /// - an HTML view of the executed run (headers, cookies, etc...)
     ///
-    /// `secrets` strings are redacted from teh produced HTML.
+    /// `secrets` strings are redacted from the produced HTML.
     pub fn write_html(
         &self,
         content: &str,

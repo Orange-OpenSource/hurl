@@ -36,8 +36,13 @@ pub fn write_json(
     stdout: &mut Stdout,
     append: bool,
 ) -> Result<(), io::Error> {
-    let json_result = hurl_result.to_json(content, filename_in, None)?;
-    let serialized = serde_json::to_string(&json_result).unwrap();
+    let response_dir = None;
+    // Secrets are only redacted from standard error and reports. In this cas, we want to output a
+    // response in a structured way. We do not change the value of the response output as it may be
+    // used for processing, contrary to the standard error that should be used for debug/log/messages.
+    let secrets = [];
+    let json_result = hurl_result.to_json(content, filename_in, response_dir, &secrets)?;
+    let serialized = serde_json::to_string(&json_result)?;
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
     match filename_out {

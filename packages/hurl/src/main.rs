@@ -178,7 +178,7 @@ fn export_results(
     }
     if let Some(dir) = &opts.json_report_dir {
         logger.debug(&format!("Writing JSON report to {}", dir.display()));
-        create_json_report(runs, dir)?;
+        create_json_report(runs, dir, &secrets)?;
     }
     if let Some(file) = &opts.cookie_output_file {
         logger.debug(&format!("Writing cookies to {}", file.display()));
@@ -232,7 +232,7 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path, secrets: &[&str]) -> Re
 }
 
 /// Creates an JSON report for this run.
-fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError> {
+fn create_json_report(runs: &[HurlRun], dir_path: &Path, secrets: &[&str]) -> Result<(), CliError> {
     // We ensure that the containing folder exists.
     let store_path = dir_path.join("store");
     std::fs::create_dir_all(&store_path)?;
@@ -243,7 +243,7 @@ fn create_json_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), CliError>
         .collect::<Vec<_>>();
 
     let index_path = dir_path.join("report.json");
-    json::write_report(&index_path, &testcases, &store_path)?;
+    json::write_report(&index_path, &testcases, &store_path, secrets)?;
     Ok(())
 }
 

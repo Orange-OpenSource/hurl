@@ -32,6 +32,7 @@ use crate::http::{
     ResponseCookie, Timings,
 };
 use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
+use crate::util::redacted::Redact;
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.
@@ -40,14 +41,16 @@ impl HurlResult {
     /// and columns). This parameter will be removed soon and the original content will be
     /// accessible through the [`HurlResult`] instance.
     /// An optional directory `response_dir` can be used to save HTTP response.
+    /// `secrets` strings are redacted from the JSON fields.
     pub fn to_json(
         &self,
         content: &str,
         filename: &Input,
         response_dir: Option<&Path>,
+        secrets: &[&str],
     ) -> Result<serde_json::Value, io::Error> {
-        let result = HurlResultJson::from_result(self, content, filename, response_dir)?;
-        let value = serde_json::to_value(result).unwrap();
+        let result = HurlResultJson::from_result(self, content, filename, response_dir, secrets)?;
+        let value = serde_json::to_value(result)?;
         Ok(value)
     }
 
@@ -199,16 +202,17 @@ impl HurlResultJson {
         content: &str,
         filename: &Input,
         response_dir: Option<&Path>,
+        secrets: &[&str],
     ) -> Result<Self, io::Error> {
         let entries = result
             .entries
             .iter()
-            .map(|e| EntryResultJson::from_entry(e, content, filename, response_dir))
+            .map(|e| EntryResultJson::from_entry(e, content, filename, response_dir, secrets))
             .collect::<Result<Vec<_>, _>>()?;
         let cookies = result
             .cookies
             .iter()
-            .map(CookieJson::from_cookie)
+            .map(|c| CookieJson::from_cookie(c, secrets))
             .collect::<Vec<_>>();
         Ok(HurlResultJson {
             filename: filename.to_string(),
@@ -226,21 +230,22 @@ impl EntryResultJson {
         content: &str,
         filename: &Input,
         response_dir: Option<&Path>,
+        secrets: &[&str],
     ) -> Result<Self, io::Error> {
         let calls = entry
             .calls
             .iter()
-            .map(|c| CallJson::from_call(c, response_dir))
+            .map(|c| CallJson::from_call(c, response_dir, secrets))
             .collect::<Result<Vec<_>, _>>()?;
         let captures = entry
             .captures
             .iter()
-            .map(CaptureJson::from_capture)
+            .map(|c| CaptureJson::from_capture(c, secrets))
             .collect::<Vec<_>>();
         let asserts = entry
             .asserts
             .iter()
-            .map(|a| AssertJson::from_assert(a, content, filename, entry.source_info))
+            .map(|a| AssertJson::from_assert(a, content, filename, entry.source_info, secrets))
             .collect::<Vec<_>>();
         Ok(EntryResultJson {
             index: entry.entry_index,
@@ -249,13 +254,13 @@ impl EntryResultJson {
             captures,
             asserts,
             time: entry.transfer_duration.as_millis() as u64,
-            curl_cmd: entry.curl_cmd.to_string(),
+            curl_cmd: entry.curl_cmd.redact(secrets),
         })
     }
 }
 
 impl CookieJson {
-    fn from_cookie(c: &Cookie) -> Self {
+    fn from_cookie(c: &Cookie, secrets: &[&str]) -> Self {
         CookieJson {
             domain: c.domain.clone(),
             include_subdomain: c.include_subdomain.clone(),
@@ -263,15 +268,19 @@ impl CookieJson {
             https: c.https.clone(),
             expires: c.expires.clone(),
             name: c.name.clone(),
-            value: c.value.clone(),
+            value: c.value.redact(secrets),
         }
     }
 }
 
 impl CallJson {
-    fn from_call(call: &Call, response_dir: Option<&Path>) -> Result<Self, io::Error> {
-        let request = RequestJson::from_request(&call.request);
-        let response = ResponseJson::from_response(&call.response, response_dir)?;
+    fn from_call(
+        call: &Call,
+        response_dir: Option<&Path>,
+        secrets: &[&str],
+    ) -> Result<Self, io::Error> {
+        let request = RequestJson::from_request(&call.request, secrets);
+        let response = ResponseJson::from_response(&call.response, response_dir, secrets)?;
         let timings = TimingsJson::from_timings(&call.timings);
         Ok(CallJson {
             request,
@@ -282,26 +291,26 @@ impl CallJson {
 }
 
 impl RequestJson {
-    fn from_request(request: &Request) -> Self {
+    fn from_request(request: &Request, secrets: &[&str]) -> Self {
         let headers = request
             .headers
             .iter()
-            .map(HeaderJson::from_header)
+            .map(|h| HeaderJson::from_header(h, secrets))
             .collect::<Vec<_>>();
         let cookies = request
             .cookies()
             .iter()
-            .map(RequestCookieJson::from_cookie)
+            .map(|c| RequestCookieJson::from_cookie(c, secrets))
             .collect::<Vec<_>>();
         let query_string = request
             .url
             .query_params()
             .iter()
-            .map(ParamJson::from_param)
+            .map(|p| ParamJson::from_param(p, secrets))
             .collect::<Vec<_>>();
         RequestJson {
             method: request.method.clone(),
-            url: request.url.to_string(),
+            url: request.url.redact(secrets),
             headers,
             cookies,
             query_string,
@@ -310,7 +319,11 @@ impl RequestJson {
 }
 
 impl ResponseJson {
-    fn from_response(response: &Response, response_dir: Option<&Path>) -> Result<Self, io::Error> {
+    fn from_response(
+        response: &Response,
+        response_dir: Option<&Path>,
+        secrets: &[&str],
+    ) -> Result<Self, io::Error> {
         let http_version = match response.version {
             HttpVersion::Http10 => "HTTP/1.0",
             HttpVersion::Http11 => "HTTP/1.1",
@@ -320,12 +333,12 @@ impl ResponseJson {
         let headers = response
             .headers
             .iter()
-            .map(HeaderJson::from_header)
+            .map(|h| HeaderJson::from_header(h, secrets))
             .collect::<Vec<_>>();
         let cookies = response
             .cookies()
             .iter()
-            .map(ResponseCookieJson::from_cookie)
+            .map(|c| ResponseCookieJson::from_cookie(c, secrets))
             .collect::<Vec<_>>();
         let certificate = response
             .certificate
@@ -385,37 +398,37 @@ impl TimingsJson {
 }
 
 impl HeaderJson {
-    fn from_header(h: &Header) -> Self {
+    fn from_header(h: &Header, secrets: &[&str]) -> Self {
         HeaderJson {
             name: h.name.clone(),
-            value: h.value.clone(),
+            value: h.value.redact(secrets),
         }
     }
 }
 
 impl RequestCookieJson {
-    fn from_cookie(c: &RequestCookie) -> Self {
+    fn from_cookie(c: &RequestCookie, secrets: &[&str]) -> Self {
         RequestCookieJson {
             name: c.name.clone(),
-            value: c.value.clone(),
+            value: c.value.redact(secrets),
         }
     }
 }
 
 impl ParamJson {
-    fn from_param(p: &Param) -> Self {
+    fn from_param(p: &Param, secrets: &[&str]) -> Self {
         ParamJson {
             name: p.name.clone(),
-            value: p.value.clone(),
+            value: p.value.redact(secrets),
         }
     }
 }
 
 impl ResponseCookieJson {
-    fn from_cookie(c: &ResponseCookie) -> Self {
+    fn from_cookie(c: &ResponseCookie, secrets: &[&str]) -> Self {
         ResponseCookieJson {
             name: c.name.clone(),
-            value: c.value.clone(),
+            value: c.value.redact(secrets),
             expires: c.expires(),
             max_age: c.max_age().map(|m| m.to_string()),
             domain: c.domain(),
@@ -431,7 +444,7 @@ impl CertificateJson {
     fn from_certificate(c: &Certificate) -> Self {
         CertificateJson {
             subject: c.subject.clone(),
-            issuer: c.issuer.to_string(),
+            issuer: c.issuer.clone(),
             start_date: c.start_date.to_string(),
             expire_date: c.expire_date.to_string(),
             serial_number: c.serial_number.to_string(),
@@ -440,10 +453,10 @@ impl CertificateJson {
 }
 
 impl CaptureJson {
-    fn from_capture(c: &CaptureResult) -> Self {
+    fn from_capture(c: &CaptureResult, secrets: &[&str]) -> Self {
         CaptureJson {
             name: c.name.clone(),
-            value: c.value.to_json(),
+            value: c.value.to_json(secrets),
         }
     }
 }
@@ -454,6 +467,7 @@ impl AssertJson {
         content: &str,
         filename: &Input,
         entry_src_info: SourceInfo,
+        secrets: &[&str],
     ) -> Self {
         let message = a.error().map(|err| {
             err.to_string(
@@ -463,6 +477,7 @@ impl AssertJson {
                 OutputFormat::Plain,
             )
         });
+        let message = message.map(|m| m.redact(secrets));
         AssertJson {
             success: a.error().is_none(),
             message,

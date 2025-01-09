@@ -21,26 +21,28 @@ use base64::engine::general_purpose;
 use base64::Engine;
 
 use crate::runner::{Number, Value};
+use crate::util::redacted::Redact;
 
 /// Serializes a [`Value`] to JSON, used in captures serialization.
 ///
 /// Natural JSON types are used to represent captures: if a [`Value::List`] is captured,
 /// the serialized data will be a JSON list.
+/// `secrets` are redacted from string values.
 impl Value {
-    pub fn to_json(&self) -> serde_json::Value {
+    pub fn to_json(&self, secrets: &[&str]) -> serde_json::Value {
         match self {
             Value::Bool(v) => serde_json::Value::Bool(*v),
             Value::Date(v) => serde_json::Value::String(v.to_string()),
             Value::Number(v) => v.to_json(),
-            Value::String(s) => serde_json::Value::String(s.clone()),
+            Value::String(s) => serde_json::Value::String(s.redact(secrets)),
             Value::List(values) => {
-                let values = values.iter().map(|v| v.to_json()).collect();
+                let values = values.iter().map(|v| v.to_json(secrets)).collect();
                 serde_json::Value::Array(values)
             }
             Value::Object(key_values) => {
                 let mut map = serde_json::Map::new();
                 for (key, value) in key_values {
-                    map.insert(key.to_string(), value.to_json());
+                    map.insert(key.to_string(), value.to_json(secrets));
                 }
                 serde_json::Value::Object(map)
             }

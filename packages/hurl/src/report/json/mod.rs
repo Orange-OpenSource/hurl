@@ -46,11 +46,12 @@ use crate::runner::HurlResult;
 /// Exports a list of [`Testcase`] to a JSON file `filename`.
 ///
 /// Response file are saved under the `response_dir` directory and referenced by path in JSON report
-/// file.
+/// file. `secrets` strings are redacted from the JSON report fields.
 pub fn write_report(
     filename: &Path,
     testcases: &[Testcase],
     response_dir: &Path,
+    secrets: &[&str],
 ) -> Result<(), ReportError> {
     // We parse any potential existing report.
     let mut report = deserialize::parse_json_report(filename)?;
@@ -58,11 +59,11 @@ pub fn write_report(
     // Serialize the new report, extended any exiting one.
     let json = testcases
         .iter()
-        .map(|t| t.to_json(response_dir))
+        .map(|t| t.to_json(response_dir, secrets))
         .collect::<Result<Vec<_>, _>>()?;
     report.extend(json);
 
-    let serialized = serde_json::to_string(&report).unwrap();
+    let serialized = serde_json::to_string(&report)?;
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
     let mut file_out = File::create(filename)?;
@@ -94,8 +95,14 @@ impl<'a> Testcase<'a> {
     }
 
     /// Serializes this testcase to JSON.
-    fn to_json(&self, response_dir: &Path) -> Result<serde_json::Value, io::Error> {
+    ///
+    /// `secrets` strings are redacted from the JSON fields.
+    fn to_json(
+        &self,
+        response_dir: &Path,
+        secrets: &[&str],
+    ) -> Result<serde_json::Value, io::Error> {
         self.result
-            .to_json(self.content, self.filename, Some(response_dir))
+            .to_json(self.content, self.filename, Some(response_dir), secrets)
     }
 }
