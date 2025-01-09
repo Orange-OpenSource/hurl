@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
       - name: Auto close inactive PR
         run: .github/workflows/bin/auto-close-inactive-pr.sh --github-project-path "${REPO}" --github-token "${GITHUB_TOKEN}" --max-days-of-inactivity 15
 

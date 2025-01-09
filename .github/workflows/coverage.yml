@@ -17,6 +17,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
+      with:
+        persist-credentials: false
 
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
