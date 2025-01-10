@@ -10,8 +10,10 @@ after this delimiter, you'll find the implicit asserts, then an `[Asserts]` sect
 ```hurl
 GET https://example.org/api/cats
 HTTP 200
-Content-Type: application/json; charset=utf-8      # Implicit assert on Content-Type Header
-[Asserts]                                          # Explicit asserts section 
+# Implicit assert on `Content-Type` Header
+Content-Type: application/json; charset=utf-8 
+[Asserts]
+# Explicit asserts section 
 bytes count == 120
 header "Content-Type" contains "utf-8"
 jsonpath "$.cats" count == 49
@@ -21,6 +23,7 @@ jsonpath "$.cats[0].lives" == 9
 
 Body responses can be encoded by server (see [`Content-Encoding` HTTP header]) but asserts in Hurl files are not 
 affected by this content compression. All body asserts (`body`, `bytes`, `sha256` etc...) work _after_ content decoding.
+
 Finally, body text asserts (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header] 
 so these asserts can be written with usual strings. 
 
