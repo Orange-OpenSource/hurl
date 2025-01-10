@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/encoding.hurl --verbose
+
+hurl --output - tests_ok/encoding.hurl

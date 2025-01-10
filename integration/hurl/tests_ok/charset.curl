@@ -1,0 +1,8 @@
+curl 'http://localhost:8000/charset/default'
+curl 'http://localhost:8000/charset/latin1'
+curl 'http://localhost:8000/charset/latin1/uppercase-key'
+curl 'http://localhost:8000/charset/gb2312'
+curl 'http://localhost:8000/charset/cp1256'
+curl 'http://localhost:8000/charset/utf8/uppercase-value'
+curl 'http://localhost:8000/charset/utf8/many-keys'
+curl 'http://localhost:8000/charset/latin1'

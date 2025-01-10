@@ -1,2 +1,0 @@
-curl 'http://localhost:8000/encoding/utf8'
-curl 'http://localhost:8000/encoding/latin1'

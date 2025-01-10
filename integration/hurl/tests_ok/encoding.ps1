@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/encoding.hurl --verbose
+
+hurl --output - tests_ok/encoding.hurl

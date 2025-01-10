@@ -71,6 +71,21 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
 
 
+# --compressed option automatically sets request encoding headers and decompresses
+# the output. Without this option, the response is outputted as a raw bytestream.
+# Asserts (explicit and implicit) work on decompressed response.
+GET http://localhost:8000/compressed/gzip
+Accept-Encoding: gzip
+HTTP 200
+Content-Length: 32
+Content-Encoding: gzip
+Content-Type: text/html; charset=utf-8
+[Asserts]
+body startsWith "Hello"             # `body` uses text decompressed response, decoded with charset
+bytes startsWith hex,48656c6c6f;    # `bytes` uses bytes decompressed response
+`Hello World!`                      # Implicit body assert uses text decompressed response
+
+
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/gzip
 [Options]

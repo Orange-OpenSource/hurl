@@ -4,19 +4,19 @@ from flask import make_response
 
 @app.route("/charset/default")
 def charset_default():
-    return "<p>Hello World!</p>"
+    return "<p>café</p>"
 
 
-@app.route("/charset/uppercase-value")
+@app.route("/charset/utf8/uppercase-value")
 def charset_uppercase_value():
-    resp = make_response("<p>Hello World!</p>")
+    resp = make_response("<p>café</p>")
     resp.headers["Content-Type"] = "text/html; charset=UTF-8"
     return resp
 
 
-@app.route("/charset/many-keys")
+@app.route("/charset/utf8/many-keys")
 def charset_uppercase_many_keys():
-    resp = make_response("<p>Hello World!</p>")
+    resp = make_response("<p>café</p>")
     resp.headers["Content-Type"] = (
         "text/plain; version=0.0.4; charset=utf-8; escaping=values"
     )

@@ -1,7 +1,7 @@
 GET http://localhost:8000/charset/default
 HTTP 200
 Content-Type: text/html; charset=utf-8
-`<p>Hello World!</p>`
+`<p>café</p>`
 
 
 GET http://localhost:8000/charset/latin1
@@ -32,15 +32,22 @@ Content-Type: text/html; charset=cp1256
 body == "<p>مرحبا بالعالم</p>"
 
 
-GET http://localhost:8000/charset/uppercase-value
+GET http://localhost:8000/charset/utf8/uppercase-value
 HTTP 200
 Content-Type: text/html; charset=UTF-8
 [Asserts]
-body == "<p>Hello World!</p>"
+body == "<p>café</p>"
 
 
-GET http://localhost:8000/charset/many-keys
+GET http://localhost:8000/charset/utf8/many-keys
 HTTP 200
 Content-Type: text/plain; version=0.0.4; charset=utf-8; escaping=values
 [Asserts]
-body == "<p>Hello World!</p>"
+body == "<p>café</p>"
+
+
+GET http://localhost:8000/charset/latin1
+HTTP 200
+Content-Type: text/html; charset=latin1
+[Asserts]
+body == "<p>café</p>"
