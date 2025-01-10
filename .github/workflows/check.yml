@@ -60,6 +60,14 @@ jobs:
         pip --version
         bin/check/install_prerequisites.sh
 
+    - name: Zizmor
+      env:
+        GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+      if: always()
+      run: |
+        pip install zizmor
+        bin/check/zizmor.sh --github-token ${GITHUB_TOKEN} .github/workflows/*.yml
+
     - name: Check Rust version
       if: always()
       run: |
