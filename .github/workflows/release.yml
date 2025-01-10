@@ -54,8 +54,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
 
       - name: Check release pull request existence
         id: check-release-pull-request-existence
@@ -172,8 +170,6 @@ jobs:
       - name: Checkout repository
         if: github.ref_name == 'master'
         uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
 
       - name: Create release branch
         if: github.ref_name == 'master'
@@ -191,7 +187,6 @@ jobs:
       - name: Checkout new release branch
         uses: actions/checkout@v4.2.2
         with:
-          persist-credentials: false
           ref: ${{ needs.set-context.outputs.release_branch }}
 
       - name: Check CHANGELOG
@@ -298,7 +293,6 @@ jobs:
       - name: Checkout new release branch
         uses: actions/checkout@v4.2.2
         with:
-          persist-credentials: false
           ref: ${{ needs.set-context.outputs.release_branch }}
 
       - name: Init git bot context

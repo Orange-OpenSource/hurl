@@ -21,7 +21,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -55,7 +54,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Rust
       run: bin/install_rust.sh
@@ -77,7 +75,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -122,7 +119,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -164,7 +160,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
@@ -206,7 +201,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
@@ -255,7 +249,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
@@ -306,7 +299,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
@@ -355,7 +347,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
@@ -407,7 +398,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Rust
       run: |
@@ -449,8 +439,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
-        persist-credentials: false
-        ref: ${{ inputs.branch }}
+       ref: ${{ inputs.branch }}
     - name: Setup wsl Ubuntu
       uses: Vampire/setup-wsl@v4.1.0
       with:

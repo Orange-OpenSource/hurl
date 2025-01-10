@@ -69,7 +69,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
-          persist-credentials: false
           ref: ${{ env.BASE_REF }}
           token: ${{ secrets.HURL_BOT_TOKEN }}
           fetch-depth: 0

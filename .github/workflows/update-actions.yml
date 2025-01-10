@@ -20,7 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
-          persist-credentials: false
           ref: master
           token: ${{ secrets.HURL_BOT_TOKEN }}
 
