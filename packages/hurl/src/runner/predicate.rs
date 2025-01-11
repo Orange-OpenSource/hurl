@@ -112,6 +112,7 @@ impl Value {
             Value::Number(number) => number.expected(),
             Value::Object(values) => format!("list of size {}", values.len()),
             Value::Regex(value) => format!("regex <{value}>"),
+            Value::Secret(value) => format!("string <{value}>"),
             Value::String(value) => format!("string <{value}>"),
             Value::Unit => "something".to_string(),
         }

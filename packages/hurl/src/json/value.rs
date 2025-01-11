@@ -32,6 +32,7 @@ impl Value {
             Value::Bool(v) => serde_json::Value::Bool(*v),
             Value::Date(v) => serde_json::Value::String(v.to_string()),
             Value::Number(v) => v.to_json(),
+            Value::Secret(s) => serde_json::Value::String(s.clone()),
             Value::String(s) => serde_json::Value::String(s.clone()),
             Value::List(values) => {
                 let values = values.iter().map(|v| v.to_json()).collect();
