@@ -21,6 +21,7 @@ use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Replaces all occurrences of `old_value` with `new_value` in `value`.
 pub fn eval_replace(
     value: &Value,
     variables: &VariableSet,
@@ -44,8 +45,7 @@ pub fn eval_replace(
 }
 
 #[cfg(test)]
-pub mod tests {
-
+mod tests {
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
@@ -55,7 +55,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_replace() {
+    fn eval_filter_replace() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

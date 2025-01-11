@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 use chrono::Utc;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
+/// Returns the number of days between now and a date `value` in the future.
 pub fn eval_days_after_now(
     value: &Value,
     source_info: SourceInfo,
@@ -39,7 +39,7 @@ pub fn eval_days_after_now(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use chrono::offset::Utc;
     use chrono::Duration;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
@@ -50,7 +50,7 @@ pub mod tests {
     use crate::runner::VariableSet;
 
     #[test]
-    pub fn eval_filter_days_after_before_now() {
+    fn eval_filter_days_after_before_now() {
         let variables = VariableSet::new();
 
         let now = Utc::now();

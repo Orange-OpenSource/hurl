@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
+/// Returns the element from a collection `value` at a zero-based index.
 pub fn eval_nth(
     value: &Value,
     source_info: SourceInfo,
@@ -45,7 +45,7 @@ pub fn eval_nth(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace, U64};
     use hurl_core::reader::Pos;
 
@@ -53,7 +53,7 @@ pub mod tests {
     use crate::runner::{Number, RunnerError, RunnerErrorKind, Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_nth() {
+    fn eval_filter_nth() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

@@ -21,17 +21,19 @@ use hurl_core::ast::{SourceInfo, Template};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Converts a string to a date given a specification `format`.
+/// See <https://docs.rs/chrono/latest/chrono/format/strftime/index.html>
 pub fn eval_to_date(
     value: &Value,
-    fmt: &Template,
+    format: &Template,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
-    let fmt = eval_template(fmt, variables)?;
+    let format = eval_template(format, variables)?;
 
     match value {
-        Value::String(v) => match NaiveDateTime::parse_from_str(v, fmt.as_str()) {
+        Value::String(v) => match NaiveDateTime::parse_from_str(v, format.as_str()) {
             Ok(v) => Ok(Some(Value::Date(
                 v.and_local_timezone(chrono::Utc).unwrap(),
             ))),
@@ -48,8 +50,7 @@ pub fn eval_to_date(
 }
 
 #[cfg(test)]
-pub mod tests {
-
+mod tests {
     use chrono::{DateTime, NaiveDate, Utc};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
@@ -58,7 +59,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_to_date() {
+    fn eval_filter_to_date() {
         let variables = VariableSet::new();
 
         let filter = Filter {

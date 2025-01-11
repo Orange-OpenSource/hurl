@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 use chrono::Utc;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
+/// Returns the number of days between now and a date `value` in the past.
 pub fn eval_days_before_now(
     value: &Value,
     source_info: SourceInfo,
@@ -37,6 +37,3 @@ pub fn eval_days_before_now(
         }
     }
 }
-
-#[cfg(test)]
-pub mod tests {}

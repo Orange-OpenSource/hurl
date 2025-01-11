@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 
 use crate::html;
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
+/// Converts the characters `&`, `<` and `>` in `value` to HTML-safe sequence.
 pub fn eval_html_escape(
     value: &Value,
     source_info: SourceInfo,

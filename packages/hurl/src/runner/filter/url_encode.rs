@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 use percent_encoding::AsciiSet;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
-// does not encode "/"
-// like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
+/// Percent-encodes all the characters in `value` which are not included in unreserved chars
+/// (see [RFC3986](https://www.rfc-editor.org/rfc/rfc3986)) with the exception of forward slash (/).
+/// Does not encode forward slash (/) like Jinja template (<https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode>)
 pub fn eval_url_encode(
     value: &Value,
     source_info: SourceInfo,
@@ -47,7 +47,7 @@ pub fn eval_url_encode(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
@@ -55,7 +55,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_url_encode() {
+    fn eval_filter_url_encode() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

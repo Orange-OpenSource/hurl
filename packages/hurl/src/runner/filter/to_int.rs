@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
+/// Converts `value` to an integer.
 pub fn eval_to_int(
     value: &Value,
     source_info: SourceInfo,
@@ -43,8 +43,7 @@ pub fn eval_to_int(
 }
 
 #[cfg(test)]
-pub mod tests {
-
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
@@ -52,7 +51,7 @@ pub mod tests {
     use crate::runner::{Number, RunnerErrorKind, Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_to_int() {
+    fn eval_filter_to_int() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
@@ -94,7 +93,7 @@ pub mod tests {
     }
 
     #[test]
-    pub fn eval_filter_to_int_error() {
+    fn eval_filter_to_int_error() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

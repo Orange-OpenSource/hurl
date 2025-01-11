@@ -21,6 +21,7 @@ use crate::jsonpath;
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Evaluates a JSONPath expression `expr` against a `value`.
 pub fn eval_jsonpath(
     value: &Value,
     expr: &Template,
@@ -75,7 +76,7 @@ pub fn eval_jsonpath_json(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
@@ -83,7 +84,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_jsonpath() {
+    fn eval_filter_jsonpath() {
         let variables = VariableSet::new();
 
         let filter = Filter {

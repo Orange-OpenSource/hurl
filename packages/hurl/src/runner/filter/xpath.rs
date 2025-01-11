@@ -21,6 +21,7 @@ use crate::runner::template::eval_template;
 use crate::runner::xpath::{Document, Format, XPathError};
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Evaluates a XPath expression `expr` against a `value`.
 pub fn eval_xpath(
     value: &Value,
     expr: &Template,

@@ -20,6 +20,7 @@ use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
+/// Replaces `%xx` URL escapes in `value` with their single-character equivalent.
 pub fn eval_url_decode(
     value: &Value,
     source_info: SourceInfo,
@@ -44,4 +45,29 @@ pub fn eval_url_decode(
 }
 
 #[cfg(test)]
-pub mod tests {}
+mod tests {
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Value, VariableSet};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::reader::Pos;
+
+    #[test]
+    fn eval_filter_url_decode() {
+        let variables = VariableSet::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            value: FilterValue::UrlDecode,
+        };
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
+                &variables,
+                false,
+            )
+            .unwrap()
+            .unwrap(),
+            Value::String("https://mozilla.org/?x=шеллы".to_string())
+        );
+    }
+}

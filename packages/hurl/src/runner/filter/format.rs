@@ -20,52 +20,25 @@ use hurl_core::ast::{SourceInfo, Template};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Formats a date `value` to a string given a specification `format`.
+/// See <https://docs.rs/chrono/latest/chrono/format/strftime/index.html>
 pub fn eval_format(
     value: &Value,
-    fmt: &Template,
+    format: &Template,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
-    let fmt = eval_template(fmt, variables)?;
+    let format = eval_template(format, variables)?;
 
     match value {
         Value::Date(value) => {
-            let formatted = format!("{}", value.format(fmt.as_str()));
+            let formatted = format!("{}", value.format(format.as_str()));
             Ok(Some(Value::String(formatted)))
         }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
-    }
-}
-
-#[cfg(test)]
-pub mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
-    use hurl_core::reader::Pos;
-
-    use super::*;
-    use crate::runner::filter::eval::eval_filter;
-
-    #[test]
-    pub fn eval_filter_url_decode() {
-        let variables = VariableSet::new();
-        let filter = Filter {
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            value: FilterValue::UrlDecode,
-        };
-        assert_eq!(
-            eval_filter(
-                &filter,
-                &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
-                &variables,
-                false,
-            )
-            .unwrap()
-            .unwrap(),
-            Value::String("https://mozilla.org/?x=шеллы".to_string())
-        );
     }
 }

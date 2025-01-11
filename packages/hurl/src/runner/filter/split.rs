@@ -20,18 +20,19 @@ use hurl_core::ast::{SourceInfo, Template};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Splits the string `value` to a list of strings around occurrences of the specified `delimiter`.
 pub fn eval_split(
     value: &Value,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
-    sep: &Template,
+    delimiter: &Template,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(s) => {
-            let sep = eval_template(sep, variables)?;
+            let delimiter = eval_template(delimiter, variables)?;
             let values = s
-                .split(&sep)
+                .split(&delimiter)
                 .map(|v| Value::String(v.to_string()))
                 .collect();
             Ok(Some(Value::List(values)))
@@ -44,8 +45,7 @@ pub fn eval_split(
 }
 
 #[cfg(test)]
-pub mod tests {
-
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
 
@@ -53,7 +53,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_split() {
+    fn eval_filter_split() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

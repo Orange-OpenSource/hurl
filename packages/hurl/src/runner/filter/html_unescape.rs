@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 
 use crate::html;
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
+/// Converts all named and numeric character references (e.g. &gt;, &#62;, &#x3e;) in `value` to the
+/// corresponding Unicode characters.
 pub fn eval_html_unescape(
     value: &Value,
     source_info: SourceInfo,
@@ -39,7 +40,7 @@ pub fn eval_html_unescape(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
@@ -47,7 +48,7 @@ pub mod tests {
     use crate::runner::{Value, VariableSet};
 
     #[test]
-    pub fn eval_filter_html_unescape() {
+    fn eval_filter_html_unescape() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),

@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{Number, RunnerError, RunnerErrorKind, Value};
 
+/// Counts the number of items in a collection `value`.
 pub fn eval_count(
     value: &Value,
     source_info: SourceInfo,
@@ -37,7 +37,7 @@ pub fn eval_count(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
@@ -46,7 +46,7 @@ pub mod tests {
     use crate::runner::VariableSet;
 
     #[test]
-    pub fn eval_filter_count() {
+    fn eval_filter_count() {
         let variables = VariableSet::new();
 
         let filter = Filter {

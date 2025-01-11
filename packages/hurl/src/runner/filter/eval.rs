@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{Filter, FilterValue};
 
-use super::count::eval_count;
+use crate::runner::filter::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
 use crate::runner::filter::decode::eval_decode;
@@ -115,7 +115,7 @@ pub fn eval_filter(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
@@ -123,7 +123,7 @@ pub mod tests {
     use crate::runner::{Number, Value, VariableSet};
 
     #[test]
-    pub fn test_filters() {
+    fn test_filters() {
         let variables = VariableSet::new();
 
         assert_eq!(

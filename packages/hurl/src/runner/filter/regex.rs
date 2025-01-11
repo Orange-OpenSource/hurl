@@ -20,14 +20,16 @@ use hurl_core::ast::{RegexValue, SourceInfo};
 use crate::runner::regex::eval_regex_value;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Extracts `regex` capture group from `value`.
+/// Pattern must have at least one capture group.
 pub fn eval_regex(
     value: &Value,
-    regex_value: &RegexValue,
+    regex: &RegexValue,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
-    let re = eval_regex_value(regex_value, variables)?;
+    let re = eval_regex_value(regex, variables)?;
     match value {
         Value::String(s) => match re.captures(s.as_str()) {
             Some(captures) => match captures.get(1) {
@@ -44,7 +46,7 @@ pub fn eval_regex(
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };

@@ -21,25 +21,26 @@ use hurl_core::ast::{SourceInfo, Template};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Decode bytes `value` to string using an `encoding`.
 pub fn eval_decode(
     value: &Value,
-    encoding_value: &Template,
+    encoding: &Template,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
-    let encoding_value = eval_template(encoding_value, variables)?;
+    let encoding = eval_template(encoding, variables)?;
     match value {
         Value::Bytes(value) => {
-            match encoding::label::encoding_from_whatwg_label(encoding_value.as_str()) {
+            match encoding::label::encoding_from_whatwg_label(encoding.as_str()) {
                 None => {
-                    let kind = RunnerErrorKind::FilterInvalidEncoding(encoding_value);
+                    let kind = RunnerErrorKind::FilterInvalidEncoding(encoding);
                     Err(RunnerError::new(source_info, kind, assert))
                 }
                 Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
                     Ok(decoded) => Ok(Some(Value::String(decoded))),
                     Err(_) => {
-                        let kind = RunnerErrorKind::FilterDecode(encoding_value);
+                        let kind = RunnerErrorKind::FilterDecode(encoding);
                         Err(RunnerError::new(source_info, kind, assert))
                     }
                 },
@@ -49,34 +50,5 @@ pub fn eval_decode(
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
         }
-    }
-}
-
-#[cfg(test)]
-pub mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
-    use hurl_core::reader::Pos;
-
-    use super::*;
-    use crate::runner::filter::eval::eval_filter;
-
-    #[test]
-    pub fn eval_filter_url_decode() {
-        let variables = VariableSet::new();
-        let filter = Filter {
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            value: FilterValue::UrlDecode,
-        };
-        assert_eq!(
-            eval_filter(
-                &filter,
-                &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
-                &variables,
-                false,
-            )
-            .unwrap()
-            .unwrap(),
-            Value::String("https://mozilla.org/?x=шеллы".to_string())
-        );
     }
 }
