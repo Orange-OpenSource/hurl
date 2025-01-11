@@ -29,7 +29,7 @@ use hurl_core::typing::Count;
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, VariableSet};
+use crate::runner::{entry, options, EntryResult, HurlResult, Value, VariableSet};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
@@ -95,11 +95,7 @@ pub fn run(
 
     // We also create a common logger for this run (logger verbosity can eventually be mutated on
     // each entry).
-    let secrets = variables
-        .iter()
-        .filter(|(_, var)| var.is_secret())
-        .map(|(_, var)| var.value().to_string())
-        .collect::<Vec<_>>();
+    let secrets = variables.secrets();
     let mut logger = Logger::new(logger_options, stderr, &secrets);
 
     // Try to parse the content
@@ -521,12 +517,12 @@ fn log_run_info(
 
     let variables = variables
         .iter()
-        .filter(|(_, variable)| !variable.is_secret())
+        .filter(|(_, value)| !matches!(value, Value::Secret(_)))
         .collect::<Vec<_>>();
     if !variables.is_empty() {
         logger.debug_important("Variables:");
-        for (name, var) in variables.iter() {
-            logger.debug(&format!("    {name}: {}", var.value()));
+        for (name, value) in variables.iter() {
+            logger.debug(&format!("    {name}: {value}"));
         }
     }
     if let Some(to_entry) = runner_options.to_entry {

@@ -413,6 +413,13 @@ pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOption
     if let Some(secret) = get_strings(matches, "secret") {
         for s in secret {
             let (name, value) = variables::parse(&s)?;
+            // We check that there is no existing secrets
+            if secrets.contains_key(&name) {
+                return Err(CliOptionsError::Error(format!(
+                    "secret '{}' can't be reassigned",
+                    &name
+                )));
+            }
             // Secrets can only be string.
             if let Value::String(value) = value {
                 secrets.insert(name, value);

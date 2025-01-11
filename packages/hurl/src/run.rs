@@ -20,7 +20,7 @@ use std::path::Path;
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::{HurlResult, Output, VariableSet};
+use hurl::runner::{HurlResult, Output, Value, VariableSet};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
@@ -58,10 +58,13 @@ pub fn run_seq(
             }
         };
         let mut variables = VariableSet::from(&options.variables);
-        options
-            .secrets
-            .iter()
-            .for_each(|(name, value)| variables.insert_secret(name.clone(), value.clone()));
+        // By runtime, construction, there is no two secrets having the same name so we can safely
+        // insert all the secrets in the variable set.
+        options.secrets.iter().for_each(|(name, value)| {
+            variables
+                .insert(name.clone(), Value::Secret(value.clone()))
+                .unwrap();
+        });
         let runner_options = options.to_runner_options(&filename, current_dir);
         let logger_options = options.to_logger_options();
 
@@ -180,10 +183,13 @@ pub fn run_par(
         None => min(files.len(), workers_count),
     };
     let mut variables = VariableSet::from(&options.variables);
-    options
-        .secrets
-        .iter()
-        .for_each(|(name, value)| variables.insert_secret(name.clone(), value.clone()));
+    // By runtime, construction, there is no two secrets having the same name so we can safely
+    // insert all the secrets in the variable set.
+    options.secrets.iter().for_each(|(name, value)| {
+        variables
+            .insert(name.clone(), Value::Secret(value.clone()))
+            .unwrap();
+    });
     let output_type = options
         .output_type
         .to_output_type(options.include, options.color);

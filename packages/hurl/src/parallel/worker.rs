@@ -85,12 +85,7 @@ impl Worker {
 
             // We also create a common logger for this run (logger verbosity can eventually be
             // mutated on each entry).
-            let secrets = job
-                .variables
-                .iter()
-                .filter(|(_, var)| var.is_secret())
-                .map(|(_, var)| var.value().to_string())
-                .collect::<Vec<_>>();
+            let secrets = job.variables.secrets();
             let mut logger = Logger::new(&job.logger_options, stderr, &secrets);
 
             // Create a worker progress listener.

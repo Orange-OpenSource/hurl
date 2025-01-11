@@ -290,8 +290,8 @@ fn eval_query_regex(
 /// Evaluates a variable, given a set of `variables`.
 fn eval_query_variable(name: &Template, variables: &VariableSet) -> QueryResult {
     let name = eval_template(name, variables)?;
-    if let Some(variable) = variables.get(name.as_str()) {
-        Ok(Some(variable.value().clone()))
+    if let Some(value) = variables.get(name.as_str()) {
+        Ok(Some(value.clone()))
     } else {
         Ok(None)
     }

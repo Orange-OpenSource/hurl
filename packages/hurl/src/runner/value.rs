@@ -78,6 +78,7 @@ impl PartialEq for Value {
             (Value::Nodeset(v1), Value::Nodeset(v2)) => v1 == v2,
             (Value::Null, Value::Null) => true,
             (Value::Object(v1), Value::Object(v2)) => v1 == v2,
+            (Value::Secret(v1), Value::Secret(v2)) => v1 == v2,
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
             _ => false,
