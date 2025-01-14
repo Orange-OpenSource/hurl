@@ -38,6 +38,7 @@ concurrency: update-branch-version
 jobs:
   update-branch-version:
     env:
+      GITHUB_REF: ${{ github.ref }}
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
@@ -53,7 +54,7 @@ jobs:
 
       - name: Init bot branch name
         run: |
-          base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g" | tr '/' '-')
+          base=$(echo "${GITHUB_REF}" | sed "s#refs/heads/##g" | tr '/' '-')
           echo "BOT_UPDATE_VERSION_BRANCH_NAME=bot/update-branch-version-${base}" | tee -a $GITHUB_ENV
 
       - name: Update version
@@ -115,9 +116,8 @@ jobs:
       - name: Create new version PR
         id: create-new-version-pr
         run: |
-          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           git fetch
-          base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g")
+          base=$(echo "${GITHUB_REF}" | sed "s#refs/heads/##g")
           gh pr create --fill --label bot --base "${base}"  --head "${BOT_UPDATE_VERSION_BRANCH_NAME}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_VERSION_BRANCH_NAME}" --state "open" --json number --jq .[].number)
@@ -127,3 +127,4 @@ jobs:
             echo "  - ❌ A problem occurs when attempting to create new pull request."
             exit 1
           fi
+
