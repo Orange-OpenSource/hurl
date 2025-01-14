@@ -111,12 +111,12 @@ pub enum RunnerErrorKind {
     TemplateVariableNotDefined {
         name: String,
     },
-    UnrenderableExpression {
-        value: String,
-    },
     /// Unauthorized file access, check `--file-root` option.
     UnauthorizedFileAccess {
         path: PathBuf,
+    },
+    UnrenderableExpression {
+        value: String,
     },
 }
 

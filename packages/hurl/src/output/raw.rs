@@ -123,7 +123,7 @@ mod tests {
     use hurl_core::ast::SourceInfo;
     use hurl_core::reader::Pos;
 
-    use crate::http::{Call, CurlCmd, Header, HeaderVec, HttpVersion, Request, Response, Url};
+    use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
@@ -163,12 +163,7 @@ mod tests {
                         response: default_response(),
                         timings: Default::default(),
                     }],
-                    captures: vec![],
-                    asserts: vec![],
-                    errors: vec![],
-                    transfer_duration: Duration::from_millis(0),
-                    compressed: false,
-                    curl_cmd: CurlCmd::default(),
+                    ..Default::default()
                 },
                 EntryResult {
                     entry_index: 2,
@@ -183,12 +178,7 @@ mod tests {
                         response: default_response(),
                         timings: Default::default(),
                     }],
-                    captures: vec![],
-                    asserts: vec![],
-                    errors: vec![],
-                    transfer_duration: Duration::from_millis(0),
-                    compressed: false,
-                    curl_cmd: CurlCmd::default(),
+                    ..Default::default()
                 },
                 EntryResult {
                     entry_index: 3,
@@ -211,18 +201,12 @@ mod tests {
                         },
                         timings: Default::default(),
                     }],
-                    captures: vec![],
-                    asserts: vec![],
-                    errors: vec![],
-                    transfer_duration: Duration::from_millis(0),
-                    compressed: false,
-                    curl_cmd: CurlCmd::default(),
+                    ..Default::default()
                 },
             ],
             duration: Duration::from_millis(100),
             success: true,
-            cookies: vec![],
-            timestamp: 0,
+            ..Default::default()
         }
     }
 

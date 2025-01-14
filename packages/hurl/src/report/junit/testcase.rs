@@ -97,7 +97,7 @@ mod test {
     use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
-    use crate::http::{CurlCmd, HttpError};
+    use crate::http::HttpError;
     use crate::report::junit::testcase::Testcase;
     use crate::report::junit::xml::XmlDocument;
     use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
@@ -105,11 +105,9 @@ mod test {
     #[test]
     fn test_create_testcase_success() {
         let hurl_result = HurlResult {
-            entries: vec![],
             duration: Duration::from_millis(230),
             success: true,
-            cookies: vec![],
-            timestamp: 1,
+            ..Default::default()
         };
 
         let content = "";
@@ -132,9 +130,6 @@ HTTP/1.0 200
             entries: vec![EntryResult {
                 entry_index: 1,
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
                     RunnerErrorKind::AssertStatus {
@@ -142,14 +137,11 @@ HTTP/1.0 200
                     },
                     true,
                 )],
-                transfer_duration: Duration::from_millis(0),
-                compressed: false,
-                curl_cmd: CurlCmd::default(),
+                ..Default::default()
             }],
             duration: Duration::from_millis(230),
-            success: true,
-            cookies: vec![],
-            timestamp: 1,
+            success: false,
+            ..Default::default()
         };
 
         let element = Testcase::from(&hurl_result, content, &filename).to_xml();
@@ -174,9 +166,6 @@ HTTP/1.0 200
             entries: vec![EntryResult {
                 entry_index: 1,
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
                     RunnerErrorKind::Http(HttpError::Libcurl {
@@ -185,14 +174,11 @@ HTTP/1.0 200
                     }),
                     false,
                 )],
-                transfer_duration: Duration::from_millis(0),
-                compressed: false,
-                curl_cmd: CurlCmd::default(),
+                ..Default::default()
             }],
             duration: Duration::from_millis(230),
-            success: true,
-            cookies: vec![],
-            timestamp: 1,
+            success: false,
+            ..Default::default()
         };
         let element = Testcase::from(&hurl_result, content, &filename).to_xml();
         let doc = XmlDocument::new(element);

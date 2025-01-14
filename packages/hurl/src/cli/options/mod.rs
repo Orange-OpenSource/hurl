@@ -402,6 +402,7 @@ pub enum OutputType {
 }
 
 impl CliOptions {
+    /// Converts this instance of [`CliOptions`] to an instance of [`RunnerOptions`]
     pub fn to_runner_options(&self, filename: &Input, current_dir: &Path) -> RunnerOptions {
         let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();
@@ -513,6 +514,7 @@ impl CliOptions {
             .build()
     }
 
+    /// Converts this instance of [`ClipOptions`] to an instance of [`LoggerOptions`]
     pub fn to_logger_options(&self) -> LoggerOptions {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()

@@ -303,6 +303,7 @@ pub fn run_entries(
         success,
         cookies,
         timestamp,
+        variables,
     }
 }
 

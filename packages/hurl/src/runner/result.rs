@@ -24,12 +24,12 @@ use crate::http::{Call, Cookie, CurlCmd};
 use crate::runner::error::RunnerError;
 use crate::runner::output::Output;
 use crate::runner::value::Value;
-use crate::runner::RunnerErrorKind;
+use crate::runner::{RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 
 /// Represents the result of a valid Hurl file execution.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct HurlResult {
     /// The entries result for this run.
     pub entries: Vec<EntryResult>,
@@ -41,6 +41,8 @@ pub struct HurlResult {
     pub cookies: Vec<Cookie>,
     /// Start of the run (in "UNIX timestamp").
     pub timestamp: i64,
+    /// The set of variables, updated at the end of the run execution.
+    pub variables: VariableSet,
 }
 
 impl HurlResult {

@@ -87,10 +87,8 @@ pub mod tests {
                 filename: Input::new(""),
                 hurl_result: HurlResult {
                     entries: vec![dummy_entry; entries_count],
-                    duration: Duration::from_millis(0),
                     success,
-                    cookies: vec![],
-                    timestamp: 1,
+                    ..Default::default()
                 },
             }
         }

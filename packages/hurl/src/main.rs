@@ -102,8 +102,10 @@ fn main() {
     let duration = start.elapsed();
 
     // Write HTML, JUnit, TAP reports on disk.
-    let ret = export_results(&runs, &opts, &base_logger);
-    unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
+    if has_report(&opts) {
+        let ret = export_results(&runs, &opts, &base_logger);
+        unwrap_or_exit(ret, EXIT_ERROR_UNDEFINED, &base_logger);
+    }
 
     if opts.test {
         let summary = cli::summary(&runs, duration);
@@ -130,6 +132,16 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
         logger.error(message);
     }
     process::exit(code);
+}
+
+/// Returns `true` if any kind of report should be created, `false` otherwise.
+fn has_report(opts: &CliOptions) -> bool {
+    opts.curl_file.is_some()
+        || opts.junit_file.is_some()
+        || opts.tap_file.is_some()
+        || opts.html_dir.is_some()
+        || opts.json_report_dir.is_some()
+        || opts.cookie_output_file.is_some()
 }
 
 /// Writes `runs` results on file, in HTML, TAP, JUnit or Cookie file format.

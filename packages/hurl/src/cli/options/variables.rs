@@ -20,6 +20,9 @@ use super::CliOptionsError;
 use crate::runner::{Number, Value};
 use hurl_core::ast::is_variable_reserved;
 
+/// Parses a string "name=value" as a pair of `String` and `Value`.
+///
+/// Value variant is inferred from the `value`, for instance `true` is parsed as [`Value::Bool(true)`].
 pub fn parse(s: &str) -> Result<(String, Value), CliOptionsError> {
     match s.find('=') {
         None => Err(CliOptionsError::Error(format!(
@@ -38,6 +41,9 @@ pub fn parse(s: &str) -> Result<(String, Value), CliOptionsError> {
     }
 }
 
+/// Parses a `value` as a pair of String and Value.
+///
+/// Value variant is inferred from the `value`, for instance true is parsed as [`Value::Bool(true)`].
 pub fn parse_value(s: &str) -> Result<Value, CliOptionsError> {
     if s == "true" {
         Ok(Value::Bool(true))

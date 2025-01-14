@@ -152,7 +152,7 @@ mod tests {
     use hurl_core::input::Input;
     use hurl_core::reader::Pos;
 
-    use crate::http::{CurlCmd, HttpError};
+    use crate::http::HttpError;
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
     use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
@@ -164,11 +164,9 @@ mod tests {
         let filename = Input::new("test.hurl");
         let mut testcases = vec![];
         let res = HurlResult {
-            entries: vec![],
-            duration: Duration::from_millis(230),
+            duration: Duration::from_millis(124),
             success: true,
-            cookies: vec![],
-            timestamp: 1,
+            ..Default::default()
         };
         let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
@@ -177,9 +175,6 @@ mod tests {
             entries: vec![EntryResult {
                 entry_index: 1,
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
                     RunnerErrorKind::AssertStatus {
@@ -187,14 +182,11 @@ mod tests {
                     },
                     true,
                 )],
-                transfer_duration: Duration::from_millis(0),
-                compressed: false,
-                curl_cmd: CurlCmd::default(),
+                ..Default::default()
             }],
-            duration: Duration::from_millis(230),
+            duration: Duration::from_millis(200),
             success: true,
-            cookies: vec![],
-            timestamp: 1,
+            ..Default::default()
         };
         let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
@@ -203,9 +195,6 @@ mod tests {
             entries: vec![EntryResult {
                 entry_index: 1,
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
-                calls: vec![],
-                captures: vec![],
-                asserts: vec![],
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
                     RunnerErrorKind::Http(HttpError::Libcurl {
@@ -214,14 +203,11 @@ mod tests {
                     }),
                     false,
                 )],
-                transfer_duration: Duration::from_millis(0),
-                compressed: false,
-                curl_cmd: CurlCmd::default(),
+                ..Default::default()
             }],
             duration: Duration::from_millis(230),
             success: true,
-            cookies: vec![],
-            timestamp: 1,
+            ..Default::default()
         };
         let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
@@ -232,8 +218,8 @@ mod tests {
             doc.to_string().unwrap(),
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
             <testsuite tests=\"3\" errors=\"1\" failures=\"1\">\
-                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.230\" />\
-                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.230\">\
+                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.124\" />\
+                <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.200\">\
                     <failure>Assert status code\n  \
                     --&gt; test.hurl:2:10\n   \
                       |\n   \
