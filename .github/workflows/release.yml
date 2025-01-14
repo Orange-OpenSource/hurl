@@ -13,8 +13,10 @@ concurrency: release
 jobs:
   set-context:
     env:
+      GITHUB_REF: ${{ github.ref_name }}
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+      SET_RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
     outputs:
       release_version: ${{ steps.set-release-version.outputs.release_version }}
       release_branch: ${{ steps.set-release-branch.outputs.release_branch }}
@@ -23,25 +25,25 @@ jobs:
     steps:
       - name: Check trigger branch
         run: |
-          if [ $(echo "${{ github.ref_name }}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
-            echo "  - ✅ The branch triggering this workflow is ${{ github.ref_name }}."
+          if [ $(echo "${GITHUB_REF}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
+            echo "  - ✅ The branch triggering this workflow is ${GITHUB_REF}."
           else
-            echo "  - ❌ The branch triggering this workflow is ${{ github.ref_name }} instead of master or release/[0-9].[0-9].[0-9]."
+            echo "  - ❌ The branch triggering this workflow is ${GITHUB_REF} instead of master or release/[0-9].[0-9].[0-9]."
             exit 1
           fi
 
       - name: Set release version
         id: set-release-version
         run: |
-          echo "release_version=${{ github.event.inputs.set-release-version }}" | tee -a $GITHUB_OUTPUT
+          echo "release_version=${SET_RELEASE_VERSION}" | tee -a $GITHUB_OUTPUT
 
       - name: Set release branch
         id: set-release-branch
         run: |
-          if [ $(echo "${{ github.ref_name }}" | grep -c "^release/") -eq 1 ] ; then
-            echo "release_branch=${{ github.ref_name }}" | tee -a $GITHUB_OUTPUT
+          if [ $(echo "${GITHUB_REF}" | grep -c "^release/") -eq 1 ] ; then
+            echo "release_branch=${GITHUB_REF}" | tee -a $GITHUB_OUTPUT
           else
-            echo "release_branch=release/${{ github.event.inputs.set-release-version }}" | tee -a $GITHUB_OUTPUT
+            echo "release_branch=release/${SET_RELEASE_VERSION}" | tee -a $GITHUB_OUTPUT
           fi
 
   clean-release:
@@ -279,9 +281,12 @@ jobs:
 
   deliver-github-release:
     env:
+      GITHUB_REF: ${{ github.ref_name }}
+      GITHUB_OWNER: ${{ github.repository_owner }}
+      GITHUB_REPO_NAME: ${{ github.event.repository.name }}
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
-      REPO: ${{ github.repository }}
+      RELEASE_VERSION: ${{ needs.set-context.outputs.release_version }}
     needs:
       - set-context
       - clean-release
@@ -311,29 +316,29 @@ jobs:
 
       - name: Push tag
         run: |
-          git tag -a ${{ needs.set-context.outputs.release_version }} -m "Release ${{ needs.set-context.outputs.release_version }}"
+          git tag -a "${RELEASE_VERSION}" -m "Release ${RELEASE_VERSION}"
           git tag -n
           git push --tags && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ ${{ needs.set-context.outputs.release_version }} tag created."
+            echo "  - ✅ ${RELEASE_VERSION} tag created."
             git fetch
           else
-            echo "  - ❌ A problem occurs when attempting to create ${{ needs.set-context.outputs.release_version }} tag."
+            echo "  - ❌ A problem occurs when attempting to create ${RELEASE_VERSION} tag."
             exit 1
           fi
 
       - name: Create sha256sums
         run: |
             bin/release/sha256sum.sh --write \
-            artifacts/release-deb-x64-artifacts/hurl_"${{ needs.set-context.outputs.release_version }}"_amd64.deb \
-            artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-unknown-linux-gnu.tar.gz \
-            artifacts/release-generic-linux-aarch64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-aarch64-unknown-linux-gnu.tar.gz \
-            artifacts/release-macos-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-apple-darwin.tar.gz \
-            artifacts/release-macos-aarch64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-aarch64-apple-darwin.tar.gz \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip
-            echo "file,sha256" > release-${{ needs.set-context.outputs.release_version }}.sha256.csv
-            find ./artifacts -name "*sha256" | xargs -I FILE sh -c 'echo "https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/releases/download/${{ needs.set-context.outputs.release_version }}/$(basename FILE),$(cat FILE)"' >> release-${{ needs.set-context.outputs.release_version }}.sha256.csv
+            artifacts/release-deb-x64-artifacts/hurl_"${RELEASE_VERSION}"_amd64.deb \
+            artifacts/release-generic-linux-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-unknown-linux-gnu.tar.gz \
+            artifacts/release-generic-linux-aarch64-artifacts/hurl-"${RELEASE_VERSION}"-aarch64-unknown-linux-gnu.tar.gz \
+            artifacts/release-macos-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-apple-darwin.tar.gz \
+            artifacts/release-macos-aarch64-artifacts/hurl-"${RELEASE_VERSION}"-aarch64-apple-darwin.tar.gz \
+            artifacts/release-windows-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-pc-windows-msvc-installer.exe \
+            artifacts/release-windows-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-pc-windows-msvc.zip
+            echo "file,sha256" > release-"${RELEASE_VERSION}".sha256.csv
+            find ./artifacts -name "*sha256" | xargs -I FILE sh -c 'echo "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/releases/download/${RELEASE_VERSION}/$(basename FILE),$(cat FILE)"' >> release-"${RELEASE_VERSION}".sha256.csv
 
       - name: Archive sha256 artifacts
         uses: actions/upload-artifact@v4.6.0
@@ -396,13 +401,12 @@ jobs:
 
       - name: Create new pull request
         run: |
-          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           {
           echo "⚠ This is a GitHub releasing PR."
           echo "- Please use \`/accept\` as usual then run the \`update-branch-version\` github workflow if you want to automatically update master branch to next SNAPSHOT version"
           } > file-body.txt
           gh pr create \
-            --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into ${{ github.ref_name }}" \
+            --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into ${GITHUB_REF}" \
             --body-file file-body.txt \
             --base master \
             --label bot && gh_exit_code=0 || gh_exit_code=$?
