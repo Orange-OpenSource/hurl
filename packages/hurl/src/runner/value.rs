@@ -62,6 +62,7 @@ pub enum ValueKind {
     Null,
     Object,
     Regex,
+    Secret,
     String,
     Unit,
 }
@@ -131,18 +132,17 @@ impl Value {
             Value::Null => ValueKind::Null,
             Value::Object(_) => ValueKind::Object,
             Value::Regex(_) => ValueKind::Regex,
-            Value::Secret(_) => ValueKind::String,
+            Value::Secret(_) => ValueKind::Secret,
             Value::String(_) => ValueKind::String,
             Value::Unit => ValueKind::Unit,
         }
     }
 
-    /// returns a printable representation of the Value incuding its type
+    /// Returns a printable representation of the Value including its type.
     pub fn repr(&self) -> String {
-        if self.kind() == ValueKind::Unit {
-            self.kind().to_string()
-        } else {
-            format!("{} <{}>", self.kind(), self)
+        match self.kind() {
+            ValueKind::Unit | ValueKind::Secret => self.kind().to_string(),
+            _ => format!("{} <{}>", self.kind(), self),
         }
     }
 
@@ -176,6 +176,7 @@ impl fmt::Display for ValueKind {
             ValueKind::Null => write!(f, "null"),
             ValueKind::Object => write!(f, "object"),
             ValueKind::Regex => write!(f, "regex"),
+            ValueKind::Secret => write!(f, "secret"),
             ValueKind::String => write!(f, "string"),
             ValueKind::Unit => write!(f, "unit"),
         }

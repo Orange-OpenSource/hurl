@@ -18,6 +18,7 @@
 mod cli;
 mod run;
 
+use std::collections::HashSet;
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
@@ -150,12 +151,15 @@ fn export_results(
     opts: &CliOptions,
     logger: &BaseLogger,
 ) -> Result<(), CliError> {
-    // Compute secrets
-    let secrets = opts
-        .secrets
-        .values()
-        .map(|v| v.as_ref())
-        .collect::<Vec<_>>();
+    // Compute secrets from the result. As secrets can be redacted during execution, we can't
+    // consider only secrets introduced from cli, we have to get secrets produced during execution.
+    // We remove identical secrets as there may be a lot of identical secrets (those that come
+    // from the command line for instance)
+    let set = runs
+        .iter()
+        .flat_map(|r| r.hurl_result.variables.secrets())
+        .collect::<HashSet<_>>();
+    let secrets = set.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
 
     if let Some(file) = &opts.curl_file {
         create_curl_export(runs, file)?;
