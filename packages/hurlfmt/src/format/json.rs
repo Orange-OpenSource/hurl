@@ -704,49 +704,41 @@ impl ToJson for Filter {
 impl ToJson for FilterValue {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
+        let att_name = "type".to_string();
         match self {
             FilterValue::Count => {
-                attributes.push(("type".to_string(), JValue::String("count".to_string())));
+                attributes.push((att_name, JValue::String("count".to_string())));
             }
             FilterValue::DaysAfterNow => {
-                attributes.push((
-                    "type".to_string(),
-                    JValue::String("daysAfterNow".to_string()),
-                ));
+                attributes.push((att_name, JValue::String("daysAfterNow".to_string())));
             }
             FilterValue::DaysBeforeNow => {
-                attributes.push((
-                    "type".to_string(),
-                    JValue::String("daysBeforeNow".to_string()),
-                ));
+                attributes.push((att_name, JValue::String("daysBeforeNow".to_string())));
             }
             FilterValue::Decode { encoding, .. } => {
-                attributes.push(("type".to_string(), JValue::String("decode".to_string())));
+                attributes.push((att_name, JValue::String("decode".to_string())));
                 attributes.push(("encoding".to_string(), JValue::String(encoding.to_string())));
             }
             FilterValue::Format { fmt, .. } => {
-                attributes.push(("type".to_string(), JValue::String("format".to_string())));
+                attributes.push((att_name, JValue::String("format".to_string())));
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
             FilterValue::JsonPath { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("jsonpath".to_string())));
+                attributes.push((att_name, JValue::String("jsonpath".to_string())));
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
             }
             FilterValue::Nth { n, .. } => {
-                attributes.push(("type".to_string(), JValue::String("nth".to_string())));
+                attributes.push((att_name, JValue::String("nth".to_string())));
                 attributes.push(("n".to_string(), JValue::Number(n.to_string())));
             }
             FilterValue::HtmlEscape => {
-                attributes.push(("type".to_string(), JValue::String("htmlEscape".to_string())));
+                attributes.push((att_name, JValue::String("htmlEscape".to_string())));
             }
             FilterValue::HtmlUnescape => {
-                attributes.push((
-                    "type".to_string(),
-                    JValue::String("htmlUnescape".to_string()),
-                ));
+                attributes.push((att_name, JValue::String("htmlUnescape".to_string())));
             }
             FilterValue::Regex { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
+                attributes.push((att_name, JValue::String("regex".to_string())));
                 attributes.push(("expr".to_string(), value.to_json()));
             }
             FilterValue::Replace {
@@ -754,7 +746,7 @@ impl ToJson for FilterValue {
                 new_value,
                 ..
             } => {
-                attributes.push(("type".to_string(), JValue::String("replace".to_string())));
+                attributes.push((att_name, JValue::String("replace".to_string())));
                 attributes.push(("old_value".to_string(), old_value.to_json()));
                 attributes.push((
                     "new_value".to_string(),
@@ -762,27 +754,27 @@ impl ToJson for FilterValue {
                 ));
             }
             FilterValue::UrlEncode => {
-                attributes.push(("type".to_string(), JValue::String("urlEncode".to_string())));
+                attributes.push((att_name, JValue::String("urlEncode".to_string())));
             }
             FilterValue::UrlDecode => {
-                attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
+                attributes.push((att_name, JValue::String("urlDecode".to_string())));
             }
             FilterValue::Split { sep, .. } => {
-                attributes.push(("type".to_string(), JValue::String("split".to_string())));
+                attributes.push((att_name, JValue::String("split".to_string())));
                 attributes.push(("sep".to_string(), JValue::String(sep.to_string())));
             }
             FilterValue::ToDate { fmt, .. } => {
-                attributes.push(("type".to_string(), JValue::String("toDate".to_string())));
+                attributes.push((att_name, JValue::String("toDate".to_string())));
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
             FilterValue::ToFloat => {
-                attributes.push(("type".to_string(), JValue::String("toFloat".to_string())));
+                attributes.push((att_name, JValue::String("toFloat".to_string())));
             }
             FilterValue::ToInt => {
-                attributes.push(("type".to_string(), JValue::String("toInt".to_string())));
+                attributes.push((att_name, JValue::String("toInt".to_string())));
             }
             FilterValue::XPath { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
+                attributes.push((att_name, JValue::String("xpath".to_string())));
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
             }
         }
