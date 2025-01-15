@@ -11,4 +11,4 @@ HTTP 200
 [Captures]
 value: jsonpath "$.value"
 [Asserts]
-jsonpath "$.value" == "secret3"
+jsonpath "$.value" == "12345678"

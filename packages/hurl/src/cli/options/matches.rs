@@ -412,7 +412,8 @@ pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOption
     let mut secrets = HashMap::new();
     if let Some(secret) = get_strings(matches, "secret") {
         for s in secret {
-            let (name, value) = variables::parse(&s)?;
+            let inferred = false;
+            let (name, value) = variables::parse(&s, inferred)?;
             // We check that there is no existing secrets
             if secrets.contains_key(&name) {
                 return Err(CliOptionsError::Error(format!(
@@ -469,7 +470,8 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
     // Use environment variables prefix by HURL_
     for (env_name, env_value) in env::vars() {
         if let Some(name) = env_name.strip_prefix("HURL_") {
-            let value = variables::parse_value(env_value.as_str())?;
+            let inferred = true;
+            let value = variables::parse_value(env_value.as_str(), inferred)?;
             variables.insert(name.to_string(), value);
         }
     }
@@ -501,7 +503,8 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
                 if line.starts_with('#') || line.is_empty() {
                     continue;
                 }
-                let (name, value) = variables::parse(line)?;
+                let inferred = true;
+                let (name, value) = variables::parse(line, inferred)?;
                 variables.insert(name.to_string(), value);
             }
         }
@@ -509,7 +512,8 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
 
     if let Some(input) = get_strings(matches, "variable") {
         for s in input {
-            let (name, value) = variables::parse(&s)?;
+            let inferred = true;
+            let (name, value) = variables::parse(&s, inferred)?;
             variables.insert(name.to_string(), value);
         }
     }

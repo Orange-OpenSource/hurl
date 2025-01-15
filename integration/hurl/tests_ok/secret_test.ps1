@@ -5,10 +5,10 @@ hurl --test \
     --very-verbose \
     --secret a=secret1 \
     --secret b=secret2 \
-    --secret c=secret3 \
+    --secret c=12345678 \
     tests_ok/secret.hurl 2>build/secret_test.err
 
-$secrets = @("secret1", "secret2", "secret3")
+$secrets = @("secret1", "secret2", "12345678")
 
 $file = "build/secret_test.err"
 

@@ -29,7 +29,7 @@ use hurl_core::typing::Count;
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, Value, VariableSet};
+use crate::runner::{entry, options, EntryResult, HurlResult, VariableSet};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
@@ -518,12 +518,12 @@ fn log_run_info(
 
     let variables = variables
         .iter()
-        .filter(|(_, value)| !matches!(value, Value::Secret(_)))
+        .filter(|(_, variable)| !variable.is_secret())
         .collect::<Vec<_>>();
     if !variables.is_empty() {
         logger.debug_important("Variables:");
-        for (name, value) in variables.iter() {
-            logger.debug(&format!("    {name}: {value}"));
+        for (name, variable) in variables.iter() {
+            logger.debug(&format!("    {name}: {}", variable.value()));
         }
     }
     if let Some(to_entry) = runner_options.to_entry {

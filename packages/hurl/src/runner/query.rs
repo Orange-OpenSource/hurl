@@ -290,12 +290,10 @@ fn eval_query_regex(
 /// Evaluates a variable, given a set of `variables`.
 fn eval_query_variable(name: &Template, variables: &VariableSet) -> QueryResult {
     let name = eval_template(name, variables)?;
-    let value = variables.get(&name);
-    // Secrets value becomes "normal" strings so they can be filtered, used in predicates values etc...
-    match value {
-        Some(Value::Secret(s)) => Ok(Some(Value::String(s.clone()))),
-        Some(v) => Ok(Some(v.clone())),
-        None => Ok(None),
+    if let Some(variable) = variables.get(&name) {
+        Ok(Some(variable.value().clone()))
+    } else {
+        Ok(None)
     }
 }
 

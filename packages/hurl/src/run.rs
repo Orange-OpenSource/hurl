@@ -20,7 +20,7 @@ use std::path::Path;
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
-use hurl::runner::{HurlResult, Output, Value, VariableSet};
+use hurl::runner::{HurlResult, Output, VariableSet};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
@@ -62,7 +62,7 @@ pub fn run_seq(
         // insert all the secrets in the variable set.
         options.secrets.iter().for_each(|(name, value)| {
             variables
-                .insert(name.clone(), Value::Secret(value.clone()))
+                .insert_secret(name.clone(), value.clone())
                 .unwrap();
         });
         let runner_options = options.to_runner_options(&filename, current_dir);
@@ -187,7 +187,7 @@ pub fn run_par(
     // insert all the secrets in the variable set.
     options.secrets.iter().for_each(|(name, value)| {
         variables
-            .insert(name.clone(), Value::Secret(value.clone()))
+            .insert_secret(name.clone(), value.clone())
             .unwrap();
     });
     let output_type = options

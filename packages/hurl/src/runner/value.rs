@@ -44,8 +44,6 @@ pub enum Value {
     Regex(regex::Regex),
     /// A string.
     String(String),
-    /// A string whose value is redacted from logs, report, etc...
-    Secret(String),
     /// The unit type.
     Unit,
 }
@@ -79,7 +77,6 @@ impl PartialEq for Value {
             (Value::Nodeset(v1), Value::Nodeset(v2)) => v1 == v2,
             (Value::Null, Value::Null) => true,
             (Value::Object(v1), Value::Object(v2)) => v1 == v2,
-            (Value::Secret(v1), Value::Secret(v2)) => v1 == v2,
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
             _ => false,
@@ -107,7 +104,6 @@ impl fmt::Display for Value {
                 let s = str::replace(x.as_str(), "/", "\\/");
                 format!("/{s}/")
             }
-            Value::Secret(s) => s.clone(),
             Value::String(x) => x.clone(),
             Value::Unit => "Unit".to_string(),
         };
@@ -132,7 +128,6 @@ impl Value {
             Value::Null => ValueKind::Null,
             Value::Object(_) => ValueKind::Object,
             Value::Regex(_) => ValueKind::Regex,
-            Value::Secret(_) => ValueKind::Secret,
             Value::String(_) => ValueKind::String,
             Value::Unit => ValueKind::Unit,
         }
@@ -156,7 +151,6 @@ impl Value {
             Value::Date(d) => Some(d.format(FORMAT_ISO).to_string()),
             Value::Null => Some("null".to_string()),
             Value::Number(v) => Some(v.to_string()),
-            Value::Secret(s) => Some(s.clone()),
             Value::String(s) => Some(s.clone()),
             _ => None,
         }
