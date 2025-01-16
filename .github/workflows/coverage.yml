@@ -1,8 +1,9 @@
 name: coverage
 
 on:
-  schedule:
-    - cron: "0 8 * * *"
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 env:
