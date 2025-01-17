@@ -359,6 +359,10 @@ impl HtmlFormatter {
             self.fmt_space(space);
             self.fmt_filter(filter);
         }
+        if capture.redact {
+            self.fmt_space(&capture.space3);
+            self.fmt_string("redact");
+        }
         self.fmt_span_close();
         self.fmt_lt(&capture.line_terminator0);
     }

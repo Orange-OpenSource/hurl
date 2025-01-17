@@ -375,6 +375,10 @@ impl Tokenizable for Capture {
             tokens.append(&mut space.tokenize());
             tokens.append(&mut filter.tokenize());
         }
+        if self.redact {
+            tokens.append(&mut self.space3.tokenize());
+            tokens.push(Token::Keyword(String::from("redact")));
+        }
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }

@@ -108,7 +108,7 @@ file-contenttype: [a-zA-Z0-9/+-]+
 
 capture:
   lt*
-  key-string ":" query (sp filter)* lt
+  key-string ":" query (sp filter)* (sp "redact")? lt
 
 assert:
   lt*

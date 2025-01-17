@@ -237,6 +237,11 @@ fn lint_capture(capture: &Capture) -> Capture {
         .iter()
         .map(|(_, f)| (one_whitespace(), lint_filter(f)))
         .collect();
+    let space3 = if capture.redact {
+        one_whitespace()
+    } else {
+        empty_whitespace()
+    };
     Capture {
         line_terminators: capture.line_terminators.clone(),
         space0: empty_whitespace(),
@@ -245,6 +250,8 @@ fn lint_capture(capture: &Capture) -> Capture {
         space2: one_whitespace(),
         query: lint_query(&capture.query),
         filters,
+        space3,
+        redact: capture.redact,
         line_terminator0: lint_line_terminator(&capture.line_terminator0),
     }
 }
