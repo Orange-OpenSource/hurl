@@ -24,7 +24,7 @@ use crate::html::entities::HTML5_ENTITIES_REF;
 
 // Ref https://html.spec.whatwg.org/#decimal-character-reference-start-state
 
-const INVALID_CHAR: [(u32, &str); 34] = [
+static INVALID_CHAR: [(u32, &str); 34] = [
     (0x00, "\u{fffd}"), // REPLACEMENT CHARACTER
     (0x0d, "\r"),       // CARRIAGE RETURN
     (0x80, "\u{20ac}"), // EURO SIGN
@@ -66,7 +66,7 @@ lazy_static! {
         INVALID_CHAR.iter().copied().collect();
 }
 
-const INVALID_CODEPOINTS: [u32; 126] = [
+static INVALID_CODEPOINTS: [u32; 126] = [
     // 0x0001 to 0x0008
     0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, // 0x000E to 0x001F
     0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,

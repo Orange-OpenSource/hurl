@@ -24,7 +24,7 @@ use lazy_static::lazy_static;
 // Generated from <https://html.spec.whatwg.org/entities.json> and
 // <https://html.spec.whatwg.org/multipage/named-characters.html>.
 // Map HTML5 named character references to the equivalent Unicode character(s).
-const HTML5_ENTITIES: [(&str, &str); 2231] = [
+static HTML5_ENTITIES: [(&str, &str); 2231] = [
     ("AElig", "\u{C6}"),
     ("AElig;", "\u{C6}"),
     ("AMP", "\u{26}"),

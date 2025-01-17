@@ -257,7 +257,7 @@ pub fn run_entries(
             logger,
         );
 
-        let has_error = results.last().map_or(false, |r| !r.errors.is_empty());
+        let has_error = results.last().is_some_and(|r| !r.errors.is_empty());
 
         entries_result.extend(results);
 

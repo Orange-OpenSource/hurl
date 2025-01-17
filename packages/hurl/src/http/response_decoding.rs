@@ -84,17 +84,17 @@ impl Response {
 
     /// Returns true if response is an HTML response.
     pub fn is_html(&self) -> bool {
-        self.headers.content_type().map_or(false, mimetype::is_html)
+        self.headers.content_type().is_some_and(mimetype::is_html)
     }
 
     /// Returns true if response is a JSON response.
     pub fn is_json(&self) -> bool {
-        self.headers.content_type().map_or(false, mimetype::is_json)
+        self.headers.content_type().is_some_and(mimetype::is_json)
     }
 
     /// Returns true if response is a XML response.
     pub fn is_xml(&self) -> bool {
-        self.headers.content_type().map_or(false, mimetype::is_xml)
+        self.headers.content_type().is_some_and(mimetype::is_xml)
     }
 
     /// Decompresses HTTP body response.
