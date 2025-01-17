@@ -16,13 +16,14 @@
  *
  */
 use hurl::runner;
-use hurl::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, RunnerError};
+use hurl::runner::{
+    AssertResult, CaptureResult, EntryResult, HurlResult, RunnerError, RunnerOptionsBuilder,
+    VariableSet,
+};
 use hurl::util::logger::{ErrorFormat, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::input::Input;
 use hurl_core::typing::Count;
-use runner::RunnerOptionsBuilder;
-use std::collections::HashMap;
 use std::fmt::Debug;
 use std::process::exit;
 use std::time::Duration;
@@ -82,7 +83,7 @@ fn main() {
         .build();
 
     // Set variables
-    let variables = HashMap::default();
+    let variables = VariableSet::default();
 
     // Run the hurl file
     let result = runner::run(
