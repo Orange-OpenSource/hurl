@@ -450,9 +450,9 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use hex_literal::hex;
     use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
+    use std::num::ParseIntError;
 
     use super::*;
     use crate::http::{HeaderVec, HttpError, HttpVersion};
@@ -1305,6 +1305,13 @@ pub mod tests {
         );
     }
 
+    fn decode_hex(s: &str) -> Result<Vec<u8>, ParseIntError> {
+        (0..s.len())
+            .step_by(2)
+            .map(|i| u8::from_str_radix(&s[i..i + 2], 16))
+            .collect()
+    }
+
     #[test]
     fn test_query_sha256() {
         let variables = VariableSet::new();
@@ -1326,7 +1333,8 @@ pub mod tests {
             .unwrap()
             .unwrap(),
             Value::Bytes(
-                hex!("a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89").to_vec()
+                decode_hex("a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89")
+                    .unwrap()
             )
         );
     }

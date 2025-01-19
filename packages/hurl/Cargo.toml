@@ -28,7 +28,6 @@ curl-sys = "0.4.78"
 encoding = "0.2.33"
 glob = "0.3.2"
 hex = "0.4.3"
-hex-literal = "0.4.1"
 hurl_core = { version = "6.1.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.1.0"
 libxml = "0.3.3"
