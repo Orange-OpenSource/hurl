@@ -85,7 +85,7 @@ mod tests {
             value: FilterValue::XPath {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(8, 1)),
+                    source_info: SourceInfo::new(Pos::new(6, 1), Pos::new(7, 1)),
                 },
                 expr: Template {
                     delimiter: None,
@@ -93,7 +93,7 @@ mod tests {
                         value: expr.to_string(),
                         encoded: expr.to_string(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + expr.len(), 1)),
+                    source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(7 + expr.len(), 1)),
                 },
             },
         }
