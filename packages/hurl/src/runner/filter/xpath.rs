@@ -67,3 +67,89 @@ pub fn eval_xpath_doc(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
+
+    use super::*;
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
+
+    /// Helper function to return a new filter given a `expr`
+    fn new_xpath_filter(expr: &str) -> Filter {
+        // Example: xpath "string(//body/text())"
+        Filter {
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            value: FilterValue::XPath {
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(8, 1)),
+                },
+                expr: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: expr.to_string(),
+                        encoded: expr.to_string(),
+                    }],
+                    source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + expr.len(), 1)),
+                },
+            },
+        }
+    }
+
+    #[test]
+    fn eval_filter_xpath_doc_ok() {
+        let variables = VariableSet::new();
+
+        let html = "<html><body>你好世界</body></html>";
+        let filter = new_xpath_filter("string(//body/text())");
+        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+
+        assert_eq!(ret.unwrap().unwrap(), Value::String("你好世界".to_string()));
+    }
+
+    #[test]
+    fn eval_filter_xpath_doc_ko_invalid_xpath() {
+        let variables = VariableSet::new();
+
+        let html = "<html><body>你好世界</body></html>";
+        let filter = new_xpath_filter("str(//body/text())");
+        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::QueryInvalidXpathEval
+        );
+    }
+
+    #[test]
+    fn eval_filter_xpath_doc_ko_invalid_xml() {
+        let variables = VariableSet::new();
+
+        let html = "";
+        let filter = new_xpath_filter("string(//body/text())");
+        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+
+        assert_eq!(ret.unwrap_err().kind, RunnerErrorKind::QueryInvalidXml);
+    }
+
+    #[test]
+    fn eval_filter_xpath_doc_ko_invalid_input() {
+        let variables = VariableSet::new();
+
+        let filter = new_xpath_filter("string(//body/text())");
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(vec![0xc4, 0xe3, 0xba, 0xc3, 0xca, 0xc0, 0xbd, 0xe7]),
+            &variables,
+            false,
+        );
+
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::FilterInvalidInput("bytes".to_string())
+        );
+    }
+}
