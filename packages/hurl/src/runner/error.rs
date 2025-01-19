@@ -98,6 +98,7 @@ pub enum RunnerErrorKind {
         message: String,
     },
     NoQueryResult,
+    PossibleLoggedSecret,
     QueryHeaderNotFound,
     QueryInvalidJsonpathExpression {
         value: String,
@@ -148,6 +149,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::InvalidUrl { .. } => "Invalid URL".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
             RunnerErrorKind::NoQueryResult => "No query result".to_string(),
+            RunnerErrorKind::PossibleLoggedSecret => "Invalid redacted secret".to_string(),
             RunnerErrorKind::QueryHeaderNotFound => "Header not found".to_string(),
             RunnerErrorKind::QueryInvalidJson => "Invalid JSON".to_string(),
             RunnerErrorKind::QueryInvalidJsonpathExpression { .. } => {
@@ -272,6 +274,11 @@ impl DisplaySourceError for RunnerError {
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
+            RunnerErrorKind::PossibleLoggedSecret => {
+                let message = "redacted secret not authorized in verbose";
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
             RunnerErrorKind::QueryHeaderNotFound => {
                 let message = "this header has not been found in the response";
                 let message = error::add_carets(message, self.source_info, content);
@@ -321,7 +328,7 @@ impl DisplaySourceError for RunnerError {
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::UnsupportedSecretType(kind) => {
-                let message = &format!("secret type <{kind}> are not supported");
+                let message = &format!("secret must be string, actual value is <{kind}>");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

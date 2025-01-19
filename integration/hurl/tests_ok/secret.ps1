@@ -1,7 +1,9 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-Remove-Item -Recurse build/secret
+if (Test-Path -Path build/secret) {
+    Remove-Item -Recurse build/secret
+}
 
 hurl --very-verbose `
     --secret a=secret1 `

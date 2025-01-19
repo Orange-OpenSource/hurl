@@ -25,6 +25,7 @@ use crate::runner::result::{AssertResult, EntryResult};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{request, response, CaptureResult, RunnerErrorKind, VariableSet};
 use crate::util::logger::{Logger, Verbosity};
+use crate::util::term::WriteMode;
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///
@@ -44,6 +45,29 @@ pub fn run(
     let source_info = entry.source_info();
     let context_dir = &runner_options.context_dir;
 
+    // We don't allow creating secrets if the logger is immediate and verbose because, in this case,
+    // network logs have already been written and may have leaked secrets before captures evaluation.
+    // Note: in `--test` mode, the logger is buffered so there is no restriction on logger level.
+    if let Some(response_spec) = &entry.response {
+        let immediate_logs =
+            matches!(logger.stderr.mode(), WriteMode::Immediate) && logger.verbosity.is_some();
+        if immediate_logs {
+            let redacted = response_spec.captures().iter().find(|c| c.redact);
+            if let Some(redacted) = redacted {
+                let source_info = redacted.name.source_info;
+                let error =
+                    RunnerError::new(source_info, RunnerErrorKind::PossibleLoggedSecret, false);
+                return EntryResult {
+                    entry_index,
+                    source_info,
+                    errors: vec![error],
+                    compressed,
+                    ..Default::default()
+                };
+            }
+        }
+    }
+
     // Evaluates our source requests given our set of variables
     let http_request = match request::eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
@@ -57,6 +81,7 @@ pub fn run(
             };
         }
     };
+
     let client_options = ClientOptions::from(runner_options, logger.verbosity);
 
     // Experimental features with cookie storage
