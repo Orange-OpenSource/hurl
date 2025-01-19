@@ -42,3 +42,67 @@ pub fn eval_format(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use chrono::offset::Utc;
+    use chrono::TimeZone;
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
+
+    use super::*;
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
+
+    /// Helper function to return a new filter given a `fmt`
+    fn new_format_filter(fmt: &str) -> Filter {
+        // Example: format "%m/%d/%Y"
+        Filter {
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            value: FilterValue::Format {
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(8, 1)),
+                },
+                fmt: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: fmt.to_string(),
+                        encoded: fmt.to_string(),
+                    }],
+                    source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + fmt.len(), 1)),
+                },
+            },
+        }
+    }
+
+    #[test]
+    fn eavl_filter_format_ok() {
+        let variables = VariableSet::new();
+
+        let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
+        let filter = new_format_filter("%m/%d/%Y");
+        let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
+        assert_eq!(
+            ret.unwrap().unwrap(),
+            Value::String("01/01/2025".to_string())
+        );
+    }
+
+    #[test]
+    fn eavl_filter_format_ko_bad_input_type() {
+        let variables = VariableSet::new();
+
+        let filter = new_format_filter("%m/%d/%Y");
+        let ret = eval_filter(
+            &filter,
+            &Value::String("01/01/2025".to_string()),
+            &variables,
+            false,
+        );
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::FilterInvalidInput("string".to_string())
+        );
+    }
+}
