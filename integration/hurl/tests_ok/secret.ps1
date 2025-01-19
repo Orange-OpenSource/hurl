@@ -1,6 +1,8 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
+Remove-Item -Recurse build/secret
+
 hurl --very-verbose `
     --secret a=secret1 `
     --secret b=secret2 `
@@ -8,7 +10,7 @@ hurl --very-verbose `
     --report-html build/secret `
     tests_ok/secret.hurl
 
-$secrets = @("secret1", "secret2", "12345678")
+$secrets = @("secret1", "secret2", "secret3", 12345678)
 
 $files = Get-ChildItem -Filter *.html -Recurse build/secret
 

@@ -990,7 +990,7 @@ impl From<IpResolve> for easy::IpResolve {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::logger::ErrorFormat;
+    use crate::util::logger::LoggerOptionsBuilder;
     use crate::util::term::{Stderr, WriteMode};
     use std::default::Default;
     use std::path::PathBuf;
@@ -1183,13 +1183,9 @@ mod tests {
             ..Default::default()
         };
 
-        let mut logger = Logger {
-            color: false,
-            error_format: ErrorFormat::Short,
-            verbosity: None,
-            stderr: Stderr::new(WriteMode::Immediate),
-            secrets: vec![],
-        };
+        let logger_options = LoggerOptionsBuilder::default().build();
+        let stderr = Stderr::new(WriteMode::Immediate);
+        let mut logger = Logger::new(&logger_options, stderr, &vec![]);
 
         let cmd = client.curl_command_line(&request, &context_dir, output, &options, &mut logger);
         assert_eq!(

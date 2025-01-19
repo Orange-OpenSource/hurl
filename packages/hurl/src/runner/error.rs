@@ -115,6 +115,8 @@ pub enum RunnerErrorKind {
     UnauthorizedFileAccess {
         path: PathBuf,
     },
+    /// Only string secrets are supported.
+    UnsupportedSecretType(String),
     UnrenderableExpression {
         value: String,
     },
@@ -159,6 +161,7 @@ impl DisplaySourceError for RunnerError {
                 "Unauthorized file access".to_string()
             }
             RunnerErrorKind::UnrenderableExpression { .. } => "Unrenderable expression".to_string(),
+            RunnerErrorKind::UnsupportedSecretType(_) => "Invalid secret type".to_string(),
         }
     }
 
@@ -314,6 +317,11 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::UnrenderableExpression { value } => {
                 let message = &format!("expression with value {value} can not be rendered");
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+            RunnerErrorKind::UnsupportedSecretType(kind) => {
+                let message = &format!("secret type <{kind}> are not supported");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

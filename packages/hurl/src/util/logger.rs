@@ -23,7 +23,7 @@ use hurl_core::text::{Format, Style, StyledString};
 
 use crate::runner::Value;
 use crate::util::redacted::Redact;
-use crate::util::term::Stderr;
+use crate::util::term::{Stderr, WriteMode};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
@@ -54,14 +54,14 @@ pub struct Logger {
     pub(crate) error_format: ErrorFormat,
     pub(crate) verbosity: Option<Verbosity>,
     pub(crate) stderr: Stderr,
-    pub(crate) secrets: Vec<String>,
+    secrets: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LoggerOptions {
-    pub(crate) color: bool,
-    pub(crate) error_format: ErrorFormat,
-    pub(crate) verbosity: Option<Verbosity>,
+    color: bool,
+    error_format: ErrorFormat,
+    verbosity: Option<Verbosity>,
 }
 
 pub struct LoggerOptionsBuilder {
@@ -344,6 +344,22 @@ impl Logger {
         s.push(": ");
         s.push(&value);
         self.eprintln(&s.to_string(fmt));
+    }
+
+    /// Update logger with new `secrets`.
+    pub fn set_secrets(&mut self, secrets: Vec<String>) {
+        if self.secrets == secrets {
+            return;
+        }
+        self.secrets = secrets;
+
+        // When secrets are updated, we need to rewrite the buffered `StdErr` as new secrets
+        // needs to be redacted.
+        if matches!(self.stderr.mode(), WriteMode::Buffered) {
+            let old_buffer = self.stderr.buffer();
+            let new_buffer = old_buffer.redact(&self.secrets);
+            self.stderr.set_buffer(new_buffer);
+        }
     }
 
     fn eprintln(&mut self, message: &str) {

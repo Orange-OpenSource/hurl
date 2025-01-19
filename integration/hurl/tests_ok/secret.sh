@@ -1,6 +1,8 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+rm -rf build/secret
+
 hurl --very-verbose \
     --secret a=secret1 \
     --secret b=secret2 \
@@ -8,9 +10,9 @@ hurl --very-verbose \
     --report-html build/secret \
     tests_ok/secret.hurl
 
-secrets=("secret1" "secret2" "12345678")
+secrets=("secret1" "secret2" "secret3" "12345678")
 
-files=$(find build/secret/*.html build/secret/**/*.html)
+files=$(find build/secret/*.html build/secret/**/*.html tests_ok/secret.err.pattern)
 
 for secret in "${secrets[@]}"; do
   for file in $files; do

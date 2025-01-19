@@ -118,6 +118,11 @@ impl Stderr {
         }
     }
 
+    /// Returns the [`WriteMode`] of this logger.
+    pub fn mode(&self) -> WriteMode {
+        self.mode
+    }
+
     /// Prints to the standard error, with a newline.
     pub fn eprintln(&mut self, message: &str) {
         match self.mode {
@@ -177,6 +182,11 @@ impl Stderr {
     /// Returns the buffered standard error.
     pub fn buffer(&self) -> &str {
         &self.buffer
+    }
+
+    /// Set the buffered standard error.
+    pub fn set_buffer(&mut self, buffer: String) {
+        self.buffer = buffer;
     }
 
     /// Clears any progress and reset cursor terminal to the position of the last "real" message.

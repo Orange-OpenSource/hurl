@@ -1,5 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
+
 rm -rf build/report/json
 
 # test.2.hurl is KO but we want the script to continue until the end

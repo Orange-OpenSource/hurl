@@ -161,9 +161,9 @@ pub fn run(
         }
     };
 
-    // Before logging, we update the logger with secrets from the variable set. The variable set
-    // can have been updated
-    logger.secrets = variables.secrets();
+    // After captures evaluation, we update the logger with secrets from the variable set. The variable
+    // set can have been updated with new secrets to redact.
+    logger.set_secrets(variables.secrets());
 
     log_captures(&captures, logger);
     logger.debug("");

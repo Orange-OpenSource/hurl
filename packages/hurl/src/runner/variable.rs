@@ -30,6 +30,7 @@ pub struct Variable {
     visibility: Visibility,
 }
 
+/// Visibility of a variable value.
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Visibility {
     /// The variable's value is always visible.

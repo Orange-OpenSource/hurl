@@ -1,5 +1,6 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
+
 if (Test-Path build/report/json) {
     Remove-Item -Recurse build/report/json
 }
