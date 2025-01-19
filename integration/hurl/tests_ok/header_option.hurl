@@ -1,7 +1,9 @@
 GET http://localhost:8000/header-option
-test: from-header-syntax
+key: from-header-syntax
 [Options]
-header: test: from-option-1
-header: test: from-option-2
-header: another-test: from-option
+header: key: from-option-1
+header: key: from-option-2
+header: {{my_header}}
+header: {{my_key}}: {{my_value}}
+header: another-key: another-from-option
 HTTP 200
