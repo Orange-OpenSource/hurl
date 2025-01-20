@@ -111,13 +111,8 @@ mod tests {
     fn eval_filter_format_ko_invalid_format() {
         let variables = VariableSet::new();
 
-        let filter = new_format_filter("%%");
-        eval_filter(
-            &filter,
-            &Value::String("01/01/2025".to_string()),
-            &variables,
-            false,
-        )
-        .unwrap();
+        let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
+        let filter = new_format_filter("%%%");
+        let _ = eval_filter(&filter, &Value::Date(date), &variables, false);
     }
 }
