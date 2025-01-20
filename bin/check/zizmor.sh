@@ -72,6 +72,8 @@ function consume_args(){
 }
 
 # main
+echo "disabled, waiting for debug fork token"
+exit 0
 init_terminal_colors
 consume_args "$@"
 zizmor --version
