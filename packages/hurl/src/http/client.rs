@@ -554,7 +554,11 @@ impl Client {
         let mut list = List::new();
 
         for header in headers {
-            list.append(&format!("{}: {}", header.name, header.value))?;
+            if header.value.is_empty() {
+                list.append(&format!("{};", header.name))?;
+            } else {
+                list.append(&format!("{}: {}", header.name, header.value))?;
+            }
         }
 
         // If request has no `Content-Type` header, we set it if the content type has been set

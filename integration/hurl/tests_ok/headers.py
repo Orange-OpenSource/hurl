@@ -47,3 +47,9 @@ def response_headers():
     # resp.headers['Beverage'] = '\x63\x61\x66\xc3\xa9'
     resp.headers["Beverage"] = "cafe"
     return resp
+
+
+@app.route("/empty-headers")
+def empty_headers():
+    assert request.headers.get("Empty-Header") == ""
+    return ""
