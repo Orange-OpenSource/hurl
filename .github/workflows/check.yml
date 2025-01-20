@@ -13,6 +13,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+permissions: {}
+
 jobs:
 
   checks:
@@ -22,6 +24,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
 
     - name: Shellcheck
@@ -62,7 +65,7 @@ jobs:
 
     - name: Zizmor
       env:
-        GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: always()
       run: |
         pip install zizmor

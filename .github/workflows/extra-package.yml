@@ -29,6 +29,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
+          persist-credentials: true
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Check if branch is a published release
@@ -52,6 +53,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
+          persist-credentials: false
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Push to chocolatey
@@ -69,6 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
+          persist-credentials: true 
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Push to winget

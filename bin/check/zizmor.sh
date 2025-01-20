@@ -5,6 +5,7 @@ set -Eeuo pipefail
 function init_terminal_colors(){
     color_red=$(echo -ne "\033[1;31m")
     color_green=$(echo -ne "\033[1;32m")
+    color_yellow=$(echo -ne "\033[1;33m")
     color_reset=$(echo -ne "\033[0m")
 }
 
@@ -72,18 +73,32 @@ function consume_args(){
 }
 
 # main
-echo "disabled, waiting for debug fork token"
-exit 0
 init_terminal_colors
 consume_args "$@"
 zizmor --version
 error_count=0
-for file in  "${files[@]}" ; do
-    zizmor \
-        --min-severity low \
-        --min-confidence medium \
-        --gh-token "${github_token}" \
-        "${file}" || error_count=$((error_count+1))
+# disable excessive-permissions on git jobs for now because all yml permissions have to be rewrited from scratch"
+conf="/tmp/conf"
+cat <<- "EOF" > "${conf}"
+  rules:
+    excessive-permissions:
+      ignore:
+        - accept-pull-request.yml
+        - auto-close-inactive-pr.yml
+        - coverage.yml
+        - extra-package.yml
+        - release.yml
+        - update-actions.yml
+        - update-branch-version.yml
+        - update-crates.yml
+EOF
+for file in "${files[@]}" ; do
+    # disable release.yml for now because output vars have to be rewrited from scratch"
+    if [[ "${file}" =~ release.yml ]] ; then
+        echo "${color_yellow}$file is disabled for now because output vars have to be rewrited from scratch${color_reset}"
+        continue
+    fi
+    zizmor --config "${conf}" --gh-token "${github_token}" "${file}" || error_count=$((error_count+1))
 done
 if [[ $error_count -gt 0 ]] ; then
     echo "${color_red}There are problems with github workflows${color_reset}"

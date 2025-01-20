@@ -14,6 +14,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+permissions: {}
+
 jobs:
   package-generic-linux-x64:
     runs-on: ubuntu-20.04
@@ -21,6 +23,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -64,6 +67,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3.3.0
@@ -113,6 +117,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v4.1.8
@@ -166,6 +171,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v4.1.8
@@ -217,6 +223,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v4.1.8
@@ -268,6 +275,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v4.1.8
@@ -321,6 +329,7 @@ jobs:
    - name: Checkout repository
      uses: actions/checkout@v4.2.2
      with:
+       persist-credentials: false
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
      uses: docker/setup-buildx-action@v3.8.0
@@ -392,6 +401,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -443,6 +453,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
@@ -492,6 +503,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
@@ -547,6 +559,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
       with:
+        persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Rust
       run: |
@@ -606,6 +619,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
       - uses: actions/download-artifact@v4.1.8
         with:
