@@ -77,7 +77,7 @@ mod tests {
     }
 
     #[test]
-    fn eavl_filter_format_ok() {
+    fn eval_filter_format_ok() {
         let variables = VariableSet::new();
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
@@ -90,7 +90,7 @@ mod tests {
     }
 
     #[test]
-    fn eavl_filter_format_ko_bad_input_type() {
+    fn eval_filter_format_ko_bad_input_type() {
         let variables = VariableSet::new();
 
         let filter = new_format_filter("%m/%d/%Y");
@@ -104,5 +104,20 @@ mod tests {
             ret.unwrap_err().kind,
             RunnerErrorKind::FilterInvalidInput("string".to_string())
         );
+    }
+
+    #[test]
+    #[should_panic]
+    fn eval_filter_format_ko_invalid_format() {
+        let variables = VariableSet::new();
+
+        let filter = new_format_filter("%%");
+        eval_filter(
+            &filter,
+            &Value::String("01/01/2025".to_string()),
+            &variables,
+            false,
+        )
+        .unwrap();
     }
 }
