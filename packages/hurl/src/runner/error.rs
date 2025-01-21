@@ -87,6 +87,7 @@ pub enum RunnerErrorKind {
     FilterDecode(String),
     FilterInvalidEncoding(String),
     FilterInvalidInput(String),
+    FilterInvalidFormatSpecifier(String),
     FilterMissingInput,
     Http(HttpError),
     InvalidJson {
@@ -143,6 +144,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::FilterDecode { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidEncoding { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidInput { .. } => "Filter error".to_string(),
+            RunnerErrorKind::FilterInvalidFormatSpecifier { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterMissingInput => "Filter error".to_string(),
             RunnerErrorKind::Http(http_error) => http_error.description(),
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
@@ -241,6 +243,11 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::FilterInvalidInput(message) => {
                 let message = &format!("invalid filter input: {message}");
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+            RunnerErrorKind::FilterInvalidFormatSpecifier(format) => {
+                let message = &format!("<{format}> format is not supported");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

@@ -19,6 +19,7 @@ use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
+use std::fmt::Write;
 
 /// Formats a date `value` to a string given a specification `format`.
 /// See <https://docs.rs/chrono/latest/chrono/format/strftime/index.html>
@@ -33,8 +34,14 @@ pub fn eval_format(
 
     match value {
         Value::Date(value) => {
-            let formatted = format!("{}", value.format(format.as_str()));
-            Ok(Some(Value::String(formatted)))
+            let mut formatted = String::new();
+            match write!(formatted, "{}", value.format(format.as_str())) {
+                Ok(_) => Ok(Some(Value::String(formatted))),
+                Err(_) => {
+                    let kind = RunnerErrorKind::FilterInvalidFormatSpecifier(format);
+                    Err(RunnerError::new(source_info, kind, assert))
+                }
+            }
         }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
@@ -107,12 +114,15 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
     fn eval_filter_format_ko_invalid_format() {
         let variables = VariableSet::new();
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
         let filter = new_format_filter("%%%");
-        let _ = eval_filter(&filter, &Value::Date(date), &variables, false);
+        let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::FilterInvalidFormatSpecifier("%%%".to_string())
+        );
     }
 }
