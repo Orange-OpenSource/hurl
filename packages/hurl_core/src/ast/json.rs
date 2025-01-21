@@ -20,12 +20,20 @@ use core::fmt;
 use crate::ast::core::Template;
 use crate::ast::{Placeholder, TemplateElement};
 
+/// This the AST for the JSON used within Hurl (for instance in [implicit JSON body request](https://hurl.dev/docs/request.html#json-body)).
 ///
-/// This the AST for the JSON used within Hurl
+/// # Example
 ///
-/// It is a superset of the standard json spec.
-/// Strings have been replaced by Hurl template.
+/// ```hurl
+/// POST https://example.org/api/cats
+/// {
+///     "id": 42,
+///     "lives": {{lives_count}},
+///     "name": "{{name}}"
+/// }
+/// ```
 ///
+/// It is a superset of the standard JSON spec. Strings have been replaced by Hurl [`Placeholder`].
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Value {
     Placeholder(Placeholder),
@@ -41,20 +49,6 @@ pub enum Value {
         elements: Vec<ObjectElement>,
     },
     Null,
-}
-
-impl Value {
-    pub fn _type(&self) -> String {
-        match self {
-            Value::Number(_) => "number".to_string(),
-            Value::Null => "null".to_string(),
-            Value::Boolean(_) => "boolean".to_string(),
-            Value::List { .. } => "list".to_string(),
-            Value::Object { .. } => "object".to_string(),
-            Value::String(_) => "string".to_string(),
-            Value::Placeholder(_) => "placeholder".to_string(),
-        }
-    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
