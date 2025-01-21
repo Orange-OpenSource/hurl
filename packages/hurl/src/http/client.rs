@@ -551,15 +551,7 @@ impl Client {
         implicit_content_type: Option<&str>,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
-        let mut list = List::new();
-
-        for header in headers {
-            if header.value.is_empty() {
-                list.append(&format!("{};", header.name))?;
-            } else {
-                list.append(&format!("{}: {}", header.name, header.value))?;
-            }
-        }
+        let mut list = headers.to_curl_headers()?;
 
         // If request has no `Content-Type` header, we set it if the content type has been set
         // implicitly on this request.
@@ -880,6 +872,21 @@ impl Header {
             }
             None => None,
         }
+    }
+}
+
+impl HeaderVec {
+    /// Converts this list of [`Header`] to a lib curl header list.
+    fn to_curl_headers(&self) -> Result<List, HttpError> {
+        let mut curl_headers = List::new();
+        for header in self {
+            if header.value.is_empty() {
+                curl_headers.append(&format!("{};", header.name))?;
+            } else {
+                curl_headers.append(&format!("{}: {}", header.name, header.value))?;
+            }
+        }
+        Ok(curl_headers)
     }
 }
 
@@ -1241,5 +1248,19 @@ mod tests {
             parse_cert_password("foo\\\\:toto\\:tata:tutu"),
             ("foo\\".to_string(), Some("toto\\:tata:tutu".to_string()))
         );
+    }
+
+    #[test]
+    fn test_to_curl_headers() {
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("foo", "a"));
+        headers.push(Header::new("bar", "b"));
+        headers.push(Header::new("baz", ""));
+
+        let list = headers.to_curl_headers().unwrap();
+        assert_eq!(
+            list.iter().collect::<Vec<_>>(),
+            vec!["foo: a".as_bytes(), "bar: b".as_bytes(), "baz;".as_bytes()]
+        )
     }
 }
