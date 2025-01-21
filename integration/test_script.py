@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 
 
 def decode_string(encoded: bytes) -> str:
@@ -32,7 +33,10 @@ def test(script_file: str):
     else:
         cmd = [script_file]
     print(" ".join(cmd))
+    start_time = time.time()
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    execution_time = time.time() - start_time
+    print(f" - Duration: {execution_time} seconds")
 
     basename = os.path.splitext(script_file)[0]
 
