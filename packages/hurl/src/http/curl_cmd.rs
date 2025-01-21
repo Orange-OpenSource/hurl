@@ -306,7 +306,11 @@ impl Header {
         let value = &self.value;
         vec![
             "--header".to_string(),
-            encode_shell_string(&format!("{name}: {value}")),
+            if self.value.is_empty() {
+                encode_shell_string(&format!("{name};"))
+            } else {
+                encode_shell_string(&format!("{name}: {value}"))
+            },
         ]
     }
 }
@@ -626,6 +630,7 @@ mod tests {
             headers: vec![
                 "Test-Header-1: content-1".to_string(),
                 "Test-Header-2: content-2".to_string(),
+                "Test-Header-Empty:".to_string(),
             ],
             http_version: RequestedHttpVersion::Http10,
             insecure: true,
@@ -658,6 +663,7 @@ mod tests {
             "curl \
         --header 'Test-Header-1: content-1' \
         --header 'Test-Header-2: content-2' \
+        --header 'Test-Header-Empty;' \
         --compressed \
         --connect-timeout 20 \
         --connect-to example.com:443:host-47.example.com:443 \
