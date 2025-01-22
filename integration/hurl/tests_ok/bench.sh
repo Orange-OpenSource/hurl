@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_ok/bench.hurl
+hurl --ipv4 tests_ok/bench.hurl

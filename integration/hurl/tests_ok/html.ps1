@@ -3,11 +3,11 @@ $ErrorActionPreference = 'Stop'
 
 # Some tests are failing but we want to continue until the end
 $ErrorActionPreference = "Continue"
-hurl --test `
+hurl --ipv4 --test `
   --report-html build/tmp/ `
   --glob "tests_ok/test.*.hurl"
 
-hurl --test `
+hurl --ipv4 --test `
   --report-html build/tmp/ `
   tests_ok/assert_body.hurl `
   tests_ok/assert_header.hurl `

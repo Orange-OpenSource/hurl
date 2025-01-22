@@ -3,11 +3,11 @@ set -Eeuo pipefail
 
 # Some tests are failing but we want to continue until the end
 set +euo pipefail
-hurl --test \
+hurl --ipv4 --test \
   --report-html build/a/b/c/ \
   --glob "tests_ok/test.*.hurl"
 
-hurl --test \
+hurl --ipv4 --test \
   --report-html build/a/b/c/ \
   tests_ok/assert_body.hurl \
   tests_ok/assert_header.hurl \

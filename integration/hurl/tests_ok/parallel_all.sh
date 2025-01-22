@@ -5,7 +5,7 @@ rm -f build/parallel-all.txt
 # Some tests are failing but we want to continue until the end
 set +euo pipefail
 
-hurl --parallel --test \
+hurl --ipv4 --parallel --test \
   --report-tap build/parallel-all.txt \
   tests_ok/assert_body.hurl \
   tests_ok/assert_header.hurl \
