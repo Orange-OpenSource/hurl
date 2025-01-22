@@ -3,20 +3,27 @@
 
 Thanks to
 [@theoforger](https://github.com/theoforger),
+[@glb-cblin](https://github.com/glb-cblin),
+[@ashishajr](https://github.com/ashishajr),
 
 Breaking Changes:
 
-* Remove deprecated predicates in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
+* Remove deprecated predicates (notEquals, greaterThan etc...) in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
 
 
 Enhancements:
 
 * Add curl -H/--header option to globally add headers to all requests [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
+* Redact secret in HTML report [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Allow sending empty HTTP header [#3536](https://github.com/Orange-OpenSource/hurl/issues/3536)
+* Redact dynamic values from logs [#3543](https://github.com/Orange-OpenSource/hurl/issues/3543)
+* Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
 
 
 Bugs Fixed:
 
 * Fix missing request line errors in HTML report [#3534](https://github.com/Orange-OpenSource/hurl/issues/3534)
+* Show error message if format is invalid in `format` filter [#3613](https://github.com/Orange-OpenSource/hurl/issues/3613)
 
 
 [6.0.0 (2024-12-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
