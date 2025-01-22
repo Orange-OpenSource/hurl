@@ -1079,6 +1079,8 @@ impl Tokenizable for VariableValue {
 impl Tokenizable for Filter {
     fn tokenize(&self) -> Vec<Token> {
         match self.value.clone() {
+            FilterValue::Base64Decode => vec![Token::FilterType(String::from("base64Decode"))],
+            FilterValue::Base64Encode => vec![Token::FilterType(String::from("base64Encode"))],
             FilterValue::Count => vec![Token::FilterType(String::from("count"))],
             FilterValue::DaysAfterNow => vec![Token::FilterType(String::from("daysAfterNow"))],
             FilterValue::DaysBeforeNow => vec![Token::FilterType(String::from("daysBeforeNow"))],

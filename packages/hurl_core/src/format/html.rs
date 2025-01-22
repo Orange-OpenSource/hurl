@@ -802,6 +802,8 @@ impl HtmlFormatter {
     fn fmt_filter_value(&mut self, filter_value: &FilterValue) {
         let class = "filter-type";
         match filter_value {
+            FilterValue::Base64Decode => self.fmt_span(class, "base64Decode"),
+            FilterValue::Base64Encode => self.fmt_span(class, "base64Encode"),
             FilterValue::Count => self.fmt_span(class, "count"),
             FilterValue::DaysAfterNow => self.fmt_span(class, "daysAfterNow"),
             FilterValue::DaysBeforeNow => self.fmt_span(class, "daysBeforeNow"),

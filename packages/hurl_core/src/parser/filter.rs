@@ -53,6 +53,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
     let start = reader.cursor();
     let value = choice(
         &[
+            base64_decode_filter,
+            base64_encode_filter,
             count_filter,
             days_after_now_filter,
             days_before_now_filter,
@@ -90,6 +92,16 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
         end: end.pos,
     };
     Ok(Filter { source_info, value })
+}
+
+fn base64_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("base64Decode", reader)?;
+    Ok(FilterValue::Base64Decode)
+}
+
+fn base64_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("base64Encode", reader)?;
+    Ok(FilterValue::Base64Encode)
 }
 
 fn count_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

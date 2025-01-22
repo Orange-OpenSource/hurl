@@ -709,6 +709,12 @@ impl ToJson for FilterValue {
         let mut attributes = vec![];
         let att_name = "type".to_string();
         match self {
+            FilterValue::Base64Decode => {
+                attributes.push((att_name, JValue::String("base64Decode".to_string())));
+            }
+            FilterValue::Base64Encode => {
+                attributes.push((att_name, JValue::String("base64Encode".to_string())));
+            }
             FilterValue::Count => {
                 attributes.push((att_name, JValue::String("count".to_string())));
             }

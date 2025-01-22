@@ -68,6 +68,8 @@ pub fn eval_filter(
     in_assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match &filter.value {
+        FilterValue::Base64Decode => todo!(),
+        FilterValue::Base64Encode => todo!(),
         FilterValue::Count => eval_count(value, filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
         FilterValue::DaysBeforeNow => eval_days_before_now(value, filter.source_info, in_assert),

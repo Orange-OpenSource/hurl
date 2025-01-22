@@ -955,6 +955,8 @@ pub struct Filter {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FilterValue {
+    Base64Decode,
+    Base64Encode,
     Count,
     DaysAfterNow,
     DaysBeforeNow,
