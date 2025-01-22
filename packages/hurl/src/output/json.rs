@@ -37,7 +37,7 @@ pub fn write_json(
     append: bool,
 ) -> Result<(), io::Error> {
     let response_dir = None;
-    // Secrets are only redacted from standard error and reports. In this cas, we want to output a
+    // Secrets are only redacted from standard error and reports. In this case, we want to output a
     // response in a structured way. We do not change the value of the response output as it may be
     // used for processing, contrary to the standard error that should be used for debug/log/messages.
     let secrets = [];

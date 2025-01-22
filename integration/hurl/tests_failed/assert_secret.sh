@@ -11,6 +11,7 @@ hurl --secret name1=Alice \
     --error-format long \
     --report-html build/assert_secret/report-html \
     --report-json build/assert_secret/report-json \
+    --report-junit build/assert_secret/report-junit/junit.xml \
     tests_failed/assert_secret.hurl
 
 ret=$?
@@ -20,6 +21,7 @@ secrets=("Alice" "Bob")
 files=$(find build/assert_secret/report-html/*.html \
   build/assert_secret/report-html/**/*.html \
   build/assert_secret/report-json/*.json \
+  build/assert_secret/report-junit/junit.xml \
   tests_failed/assert_secret.err.pattern)
 
 for secret in "${secrets[@]}"; do

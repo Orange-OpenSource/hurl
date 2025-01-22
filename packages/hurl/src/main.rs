@@ -155,18 +155,18 @@ fn export_results(
     // consider only secrets introduced from cli, we have to get secrets produced during execution.
     // We remove identical secrets as there may be a lot of identical secrets (those that come
     // from the command line for instance)
-    let set = runs
+    let secrets = runs
         .iter()
         .flat_map(|r| r.hurl_result.variables.secrets())
         .collect::<HashSet<_>>();
-    let secrets = set.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
+    let secrets = secrets.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
 
     if let Some(file) = &opts.curl_file {
         create_curl_export(runs, file)?;
     }
     if let Some(file) = &opts.junit_file {
         logger.debug(&format!("Writing JUnit report to {}", file.display()));
-        create_junit_report(runs, file)?;
+        create_junit_report(runs, file, &secrets)?;
     }
     if let Some(file) = &opts.tap_file {
         logger.debug(&format!("Writing TAP report to {}", file.display()));
@@ -195,12 +195,16 @@ fn create_curl_export(runs: &[HurlRun], filename: &Path) -> Result<(), CliError>
 }
 
 /// Creates a JUnit report for this run.
-fn create_junit_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
+fn create_junit_report(
+    runs: &[HurlRun],
+    filename: &Path,
+    secrets: &[&str],
+) -> Result<(), CliError> {
     let testcases = runs
         .iter()
         .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
         .collect::<Vec<_>>();
-    junit::write_report(filename, &testcases)?;
+    junit::write_report(filename, &testcases, secrets)?;
     Ok(())
 }
 

@@ -65,7 +65,13 @@ use crate::report::junit::xml::{Element, XmlDocument};
 use crate::report::ReportError;
 
 /// Creates a JUnit from a list of `testcases`.
-pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), ReportError> {
+///
+///  `secrets` strings are redacted from messages (mainly assert error messages).
+pub fn write_report(
+    filename: &Path,
+    testcases: &[Testcase],
+    secrets: &[&str],
+) -> Result<(), ReportError> {
     // We ensure that parent folder is created.
     if let Some(parent) = filename.parent() {
         match std::fs::create_dir_all(parent) {
@@ -98,7 +104,7 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
         Element::new("testsuites")
     };
 
-    let testsuite = create_testsuite(testcases);
+    let testsuite = create_testsuite(testcases, secrets);
     root = root.add_child(testsuite);
 
     let doc = XmlDocument::new(root);
@@ -121,7 +127,9 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
 }
 
 /// Returns a testsuite as a XML object, from a list of `testcases`.
-fn create_testsuite(testcases: &[Testcase]) -> Element {
+///
+/// `secrets` strings are redacted from the produced HTML.
+fn create_testsuite(testcases: &[Testcase], secrets: &[&str]) -> Element {
     let mut tests = 0;
     let mut errors = 0;
     let mut failures = 0;
@@ -138,7 +146,7 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
         .attr("failures", &failures.to_string());
 
     for testcase in testcases.iter() {
-        let child = testcase.to_xml();
+        let child = testcase.to_xml(secrets);
         element = element.add_child(child);
     }
     element
@@ -162,6 +170,7 @@ mod tests {
         let content = "GET http://localhost:8000/not_found\n\
                        HTTP/1.0 200";
         let filename = Input::new("test.hurl");
+        let secrets = [];
         let mut testcases = vec![];
         let res = HurlResult {
             duration: Duration::from_millis(124),
@@ -212,7 +221,7 @@ mod tests {
         let tc = Testcase::from(&res, content, &filename);
         testcases.push(tc);
 
-        let suite = create_testsuite(&testcases);
+        let suite = create_testsuite(&testcases, &secrets);
         let doc = XmlDocument::new(suite);
         assert_eq!(
             doc.to_string().unwrap(),
