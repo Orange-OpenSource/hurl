@@ -4,6 +4,8 @@ HTTP 200
 [Captures]
 count: jsonpath "$.books" count
 [Asserts]
+jsonpath "$.data" base64Decode == hex,48656c6c6f;                                           # base64Decode
+bytes base64Encode == "SGVsbG8="                                                            # base64Encode
 jsonpath "$.books" count == 12                                                              # count
 certificate "Expire-Date" daysAfterNow > 15                                                 # daysAfterNow
 certificate "Start-Date" daysBeforeNow < 100                                                # daysBeforeNow
