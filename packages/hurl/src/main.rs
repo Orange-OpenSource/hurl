@@ -162,13 +162,14 @@ fn export_results(
     let secrets = secrets.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
 
     if let Some(file) = &opts.curl_file {
-        create_curl_export(runs, file)?;
+        create_curl_export(runs, file, &secrets)?;
     }
     if let Some(file) = &opts.junit_file {
         logger.debug(&format!("Writing JUnit report to {}", file.display()));
         create_junit_report(runs, file, &secrets)?;
     }
     if let Some(file) = &opts.tap_file {
+        // TAP files doesn't need to be redacted, they don't expose any logs apart from files names.
         logger.debug(&format!("Writing TAP report to {}", file.display()));
         create_tap_report(runs, file)?;
     }
@@ -188,9 +189,9 @@ fn export_results(
 }
 
 /// Creates an export of all curl commands for this run.
-fn create_curl_export(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
+fn create_curl_export(runs: &[HurlRun], filename: &Path, secrets: &[&str]) -> Result<(), CliError> {
     let results = runs.iter().map(|r| &r.hurl_result).collect::<Vec<_>>();
-    curl::write_curl(&results, filename)?;
+    curl::write_curl(&results, filename, secrets)?;
     Ok(())
 }
 

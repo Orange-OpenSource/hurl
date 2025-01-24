@@ -17,12 +17,19 @@
  */
 use crate::report::ReportError;
 use crate::runner::HurlResult;
+use crate::util::redacted::Redact;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::Path;
 
 /// Creates a curl export from a list of `hurl_results`.
-pub fn write_curl(hurl_results: &[&HurlResult], filename: &Path) -> Result<(), ReportError> {
+///
+/// `secrets` strings are redacted from this export.
+pub fn write_curl(
+    hurl_results: &[&HurlResult],
+    filename: &Path,
+    secrets: &[&str],
+) -> Result<(), ReportError> {
     // We ensure that parent folder is created.
     if let Some(parent) = filename.parent() {
         match std::fs::create_dir_all(parent) {
@@ -39,7 +46,7 @@ pub fn write_curl(hurl_results: &[&HurlResult], filename: &Path) -> Result<(), R
     let mut cmds = hurl_results
         .iter()
         .flat_map(|h| &h.entries)
-        .map(|e| e.curl_cmd.to_string())
+        .map(|e| e.curl_cmd.redact(secrets))
         .collect::<Vec<_>>()
         .join("\n");
     cmds.push('\n');

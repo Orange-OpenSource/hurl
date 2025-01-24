@@ -9,6 +9,7 @@ hurl --very-verbose `
     --secret a=secret1 `
     --secret b=secret2 `
     --secret c=12345678 `
+    --curl build/secret/curl.txt `
     --report-html build/secret/report-html `
     --report-json build/secret/report-json `
     tests_ok/secret.hurl
@@ -17,6 +18,7 @@ $secrets = @("secret1", "secret2", "secret3", "12345678")
 
 $files = @(Get-ChildItem -Filter *.html -Recurse build/secret/report-html)
 $files += @(Get-ChildItem -Filter *.json build/secret/report-json)
+$files += @(Get-ChildItem build/secret/curl.txt)
 $files += @(Get-ChildItem tests_ok/secret.err.pattern)
 
 foreach ($secret in $secrets) {

@@ -40,7 +40,7 @@ impl Testcase {
     /// Creates an Tap &lt;testcase&gt; from a TAP line
     /// ok 1 - this is the first test
     /// nok 2 - this is the second test
-    pub(crate) fn parse(line: &str) -> Result<Testcase, ReportError> {
+    pub fn parse(line: &str) -> Result<Testcase, ReportError> {
         let mut line = line;
         let success = if line.starts_with("ok") {
             line = &line[2..];
