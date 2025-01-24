@@ -369,7 +369,7 @@ fn new_call_tooltip(
     elt.add_attr(Height("20".to_string()));
     legend.add_child(elt);
 
-    let url = call.request.url.redact(secrets);
+    let url = call.request.url.to_string().redact(secrets);
     let text = format!("{} {}", call.request.method, url);
     let text = trunc_str(&text, 54);
     let text = format!("{text}  {}", call.response.status);

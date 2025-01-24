@@ -8,6 +8,7 @@ hurl --very-verbose \
     --secret b=secret2 \
     --secret c=12345678 \
     --curl build/secret/curl.txt \
+    --cookie-jar build/secret-cookies.txt \
     --report-html build/secret/report-html \
     --report-json build/secret/report-json \
     tests_ok/secret.hurl
@@ -18,6 +19,7 @@ files=$(find build/secret/report-html/*.html \
   build/secret/report-html/**/*.html \
   build/secret/report-json/*.json \
   build/secret/curl.txt \
+  build/secret-cookies.txt \
   tests_ok/secret.err.pattern
 )
 

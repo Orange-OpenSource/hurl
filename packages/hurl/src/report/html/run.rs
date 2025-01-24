@@ -79,7 +79,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
-    let cmd = entry.curl_cmd.redact(secrets);
+    let cmd = entry.curl_cmd.to_string().redact(secrets);
     let table = new_table("Debug", &[("Command", &cmd)]);
     text.push_str(&table);
 
@@ -87,7 +87,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
         let mut values = entry
             .captures
             .iter()
-            .map(|c| (&c.name, c.value.redact(secrets)))
+            .map(|c| (&c.name, c.value.to_string().redact(secrets)))
             .collect::<Vec<(&String, String)>>();
         values.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
         let table = new_table("Captures", &values);
@@ -114,7 +114,7 @@ fn get_call_html(
     // General
     let status = call.response.status.to_string();
     let version = call.response.version.to_string();
-    let url = &call.request.url.redact(secrets);
+    let url = &call.request.url.to_string().redact(secrets);
     let url = format!("<a href=\"{url}\">{url}</a>");
     let source = format!("<a href=\"{source}#l{line}\">{filename}:{line}</a>");
     let values = vec![

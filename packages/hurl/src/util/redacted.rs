@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::fmt::Display;
 
 pub trait Redact {
     /// Redacts this given a list of secrets.
@@ -24,7 +23,7 @@ pub trait Redact {
 
 impl<T> Redact for T
 where
-    T: Display,
+    T: AsRef<str> + ToString,
 {
     fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
         let mut value = self.to_string();

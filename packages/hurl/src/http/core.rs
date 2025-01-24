@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::util::redacted::Redact;
 use core::fmt;
 use std::str::FromStr;
 
@@ -97,6 +98,22 @@ impl fmt::Display for Cookie {
             self.expires,
             self.name,
             self.value
+        )
+    }
+}
+
+impl Redact for Cookie {
+    fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
+        format!(
+            "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            if self.http_only { "#HttpOnly_" } else { "" },
+            self.domain,
+            self.include_subdomain,
+            self.path,
+            self.https,
+            self.expires,
+            self.name,
+            self.value.redact(secrets)
         )
     }
 }

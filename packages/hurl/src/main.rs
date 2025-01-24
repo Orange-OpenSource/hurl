@@ -27,6 +27,7 @@ use std::{env, process, thread};
 use hurl::report::{curl, html, json, junit, tap};
 use hurl::runner;
 use hurl::runner::HurlResult;
+use hurl::util::redacted::Redact;
 use hurl_core::input::Input;
 use hurl_core::text;
 
@@ -183,7 +184,7 @@ fn export_results(
     }
     if let Some(file) = &opts.cookie_output_file {
         logger.debug(&format!("Writing cookies to {}", file.display()));
-        create_cookies_file(runs, file)?;
+        create_cookies_file(runs, file, &secrets)?;
     }
     Ok(())
 }
@@ -274,7 +275,14 @@ fn exit_code(runs: &[HurlRun]) -> i32 {
     }
 }
 
-fn create_cookies_file(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
+/// Export cookies for this run to `filename` file.
+///
+/// The file format for the cookies is [Netscape cookie format](http://www.cookiecentral.com/faq/#3.5).
+fn create_cookies_file(
+    runs: &[HurlRun],
+    filename: &Path,
+    secrets: &[&str],
+) -> Result<(), CliError> {
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
             return Err(CliError::IO(format!(
@@ -289,13 +297,16 @@ fn create_cookies_file(runs: &[HurlRun], filename: &Path) -> Result<(), CliError
 
 "#
     .to_string();
+
+    // TODO: We only serialize the first file. I don't see any valid reason why we're not
+    // serializing every file see issue <https://github.com/Orange-OpenSource/hurl/issues/2537>
     match runs.first() {
         None => {
             return Err(CliError::IO("Issue fetching results".to_string()));
         }
         Some(run) => {
             for cookie in run.hurl_result.cookies.iter() {
-                s.push_str(&cookie.to_string());
+                s.push_str(&cookie.redact(secrets));
                 s.push('\n');
             }
         }

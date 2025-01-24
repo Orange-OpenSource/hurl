@@ -254,7 +254,7 @@ impl EntryResultJson {
             captures,
             asserts,
             time: entry.transfer_duration.as_millis() as u64,
-            curl_cmd: entry.curl_cmd.redact(secrets),
+            curl_cmd: entry.curl_cmd.to_string().redact(secrets),
         })
     }
 }
@@ -310,7 +310,7 @@ impl RequestJson {
             .collect::<Vec<_>>();
         RequestJson {
             method: request.method.clone(),
-            url: request.url.redact(secrets),
+            url: request.url.to_string().redact(secrets),
             headers,
             cookies,
             query_string,

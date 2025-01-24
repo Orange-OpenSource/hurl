@@ -130,7 +130,7 @@ fn new_calls(
             x += 12.px();
 
             // URL
-            let url = &call.request.url.redact(secrets);
+            let url = &call.request.url.to_string().redact(secrets);
             let url = url.strip_prefix("http://").unwrap_or(url);
             let url = url.strip_prefix("https://").unwrap_or(url);
             let text = format!("{} {url}", call.request.method);
