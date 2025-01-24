@@ -3,6 +3,7 @@
 
 Thanks to
 [@theoforger](https://github.com/theoforger),
+[@docwhat](https://github.com/docwhat),
 [@glb-cblin](https://github.com/glb-cblin),
 [@ashishajr](https://github.com/ashishajr),
 
@@ -14,7 +15,11 @@ Breaking Changes:
 Enhancements:
 
 * Add curl -H/--header option to globally add headers to all requests [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
-* Redact secret in HTML report [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Redacts secrets from JUnit reports [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Redacts secrets from JSON report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Redact secret in HTML report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Redact secrets from curl export [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Redact secrets from cookies export [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Allow sending empty HTTP header [#3536](https://github.com/Orange-OpenSource/hurl/issues/3536)
 * Redact dynamic values from logs [#3543](https://github.com/Orange-OpenSource/hurl/issues/3543)
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
