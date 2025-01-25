@@ -8,7 +8,8 @@ POST http://localhost:8000/post-json
     "g_clef": "\uD834\uDD1E",
     "items": [true, "true", 1],
     "variable": "{{string_variable}}",
-    "": "empty"
+    "": "empty",
+    "{{key}}": "dynamic_key"
 }
 HTTP 200
 

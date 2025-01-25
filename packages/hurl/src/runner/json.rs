@@ -24,6 +24,8 @@ use hurl_core::reader::Reader;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::{expr, VariableSet};
 
+use super::template::eval_template;
+
 /// Evaluates a JSON value to a string given a set of `variables`.
 /// If `keep_whitespace` is true, whitespace is preserved from the JSonValue, otherwise
 /// it is trimmed.
@@ -112,11 +114,12 @@ fn eval_json_object_element(
     variables: &VariableSet,
     keep_whitespace: bool,
 ) -> Result<String, RunnerError> {
+    let name = eval_template(&element.name, variables)?;
     let value = eval_json_value(&element.value, variables, keep_whitespace)?;
     if keep_whitespace {
         Ok(format!(
             "{}\"{}\"{}:{}{}{}",
-            element.space0, element.name, element.space1, element.space2, value, element.space3
+            element.space0, name, element.space1, element.space2, value, element.space3
         ))
     } else {
         Ok(format!("\"{}\":{}", element.name, value))

@@ -17,7 +17,8 @@ def post_json():
     "g_clef": "\\uD834\\uDD1E",
     "items": [true, \"true\", 1],
     "variable": "\\\\",
-    "": "empty"
+    "": "empty",
+    "dynamic_key": "dynamic_key"
 }"""
     )
     return ""
