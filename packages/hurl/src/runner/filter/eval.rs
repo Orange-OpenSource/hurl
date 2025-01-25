@@ -17,6 +17,7 @@
  */
 use hurl_core::ast::{Filter, FilterValue};
 
+use crate::runner::filter::base64_decode::eval_base64_decode;
 use crate::runner::filter::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
@@ -68,7 +69,7 @@ pub fn eval_filter(
     in_assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match &filter.value {
-        FilterValue::Base64Decode => todo!(),
+        FilterValue::Base64Decode => eval_base64_decode(value, filter.source_info, in_assert),
         FilterValue::Base64Encode => todo!(),
         FilterValue::Count => eval_count(value, filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
