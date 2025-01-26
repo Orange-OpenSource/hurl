@@ -40,7 +40,6 @@ Structure of a capture:
 A capture consists of a variable name, followed by `:` and a query. Captures
 section starts with `[Captures]`.
 
-
 ### Query
 
 Queries are used to extract data from an HTTP response.
@@ -135,7 +134,6 @@ http-only: cookie "LSID[HttpOnly]"
 same-site: cookie "LSID[SameSite]"
 ```
 
-
 ### Body capture
 
 Capture the entire body (decoded as text) from the received HTTP response. The encoding used to decode the body 
@@ -161,7 +159,6 @@ HTTP 200
 my_body: bytes decode "gb2312"
 ```
 
-
 ### Bytes capture
 
 Capture the entire body (as a raw bytestream) from the received HTTP response
@@ -172,7 +169,6 @@ HTTP 200
 [Captures]
 my_data: bytes
 ```
-
 
 ### XPath capture
 
@@ -212,7 +208,6 @@ HTTP 200
 [Captures]
 pet-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 ```
-
 
 ### JSONPath capture
 
@@ -267,7 +262,6 @@ a_string:   jsonpath "$['a_string']"
 all:        jsonpath "$"
 ```
 
-
 ### Regex capture
 
 Capture a regex pattern from the HTTP received body, decoded as text.
@@ -285,7 +279,6 @@ name: regex "Hello ([a-zA-Z]+)"
 The regex pattern must have at least one capture group, otherwise the
 capture will fail. When the pattern is a double-quoted string, metacharacters beginning with a backslash in the pattern
 (like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters escaping. 
-
 
 ### Variable capture
 
@@ -326,6 +319,23 @@ cert_expire_date: certificate "Expire-Date"
 cert_serial_number: certificate "Serial-Number"
 ```
 
+## Redacting Secrets
+
+Secrets can be redacted from logs and reports using [`--secret` option]:
+
+```shell
+$ hurl --secret pass=sesame-ouvre-toi file.hurl
+```
+
+If the secret value to be redacted is dynamic, or not known before execution, a capture can become a secret using `redact`
+at the end of the query's capture:
+
+```hurl
+GET https://foo.com
+HTTP 200
+[Captures]
+pass: header "token" redact
+```
 
 [CSRF tokens]: https://en.wikipedia.org/wiki/Cross-site_request_forgery
 [injected into the session]: /docs/templates.md#injecting-variables
@@ -339,3 +349,4 @@ cert_serial_number: certificate "Serial-Number"
 [filters]: /docs/filters.md
 [`xpath` filter]: /docs/filters.md#xpath
 [`decode` filter]: /docs/filters.md#decode
+[`--secret` option]: /docs/templates.md#secrets

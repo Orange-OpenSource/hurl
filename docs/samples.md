@@ -597,7 +597,6 @@ file,data.bin;
 
 [Doc](/docs/asserting-response.md#file-body)
 
-
 ## Reports
 
 ### HTML Report
@@ -641,7 +640,6 @@ A structured output of running Hurl files can be obtained with [`--json` option]
 ```shell
 $ hurl --json *.hurl
 ```
-
 
 ## Others
 
@@ -720,7 +718,6 @@ GET https://example.org/d
 
 [Doc](/docs/manual.md#skip)
 
-
 ### Testing Endpoint Performance
 
 ```hurl
@@ -767,6 +764,47 @@ HTTP 302
 ```
 
 [Doc](/docs/capturing-response.md#xpath-capture)
+
+### Redacting Secrets
+
+Using command-line for known values:
+
+```shell
+$ hurl --secret token=1234 file.hurl
+```
+
+```hurl
+POST https://example.org
+X-Token: {{token}}
+{
+  "name": "Alice",
+  "value: 100
+}
+HTTP 200
+```
+
+[Doc](/docs/templates.md#secrets)
+
+Using `redact` for dynamic values:
+
+```hurl
+# Get an authorization token:
+GET https://example.org/token
+HTTP 200
+[Captures]
+token: header "X-Token" redact
+
+# Send an authorized request:
+POST https://example.org
+X-Token: {{token}}
+{
+  "name": "Alice",
+  "value: 100
+}
+HTTP 200
+```
+
+[Doc](/docs/capturing-response.md#redacting-secrets)
 
 ### Checking Byte Order Mark (BOM) in Response Body
 

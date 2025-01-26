@@ -212,6 +212,32 @@ GET https://{{host}}/health
 HTTP 200
 ```
 
+### Secrets
+
+Secrets are variables which value is redacted from standard error logs (for instance using [`--very-verbose`]) and [reports].
+Secrets are injected through command-line with [`--secret` option]:
+
+```shell
+$ hurl --secret token=FooBar test.hurl
+```
+
+Values are redacted by _exact matching_: if a secret value is transformed, and you want to redact also the transformed value, 
+you can add as many secrets as there are transformed values. Even if a secret is not used as a variable, all secrets values 
+will be redacted from messages and logs.
+
+```shell
+$ hurl --secret token=FooBar \
+       --secret token_alt_0=FOOBAR \
+       --secret token_alt_1=foobar \
+       test.hurl
+```
+
+> Secrets __are not redacted__ from HTTP responses outputted on standard output as Hurl considers the standard output as
+> the correct unaltered output of a run. With this call `$ hurl --secret token=FooBar test.hurl`,
+> the HTTP response is outputted unaltered and `FooBar` can appear in the HTTP response. Options that transforms Hurl
+> output on standard output, like [`--include`] or [`--json`] works the same. [JSON report] also saves each unaltered HTTP
+> response on disk so extra care must be taken when secrets are in the HTTP response body. 
+
 
 ## Templating Body
 
@@ -276,3 +302,9 @@ Resulting in a PUT request with the following JSON body:
 [options]: /docs/request.md#options
 [UUID v4 random string]: https://en.wikipedia.org/wiki/Universally_unique_identifier
 [RFC 3339]: https://www.rfc-editor.org/rfc/rfc3339
+[`--very-verbose`]: /docs/manual.md#very-verbose
+[reports]: /docs/running-tests.md#generating-report
+[`--secret` option]: /docs/manual.md#secret
+[`--include`]: /docs/manual.md#include
+[`--json`]: /docs/manual.md#json
+[JSON report]: /docs/running-tests.md#json-report
