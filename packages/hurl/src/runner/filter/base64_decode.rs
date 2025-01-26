@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use base64::{prelude::BASE64_URL_SAFE_NO_PAD, Engine};
+use base64::{prelude::BASE64_STANDARD, Engine};
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
@@ -27,7 +27,7 @@ pub fn eval_base64_decode(
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
-        Value::String(value) => match BASE64_URL_SAFE_NO_PAD.decode(value) {
+        Value::String(value) => match BASE64_STANDARD.decode(value) {
             Ok(decoded) => Ok(Some(Value::Bytes(decoded))),
             Err(_) => {
                 let kind = RunnerErrorKind::FilterInvalidInput("Invalid base64 string".to_string());
