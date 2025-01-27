@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 pub use self::html::{format as format_html, hurl_css};
 
 mod html;

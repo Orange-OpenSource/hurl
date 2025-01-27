@@ -23,6 +23,7 @@ use crate::ast::primitive::{
     SourceInfo, Template, Whitespace,
 };
 use crate::ast::Filter;
+use crate::typing::{SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Section {
@@ -225,6 +226,20 @@ impl fmt::Display for CookiePath {
     }
 }
 
+impl ToSource for CookiePath {
+    fn to_source(&self) -> SourceString {
+        let mut source = SourceString::new();
+        source.push('"');
+        source.push_str(self.name.to_source().as_str());
+        if let Some(attribute) = &self.attribute {
+            let s = format!("[{}]", attribute.name.value());
+            source.push_str(&s);
+        }
+        source.push('"');
+        source
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CookieAttribute {
     pub space0: Whitespace,
@@ -293,6 +308,16 @@ impl CertificateAttributeName {
             CertificateAttributeName::ExpireDate => "Expire-Date",
             CertificateAttributeName::SerialNumber => "Serial-Number",
         }
+    }
+}
+
+impl ToSource for CertificateAttributeName {
+    fn to_source(&self) -> SourceString {
+        let mut s = SourceString::new();
+        s.push('"');
+        s.push_str(self.identifier());
+        s.push('"');
+        s
     }
 }
 
@@ -419,6 +444,14 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsIpv4 => "isIpv4",
             PredicateFuncValue::IsIpv6 => "isIpv6",
         }
+    }
+}
+
+impl ToSource for PredicateFuncValue {
+    fn to_source(&self) -> SourceString {
+        let mut s = SourceString::new();
+        s.push_str(self.identifier());
+        s
     }
 }
 

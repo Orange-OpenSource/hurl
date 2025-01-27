@@ -1,4 +1,5 @@
-﻿GET http://localhost:8000/hello
+﻿# This file starts with a BOM
+GET http://localhost:8000/hello
 [BasicAuth]
 [QueryStringParams]
 [FormParams]

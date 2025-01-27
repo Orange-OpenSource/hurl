@@ -58,12 +58,12 @@ impl ToSource for MultilineString {
         let att = self
             .attributes
             .iter()
-            .map(|att| att.to_source())
+            .map(|att| att.identifier())
             .collect::<Vec<_>>()
             .join(",");
         source.push_str("```");
         source.push_str(self.lang());
-        if !self.lang().is_empty() && !self.attributes.is_empty() {
+        if !self.lang().is_empty() && self.has_attributes() {
             source.push(',');
         }
         source.push_str(&att);
@@ -120,17 +120,17 @@ impl ToSource for MultilineStringKind {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum MultilineStringAttribute {
     Escape,
     NoVariable,
 }
 
-impl ToSource for MultilineStringAttribute {
-    fn to_source(&self) -> SourceString {
+impl MultilineStringAttribute {
+    pub fn identifier(&self) -> &'static str {
         match self {
-            MultilineStringAttribute::Escape => "escape".to_source(),
-            MultilineStringAttribute::NoVariable => "novariable".to_source(),
+            MultilineStringAttribute::Escape => "escape",
+            MultilineStringAttribute::NoVariable => "novariable",
         }
     }
 }
@@ -271,6 +271,12 @@ impl ToSource for TemplateElement {
 pub struct Comment {
     pub value: String,
     pub source_info: SourceInfo,
+}
+
+impl ToSource for Comment {
+    fn to_source(&self) -> SourceString {
+        format!("#{}", self.value).to_source()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

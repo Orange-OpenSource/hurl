@@ -24,6 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
+use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -205,6 +206,12 @@ impl Method {
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl ToSource for Method {
+    fn to_source(&self) -> SourceString {
+        self.0.to_source()
     }
 }
 

@@ -39,6 +39,8 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// etc...) can be read in the [`HurlResult`] `success` field. If `content` is not syntactically
 /// correct, a parsing error is returned. This is the only possible way for this function to fail.
 ///
+/// The caller must ensure that `content` do not start with [BOM](https://en.wikipedia.org/wiki/Byte_order_mark).
+///
 /// `filename` indicates an optional file source, used when displaying errors.
 ///
 /// # Example

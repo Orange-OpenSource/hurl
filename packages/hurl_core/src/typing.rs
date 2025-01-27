@@ -29,27 +29,6 @@ pub enum Count {
     Infinite,
 }
 
-/// Represent a duration
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Duration {
-    pub value: U64,
-    pub unit: Option<DurationUnit>,
-}
-
-impl Duration {
-    pub fn new(value: U64, unit: Option<DurationUnit>) -> Duration {
-        Duration { value, unit }
-    }
-}
-
-/// Represents a duration unit
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum DurationUnit {
-    MilliSecond,
-    Second,
-    Minute,
-}
-
 impl fmt::Display for Count {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -63,6 +42,19 @@ impl fmt::Display for Count {
     }
 }
 
+/// Represent a duration
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Duration {
+    pub value: U64,
+    pub unit: Option<DurationUnit>,
+}
+
+impl Duration {
+    pub fn new(value: U64, unit: Option<DurationUnit>) -> Duration {
+        Duration { value, unit }
+    }
+}
+
 impl fmt::Display for Duration {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let unit = if let Some(value) = self.unit {
@@ -72,6 +64,14 @@ impl fmt::Display for Duration {
         };
         write!(f, "{}{unit}", self.value)
     }
+}
+
+/// Represents a duration unit
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum DurationUnit {
+    MilliSecond,
+    Second,
+    Minute,
 }
 
 impl fmt::Display for DurationUnit {
