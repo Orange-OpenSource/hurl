@@ -27,3 +27,4 @@ mod json;
 mod option;
 mod primitive;
 mod section;
+mod visit;
