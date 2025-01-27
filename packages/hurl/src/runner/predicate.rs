@@ -652,126 +652,28 @@ fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
-    let actual_display = actual.repr();
-    let expected_display = expected.repr();
-    match (actual, expected) {
-        (Value::Null, Value::Null) => AssertResult {
-            success: true,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Bool(value1), Value::Bool(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Number(number1), Value::Number(number2)) => AssertResult {
-            success: number1.cmp_value(number2) == Ordering::Equal,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::String(value1), Value::String(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::List(value1), Value::List(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Date(value1), Value::Date(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        // FIXME: why case (UNIT UNIT) is not treated?
-        (Value::Unit, _) => AssertResult {
-            success: false,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: true,
-        },
-        _ => AssertResult {
-            success: false,
-            actual: actual_display,
-            expected: expected_display,
-            // FIXME: why type_mismatch is not true here?
-            type_mismatch: false,
-        },
+    let success = actual == expected;
+    let actual = actual.repr();
+    let expected = expected.repr();
+    let type_mismatch = false;
+    AssertResult {
+        success,
+        actual,
+        expected,
+        type_mismatch,
     }
 }
 
 fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
-    let actual_display = actual.repr();
-    let expected_display = expected.repr();
-    match (actual, expected) {
-        (Value::Null, Value::Null) => AssertResult {
-            success: false,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Bool(value1), Value::Bool(value2)) => AssertResult {
-            success: value1 != value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Number(number1), Value::Number(number2)) => AssertResult {
-            success: number1.cmp_value(number2) != Ordering::Equal,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::String(value1), Value::String(value2)) => AssertResult {
-            success: value1 != value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::List(value1), Value::List(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
-            success: value1 != value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Date(value1), Value::Date(value2)) => AssertResult {
-            success: value1 != value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Unit, _) => AssertResult {
-            success: false,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: true,
-        },
-        _ => AssertResult {
-            success: true,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
+    let success = actual != expected;
+    let actual = actual.repr();
+    let expected = expected.repr();
+    let type_mismatch = false;
+    AssertResult {
+        success,
+        actual,
+        expected,
+        type_mismatch,
     }
 }
 
@@ -1027,7 +929,7 @@ mod tests {
         let value = Value::Unit;
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
-        assert!(assert_result.type_mismatch);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual, "unit");
         assert_eq!(assert_result.expected, "integer <10>");
     }

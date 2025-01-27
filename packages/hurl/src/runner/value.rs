@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::fmt;
+use std::{cmp::Ordering, fmt};
 
 use crate::runner::Number;
 
@@ -65,14 +65,17 @@ pub enum ValueKind {
     Unit,
 }
 
-// You must implement it yourself because of the Regex Value
+/// Equality of values
+/// as used in the predicate ==
+///
+/// Any combination of value type can be used in the equality. There isn't any type/mismatch errors.
 impl PartialEq for Value {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (Value::Bool(v1), Value::Bool(v2)) => v1 == v2,
             (Value::Bytes(v1), Value::Bytes(v2)) => v1 == v2,
             (Value::Date(v1), Value::Date(v2)) => v1 == v2,
-            (Value::Number(v1), Value::Number(v2)) => v1 == v2,
+            (Value::Number(v1), Value::Number(v2)) => v1.cmp_value(v2) == Ordering::Equal,
             (Value::List(v1), Value::List(v2)) => v1 == v2,
             (Value::Nodeset(v1), Value::Nodeset(v2)) => v1 == v2,
             (Value::Null, Value::Null) => true,
@@ -233,6 +236,13 @@ mod tests {
     fn test_is_scalar() {
         assert!(Value::Number(Number::Integer(1)).is_scalar());
         assert!(!Value::List(vec![]).is_scalar());
+    }
+
+    #[test]
+    fn test_eq() {
+        assert!(!(Value::Bool(true) == Value::Bool(false)));
+        assert!(Value::Number(Number::Integer(1)) == Value::Number(Number::Float(1.0)));
+        assert!(!(Value::Bool(true) == Value::String("Hello".to_string())));
     }
 
     #[test]
