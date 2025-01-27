@@ -1,7 +1,6 @@
-use chrono::Utc;
 /*
  * Hurl (https://hurl.dev)
- * Copyright (C) 2024 Orange
+ * Copyright (C) 2025 Orange
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +20,7 @@ use uuid::Uuid;
 
 use crate::runner::error::RunnerError;
 use crate::runner::value::Value;
+use chrono::Utc;
 
 /// Evaluates the function `function`, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(function: &Function) -> Result<Value, RunnerError> {
