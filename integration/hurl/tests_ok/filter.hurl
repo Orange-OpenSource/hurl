@@ -4,6 +4,7 @@ HTTP 200
 url: jsonpath "$.url"
 text: jsonpath "$.text"
 [Asserts]
+jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7958c;
 jsonpath "$.list" count == 3
 jsonpath "$.list" nth 1 == 2
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
@@ -29,6 +30,7 @@ jsonpath "$.pi" toFloat > 3
 jsonpath "$.pi" toFloat < 4
 jsonpath "$.ten" toInt == 10
 {
+  "file": "5L2g5aW95LiW55WM",
   "list": [1,2,3],
   "message": "Hello Bob!",
   "url": "https://mozilla.org/?x=шеллы",

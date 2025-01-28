@@ -4,6 +4,7 @@ from app import app
 @app.route("/filter")
 def filter():
     return """{
+  "file": "5L2g5aW95LiW55WM",
   "list": [1,2,3],
   "message": "Hello Bob!",
   "url": "https://mozilla.org/?x=шеллы",
