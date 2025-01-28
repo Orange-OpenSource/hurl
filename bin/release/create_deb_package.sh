@@ -34,6 +34,7 @@ Description: Run and test HTTP requests
  from HTTP responses and make asserts.
 
 END
+echo "compress-type none" >> ~/.dpkg.cfg
 dpkg --build --no-compress target/debian
 
 
