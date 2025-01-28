@@ -35,7 +35,7 @@ Description: Run and test HTTP requests
 
 END
 echo "compress-type none" >> ~/.dpkg.cfg
-dpkg-deb -b target/debian
+dpkg-deb -Znone --build target/debian
 
 
 echo "Check Lintian"
@@ -43,5 +43,5 @@ sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload
-dpkgdeb -b target/debiancp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
+dpkgdeb -Znone --build target/debiancp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
 
