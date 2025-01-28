@@ -43,5 +43,4 @@ sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload
-dpkg-deb -Znone --build target/debiancp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
-
+cp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
