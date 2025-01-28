@@ -19,8 +19,8 @@ use crate::ast::{
     BooleanOption, CookieAttribute, CookieAttributeName, CookiePath, CountOption, DurationOption,
     Expr, ExprKind, FilterValue, Float, Function, Hex, Method, MultilineString,
     MultilineStringAttribute, MultilineStringKind, NaturalOption, Number, Placeholder,
-    PredicateFuncValue, Regex, Status, StatusValue, Template, TemplateElement, Variable,
-    VariableDefinition, VariableValue, Version, VersionValue,
+    PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template, TemplateElement,
+    Variable, VariableDefinition, VariableValue, Version, VersionValue,
 };
 use core::fmt;
 
@@ -318,6 +318,28 @@ impl PredicateFuncValue {
             PredicateFuncValue::Exist => "exists",
             PredicateFuncValue::IsEmpty => "isEmpty",
             PredicateFuncValue::IsNumber => "isNumber",
+        }
+    }
+}
+
+impl QueryValue {
+    /// Returns the Hurl string identifier of this query type.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            QueryValue::Status => "status",
+            QueryValue::Url => "url",
+            QueryValue::Header { .. } => "header",
+            QueryValue::Cookie { .. } => "cookie",
+            QueryValue::Body => "body",
+            QueryValue::Xpath { .. } => "xpath",
+            QueryValue::Jsonpath { .. } => "jsonpath",
+            QueryValue::Regex { .. } => "regex",
+            QueryValue::Variable { .. } => "variable",
+            QueryValue::Duration => "duration",
+            QueryValue::Bytes => "bytes",
+            QueryValue::Sha256 => "sha256",
+            QueryValue::Md5 => "md5",
+            QueryValue::Certificate { .. } => "certificate",
         }
     }
 }

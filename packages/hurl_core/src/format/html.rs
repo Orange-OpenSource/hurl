@@ -372,52 +372,47 @@ impl HtmlFormatter {
     }
 
     fn fmt_query_value(&mut self, query_value: &QueryValue) {
+        let query_type = query_value.identifier();
+        self.fmt_span("query-type", query_type);
         match query_value {
-            QueryValue::Status => self.fmt_span("query-type", "status"),
-            QueryValue::Url => self.fmt_span("query-type", "url"),
             QueryValue::Header { space0, name } => {
-                self.fmt_span("query-type", "header");
                 self.fmt_space(space0);
                 self.fmt_template(name);
             }
             QueryValue::Cookie { space0, expr } => {
-                self.fmt_span("query-type", "cookie");
                 self.fmt_space(space0);
                 self.fmt_cookie_path(expr);
             }
-            QueryValue::Body => self.fmt_span("query-type", "body"),
             QueryValue::Xpath { space0, expr } => {
-                self.fmt_span("query-type", "xpath");
                 self.fmt_space(space0);
                 self.fmt_template(expr);
             }
             QueryValue::Jsonpath { space0, expr } => {
-                self.fmt_span("query-type", "jsonpath");
                 self.fmt_space(space0);
                 self.fmt_template(expr);
             }
             QueryValue::Regex { space0, value } => {
-                self.fmt_span("query-type", "regex");
                 self.fmt_space(space0);
                 self.fmt_regex_value(value);
             }
             QueryValue::Variable { space0, name } => {
-                self.fmt_span("query-type", "variable");
                 self.fmt_space(space0);
                 self.fmt_template(name);
             }
-            QueryValue::Duration => self.fmt_span("query-type", "duration"),
-            QueryValue::Bytes => self.fmt_span("query-type", "bytes"),
-            QueryValue::Sha256 => self.fmt_span("query-type", "sha256"),
-            QueryValue::Md5 => self.fmt_span("query-type", "md5"),
             QueryValue::Certificate {
                 space0,
                 attribute_name: field,
             } => {
-                self.fmt_span("query-type", "certificate");
                 self.fmt_space(space0);
                 self.fmt_certificate_attribute_name(field);
             }
+            QueryValue::Status
+            | QueryValue::Url
+            | QueryValue::Body
+            | QueryValue::Duration
+            | QueryValue::Bytes
+            | QueryValue::Sha256
+            | QueryValue::Md5 => {}
         }
     }
 
