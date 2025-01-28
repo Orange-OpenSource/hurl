@@ -1078,45 +1078,27 @@ impl Tokenizable for VariableValue {
 
 impl Tokenizable for Filter {
     fn tokenize(&self) -> Vec<Token> {
-        match self.value.clone() {
-            FilterValue::Base64Decode => vec![Token::FilterType(String::from("base64Decode"))],
-            FilterValue::Base64Encode => vec![Token::FilterType(String::from("base64Encode"))],
-            FilterValue::Count => vec![Token::FilterType(String::from("count"))],
-            FilterValue::DaysAfterNow => vec![Token::FilterType(String::from("daysAfterNow"))],
-            FilterValue::DaysBeforeNow => vec![Token::FilterType(String::from("daysBeforeNow"))],
+        let mut tokens = vec![Token::FilterType(self.value.identifier().to_string())];
+        match &self.value {
             FilterValue::Decode { space0, encoding } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("decode"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut encoding.tokenize());
-                tokens
             }
             FilterValue::Format { space0, fmt } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("format"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut fmt.tokenize());
-                tokens
-            }
-            FilterValue::HtmlEscape => vec![Token::FilterType(String::from("htmlEscape"))],
-            FilterValue::HtmlUnescape => {
-                vec![Token::FilterType(String::from("htmlUnescape"))]
             }
             FilterValue::JsonPath { space0, expr } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("jsonpath"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
-                tokens
             }
             FilterValue::Nth { space0, n } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("nth"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.push(Token::Number(n.to_string()));
-                tokens
             }
             FilterValue::Regex { space0, value } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("regex"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
-                tokens
             }
             FilterValue::Replace {
                 space0,
@@ -1124,35 +1106,25 @@ impl Tokenizable for Filter {
                 space1,
                 new_value,
             } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("replace"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut old_value.tokenize());
                 tokens.append(&mut space1.tokenize());
                 tokens.append(&mut new_value.tokenize());
-                tokens
             }
-            FilterValue::UrlEncode => vec![Token::FilterType(String::from("urlEncode"))],
-            FilterValue::UrlDecode => vec![Token::FilterType(String::from("urlDecode"))],
             FilterValue::Split { space0, sep } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("split"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut sep.tokenize());
-                tokens
             }
             FilterValue::ToDate { space0, fmt } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("toDate"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut fmt.tokenize());
-                tokens
             }
-            FilterValue::ToFloat => vec![Token::FilterType(String::from("toFloat"))],
-            FilterValue::ToInt => vec![Token::FilterType(String::from("toInt"))],
             FilterValue::XPath { space0, expr } => {
-                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("xpath"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
-                tokens
             }
+            _ => {}
         }
+        tokens
     }
 }

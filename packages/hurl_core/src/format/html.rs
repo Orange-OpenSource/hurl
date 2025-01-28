@@ -800,37 +800,25 @@ impl HtmlFormatter {
     }
 
     fn fmt_filter_value(&mut self, filter_value: &FilterValue) {
-        let class = "filter-type";
+        self.fmt_span("filter-type", filter_value.identifier());
         match filter_value {
-            FilterValue::Base64Decode => self.fmt_span(class, "base64Decode"),
-            FilterValue::Base64Encode => self.fmt_span(class, "base64Encode"),
-            FilterValue::Count => self.fmt_span(class, "count"),
-            FilterValue::DaysAfterNow => self.fmt_span(class, "daysAfterNow"),
-            FilterValue::DaysBeforeNow => self.fmt_span(class, "daysBeforeNow"),
             FilterValue::Decode { space0, encoding } => {
-                self.fmt_span(class, "decode");
                 self.fmt_space(space0);
                 self.fmt_template(encoding);
             }
             FilterValue::Format { space0, fmt } => {
-                self.fmt_span(class, "format");
                 self.fmt_space(space0);
                 self.fmt_template(fmt);
             }
-            FilterValue::HtmlEscape => self.fmt_span(class, "htmlEscape"),
-            FilterValue::HtmlUnescape => self.fmt_span(class, "htmlUnescape"),
             FilterValue::JsonPath { space0, expr } => {
-                self.fmt_span(class, "jsonpath");
                 self.fmt_space(space0);
                 self.fmt_template(expr);
             }
             FilterValue::Nth { space0, n: value } => {
-                self.fmt_span(class, "nth");
                 self.fmt_space(space0);
                 self.fmt_number(value);
             }
             FilterValue::Regex { space0, value } => {
-                self.fmt_span(class, "regex");
                 self.fmt_space(space0);
                 self.fmt_regex_value(value);
             }
@@ -840,31 +828,34 @@ impl HtmlFormatter {
                 space1,
                 new_value,
             } => {
-                self.fmt_span(class, "replace");
                 self.fmt_space(space0);
                 self.fmt_regex_value(old_value);
                 self.fmt_space(space1);
                 self.fmt_template(new_value);
             }
             FilterValue::Split { space0, sep } => {
-                self.fmt_span(class, "split");
                 self.fmt_space(space0);
                 self.fmt_template(sep);
             }
             FilterValue::ToDate { space0, fmt } => {
-                self.fmt_span(class, "toDate");
                 self.fmt_space(space0);
                 self.fmt_template(fmt);
             }
-            FilterValue::ToFloat => self.fmt_span(class, "toFloat"),
-            FilterValue::ToInt => self.fmt_span(class, "toInt"),
-            FilterValue::UrlDecode => self.fmt_span(class, "urlDecode"),
-            FilterValue::UrlEncode => self.fmt_span(class, "urlEncode"),
             FilterValue::XPath { space0, expr } => {
-                self.fmt_span(class, "xpath");
                 self.fmt_space(space0);
                 self.fmt_template(expr);
             }
+            FilterValue::Base64Decode
+            | FilterValue::Base64Encode
+            | FilterValue::Count
+            | FilterValue::DaysAfterNow
+            | FilterValue::DaysBeforeNow
+            | FilterValue::HtmlEscape
+            | FilterValue::HtmlUnescape
+            | FilterValue::ToFloat
+            | FilterValue::ToInt
+            | FilterValue::UrlDecode
+            | FilterValue::UrlEncode => {}
         };
     }
 
