@@ -59,5 +59,6 @@ mod result;
 mod runner_options;
 mod template;
 mod value;
+mod value_impl;
 mod variable;
 mod xpath;

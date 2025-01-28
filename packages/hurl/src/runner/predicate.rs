@@ -681,14 +681,14 @@ fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> Assert
     let actual = actual_value.repr();
     let expected = format!("greater than {}", expected_value.repr());
 
-    match compare_values(actual_value, expected_value) {
-        Some(ordering) => AssertResult {
+    match actual_value.compare(expected_value) {
+        Ok(ordering) => AssertResult {
             success: ordering == Ordering::Greater,
             actual,
             expected,
             type_mismatch: false,
         },
-        None => AssertResult {
+        _ => AssertResult {
             success: false,
             actual,
             expected,
@@ -700,14 +700,14 @@ fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> Assert
 fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.repr();
     let expected = format!("greater or equal than {}", expected_value.repr());
-    match compare_values(actual_value, expected_value) {
-        Some(ordering) => AssertResult {
+    match actual_value.compare(expected_value) {
+        Ok(ordering) => AssertResult {
             success: ordering == Ordering::Greater || ordering == Ordering::Equal,
             actual,
             expected,
             type_mismatch: false,
         },
-        None => AssertResult {
+        _ => AssertResult {
             success: false,
             actual,
             expected,
@@ -719,14 +719,14 @@ fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) 
 fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.repr();
     let expected = format!("less than {}", expected_value.repr());
-    match compare_values(actual_value, expected_value) {
-        Some(ordering) => AssertResult {
+    match actual_value.compare(expected_value) {
+        Ok(ordering) => AssertResult {
             success: ordering == Ordering::Less,
             actual,
             expected,
             type_mismatch: false,
         },
-        None => AssertResult {
+        _ => AssertResult {
             success: false,
             actual,
             expected,
@@ -738,30 +738,19 @@ fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertRes
 fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.repr();
     let expected = format!("less or equal than {}", expected_value.repr());
-    match compare_values(actual_value, expected_value) {
-        Some(ordering) => AssertResult {
+    match actual_value.compare(expected_value) {
+        Ok(ordering) => AssertResult {
             success: ordering == Ordering::Less || ordering == Ordering::Equal,
             actual,
             expected,
             type_mismatch: false,
         },
-        None => AssertResult {
+        _ => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: true,
         },
-    }
-}
-
-/// Compares `actual` and `expected`.
-///
-/// Returns None it the values are not cpmparable
-fn compare_values(actual: &Value, expected: &Value) -> Option<Ordering> {
-    match (actual, expected) {
-        (Value::Number(number1), Value::Number(number2)) => Some(number1.cmp_value(number2)),
-        (Value::String(s1), Value::String(s2)) => Some(s1.cmp(s2)),
-        _ => None,
     }
 }
 
