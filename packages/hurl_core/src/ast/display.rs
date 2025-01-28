@@ -17,10 +17,10 @@
  */
 use crate::ast::{
     BooleanOption, CookieAttribute, CookieAttributeName, CookiePath, CountOption, DurationOption,
-    Expr, ExprKind, Float, Function, Hex, Method, MultilineString, MultilineStringAttribute,
-    MultilineStringKind, NaturalOption, Number, Placeholder, PredicateFuncValue, Regex, Status,
-    StatusValue, Template, TemplateElement, Variable, VariableDefinition, VariableValue, Version,
-    VersionValue,
+    Expr, ExprKind, FilterValue, Float, Function, Hex, Method, MultilineString,
+    MultilineStringAttribute, MultilineStringKind, NaturalOption, Number, Placeholder,
+    PredicateFuncValue, Regex, Status, StatusValue, Template, TemplateElement, Variable,
+    VariableDefinition, VariableValue, Version, VersionValue,
 };
 use core::fmt;
 
@@ -118,6 +118,34 @@ impl fmt::Display for ExprKind {
         match self {
             ExprKind::Variable(variable) => write!(f, "{}", variable),
             ExprKind::Function(function) => write!(f, "{}", function),
+        }
+    }
+}
+
+impl FilterValue {
+    /// Returns the Hurl identifier for this filter type.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            FilterValue::Base64Decode => "base64Decode",
+            FilterValue::Base64Encode => "base64Encode",
+            FilterValue::Count => "count",
+            FilterValue::DaysAfterNow => "daysAfterNow",
+            FilterValue::DaysBeforeNow => "daysBeforeNow",
+            FilterValue::Decode { .. } => "decode",
+            FilterValue::Format { .. } => "format",
+            FilterValue::HtmlEscape => "htmlEscape",
+            FilterValue::HtmlUnescape => "htmlUnescape",
+            FilterValue::JsonPath { .. } => "jsonpath",
+            FilterValue::Nth { .. } => "nth",
+            FilterValue::Regex { .. } => "regex",
+            FilterValue::Replace { .. } => "replace",
+            FilterValue::Split { .. } => "split",
+            FilterValue::ToDate { .. } => "toDate",
+            FilterValue::ToFloat => "toFloat",
+            FilterValue::ToInt => "toInt",
+            FilterValue::UrlDecode => "urlDecode",
+            FilterValue::UrlEncode => "urlEncode",
+            FilterValue::XPath { .. } => "xpath",
         }
     }
 }
