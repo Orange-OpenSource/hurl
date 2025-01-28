@@ -34,7 +34,7 @@ Description: Run and test HTTP requests
  from HTTP responses and make asserts.
 
 END
-dpkg --build target/debian
+dpkg-deb -Znone --build target/debian
 
 
 echo "Check Lintian"
@@ -43,4 +43,3 @@ lintian --verbose target/debian.deb
 
 mkdir -p target/upload
 cp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
-
