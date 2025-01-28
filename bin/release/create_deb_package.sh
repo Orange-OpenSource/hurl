@@ -34,7 +34,7 @@ Description: Run and test HTTP requests
  from HTTP responses and make asserts.
 
 END
-dpkg --build target/debian
+dpkg --build --no-compress target/debian
 
 
 echo "Check Lintian"
@@ -42,5 +42,5 @@ sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload
-dpkg --build -Zxz target/debiancp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
+dpkg --build --no-compress target/debiancp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
 
