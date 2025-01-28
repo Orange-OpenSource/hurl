@@ -417,55 +417,45 @@ impl Tokenizable for Query {
 
 impl Tokenizable for QueryValue {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        match self.clone() {
-            QueryValue::Status => tokens.push(Token::QueryType(String::from("status"))),
-            QueryValue::Url => tokens.push(Token::QueryType(String::from("url"))),
+        let mut tokens = vec![];
+        let token = Token::QueryType(self.identifier().to_string());
+        tokens.push(token);
+
+        match self {
             QueryValue::Header { space0, name } => {
-                tokens.push(Token::QueryType(String::from("header")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut name.tokenize());
             }
             QueryValue::Cookie { space0, expr } => {
-                tokens.push(Token::QueryType(String::from("cookie")));
                 tokens.append(&mut space0.tokenize());
                 tokens.push(Token::CodeDelimiter("\"".to_string()));
                 tokens.append(&mut expr.tokenize());
                 tokens.push(Token::CodeDelimiter("\"".to_string()));
             }
-            QueryValue::Body => tokens.push(Token::QueryType(String::from("body"))),
             QueryValue::Xpath { space0, expr } => {
-                tokens.push(Token::QueryType(String::from("xpath")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
             }
             QueryValue::Jsonpath { space0, expr } => {
-                tokens.push(Token::QueryType(String::from("jsonpath")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
             }
             QueryValue::Regex { space0, value } => {
-                tokens.push(Token::QueryType(String::from("regex")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             QueryValue::Variable { space0, name } => {
-                tokens.push(Token::QueryType(String::from("variable")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut name.tokenize());
             }
-            QueryValue::Duration => tokens.push(Token::QueryType(String::from("duration"))),
-            QueryValue::Bytes => tokens.push(Token::QueryType(String::from("bytes"))),
-            QueryValue::Sha256 => tokens.push(Token::QueryType(String::from("sha256"))),
-            QueryValue::Md5 => tokens.push(Token::QueryType(String::from("md5"))),
             QueryValue::Certificate {
                 space0,
                 attribute_name: field,
             } => {
-                tokens.push(Token::QueryType(String::from("certificate")));
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut field.tokenize());
             }
+            _ => {}
         }
         tokens
     }
