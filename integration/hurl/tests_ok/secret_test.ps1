@@ -15,6 +15,7 @@ $file = "build/secret_test.err"
 foreach ($secret in $secrets) {
     if (Get-Content $file | Select-String -CaseSensitive $secret) {
         echo "Secret <$secret> have leaked in $file"
+        Get-Content $file
         exit 1
     }
 }

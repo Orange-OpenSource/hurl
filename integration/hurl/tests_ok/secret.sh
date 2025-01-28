@@ -31,6 +31,7 @@ for secret in "${secrets[@]}"; do
     fi
     if grep -q "$secret" "$file"; then
         echo "Secret <$secret> have leaked in $file"
+        cat "$file"
         exit 1
     fi
   done
