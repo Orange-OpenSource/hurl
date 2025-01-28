@@ -453,62 +453,35 @@ impl ToJson for Query {
 
 fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
     let mut attributes = vec![];
+    let att_type = JValue::String(query_value.identifier().to_string());
+    attributes.push(("type".to_string(), att_type));
+
     match query_value {
-        QueryValue::Status => {
-            attributes.push(("type".to_string(), JValue::String("status".to_string())));
-        }
-        QueryValue::Url => {
-            attributes.push(("type".to_string(), JValue::String("url".to_string())));
-        }
-        QueryValue::Body => {
-            attributes.push(("type".to_string(), JValue::String("body".to_string())));
-        }
         QueryValue::Jsonpath { expr, .. } => {
-            attributes.push(("type".to_string(), JValue::String("jsonpath".to_string())));
             attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
         }
         QueryValue::Header { name, .. } => {
-            attributes.push(("type".to_string(), JValue::String("header".to_string())));
             attributes.push(("name".to_string(), JValue::String(name.to_string())));
         }
         QueryValue::Cookie { expr, .. } => {
-            attributes.push(("type".to_string(), JValue::String("cookie".to_string())));
             attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
         }
         QueryValue::Xpath { expr, .. } => {
-            attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
             attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
         }
         QueryValue::Regex { value, .. } => {
-            attributes.push(("type".to_string(), JValue::String("regex".to_string())));
             attributes.push(("expr".to_string(), value.to_json()));
         }
         QueryValue::Variable { name, .. } => {
-            attributes.push(("type".to_string(), JValue::String("variable".to_string())));
             attributes.push(("name".to_string(), JValue::String(name.to_string())));
-        }
-        QueryValue::Duration => {
-            attributes.push(("type".to_string(), JValue::String("duration".to_string())));
-        }
-        QueryValue::Bytes => {
-            attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
-        }
-        QueryValue::Sha256 => {
-            attributes.push(("type".to_string(), JValue::String("sha256".to_string())));
-        }
-        QueryValue::Md5 => {
-            attributes.push(("type".to_string(), JValue::String("md5".to_string())));
         }
         QueryValue::Certificate {
             attribute_name: field,
             ..
         } => {
-            attributes.push((
-                "type".to_string(),
-                JValue::String("certificate".to_string()),
-            ));
             attributes.push(("expr".to_string(), field.to_json()));
         }
+        _ => {}
     };
     attributes
 }

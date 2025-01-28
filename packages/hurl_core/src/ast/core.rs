@@ -1,5 +1,3 @@
-use std::fmt;
-
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -17,6 +15,8 @@ use std::fmt;
  * limitations under the License.
  *
  */
+use std::fmt;
+
 use crate::ast::json;
 use crate::reader::Pos;
 use crate::typing::{Count, Duration};
