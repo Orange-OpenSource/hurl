@@ -223,7 +223,8 @@ impl fmt::Display for Placeholder {
 }
 
 impl PredicateFuncValue {
-    pub fn name(&self) -> &str {
+    /// Returns the Hurl string identifier of this predicate.
+    pub fn identifier(&self) -> &'static str {
         match self {
             PredicateFuncValue::Equal { .. } => "==",
             PredicateFuncValue::NotEqual { .. } => "!=",

@@ -523,7 +523,7 @@ impl Tokenizable for PredicateFunc {
 impl Tokenizable for PredicateFuncValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        let name = self.name().to_string();
+        let name = self.identifier().to_string();
         match self {
             PredicateFuncValue::Equal { space0, value, .. } => {
                 tokens.push(Token::PredicateType(name));

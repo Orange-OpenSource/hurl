@@ -480,7 +480,7 @@ impl HtmlFormatter {
 
     fn fmt_predicate_func_value(&mut self, value: &PredicateFuncValue) {
         self.fmt_span_open("predicate-type");
-        self.buffer.push_str(&encode_html(value.name()));
+        self.buffer.push_str(&encode_html(value.identifier()));
         self.fmt_span_close();
 
         match value {
