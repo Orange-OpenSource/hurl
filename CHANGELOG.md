@@ -5,6 +5,7 @@ Thanks to
 [@theoforger](https://github.com/theoforger),
 [@docwhat](https://github.com/docwhat),
 [@glb-cblin](https://github.com/glb-cblin),
+[@Enoz](https://github.com/Enoz),
 [@ashishajr](https://github.com/ashishajr),
 
 Breaking Changes:
@@ -23,11 +24,13 @@ Enhancements:
 * Allow sending empty HTTP header [#3536](https://github.com/Orange-OpenSource/hurl/issues/3536)
 * Redact dynamic values from logs [#3543](https://github.com/Orange-OpenSource/hurl/issues/3543)
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
+* hurlfmt: Use Hurl predicates identifiers for Hurl to JSON file export [#3662](https://github.com/Orange-OpenSource/hurl/issues/3662)
 
 
 Bugs Fixed:
 
 * Fix missing request line errors in HTML report [#3534](https://github.com/Orange-OpenSource/hurl/issues/3534)
+* Eval template in JSON object key [#3593](https://github.com/Orange-OpenSource/hurl/issues/3593)
 * Show error message if format is invalid in `format` filter [#3613](https://github.com/Orange-OpenSource/hurl/issues/3613)
 
 
