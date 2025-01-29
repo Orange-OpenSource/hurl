@@ -65,6 +65,12 @@ pub enum ValueKind {
     Unit,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum EvalError {
+    Type,
+    InvalidRegex,
+}
+
 /// Equality of values
 /// as used in the predicate ==
 ///
