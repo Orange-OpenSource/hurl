@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
+//! Exposes Hurl AST nodes (see [Hurl grammar](https://hurl.dev/docs/grammar.html)).
 pub use self::core::*;
 pub use self::json::{
     ListElement as JsonListElement, ObjectElement as JsonObjectElement, Value as JsonValue,

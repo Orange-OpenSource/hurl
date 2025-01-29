@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  */
+//! This module regroups methods on AST nodes to be serialized as Hurl strings and expose
+//! Hurl file format identifier that can be used, for instance, as identifier when exporting
+//! an Hurl AST to a JSON representation.
 use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
     CountOption, DurationOption, Expr, ExprKind, FilterValue, Float, Function, Hex, Method,

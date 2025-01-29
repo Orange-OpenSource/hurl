@@ -21,9 +21,7 @@ use crate::ast::json;
 use crate::reader::Pos;
 use crate::typing::{Count, Duration};
 
-///
-/// Hurl AST
-///
+/// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlFile {
     pub entries: Vec<Entry>,
