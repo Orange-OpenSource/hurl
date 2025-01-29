@@ -494,16 +494,9 @@ impl Tokenizable for CookieAttribute {
 
 impl Tokenizable for CertificateAttributeName {
     fn tokenize(&self) -> Vec<Token> {
-        let value = match self {
-            CertificateAttributeName::Subject => "Subject",
-            CertificateAttributeName::Issuer => "Issuer",
-            CertificateAttributeName::StartDate => "Start-Date",
-            CertificateAttributeName::ExpireDate => "Expire-Date",
-            CertificateAttributeName::SerialNumber => "Serial-Number",
-        };
         vec![
             Token::StringDelimiter("\"".to_string()),
-            Token::String(value.to_string()),
+            Token::String(self.identifier().to_string()),
             Token::StringDelimiter("\"".to_string()),
         ]
     }

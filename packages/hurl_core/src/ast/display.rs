@@ -16,11 +16,11 @@
  *
  */
 use crate::ast::{
-    BooleanOption, CookieAttribute, CookieAttributeName, CookiePath, CountOption, DurationOption,
-    Expr, ExprKind, FilterValue, Float, Function, Hex, Method, MultilineString,
-    MultilineStringAttribute, MultilineStringKind, NaturalOption, Number, Placeholder,
-    PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template, TemplateElement,
-    Variable, VariableDefinition, VariableValue, Version, VersionValue,
+    BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
+    CountOption, DurationOption, Expr, ExprKind, FilterValue, Float, Function, Hex, Method,
+    MultilineString, MultilineStringAttribute, MultilineStringKind, NaturalOption, Number,
+    Placeholder, PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template,
+    TemplateElement, Variable, VariableDefinition, VariableValue, Version, VersionValue,
 };
 use core::fmt;
 
@@ -29,6 +29,19 @@ impl fmt::Display for BooleanOption {
         match self {
             BooleanOption::Literal(v) => write!(f, "{}", v),
             BooleanOption::Placeholder(v) => write!(f, "{}", v),
+        }
+    }
+}
+
+impl CertificateAttributeName {
+    /// Returns the Hurl string identifier of this certificate attribute name.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            CertificateAttributeName::Subject => "Subject",
+            CertificateAttributeName::Issuer => "Issuer",
+            CertificateAttributeName::StartDate => "Start-Date",
+            CertificateAttributeName::ExpireDate => "Expire-Date",
+            CertificateAttributeName::SerialNumber => "Serial-Number",
         }
     }
 }

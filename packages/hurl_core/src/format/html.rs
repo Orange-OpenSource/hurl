@@ -444,16 +444,9 @@ impl HtmlFormatter {
     }
 
     fn fmt_certificate_attribute_name(&mut self, name: &CertificateAttributeName) {
-        let value = match name {
-            CertificateAttributeName::Subject => "Subject",
-            CertificateAttributeName::Issuer => "Issuer",
-            CertificateAttributeName::StartDate => "Start-Date",
-            CertificateAttributeName::ExpireDate => "Expire-Date",
-            CertificateAttributeName::SerialNumber => "Serial-Number",
-        };
         self.fmt_span_open("string");
         self.buffer.push('"');
-        self.buffer.push_str(value);
+        self.buffer.push_str(name.identifier());
         self.buffer.push('"');
         self.fmt_span_close();
     }

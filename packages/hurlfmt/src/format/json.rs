@@ -507,14 +507,7 @@ impl ToJson for Regex {
 
 impl ToJson for CertificateAttributeName {
     fn to_json(&self) -> JValue {
-        let value = match self {
-            CertificateAttributeName::Subject => "Subject",
-            CertificateAttributeName::Issuer => "Issuer",
-            CertificateAttributeName::StartDate => "Start-Date",
-            CertificateAttributeName::ExpireDate => "Expire-Date",
-            CertificateAttributeName::SerialNumber => "Serial-Number",
-        };
-        JValue::String(value.to_string())
+        JValue::String(self.identifier().to_string())
     }
 }
 
