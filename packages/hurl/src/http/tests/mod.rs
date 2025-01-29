@@ -21,7 +21,7 @@ use crate::http::{
     Header, HeaderVec, HttpVersion, Method, Param, RequestCookie, RequestSpec, Response, Url,
 };
 
-/// Some Request Response to be used by tests
+// Some Request Response to be used by tests
 
 fn default_response() -> Response {
     Response {

@@ -60,24 +60,24 @@ mod tests {
         assert_eq!(
             eval_filter(
                 &filter,
-                &Value::String("3.1415".to_string()),
+                &Value::String("3.5415".to_string()),
                 &variable,
                 false
             )
             .unwrap()
             .unwrap(),
-            Value::Number(Number::Float(3.1415))
+            Value::Number(Number::Float(3.5415))
         );
         assert_eq!(
             eval_filter(
                 &filter,
-                &Value::Number(Number::Float(3.1415)),
+                &Value::Number(Number::Float(3.5415)),
                 &variable,
                 false
             )
             .unwrap()
             .unwrap(),
-            Value::Number(Number::Float(3.1415))
+            Value::Number(Number::Float(3.5415))
         );
         assert_eq!(
             eval_filter(
