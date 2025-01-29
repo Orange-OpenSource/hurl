@@ -223,7 +223,7 @@ mod test {
                 Visibility::Secret
             ))
         );
-        assert!(variables.get("BAZ").is_none())
+        assert!(variables.get("BAZ").is_none());
     }
 
     #[test]
@@ -286,6 +286,6 @@ mod test {
 
         let mut secrets = variables.secrets();
         secrets.sort();
-        assert_eq!(secrets, vec!["1234", "42"])
+        assert_eq!(secrets, vec!["1234", "42"]);
     }
 }

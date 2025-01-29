@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
+//! Some [`Request`]/[`Response`] used by tests.
 use std::str::FromStr;
 
 use crate::http::{
     Header, HeaderVec, HttpVersion, Method, Param, RequestCookie, RequestSpec, Response, Url,
 };
-
-/// Some Request Response to be used by tests
 
 fn default_response() -> Response {
     Response {

@@ -54,6 +54,6 @@ mod tests {
         let mut reader = Reader::new("name");
         let err = parse(&mut reader).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
-        assert_eq!(err.recoverable, true);
+        assert!(err.recoverable);
     }
 }

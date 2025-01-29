@@ -543,12 +543,12 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(cmd.to_string(), "curl 'http://localhost:8000/hello'");
 
         // Same requests with some output:
         let output = Some(Output::new("foo.out"));
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -561,7 +561,7 @@ mod tests {
         headers.push(Header::new("User-Agent", "iPhone"));
         headers.push(Header::new("Foo", "Bar"));
         request.headers = headers;
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -594,7 +594,7 @@ mod tests {
                 http_only: true,
             },
         ];
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -657,7 +657,7 @@ mod tests {
             verbosity: None,
         };
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, None, &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, None, &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -701,7 +701,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl 'https://example.org/hello/../to/../your/../file'"
@@ -721,7 +721,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -753,7 +753,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl 'http://localhost:8000/querystring-params?param1=value1&param2=a%20b'",
@@ -763,7 +763,7 @@ mod tests {
         request.url =
             Url::from_str("http://localhost:8000/querystring-params?param3=foo&param4=bar")
                 .unwrap();
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl 'http://localhost:8000/querystring-params?param3=foo&param4=bar&param1=value1&param2=a%20b'",
@@ -792,7 +792,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -811,7 +811,7 @@ mod tests {
             method: Method("POST".to_string()),
             url: Url::from_str("http://localhost/json").unwrap(),
             headers,
-            body: Body::Text("".to_string()),
+            body: Body::Text(String::new()),
             implicit_content_type: Some("application/json".to_string()),
             ..Default::default()
         };
@@ -821,7 +821,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -832,7 +832,7 @@ mod tests {
 
         // Add a non-empty body
         request.body = Body::Text("{\"foo\":\"bar\"}".to_string());
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -843,7 +843,7 @@ mod tests {
 
         // Change method
         request.method = Method("PUT".to_string());
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -868,7 +868,7 @@ mod tests {
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl \

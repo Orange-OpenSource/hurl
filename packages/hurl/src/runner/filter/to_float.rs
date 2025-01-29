@@ -50,6 +50,7 @@ mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Number, RunnerErrorKind, Value, VariableSet};
 
+    #[allow(clippy::approx_constant)]
     #[test]
     fn eval_filter_to_float() {
         let variable = VariableSet::new();

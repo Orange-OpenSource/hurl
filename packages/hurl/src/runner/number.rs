@@ -155,8 +155,8 @@ mod tests {
         let integer_minus_one = Number::from(-1);
         let integer_one = Number::from(1);
         let integer_two = Number::from(2);
-        let integer_max = Number::from(i64::max_value());
-        let integer_min = Number::from(i64::min_value());
+        let integer_max = Number::from(i64::MAX);
+        let integer_min = Number::from(i64::MIN);
 
         let float_zero = Number::from(0.0);
         let float_one = Number::from(1.0);

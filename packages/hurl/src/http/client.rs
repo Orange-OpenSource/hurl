@@ -1196,7 +1196,7 @@ mod tests {
 
         let logger_options = LoggerOptionsBuilder::default().build();
         let stderr = Stderr::new(WriteMode::Immediate);
-        let mut logger = Logger::new(&logger_options, stderr, &vec![]);
+        let mut logger = Logger::new(&logger_options, stderr, &[]);
 
         let cmd = client.curl_command_line(&request, &context_dir, output, &options, &mut logger);
         assert_eq!(
@@ -1261,6 +1261,6 @@ mod tests {
         assert_eq!(
             list.iter().collect::<Vec<_>>(),
             vec!["foo: a".as_bytes(), "bar: b".as_bytes(), "baz;".as_bytes()]
-        )
+        );
     }
 }
