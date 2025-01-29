@@ -24,86 +24,57 @@ use crate::ast::{
 };
 use core::fmt;
 
-impl fmt::Display for Method {
+impl fmt::Display for BooleanOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
+        match self {
+            BooleanOption::Literal(v) => write!(f, "{}", v),
+            BooleanOption::Placeholder(v) => write!(f, "{}", v),
+        }
     }
 }
 
-impl fmt::Display for Version {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
+impl fmt::Display for CookiePath {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = self.name.to_string();
+        if let Some(attribute) = &self.attribute {
+            let s = format!("[{attribute}]");
+            buf.push_str(s.as_str());
+        }
+        write!(f, "{buf}")
     }
 }
 
-impl fmt::Display for VersionValue {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            VersionValue::Version1 => "HTTP/1.0",
-            VersionValue::Version11 => "HTTP/1.1",
-            VersionValue::Version2 => "HTTP/2",
-            VersionValue::Version3 => "HTTP/3",
-            VersionValue::VersionAny => "HTTP",
-            VersionValue::VersionAnyLegacy => "HTTP/*",
+impl fmt::Display for CookieAttribute {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self.name {
+            CookieAttributeName::MaxAge(_) => "Max-Age",
+            CookieAttributeName::Value(_) => "Value",
+            CookieAttributeName::Expires(_) => "Expires",
+            CookieAttributeName::Domain(_) => "Domain",
+            CookieAttributeName::Path(_) => "Path",
+            CookieAttributeName::Secure(_) => "Secure",
+            CookieAttributeName::HttpOnly(_) => "HttpOnly",
+            CookieAttributeName::SameSite(_) => "SameSite",
         };
         write!(f, "{s}")
     }
 }
 
-impl fmt::Display for Status {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-impl fmt::Display for StatusValue {
+impl fmt::Display for CountOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            StatusValue::Any => write!(f, "*"),
-            StatusValue::Specific(v) => write!(f, "{v}"),
+            CountOption::Literal(v) => write!(f, "{}", v),
+            CountOption::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }
 
-impl fmt::Display for Template {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buffer = String::new();
-        for element in self.elements.iter() {
-            buffer.push_str(element.to_string().as_str());
-        }
-        write!(f, "{buffer}")
-    }
-}
-
-impl fmt::Display for TemplateElement {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            TemplateElement::String { value, .. } => value.clone(),
-            TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}"),
-        };
-        write!(f, "{s}")
-    }
-}
-
-impl fmt::Display for Number {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl fmt::Display for DurationOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Number::Float(value) => write!(f, "{}", value),
-            Number::Integer(value) => write!(f, "{}", value),
-            Number::BigInteger(value) => write!(f, "{}", value),
+            DurationOption::Literal(v) => write!(f, "{}", v),
+            DurationOption::Placeholder(v) => write!(f, "{}", v),
         }
-    }
-}
-
-impl fmt::Display for Float {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.encoded)
-    }
-}
-
-impl fmt::Display for Placeholder {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.expr)
     }
 }
 
@@ -150,9 +121,9 @@ impl FilterValue {
     }
 }
 
-impl fmt::Display for Variable {
+impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.name)
+        write!(f, "{}", self.encoded)
     }
 }
 
@@ -162,33 +133,6 @@ impl fmt::Display for Function {
             Function::NewDate => write!(f, "newDate"),
             Function::NewUuid => write!(f, "newUuid"),
         }
-    }
-}
-
-impl fmt::Display for CookiePath {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buf = self.name.to_string();
-        if let Some(attribute) = &self.attribute {
-            let s = format!("[{attribute}]");
-            buf.push_str(s.as_str());
-        }
-        write!(f, "{buf}")
-    }
-}
-
-impl fmt::Display for CookieAttribute {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self.name {
-            CookieAttributeName::MaxAge(_) => "Max-Age",
-            CookieAttributeName::Value(_) => "Value",
-            CookieAttributeName::Expires(_) => "Expires",
-            CookieAttributeName::Domain(_) => "Domain",
-            CookieAttributeName::Path(_) => "Path",
-            CookieAttributeName::Secure(_) => "Secure",
-            CookieAttributeName::HttpOnly(_) => "HttpOnly",
-            CookieAttributeName::SameSite(_) => "SameSite",
-        };
-        write!(f, "{s}")
     }
 }
 
@@ -202,9 +146,9 @@ impl fmt::Display for Hex {
     }
 }
 
-impl fmt::Display for Regex {
+impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.inner)
+        write!(f, "{}", self.0)
     }
 }
 
@@ -240,15 +184,6 @@ impl fmt::Display for MultilineStringAttribute {
     }
 }
 
-impl fmt::Display for BooleanOption {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            BooleanOption::Literal(v) => write!(f, "{}", v),
-            BooleanOption::Placeholder(v) => write!(f, "{}", v),
-        }
-    }
-}
-
 impl fmt::Display for NaturalOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -258,39 +193,19 @@ impl fmt::Display for NaturalOption {
     }
 }
 
-impl fmt::Display for CountOption {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl fmt::Display for Number {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            CountOption::Literal(v) => write!(f, "{}", v),
-            CountOption::Placeholder(v) => write!(f, "{}", v),
+            Number::Float(value) => write!(f, "{}", value),
+            Number::Integer(value) => write!(f, "{}", value),
+            Number::BigInteger(value) => write!(f, "{}", value),
         }
     }
 }
 
-impl fmt::Display for DurationOption {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            DurationOption::Literal(v) => write!(f, "{}", v),
-            DurationOption::Placeholder(v) => write!(f, "{}", v),
-        }
-    }
-}
-
-impl fmt::Display for VariableDefinition {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}={}", self.name, self.value)
-    }
-}
-
-impl fmt::Display for VariableValue {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            VariableValue::Null => "null".to_string(),
-            VariableValue::Bool(value) => value.to_string(),
-            VariableValue::Number(n) => n.to_string(),
-            VariableValue::String(s) => s.to_string(),
-        };
-        write!(f, "{}", s)
+impl fmt::Display for Placeholder {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.expr)
     }
 }
 
@@ -341,6 +256,91 @@ impl QueryValue {
             QueryValue::Md5 => "md5",
             QueryValue::Certificate { .. } => "certificate",
         }
+    }
+}
+
+impl fmt::Display for Regex {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.inner)
+    }
+}
+
+impl fmt::Display for Status {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl fmt::Display for StatusValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            StatusValue::Any => write!(f, "*"),
+            StatusValue::Specific(v) => write!(f, "{v}"),
+        }
+    }
+}
+
+impl fmt::Display for Template {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buffer = String::new();
+        for element in self.elements.iter() {
+            buffer.push_str(element.to_string().as_str());
+        }
+        write!(f, "{buffer}")
+    }
+}
+
+impl fmt::Display for TemplateElement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self {
+            TemplateElement::String { value, .. } => value.clone(),
+            TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}"),
+        };
+        write!(f, "{s}")
+    }
+}
+
+impl fmt::Display for Variable {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+impl fmt::Display for VariableDefinition {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}={}", self.name, self.value)
+    }
+}
+
+impl fmt::Display for VariableValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            VariableValue::Null => "null".to_string(),
+            VariableValue::Bool(value) => value.to_string(),
+            VariableValue::Number(n) => n.to_string(),
+            VariableValue::String(s) => s.to_string(),
+        };
+        write!(f, "{}", s)
+    }
+}
+
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl fmt::Display for VersionValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            VersionValue::Version1 => "HTTP/1.0",
+            VersionValue::Version11 => "HTTP/1.1",
+            VersionValue::Version2 => "HTTP/2",
+            VersionValue::Version3 => "HTTP/3",
+            VersionValue::VersionAny => "HTTP",
+            VersionValue::VersionAnyLegacy => "HTTP/*",
+        };
+        write!(f, "{s}")
     }
 }
 
