@@ -96,7 +96,11 @@ fn format(
 ) -> String {
     let mut s = format!("{method} {url}");
     for header in headers {
-        s.push_str(format!("\n{header}").as_str());
+        if let Some(stripped) = header.strip_suffix(";") {
+            s.push_str(format!("\n{}:", stripped).as_str());
+        } else {
+            s.push_str(format!("\n{header}").as_str());
+        }
     }
     if !options.is_empty() {
         s.push_str("\n[Options]");
@@ -183,6 +187,17 @@ Test: '
         );
         assert_eq!(
             parse_line("curl http://localhost:8000/custom-headers   --header Fruit:Raspberry -H 'Fruit: Banana' -H $'Test: \\''  ").unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_empty_headers() {
+        let hurl_str = r#"GET http://localhost:8000/empty-headers
+Empty-Header:
+"#;
+        assert_eq!(
+            parse_line("curl http://localhost:8000/empty-headers -H 'Empty-Header;'").unwrap(),
             hurl_str
         );
     }
