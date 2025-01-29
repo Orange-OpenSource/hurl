@@ -19,7 +19,7 @@ use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
     CountOption, DurationOption, Expr, ExprKind, FilterValue, Float, Function, Hex, Method,
     MultilineString, MultilineStringAttribute, MultilineStringKind, NaturalOption, Number,
-    Placeholder, PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template,
+    OptionKind, Placeholder, PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template,
     TemplateElement, Variable, VariableDefinition, VariableValue, Version, VersionValue,
 };
 use core::fmt;
@@ -212,6 +212,94 @@ impl fmt::Display for Number {
             Number::Float(value) => write!(f, "{}", value),
             Number::Integer(value) => write!(f, "{}", value),
             Number::BigInteger(value) => write!(f, "{}", value),
+        }
+    }
+}
+
+impl OptionKind {
+    /// Returns the Hurl string identifier of this option.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            OptionKind::AwsSigV4(_) => "aws-sigv4",
+            OptionKind::CaCertificate(_) => "cacert",
+            OptionKind::ClientCert(_) => "cert",
+            OptionKind::ClientKey(_) => "key",
+            OptionKind::Compressed(_) => "compressed",
+            OptionKind::ConnectTo(_) => "connect-to",
+            OptionKind::ConnectTimeout(_) => "connect-timeout",
+            OptionKind::Delay(_) => "delay",
+            OptionKind::FollowLocation(_) => "location",
+            OptionKind::FollowLocationTrusted(_) => "location-trusted",
+            OptionKind::Header(_) => "header",
+            OptionKind::Http10(_) => "http1.0",
+            OptionKind::Http11(_) => "http1.1",
+            OptionKind::Http2(_) => "http2",
+            OptionKind::Http3(_) => "http3",
+            OptionKind::Insecure(_) => "insecure",
+            OptionKind::IpV4(_) => "ipv4",
+            OptionKind::IpV6(_) => "ipv6",
+            OptionKind::LimitRate(_) => "limit-rate",
+            OptionKind::MaxRedirect(_) => "max-redirs",
+            OptionKind::NetRc(_) => "netrc",
+            OptionKind::NetRcFile(_) => "netrc-file",
+            OptionKind::NetRcOptional(_) => "netrc-optional",
+            OptionKind::Output(_) => "output",
+            OptionKind::PathAsIs(_) => "path-as-is",
+            OptionKind::Proxy(_) => "proxy",
+            OptionKind::Repeat(_) => "repeat",
+            OptionKind::Resolve(_) => "resolve",
+            OptionKind::Retry(_) => "retry",
+            OptionKind::RetryInterval(_) => "retry-interval",
+            OptionKind::Skip(_) => "skip",
+            OptionKind::UnixSocket(_) => "unix-socket",
+            OptionKind::User(_) => "user",
+            OptionKind::Variable(_) => "variable",
+            OptionKind::Verbose(_) => "verbose",
+            OptionKind::VeryVerbose(_) => "very-verbose",
+        }
+    }
+
+    /// Returns the string representation of this option.
+    pub fn value_as_str(&self) -> String {
+        match self {
+            OptionKind::AwsSigV4(value) => value.to_string(),
+            OptionKind::CaCertificate(filename) => filename.to_string(),
+            OptionKind::ClientCert(filename) => filename.to_string(),
+            OptionKind::ClientKey(filename) => filename.to_string(),
+            OptionKind::Compressed(value) => value.to_string(),
+            OptionKind::ConnectTo(value) => value.to_string(),
+            OptionKind::ConnectTimeout(value) => value.to_string(),
+            OptionKind::Delay(value) => value.to_string(),
+            OptionKind::FollowLocation(value) => value.to_string(),
+            OptionKind::FollowLocationTrusted(value) => value.to_string(),
+            OptionKind::Header(value) => value.to_string(),
+            OptionKind::Http10(value) => value.to_string(),
+            OptionKind::Http11(value) => value.to_string(),
+            OptionKind::Http2(value) => value.to_string(),
+            OptionKind::Http3(value) => value.to_string(),
+            OptionKind::Insecure(value) => value.to_string(),
+            OptionKind::IpV4(value) => value.to_string(),
+            OptionKind::IpV6(value) => value.to_string(),
+            OptionKind::LimitRate(value) => value.to_string(),
+            OptionKind::MaxRedirect(value) => value.to_string(),
+            OptionKind::NetRc(value) => value.to_string(),
+            OptionKind::NetRcFile(filename) => filename.to_string(),
+            OptionKind::NetRcOptional(value) => value.to_string(),
+            OptionKind::Output(filename) => filename.to_string(),
+            OptionKind::PathAsIs(value) => value.to_string(),
+            OptionKind::Proxy(value) => value.to_string(),
+            OptionKind::Repeat(value) => value.to_string(),
+            OptionKind::Resolve(value) => value.to_string(),
+            OptionKind::Retry(value) => value.to_string(),
+            OptionKind::RetryInterval(value) => value.to_string(),
+            OptionKind::Skip(value) => value.to_string(),
+            OptionKind::UnixSocket(value) => value.to_string(),
+            OptionKind::User(value) => value.to_string(),
+            OptionKind::Variable(VariableDefinition { name, value, .. }) => {
+                format!("{name}={value}")
+            }
+            OptionKind::Verbose(value) => value.to_string(),
+            OptionKind::VeryVerbose(value) => value.to_string(),
         }
     }
 }

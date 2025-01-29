@@ -272,7 +272,7 @@ pub fn get_entry_options(
 
 /// Logs an entry option.
 fn log_option(option: &EntryOption, logger: &mut Logger) {
-    let name = option.kind.name();
+    let name = option.kind.identifier();
     let value = option.kind.value_as_str();
     logger.debug(&format!("{name}: {value}"));
 }

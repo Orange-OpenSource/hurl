@@ -350,14 +350,14 @@ impl ToJson for EntryOption {
         let attributes = if let JValue::Object(mut attributes) = value {
             attributes.push((
                 "name".to_string(),
-                JValue::String(self.kind.name().to_string()),
+                JValue::String(self.kind.identifier().to_string()),
             ));
             attributes
         } else {
             vec![
                 (
                     "name".to_string(),
-                    JValue::String(self.kind.name().to_string()),
+                    JValue::String(self.kind.identifier().to_string()),
                 ),
                 ("value".to_string(), value),
             ]

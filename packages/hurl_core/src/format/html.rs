@@ -217,7 +217,7 @@ impl HtmlFormatter {
         self.fmt_lts(&option.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&option.space0);
-        self.fmt_string(option.kind.name());
+        self.fmt_string(option.kind.identifier());
         self.fmt_space(&option.space1);
         self.buffer.push(':');
         self.fmt_space(&option.space2);

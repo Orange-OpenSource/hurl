@@ -917,7 +917,7 @@ impl Tokenizable for EntryOption {
                 .collect(),
         );
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String(self.kind.name().to_string()));
+        tokens.push(Token::String(self.kind.identifier().to_string()));
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
         tokens.append(&mut self.space2.tokenize());
