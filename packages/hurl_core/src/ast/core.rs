@@ -626,8 +626,9 @@ pub enum Number {
 #[derive(Clone, Debug)]
 pub struct Float {
     pub value: f64,
-    pub encoded: String, // as defined in Hurl
+    pub source: String,
 }
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct U64 {
     value: u64,
@@ -674,7 +675,7 @@ impl fmt::Display for I64 {
 
 impl PartialEq for Float {
     fn eq(&self, other: &Self) -> bool {
-        self.encoded == other.encoded
+        self.source == other.source
     }
 }
 impl Eq for Float {}

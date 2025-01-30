@@ -139,7 +139,7 @@ impl FilterValue {
 
 impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.encoded)
+        write!(f, "{}", self.source)
     }
 }
 
@@ -499,7 +499,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: 1.0,
-                encoded: "1.0".to_string()
+                source: "1.0".to_string()
             }
             .to_string(),
             "1.0"
@@ -507,7 +507,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: 1.01,
-                encoded: "1.01".to_string()
+                source: "1.01".to_string()
             }
             .to_string(),
             "1.01"
@@ -515,7 +515,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: 1.01,
-                encoded: "1.010".to_string()
+                source: "1.010".to_string()
             }
             .to_string(),
             "1.010"
@@ -523,7 +523,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: -1.333,
-                encoded: "-1.333".to_string()
+                source: "-1.333".to_string()
             }
             .to_string(),
             "-1.333"

@@ -123,8 +123,8 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         }
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
-                let encoded = reader.read_from(start.index);
-                Ok(Number::Float(Float { value, encoded }))
+                let source = reader.read_from(start.index);
+                Ok(Number::Float(Float { value, source }))
             }
             Err(_) => {
                 let kind = ParseErrorKind::Expecting {
@@ -244,7 +244,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1.0,
-                encoded: "1.0".to_string()
+                source: "1.0".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 3);
@@ -254,7 +254,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: -1.0,
-                encoded: "-1.0".to_string()
+                source: "-1.0".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 4);
@@ -264,7 +264,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1.1,
-                encoded: "1.1".to_string()
+                source: "1.1".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 3);
@@ -274,7 +274,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1.1,
-                encoded: "1.100".to_string()
+                source: "1.100".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 5);
@@ -284,7 +284,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1.01,
-                encoded: "1.01".to_string()
+                source: "1.01".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 4);
@@ -294,7 +294,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1.01,
-                encoded: "1.010".to_string()
+                source: "1.010".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 5);
@@ -305,7 +305,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: -0.3333333333333333,
-                encoded: "-0.3333333333333333333".to_string()
+                source: "-0.3333333333333333333".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 22);
@@ -315,7 +315,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float {
                 value: 1000000000000000000000.0,
-                encoded: "1000000000000000000000.5".to_string()
+                source: "1000000000000000000000.5".to_string()
             })
         );
         assert_eq!(reader.cursor().index, 24);

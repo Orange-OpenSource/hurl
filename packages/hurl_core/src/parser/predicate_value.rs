@@ -112,7 +112,7 @@ mod tests {
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Number(Number::Float(Float {
                 value: 1.1,
-                encoded: "1.1".to_string(),
+                source: "1.1".to_string(),
             }))
         );
     }

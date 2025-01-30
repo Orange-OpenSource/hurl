@@ -405,7 +405,7 @@ mod tests {
             PredicateFuncValue::Equal {
                 value: PredicateValue::Number(Number::Float(Float {
                     value: 1.1,
-                    encoded: "1.1".to_string(),
+                    source: "1.1".to_string(),
                 })),
                 space0: Whitespace {
                     value: String::from(" "),
