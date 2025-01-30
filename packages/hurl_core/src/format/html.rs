@@ -762,7 +762,7 @@ impl HtmlFormatter {
     fn fmt_hex(&mut self, hex: &Hex) {
         self.buffer.push_str("hex,");
         self.fmt_space(&hex.space0);
-        self.fmt_span("hex", &hex.encoded);
+        self.fmt_span("hex", &hex.source);
         self.fmt_space(&hex.space1);
         self.buffer.push(';');
     }

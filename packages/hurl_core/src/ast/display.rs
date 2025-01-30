@@ -157,7 +157,7 @@ impl fmt::Display for Hex {
         write!(
             f,
             "hex,{}{}{};",
-            self.space0.value, self.encoded, self.space1.value
+            self.space0.value, self.source, self.space1.value
         )
     }
 }

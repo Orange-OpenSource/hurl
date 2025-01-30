@@ -550,7 +550,7 @@ fn lint_hex(hex: &Hex) -> Hex {
     Hex {
         space0: empty_whitespace(),
         value: hex.value.clone(),
-        encoded: hex.encoded.clone(),
+        source: hex.source.clone(),
         space1: empty_whitespace(),
     }
 }

@@ -695,7 +695,7 @@ pub enum Bytes {
 pub struct Hex {
     pub space0: Whitespace,
     pub value: Vec<u8>,
-    pub encoded: String,
+    pub source: String,
     pub space1: Whitespace,
 }
 

@@ -257,7 +257,7 @@ impl Tokenizable for Hex {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("hex,"))];
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String(self.encoded.to_string()));
+        tokens.push(Token::String(self.source.to_string()));
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Keyword(String::from(";")));
         tokens
