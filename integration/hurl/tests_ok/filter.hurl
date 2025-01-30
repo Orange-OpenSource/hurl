@@ -5,6 +5,7 @@ url: jsonpath "$.url"
 text: jsonpath "$.text"
 [Asserts]
 jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7958c;
+jsonpath "$.file" base64Decode base64Encode == "5L2g5aW95LiW55WM"
 jsonpath "$.list" count == 3
 jsonpath "$.list" nth 1 == 2
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"

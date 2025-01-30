@@ -3,6 +3,7 @@ HTTP 200
 [Asserts]
 jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7;
 jsonpath "$.number" base64Decode == 123
+jsonpath "$.number" base64Encode == "MTIz"
 jsonpath "$.id" toInt == 123
 jsonpath "$.status" toInt == 0
 jsonpath "$.unknown" toInt == 1
