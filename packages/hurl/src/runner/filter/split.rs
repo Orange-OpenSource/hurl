@@ -62,7 +62,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: ",".to_string(),
-                        encoded: ",".to_string(),
+                        source: ",".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

@@ -75,7 +75,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: fmt.to_string(),
-                        encoded: fmt.to_string(),
+                        source: fmt.to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + fmt.len(), 1)),
                 },

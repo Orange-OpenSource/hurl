@@ -592,7 +592,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "message".to_string(),
-                        encoded: "message".to_string(),
+                        source: "message".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },
@@ -609,7 +609,7 @@ mod tests {
                     elements: vec![
                         TemplateElement::String {
                             value: "hello ".to_string(),
-                            encoded: "hello ".to_string(),
+                            source: "hello ".to_string(),
                         },
                         TemplateElement::Placeholder(Placeholder {
                             space0: Whitespace {
@@ -630,7 +630,7 @@ mod tests {
                         }),
                         TemplateElement::String {
                             value: "!".to_string(),
-                            encoded: "!".to_string(),
+                            source: "!".to_string(),
                         },
                     ],
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 25)),
@@ -697,7 +697,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "value".to_string(),
-                        encoded: "value".to_string(),
+                        source: "value".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 15)),
                 },
@@ -894,7 +894,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: String::from("data.xml"),
-                        encoded: String::from("data.xml"),
+                        source: String::from("data.xml"),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 14)),
                 },
@@ -917,7 +917,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: String::from("filename1"),
-                        encoded: String::from("filename1"),
+                        source: String::from("filename1"),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 16)),
                 },
@@ -940,7 +940,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: String::from("tmp/filename1"),
-                        encoded: String::from("tmp/filename1"),
+                        source: String::from("tmp/filename1"),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 },
@@ -962,7 +962,7 @@ mod tests {
                 filename: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("tmp/filename with spaces.txt"),
-                        encoded: String::from("tmp/filename\\ with\\ spaces.txt"),
+                        source: String::from("tmp/filename\\ with\\ spaces.txt"),
                     }],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 37)),

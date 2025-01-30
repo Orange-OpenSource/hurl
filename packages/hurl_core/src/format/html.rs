@@ -873,7 +873,7 @@ impl Template {
         }
         for element in self.elements.iter() {
             let elem_str = match element {
-                TemplateElement::String { encoded, .. } => encoded.to_string(),
+                TemplateElement::String { source, .. } => source.to_string(),
                 TemplateElement::Placeholder(expr) => format!("{{{{{expr}}}}}"),
             };
             s.push_str(elem_str.as_str());
@@ -967,7 +967,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "line1\nline2\n".to_string(),
-                    encoded: "line1\nline2\n".to_string(),
+                    source: "line1\nline2\n".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -1034,7 +1034,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "id".to_string(),
-                        encoded: "id".to_string(),
+                        source: "id".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -1062,7 +1062,7 @@ mod tests {
             delimiter: Some('"'),
             elements: vec![TemplateElement::String {
                 value: "\n".to_string(),
-                encoded: "\\n".to_string(),
+                source: "\\n".to_string(),
             }],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });

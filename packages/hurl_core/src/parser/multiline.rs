@@ -293,7 +293,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -319,7 +319,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -348,7 +348,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -380,7 +380,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "{\n  \"g_clef\": \"𝄞\"\n}\n".to_string(),
-                            encoded: "{\n  \"g_clef\": \"\\u{1D11E}\"\n}\n".to_string(),
+                            source: "{\n  \"g_clef\": \"\\u{1D11E}\"\n}\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -409,7 +409,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -436,7 +436,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -538,7 +538,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
-                            encoded: "line1\nline2\nline3\n".to_string(),
+                            source: "line1\nline2\nline3\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                     },
@@ -567,7 +567,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "\n".to_string(),
-                            encoded: "\n".to_string(),
+                            source: "\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
                     },
@@ -594,7 +594,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "\r\n".to_string(),
-                            encoded: "\r\n".to_string(),
+                            source: "\r\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
                     },
@@ -657,7 +657,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "\t\n".to_string(),
-                            encoded: "\\t\n".to_string(),
+                            source: "\\t\n".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
                     },
@@ -721,7 +721,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
-                    encoded: "hello".to_string(),
+                    source: "hello".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
@@ -761,7 +761,7 @@ variables {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string(),
-                        encoded:
+                        source:
                             "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string()
                     }],
                     source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(8, 1)),
@@ -780,7 +780,7 @@ variables {
                                 elements: vec![
                                     TemplateElement::String {
                                         value: "name".to_string(),
-                                        encoded: "name".to_string()
+                                        source: "name".to_string()
                                     }
                                 ],
                                 source_info: SourceInfo::new(Pos::new(9, 4), Pos::new(9, 8))
@@ -792,7 +792,7 @@ variables {
                                 elements: vec![
                                     TemplateElement::String {
                                         value: "Han Solo".to_string(),
-                                        encoded: "Han Solo".to_string()
+                                        source: "Han Solo".to_string()
                                     }
                                 ],
                                 source_info: SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))

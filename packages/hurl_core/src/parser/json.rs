@@ -511,7 +511,7 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    encoded: "Hello\\u0020".to_string(),
+                    source: "Hello\\u0020".to_string(),
                 },
                 TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
@@ -532,7 +532,7 @@ mod tests {
                 }),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    encoded: "!".to_string(),
+                    source: "!".to_string(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
@@ -563,7 +563,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "{}".to_string(),
-                    encoded: "{}".to_string(),
+                    source: "{}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
             })
@@ -945,7 +945,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "a".to_string(),
-                            encoded: "a".to_string()
+                            source: "a".to_string()
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
                     },
@@ -993,7 +993,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "a".to_string(),
-                        encoded: "a".to_string()
+                        source: "a".to_string()
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3))
                 },

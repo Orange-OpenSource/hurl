@@ -111,7 +111,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
                 elements: vec![TemplateElement::String {
                     value: "tests/data.bin".to_string(),
-                    encoded: "tests/data.bin".to_string(),
+                    source: "tests/data.bin".to_string(),
                 }],
             },
             space1: whitespace,
@@ -142,7 +142,7 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
                 elements: vec![TemplateElement::String {
                     value: "data.bin".to_string(),
-                    encoded: "data.bin".to_string(),
+                    source: "data.bin".to_string(),
                 }],
             },
             space1: whitespace,

@@ -96,7 +96,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "UserCount".to_string(),
-                    encoded: "UserCount".to_string(),
+                    source: "UserCount".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -129,7 +129,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "duration".to_string(),
-                    encoded: "duration".to_string(),
+                    source: "duration".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -164,7 +164,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "count".to_string(),
-                    encoded: "count".to_string(),
+                    source: "count".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -208,7 +208,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "???".to_string(),
-                    encoded: "???".to_string(),
+                    source: "???".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -224,7 +224,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "//user".to_string(),
-                            encoded: "//user".to_string(),
+                            source: "//user".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 13)),
                     },

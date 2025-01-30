@@ -39,8 +39,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let encoded = reader.read_from(start.index);
-                    let element = TemplateElement::String { value, encoded };
+                    let source = reader.read_from(start.index);
+                    let element = TemplateElement::String { value, source };
                     elements.push(element);
                 } else {
                     return Err(e);
@@ -54,8 +54,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         };
         return Err(ParseError::new(start.pos, false, kind));
     }
-    if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
-        if encoded.starts_with('[') {
+    if let Some(TemplateElement::String { source, .. }) = elements.first() {
+        if source.starts_with('[') {
             let kind = ParseErrorKind::Expecting {
                 value: "key-string".to_string(),
             };
@@ -159,7 +159,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "aaa:".to_string(),
-                    encoded: "aaa\\:".to_string(),
+                    source: "aaa\\:".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
@@ -173,7 +173,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "$top".to_string(),
-                    encoded: "$top".to_string(),
+                    source: "$top".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
@@ -187,7 +187,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "key :".to_string(),
-                    encoded: "key\\u{20}\\u{3a}".to_string(),
+                    source: "key\\u{20}\\u{3a}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
             }
@@ -201,7 +201,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "values[0]".to_string(),
-                    encoded: "values\\u{5b}0\\u{5d}".to_string(),
+                    source: "values\\u{5b}0\\u{5d}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             }
@@ -215,7 +215,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "values[0]".to_string(),
-                    encoded: "values[0]".to_string(),
+                    source: "values[0]".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             }
@@ -229,7 +229,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "[0]".to_string(),
-                    encoded: "\\u{5b}0\\u{5d}".to_string(),
+                    source: "\\u{5b}0\\u{5d}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }

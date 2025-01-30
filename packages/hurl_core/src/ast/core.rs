@@ -588,7 +588,7 @@ pub struct Template {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TemplateElement {
     // TODO: explain the difference between value and encoded
-    String { value: String, encoded: String },
+    String { value: String, source: String },
     Placeholder(Placeholder),
 }
 

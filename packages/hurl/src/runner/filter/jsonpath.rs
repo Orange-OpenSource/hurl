@@ -94,7 +94,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "$.message".to_string(),
-                        encoded: "$.message".to_string(),
+                        source: "$.message".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

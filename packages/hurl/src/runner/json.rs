@@ -154,7 +154,7 @@ fn eval_json_template_element(
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     match template_element {
-        TemplateElement::String { encoded, .. } => Ok(encoded.clone()),
+        TemplateElement::String { source, .. } => Ok(source.clone()),
         TemplateElement::Placeholder(Placeholder { expr, .. }) => {
             let s = expr::render(expr, variables)?;
             Ok(encode_json_string(&s))
@@ -193,7 +193,7 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    encoded: "Hello\\u0020".to_string(),
+                    source: "Hello\\u0020".to_string(),
                 },
                 TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
@@ -214,7 +214,7 @@ mod tests {
                 }),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    encoded: "!".to_string(),
+                    source: "!".to_string(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
@@ -230,7 +230,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "firstName".to_string(),
-                        encoded: "firstName".to_string(),
+                        source: "firstName".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
@@ -240,7 +240,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "John".to_string(),
-                        encoded: "John".to_string(),
+                        source: "John".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
@@ -342,7 +342,7 @@ mod tests {
         let template = Template {
             delimiter: Some('"'),
             elements: vec![TemplateElement::String {
-                encoded: "Hi".to_string(),
+                source: "Hi".to_string(),
                 value: "Hi".to_string(),
             }],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -405,7 +405,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
-                        encoded: "\\n".to_string(),
+                        source: "\\n".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
@@ -426,7 +426,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
-                        encoded: "\\n".to_string(),
+                        source: "\\n".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
@@ -447,7 +447,7 @@ mod tests {
                     elements: vec![
                         TemplateElement::String {
                             value: "Hello ".to_string(),
-                            encoded: "Hello ".to_string(),
+                            source: "Hello ".to_string(),
                         },
                         TemplateElement::Placeholder(Placeholder {
                             space0: whitespace(),

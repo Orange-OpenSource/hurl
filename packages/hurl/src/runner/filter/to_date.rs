@@ -69,7 +69,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
-                        encoded: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
+                        source: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -104,7 +104,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
-                        encoded: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
+                        source: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

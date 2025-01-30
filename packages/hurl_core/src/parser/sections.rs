@@ -386,7 +386,7 @@ mod tests {
                                 delimiter: Some('"'),
                                 elements: vec![TemplateElement::String {
                                     value: "Location".to_string(),
-                                    encoded: "Location".to_string(),
+                                    source: "Location".to_string(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 18)),
                             },
@@ -414,7 +414,7 @@ mod tests {
                                     delimiter: Some('"'),
                                     elements: vec![TemplateElement::String {
                                         value: "https://google.fr".to_string(),
-                                        encoded: "https://google.fr".to_string(),
+                                        source: "https://google.fr".to_string(),
                                     }],
                                     source_info: SourceInfo::new(Pos::new(2, 22), Pos::new(2, 41)),
                                 }),
@@ -474,7 +474,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "Bar".to_string(),
-                    encoded: "Bar".to_string(),
+                    source: "Bar".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 9)),
             }
@@ -515,7 +515,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "hello.txt".to_string(),
-                        encoded: "hello.txt".to_string(),
+                        source: "hello.txt".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                 },
@@ -541,7 +541,7 @@ mod tests {
                 filename: Template {
                     elements: vec![TemplateElement::String {
                         value: "hello.txt".to_string(),
-                        encoded: "hello.txt".to_string(),
+                        source: "hello.txt".to_string(),
                     }],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
@@ -594,7 +594,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "url".to_string(),
-                    encoded: "url".to_string(),
+                    source: "url".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
             },
@@ -612,7 +612,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
-                            encoded: "Location".to_string(),
+                            source: "Location".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23)),
                     },
@@ -643,7 +643,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
-                            encoded: "Location".to_string(),
+                            source: "Location".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 25)),
                     },
@@ -708,7 +708,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
-                            encoded: "Location".to_string(),
+                            source: "Location".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 18)),
                     },
@@ -779,7 +779,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "user".to_string(),
-                            encoded: "user".to_string()
+                            source: "user".to_string()
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 5)),
                     },
@@ -795,7 +795,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "password".to_string(),
-                            encoded: "password".to_string()
+                            source: "password".to_string()
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 14)),
                     },

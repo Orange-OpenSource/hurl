@@ -737,7 +737,7 @@ pub mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "http://example.com".to_string(),
-                        encoded: "not_used".to_string(),
+                        source: "not_used".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -749,7 +749,7 @@ pub mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Foo".to_string(),
-                            encoded: "unused".to_string(),
+                            source: "unused".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -759,7 +759,7 @@ pub mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Bar".to_string(),
-                            encoded: "unused".to_string(),
+                            source: "unused".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -850,7 +850,7 @@ pub mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "Content-Length".to_string(),
-                        encoded: "10".to_string(),
+                        source: "10".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -866,7 +866,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "size".to_string(),
-                    encoded: "unused".to_string(),
+                    source: "unused".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },

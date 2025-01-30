@@ -557,7 +557,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "/home/foo/cert.pem".to_string(),
-                        encoded: "/home/foo/cert.pem".to_string()
+                        source: "/home/foo/cert.pem".to_string()
                     }],
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
@@ -617,7 +617,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "/etc/client-cert.pem".to_string(),
-                    encoded: "/etc/client-cert.pem".to_string()
+                    source: "/etc/client-cert.pem".to_string()
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
@@ -689,7 +689,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "toto".to_string(),
-                    encoded: "toto".to_string(),
+                    source: "toto".to_string(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
@@ -704,7 +704,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "123".to_string(),
-                    encoded: "123".to_string(),
+                    source: "123".to_string(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },

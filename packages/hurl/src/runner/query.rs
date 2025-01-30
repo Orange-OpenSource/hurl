@@ -483,7 +483,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
-                        encoded: "???".to_string(),
+                        source: "???".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 },
@@ -504,7 +504,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "count(//user)".to_string(),
-                        encoded: "count(//user)".to_string(),
+                        source: "count(//user)".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -525,7 +525,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "//user".to_string(),
-                        encoded: "/user".to_string(),
+                        source: "/user".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -545,7 +545,7 @@ pub mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("$.success"),
-                        encoded: String::from("$.success"),
+                        source: String::from("$.success"),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 19)),
@@ -566,7 +566,7 @@ pub mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("$.errors"),
-                        encoded: String::from("$.errors"),
+                        source: String::from("$.errors"),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
@@ -587,7 +587,7 @@ pub mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("$.duration"),
-                        encoded: String::from("$.duration"),
+                        source: String::from("$.duration"),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
@@ -609,7 +609,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Hello ([a-zA-Z]+)!".to_string(),
-                        encoded: "Hello ([a-zA-Z]+)!".to_string(),
+                        source: "Hello ([a-zA-Z]+)!".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 26)),
                 }),
@@ -630,7 +630,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
-                        encoded: "???".to_string(),
+                        source: "???".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 }),
@@ -704,7 +704,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Custom".to_string(),
-                        encoded: "Custom".to_string(),
+                        source: "Custom".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 14)),
                 },
@@ -742,7 +742,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Content-Type".to_string(),
-                        encoded: "Content-Type".to_string(),
+                        source: "Content-Type".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 16)),
                 },
@@ -788,7 +788,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
-                            encoded: "LSID".to_string(),
+                            source: "LSID".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -813,7 +813,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
-                            encoded: "LSID".to_string(),
+                            source: "LSID".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -842,7 +842,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
-                            encoded: "LSID".to_string(),
+                            source: "LSID".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -871,7 +871,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
-                            encoded: "LSID".to_string(),
+                            source: "LSID".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -1051,7 +1051,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "^^^".to_string(),
-                        encoded: "^^^".to_string(),
+                        source: "^^^".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 },
@@ -1112,7 +1112,7 @@ pub mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "normalize-space(/html/head/meta/@charset)".to_string(),
-                        encoded: "normalize-space(/html/head/meta/@charset)".to_string(),
+                        source: "normalize-space(/html/head/meta/@charset)".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -1154,7 +1154,7 @@ pub mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("xxx"),
-                        encoded: String::from("xxx"),
+                        source: String::from("xxx"),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 13)),

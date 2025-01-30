@@ -268,7 +268,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "a".to_string(),
-                    encoded: "a".to_string(),
+                    source: "a".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
             }
@@ -285,7 +285,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
-                    encoded: "a\\u{23}".to_string(),
+                    source: "a\\u{23}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
             }
@@ -302,7 +302,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
-                    encoded: "\"hi\"".to_string(),
+                    source: "\"hi\"".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
@@ -320,7 +320,7 @@ mod tests {
                 elements: vec![
                     TemplateElement::String {
                         value: "hello ".to_string(),
-                        encoded: "hello\\u{20}".to_string(),
+                        source: "hello\\u{20}".to_string(),
                     },
                     TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
@@ -341,7 +341,7 @@ mod tests {
                     }),
                     TemplateElement::String {
                         value: "!".to_string(),
-                        encoded: "!".to_string(),
+                        source: "!".to_string(),
                     },
                 ],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
@@ -370,7 +370,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
-                    encoded: "a#".to_string(),
+                    source: "a#".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
@@ -384,7 +384,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "{0}".to_string(),
-                    encoded: "{0}".to_string(),
+                    source: "{0}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
@@ -402,7 +402,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
-                    encoded: "\\\"hi\\\"".to_string()
+                    source: "\\\"hi\\\"".to_string()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
@@ -455,7 +455,7 @@ mod tests {
                 delimiter: Some('`'),
                 elements: vec![TemplateElement::String {
                     value: "foo#".to_string(),
-                    encoded: "foo#".to_string(),
+                    source: "foo#".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
             }
@@ -469,7 +469,7 @@ mod tests {
                 delimiter: Some('`'),
                 elements: vec![TemplateElement::String {
                     value: "{0}".to_string(),
-                    encoded: "{0}".to_string(),
+                    source: "{0}".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
@@ -487,7 +487,7 @@ mod tests {
                 delimiter: Some('`'),
                 elements: vec![TemplateElement::String {
                     value: "`hi`".to_string(),
-                    encoded: "\\`hi\\`".to_string()
+                    source: "\\`hi\\`".to_string()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }

@@ -79,7 +79,7 @@ mod tests {
             eval_template_element(
                 &TemplateElement::String {
                     value: "World".to_string(),
-                    encoded: "World".to_string(),
+                    source: "World".to_string(),
                 },
                 &variables
             )

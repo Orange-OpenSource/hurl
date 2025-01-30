@@ -746,8 +746,8 @@ impl Tokenizable for Template {
 impl Tokenizable for TemplateElement {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            TemplateElement::String { encoded, .. } => {
-                vec![Token::String(encoded.to_string())]
+            TemplateElement::String { source, .. } => {
+                vec![Token::String(source.to_string())]
             }
             TemplateElement::Placeholder(value) => {
                 let mut tokens: Vec<Token> = vec![];

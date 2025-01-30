@@ -1342,7 +1342,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "toto".to_string(),
-                            encoded: "toto".to_string(),
+                            source: "toto".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     }),

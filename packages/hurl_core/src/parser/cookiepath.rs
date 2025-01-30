@@ -84,7 +84,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
-                        encoded: "cookie1".to_string(),
+                        source: "cookie1".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },
@@ -104,7 +104,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
-                        encoded: "cookie1".to_string(),
+                        source: "cookie1".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },

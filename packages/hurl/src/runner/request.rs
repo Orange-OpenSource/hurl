@@ -235,7 +235,7 @@ mod tests {
                     }),
                     TemplateElement::String {
                         value: String::from("/hello"),
-                        encoded: String::from("/hello"),
+                        source: String::from("/hello"),
                     },
                 ],
                 delimiter: None,
@@ -280,7 +280,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://localhost:8000/querystring-params"),
-                    encoded: String::from("http://localhost:8000/querystring-params"),
+                    source: String::from("http://localhost:8000/querystring-params"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -298,7 +298,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "param1".to_string(),
-                                    encoded: "param1".to_string(),
+                                    source: "param1".to_string(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -329,7 +329,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "param2".to_string(),
-                                    encoded: "param2".to_string(),
+                                    source: "param2".to_string(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -337,7 +337,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "a b".to_string(),
-                                    encoded: "a b".to_string(),
+                                    source: "a b".to_string(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -422,7 +422,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http:///localhost"),
-                    encoded: String::from("http://localhost"),
+                    source: String::from("http://localhost"),
                 },],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -463,7 +463,7 @@ mod tests {
                 url: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("http:///localhost"),
-                        encoded: String::from("http://localhost"),
+                        source: String::from("http://localhost"),
                     },],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

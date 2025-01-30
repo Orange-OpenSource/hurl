@@ -286,7 +286,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://google.fr"),
-                    encoded: String::from("http://google.fr"),
+                    source: String::from("http://google.fr"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
@@ -325,7 +325,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://google.fr"),
-                    encoded: String::from("http://google.fr"),
+                    source: String::from("http://google.fr"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
@@ -389,7 +389,7 @@ mod tests {
                         value: Template {
                             elements: vec![TemplateElement::String {
                                 value: String::from("Hello World!\n"),
-                                encoded: String::from("Hello World!\n"),
+                                source: String::from("Hello World!\n"),
                             }],
                             delimiter: None,
                             source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
@@ -450,7 +450,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "Hello".to_string(),
-                    encoded: "Hello".to_string(),
+                    source: "Hello".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
             }))

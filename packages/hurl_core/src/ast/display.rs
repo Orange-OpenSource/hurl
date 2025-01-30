@@ -482,12 +482,12 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    encoded: "Hello ".to_string(),
+                    source: "Hello ".to_string(),
                 },
                 TemplateElement::Placeholder(variable_placeholder()),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    encoded: "!".to_string(),
+                    source: "!".to_string(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -543,7 +543,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "LSID".to_string(),
-                        encoded: "unused".to_string(),
+                        source: "unused".to_string(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

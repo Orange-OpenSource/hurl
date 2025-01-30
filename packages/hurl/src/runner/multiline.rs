@@ -107,7 +107,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: query.to_string(),
-                        encoded: query.to_string(),
+                        source: query.to_string(),
                     }],
                     source_info: empty_source_info(),
                 },
@@ -143,7 +143,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "episode".to_string(),
-                                encoded: "episode".to_string(),
+                                source: "episode".to_string(),
                             }],
                             source_info: empty_source_info(),
                         },
@@ -153,7 +153,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "JEDI".to_string(),
-                                encoded: "JEDI".to_string(),
+                                source: "JEDI".to_string(),
                             }],
                             source_info: empty_source_info(),
                         }),
@@ -165,7 +165,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "withFriends".to_string(),
-                                encoded: "withFriends".to_string(),
+                                source: "withFriends".to_string(),
                             }],
                             source_info: empty_source_info(),
                         },
@@ -186,7 +186,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: query.to_string(),
-                        encoded: query.to_string(),
+                        source: query.to_string(),
                     }],
                     source_info: empty_source_info(),
                 },

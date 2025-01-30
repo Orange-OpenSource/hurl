@@ -68,7 +68,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
         })),
         Just(JsonValue::String(Template {
             elements: vec![TemplateElement::String {
-                encoded: "Hello".to_string(),
+                source: "Hello".to_string(),
                 value: "Hello".to_string(),
             }],
             delimiter: Some('"'),
@@ -77,7 +77,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
         Just(JsonValue::String(Template {
             elements: vec![
                 TemplateElement::String {
-                    encoded: "Hello\\u0020 ".to_string(),
+                    source: "Hello\\u0020 ".to_string(),
                     value: "Hello ".to_string(),
                 },
                 TemplateElement::Placeholder(Placeholder {
@@ -225,7 +225,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                                     delimiter: None,
                                     elements: vec![TemplateElement::String {
                                         value: "key1".to_string(),
-                                        encoded: "key1".to_string(),
+                                        source: "key1".to_string(),
                                     }],
                                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                                 },

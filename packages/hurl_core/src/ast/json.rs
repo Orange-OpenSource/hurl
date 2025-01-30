@@ -201,7 +201,7 @@ impl Template {
 impl TemplateElement {
     fn encoded(&self) -> String {
         match self {
-            TemplateElement::String { encoded, .. } => encoded.to_string(),
+            TemplateElement::String { source, .. } => source.to_string(),
             TemplateElement::Placeholder(expr) => format!("{{{{{expr}}}}}"),
         }
     }
@@ -243,7 +243,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
-                    encoded: "hello".to_string(),
+                    source: "hello".to_string(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             })
@@ -300,7 +300,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "id".to_string(),
-                            encoded: "id".to_string(),
+                            source: "id".to_string(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
