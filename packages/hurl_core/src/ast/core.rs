@@ -599,14 +599,6 @@ pub struct Comment {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct EncodedString {
-    pub value: String,
-    pub encoded: String,
-    pub quotes: bool,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Whitespace {
     pub value: String,
     pub source_info: SourceInfo,

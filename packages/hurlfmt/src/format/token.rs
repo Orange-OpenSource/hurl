@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
-    CookieAttribute, CookiePath, CountOption, DurationOption, EncodedString, Entry, EntryOption,
+    CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption,
     Expr, ExprKind, File, FileParam, FileValue, Filter, FilterValue, Function, GraphQl,
     GraphQlVariables, Hex, HurlFile, JsonListElement, JsonObjectElement, JsonValue, KeyValue,
     LineTerminator, Method, MultilineString, MultilineStringAttribute, MultilineStringKind,
@@ -704,25 +704,6 @@ impl Tokenizable for GraphQlVariables {
         tokens.append(&mut self.space.tokenize());
         tokens.append(&mut self.value.tokenize());
         tokens.append(&mut self.whitespace.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for EncodedString {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        if self.quotes {
-            tokens.push(Token::StringDelimiter(
-                if self.quotes { "\"" } else { "" }.to_string(),
-            ));
-        }
-        tokens.push(Token::String(self.encoded.clone()));
-
-        if self.quotes {
-            tokens.push(Token::StringDelimiter(
-                if self.quotes { "\"" } else { "" }.to_string(),
-            ));
-        }
         tokens
     }
 }
