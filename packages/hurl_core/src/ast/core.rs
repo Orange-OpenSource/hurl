@@ -646,12 +646,12 @@ impl fmt::Display for U64 {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct I64 {
     value: i64,
-    encoded: String, // as defined in Hurl
+    source: String,
 }
 
 impl I64 {
-    pub fn new(value: i64, encoded: String) -> I64 {
-        I64 { value, encoded }
+    pub fn new(value: i64, source: String) -> I64 {
+        I64 { value, source }
     }
 
     pub fn as_i64(&self) -> i64 {
@@ -661,7 +661,7 @@ impl I64 {
 
 impl fmt::Display for I64 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.encoded)
+        write!(f, "{}", self.source)
     }
 }
 
