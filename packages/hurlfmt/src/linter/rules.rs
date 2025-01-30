@@ -541,7 +541,7 @@ fn lint_base64(base64: &Base64) -> Base64 {
     Base64 {
         space0: empty_whitespace(),
         value: base64.value.clone(),
-        encoded: base64.encoded.clone(),
+        source: base64.source.clone(),
         space1: empty_whitespace(),
     }
 }

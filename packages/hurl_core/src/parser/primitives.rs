@@ -361,13 +361,13 @@ pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     let value = base64::parse(reader);
     let count = reader.cursor().index - save_state.index;
     reader.seek(save_state);
-    let encoded = reader.read_n(count);
+    let source = reader.read_n(count);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
     Ok(Base64 {
         space0,
         value,
-        encoded,
+        source,
         space1,
     })
 }
@@ -1028,7 +1028,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 10)),
                 },
                 value: vec![77, 97],
-                encoded: String::from("T WE="),
+                source: String::from("T WE="),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),

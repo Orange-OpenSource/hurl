@@ -754,7 +754,7 @@ impl HtmlFormatter {
     fn fmt_base64(&mut self, base64: &Base64) {
         self.buffer.push_str("base64,");
         self.fmt_space(&base64.space0);
-        self.fmt_span("base64", &base64.encoded);
+        self.fmt_span("base64", &base64.source);
         self.fmt_space(&base64.space1);
         self.buffer.push(';');
     }
