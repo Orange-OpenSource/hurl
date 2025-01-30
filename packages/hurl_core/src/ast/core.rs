@@ -624,12 +624,12 @@ pub struct Float {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct U64 {
     value: u64,
-    encoded: String, // as defined in Hurl
+    source: String,
 }
 
 impl U64 {
-    pub fn new(value: u64, encoded: String) -> U64 {
-        U64 { value, encoded }
+    pub fn new(value: u64, source: String) -> U64 {
+        U64 { value, source }
     }
 
     pub fn as_u64(&self) -> u64 {
@@ -639,7 +639,7 @@ impl U64 {
 
 impl fmt::Display for U64 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.encoded)
+        write!(f, "{}", self.source)
     }
 }
 
