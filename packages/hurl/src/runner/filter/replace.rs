@@ -46,13 +46,13 @@ pub fn eval_replace(
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Value, VariableSet};
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Value, VariableSet};
+    use hurl_core::typing::ToSource;
 
     #[test]
     fn eval_filter_replace() {
@@ -64,7 +64,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\\s+".to_string(),
-                        source: ",".to_string(),
+                        source: ",".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),
@@ -72,7 +72,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: ",".to_string(),
-                        source: ",".to_string(),
+                        source: ",".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

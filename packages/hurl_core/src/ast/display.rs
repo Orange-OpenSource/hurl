@@ -448,6 +448,7 @@ mod tests {
     use super::*;
     use crate::ast::{CookieAttributeName, SourceInfo, Whitespace};
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -476,12 +477,12 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    source: "Hello ".to_string(),
+                    source: "Hello ".to_source(),
                 },
                 TemplateElement::Placeholder(variable_placeholder()),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    source: "!".to_string(),
+                    source: "!".to_source(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -501,7 +502,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "LSID".to_string(),
-                        source: "unused".to_string(),
+                        source: "unused".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

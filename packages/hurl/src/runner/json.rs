@@ -154,7 +154,7 @@ fn eval_json_template_element(
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     match template_element {
-        TemplateElement::String { source, .. } => Ok(source.clone()),
+        TemplateElement::String { source, .. } => Ok(source.to_string()),
         TemplateElement::Placeholder(Placeholder { expr, .. }) => {
             let s = expr::render(expr, variables)?;
             Ok(encode_json_string(&s))
@@ -179,12 +179,12 @@ fn encode_json_char(c: char) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::super::error::RunnerErrorKind;
+    use super::*;
     use crate::runner::Value;
     use hurl_core::ast::*;
     use hurl_core::reader::Pos;
-
-    use super::super::error::RunnerErrorKind;
-    use super::*;
+    use hurl_core::typing::ToSource;
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
@@ -193,7 +193,7 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    source: "Hello\\u0020".to_string(),
+                    source: "Hello\\u0020".to_source(),
                 },
                 TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
@@ -214,7 +214,7 @@ mod tests {
                 }),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    source: "!".to_string(),
+                    source: "!".to_source(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
@@ -230,7 +230,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "firstName".to_string(),
-                        source: "firstName".to_string(),
+                        source: "firstName".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
@@ -240,7 +240,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "John".to_string(),
-                        source: "John".to_string(),
+                        source: "John".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
@@ -342,8 +342,8 @@ mod tests {
         let template = Template {
             delimiter: Some('"'),
             elements: vec![TemplateElement::String {
-                source: "Hi".to_string(),
                 value: "Hi".to_string(),
+                source: "Hi".to_source(),
             }],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
@@ -405,7 +405,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
-                        source: "\\n".to_string(),
+                        source: "\\n".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
@@ -426,7 +426,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
-                        source: "\\n".to_string(),
+                        source: "\\n".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
@@ -447,7 +447,7 @@ mod tests {
                     elements: vec![
                         TemplateElement::String {
                             value: "Hello ".to_string(),
-                            source: "Hello ".to_string(),
+                            source: "Hello ".to_source(),
                         },
                         TemplateElement::Placeholder(Placeholder {
                             space0: whitespace(),

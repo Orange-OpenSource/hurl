@@ -51,12 +51,12 @@ pub fn eval_to_date(
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Value, VariableSet};
     use chrono::{DateTime, NaiveDate, Utc};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Value, VariableSet};
+    use hurl_core::typing::ToSource;
 
     #[test]
     fn eval_filter_to_date() {
@@ -69,7 +69,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
-                        source: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
+                        source: "%Y %b %d %H:%M:%S%.3f %z".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -104,7 +104,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
-                        source: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
+                        source: "%a, %d %b %Y %H:%M:%S GMT".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

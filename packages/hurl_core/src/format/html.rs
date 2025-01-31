@@ -941,6 +941,7 @@ mod tests {
     use super::*;
     use crate::ast::{JsonObjectElement, SourceInfo, Text};
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_multiline_string() {
@@ -967,7 +968,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "line1\nline2\n".to_string(),
-                    source: "line1\nline2\n".to_string(),
+                    source: "line1\nline2\n".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -1034,7 +1035,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "id".to_string(),
-                        source: "id".to_string(),
+                        source: "id".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -1062,7 +1063,7 @@ mod tests {
             delimiter: Some('"'),
             elements: vec![TemplateElement::String {
                 value: "\n".to_string(),
-                source: "\\n".to_string(),
+                source: "\\n".to_source(),
             }],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });

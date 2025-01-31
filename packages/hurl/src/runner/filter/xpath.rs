@@ -70,12 +70,12 @@ pub fn eval_xpath_doc(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
-    use hurl_core::reader::Pos;
-
     use super::*;
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
+    use hurl_core::typing::ToSource;
 
     /// Helper function to return a new filter given a `expr`
     fn new_xpath_filter(expr: &str) -> Filter {
@@ -91,7 +91,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: expr.to_string(),
-                        source: expr.to_string(),
+                        source: expr.to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(7 + expr.len(), 1)),
                 },

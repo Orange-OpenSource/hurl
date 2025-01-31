@@ -104,3 +104,74 @@ impl fmt::Display for BytesPerSec {
         write!(f, "{}", self.0)
     }
 }
+
+/// Represents a source string, in Hurl file format.
+///
+/// For instance, with this Hurl file:
+///
+/// ```hurl
+/// GET https://example.org/api
+/// HTTP 200
+/// [Asserts]
+/// jsonpath "$.slideshow.title" == "A beautiful \u{2708}!"
+/// ```
+///
+/// `"A beautiful \u{2708}!"` is the source string, using a [Hurl Unicode literal](https://hurl.dev/docs/hurl-file.html#special-characters-in-strings).
+/// It's string value is `A beautiful ✈!`.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct SourceString(String);
+
+impl SourceString {
+    /// Creates a new empty [`SourceString`].
+    pub fn new() -> Self {
+        SourceString(String::new())
+    }
+
+    /// Appends a given string slice onto the end of this [`SourceString`].
+    pub fn push_str(&mut self, string: &str) {
+        self.0.push_str(string);
+    }
+
+    /// Appends the given char to the end of this [`SourceString`].
+    pub fn push(&mut self, c: char) {
+        self.0.push(c);
+    }
+
+    /// Extracts a string slice containing the entire [`SourceString`].
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
+
+    /// Returns `true` if this [`SourceString`] starts with the char `c`.
+    pub fn starts_with(&self, c: char) -> bool {
+        self.0.starts_with(c)
+    }
+}
+
+pub trait ToSource {
+    fn to_source(&self) -> SourceString;
+}
+
+impl<T> ToSource for T
+where
+    T: AsRef<str>,
+{
+    fn to_source(&self) -> SourceString {
+        SourceString(self.as_ref().to_string())
+    }
+}
+
+impl<T> From<T> for SourceString
+where
+    T: AsRef<str>,
+{
+    fn from(value: T) -> Self {
+        SourceString(value.as_ref().to_string())
+    }
+}
+
+impl fmt::Display for SourceString {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}

@@ -447,6 +447,7 @@ mod tests {
     use super::*;
     use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace, I64};
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_option_insecure() {
@@ -557,7 +558,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "/home/foo/cert.pem".to_string(),
-                        source: "/home/foo/cert.pem".to_string()
+                        source: "/home/foo/cert.pem".to_source()
                     }],
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
@@ -617,7 +618,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "/etc/client-cert.pem".to_string(),
-                    source: "/etc/client-cert.pem".to_string()
+                    source: "/etc/client-cert.pem".to_source()
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
@@ -689,7 +690,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "toto".to_string(),
-                    source: "toto".to_string(),
+                    source: "toto".to_source(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
@@ -704,7 +705,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "123".to_string(),
-                    source: "123".to_string(),
+                    source: "123".to_source(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },

@@ -45,11 +45,11 @@ fn eval_template_element(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
-    use hurl_core::reader::Pos;
-
     use super::*;
     use crate::runner::{Number, RunnerErrorKind, Value};
+    use hurl_core::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
+    use hurl_core::reader::Pos;
+    use hurl_core::typing::ToSource;
 
     fn template_element_expression() -> TemplateElement {
         // {{name}}
@@ -79,7 +79,7 @@ mod tests {
             eval_template_element(
                 &TemplateElement::String {
                     value: "World".to_string(),
-                    source: "World".to_string(),
+                    source: "World".to_source(),
                 },
                 &variables
             )

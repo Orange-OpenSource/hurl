@@ -217,6 +217,7 @@ mod tests {
         MultilineStringKind, Template, TemplateElement, Text, Whitespace,
     };
     use crate::reader::Pos;
+    use crate::typing::{SourceString, ToSource};
 
     #[test]
     fn test_hurl_file() {
@@ -286,7 +287,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://google.fr"),
-                    source: String::from("http://google.fr"),
+                    source: SourceString::from("http://google.fr"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
@@ -325,7 +326,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://google.fr"),
-                    source: String::from("http://google.fr"),
+                    source: SourceString::from("http://google.fr"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
@@ -389,7 +390,7 @@ mod tests {
                         value: Template {
                             elements: vec![TemplateElement::String {
                                 value: String::from("Hello World!\n"),
-                                source: String::from("Hello World!\n"),
+                                source: SourceString::from("Hello World!\n"),
                             }],
                             delimiter: None,
                             source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
@@ -450,7 +451,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "Hello".to_string(),
-                    source: "Hello".to_string(),
+                    source: "Hello".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
             }))

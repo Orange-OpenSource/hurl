@@ -74,14 +74,14 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
+    use self::super::super::query;
+    use super::*;
+    use crate::runner::{Number, Value};
     use hurl_core::ast::{
         LineTerminator, Query, QueryValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-
-    use self::super::super::query;
-    use super::*;
-    use crate::runner::{Number, Value};
+    use hurl_core::typing::ToSource;
 
     pub fn user_count_capture() -> Capture {
         // non scalar value
@@ -96,7 +96,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "UserCount".to_string(),
-                    source: "UserCount".to_string(),
+                    source: "UserCount".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -129,7 +129,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "duration".to_string(),
-                    source: "duration".to_string(),
+                    source: "duration".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -164,7 +164,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "count".to_string(),
-                    source: "count".to_string(),
+                    source: "count".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -208,7 +208,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "???".to_string(),
-                    source: "???".to_string(),
+                    source: "???".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
@@ -224,7 +224,7 @@ pub mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "//user".to_string(),
-                            source: "//user".to_string(),
+                            source: "//user".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 13)),
                     },

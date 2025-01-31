@@ -702,13 +702,13 @@ impl ToJson for NaturalOption {
 }
 #[cfg(test)]
 pub mod tests {
+    use super::*;
     use hurl_core::ast::{
         LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
         TemplateElement, Version, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
-
-    use super::*;
+    use hurl_core::typing::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -737,7 +737,7 @@ pub mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "http://example.com".to_string(),
-                        source: "not_used".to_string(),
+                        source: "not_used".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -749,7 +749,7 @@ pub mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Foo".to_string(),
-                            source: "unused".to_string(),
+                            source: "unused".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -759,7 +759,7 @@ pub mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Bar".to_string(),
-                            source: "unused".to_string(),
+                            source: "unused".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
@@ -850,7 +850,7 @@ pub mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "Content-Length".to_string(),
-                        source: "10".to_string(),
+                        source: "Content-Length".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -866,7 +866,7 @@ pub mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "size".to_string(),
-                    source: "unused".to_string(),
+                    source: "unused".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },

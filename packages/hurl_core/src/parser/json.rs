@@ -414,6 +414,7 @@ fn whitespace(reader: &mut Reader) -> String {
 mod tests {
     use super::*;
     use crate::ast::*;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_parse_error() {
@@ -511,7 +512,7 @@ mod tests {
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
-                    source: "Hello\\u0020".to_string(),
+                    source: "Hello\\u0020".to_source(),
                 },
                 TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
@@ -532,7 +533,7 @@ mod tests {
                 }),
                 TemplateElement::String {
                     value: "!".to_string(),
-                    source: "!".to_string(),
+                    source: "!".to_source(),
                 },
             ],
             source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
@@ -563,7 +564,7 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "{}".to_string(),
-                    source: "{}".to_string(),
+                    source: "{}".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
             })
@@ -945,7 +946,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "a".to_string(),
-                            source: "a".to_string()
+                            source: "a".to_source()
                         }],
                         source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
                     },
@@ -993,7 +994,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "a".to_string(),
-                        source: "a".to_string()
+                        source: "a".to_source()
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3))
                 },

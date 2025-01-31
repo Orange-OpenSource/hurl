@@ -55,12 +55,12 @@ pub fn eval_decode(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
-    use hurl_core::reader::Pos;
-
     use super::*;
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
+    use hurl_core::typing::ToSource;
 
     /// Helper function to return a new filter given an `encoding`
     fn new_decode_filter(encoding: &str) -> Filter {
@@ -76,7 +76,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: encoding.to_string(),
-                        source: encoding.to_string(),
+                        source: encoding.to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + encoding.len(), 1)),
                 },

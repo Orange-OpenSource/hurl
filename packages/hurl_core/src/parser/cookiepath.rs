@@ -73,6 +73,7 @@ mod tests {
         Expr, ExprKind, Placeholder, SourceInfo, Template, TemplateElement, Variable, Whitespace,
     };
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn cookiepath_simple() {
@@ -84,7 +85,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
-                        source: "cookie1".to_string(),
+                        source: "cookie1".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },
@@ -104,7 +105,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
-                        source: "cookie1".to_string(),
+                        source: "cookie1".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },

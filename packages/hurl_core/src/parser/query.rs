@@ -219,6 +219,7 @@ mod tests {
     };
     use crate::parser::filter::filters;
     use crate::reader::Pos;
+    use crate::typing::{SourceString, ToSource};
 
     #[test]
     fn test_query() {
@@ -258,7 +259,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Foo".to_string(),
-                        source: "Foo".to_string(),
+                        source: "Foo".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 13)),
                 },
@@ -281,7 +282,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Foo".to_string(),
-                            source: "Foo".to_string(),
+                            source: "Foo".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 12)),
                     },
@@ -319,7 +320,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: String::from("normalize-space(//head/title)"),
-                        source: String::from("normalize-space(//head/title)"),
+                        source: SourceString::from("normalize-space(//head/title)"),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 38)),
                 },
@@ -334,7 +335,7 @@ mod tests {
                 elements: vec![
                     TemplateElement::String {
                         value: String::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
-                        source: String::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
+                        source: SourceString::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
                     }
                 ],
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 100)),
@@ -356,7 +357,7 @@ mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: "$['statusCode']".to_string(),
-                        source: "$['statusCode']".to_string(),
+                        source: "$['statusCode']".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 27)),
@@ -374,7 +375,7 @@ mod tests {
                 expr: Template {
                     elements: vec![TemplateElement::String {
                         value: "$.success".to_string(),
-                        source: "$.success".to_string(),
+                        source: "$.success".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 21)),

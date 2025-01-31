@@ -19,7 +19,7 @@ use std::fmt;
 
 use crate::ast::json;
 use crate::reader::Pos;
-use crate::typing::{Count, Duration};
+use crate::typing::{Count, Duration, SourceString};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -605,8 +605,7 @@ pub struct Template {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TemplateElement {
-    // TODO: explain the difference between value and encoded
-    String { value: String, source: String },
+    String { value: String, source: SourceString },
     Placeholder(Placeholder),
 }
 

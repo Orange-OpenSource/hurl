@@ -732,6 +732,7 @@ mod tests {
         Expr, ExprKind, Float, Placeholder, Regex, Template, TemplateElement, Variable, Whitespace,
         I64,
     };
+    use hurl_core::typing::ToSource;
     use std::path::Path;
 
     fn whitespace() -> Whitespace {
@@ -1271,7 +1272,7 @@ mod tests {
                         delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "toto".to_string(),
-                            source: "toto".to_string(),
+                            source: "toto".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     }),

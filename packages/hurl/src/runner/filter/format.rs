@@ -52,14 +52,14 @@ pub fn eval_format(
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
     use chrono::offset::Utc;
     use chrono::TimeZone;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-
-    use super::*;
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::VariableSet;
+    use hurl_core::typing::ToSource;
 
     /// Helper function to return a new filter given a `fmt`
     fn new_format_filter(fmt: &str) -> Filter {
@@ -75,7 +75,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: fmt.to_string(),
-                        source: fmt.to_string(),
+                        source: fmt.to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + fmt.len(), 1)),
                 },

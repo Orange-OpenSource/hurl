@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
 use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-
-use super::placeholder;
+use crate::typing::ToSource;
 
 /// Parse a filename with an optional password
 ///
@@ -46,7 +46,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let source = reader.read_from(start.index);
+                    let source = reader.read_from(start.index).to_source();
                     let element = TemplateElement::String { value, source };
                     elements.push(element);
                 } else {
@@ -166,7 +166,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "file\\:123:pwd\\:#:".to_string(),
-                    source: "file\\:123:pwd\\:\\#:".to_string()
+                    source: "file\\:123:pwd\\:\\#:".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
@@ -183,7 +183,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "/etc/client-cert.pem".to_string(),
-                    source: "/etc/client-cert.pem".to_string()
+                    source: "/etc/client-cert.pem".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
             }

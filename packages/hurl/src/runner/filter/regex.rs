@@ -47,13 +47,13 @@ pub fn eval_regex(
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{RunnerErrorKind, Value, VariableSet};
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{RunnerErrorKind, Value, VariableSet};
+    use hurl_core::typing::ToSource;
 
     #[test]
     fn eval_filter_regex() {
@@ -71,7 +71,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "Hello (.*)!".to_string(),
-                        source: "Hello (.*)!".to_string(),
+                        source: "Hello (.*)!".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),
@@ -117,7 +117,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
-                        source: "???".to_string(),
+                        source: "???".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),

@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
 use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+use crate::typing::ToSource;
 
-use super::placeholder;
-
+/// Parses a string into a [key string](https://hurl.dev/docs/grammar.html#key-string).
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.cursor();
     let mut elements = vec![];
@@ -39,7 +40,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let source = reader.read_from(start.index);
+                    let source = reader.read_from(start.index).to_source();
                     let element = TemplateElement::String { value, source };
                     elements.push(element);
                 } else {
@@ -159,7 +160,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "aaa:".to_string(),
-                    source: "aaa\\:".to_string(),
+                    source: "aaa\\:".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
@@ -173,7 +174,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "$top".to_string(),
-                    source: "$top".to_string(),
+                    source: "$top".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
@@ -187,7 +188,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "key :".to_string(),
-                    source: "key\\u{20}\\u{3a}".to_string(),
+                    source: "key\\u{20}\\u{3a}".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
             }
@@ -201,7 +202,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "values[0]".to_string(),
-                    source: "values\\u{5b}0\\u{5d}".to_string(),
+                    source: "values\\u{5b}0\\u{5d}".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             }
@@ -215,7 +216,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "values[0]".to_string(),
-                    source: "values[0]".to_string(),
+                    source: "values[0]".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             }
@@ -229,7 +230,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "[0]".to_string(),
-                    source: "\\u{5b}0\\u{5d}".to_string(),
+                    source: "\\u{5b}0\\u{5d}".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }

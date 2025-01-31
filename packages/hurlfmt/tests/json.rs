@@ -21,6 +21,7 @@ use std::fs;
 use hurl_core::ast::*;
 use hurl_core::parser::parse_json;
 use hurl_core::reader::{Pos, Reader};
+use hurl_core::typing::ToSource;
 use hurlfmt::format::{Token, Tokenizable};
 use proptest::prelude::prop::test_runner::TestRunner;
 use proptest::prelude::*;
@@ -68,8 +69,8 @@ fn value_string() -> BoxedStrategy<JsonValue> {
         })),
         Just(JsonValue::String(Template {
             elements: vec![TemplateElement::String {
-                source: "Hello".to_string(),
                 value: "Hello".to_string(),
+                source: "Hello".to_source(),
             }],
             delimiter: Some('"'),
             source_info
@@ -77,8 +78,8 @@ fn value_string() -> BoxedStrategy<JsonValue> {
         Just(JsonValue::String(Template {
             elements: vec![
                 TemplateElement::String {
-                    source: "Hello\\u0020 ".to_string(),
                     value: "Hello ".to_string(),
+                    source: "Hello\\u0020 ".to_source(),
                 },
                 TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
@@ -225,7 +226,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                                     delimiter: None,
                                     elements: vec![TemplateElement::String {
                                         value: "key1".to_string(),
-                                        source: "key1".to_string(),
+                                        source: "key1".to_source(),
                                     }],
                                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                                 },

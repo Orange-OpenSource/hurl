@@ -77,11 +77,11 @@ pub fn eval_jsonpath_json(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
-    use hurl_core::reader::Pos;
-
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Value, VariableSet};
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::reader::Pos;
+    use hurl_core::typing::ToSource;
 
     #[test]
     fn eval_filter_jsonpath() {
@@ -94,7 +94,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "$.message".to_string(),
-                        source: "$.message".to_string(),
+                        source: "$.message".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },

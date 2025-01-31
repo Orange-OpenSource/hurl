@@ -63,14 +63,14 @@ pub fn eval_multiline(
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::multiline::eval_multiline;
+    use crate::runner::VariableSet;
     use hurl_core::ast::{
         GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
         MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-
-    use crate::runner::multiline::eval_multiline;
-    use crate::runner::VariableSet;
+    use hurl_core::typing::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -107,7 +107,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: query.to_string(),
-                        source: query.to_string(),
+                        source: query.to_source(),
                     }],
                     source_info: empty_source_info(),
                 },
@@ -143,7 +143,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "episode".to_string(),
-                                source: "episode".to_string(),
+                                source: "episode".to_source(),
                             }],
                             source_info: empty_source_info(),
                         },
@@ -153,7 +153,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "JEDI".to_string(),
-                                source: "JEDI".to_string(),
+                                source: "JEDI".to_source(),
                             }],
                             source_info: empty_source_info(),
                         }),
@@ -165,7 +165,7 @@ mod tests {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
                                 value: "withFriends".to_string(),
-                                source: "withFriends".to_string(),
+                                source: "withFriends".to_source(),
                             }],
                             source_info: empty_source_info(),
                         },
@@ -186,7 +186,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: query.to_string(),
-                        source: query.to_string(),
+                        source: query.to_source(),
                     }],
                     source_info: empty_source_info(),
                 },

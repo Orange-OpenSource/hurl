@@ -78,6 +78,7 @@ mod tests {
     use super::*;
     use crate::ast::{JsonListElement, JsonValue, SourceInfo, Template, TemplateElement};
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_bytes_json() {
@@ -202,7 +203,7 @@ mod tests {
                 delimiter: Some('`'),
                 elements: vec![TemplateElement::String {
                     value: "foo".to_string(),
-                    source: "foo".to_string()
+                    source: "foo".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
             })

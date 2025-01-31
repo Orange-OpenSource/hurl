@@ -93,10 +93,10 @@ pub fn file_value_content_type(
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use hurl_core::ast::{LineTerminator, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-
-    use super::*;
+    use hurl_core::typing::ToSource;
 
     pub fn whitespace() -> Whitespace {
         Whitespace {
@@ -124,7 +124,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "upload1".to_string(),
-                        source: "upload1".to_string(),
+                        source: "upload1".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
@@ -137,7 +137,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         elements: vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
-                            source: "hello.txt".to_string(),
+                            source: "hello.txt".to_source(),
                         }],
                     },
                     space1: whitespace(),
@@ -173,7 +173,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         elements: vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
-                            source: "hello.txt".to_string()
+                            source: "hello.txt".to_source()
                         }],
                     },
                     space1: whitespace(),
@@ -195,7 +195,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         elements: vec![TemplateElement::String {
                             value: "hello.html".to_string(),
-                            source: "hello.html".to_string()
+                            source: "hello.html".to_source()
                         }],
                     },
                     space1: whitespace(),
@@ -217,7 +217,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         elements: vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
-                            source: "hello.txt".to_string()
+                            source: "hello.txt".to_source()
                         }],
                     },
                     space1: whitespace(),
@@ -239,7 +239,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         elements: vec![TemplateElement::String {
                             value: "hello".to_string(),
-                            source: "hello".to_string()
+                            source: "hello".to_source()
                         }],
                     },
                     space1: whitespace(),

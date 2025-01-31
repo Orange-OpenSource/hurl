@@ -192,15 +192,15 @@ fn eval_method(method: &Method) -> http::Method {
 
 #[cfg(test)]
 mod tests {
+    use super::super::error::RunnerErrorKind;
+    use super::*;
     use crate::runner::Value;
     use hurl_core::ast::{
         Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, Section, SectionValue,
         SourceInfo, TemplateElement, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
-
-    use super::super::error::RunnerErrorKind;
-    use super::*;
+    use hurl_core::typing::{SourceString, ToSource};
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -235,7 +235,7 @@ mod tests {
                     }),
                     TemplateElement::String {
                         value: String::from("/hello"),
-                        source: String::from("/hello"),
+                        source: SourceString::from("/hello"),
                     },
                 ],
                 delimiter: None,
@@ -280,7 +280,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://localhost:8000/querystring-params"),
-                    source: String::from("http://localhost:8000/querystring-params"),
+                    source: SourceString::from("http://localhost:8000/querystring-params"),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -298,7 +298,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "param1".to_string(),
-                                    source: "param1".to_string(),
+                                    source: "param1".to_source(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -329,7 +329,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "param2".to_string(),
-                                    source: "param2".to_string(),
+                                    source: "param2".to_source(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -337,7 +337,7 @@ mod tests {
                                 delimiter: None,
                                 elements: vec![TemplateElement::String {
                                     value: "a b".to_string(),
-                                    source: "a b".to_string(),
+                                    source: "a b".to_source(),
                                 }],
                                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
@@ -422,7 +422,7 @@ mod tests {
             url: Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http:///localhost"),
-                    source: String::from("http://localhost"),
+                    source: SourceString::from("http://localhost"),
                 },],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -463,7 +463,7 @@ mod tests {
                 url: Template {
                     elements: vec![TemplateElement::String {
                         value: String::from("http:///localhost"),
-                        source: String::from("http://localhost"),
+                        source: SourceString::from("http://localhost"),
                     },],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
 use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-
-use super::placeholder;
+use crate::typing::ToSource;
 
 /// Parse a filename.
 ///
@@ -45,7 +45,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
                     if value.is_empty() {
                         break;
                     }
-                    let source = reader.read_from(start.index);
+                    let source = reader.read_from(start.index).to_source();
                     let element = TemplateElement::String { value, source };
                     elements.push(element);
                 } else {
@@ -160,7 +160,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "data/data.bin".to_string(),
-                    source: "data/data.bin".to_string()
+                    source: "data/data.bin".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }
@@ -175,7 +175,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "data.bin".to_string(),
-                    source: "data.bin".to_string()
+                    source: "data.bin".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
@@ -192,7 +192,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "file with spaces".to_string(),
-                    source: "file\\ with\\ spaces".to_string()
+                    source: "file\\ with\\ spaces".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
@@ -209,7 +209,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "filename{".to_string(),
-                    source: "filename\\{".to_string()
+                    source: "filename\\{".to_source()
                 }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11)),
             }
@@ -240,7 +240,7 @@ mod tests {
                 elements: vec![
                     TemplateElement::String {
                         value: "foo_".to_string(),
-                        source: "foo_".to_string(),
+                        source: "foo_".to_source(),
                     },
                     TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
@@ -272,7 +272,7 @@ mod tests {
                 elements: vec![
                     TemplateElement::String {
                         value: "foo_".to_string(),
-                        source: "foo_".to_string(),
+                        source: "foo_".to_source(),
                     },
                     TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
@@ -293,7 +293,7 @@ mod tests {
                     }),
                     TemplateElement::String {
                         value: "_baz".to_string(),
-                        source: "_baz".to_string(),
+                        source: "_baz".to_source(),
                     },
                 ],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),

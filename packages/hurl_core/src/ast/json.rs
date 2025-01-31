@@ -212,6 +212,7 @@ mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, SourceInfo, TemplateElement, Variable, Whitespace};
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_to_string() {
@@ -243,7 +244,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
-                    source: "hello".to_string(),
+                    source: "hello".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             })
@@ -300,7 +301,7 @@ mod tests {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "id".to_string(),
-                            source: "id".to_string(),
+                            source: "id".to_source(),
                         }],
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },

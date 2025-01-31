@@ -321,6 +321,7 @@ mod tests {
         Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable, I64,
     };
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_predicate_not() {
@@ -431,7 +432,7 @@ mod tests {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Bob".to_string(),
-                        source: "Bob".to_string(),
+                        source: "Bob".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 9)),
                 }),
