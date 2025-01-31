@@ -78,7 +78,7 @@ Encode bytes into base 64 encoded string.
 GET https://example.org/api
 HTTP 200
 [Asserts]
-jsonpath "$.token" base64Decode base64Encode == "5L2g5aW95LiW55WM"
+bytes base64Encode == "5L2g5aW95LiW55WM"
 ```
 
 ### count
