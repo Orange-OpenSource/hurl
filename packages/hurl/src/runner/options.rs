@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::ast::{
-    BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, NaturalOption,
+    BooleanOption, CountOption, DurationOption, Entry, EntryOption, NaturalOption,
     Number as AstNumber, OptionKind, Placeholder, SectionValue, VariableDefinition, VariableValue,
 };
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
@@ -467,7 +467,7 @@ fn eval_variable_value(
 
 fn eval_number(number: &AstNumber) -> Value {
     match number {
-        AstNumber::Float(Float { value, .. }) => Value::Number(Number::Float(*value)),
+        AstNumber::Float(value) => Value::Number(Number::Float(value.as_f64())),
         AstNumber::Integer(value) => Value::Number(Number::Integer(value.as_i64())),
         AstNumber::BigInteger(value) => Value::Number(Number::BigInteger(value.clone())),
     }

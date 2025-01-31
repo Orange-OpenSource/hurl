@@ -110,10 +110,7 @@ mod tests {
         let mut reader = Reader::new("1.1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Number(Number::Float(Float {
-                value: 1.1,
-                source: "1.1".to_string(),
-            }))
+            PredicateValue::Number(Number::Float(Float::new(1.1, "1.1".to_string())))
         );
     }
 

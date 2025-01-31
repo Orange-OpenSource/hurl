@@ -70,7 +70,7 @@ pub fn eval_predicate_value_template(
 
 fn eval_number(number: &Number) -> ValueNumber {
     match number {
-        Number::Float(value) => ValueNumber::Float(value.value),
+        Number::Float(value) => ValueNumber::Float(value.as_f64()),
         Number::Integer(value) => ValueNumber::Integer(value.as_i64()),
         Number::BigInteger(value) => ValueNumber::BigInteger(value.clone()),
     }

@@ -20,7 +20,7 @@
 //! an Hurl AST to a JSON representation.
 use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
-    CountOption, DurationOption, Expr, ExprKind, FilterValue, Float, Function, Hex, Method,
+    CountOption, DurationOption, Expr, ExprKind, FilterValue, Function, Hex, Method,
     MultilineString, MultilineStringAttribute, MultilineStringKind, NaturalOption, Number,
     OptionKind, Placeholder, PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template,
     TemplateElement, Variable, VariableDefinition, VariableValue, Version, VersionValue,
@@ -134,12 +134,6 @@ impl FilterValue {
             FilterValue::UrlEncode => "urlEncode",
             FilterValue::XPath { .. } => "xpath",
         }
-    }
-}
-
-impl fmt::Display for Float {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.source)
     }
 }
 
@@ -492,42 +486,6 @@ mod tests {
             ],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
-    }
-
-    #[test]
-    fn test_float() {
-        assert_eq!(
-            Float {
-                value: 1.0,
-                source: "1.0".to_string()
-            }
-            .to_string(),
-            "1.0"
-        );
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.01".to_string()
-            }
-            .to_string(),
-            "1.01"
-        );
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.010".to_string()
-            }
-            .to_string(),
-            "1.010"
-        );
-        assert_eq!(
-            Float {
-                value: -1.333,
-                source: "-1.333".to_string()
-            }
-            .to_string(),
-            "-1.333"
-        );
     }
 
     #[test]

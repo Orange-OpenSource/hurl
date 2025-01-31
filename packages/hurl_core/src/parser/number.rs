@@ -124,7 +124,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
                 let source = reader.read_from(start.index);
-                Ok(Number::Float(Float { value, source }))
+                Ok(Number::Float(Float::new(value, source)))
             }
             Err(_) => {
                 let kind = ParseErrorKind::Expecting {
@@ -138,8 +138,8 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     } else {
         match format!("{sign}{integer_digits}").parse::<i64>() {
             Ok(value) => {
-                let encoded = reader.read_from(start.index);
-                let integer = I64::new(value, encoded);
+                let source = reader.read_from(start.index);
+                let integer = I64::new(value, source);
                 Ok(Number::Integer(integer))
             }
             Err(_) => Ok(Number::BigInteger(integer_digits)),
@@ -242,60 +242,42 @@ mod tests {
         let mut reader = Reader::new("1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1.0,
-                source: "1.0".to_string()
-            })
+            Number::Float(Float::new(1.0, "1.0".to_string())),
         );
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: -1.0,
-                source: "-1.0".to_string()
-            })
+            Number::Float(Float::new(-1.0, "-1.0".to_string())),
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1.1,
-                source: "1.1".to_string()
-            })
+            Number::Float(Float::new(1.1, "1.1".to_string())),
         );
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1.1,
-                source: "1.100".to_string()
-            })
+            Number::Float(Float::new(1.1, "1.100".to_string())),
         );
         assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1.01,
-                source: "1.01".to_string()
-            })
+            Number::Float(Float::new(1.01, "1.01".to_string())),
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1.01,
-                source: "1.010".to_string()
-            })
+            Number::Float(Float::new(1.01, "1.010".to_string()))
         );
         assert_eq!(reader.cursor().index, 5);
 
@@ -303,20 +285,20 @@ mod tests {
         let mut reader = Reader::new("-0.3333333333333333333");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: -0.3333333333333333,
-                source: "-0.3333333333333333333".to_string()
-            })
+            Number::Float(Float::new(
+                -0.3333333333333333,
+                "-0.3333333333333333333".to_string()
+            ))
         );
         assert_eq!(reader.cursor().index, 22);
 
         let mut reader = Reader::new("1000000000000000000000.5");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float {
-                value: 1000000000000000000000.0,
-                source: "1000000000000000000000.5".to_string()
-            })
+            Number::Float(Float::new(
+                1000000000000000000000.0,
+                "1000000000000000000000.5".to_string()
+            ))
         );
         assert_eq!(reader.cursor().index, 24);
     }

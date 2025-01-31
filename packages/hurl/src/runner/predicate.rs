@@ -884,10 +884,10 @@ mod tests {
 
         // predicate: `== 1.2`
         // value: 1.1
-        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float {
-            value: 1.2,
-            source: "1.2".to_string(),
-        }));
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float::new(
+            1.2,
+            "1.2".to_string(),
+        )));
         let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
@@ -994,10 +994,10 @@ mod tests {
 
         // predicate: `== 1.1`
         // value: 1.1
-        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float {
-            value: 1.1,
-            source: "1.1".to_string(),
-        }));
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float::new(
+            1.1,
+            "1.1".to_string(),
+        )));
         let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);

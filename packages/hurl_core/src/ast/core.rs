@@ -617,8 +617,24 @@ pub enum Number {
 
 #[derive(Clone, Debug)]
 pub struct Float {
-    pub value: f64,
-    pub source: String,
+    value: f64,
+    source: String,
+}
+
+impl Float {
+    pub fn new(value: f64, source: String) -> Float {
+        Float { value, source }
+    }
+
+    pub fn as_f64(&self) -> f64 {
+        self.value
+    }
+}
+
+impl fmt::Display for Float {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.source)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -911,4 +927,45 @@ pub enum FilterValue {
         space0: Whitespace,
         expr: Template,
     },
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::ast::Float;
+
+    #[test]
+    fn test_float() {
+        assert_eq!(
+            Float {
+                value: 1.0,
+                source: "1.0".to_string()
+            }
+            .to_string(),
+            "1.0"
+        );
+        assert_eq!(
+            Float {
+                value: 1.01,
+                source: "1.01".to_string()
+            }
+            .to_string(),
+            "1.01"
+        );
+        assert_eq!(
+            Float {
+                value: 1.01,
+                source: "1.010".to_string()
+            }
+            .to_string(),
+            "1.010"
+        );
+        assert_eq!(
+            Float {
+                value: -1.333,
+                source: "-1.333".to_string()
+            }
+            .to_string(),
+            "-1.333"
+        );
+    }
 }
