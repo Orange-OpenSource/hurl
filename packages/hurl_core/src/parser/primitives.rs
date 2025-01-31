@@ -22,6 +22,7 @@ use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
 use crate::parser::{base64, filename, key_string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+use crate::typing::ToSource;
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.cursor();
@@ -361,7 +362,7 @@ pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     let value = base64::parse(reader);
     let count = reader.cursor().index - save_state.index;
     reader.seek(save_state);
-    let source = reader.read_n(count);
+    let source = reader.read_n(count).to_source();
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
     Ok(Base64 {
@@ -1029,7 +1030,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 10)),
                 },
                 value: vec![77, 97],
-                source: String::from("T WE="),
+                source: SourceString::from("T WE="),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),

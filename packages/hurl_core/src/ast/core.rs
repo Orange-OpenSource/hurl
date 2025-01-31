@@ -567,7 +567,7 @@ pub struct GraphQlVariables {
 pub struct Base64 {
     pub space0: Whitespace,
     pub value: Vec<u8>,
-    pub source: String,
+    pub source: SourceString,
     pub space1: Whitespace,
 }
 
