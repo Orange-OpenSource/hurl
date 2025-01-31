@@ -59,6 +59,28 @@ jsonpath "$.books" count == 12
 
 ## Description
 
+### base64Decode
+
+Decode a base 64 encoded string into bytes.
+
+```hurl
+GET https://example.org/api
+HTTP 200
+[Asserts]
+jsonpath "$.token" base64Decode == hex,e4bda0e5a5bde4b896e7958c;
+```
+
+### base64Encode
+
+Encode bytes into base 64 encoded string.
+
+```hurl
+GET https://example.org/api
+HTTP 200
+[Asserts]
+jsonpath "$.token" base64Decode base64Encode == "5L2g5aW95LiW55WM"
+```
+
 ### count
 
 Counts the number of items in a collection.
