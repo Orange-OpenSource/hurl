@@ -241,7 +241,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
             ParseErrorKind::OddNumberOfHexDigits,
         ));
     }
-    let source = reader.read_from(start.index);
+    let source = reader.read_from(start.index).to_source();
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
 
@@ -783,7 +783,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 6)),
                 },
                 value: vec![255],
-                source: "ff".to_string(),
+                source: "ff".to_source(),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
@@ -800,7 +800,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 5)),
                 },
                 value: vec![1, 2, 3],
-                source: "010203".to_string(),
+                source: "010203".to_source(),
                 space1: Whitespace {
                     value: " ".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 12)),
