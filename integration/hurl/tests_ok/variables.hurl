@@ -14,6 +14,7 @@ A-Null: {{a_null}}
 Country: {{country}}
 Planet: {{planet}}
 Galaxy: {{galaxy}}
+BigInt: {{big_int}}
 [Options]
 variable: country=Italy
 variable: planet=The Earth
@@ -26,7 +27,8 @@ variable: planet=The Earth
   "a_null": {{a_null}},
   "country": "{{country}}",
   "planet": "{{planet}}",
-  "galaxy": "{{galaxy}}"
+  "galaxy": "{{galaxy}}",
+  "big_int": {{big_int}}
 }
 HTTP 200
 [Asserts]

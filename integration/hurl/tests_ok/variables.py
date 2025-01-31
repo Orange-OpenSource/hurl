@@ -16,6 +16,7 @@ def variables():
     assert request.headers["Country"] == "Italy"
     assert request.headers["Planet"] == "The Earth"
     assert request.headers["Galaxy"] == "Milky Way"
+    assert request.headers["BigInt"] == "9223372036854775808"
 
     s = request.data.decode("utf-8")
     data = json.loads(s)
@@ -28,6 +29,7 @@ def variables():
     assert data["country"] == "Italy"
     assert data["planet"] == "The Earth"
     assert data["galaxy"] == "Milky Way"
+    assert data["big_int"] == 9223372036854775808
     return ""
 
 

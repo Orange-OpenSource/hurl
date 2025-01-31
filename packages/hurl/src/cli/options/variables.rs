@@ -55,6 +55,8 @@ pub fn parse_value(s: &str, inferred: bool) -> Result<Value, CliOptionsError> {
         Ok(Value::Null)
     } else if let Ok(v) = s.parse::<i64>() {
         Ok(Value::Number(Number::Integer(v)))
+    } else if s.chars().all(char::is_numeric) {
+        Ok(Value::Number(Number::BigInteger(s.to_string())))
     } else if let Ok(v) = s.parse::<f64>() {
         Ok(Value::Number(Number::Float(v)))
     } else if let Some(s) = s.strip_prefix('"') {
@@ -95,6 +97,13 @@ mod tests {
         assert_eq!(
             parse("id=\"123\"", true).unwrap(),
             ("id".to_string(), Value::String("123".to_string()))
+        );
+        assert_eq!(
+            parse("id=9223372036854775808", true).unwrap(),
+            (
+                "id".to_string(),
+                Value::Number(Number::BigInteger("9223372036854775808".to_string()))
+            )
         );
         assert_eq!(
             parse("a_null=null", true).unwrap(),
