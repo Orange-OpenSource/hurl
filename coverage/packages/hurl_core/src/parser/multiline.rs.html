@@ -4389,7 +4389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::ast::{JsonObjectElement, JsonValue, TemplateElement};</pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4405,7 +4405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::reader::Pos;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::ast::{JsonObjectElement, JsonValue, TemplateElement};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4421,7 +4421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    use crate::reader::Pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4437,7 +4437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4773,7 +4773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5189,7 +5189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5653,7 +5653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6165,7 +6165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;{\n  \&quot;g_clef\&quot;: \&quot;\\u{1D11E}\&quot;\n}\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;{\n  \&quot;g_clef\&quot;: \&quot;\\u{1D11E}\&quot;\n}\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6629,7 +6629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7061,7 +7061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8693,7 +8693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;line1\nline2\nline3\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9157,7 +9157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9589,7 +9589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;\r\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;\r\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10597,7 +10597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;\\t\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;\\t\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11621,7 +11621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;hello&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;hello&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12277,7 +12277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            &quot;query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                            &quot;query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12565,7 +12565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        source: &quot;name&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                                        source: &quot;name&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12757,7 +12757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        source: &quot;Han Solo&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                                        source: &quot;Han Solo&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13755,7 +13755,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-31 16:35</p>
+                <p class="heading">Date: 2025-01-31 17:45</p>
             </div>
         </footer>
     </body>

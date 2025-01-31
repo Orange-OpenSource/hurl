@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::ast::{SourceInfo, Template, TemplateElement};</pre>
+                <pre class="has-background-white py-0 px-2">use super::placeholder;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::parser::primitives::try_literal;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::ast::{SourceInfo, Template, TemplateElement};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::parser::primitives::try_literal;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -373,7 +373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::reader::Reader;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use crate::reader::Reader;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::placeholder;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let source = reader.read_from(start.index);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let source = reader.read_from(start.index).to_source();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2645,7 +2645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;data&#x2F;data.bin&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;data&#x2F;data.bin&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2885,7 +2885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;data.bin&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;data.bin&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3157,7 +3157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;file\\ with\\ spaces&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;file\\ with\\ spaces&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3429,7 +3429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;filename\\{&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;filename\\{&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3925,7 +3925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;foo_&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;foo_&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4437,7 +4437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;foo_&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;foo_&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4773,7 +4773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;_baz&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;_baz&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4891,7 +4891,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-31 16:35</p>
+                <p class="heading">Date: 2025-01-31 17:45</p>
             </div>
         </footer>
     </body>
