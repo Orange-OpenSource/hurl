@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let encoded = reader.read_from(start.index);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let source = reader.read_from(start.index);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let element = TemplateElement::String { value, encoded };</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let element = TemplateElement::String { value, source };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -949,7 +949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if let Some(TemplateElement::String { encoded, .. }) = elements.first() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if let Some(TemplateElement::String { source, .. }) = elements.first() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -965,7 +965,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if encoded.starts_with(&#x27;[&#x27;) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if source.starts_with(&#x27;[&#x27;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2629,7 +2629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;aaa\\:&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;aaa\\:&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;$top&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;$top&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3077,7 +3077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;key\\u{20}\\u{3a}&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;key\\u{20}\\u{3a}&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3301,7 +3301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;values\\u{5b}0\\u{5d}&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;values\\u{5b}0\\u{5d}&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3525,7 +3525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;values[0]&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;values[0]&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3749,7 +3749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;\\u{5b}0\\u{5d}&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;\\u{5b}0\\u{5d}&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4987,7 +4987,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-30 16:54</p>
+                <p class="heading">Date: 2025-01-31 07:41</p>
             </div>
         </footer>
     </body>

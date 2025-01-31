@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut encoded = String::new();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut source = String::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    encoded.push_str(&amp;s.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source.push_str(&amp;s.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -949,7 +949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        elements.push(TemplateElement::String { value, encoded });</pre>
+                <pre class="has-background-success-light py-0 px-2">                        elements.push(TemplateElement::String { value, source });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -981,7 +981,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        encoded = String::new();</pre>
+                <pre class="has-background-success-light py-0 px-2">                        source = String::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1061,7 +1061,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    encoded.push(&#x27;{&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source.push(&#x27;{&#x27;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1109,7 +1109,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    encoded.push_str(&amp;s.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source.push_str(&amp;s.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1317,7 +1317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    encoded.push_str(&amp;s.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source.push_str(&amp;s.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1413,7 +1413,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let mut reader = Reader::with_pos(encoded.as_str(), expression_start.unwrap());</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let mut reader = Reader::with_pos(source.as_str(), expression_start.unwrap());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1589,7 +1589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    encoded = String::new();</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source = String::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1685,7 +1685,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    encoded.push(&#x27;}&#x27;);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    source.push(&#x27;}&#x27;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    encoded.push_str(&amp;s.clone());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    source.push_str(&amp;s.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1861,7 +1861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            encoded.push(&#x27;{&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">            source.push(&#x27;{&#x27;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2101,7 +2101,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        elements.push(TemplateElement::String { value, encoded });</pre>
+                <pre class="has-background-success-light py-0 px-2">        elements.push(TemplateElement::String { value, source });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3717,7 +3717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;Hi\\u0020&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;Hi\\u0020&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4053,7 +4053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    encoded: &quot;!&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;!&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5317,7 +5317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                encoded: &quot;\\{\\{&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                source: &quot;\\{\\{&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5387,7 +5387,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-30 16:54</p>
+                <p class="heading">Date: 2025-01-31 07:41</p>
             </div>
         </footer>
     </body>
