@@ -22,8 +22,9 @@ use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
     CountOption, DurationOption, Expr, ExprKind, FilterValue, Function, Hex, Method,
     MultilineString, MultilineStringAttribute, MultilineStringKind, NaturalOption, Number,
-    OptionKind, Placeholder, PredicateFuncValue, QueryValue, Regex, Status, StatusValue, Template,
-    TemplateElement, Variable, VariableDefinition, VariableValue, Version, VersionValue,
+    OptionKind, Placeholder, PredicateFuncValue, QueryValue, Regex, Section, SectionValue, Status,
+    StatusValue, Template, TemplateElement, Variable, VariableDefinition, VariableValue, Version,
+    VersionValue,
 };
 use core::fmt;
 
@@ -361,6 +362,25 @@ impl QueryValue {
 impl fmt::Display for Regex {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.inner)
+    }
+}
+
+impl Section {
+    /// Returns the Hurl string identifier of this section.
+    pub fn identifier(&self) -> &'static str {
+        match self.value {
+            SectionValue::Asserts(_) => "Asserts",
+            SectionValue::QueryParams(_, true) => "Query",
+            SectionValue::QueryParams(_, false) => "QueryStringParams",
+            SectionValue::BasicAuth(_) => "BasicAuth",
+            SectionValue::FormParams(_, true) => "Form",
+            SectionValue::FormParams(_, false) => "FormParams",
+            SectionValue::Cookies(_) => "Cookies",
+            SectionValue::Captures(_) => "Captures",
+            SectionValue::MultipartFormData(_, true) => "Multipart",
+            SectionValue::MultipartFormData(_, false) => "MultipartFormData",
+            SectionValue::Options(_) => "Options",
+        }
     }
 }
 

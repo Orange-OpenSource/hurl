@@ -54,39 +54,39 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let start = reader.cursor();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let m = method(reader)?;
+    let method = method(reader)?;
     let space1 = one_or_more_spaces(reader)?;
     let url = unquoted_template(reader)?;
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = request_sections(reader)?;
-    let b = optional(body, reader)?;
+    let body = optional(body, reader)?;
     let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
 
     // Check duplicated section
     let mut section_names = vec![];
-    for section in sections.clone() {
-        if section_names.contains(&section.name().to_string()) {
+    for section in &sections {
+        if section_names.contains(&section.identifier()) {
             return Err(ParseError::new(
                 section.source_info.start,
                 false,
                 ParseErrorKind::DuplicateSection,
             ));
         } else {
-            section_names.push(section.name().to_string());
+            section_names.push(section.identifier());
         }
     }
 
     Ok(Request {
         line_terminators,
         space0,
-        method: m,
+        method,
         space1,
         url,
         line_terminator0,
         headers,
         sections,
-        body: b,
+        body,
         source_info,
     })
 }
@@ -95,24 +95,26 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
     let start = reader.cursor();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let _version = version(reader)?;
+    let version = version(reader)?;
     let space1 = one_or_more_spaces(reader)?;
-    let _status = status(reader)?;
+    let status = status(reader)?;
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = response_sections(reader)?;
-    let b = optional(body, reader)?;
+    let body = optional(body, reader)?;
+    let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
+
     Ok(Response {
         line_terminators,
         space0,
-        version: _version,
+        version,
         space1,
-        status: _status,
+        status,
         line_terminator0,
         headers,
         sections,
-        body: b,
-        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
+        body,
+        source_info,
     })
 }
 

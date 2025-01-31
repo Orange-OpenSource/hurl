@@ -172,7 +172,7 @@ impl HtmlFormatter {
         self.fmt_lts(&section.line_terminators);
         self.fmt_space(&section.space0);
         self.fmt_span_open("line");
-        let name = format!("[{}]", section.name());
+        let name = format!("[{}]", section.identifier());
         self.fmt_span("section-header", &name);
         self.fmt_span_close();
         self.fmt_lt(&section.line_terminator0);

@@ -217,24 +217,6 @@ pub struct Section {
     pub source_info: SourceInfo,
 }
 
-impl Section {
-    pub fn name(&self) -> &str {
-        match self.value {
-            SectionValue::Asserts(_) => "Asserts",
-            SectionValue::QueryParams(_, true) => "Query",
-            SectionValue::QueryParams(_, false) => "QueryStringParams",
-            SectionValue::BasicAuth(_) => "BasicAuth",
-            SectionValue::FormParams(_, true) => "Form",
-            SectionValue::FormParams(_, false) => "FormParams",
-            SectionValue::Cookies(_) => "Cookies",
-            SectionValue::Captures(_) => "Captures",
-            SectionValue::MultipartFormData(_, true) => "Multipart",
-            SectionValue::MultipartFormData(_, false) => "MultipartFormData",
-            SectionValue::Options(_) => "Options",
-        }
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum SectionValue {

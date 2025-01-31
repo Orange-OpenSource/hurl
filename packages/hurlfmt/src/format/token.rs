@@ -200,7 +200,7 @@ impl Tokenizable for Section {
                 .collect(),
         );
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::SectionHeader(format!("[{}]", self.name())));
+        tokens.push(Token::SectionHeader(format!("[{}]", self.identifier())));
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens.append(&mut self.value.tokenize());
         tokens
