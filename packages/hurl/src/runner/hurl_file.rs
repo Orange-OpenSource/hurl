@@ -396,7 +396,7 @@ fn run_request(
 fn get_output_source_info(entry: &Entry) -> SourceInfo {
     let mut source_info = entry.source_info();
     for option_entry in entry.request.options() {
-        if let OptionKind::Output(value) = option_entry.kind {
+        if let OptionKind::Output(value) = &option_entry.kind {
             source_info = value.source_info;
         }
     }

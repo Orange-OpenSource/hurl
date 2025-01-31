@@ -61,7 +61,7 @@ pub fn eval_request(
 
     // Query string params
     let mut querystring = vec![];
-    for param in &request.querystring_params() {
+    for param in request.querystring_params() {
         let name = template::eval_template(&param.key, variables)?;
         let value = template::eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
@@ -70,7 +70,7 @@ pub fn eval_request(
 
     // Form params
     let mut form = vec![];
-    for param in &request.form_params() {
+    for param in request.form_params() {
         let name = template::eval_template(&param.key, variables)?;
         let value = template::eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
@@ -79,7 +79,7 @@ pub fn eval_request(
 
     // Cookies
     let mut cookies = vec![];
-    for cookie in &request.cookies() {
+    for cookie in request.cookies() {
         let name = template::eval_template(&cookie.name, variables)?;
         let value = template::eval_template(&cookie.value, variables)?;
         let cookie = http::RequestCookie { name, value };
@@ -92,7 +92,7 @@ pub fn eval_request(
     };
 
     let mut multipart = vec![];
-    for multipart_param in &request.multipart_form_data() {
+    for multipart_param in request.multipart_form_data() {
         let param = multipart::eval_multipart_param(multipart_param, variables, context_dir)?;
         multipart.push(param);
     }

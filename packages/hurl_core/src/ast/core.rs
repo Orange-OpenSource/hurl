@@ -56,56 +56,74 @@ pub struct Request {
 }
 
 impl Request {
-    pub fn querystring_params(&self) -> Vec<KeyValue> {
+    /// Returns the query strings params for this request.
+    ///
+    /// See <https://developer.mozilla.org/en-US/docs/Web/API/URL/searchParams>.
+    pub fn querystring_params(&self) -> &[KeyValue] {
         for section in &self.sections {
             if let SectionValue::QueryParams(params, _) = &section.value {
-                return params.clone();
+                return params;
             }
         }
-        vec![]
+        &[]
     }
-    pub fn form_params(&self) -> Vec<KeyValue> {
+
+    /// Returns the form params for this request.
+    ///
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#url-encoded_form_submission>.
+    pub fn form_params(&self) -> &[KeyValue] {
         for section in &self.sections {
             if let SectionValue::FormParams(params, _) = &section.value {
-                return params.clone();
+                return params;
             }
         }
-        vec![]
+        &[]
     }
-    pub fn multipart_form_data(&self) -> Vec<MultipartParam> {
+
+    /// Returns the multipart form data for this request.
+    ///
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#multipart_form_submission>.
+    pub fn multipart_form_data(&self) -> &[MultipartParam] {
         for section in &self.sections {
             if let SectionValue::MultipartFormData(params, _) = &section.value {
-                return params.clone();
+                return params;
             }
         }
-        vec![]
+        &[]
     }
 
-    pub fn cookies(&self) -> Vec<Cookie> {
+    /// Returns the list of cookies on this request.
+    ///
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>.
+    pub fn cookies(&self) -> &[Cookie] {
         for section in &self.sections {
             if let SectionValue::Cookies(cookies) = &section.value {
-                return cookies.clone();
+                return cookies;
             }
         }
-        vec![]
+        &[]
     }
 
-    pub fn basic_auth(&self) -> Option<KeyValue> {
+    /// Returns the basic authentication on this request.
+    ///
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication>.
+    pub fn basic_auth(&self) -> Option<&KeyValue> {
         for section in &self.sections {
             if let SectionValue::BasicAuth(kv) = &section.value {
-                return kv.clone();
+                return kv.as_ref();
             }
         }
         None
     }
 
-    pub fn options(&self) -> Vec<EntryOption> {
+    /// Returns the options specific for this request.
+    pub fn options(&self) -> &[EntryOption] {
         for section in &self.sections {
             if let SectionValue::Options(options) = &section.value {
-                return options.clone();
+                return options;
             }
         }
-        vec![]
+        &[]
     }
 }
 
