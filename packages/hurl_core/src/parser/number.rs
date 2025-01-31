@@ -26,8 +26,8 @@ pub fn natural(reader: &mut Reader) -> ParseResult<U64> {
     let s = parse_natural_str(reader, "natural")?;
     match s.parse() {
         Ok(value) => {
-            let encoded = reader.read_from(start.index);
-            Ok(U64::new(value, encoded))
+            let source = reader.read_from(start.index);
+            Ok(U64::new(value, source))
         }
         Err(_) => {
             let kind = ParseErrorKind::Expecting {
@@ -48,8 +48,8 @@ pub fn integer(reader: &mut Reader) -> ParseResult<I64> {
     match s.to_string().parse::<i64>() {
         Ok(value) => {
             let value = sign * value;
-            let encoded = reader.read_from(start.index);
-            Ok(I64::new(value, encoded))
+            let source = reader.read_from(start.index);
+            Ok(I64::new(value, source))
         }
         Err(_) => {
             let kind = ParseErrorKind::Expecting {
