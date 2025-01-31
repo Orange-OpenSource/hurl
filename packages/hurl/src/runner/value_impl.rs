@@ -69,6 +69,16 @@ impl Value {
             (Value::Bytes(s), Value::Bytes(substr)) => {
                 Ok(contains(s.as_slice(), substr.as_slice()))
             }
+            (Value::List(values), _) => {
+                let mut included = false;
+                for v in values {
+                    if v == other {
+                        included = true;
+                        break;
+                    }
+                }
+                Ok(included)
+            }
             _ => Err(EvalError::Type),
         }
     }
@@ -269,6 +279,13 @@ mod tests {
         assert!(Value::String("abc".to_string())
             .contains(&Value::String("ab".to_string()))
             .unwrap());
+        let values = Value::List(vec![
+            Value::Number(Number::Integer(0)),
+            Value::Number(Number::Integer(2)),
+            Value::Number(Number::Integer(3)),
+        ]);
+        assert!(values.contains(&Value::Number(Number::Integer(0))).unwrap());
+        assert!(!values.contains(&Value::Number(Number::Integer(4))).unwrap());
     }
 
     #[test]

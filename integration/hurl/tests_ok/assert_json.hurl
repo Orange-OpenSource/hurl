@@ -40,13 +40,13 @@ jsonpath "$.errors[0]" isCollection
 jsonpath "$.errors[0].id" == "error1"
 jsonpath "$.errors[0].id" isString
 jsonpath "$.errors[0]['id']" == "error1"
-jsonpath "$.errors[*].id" includes "error1"
-jsonpath "$.errors[0,1].id" includes "error1"
+jsonpath "$.errors[*].id" contains "error1"
+jsonpath "$.errors[0,1].id" contains "error1"
 jsonpath "$.errors[:2].id" count == 2
 jsonpath "$.errors[0:].id" count == 2
 jsonpath "$.errors[?(@.id)].id" nth 0 == "error1"
 jsonpath "$.errors[?(@.id=='error1')].id" nth 0 == "error1"
-jsonpath "$.failures[*].id" includes "failure1"
+jsonpath "$.failures[*].id" contains "failure1"
 jsonpath "$.duration" == 1.5
 jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" < 2
@@ -105,9 +105,9 @@ HTTP 200
 [Asserts]
 jsonpath "$.errors[{{index}}].id" == "error2"
 jsonpath "$.errors[{{index}}].id" == `error2`
-jsonpath "$.tags" includes "test"
-jsonpath "$.tags" not includes "prod"
-jsonpath "$.tags" not includes null
+jsonpath "$.tags" contains "test"
+jsonpath "$.tags" not contains "prod"
+jsonpath "$.tags" not contains null
 
 
 GET http://localhost:8000/assert-json/list

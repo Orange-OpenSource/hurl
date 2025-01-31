@@ -4,8 +4,7 @@ HTTP 200
 header "content-type" == "XXX"
 header "content-type" != "text/html; charset=utf-8"
 jsonpath "$.id" == "000001"
-jsonpath "$.values" includes 100
-jsonpath "$.values" not contains "Hello"
+jsonpath "$.values" contains 100
 jsonpath "$.count" > 5
 jsonpath "$.count" isFloat
 jsonpath "$.line_terminator" == "\r\n"

@@ -28,32 +28,27 @@
         },
         {
           "line": 7,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:7:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 7 | jsonpath \"$.values\" includes 100\n   |   actual:   list <[1,2,3]>\n   |   expected: includes integer <100>\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:7:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 7 | jsonpath \"$.values\" contains 100\n   |   actual:   list <[1,2,3]>\n   |   expected: contains integer <100>\n   |",
           "success": false
         },
         {
           "line": 8,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:8:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 8 | jsonpath \"$.values\" not contains \"Hello\"\n   |   actual:   list <[1,2,3]>\n   |   expected: not contains string <Hello>\n   |   >>> types between actual and expected are not consistent\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:8:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 8 | jsonpath \"$.count\" > 5\n   |   actual:   integer <2>\n   |   expected: greater than integer <5>\n   |",
           "success": false
         },
         {
           "line": 9,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:9:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 9 | jsonpath \"$.count\" > 5\n   |   actual:   integer <2>\n   |   expected: greater than integer <5>\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:9:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 9 | jsonpath \"$.count\" isFloat\n   |   actual:   integer <2>\n   |   expected: float\n   |",
           "success": false
         },
         {
           "line": 10,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:10:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n10 | jsonpath \"$.count\" isFloat\n   |   actual:   integer <2>\n   |   expected: float\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:10:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n10 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\r\n   |>\n   |",
           "success": false
         },
         {
           "line": 11,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\r\n   |>\n   |",
-          "success": false
-        },
-        {
-          "line": 12,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:12:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n12 | bytes contains hex,00;\n   |   actual:   bytes <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>\n   |   expected: contains bytes <00>\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | bytes contains hex,00;\n   |   actual:   bytes <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>\n   |   expected: contains bytes <00>\n   |",
           "success": false
         }
       ],

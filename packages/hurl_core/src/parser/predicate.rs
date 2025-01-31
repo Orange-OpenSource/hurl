@@ -230,15 +230,7 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn contain_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("contains", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let save = reader.cursor();
     let value = predicate_value(reader)?;
-    if !value.is_string() && !value.is_bytearray() {
-        return Err(ParseError::new(
-            save.pos,
-            false,
-            ParseErrorKind::PredicateValue,
-        ));
-    }
     Ok(PredicateFuncValue::Contain { space0, value })
 }
 
@@ -246,6 +238,7 @@ fn include_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("includes", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let value = predicate_value(reader)?;
+    eprintln!("<include> predicate is now depracted in favor of <contains> predicate");
     Ok(PredicateFuncValue::Include { space0, value })
 }
 

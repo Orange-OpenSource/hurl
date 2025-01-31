@@ -50,8 +50,8 @@ GET http://localhost:8000/assert-json
 HTTP 200
 [Asserts]
 jsonpath "$.errors[1].id" == "error2"
-jsonpath "$.tags" includes "test"
-jsonpath "$.tags" not includes "prod"
-jsonpath "$.tags" not includes null
+jsonpath "$.tags" contains "test"
+jsonpath "$.tags" not contains "prod"
+jsonpath "$.tags" not contains null
 
 

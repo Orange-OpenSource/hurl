@@ -14,6 +14,7 @@ jsonpath "$.movie" endsWith "Back"           # endsWith
 bytes endsWith hex,ab123456;                 # endsWith
 jsonpath "$.book" exists                     # exists
 jsonpath "$.nooks" includes "Dune"           # includes
+jsonpath "$.nooks" contains "Dune"           # contains
 jsonpath "$.succeeded" isBoolean             # isBoolean
 jsonpath "$.books" isCollection              # isCollection
 certificate "Expire-Date" isDate             # isDate

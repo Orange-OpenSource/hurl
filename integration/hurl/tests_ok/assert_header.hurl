@@ -13,8 +13,8 @@ header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" format "%Y" == "2015"
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000
 header "Set-Cookie" exists
 header "Set-Cookie" count == 3
-header "Set-Cookie" includes "cookie1=value1; Path=/"
-header "Set-Cookie" not includes "cookie4=value4; Path=/"
+header "Set-Cookie" contains "cookie1=value1; Path=/"
+header "Set-Cookie" not contains "cookie4=value4; Path=/"
 header "X-Fruit" isCollection
 header "x-fruit" count == 4
 header "X-Fruit" nth 0 == "Banana"
@@ -22,7 +22,7 @@ header "x-fruit" nth 1 == "Lemon"
 header "X-Fruit" nth 2 != "Lemon"
 header "X-Fruit" nth 2 == "Grape"
 header "X-Fruit" nth 3 == "Strawberry"
-header "X-Fruit" includes "Strawberry"
+header "X-Fruit" contains "Strawberry"
 
 
 # Same request as previously, but now we check that we can capture the header "X-Fruit" collection as a variable
