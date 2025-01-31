@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    BooleanOption, CountOption, DurationOption, Entry, EntryOption, Float, NaturalOption,</pre>
+                <pre class="has-background-white py-0 px-2">    BooleanOption, CountOption, DurationOption, Entry, EntryOption, NaturalOption,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7557,7 +7557,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        AstNumber::Float(Float { value, .. }) =&gt; Value::Number(Number::Float(*value)),</pre>
+                <pre class="has-background-danger-light py-0 px-2">        AstNumber::Float(value) =&gt; Value::Number(Number::Float(value.as_f64())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9579,7 +9579,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-01-31 12:13</p>
+                <p class="heading">Date: 2025-01-31 13:12</p>
             </div>
         </footer>
     </body>
