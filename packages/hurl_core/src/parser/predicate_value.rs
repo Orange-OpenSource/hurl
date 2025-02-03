@@ -92,6 +92,7 @@ mod tests {
     use crate::ast::{Float, Number, I64};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_predicate_value() {
@@ -110,7 +111,7 @@ mod tests {
         let mut reader = Reader::new("1.1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Number(Number::Float(Float::new(1.1, "1.1".to_string())))
+            PredicateValue::Number(Number::Float(Float::new(1.1, "1.1".to_source())))
         );
     }
 

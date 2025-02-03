@@ -20,6 +20,7 @@ use crate::ast::{Float, Number, I64};
 use crate::parser::primitives::try_literal;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+use crate::typing::ToSource;
 
 pub fn natural(reader: &mut Reader) -> ParseResult<U64> {
     let start = reader.cursor();
@@ -123,7 +124,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         }
         match format!("{sign}{integer_digits}.{decimal_digits}").parse() {
             Ok(value) => {
-                let source = reader.read_from(start.index);
+                let source = reader.read_from(start.index).to_source();
                 Ok(Number::Float(Float::new(value, source)))
             }
             Err(_) => {
@@ -242,42 +243,42 @@ mod tests {
         let mut reader = Reader::new("1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(1.0, "1.0".to_string())),
+            Number::Float(Float::new(1.0, "1.0".to_source())),
         );
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(-1.0, "-1.0".to_string())),
+            Number::Float(Float::new(-1.0, "-1.0".to_source())),
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(1.1, "1.1".to_string())),
+            Number::Float(Float::new(1.1, "1.1".to_source())),
         );
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(1.1, "1.100".to_string())),
+            Number::Float(Float::new(1.1, "1.100".to_source())),
         );
         assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(1.01, "1.01".to_string())),
+            Number::Float(Float::new(1.01, "1.01".to_source())),
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Float(Float::new(1.01, "1.010".to_string()))
+            Number::Float(Float::new(1.01, "1.010".to_source()))
         );
         assert_eq!(reader.cursor().index, 5);
 
@@ -287,7 +288,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float::new(
                 -0.3333333333333333,
-                "-0.3333333333333333333".to_string()
+                "-0.3333333333333333333".to_source()
             ))
         );
         assert_eq!(reader.cursor().index, 22);
@@ -297,7 +298,7 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float::new(
                 1000000000000000000000.0,
-                "1000000000000000000000.5".to_string()
+                "1000000000000000000000.5".to_source()
             ))
         );
         assert_eq!(reader.cursor().index, 24);

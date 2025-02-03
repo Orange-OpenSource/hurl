@@ -618,11 +618,11 @@ pub enum Number {
 #[derive(Clone, Debug)]
 pub struct Float {
     value: f64,
-    source: String,
+    source: SourceString,
 }
 
 impl Float {
-    pub fn new(value: f64, source: String) -> Float {
+    pub fn new(value: f64, source: SourceString) -> Float {
         Float { value, source }
     }
 
@@ -932,13 +932,14 @@ pub enum FilterValue {
 #[cfg(test)]
 mod tests {
     use crate::ast::Float;
+    use crate::typing::ToSource;
 
     #[test]
     fn test_float() {
         assert_eq!(
             Float {
                 value: 1.0,
-                source: "1.0".to_string()
+                source: "1.0".to_source()
             }
             .to_string(),
             "1.0"
@@ -946,7 +947,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: 1.01,
-                source: "1.01".to_string()
+                source: "1.01".to_source()
             }
             .to_string(),
             "1.01"
@@ -954,7 +955,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: 1.01,
-                source: "1.010".to_string()
+                source: "1.010".to_source()
             }
             .to_string(),
             "1.010"
@@ -962,7 +963,7 @@ mod tests {
         assert_eq!(
             Float {
                 value: -1.333,
-                source: "-1.333".to_string()
+                source: "-1.333".to_source()
             }
             .to_string(),
             "-1.333"
