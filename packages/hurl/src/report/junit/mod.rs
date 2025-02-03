@@ -63,6 +63,7 @@ pub use testcase::Testcase;
 
 use crate::report::junit::xml::{Element, XmlDocument};
 use crate::report::ReportError;
+use crate::util::path::create_dir_all;
 
 /// Creates a JUnit from a list of `testcases`.
 ///
@@ -72,18 +73,12 @@ pub fn write_report(
     testcases: &[Testcase],
     secrets: &[&str],
 ) -> Result<(), ReportError> {
-    // We ensure that parent folder is created.
-    if let Some(parent) = filename.parent() {
-        match std::fs::create_dir_all(parent) {
-            Ok(_) => {}
-            Err(err) => {
-                return Err(ReportError::from_error(
-                    err,
-                    filename,
-                    "Issue writing Junit report",
-                ))
-            }
-        }
+    if let Err(err) = create_dir_all(filename) {
+        return Err(ReportError::from_error(
+            err,
+            filename,
+            "Issue writing JUnit report",
+        ));
     }
 
     // If there is an existing JUnit report, we parse it to insert a new testsuite.
