@@ -283,6 +283,18 @@ fn create_cookies_file(
     filename: &Path,
     secrets: &[&str],
 ) -> Result<(), CliError> {
+    // We ensure that parent folder is created.
+    if let Some(parent) = filename.parent() {
+        match std::fs::create_dir_all(parent) {
+            Ok(_) => {}
+            Err(err) => {
+                return Err(CliError::IO(format!(
+                    "Issue writing to {}: {err:?}",
+                    filename.display()
+                )));
+            }
+        }
+    }
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
             return Err(CliError::IO(format!(
