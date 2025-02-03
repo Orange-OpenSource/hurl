@@ -17,6 +17,7 @@
  */
 use crate::report::ReportError;
 use crate::runner::HurlResult;
+use crate::util::path::create_dir_all;
 use crate::util::redacted::Redact;
 use std::fs::OpenOptions;
 use std::io::Write;
@@ -30,13 +31,14 @@ pub fn write_curl(
     filename: &Path,
     secrets: &[&str],
 ) -> Result<(), ReportError> {
-    // We ensure that parent folder is created.
-    if let Some(parent) = filename.parent() {
-        match std::fs::create_dir_all(parent) {
-            Ok(_) => {}
-            Err(err) => return Err(ReportError::from_error(err, filename, "Issue curl export")),
-        }
+    if let Err(err) = create_dir_all(filename) {
+        return Err(ReportError::from_error(
+            err,
+            filename,
+            "Issue creating curl export",
+        ));
     }
+
     let mut file = OpenOptions::new()
         .create(true)
         .truncate(true)
