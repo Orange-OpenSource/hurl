@@ -109,6 +109,14 @@ fn normalize_path(path: &Path) -> PathBuf {
     ret
 }
 
+// Create parent directories, if missing, given a filepath ending with a file name
+pub fn create_dir_all(filename: &Path) -> Result<(), std::io::Error> {
+    if let Some(parent) = filename.parent() {
+        return std::fs::create_dir_all(parent);
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
