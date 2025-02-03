@@ -40,6 +40,7 @@ pub fn eval_query(
 ) -> QueryResult {
     match &query.value {
         QueryValue::Status => eval_query_status(response),
+        QueryValue::Version => todo!(),
         QueryValue::Url => eval_query_url(response),
         QueryValue::Header { name, .. } => eval_query_header(response, name, variables),
         QueryValue::Cookie {

@@ -342,6 +342,7 @@ impl QueryValue {
     pub fn identifier(&self) -> &'static str {
         match self {
             QueryValue::Status => "status",
+            QueryValue::Version => "version",
             QueryValue::Url => "url",
             QueryValue::Header { .. } => "header",
             QueryValue::Cookie { .. } => "cookie",

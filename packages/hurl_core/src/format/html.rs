@@ -407,6 +407,7 @@ impl HtmlFormatter {
                 self.fmt_certificate_attribute_name(field);
             }
             QueryValue::Status
+            | QueryValue::Version
             | QueryValue::Url
             | QueryValue::Body
             | QueryValue::Duration

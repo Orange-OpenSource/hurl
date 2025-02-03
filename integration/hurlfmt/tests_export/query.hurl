@@ -2,6 +2,7 @@ GET http://localhost:8000/hello
 HTTP 200
 [Asserts]
 status == 200
+version == "2"
 url == "http://localhost8080/hello"
 header "content-type" == "application/json"
 certificate "Subject" replace " = " "=" replace ";" ", " == "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"

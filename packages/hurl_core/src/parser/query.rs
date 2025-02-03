@@ -37,6 +37,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
     choice(
         &[
             status_query,
+            version_query,
             url_query,
             header_query,
             cookie_query,
@@ -58,6 +59,11 @@ fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn status_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("status", reader)?;
     Ok(QueryValue::Status)
+}
+
+fn version_query(reader: &mut Reader) -> ParseResult<QueryValue> {
+    try_literal("version", reader)?;
+    Ok(QueryValue::Version)
 }
 
 fn url_query(reader: &mut Reader) -> ParseResult<QueryValue> {

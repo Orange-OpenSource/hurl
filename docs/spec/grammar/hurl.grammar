@@ -248,6 +248,7 @@ variable-value:
 
 query:
     status-query
+  | version-query
   | url-query
   | header-query
   | certificate-query
@@ -263,6 +264,8 @@ query:
   | md5-query
 
 status-query: "status"
+
+version-query: "version"
 
 url-query: "url"
 

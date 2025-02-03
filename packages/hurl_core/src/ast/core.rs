@@ -313,6 +313,7 @@ pub struct Query {
 #[allow(clippy::large_enum_variant)]
 pub enum QueryValue {
     Status,
+    Version,
     Url,
     Header {
         space0: Whitespace,

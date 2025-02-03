@@ -266,6 +266,7 @@ fn lint_query(query: &Query) -> Query {
 fn lint_query_value(query_value: &QueryValue) -> QueryValue {
     match query_value {
         QueryValue::Status => QueryValue::Status,
+        QueryValue::Version => QueryValue::Version,
         QueryValue::Url => QueryValue::Url,
         QueryValue::Header { name, .. } => QueryValue::Header {
             name: name.clone(),
