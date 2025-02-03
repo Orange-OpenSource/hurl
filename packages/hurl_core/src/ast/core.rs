@@ -662,11 +662,11 @@ impl fmt::Display for U64 {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct I64 {
     value: i64,
-    source: String,
+    source: SourceString,
 }
 
 impl I64 {
-    pub fn new(value: i64, source: String) -> I64 {
+    pub fn new(value: i64, source: SourceString) -> I64 {
         I64 { value, source }
     }
 

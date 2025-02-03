@@ -50,7 +50,7 @@ pub fn integer(reader: &mut Reader) -> ParseResult<I64> {
     match s.to_string().parse::<i64>() {
         Ok(value) => {
             let value = sign * value;
-            let source = reader.read_from(start.index);
+            let source = reader.read_from(start.index).to_source();
             Ok(I64::new(value, source))
         }
         Err(_) => {
@@ -140,7 +140,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     } else {
         match format!("{sign}{integer_digits}").parse::<i64>() {
             Ok(value) => {
-                let source = reader.read_from(start.index);
+                let source = reader.read_from(start.index).to_source();
                 let integer = I64::new(value, source);
                 Ok(Number::Integer(integer))
             }
@@ -207,34 +207,34 @@ mod tests {
     #[test]
     fn test_integer() {
         let mut reader = Reader::new("0");
-        assert_eq!(integer(&mut reader).unwrap(), I64::new(0, "0".to_string()));
+        assert_eq!(integer(&mut reader).unwrap(), I64::new(0, "0".to_source()));
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("-1");
         assert_eq!(
             integer(&mut reader).unwrap(),
-            I64::new(-1, "-1".to_string())
+            I64::new(-1, "-1".to_source())
         );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("0");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Integer(I64::new(0, "0".to_string()))
+            Number::Integer(I64::new(0, "0".to_source()))
         );
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Integer(I64::new(10, "10".to_string()))
+            Number::Integer(I64::new(10, "10".to_source()))
         );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("-10x");
         assert_eq!(
             number(&mut reader).unwrap(),
-            Number::Integer(I64::new(-10, "-10".to_string()))
+            Number::Integer(I64::new(-10, "-10".to_source()))
         );
         assert_eq!(reader.cursor().index, 3);
     }

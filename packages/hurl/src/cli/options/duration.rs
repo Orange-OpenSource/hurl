@@ -65,28 +65,28 @@ mod tests {
         assert_eq!(
             parse("10").unwrap(),
             Duration {
-                value: U64::new(10, "10".to_string()),
+                value: U64::new(10, "10".to_source()),
                 unit: None
             }
         );
         assert_eq!(
             parse("10s").unwrap(),
             Duration {
-                value: U64::new(10, "10".to_string()),
+                value: U64::new(10, "10".to_source()),
                 unit: Some(DurationUnit::Second)
             }
         );
         assert_eq!(
             parse("10000ms").unwrap(),
             Duration {
-                value: U64::new(10000, "10000".to_string()),
+                value: U64::new(10000, "10000".to_source()),
                 unit: Some(DurationUnit::MilliSecond)
             }
         );
         assert_eq!(
             parse("5m").unwrap(),
             Duration {
-                value: U64::new(5, "5".to_string()),
+                value: U64::new(5, "5".to_source()),
                 unit: Some(DurationUnit::Minute)
             }
         );

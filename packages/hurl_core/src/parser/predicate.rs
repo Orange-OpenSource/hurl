@@ -409,7 +409,7 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::Number(Number::Integer(I64::new(2, "2".to_string()))),
+                value: PredicateValue::Number(Number::Integer(I64::new(2, "2".to_source()))),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),

@@ -765,7 +765,7 @@ mod tests {
                     space0: whitespace,
                     value: PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
                         10,
-                        "10".to_string(),
+                        "10".to_source(),
                     ))),
                 },
                 source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 12)),
@@ -820,7 +820,7 @@ mod tests {
         // value: true
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             10,
-            "10".to_string(),
+            "10".to_source(),
         )));
         let value = Value::Bool(true);
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
@@ -843,7 +843,7 @@ mod tests {
         // value: Unit
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             10,
-            "10".to_string(),
+            "10".to_source(),
         )));
         let value = Value::Unit;
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
@@ -864,7 +864,7 @@ mod tests {
         // value: 1
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             10,
-            "10".to_string(),
+            "10".to_source(),
         )));
         let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
@@ -938,7 +938,7 @@ mod tests {
         // value: 1
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             1,
-            "1".to_string(),
+            "1".to_source(),
         )));
         let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
@@ -1018,7 +1018,7 @@ mod tests {
         // value: 1.0
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             1,
-            "1".to_string(),
+            "1".to_source(),
         )));
         let value = Value::Number(Number::Float(1.0));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
@@ -1039,7 +1039,7 @@ mod tests {
         // value: 2
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
             1,
-            "1".to_string(),
+            "1".to_source(),
         )));
         let value = Value::Number(Number::Integer(2));
         let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();

@@ -902,7 +902,7 @@ pub mod tests {
                     space0: whitespace(),
                     value: PredicateValue::Number(Number::Integer(I64::new(
                         value,
-                        value.to_string(),
+                        value.to_string().to_source(),
                     ))),
                 },
             },

@@ -105,7 +105,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Number(Number::Integer(I64::new(1, "1".to_string())))
+            PredicateValue::Number(Number::Integer(I64::new(1, "1".to_source())))
         );
 
         let mut reader = Reader::new("1.1");

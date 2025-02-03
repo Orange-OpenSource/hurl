@@ -661,7 +661,7 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
-                value: VariableValue::Number(Number::Integer(I64::new(1, "1".to_string()))),
+                value: VariableValue::Number(Number::Integer(I64::new(1, "1".to_source()))),
             }
         );
     }
@@ -680,7 +680,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
-            VariableValue::Number(Number::Integer(I64::new(1, "1".to_string())))
+            VariableValue::Number(Number::Integer(I64::new(1, "1".to_source())))
         );
 
         let mut reader = Reader::new("toto");

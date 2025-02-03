@@ -739,7 +739,7 @@ mod tests {
                         },
                         value: PredicateValue::Number(Number::Integer(I64::new(
                             5,
-                            "5".to_string()
+                            "5".to_source()
                         ))),
                     },
                 },
