@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
+use hurl_core::typing::ToSource;
 use hurl_core::{
     ast::U64,
     typing::{Duration, DurationUnit},
@@ -23,18 +23,22 @@ use hurl_core::{
 use regex::Regex;
 use std::str::FromStr;
 
-pub fn parse(_s: &str) -> Result<Duration, String> {
+/// Parses a string to a `Duration`, including time unit.
+///
+/// Example: `32s`, `10m`, `20000`.
+///
+pub fn parse(duration: &str) -> Result<Duration, String> {
     let re = Regex::new(r"^(\d+)([a-zA-Z]*)$").unwrap();
-    if let Some(caps) = re.captures(_s) {
-        let encoded = caps.get(1).unwrap().as_str().to_string();
-        let value = encoded.parse::<u64>().unwrap();
+    if let Some(caps) = re.captures(duration) {
+        let source = caps.get(1).unwrap().as_str().to_string();
+        let value = source.parse::<u64>().unwrap();
         let unit = caps.get(2).unwrap().as_str();
         let unit = if unit.is_empty() {
             None
         } else {
             Some(DurationUnit::from_str(unit)?)
         };
-        let value = U64::new(value, encoded);
+        let value = U64::new(value, source.to_source());
         Ok(Duration { value, unit })
     } else {
         Err("Invalid duration".to_string())

@@ -22,12 +22,13 @@ use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::typing::ToSource;
 
+/// Parses a string to a `U64`.
 pub fn natural(reader: &mut Reader) -> ParseResult<U64> {
     let start = reader.cursor();
     let s = parse_natural_str(reader, "natural")?;
     match s.parse() {
         Ok(value) => {
-            let source = reader.read_from(start.index);
+            let source = reader.read_from(start.index).to_source();
             Ok(U64::new(value, source))
         }
         Err(_) => {
@@ -156,13 +157,13 @@ mod tests {
     #[test]
     fn test_natural() {
         let mut reader = Reader::new("0");
-        assert_eq!(natural(&mut reader).unwrap(), U64::new(0, "0".to_string()));
+        assert_eq!(natural(&mut reader).unwrap(), U64::new(0, "0".to_source()));
         assert_eq!(reader.cursor().index, 1);
 
         let mut reader = Reader::new("10x");
         assert_eq!(
             natural(&mut reader).unwrap(),
-            U64::new(10, "10".to_string())
+            U64::new(10, "10".to_source())
         );
         assert_eq!(reader.cursor().index, 2);
     }

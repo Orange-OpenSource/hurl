@@ -477,7 +477,7 @@ fn eval_number(number: &AstNumber) -> Value {
 mod tests {
     use hurl_core::ast::{Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace, U64};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::{Duration, DurationUnit};
+    use hurl_core::typing::{Duration, DurationUnit, ToSource};
 
     use super::*;
     use crate::runner::RunnerErrorKind;
@@ -570,7 +570,7 @@ mod tests {
         assert_eq!(
             eval_duration_option(
                 &DurationOption::Literal(Duration::new(
-                    U64::new(1, "1".to_string()),
+                    U64::new(1, "1".to_source()),
                     Some(DurationUnit::Second)
                 )),
                 &variables,

@@ -50,7 +50,7 @@ mod tests {
     use crate::ast::U64;
     use crate::reader::Pos;
 
-    use crate::typing::DurationUnit;
+    use crate::typing::{DurationUnit, ToSource};
 
     #[test]
     fn test_duration_unit() {
@@ -91,18 +91,18 @@ mod tests {
         let mut reader = Reader::new("10");
         assert_eq!(
             duration(&mut reader).unwrap(),
-            Duration::new(U64::new(10, "10".to_string()), None)
+            Duration::new(U64::new(10, "10".to_source()), None)
         );
         let mut reader = Reader::new("10s");
         assert_eq!(
             duration(&mut reader).unwrap(),
-            Duration::new(U64::new(10, "10".to_string()), Some(DurationUnit::Second))
+            Duration::new(U64::new(10, "10".to_source()), Some(DurationUnit::Second))
         );
         let mut reader = Reader::new("10000ms");
         assert_eq!(
             duration(&mut reader).unwrap(),
             Duration::new(
-                U64::new(10000, "10000".to_string()),
+                U64::new(10000, "10000".to_source()),
                 Some(DurationUnit::MilliSecond)
             )
         );

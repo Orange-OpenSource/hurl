@@ -640,11 +640,11 @@ impl fmt::Display for Float {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct U64 {
     value: u64,
-    source: String,
+    source: SourceString,
 }
 
 impl U64 {
-    pub fn new(value: u64, source: String) -> U64 {
+    pub fn new(value: u64, source: SourceString) -> U64 {
         U64 { value, source }
     }
 
