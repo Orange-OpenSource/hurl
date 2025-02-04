@@ -61,55 +61,6 @@ jobs:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
 
-  package-generic-linux-aarch64:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.2.2
-      with:
-        persist-credentials: false
-        ref: ${{ inputs.branch }}
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3.3.0
-    - name: Create package
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ubuntu:22.04
-        options: --platform linux/arm64/v8 --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --env CARGO_BUILD_TARGET=aarch64-unknown-linux-gnu
-        run: |
-          set -e
-          echo "::group::Install Prerequisites"
-            bin/install_prerequisites_ubuntu.sh
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y g++-aarch64-linux-gnu libc6-dev-arm64-cross
-            ./bin/export_cross_compile_env.sh
-          echo "::endgroup::"
-          echo "::group::Install Rust"
-            bin/install_rust.sh
-            . "$HOME/.cargo/env"
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Build"
-            ./bin/release/release.sh
-            cp -frp target/$CARGO_BUILD_TARGET/release/hurl ./target/release/
-            cp -frp target/$CARGO_BUILD_TARGET/release/hurlfmt ./target/release/
-          echo "::endgroup::"
-          echo "::group::Get version"
-            export VERSION=$(bin/release/get_version.sh)
-          echo "::endgroup::"
-          echo "::group::Create man"
-            bin/release/man.sh
-          echo "::endgroup::"
-          echo "::group::Create tarball"
-            bin/release/create_tarball.sh
-          echo "::endgroup::"
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: release-generic-linux-aarch64-artifacts
-        path: target/upload/*
-
   test-generic-linux-on-docker-ubuntu-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
@@ -394,6 +345,58 @@ jobs:
        name: test-docker-amd64-package-artifacts
        path: |
          ./**/*.log
+
+  package-generic-linux-aarch64:
+    runs-on: ubuntu-22.04-arm
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.2
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - name: Install prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Python 3.11
+      uses: actions/setup-python@v5.4.0
+      with:
+        python-version: '3.11'
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
+        echo "PATH=$PATH" >> $GITHUB_ENV
+        which python3
+        python3 --version
+        pip --version
+    - name : Environment
+      run: bin/environment.sh
+    - name: Install rust
+      run: bin/install_rust.sh
+    - name: Build
+      run: |
+        bin/release/release.sh
+        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Get version
+      run: |
+        VERSION=$(bin/release/get_version.sh)
+        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
+    - name: Create generic linux package
+      run: |
+        bin/release/man.sh
+        bin/release/create_tarball.sh
+    - name: Install generic linux package
+      run: |
+        bin/release/install_generic_linux_package.sh
+        export PATH="/tmp/hurl-generic-linux/bin:$PATH"
+    - name: Test integ
+      run: |
+        bin/test/test_prerequisites.sh
+        bin/test/test_integ.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: release-generic-linux-aarch64-artifacts
+        path: target/upload/*
 
   package-deb-x64:
     runs-on: ubuntu-20.04
