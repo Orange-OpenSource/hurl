@@ -111,37 +111,40 @@ fn main() {
             let InputKind::File(path) = input_file.kind() else {
                 unreachable!("--in-place and standard input have been filtered in args parsing")
             };
-            write_output(&output, Some(path.clone()));
+            write_output(&output, Some(path.clone()), &logger);
         } else {
             output_all.push_str(&output);
         }
     }
     if !opts.in_place {
-        write_output(&output_all, opts.output_file);
+        write_output(&output_all, opts.output_file, &logger);
     }
 }
 
-fn write_output(content: &str, filename: Option<PathBuf>) {
+fn write_output(content: &str, filename: Option<PathBuf>, logger: &Logger) {
     let content = if !content.ends_with('\n') {
         format!("{content}\n")
     } else {
         content.to_string()
     };
+
     let bytes = content.into_bytes();
+
     match filename {
         None => {
             let stdout = io::stdout();
             let mut handle = stdout.lock();
 
-            handle
-                .write_all(bytes.as_slice())
-                .expect("writing bytes to console");
+            if let Err(why) = handle.write_all(bytes.as_slice()) {
+                logger.error(&format!("Issue writing to stdout: {why}"));
+                process::exit(EXIT_ERROR);
+            }
         }
         Some(path_buf) => {
             let mut file = match std::fs::File::create(&path_buf) {
                 Err(why) => {
                     eprintln!("Issue writing to {}: {:?}", path_buf.display(), why);
-                    process::exit(1);
+                    process::exit(EXIT_ERROR);
                 }
                 Ok(file) => file,
             };
