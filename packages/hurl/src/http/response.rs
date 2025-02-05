@@ -19,6 +19,7 @@ use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
+use crate::http::response_ip::IpAddr;
 use crate::http::{HeaderVec, Url};
 
 /// Represents a runtime HTTP response.
@@ -33,10 +34,12 @@ pub struct Response {
     pub url: Url,
     /// The end-user certificate, in the response certificate chain
     pub certificate: Option<Certificate>,
+    pub ip_addr: IpAddr,
 }
 
 impl Response {
     /// Creates a new HTTP response
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         version: HttpVersion,
         status: u32,
@@ -45,6 +48,7 @@ impl Response {
         duration: Duration,
         url: Url,
         certificate: Option<Certificate>,
+        ip_addr: IpAddr,
     ) -> Self {
         Response {
             version,
@@ -54,6 +58,7 @@ impl Response {
             duration,
             url,
             certificate,
+            ip_addr,
         }
     }
 }
@@ -97,6 +102,7 @@ mod tests {
             duration: Default::default(),
             url: "http://localhost".parse().unwrap(),
             certificate: None,
+            ip_addr: Default::default(),
         };
         assert_eq!(response.headers.values("Content-Length"), vec!["12"]);
         assert!(response.headers.values("Unknown").is_empty());

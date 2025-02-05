@@ -173,6 +173,7 @@ pub mod tests {
             duration: Default::default(),
             url: "http://localhost".parse().unwrap(),
             certificate: None,
+            ip_addr: Default::default(),
         }
     }
 

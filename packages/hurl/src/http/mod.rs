@@ -59,6 +59,7 @@ mod response;
 mod response_cookie;
 mod response_debug;
 mod response_decoding;
+mod response_ip;
 #[cfg(test)]
 mod tests;
 mod timings;

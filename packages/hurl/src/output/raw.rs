@@ -137,6 +137,7 @@ mod tests {
             duration: Default::default(),
             url: Url::from_str("http://localhost").unwrap(),
             certificate: None,
+            ip_addr: Default::default(),
         }
     }
 
@@ -198,6 +199,7 @@ mod tests {
                             duration: Default::default(),
                             url: Url::from_str("https://baz.com").unwrap(),
                             certificate: None,
+                            ip_addr: Default::default(),
                         },
                         timings: Default::default(),
                     }],

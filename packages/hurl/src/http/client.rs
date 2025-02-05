@@ -36,6 +36,7 @@ use crate::http::header::{
     HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
 };
 use crate::http::options::ClientOptions;
+use crate::http::response_ip::IpAddr;
 use crate::http::timings::Timings;
 use crate::http::url::Url;
 use crate::http::{
@@ -305,6 +306,7 @@ impl Client {
         let timings = Timings::new(&mut self.handle, start_dt, stop_dt);
 
         let url = Url::from_str(&url)?;
+        let ip_addr = self.primary_ip()?;
         let request = Request::new(
             &method.to_string(),
             url.clone(),
@@ -319,6 +321,7 @@ impl Client {
             duration,
             url,
             certificate,
+            ip_addr,
         );
 
         if verbose {
@@ -719,6 +722,14 @@ impl Client {
             }
         }
         headers
+    }
+
+    /// Get the IP address of the last connection from libcurl
+    fn primary_ip(&mut self) -> Result<IpAddr, HttpError> {
+        match self.handle.primary_ip()? {
+            Some(ip) => Ok(IpAddr::new(ip.to_string())),
+            None => Err(HttpError::NoPrimaryIp),
+        }
     }
 
     /// Retrieves an optional location to follow

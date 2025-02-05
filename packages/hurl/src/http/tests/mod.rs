@@ -31,6 +31,7 @@ fn default_response() -> Response {
         duration: Default::default(),
         url: Url::from_str("http://localhost").unwrap(),
         certificate: None,
+        ip_addr: Default::default(),
     }
 }
 
