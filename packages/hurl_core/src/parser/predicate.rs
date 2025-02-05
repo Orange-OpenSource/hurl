@@ -238,7 +238,6 @@ fn include_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("includes", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let value = predicate_value(reader)?;
-    eprintln!("<include> predicate is now depracted in favor of <contains> predicate");
     Ok(PredicateFuncValue::Include { space0, value })
 }
 

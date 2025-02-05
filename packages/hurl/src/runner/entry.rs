@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Entry, SourceInfo};
+use hurl_core::ast::{Entry, PredicateFuncValue, Response, SourceInfo};
 
 use crate::http;
 use crate::http::{ClientOptions, CurlCmd};
@@ -196,6 +196,7 @@ pub fn run(
     // Compute asserts
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
+            warn_deprecated(response_spec, logger);
             let mut other_asserts = response::eval_asserts(
                 response_spec,
                 variables,
@@ -336,5 +337,17 @@ fn log_captures(captures: &[CaptureResult], logger: &mut Logger) {
     logger.debug_important("Captures:");
     for c in captures.iter() {
         logger.capture(&c.name, &c.value);
+    }
+}
+
+/// Warns some deprecation on this `response`.
+fn warn_deprecated(response_spec: &Response, logger: &mut Logger) {
+    if response_spec.asserts().iter().any(|a| {
+        matches!(
+            &a.predicate.predicate_func.value,
+            PredicateFuncValue::Include { .. }
+        )
+    }) {
+        logger.warning("<includes> predicate is now deprecated in favor of <contains> predicate");
     }
 }
