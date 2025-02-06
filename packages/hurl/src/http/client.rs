@@ -36,7 +36,7 @@ use crate::http::header::{
     HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
 };
 use crate::http::options::ClientOptions;
-use crate::http::response_ip::IpAddr;
+use crate::http::ip::IpAddr;
 use crate::http::timings::Timings;
 use crate::http::url::Url;
 use crate::http::{

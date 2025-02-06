@@ -19,7 +19,7 @@ use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
-use crate::http::response_ip::IpAddr;
+use crate::http::ip::IpAddr;
 use crate::http::{HeaderVec, Url};
 
 /// Represents a runtime HTTP response.
