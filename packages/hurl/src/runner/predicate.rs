@@ -202,6 +202,8 @@ fn expected_no_value(
         PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
         PredicateFuncValue::IsNumber => Ok("number".to_string()),
+        PredicateFuncValue::IsIpv4 => Ok("ipv4".to_string()),
+        PredicateFuncValue::IsIpv6 => Ok("ipv6".to_string()),
     }
 }
 
@@ -277,6 +279,8 @@ fn eval_predicate_func(
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
         PredicateFuncValue::IsNumber => eval_is_number(value),
+        PredicateFuncValue::IsIpv4 => eval_is_ipv4(value),
+        PredicateFuncValue::IsIpv6 => eval_is_ipv6(value),
     }
 }
 
@@ -602,6 +606,42 @@ fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
         expected: "number".to_string(),
         type_mismatch: false,
     })
+}
+
+/// Evaluates if an `actual` value is an IPv4 address.
+fn eval_is_ipv4(actual: &Value) -> Result<AssertResult, RunnerError> {
+    match actual.is_ipv4() {
+        Ok(success) => Ok(AssertResult {
+            success,
+            actual: actual.to_string(),
+            expected: "string in IPv4 format".to_string(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.repr(),
+            expected: "string".to_string(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+/// Evaluates if an `actual` value is an IPv6 address.
+fn eval_is_ipv6(actual: &Value) -> Result<AssertResult, RunnerError> {
+    match actual.is_ipv6() {
+        Ok(success) => Ok(AssertResult {
+            success,
+            actual: actual.to_string(),
+            expected: "string in IPv6 format".to_string(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.repr(),
+            expected: "string".to_string(),
+            type_mismatch: true,
+        }),
+    }
 }
 
 fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {

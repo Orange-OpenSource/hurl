@@ -92,6 +92,8 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             exist_predicate,
             is_empty_predicate,
             is_number_predicate,
+            is_ipv4_predicate,
+            is_ipv6_predicate,
         ],
         reader,
     ) {
@@ -304,6 +306,16 @@ fn is_empty_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isNumber", reader)?;
     Ok(PredicateFuncValue::IsNumber)
+}
+
+fn is_ipv4_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isIpv4", reader)?;
+    Ok(PredicateFuncValue::IsIpv4)
+}
+
+fn is_ipv6_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isIpv6", reader)?;
+    Ok(PredicateFuncValue::IsIpv6)
 }
 
 #[cfg(test)]

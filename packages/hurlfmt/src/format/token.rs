@@ -610,6 +610,12 @@ impl Tokenizable for PredicateFuncValue {
             PredicateFuncValue::IsNumber => {
                 tokens.push(Token::PredicateType(name));
             }
+            PredicateFuncValue::IsIpv4 => {
+                tokens.push(Token::PredicateType(name));
+            }
+            PredicateFuncValue::IsIpv6 => {
+                tokens.push(Token::PredicateType(name));
+            }
         }
         tokens
     }

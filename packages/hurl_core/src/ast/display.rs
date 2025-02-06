@@ -335,6 +335,8 @@ impl PredicateFuncValue {
             PredicateFuncValue::Exist => "exists",
             PredicateFuncValue::IsEmpty => "isEmpty",
             PredicateFuncValue::IsNumber => "isNumber",
+            PredicateFuncValue::IsIpv4 => "isIpv4",
+            PredicateFuncValue::IsIpv6 => "isIpv6",
         }
     }
 }

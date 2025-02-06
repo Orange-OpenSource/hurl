@@ -28,3 +28,5 @@ jsonpath "$.release" matches /\d{4}/         # matches
 jsonpath "$.movie" startsWith "The"          # startsWith
 bytes startsWith hex,efbbbf;                 # startsWith
 jsonpath "$.count" isNumber                  # isNumber
+ip isIpv6                                    # isIpv6
+ip isIpv4                                    # isIpv4

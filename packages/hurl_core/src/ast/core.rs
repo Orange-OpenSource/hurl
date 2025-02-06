@@ -496,6 +496,8 @@ pub enum PredicateFuncValue {
     Exist,
     IsEmpty,
     IsNumber,
+    IsIpv4,
+    IsIpv6,
 }
 
 //

@@ -16,6 +16,8 @@
  *
  */
 use std::cmp::Ordering;
+use std::net::IpAddr;
+use std::str::FromStr;
 
 use super::value::ValueKind;
 use super::{EvalError, Value};
@@ -157,6 +159,36 @@ impl Value {
     /// Returns `false` if it is not.
     pub fn is_string(&self) -> bool {
         self.kind() == ValueKind::String || self.kind() == ValueKind::Secret
+    }
+
+    /// Returns `true` the value is an IPv4 address.
+    ///
+    /// Returns `false` if it is not.
+    ///
+    /// Returns a [`EvalError::Type`] if the given value is not a String.
+    pub fn is_ipv4(&self) -> Result<bool, EvalError> {
+        match self {
+            Value::String(value) => {
+                let is_ipv4 = IpAddr::from_str(value).is_ok_and(|ip| ip.is_ipv4());
+                Ok(is_ipv4)
+            }
+            _ => Err(EvalError::Type),
+        }
+    }
+
+    /// Returns `true` the value is a IPv6 address.
+    ///
+    /// Returns `false` if it is not.
+    ///
+    /// Returns a [`EvalError::Type`] if the given value is not a String.
+    pub fn is_ipv6(&self) -> Result<bool, EvalError> {
+        match self {
+            Value::String(value) => {
+                let is_ipv6 = IpAddr::from_str(value).is_ok_and(|ip| ip.is_ipv6());
+                Ok(is_ipv6)
+            }
+            _ => Err(EvalError::Type),
+        }
     }
 
     /// Returns `true` the string value represents a RFC339 date (format YYYY-MM-DDTHH:mm:ss.sssZ).

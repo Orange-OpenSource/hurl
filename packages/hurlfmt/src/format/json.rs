@@ -561,7 +561,9 @@ impl ToJson for Predicate {
             | PredicateFuncValue::IsIsoDate
             | PredicateFuncValue::Exist
             | PredicateFuncValue::IsEmpty
-            | PredicateFuncValue::IsNumber => {}
+            | PredicateFuncValue::IsNumber
+            | PredicateFuncValue::IsIpv4
+            | PredicateFuncValue::IsIpv6 => {}
         }
         JValue::Object(attributes)
     }
