@@ -540,6 +540,8 @@ impl HtmlFormatter {
             PredicateFuncValue::Exist => {}
             PredicateFuncValue::IsEmpty => {}
             PredicateFuncValue::IsNumber => {}
+            PredicateFuncValue::IsIpv4 => {}
+            PredicateFuncValue::IsIpv6 => {}
         }
     }
 
