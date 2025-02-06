@@ -356,6 +356,7 @@ impl QueryValue {
             QueryValue::Sha256 => "sha256",
             QueryValue::Md5 => "md5",
             QueryValue::Certificate { .. } => "certificate",
+            QueryValue::Ip => "ip",
         }
     }
 }

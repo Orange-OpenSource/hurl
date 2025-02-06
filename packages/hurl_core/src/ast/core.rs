@@ -348,6 +348,7 @@ pub enum QueryValue {
         space0: Whitespace,
         attribute_name: CertificateAttributeName,
     },
+    Ip,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

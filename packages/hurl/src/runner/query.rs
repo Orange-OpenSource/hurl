@@ -66,6 +66,7 @@ pub fn eval_query(
             attribute_name: field,
             ..
         } => eval_query_certificate(response, *field),
+        QueryValue::Ip => eval_ip(response),
     }
 }
 
@@ -378,6 +379,11 @@ fn eval_query_certificate(
     } else {
         Ok(None)
     }
+}
+
+/// Evaluates the ip address of the HTTP `response`.
+fn eval_ip(response: &http::Response) -> QueryResult {
+    Ok(Some(Value::String(response.ip_addr.to_string())))
 }
 
 fn eval_cookie_attribute_name(

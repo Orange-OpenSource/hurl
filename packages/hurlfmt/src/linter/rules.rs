@@ -313,6 +313,7 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
             attribute_name: *field,
             space0: one_whitespace(),
         },
+        QueryValue::Ip => QueryValue::Ip,
     }
 }
 

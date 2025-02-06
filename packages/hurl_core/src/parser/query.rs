@@ -51,6 +51,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
             sha256_query,
             md5_query,
             certificate_query,
+            ip_query,
         ],
         reader,
     )
@@ -193,6 +194,11 @@ fn certificate_query(reader: &mut Reader) -> ParseResult<QueryValue> {
         space0,
         attribute_name: field,
     })
+}
+
+fn ip_query(reader: &mut Reader) -> ParseResult<QueryValue> {
+    try_literal("ip", reader)?;
+    Ok(QueryValue::Ip)
 }
 
 fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeName> {

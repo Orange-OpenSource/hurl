@@ -51,6 +51,7 @@ mod easy_ext;
 mod error;
 mod header;
 mod headers_helper;
+mod ip;
 mod mimetype;
 mod options;
 mod request;
@@ -59,7 +60,6 @@ mod response;
 mod response_cookie;
 mod response_debug;
 mod response_decoding;
-mod ip;
 #[cfg(test)]
 mod tests;
 mod timings;

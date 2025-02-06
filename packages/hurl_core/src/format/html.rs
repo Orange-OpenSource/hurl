@@ -413,7 +413,8 @@ impl HtmlFormatter {
             | QueryValue::Duration
             | QueryValue::Bytes
             | QueryValue::Sha256
-            | QueryValue::Md5 => {}
+            | QueryValue::Md5
+            | QueryValue::Ip => {}
         }
     }
 
