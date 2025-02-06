@@ -459,7 +459,6 @@ impl fmt::Display for VersionValue {
             VersionValue::Version2 => "HTTP/2",
             VersionValue::Version3 => "HTTP/3",
             VersionValue::VersionAny => "HTTP",
-            VersionValue::VersionAnyLegacy => "HTTP/*",
         };
         write!(f, "{s}")
     }

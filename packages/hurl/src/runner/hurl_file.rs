@@ -19,7 +19,6 @@ use std::thread;
 use std::time::Instant;
 
 use chrono::Utc;
-use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::{Entry, OptionKind, SourceInfo};
 use hurl_core::error::DisplaySourceError;
 use hurl_core::input::Input;
@@ -185,8 +184,6 @@ pub fn run_entries(
         }
 
         log_run_entry(entry_index, logger);
-
-        warn_deprecated(entry, filename, logger);
 
         // We can report the progression of the run for --test mode.
         if let Some(listener) = listener {
@@ -429,21 +426,6 @@ fn is_success(entries: &[EntryResult]) -> bool {
         }
     }
     true
-}
-
-/// Logs deprecated syntax and provides alternatives.
-fn warn_deprecated(entry: &Entry, filename: Option<&Input>, logger: &mut Logger) {
-    let filename = filename.map_or(String::new(), |f| f.to_string());
-    // HTTP/* is used instead of HTTP.
-    if let Some(response) = &entry.response {
-        let version = &response.version;
-        let source_info = &version.source_info;
-        let line = &source_info.start.line;
-        let column = &source_info.start.column;
-        if version.value == VersionAnyLegacy {
-            logger.warning(&format!("{filename}:{line}:{column} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead"));
-        }
-    }
 }
 
 // Returns the list of options that have non-default values.

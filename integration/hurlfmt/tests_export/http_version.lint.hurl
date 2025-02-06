@@ -12,7 +12,3 @@ HTTP/3 200
 
 GET http://localhost:8000/hello
 HTTP 200
-
-# Deprecated
-GET http://localhost:8000/hello
-HTTP/* 200

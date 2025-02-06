@@ -179,7 +179,6 @@ pub enum VersionValue {
     Version2,
     Version3,
     VersionAny,
-    VersionAnyLegacy,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

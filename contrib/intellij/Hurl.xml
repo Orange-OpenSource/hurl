@@ -9,7 +9,7 @@
         </options>
         <keywords keywords="GET;HEAD;POST;PUT;DELETE;CONNECT;DELETE;OPTIONS;TRACE;PATCH;LINK;UNLINK;PURGE;LOCK;UNLOCK;PROPFIND;VIEW" ignore_case="false" />
         <keywords2 keywords="[Asserts];[BasicAuth];[Captures];[Cookies];[Form];[FormParams];[Multipart];[MultipartFormData];[Query];[QueryStringParams];[Options]" ignore_case="false" />
-        <keywords3 keywords="certificate;status;url;header;cookie;body;xpath;jsonpath;regex;variable;duration;sha256;md5;bytes;HTTP;HTTP/*;HTTP/1.0;HTTP/1.1;HTTP/2"  ignore_case="false"/>
+        <keywords3 keywords="certificate;status;url;header;cookie;body;xpath;jsonpath;regex;variable;duration;sha256;md5;bytes;HTTP;HTTP/1.0;HTTP/1.1;HTTP/2"  ignore_case="false"/>
         <keywords4 keywords="not;&lt;;&lt;=;==;!=;&gt;;&gt;=;startsWith;endsWith;contains;includes;matches;exists;isBoolean;isCollection;isDate;isEmpty;isFloat;isInteger;isIsoDate;isNumber;isString;count;daysAfterNow;daysBeforeNow;decode;format;htmlEscape;htmlUnescape;nth;replace;split;toDate;toInt;urlEncode;urlDecode" ignore_case="false" />
     </highlighting>
     <extensionMap>

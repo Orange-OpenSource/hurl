@@ -252,7 +252,6 @@ fn get_json_version(version_value: &VersionValue) -> Option<String> {
         VersionValue::Version2 => Some("HTTP/2".to_string()),
         VersionValue::Version3 => Some("HTTP/3".to_string()),
         VersionValue::VersionAny => None,
-        VersionValue::VersionAnyLegacy => None,
     }
 }
 

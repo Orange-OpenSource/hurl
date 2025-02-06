@@ -38,10 +38,7 @@ impl AssertResult {
                 expected,
                 source_info,
             } => {
-                if expected.as_str() == "HTTP"
-                    || expected.as_str() == "HTTP/*"
-                    || actual == expected
-                {
+                if expected.as_str() == "HTTP" || actual == expected {
                     None
                 } else {
                     let kind = RunnerErrorKind::AssertVersion {

@@ -147,7 +147,6 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
                 ("/1.1", VersionValue::Version11),
                 ("/2", VersionValue::Version2),
                 ("/3", VersionValue::Version3),
-                ("/*", VersionValue::VersionAnyLegacy),
             ];
             for (s, value) in available_version.iter() {
                 if try_literal(s, reader).is_ok() {

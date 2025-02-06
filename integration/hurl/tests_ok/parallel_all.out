@@ -1,5 +1,5 @@
 TAP version 13
-1..91
+1..90
 ok 1 - tests_ok/assert_body.hurl
 ok 2 - tests_ok/assert_header.hurl
 ok 3 - tests_ok/assert_json.hurl
@@ -13,81 +13,80 @@ ok 10 - tests_ok/captures.hurl
 ok 11 - tests_ok/charset.hurl
 ok 12 - tests_ok/compressed_option.hurl
 ok 13 - tests_ok/cookie_storage.hurl
-ok 14 - tests_ok/deprecated.hurl
-ok 15 - tests_ok/empty.hurl
-ok 16 - tests_ok/encoding.hurl
-ok 17 - tests_ok/expect.hurl
-ok 18 - tests_ok/filter.hurl
-ok 19 - tests_ok/float.hurl
-ok 20 - tests_ok/follow_redirect_option.hurl
-ok 21 - tests_ok/form_params.hurl
-ok 22 - tests_ok/gb2312.hurl
-ok 23 - tests_ok/get_large.hurl
-ok 24 - tests_ok/graphql.hurl
-ok 25 - tests_ok/head.hurl
-ok 26 - tests_ok/headers.hurl
-ok 27 - tests_ok/hello.hurl
-ok 28 - tests_ok/hello_gb2312.hurl
-ok 29 - tests_ok/insecure_option.hurl
-ok 30 - tests_ok/json_output.hurl
-ok 31 - tests_ok/method.hurl
-ok 32 - tests_ok/multilines.hurl
-ok 33 - tests_ok/multipart_form_data.hurl
-ok 34 - tests_ok/no_entry.hurl
-ok 35 - tests_ok/non_utf8.hurl
-ok 36 - tests_ok/output.hurl
-ok 37 - tests_ok/patch.hurl
-ok 38 - tests_ok/post_base64.hurl
-ok 39 - tests_ok/post_bytes.hurl
-not ok 40 - tests_ok/post_file.hurl
-ok 41 - tests_ok/post_multilines.hurl
-ok 42 - tests_ok/post_xml.hurl
-ok 43 - tests_ok/predicates_string.hurl
-ok 44 - tests_ok/proxy_option.hurl
-ok 45 - tests_ok/put.hurl
-ok 46 - tests_ok/querystring_params.hurl
-ok 47 - tests_ok/redirect.hurl
-ok 48 - tests_ok/request_content_length.hurl
-ok 49 - tests_ok/retry_option.hurl
-ok 50 - tests_ok/retry_until_200.hurl
-ok 51 - tests_ok/url.hurl
-ok 52 - tests_ok/utf8.hurl
-ok 53 - tests_ok/verbose_option.hurl
-ok 54 - tests_ok_not_linted/bom.hurl
-not ok 55 - tests_failed/assert_base64.hurl
-not ok 56 - tests_failed/assert_bytearray.hurl
-not ok 57 - tests_failed/assert_content_encoding.hurl
-not ok 58 - tests_failed/assert_file.hurl
-not ok 59 - tests_failed/assert_header_not_found.hurl
-not ok 60 - tests_failed/assert_header_value.hurl
-not ok 61 - tests_failed/assert_http_version.hurl
-not ok 62 - tests_failed/assert_invalid_predicate_type.hurl
-not ok 63 - tests_failed/assert_match_utf8.hurl
-not ok 64 - tests_failed/assert_newline.hurl
-not ok 65 - tests_failed/assert_query_cookie.hurl
-not ok 66 - tests_failed/assert_query_invalid_regex.hurl
-not ok 67 - tests_failed/assert_query_invalid_xpath.hurl
-not ok 68 - tests_failed/assert_status.hurl
-not ok 69 - tests_failed/assert_template_variable_not_found.hurl
-not ok 70 - tests_failed/assert_value_error.hurl
-not ok 71 - tests_failed/assert_variable.hurl
-not ok 72 - tests_failed/assert_xpath.hurl
-not ok 73 - tests_failed/file_read_access.hurl
-not ok 74 - tests_failed/filter.hurl
-not ok 75 - tests_failed/filter_decode.hurl
-not ok 76 - tests_failed/filter_in_capture.hurl
-not ok 77 - tests_failed/hello_gb2312_failed.hurl
-not ok 78 - tests_failed/http_connection.hurl
-not ok 79 - tests_failed/invalid_jsonpath.hurl
-not ok 80 - tests_failed/invalid_url.hurl
-not ok 81 - tests_failed/invalid_xml.hurl
-not ok 82 - tests_failed/max_redirect_option.hurl
-not ok 83 - tests_failed/multipart_form_data.hurl
-not ok 84 - tests_failed/predicate.hurl
-not ok 85 - tests_failed/query_header_not_found.hurl
-not ok 86 - tests_failed/query_invalid_json.hurl
-not ok 87 - tests_failed/query_invalid_utf8.hurl
-not ok 88 - tests_failed/query_match_none.hurl
-not ok 89 - tests_failed/retry_option.hurl
-not ok 90 - tests_failed/template_variable_not_found.hurl
-not ok 91 - tests_failed/template_variable_not_renderable.hurl
+ok 14 - tests_ok/empty.hurl
+ok 15 - tests_ok/encoding.hurl
+ok 16 - tests_ok/expect.hurl
+ok 17 - tests_ok/filter.hurl
+ok 18 - tests_ok/float.hurl
+ok 19 - tests_ok/follow_redirect_option.hurl
+ok 20 - tests_ok/form_params.hurl
+ok 21 - tests_ok/gb2312.hurl
+ok 22 - tests_ok/get_large.hurl
+ok 23 - tests_ok/graphql.hurl
+ok 24 - tests_ok/head.hurl
+ok 25 - tests_ok/headers.hurl
+ok 26 - tests_ok/hello.hurl
+ok 27 - tests_ok/hello_gb2312.hurl
+ok 28 - tests_ok/insecure_option.hurl
+ok 29 - tests_ok/json_output.hurl
+ok 30 - tests_ok/method.hurl
+ok 31 - tests_ok/multilines.hurl
+ok 32 - tests_ok/multipart_form_data.hurl
+ok 33 - tests_ok/no_entry.hurl
+ok 34 - tests_ok/non_utf8.hurl
+ok 35 - tests_ok/output.hurl
+ok 36 - tests_ok/patch.hurl
+ok 37 - tests_ok/post_base64.hurl
+ok 38 - tests_ok/post_bytes.hurl
+not ok 39 - tests_ok/post_file.hurl
+ok 40 - tests_ok/post_multilines.hurl
+ok 41 - tests_ok/post_xml.hurl
+ok 42 - tests_ok/predicates_string.hurl
+ok 43 - tests_ok/proxy_option.hurl
+ok 44 - tests_ok/put.hurl
+ok 45 - tests_ok/querystring_params.hurl
+ok 46 - tests_ok/redirect.hurl
+ok 47 - tests_ok/request_content_length.hurl
+ok 48 - tests_ok/retry_option.hurl
+ok 49 - tests_ok/retry_until_200.hurl
+ok 50 - tests_ok/url.hurl
+ok 51 - tests_ok/utf8.hurl
+ok 52 - tests_ok/verbose_option.hurl
+ok 53 - tests_ok_not_linted/bom.hurl
+not ok 54 - tests_failed/assert_base64.hurl
+not ok 55 - tests_failed/assert_bytearray.hurl
+not ok 56 - tests_failed/assert_content_encoding.hurl
+not ok 57 - tests_failed/assert_file.hurl
+not ok 58 - tests_failed/assert_header_not_found.hurl
+not ok 59 - tests_failed/assert_header_value.hurl
+not ok 60 - tests_failed/assert_http_version.hurl
+not ok 61 - tests_failed/assert_invalid_predicate_type.hurl
+not ok 62 - tests_failed/assert_match_utf8.hurl
+not ok 63 - tests_failed/assert_newline.hurl
+not ok 64 - tests_failed/assert_query_cookie.hurl
+not ok 65 - tests_failed/assert_query_invalid_regex.hurl
+not ok 66 - tests_failed/assert_query_invalid_xpath.hurl
+not ok 67 - tests_failed/assert_status.hurl
+not ok 68 - tests_failed/assert_template_variable_not_found.hurl
+not ok 69 - tests_failed/assert_value_error.hurl
+not ok 70 - tests_failed/assert_variable.hurl
+not ok 71 - tests_failed/assert_xpath.hurl
+not ok 72 - tests_failed/file_read_access.hurl
+not ok 73 - tests_failed/filter.hurl
+not ok 74 - tests_failed/filter_decode.hurl
+not ok 75 - tests_failed/filter_in_capture.hurl
+not ok 76 - tests_failed/hello_gb2312_failed.hurl
+not ok 77 - tests_failed/http_connection.hurl
+not ok 78 - tests_failed/invalid_jsonpath.hurl
+not ok 79 - tests_failed/invalid_url.hurl
+not ok 80 - tests_failed/invalid_xml.hurl
+not ok 81 - tests_failed/max_redirect_option.hurl
+not ok 82 - tests_failed/multipart_form_data.hurl
+not ok 83 - tests_failed/predicate.hurl
+not ok 84 - tests_failed/query_header_not_found.hurl
+not ok 85 - tests_failed/query_invalid_json.hurl
+not ok 86 - tests_failed/query_invalid_utf8.hurl
+not ok 87 - tests_failed/query_match_none.hurl
+not ok 88 - tests_failed/retry_option.hurl
+not ok 89 - tests_failed/template_variable_not_found.hurl
+not ok 90 - tests_failed/template_variable_not_renderable.hurl
