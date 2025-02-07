@@ -283,7 +283,7 @@ jobs:
        persist-credentials: false
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
-     uses: docker/setup-buildx-action@v3.8.0
+     uses: docker/setup-buildx-action@v3.9.0
    - name: Build docker images
      run: |
          echo "::group::Docker build prerequisites"
