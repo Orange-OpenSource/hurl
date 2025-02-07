@@ -44,9 +44,11 @@ impl fmt::Display for HurlOption {
 }
 
 pub fn parse(s: &str) -> Result<String, String> {
+    let cleaned_s = s.replace("\\\n", "").replace("\\\r\n", "");
+
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
-        .split(s)
+        .split(&cleaned_s)
         .filter(|s| !s.is_empty())
         .collect();
     let mut s = String::new();
@@ -158,6 +160,26 @@ Fruit:Raspberry
                 r#"curl http://localhost:8000/hello
 curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry'
 "#
+            )
+            .unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_parse_with_escape() {
+        let hurl_str = r#"GET http://localhost:8000/custom_headers
+Fruit:Raspberry
+Fruit:Banana
+
+"#;
+
+        assert_eq!(
+            parse(
+                r#"curl http://localhost:8000/custom_headers \
+                -H 'Fruit:Raspberry' \
+                -H 'Fruit:Banana'
+"#,
             )
             .unwrap(),
             hurl_str
