@@ -1,5 +1,6 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
+
 if (Test-Path build/cookies.txt) {
     Remove-Item build/cookies.txt
 }
