@@ -87,11 +87,8 @@ fn main() {
 
         // Only checks
         if opts.check {
-            let lints = linter::check_hurl_file(&hurl_file);
-            for e in lints.iter() {
-                logger.warn_lint(&content, input_file, e);
-            }
-            if lints.is_empty() {
+            let formatted_hurl = format::format_text(&hurl_file, false);
+            if formatted_hurl == content {
                 process::exit(EXIT_OK);
             } else {
                 process::exit(EXIT_LINT_ISSUE);
