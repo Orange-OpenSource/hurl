@@ -87,10 +87,12 @@ fn main() {
 
         // Only checks
         if opts.check {
-            let formatted_hurl = format::format_text(&hurl_file, false);
-            if formatted_hurl == content {
+            let hurl_file = linter::lint_hurl_file(&hurl_file);
+            let formatted = format::format_text(&hurl_file, false);
+            if formatted == content {
                 process::exit(EXIT_OK);
             } else {
+                logger.error(&format!("Would reformat: {}", input_file));
                 process::exit(EXIT_LINT_ISSUE);
             }
         }

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-pub use rules::{check_hurl_file, lint_hurl_file};
+pub use rules::lint_hurl_file;
 
-pub use self::error::{LinterError, LinterErrorKind};
-mod error;
 mod rules;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use crate::linter::{LinterError, LinterErrorKind};
 use hurl_core::ast::{
     Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
     CookiePath, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, GraphQl,
@@ -27,11 +26,6 @@ use hurl_core::ast::{
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
 
-/// Returns lint errors for the `hurl_file`.
-pub fn check_hurl_file(hurl_file: &HurlFile) -> Vec<LinterError> {
-    hurl_file.entries.iter().flat_map(check_entry).collect()
-}
-
 /// Returns a new linted instance from this `hurl_file`.
 pub fn lint_hurl_file(hurl_file: &HurlFile) -> HurlFile {
     HurlFile {
@@ -40,40 +34,10 @@ pub fn lint_hurl_file(hurl_file: &HurlFile) -> HurlFile {
     }
 }
 
-fn check_entry(entry: &Entry) -> Vec<LinterError> {
-    let mut errors = vec![];
-    errors.append(&mut check_request(&entry.request));
-    if let Some(response) = &entry.response {
-        errors.append(&mut check_response(response));
-    }
-    errors
-}
-
 fn lint_entry(entry: &Entry) -> Entry {
     let request = lint_request(&entry.request);
     let response = entry.response.as_ref().map(lint_response);
     Entry { request, response }
-}
-
-fn check_request(request: &Request) -> Vec<LinterError> {
-    let mut errors = vec![];
-    if !request.space0.value.is_empty() {
-        errors.push(LinterError {
-            source_info: request.space0.source_info,
-            kind: LinterErrorKind::UnnecessarySpace,
-        });
-    }
-    if request.space1.value != " " {
-        errors.push(LinterError {
-            source_info: request.space1.source_info,
-            kind: LinterErrorKind::OneSpace,
-        });
-    }
-    for error in check_line_terminator(&request.line_terminator0) {
-        errors.push(error);
-    }
-    errors.extend(request.sections.iter().flat_map(check_section));
-    errors
 }
 
 fn lint_request(request: &Request) -> Request {
@@ -104,18 +68,6 @@ fn lint_request(request: &Request) -> Request {
     }
 }
 
-fn check_response(response: &Response) -> Vec<LinterError> {
-    let mut errors = vec![];
-    if !response.space0.value.is_empty() {
-        errors.push(LinterError {
-            source_info: response.space0.source_info,
-            kind: LinterErrorKind::UnnecessarySpace,
-        });
-    }
-    errors.extend(response.sections.iter().flat_map(check_section));
-    errors
-}
-
 fn lint_response(response: &Response) -> Response {
     let line_terminators = response.line_terminators.clone();
     let space0 = empty_whitespace();
@@ -140,20 +92,6 @@ fn lint_response(response: &Response) -> Response {
         body,
         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
-}
-
-fn check_section(section: &Section) -> Vec<LinterError> {
-    let mut errors = vec![];
-    if !section.space0.value.is_empty() {
-        errors.push(LinterError {
-            source_info: section.space0.source_info,
-            kind: LinterErrorKind::UnnecessarySpace,
-        });
-    }
-    for error in check_line_terminator(&section.line_terminator0) {
-        errors.push(error);
-    }
-    errors
 }
 
 fn lint_section(section: &Section) -> Section {
@@ -623,22 +561,6 @@ fn one_whitespace() -> Whitespace {
     }
 }
 
-fn check_line_terminator(line_terminator: &LineTerminator) -> Vec<LinterError> {
-    let mut errors = vec![];
-    match &line_terminator.comment {
-        Some(_) => {}
-        None => {
-            if !line_terminator.space0.value.is_empty() {
-                errors.push(LinterError {
-                    source_info: line_terminator.space0.source_info,
-                    kind: LinterErrorKind::UnnecessarySpace,
-                });
-            }
-        }
-    }
-    errors
-}
-
 fn lint_line_terminator(line_terminator: &LineTerminator) -> LineTerminator {
     let space0 = match line_terminator.comment {
         None => empty_whitespace(),
@@ -759,7 +681,6 @@ mod tests {
             entries: vec![],
             line_terminators: vec![],
         };
-        assert_eq!(check_hurl_file(&hurl_file), vec![]);
         assert_eq!(lint_hurl_file(&hurl_file), hurl_file_linted);
     }
 
@@ -773,7 +694,6 @@ mod tests {
             entries: vec![],
             line_terminators: vec![],
         };
-        assert_eq!(check_hurl_file(&entry), vec![]);
         assert_eq!(lint_hurl_file(&entry), entry_linted);
     }
 }
