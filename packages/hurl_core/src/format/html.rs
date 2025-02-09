@@ -876,7 +876,13 @@ impl Template {
         for element in self.elements.iter() {
             let elem_str = match element {
                 TemplateElement::String { source, .. } => source.to_string(),
-                TemplateElement::Placeholder(expr) => format!("{{{{{expr}}}}}"),
+                TemplateElement::Placeholder(Placeholder {
+                    space0,
+                    expr,
+                    space1,
+                }) => {
+                    format!("{{{}{}{}}}", space0.value, expr, space1.value)
+                }
             };
             s.push_str(elem_str.as_str());
         }
