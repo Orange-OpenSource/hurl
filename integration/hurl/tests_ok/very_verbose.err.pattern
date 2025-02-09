@@ -106,6 +106,104 @@
 * Cookie store:
 *
 * Request:
+* POST http://localhost:8000/very-verbose/redirect
+*
+* Request can be run with the following curl command:
+* curl --data '' --location 'http://localhost:8000/very-verbose/redirect'
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 51359 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> POST /very-verbose/redirect HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Closing connection
+* Response: (received 205 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 301 MOVED PERMANENTLY
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 205
+< Location: /very-verbose/redirected
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+* <html>
+* <head>
+*     <meta content="text/html;charset=utf-8">
+*     <title>301 Moved</title>
+* </head>
+* <body>
+* <h1>301 Moved</h1>
+* The document has moved
+* <a href="/very-verbose/redirected">here</a>.
+* </body>
+* </html>
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* => Redirect to http://localhost:8000/very-verbose/redirected
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 51361 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> GET /very-verbose/redirected HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Closing connection
+* Response: (received 11 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 11
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+* Redirected.
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
 * GET http://localhost:8000/very-verbose/encoding/latin1
 *
 * Request can be run with the following curl command:
@@ -149,7 +247,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 3
+* Executing entry 4
 *
 * Cookie store:
 *
@@ -205,7 +303,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 4
+* Executing entry 5
 *
 * Cookie store:
 *
@@ -253,7 +351,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 5
+* Executing entry 6
 *
 * Cookie store:
 *
@@ -305,7 +403,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 6
+* Executing entry 7
 *
 * Cookie store:
 *
@@ -357,7 +455,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 7
+* Executing entry 8
 *
 * Cookie store:
 *
