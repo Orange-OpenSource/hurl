@@ -2,19 +2,26 @@
 ========================================================================================================================
 
 Thanks to
+[@ashishajr](https://github.com/ashishajr),
 [@theoforger](https://github.com/theoforger),
 [@docwhat](https://github.com/docwhat),
 [@glb-cblin](https://github.com/glb-cblin),
 [@Enoz](https://github.com/Enoz),
-[@ashishajr](https://github.com/ashishajr),
+[@ikorason](https://github.com/ikorason),
+[@uday-rana](https://github.com/uday-rana),
+[@lu-zero](https://github.com/lu-zero),
+[@nghiab1906724](https://github.com/nghiab1906724),
 
 Breaking Changes:
 
 * Remove deprecated predicates (notEquals, greaterThan etc...) in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
+* Remove deprecated keyword HTTP/* for HTTP [#3697](https://github.com/Orange-OpenSource/hurl/issues/3697)
 
 
 Enhancements:
 
+* Add version query and integration tests [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
+* Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
 * Add curl -H/--header option to globally add headers to all requests [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
 * Redacts secrets from JUnit reports [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Redacts secrets from JSON report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
@@ -24,6 +31,7 @@ Enhancements:
 * Allow sending empty HTTP header [#3536](https://github.com/Orange-OpenSource/hurl/issues/3536)
 * Redact dynamic values from logs [#3543](https://github.com/Orange-OpenSource/hurl/issues/3543)
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
+* Fix invalid escape in hurlfmt parse func [#3615](https://github.com/Orange-OpenSource/hurl/issues/3615)
 * hurlfmt: Use Hurl predicates identifiers for Hurl to JSON file export [#3662](https://github.com/Orange-OpenSource/hurl/issues/3662)
 
 
@@ -32,6 +40,9 @@ Bugs Fixed:
 * Fix missing request line errors in HTML report [#3534](https://github.com/Orange-OpenSource/hurl/issues/3534)
 * Eval template in JSON object key [#3593](https://github.com/Orange-OpenSource/hurl/issues/3593)
 * Show error message if format is invalid in `format` filter [#3613](https://github.com/Orange-OpenSource/hurl/issues/3613)
+* Create parent folders if missing when using --cookie-jar FILE [#3637](https://github.com/Orange-OpenSource/hurl/issues/3637)
+* Remove lint errors [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
+* Support BigInteger in variable [#3656](https://github.com/Orange-OpenSource/hurl/issues/3656)
 
 
 [6.0.0 (2024-12-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
