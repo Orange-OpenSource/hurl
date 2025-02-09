@@ -40,7 +40,7 @@ pub fn eval_query(
 ) -> QueryResult {
     match &query.value {
         QueryValue::Status => eval_query_status(response),
-        QueryValue::Version => todo!(),
+        QueryValue::Version => eval_query_version(response),
         QueryValue::Url => eval_query_url(response),
         QueryValue::Header { name, .. } => eval_query_header(response, name, variables),
         QueryValue::Cookie {
@@ -75,6 +75,18 @@ fn eval_query_status(response: &http::Response) -> QueryResult {
     Ok(Some(Value::Number(Number::Integer(i64::from(
         response.status,
     )))))
+}
+
+/// Evaluates the version on the HTTP `response`
+fn eval_query_version(response: &http::Response) -> QueryResult {
+    Ok(Some(Value::String(
+        response
+            .version
+            .to_string()
+            .strip_prefix("HTTP/")
+            .unwrap()
+            .to_string(),
+    )))
 }
 
 /// Evaluates the final URL of the HTTP `response`.

@@ -6,3 +6,13 @@ error: Assert HTTP version
    | ^^^^^^ actual value is <HTTP/1.1>
    |
 
+error: Assert failure
+  --> tests_failed/assert_http_version.hurl:8:0
+   |
+   | GET http://localhost:8000/error-assert/http-version
+   | ...
+ 8 | version == "2"
+   |   actual:   string <1.1>
+   |   expected: string <2>
+   |
+
