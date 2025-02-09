@@ -47,6 +47,7 @@ Queries are used to extract data from an HTTP response.
 A query can be of the following type:
 
 - [`status`](#status-capture)
+- [`version`](#version-capture)
 - [`header`](#header-capture)
 - [`url`](#url-capture)
 - [`cookie`](#cookie-capture)
@@ -71,6 +72,18 @@ GET https://example.org
 HTTP 200
 [Captures]
 my_status: status
+```
+
+### Version capture
+
+Capture the received HTTP version. Version capture consists of a variable name, followed by a `:`, and the
+keyword `version`.
+
+```hurl
+GET https://example.org
+HTTP 200
+[Captures]
+http_version: version
 ```
 
 ### Header capture

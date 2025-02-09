@@ -152,6 +152,7 @@ An assert consists of a query followed by a predicate. The format of the query
 is shared with [captures], and can be one of :
 
 - [`status`](#status-assert)
+- [`version`](#version-assert)
 - [`header`](#header-assert)
 - [`url`](#url-assert)
 - [`cookie`](#cookie-assert)
@@ -273,6 +274,18 @@ GET https://example.org
 HTTP *
 [Asserts]
 status < 300
+```
+
+### Version assert
+
+Check the received HTTP version. Version assert consists of the keyword `version` followed by a predicate
+function and value.
+
+```hurl
+GET https://example.org
+HTTP *
+[Asserts]
+version == "2"
 ```
 
 ### Header assert
