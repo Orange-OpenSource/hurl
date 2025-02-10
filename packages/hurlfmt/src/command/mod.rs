@@ -15,8 +15,4 @@
  * limitations under the License.
  *
  */
-pub mod cli;
-pub mod command;
-pub mod curl;
-pub mod format;
-pub mod linter;
+pub mod check;

@@ -19,11 +19,12 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 use std::process;
 
-use hurl_core::input::InputKind;
+use hurl_core::input::{Input, InputKind};
 use hurl_core::{parser, text};
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
-use hurlfmt::{cli, curl, format, linter};
+use hurlfmt::command::check::CheckError;
+use hurlfmt::{cli, command, curl, format, linter};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR: i32 = 1;
@@ -51,72 +52,122 @@ fn main() {
     let logger = Logger::new(opts.color);
     let mut output_all = String::new();
 
-    for input_file in &opts.input_files {
-        // Get content of the input
-        let content = match input_file.read_to_string() {
-            Ok(c) => c,
-            Err(e) => {
-                logger.error(&format!(
-                    "Input file {} can not be read - {e}",
-                    &input_file.to_string()
-                ));
-                process::exit(EXIT_INVALID_INPUT);
-            }
-        };
-
-        // Parse input curl or Hurl file
-        let input = match opts.input_format {
-            InputFormat::Hurl => content.to_string(),
-            InputFormat::Curl => match curl::parse(&content) {
-                Ok(s) => s,
+    // Check command
+    if opts.check {
+        process_check_command(&opts.input_files, opts.output_file, &logger);
+    } else {
+        // TODO: Move code within command module like the check command above
+        for input_file in &opts.input_files {
+            // Get content of the input
+            let content = match input_file.read_to_string() {
+                Ok(c) => c,
                 Err(e) => {
-                    logger.error(&e.to_string());
+                    logger.error(&format!(
+                        "Input file {} can not be read - {e}",
+                        &input_file.to_string()
+                    ));
                     process::exit(EXIT_INVALID_INPUT);
                 }
-            },
-        };
+            };
 
-        // Parse Hurl content
-        let hurl_file = match parser::parse_hurl_file(&input) {
-            Ok(h) => h,
-            Err(e) => {
-                logger.error_parsing(&content, input_file, &e);
-                process::exit(EXIT_INVALID_INPUT);
+            // Parse input curl or Hurl file
+            let input = match opts.input_format {
+                InputFormat::Hurl => content.to_string(),
+                InputFormat::Curl => match curl::parse(&content) {
+                    Ok(s) => s,
+                    Err(e) => {
+                        logger.error(&e.to_string());
+                        process::exit(EXIT_INVALID_INPUT);
+                    }
+                },
+            };
+
+            // Parse Hurl content
+            let hurl_file = match parser::parse_hurl_file(&input) {
+                Ok(h) => h,
+                Err(e) => {
+                    logger.error_parsing(&content, input_file, &e);
+                    process::exit(EXIT_INVALID_INPUT);
+                }
+            };
+
+            // Only checks
+            if opts.check {
+                let hurl_file = linter::lint_hurl_file(&hurl_file);
+                let formatted = format::format_text(&hurl_file, false);
+                if formatted == content {
+                    process::exit(EXIT_OK);
+                } else {
+                    logger.error(&format!("Would reformat: {}", input_file));
+                    process::exit(EXIT_LINT_ISSUE);
+                }
             }
-        };
 
-        // Only checks
-        if opts.check {
-            let hurl_file = linter::lint_hurl_file(&hurl_file);
-            let formatted = format::format_text(&hurl_file, false);
-            if formatted == content {
-                process::exit(EXIT_OK);
+            // Output files
+            let output = match opts.output_format {
+                OutputFormat::Hurl => {
+                    let hurl_file = linter::lint_hurl_file(&hurl_file);
+                    format::format_text(&hurl_file, opts.color)
+                }
+                OutputFormat::Json => format::format_json(&hurl_file),
+                OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
+            };
+            if opts.in_place {
+                let InputKind::File(path) = input_file.kind() else {
+                    unreachable!("--in-place and standard input have been filtered in args parsing")
+                };
+                write_output(&output, Some(path.clone()), &logger);
             } else {
-                logger.error(&format!("Would reformat: {}", input_file));
-                process::exit(EXIT_LINT_ISSUE);
+                output_all.push_str(&output);
             }
         }
-
-        // Output files
-        let output = match opts.output_format {
-            OutputFormat::Hurl => {
-                let hurl_file = linter::lint_hurl_file(&hurl_file);
-                format::format_text(&hurl_file, opts.color)
-            }
-            OutputFormat::Json => format::format_json(&hurl_file),
-            OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
-        };
-        if opts.in_place {
-            let InputKind::File(path) = input_file.kind() else {
-                unreachable!("--in-place and standard input have been filtered in args parsing")
-            };
-            write_output(&output, Some(path.clone()), &logger);
-        } else {
-            output_all.push_str(&output);
+        if !opts.in_place {
+            write_output(&output_all, opts.output_file, &logger);
         }
     }
-    if !opts.in_place {
-        write_output(&output_all, opts.output_file, &logger);
+}
+
+fn process_check_command(input_files: &[Input], output_file: Option<PathBuf>, logger: &Logger) {
+    let errors = command::check::run(input_files);
+    if errors.is_empty() {
+        process::exit(EXIT_OK);
+    } else {
+        let mut count = 0;
+        let mut invalid_input = false;
+        let mut output_all = String::new();
+
+        for e in &errors {
+            match e {
+                CheckError::IO(filename) => {
+                    logger.error(&format!("Input file {filename} can not be read"));
+                    invalid_input = true;
+                }
+                CheckError::Parse {
+                    content,
+                    input_file,
+                    error,
+                } => {
+                    logger.error_parsing(content, input_file, error);
+                    invalid_input = true;
+                }
+                CheckError::Unformatted(filename) => {
+                    output_all.push_str(&format!("would reformat: {}\n", filename));
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 {
+            output_all.push_str(&format!(
+                "{count} file{} would be reformatted",
+                if count > 1 { "s" } else { "" }
+            ));
+        }
+        write_output(&output_all, output_file, logger);
+        if invalid_input {
+            process::exit(EXIT_INVALID_INPUT);
+        } else {
+            process::exit(EXIT_LINT_ISSUE);
+        }
     }
 }
 

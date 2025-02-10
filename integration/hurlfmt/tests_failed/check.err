@@ -1,1 +1,8 @@
-error: Would reformat: tests_failed/check.hurl
+error: Input file tests_failed/check_error_io.hurl can not be read
+error: Parsing space
+  --> tests_failed/check_error_parse.hurl:1:4
+   |
+ 1 | GET
+   |    ^ expecting a space
+   |
+
