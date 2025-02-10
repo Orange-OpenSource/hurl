@@ -422,7 +422,7 @@ mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, Template, TemplateElement, Variable};
     use crate::reader::Pos;
-    use crate::typing::{SourceString, ToSource};
+    use crate::typing::ToSource;
 
     #[test]
     fn test_space() {
@@ -895,8 +895,8 @@ mod tests {
                 filename: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
-                        value: String::from("data.xml"),
-                        source: SourceString::from("data.xml"),
+                        value: "data.xml".to_string(),
+                        source: "data.xml".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 14)),
                 },
@@ -918,8 +918,8 @@ mod tests {
                 filename: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
-                        value: String::from("filename1"),
-                        source: SourceString::from("filename1"),
+                        value: "filename1".to_string(),
+                        source: "filename1".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 16)),
                 },
@@ -941,8 +941,8 @@ mod tests {
                 filename: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
-                        value: String::from("tmp/filename1"),
-                        source: SourceString::from("tmp/filename1"),
+                        value: "tmp/filename1".to_string(),
+                        source: "tmp/filename1".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 },
@@ -963,8 +963,8 @@ mod tests {
                 },
                 filename: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("tmp/filename with spaces.txt"),
-                        source: SourceString::from("tmp/filename\\ with\\ spaces.txt"),
+                        value: "tmp/filename with spaces.txt".to_string(),
+                        source: "tmp/filename\\ with\\ spaces.txt".to_source(),
                     }],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 37)),
@@ -1030,7 +1030,7 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 10)),
                 },
                 value: vec![77, 97],
-                source: SourceString::from("T WE="),
+                source: "T WE=".to_source(),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),

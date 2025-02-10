@@ -200,7 +200,7 @@ mod tests {
         SourceInfo, TemplateElement, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::{SourceString, ToSource};
+    use hurl_core::typing::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -234,8 +234,8 @@ mod tests {
                         space1: whitespace(),
                     }),
                     TemplateElement::String {
-                        value: String::from("/hello"),
-                        source: SourceString::from("/hello"),
+                        value: "/hello".to_string(),
+                        source: "/hello".to_source(),
                     },
                 ],
                 delimiter: None,
@@ -279,8 +279,8 @@ mod tests {
             space1: whitespace(),
             url: Template {
                 elements: vec![TemplateElement::String {
-                    value: String::from("http://localhost:8000/querystring-params"),
-                    source: SourceString::from("http://localhost:8000/querystring-params"),
+                    value: "http://localhost:8000/querystring-params".to_string(),
+                    source: "http://localhost:8000/querystring-params".to_source(),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -421,8 +421,8 @@ mod tests {
             space1: whitespace(),
             url: Template {
                 elements: vec![TemplateElement::String {
-                    value: String::from("http:///localhost"),
-                    source: SourceString::from("http://localhost"),
+                    value: "http:///localhost".to_string(),
+                    source: "http://localhost".to_source(),
                 },],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -462,8 +462,8 @@ mod tests {
                 space1: whitespace(),
                 url: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("http:///localhost"),
-                        source: SourceString::from("http://localhost"),
+                        value: "http:///localhost".to_string(),
+                        source: "http://localhost".to_source(),
                     },],
                     delimiter: None,
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

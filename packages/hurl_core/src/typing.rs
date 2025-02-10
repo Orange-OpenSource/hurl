@@ -152,21 +152,15 @@ pub trait ToSource {
     fn to_source(&self) -> SourceString;
 }
 
-impl<T> ToSource for T
-where
-    T: AsRef<str>,
-{
+impl ToSource for String {
     fn to_source(&self) -> SourceString {
-        SourceString(self.as_ref().to_string())
+        SourceString(self.clone())
     }
 }
 
-impl<T> From<T> for SourceString
-where
-    T: AsRef<str>,
-{
-    fn from(value: T) -> Self {
-        SourceString(value.as_ref().to_string())
+impl ToSource for &str {
+    fn to_source(&self) -> SourceString {
+        SourceString(self.to_string())
     }
 }
 

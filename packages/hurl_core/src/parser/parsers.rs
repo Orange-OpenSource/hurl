@@ -218,7 +218,7 @@ mod tests {
         MultilineStringKind, Template, TemplateElement, Text, Whitespace,
     };
     use crate::reader::Pos;
-    use crate::typing::{SourceString, ToSource};
+    use crate::typing::ToSource;
 
     #[test]
     fn test_hurl_file() {
@@ -287,8 +287,8 @@ mod tests {
             },
             url: Template {
                 elements: vec![TemplateElement::String {
-                    value: String::from("http://google.fr"),
-                    source: SourceString::from("http://google.fr"),
+                    value: "http://google.fr".to_string(),
+                    source: "http://google.fr".to_source(),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
@@ -326,8 +326,8 @@ mod tests {
             },
             url: Template {
                 elements: vec![TemplateElement::String {
-                    value: String::from("http://google.fr"),
-                    source: SourceString::from("http://google.fr"),
+                    value: "http://google.fr".to_string(),
+                    source: "http://google.fr".to_source(),
                 }],
                 delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
@@ -390,8 +390,8 @@ mod tests {
                         },
                         value: Template {
                             elements: vec![TemplateElement::String {
-                                value: String::from("Hello World!\n"),
-                                source: SourceString::from("Hello World!\n"),
+                                value: "Hello World!\n".to_string(),
+                                source: "Hello World!\n".to_source(),
                             }],
                             delimiter: None,
                             source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),

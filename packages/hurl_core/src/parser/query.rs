@@ -231,7 +231,7 @@ mod tests {
     };
     use crate::parser::filter::filters;
     use crate::reader::Pos;
-    use crate::typing::{SourceString, ToSource};
+    use crate::typing::ToSource;
 
     #[test]
     fn test_query() {
@@ -331,8 +331,8 @@ mod tests {
                 expr: Template {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
-                        value: String::from("normalize-space(//head/title)"),
-                        source: SourceString::from("normalize-space(//head/title)"),
+                        value: "normalize-space(//head/title)".to_string(),
+                        source: "normalize-space(//head/title)".to_source(),
                     }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 38)),
                 },
@@ -346,8 +346,8 @@ mod tests {
                 delimiter: Some('"'),
                 elements: vec![
                     TemplateElement::String {
-                        value: String::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
-                        source: SourceString::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
+                        value: "normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])".to_string(),
+                        source: "normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])".to_source(),
                     }
                 ],
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 100)),

@@ -473,7 +473,7 @@ pub mod tests {
     use crate::http::{HeaderVec, HttpError, HttpVersion};
     use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::{SourceString, ToSource};
+    use hurl_core::typing::ToSource;
     use std::num::ParseIntError;
 
     fn default_response() -> http::Response {
@@ -564,8 +564,8 @@ pub mod tests {
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("$.success"),
-                        source: SourceString::from("$.success"),
+                        value: "$.success".to_string(),
+                        source: "$.success".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 19)),
@@ -585,8 +585,8 @@ pub mod tests {
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("$.errors"),
-                        source: SourceString::from("$.errors"),
+                        value: "$.errors".to_string(),
+                        source: "$.errors".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
@@ -606,8 +606,8 @@ pub mod tests {
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("$.duration"),
-                        source: SourceString::from("$.duration"),
+                        value: "$.duration".to_string(),
+                        source: "$.duration".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
@@ -1173,8 +1173,8 @@ pub mod tests {
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
-                        value: String::from("xxx"),
-                        source: SourceString::from("xxx"),
+                        value: "xxx".to_string(),
+                        source: "xxx".to_source(),
                     }],
                     delimiter: Some('"'),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 13)),
