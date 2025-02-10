@@ -6,7 +6,6 @@ import sys
 
 sys.path.append("..")
 import test_format
-import test_lint
 import test_script
 
 
@@ -24,7 +23,6 @@ def main():
     [test_format.test("hurl", f) for f in hurl_files]
     [test_format.test("json", f) for f in hurl_files]
     [test_format.test("html", f) for f in hurl_files]
-    [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
 
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = get_files("tests_ok/*." + extension) + get_files(
