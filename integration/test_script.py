@@ -34,7 +34,7 @@ def test(script_file: str):
         cmd = [script_file]
     start_time = time.time()
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    execution_time = round(time.time() - start_time, 2)
+    execution_time = round(time.time() - start_time, 4)
     print(f"{' '.join(cmd)} (Duration: {execution_time} seconds)")
 
     basename = os.path.splitext(script_file)[0]
