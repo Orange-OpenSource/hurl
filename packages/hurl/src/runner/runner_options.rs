@@ -63,6 +63,8 @@ pub struct RunnerOptionsBuilder {
     retry_interval: Duration,
     skip: bool,
     ssl_no_revoke: bool,
+    test_retry: u32,
+    test_retry_interval: Duration,
     timeout: Duration,
     to_entry: Option<usize>,
     unix_socket: Option<String>,
@@ -111,6 +113,8 @@ impl Default for RunnerOptionsBuilder {
             retry_interval: Duration::from_millis(1000),
             skip: false,
             ssl_no_revoke: false,
+            test_retry: 0,
+            test_retry_interval: Duration::from_millis(0),
             timeout: Duration::from_secs(300),
             to_entry: None,
             unix_socket: None,
@@ -363,7 +367,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets maximum number of retries.
+    /// Sets maximum number of request retries.
     ///
     /// Default is 0.
     pub fn retry(&mut self, retry: Option<Count>) -> &mut Self {
@@ -371,7 +375,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets duration between each retry.
+    /// Sets duration between each request retry.
     ///
     /// Default is 1000 ms.
     pub fn retry_interval(&mut self, retry_interval: Duration) -> &mut Self {
@@ -381,6 +385,22 @@ impl RunnerOptionsBuilder {
 
     pub fn ssl_no_revoke(&mut self, ssl_no_revoke: bool) -> &mut Self {
         self.ssl_no_revoke = ssl_no_revoke;
+        self
+    }
+
+    /// Sets maximum number of test retries.
+    ///
+    /// Default is 0.
+    pub fn test_retry(&mut self, retry: u32) -> &mut Self {
+        self.test_retry = retry;
+        self
+    }
+
+    /// Sets duration between each test retry.
+    ///
+    /// Default is 0 ms.
+    pub fn test_retry_interval(&mut self, retry_interval: Duration) -> &mut Self {
+        self.test_retry_interval = retry_interval;
         self
     }
 
@@ -457,6 +477,8 @@ impl RunnerOptionsBuilder {
             retry_interval: self.retry_interval,
             skip: self.skip,
             ssl_no_revoke: self.ssl_no_revoke,
+            test_retry: self.test_retry,
+            test_retry_interval: self.test_retry_interval,
             timeout: self.timeout,
             to_entry: self.to_entry,
             unix_socket: self.unix_socket.clone(),
@@ -506,6 +528,8 @@ pub struct RunnerOptions {
     pub(crate) retry_interval: Duration,
     pub(crate) skip: bool,
     pub(crate) ssl_no_revoke: bool,
+    pub(crate) test_retry: u32,
+    pub(crate) test_retry_interval: Duration,
     pub(crate) timeout: Duration,
     pub(crate) to_entry: Option<usize>,
     pub(crate) unix_socket: Option<String>,

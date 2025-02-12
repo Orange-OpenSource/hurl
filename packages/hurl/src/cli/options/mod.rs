@@ -94,6 +94,8 @@ pub struct CliOptions {
     pub ssl_no_revoke: bool,
     pub tap_file: Option<PathBuf>,
     pub test: bool,
+    pub test_retry: u32,
+    pub test_retry_interval: Duration,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub unix_socket: Option<String>,
@@ -228,6 +230,8 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::retry_interval())
         .arg(commands::secret())
         .arg(commands::test())
+        .arg(commands::test_retry())
+        .arg(commands::test_retry_interval())
         .arg(commands::to_entry())
         .arg(commands::variable())
         .arg(commands::variables_file())
@@ -320,6 +324,8 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
     let tap_file = matches::tap_file(arg_matches);
     let test = matches::test(arg_matches);
+    let test_retry = matches::test_retry(arg_matches);
+    let test_retry_interval = matches::test_retry_interval(arg_matches)?;
     let timeout = matches::timeout(arg_matches)?;
     let to_entry = matches::to_entry(arg_matches);
     let unix_socket = matches::unix_socket(arg_matches);
@@ -379,6 +385,8 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError
         ssl_no_revoke,
         tap_file,
         test,
+        test_retry,
+        test_retry_interval,
         timeout,
         to_entry,
         unix_socket,
@@ -463,6 +471,8 @@ impl CliOptions {
         let retry = self.retry;
         let retry_interval = self.retry_interval;
         let ssl_no_revoke = self.ssl_no_revoke;
+        let test_retry = self.test_retry;
+        let test_retry_interval = self.test_retry_interval;
         let timeout = self.timeout;
         let to_entry = self.to_entry;
         let unix_socket = self.unix_socket.clone();
@@ -506,6 +516,8 @@ impl CliOptions {
             .retry(retry)
             .retry_interval(retry_interval)
             .ssl_no_revoke(ssl_no_revoke)
+            .test_retry(test_retry)
+            .test_retry_interval(test_retry_interval)
             .timeout(timeout)
             .to_entry(to_entry)
             .unix_socket(unix_socket)

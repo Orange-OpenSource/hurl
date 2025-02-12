@@ -113,19 +113,19 @@ impl ParProgress {
         if matches!(self.mode, Mode::Default) {
             return;
         }
-        let count = result
-            .hurl_result
+        let last_hurl_result = result.last_hurl_result();
+        let count = last_hurl_result
             .entries
             .iter()
             .flat_map(|r| &r.calls)
             .count();
-        let duration = result.hurl_result.duration.as_millis();
+        let duration = last_hurl_result.duration.as_millis();
         let filename = result.job.filename.to_string();
 
         let mut message = StyledString::new();
         message.push_with(&filename, Style::new().bold());
         message.push(": ");
-        if result.hurl_result.success {
+        if last_hurl_result.success {
             message.push_with("Success", Style::new().green().bold());
         } else {
             message.push_with("Failure", Style::new().red().bold());

@@ -71,7 +71,7 @@ pub fn run_seq(
         // Run our Hurl file now, we can only fail if there is a parsing error.
         // The parsing error is displayed in the `execute` call, that's why we gobble the error
         // string.
-        let Ok(hurl_result) = runner::run(
+        let Ok(hurl_results) = runner::run(
             &content,
             Some(&filename),
             &runner_options,
@@ -88,7 +88,7 @@ pub fn run_seq(
         // for subsequent writes.
         let mut stdout = Stdout::new(WriteMode::Immediate);
         print_output(
-            &hurl_result,
+            hurl_results.last().expect("at least one hurl result"),
             &content,
             &filename,
             options,
@@ -100,7 +100,7 @@ pub fn run_seq(
         let run = HurlRun {
             content,
             filename: filename.clone(),
-            hurl_result,
+            hurl_results: hurl_results,
         };
         runs.push(run);
     }
@@ -224,7 +224,7 @@ impl From<JobResult> for HurlRun {
         HurlRun {
             content: job_result.content,
             filename: job_result.job.filename,
-            hurl_result: job_result.hurl_result,
+            hurl_results: job_result.hurl_results,
         }
     }
 }

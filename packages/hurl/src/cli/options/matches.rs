@@ -442,6 +442,15 @@ pub fn test(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "test")
 }
 
+pub fn test_retry(arg_matches: &ArgMatches) -> u32 {
+    get::<u32>(arg_matches, "test_retry").unwrap_or_default()
+}
+
+pub fn test_retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
+    let s = get::<String>(arg_matches, "test_retry_interval").unwrap_or_default();
+    get_duration(&s, DurationUnit::MilliSecond)
+}
+
 pub fn timeout(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
     let s = get::<String>(arg_matches, "max_time").unwrap_or_default();
     get_duration(&s, DurationUnit::Second)

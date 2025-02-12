@@ -114,24 +114,50 @@ impl Worker {
             };
 
             // Now, we have a syntactically correct HurlFile instance, we can run it.
-            let result = runner::run_entries(
-                &hurl_file.entries,
-                &content,
-                Some(&job.filename),
-                &job.runner_options,
-                &job.variables,
-                &mut stdout,
-                Some(&progress),
-                &mut logger,
-            );
+            let mut results = Vec::new();
+            for retry in 0..=job.runner_options.test_retry {
+                let result = runner::run_entries(
+                    &hurl_file.entries,
+                    &content,
+                    Some(&job.filename),
+                    &job.runner_options,
+                    &job.variables,
+                    &mut stdout,
+                    Some(&progress),
+                    &mut logger,
+                );
 
-            if result.success && result.entries.last().is_none() {
+                let success = result.success;
+                results.push(result);
+
+                if success || job.runner_options.test_retry == 0 {
+                    break;
+                }
+
+                if retry == job.runner_options.test_retry {
+                    logger.debug_important("Retry file max count reached, no more retry");
+                    logger.debug("");
+                } else {
+                    let filename = &job.filename;
+                    let retry_count = retry + 1;
+                    let delay = job.runner_options.test_retry_interval.as_millis();
+                    logger.debug("");
+                    logger.debug_important(&format!(
+                        "Retry file {filename} (x{retry_count} pause {delay} ms)"
+                    ));
+                    thread::sleep(job.runner_options.test_retry_interval);
+                }
+            }
+
+            let last_result = results.last().expect("at least one hurl result");
+            if last_result.success && last_result.entries.last().is_none() {
                 logger.warning(&format!(
                     "No entry have been executed for file {}",
                     job.filename
                 ));
             }
-            let job_result = JobResult::new(job, content, result);
+
+            let job_result = JobResult::new(job, content, results);
             let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
             _ = tx.send(WorkerMessage::Completed(msg));
         });
