@@ -90,9 +90,6 @@ pub enum RunnerErrorKind {
     FilterInvalidFormatSpecifier(String),
     FilterMissingInput,
     Http(HttpError),
-    InvalidIpAddr {
-        value: String,
-    },
     InvalidJson {
         value: String,
     },
@@ -150,7 +147,6 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::FilterInvalidFormatSpecifier { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterMissingInput => "Filter error".to_string(),
             RunnerErrorKind::Http(http_error) => http_error.description(),
-            RunnerErrorKind::InvalidIpAddr { .. } => "Invalid IP address".to_string(),
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerErrorKind::InvalidUrl { .. } => "Invalid URL".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
@@ -263,11 +259,6 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::Http(http_error) => {
                 let message = http_error.message();
                 let message = error::add_carets(&message, self.source_info, content);
-                color_red_multiline_string(&message)
-            }
-            RunnerErrorKind::InvalidIpAddr { value } => {
-                let message = &format!("Invalid IP address <{value}>");
-                let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::InvalidJson { value } => {

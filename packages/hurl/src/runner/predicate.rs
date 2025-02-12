@@ -279,8 +279,8 @@ fn eval_predicate_func(
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
         PredicateFuncValue::IsNumber => eval_is_number(value),
-        PredicateFuncValue::IsIpv4 => eval_is_ipv4(predicate_func.source_info, value),
-        PredicateFuncValue::IsIpv6 => eval_is_ipv6(predicate_func.source_info, value),
+        PredicateFuncValue::IsIpv4 => eval_is_ipv4(value),
+        PredicateFuncValue::IsIpv6 => eval_is_ipv6(value),
     }
 }
 
@@ -609,16 +609,17 @@ fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is an IPv4 address.
-fn eval_is_ipv4(source_info: SourceInfo, actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_ipv4(actual: &Value) -> Result<AssertResult, RunnerError> {
     let ip = actual.to_string();
     let parsed = match IpAddr::from_str(&ip) {
         Ok(ip) => ip,
         Err(_) => {
-            return Err(RunnerError::new(
-                source_info,
-                RunnerErrorKind::InvalidIpAddr { value: ip },
-                false,
-            ))
+            return Ok(AssertResult {
+                success: false,
+                actual: actual.repr(),
+                expected: "ipv4".to_string(),
+                type_mismatch: true,
+            })
         }
     };
 
@@ -631,16 +632,17 @@ fn eval_is_ipv4(source_info: SourceInfo, actual: &Value) -> Result<AssertResult,
 }
 
 /// Evaluates if an `actual` value is an IPv6 address.
-fn eval_is_ipv6(source_info: SourceInfo, actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_ipv6(actual: &Value) -> Result<AssertResult, RunnerError> {
     let ip = actual.to_string();
     let parsed = match IpAddr::from_str(&ip) {
         Ok(ip) => ip,
         Err(_) => {
-            return Err(RunnerError::new(
-                source_info,
-                RunnerErrorKind::InvalidIpAddr { value: ip },
-                false,
-            ))
+            return Ok(AssertResult {
+                success: false,
+                actual: actual.repr(),
+                expected: "ipv6".to_string(),
+                type_mismatch: true,
+            })
         }
     };
 
