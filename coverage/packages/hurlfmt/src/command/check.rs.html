@@ -2,12 +2,12 @@
 <html lang="en-us">
     <head><meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Grcov report - mod.rs </title>
+        <title>Grcov report - check.rs </title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"></head>
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl_core&#x2F;src&#x2F;parser</a></li><li class="is-active"><a href="#">mod.rs</a></li>
+        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurlfmt&#x2F;src&#x2F;command</a></li><li class="is-active"><a href="#">check.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="3 / 3">100 %</abbr></p>
+                <abbr title="20 / 20">100 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="1 / 1">100 %</abbr></p>
+                <abbr title="4 / 4">100 %</abbr></p>
         </div>
     </div>
 
@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub type ParseResult&lt;T&gt; = Result&lt;T, ParseError&gt;;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::{</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -351,13 +351,13 @@
                 <a href="#20">20</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4020">
-                4020
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn parse_hurl_file(s: &amp;str) -&gt; ParseResult&lt;HurlFile&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">    input::Input,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -367,13 +367,13 @@
                 <a href="#21">21</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4020">
-                4020
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut reader = Reader::new(s);</pre>
+                <pre class="has-background-white py-0 px-2">    parser::{self, ParseError},</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -383,13 +383,13 @@
                 <a href="#22">22</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4020">
-                4020
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    parsers::hurl_file(&amp;mut reader)</pre>
+                <pre class="has-background-white py-0 px-2">};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use crate::{format, linter};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::error::{JsonErrorVariant, ParseError, ParseErrorKind};</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::json::{</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Represents a check error.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    boolean_value as parse_json_boolean, null_value as parse_json_null,</pre>
+                <pre class="has-background-white py-0 px-2">pub enum CheckError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -485,7 +485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    number_value as parse_json_number, parse as parse_json,</pre>
+                <pre class="has-background-white py-0 px-2">    IO(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">};</pre>
+                <pre class="has-background-white py-0 px-2">    Parse {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::template::templatize;</pre>
+                <pre class="has-background-white py-0 px-2">        content: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::ast::HurlFile;</pre>
+                <pre class="has-background-white py-0 px-2">        input_file: Input,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -549,7 +549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::reader::Reader;</pre>
+                <pre class="has-background-white py-0 px-2">        error: ParseError,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -565,7 +565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod base64;</pre>
+                <pre class="has-background-white py-0 px-2">    Unformatted(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod bytes;</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -613,7 +613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod cookiepath;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod duration;</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Run the check command for a list of input files</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -639,13 +639,13 @@
                 <a href="#38">38</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod error;</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn run(input_files: &amp;[Input]) -&gt; Vec&lt;CheckError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -655,13 +655,13 @@
                 <a href="#39">39</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod expr;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut errors = vec![];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -671,13 +671,13 @@
                 <a href="#40">40</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="21">
+                21
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod filename;</pre>
+                <pre class="has-background-success-light py-0 px-2">    for input_file in input_files {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -687,13 +687,13 @@
                 <a href="#41">41</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod filename_password;</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Err(e) = run_check(input_file) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -703,13 +703,13 @@
                 <a href="#42">42</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod filter;</pre>
+                <pre class="has-background-success-light py-0 px-2">            errors.push(e);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod function;</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod json;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -751,13 +751,13 @@
                 <a href="#45">45</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod key_string;</pre>
+                <pre class="has-background-success-light py-0 px-2">    errors</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod multiline;</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod number;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod option;</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Run the check command for one input file</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -815,13 +815,13 @@
                 <a href="#49">49</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod parsers;</pre>
+                <pre class="has-background-success-light py-0 px-2">fn run_check(input_file: &amp;Input) -&gt; Result&lt;(), CheckError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -831,13 +831,13 @@
                 <a href="#50">50</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod placeholder;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let content = input_file</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -847,13 +847,13 @@
                 <a href="#51">51</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod predicate;</pre>
+                <pre class="has-background-success-light py-0 px-2">        .read_to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -863,13 +863,13 @@
                 <a href="#52">52</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="16">
+                16
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod predicate_value;</pre>
+                <pre class="has-background-success-light py-0 px-2">        .map_err(|_| CheckError::IO(input_file.to_string()))?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -879,13 +879,13 @@
                 <a href="#53">53</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="13">
+                13
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod primitives;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let hurl_file = parser::parse_hurl_file(&amp;content).map_err(|error| CheckError::Parse {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -895,13 +895,13 @@
                 <a href="#54">54</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod query;</pre>
+                <pre class="has-background-success-light py-0 px-2">        content: content.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -911,13 +911,13 @@
                 <a href="#55">55</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod sections;</pre>
+                <pre class="has-background-success-light py-0 px-2">        input_file: input_file.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -927,13 +927,13 @@
                 <a href="#56">56</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod string;</pre>
+                <pre class="has-background-success-light py-0 px-2">        error,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -943,13 +943,13 @@
                 <a href="#57">57</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="13">
+                13
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod template;</pre>
+                <pre class="has-background-success-light py-0 px-2">    })?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -959,13 +959,125 @@
                 <a href="#58">58</a>
             </div>
             <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let hurl_file = linter::lint_hurl_file(&amp;hurl_file);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="59"
+                role="cell">
+                <a href="#59">59</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let formatted = format::format_text(&amp;hurl_file, false);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="60"
+                role="cell">
+                <a href="#60">60</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    if formatted == content {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="61"
+                role="cell">
+                <a href="#61">61</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        Ok(())</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="62"
+                role="cell">
+                <a href="#62">62</a>
+            </div>
+            <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
                 role="cell" aria-label="no coverage">
                 
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod xml;</pre>
+                <pre class="has-background-white py-0 px-2">    } else {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="63"
+                role="cell">
+                <a href="#63">63</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        Err(CheckError::Unformatted(input_file.to_string()))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="64"
+                role="cell">
+                <a href="#64">64</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="65"
+                role="cell">
+                <a href="#65">65</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
