@@ -7653,7 +7653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::{SourceString, ToSource};</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9109,7 +9109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;$.success&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;$.success&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9125,7 +9125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: SourceString::from(&quot;$.success&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;$.success&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9445,7 +9445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;$.errors&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;$.errors&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9461,7 +9461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: SourceString::from(&quot;$.errors&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;$.errors&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9781,7 +9781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;$.duration&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;$.duration&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9797,7 +9797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: SourceString::from(&quot;$.duration&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;$.duration&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18853,7 +18853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;xxx&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;xxx&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18869,7 +18869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: SourceString::from(&quot;xxx&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;xxx&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22299,7 +22299,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-02-12 16:19</p>
+                <p class="heading">Date: 2025-02-12 17:41</p>
             </div>
         </footer>
     </body>

@@ -3573,7 +3573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::typing::{SourceString, ToSource};</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4677,7 +4677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: String::from(&quot;http:&#x2F;&#x2F;google.fr&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: &quot;http:&#x2F;&#x2F;google.fr&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4693,7 +4693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: SourceString::from(&quot;http:&#x2F;&#x2F;google.fr&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;http:&#x2F;&#x2F;google.fr&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5301,7 +5301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: String::from(&quot;http:&#x2F;&#x2F;google.fr&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: &quot;http:&#x2F;&#x2F;google.fr&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5317,7 +5317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: SourceString::from(&quot;http:&#x2F;&#x2F;google.fr&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;http:&#x2F;&#x2F;google.fr&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6325,7 +6325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                value: String::from(&quot;Hello World!\n&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                                value: &quot;Hello World!\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6341,7 +6341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                source: SourceString::from(&quot;Hello World!\n&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                                source: &quot;Hello World!\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9643,7 +9643,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-02-12 16:19</p>
+                <p class="heading">Date: 2025-02-12 17:41</p>
             </div>
         </footer>
     </body>
