@@ -9,8 +9,8 @@ $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
 git -C $vcpkg_dir pull
 
 # install libxml and libcurl[openssl]
-vcpkg install --recurse --x-use-aria2 curl[core,non-http,schannel,ssl,sspi,http2]:x64-windows  || true
-vcpkg install --recurse --x-use-aria2 libxml2[core,iconv]:x64-windows || true
+vcpkg install --recurse curl[core,non-http,schannel,ssl,sspi,http2]:x64-windows
+vcpkg install --recurse libxml2[core,iconv]:x64-windows
 vcpkg update
 if ($LASTEXITCODE) { Throw }
 vcpkg upgrade --no-dry-run
