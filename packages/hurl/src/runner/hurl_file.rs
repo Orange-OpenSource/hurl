@@ -71,14 +71,15 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 /// variables.insert("name".to_string(), Value::String("toto".to_string())).unwrap();
 ///
 /// // Run the Hurl sample
-/// let result = runner::run(
+/// let results = runner::run(
 ///     content,
 ///     Some(filename).as_ref(),
 ///     &runner_opts,
 ///     &variables,
 ///     &logger_opts
 /// );
-/// assert!(result.unwrap().success);
+/// let result = results.unwrap().into_iter().last().unwrap();
+/// assert!(result.success);
 /// ```
 pub fn run(
     content: &str,
@@ -86,7 +87,7 @@ pub fn run(
     runner_options: &RunnerOptions,
     variables: &VariableSet,
     logger_options: &LoggerOptions,
-) -> Result<HurlResult, String> {
+) -> Result<Vec<HurlResult>, String> {
     // In this method, we run Hurl content sequentially. Standard output and standard error messages
     // are written immediately (in parallel mode, we'll use buffered standard output and error).
     let mut stdout = Stdout::new(WriteMode::Immediate);
@@ -108,23 +109,48 @@ pub fn run(
     };
 
     // Now, we have a syntactically correct HurlFile instance, we can run it.
-    let result = run_entries(
-        &hurl_file.entries,
-        content,
-        filename,
-        runner_options,
-        variables,
-        &mut stdout,
-        None,
-        &mut logger,
-    );
+    let mut results = Vec::new();
+    for retry in 0..=runner_options.test_retry {
+        let result = run_entries(
+            &hurl_file.entries,
+            content,
+            filename,
+            runner_options,
+            variables,
+            &mut stdout,
+            None,
+            &mut logger,
+        );
 
-    if result.success && result.entries.last().is_none() {
+        let success = result.success;
+        results.push(result);
+
+        if success || runner_options.test_retry == 0 {
+            break;
+        }
+
+        if retry == runner_options.test_retry {
+            logger.debug_important("Retry file max count reached, no more retry");
+            logger.debug("");
+        } else {
+            let filename = filename.map_or(String::new(), |f| f.to_string());
+            let retry_count = retry + 1;
+            let delay = runner_options.test_retry_interval.as_millis();
+            logger.debug("");
+            logger.debug_important(&format!(
+                "Retry file {filename} (x{retry_count} pause {delay} ms)"
+            ));
+            thread::sleep(runner_options.test_retry_interval);
+        }
+    }
+
+    let last_result = results.last().expect("at least one hurl result");
+    if last_result.success && last_result.entries.last().is_none() {
         let filename = filename.map_or(String::new(), |f| f.to_string());
         logger.warning(&format!("No entry have been executed for file {filename}"));
     }
 
-    Ok(result)
+    Ok(results)
 }
 
 #[allow(clippy::too_many_arguments)]

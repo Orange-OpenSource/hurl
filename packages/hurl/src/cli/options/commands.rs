@@ -520,7 +520,7 @@ pub fn retry() -> clap::Arg {
         .value_name("NUM")
         .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
-        .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
+        .help("Maximum number of request retries, 0 for no retries, -1 for unlimited retries")
         .help_heading("Run options")
         .num_args(1)
 }
@@ -530,7 +530,7 @@ pub fn retry_interval() -> clap::Arg {
         .long("retry-interval")
         .value_name("MILLISECONDS")
         .default_value("1000")
-        .help("Interval in milliseconds before a retry")
+        .help("Interval in milliseconds before a request retry")
         .help_heading("Run options")
         .num_args(1)
 }
@@ -559,6 +559,27 @@ pub fn test() -> clap::Arg {
         .help("Activate test mode (use parallel execution)")
         .help_heading("Run options")
         .action(clap::ArgAction::SetTrue)
+}
+
+pub fn test_retry() -> clap::Arg {
+    clap::Arg::new("test_retry")
+        .long("test-retry")
+        .value_name("NUM")
+        .value_parser(clap::value_parser!(u32).range(0..))
+        .allow_hyphen_values(true)
+        .help("Maximum number of test retries, 0 for no retries")
+        .help_heading("Run options")
+        .num_args(1)
+}
+
+pub fn test_retry_interval() -> clap::Arg {
+    clap::Arg::new("test_retry_interval")
+        .long("test-retry-interval")
+        .value_name("MILLISECONDS")
+        .default_value("0")
+        .help("Interval in milliseconds before a retrying a test")
+        .help_heading("Run options")
+        .num_args(1)
 }
 
 pub fn to_entry() -> clap::Arg {

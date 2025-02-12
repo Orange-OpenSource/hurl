@@ -302,7 +302,7 @@ impl ParallelRunner {
     ) -> Result<(), JobError> {
         let job = &result.job;
         let content = &result.content;
-        let hurl_result = &result.hurl_result;
+        let hurl_result = &result.last_hurl_result();
         let filename_in = &job.filename;
         let filename_out = job.runner_options.output.as_ref();
 

@@ -135,7 +135,7 @@ fn simple_sample() {
     let variables = VariableSet::new();
 
     // Run the hurl file and check data:
-    let result = runner::run(
+    let results = runner::run(
         content,
         filename.as_ref(),
         &runner_opts,
@@ -143,9 +143,10 @@ fn simple_sample() {
         &logger_opts,
     )
     .unwrap();
-    check_result(&result);
+    let last_result = results.last().unwrap();
+    check_result(&last_result);
 
-    let entry = result.entries.first().unwrap();
+    let entry = last_result.entries.first().unwrap();
     check_entry(entry);
 
     let call = entry.calls.first().unwrap();

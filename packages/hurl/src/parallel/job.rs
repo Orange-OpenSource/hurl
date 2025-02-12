@@ -62,17 +62,21 @@ pub struct JobResult {
     /// The source content of the job.
     pub content: String,
     /// The result of execution of the job.
-    pub hurl_result: HurlResult,
+    pub hurl_results: Vec<HurlResult>,
 }
 
 impl JobResult {
     /// Creates a new job result.
-    pub fn new(job: Job, content: String, hurl_result: HurlResult) -> Self {
+    pub fn new(job: Job, content: String, hurl_results: Vec<HurlResult>) -> Self {
         JobResult {
             job,
             content,
-            hurl_result,
+            hurl_results,
         }
+    }
+
+    pub fn last_hurl_result(&self) -> &HurlResult {
+        self.hurl_results.last().expect("at least one hurl result")
     }
 }
 

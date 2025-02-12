@@ -48,7 +48,13 @@ struct HurlRun {
     content: String,
     /// Content's source file
     filename: Input,
-    hurl_result: HurlResult,
+    hurl_results: Vec<HurlResult>,
+}
+
+impl HurlRun {
+    pub fn last_hurl_result(&self) -> &HurlResult {
+        self.hurl_results.last().expect("at least one hurl result")
+    }
 }
 
 /// Executes Hurl entry point.
@@ -158,7 +164,8 @@ fn export_results(
     // from the command line for instance)
     let secrets = runs
         .iter()
-        .flat_map(|r| r.hurl_result.variables.secrets())
+        .flat_map(|r| &r.hurl_results)
+        .flat_map(|r| r.variables.secrets())
         .collect::<HashSet<_>>();
     let secrets = secrets.iter().map(|s| s.as_ref()).collect::<Vec<_>>();
 
@@ -191,7 +198,10 @@ fn export_results(
 
 /// Creates an export of all curl commands for this run.
 fn create_curl_export(runs: &[HurlRun], filename: &Path, secrets: &[&str]) -> Result<(), CliError> {
-    let results = runs.iter().map(|r| &r.hurl_result).collect::<Vec<_>>();
+    let results = runs
+        .iter()
+        .map(|r| r.last_hurl_result())
+        .collect::<Vec<_>>();
     curl::write_curl(&results, filename, secrets)?;
     Ok(())
 }
@@ -203,8 +213,12 @@ fn create_junit_report(
     secrets: &[&str],
 ) -> Result<(), CliError> {
     let testcases = runs
-        .iter()
-        .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
+        .into_iter()
+        .flat_map(|tr| {
+            tr.hurl_results
+                .iter()
+                .map(|hr| junit::Testcase::from(&hr, &tr.content, &tr.filename))
+        })
         .collect::<Vec<_>>();
     junit::write_report(filename, &testcases, secrets)?;
     Ok(())
@@ -213,8 +227,12 @@ fn create_junit_report(
 /// Creates a TAP report for this run.
 fn create_tap_report(runs: &[HurlRun], filename: &Path) -> Result<(), CliError> {
     let testcases = runs
-        .iter()
-        .map(|r| tap::Testcase::from(&r.hurl_result, &r.filename))
+        .into_iter()
+        .flat_map(|tr| {
+            tr.hurl_results
+                .iter()
+                .map(|hr| tap::Testcase::from(&hr, &tr.filename))
+        })
         .collect::<Vec<_>>();
     tap::write_report(filename, &testcases)?;
     Ok(())
@@ -228,10 +246,11 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path, secrets: &[&str]) -> Re
 
     let mut testcases = vec![];
     for run in runs.iter() {
-        let result = &run.hurl_result;
-        let testcase = html::Testcase::from(result, &run.filename);
-        testcase.write_html(&run.content, &result.entries, &store_path, secrets)?;
-        testcases.push(testcase);
+        for result in &run.hurl_results {
+            let testcase = html::Testcase::from(result, &run.filename);
+            testcase.write_html(&run.content, &result.entries, &store_path, secrets)?;
+            testcases.push(testcase);
+        }
     }
     html::write_report(dir_path, &testcases)?;
     Ok(())
@@ -244,8 +263,12 @@ fn create_json_report(runs: &[HurlRun], dir_path: &Path, secrets: &[&str]) -> Re
     std::fs::create_dir_all(&store_path)?;
 
     let testcases = runs
-        .iter()
-        .map(|r| json::Testcase::new(&r.hurl_result, &r.content, &r.filename))
+        .into_iter()
+        .flat_map(|tr| {
+            tr.hurl_results
+                .iter()
+                .map(|hr| json::Testcase::new(&hr, &tr.content, &tr.filename))
+        })
         .collect::<Vec<_>>();
 
     let index_path = dir_path.join("report.json");
@@ -258,7 +281,7 @@ fn exit_code(runs: &[HurlRun]) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for run in runs.iter() {
-        let errors = run.hurl_result.errors();
+        let errors = run.last_hurl_result().errors();
         if errors.is_empty() {
         } else if errors.iter().filter(|(error, _)| !error.assert).count() == 0 {
             count_errors_assert += 1;
@@ -312,7 +335,7 @@ fn create_cookies_file(
             return Err(CliError::IO("Issue fetching results".to_string()));
         }
         Some(run) => {
-            for cookie in run.hurl_result.cookies.iter() {
+            for cookie in run.last_hurl_result().cookies.iter() {
                 s.push_str(&cookie.redact(secrets));
                 s.push('\n');
             }

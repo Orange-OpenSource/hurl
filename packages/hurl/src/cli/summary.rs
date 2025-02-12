@@ -28,7 +28,7 @@ pub fn summary(runs: &[HurlRun], duration: Duration) -> String {
     let duration_in_ms = duration.as_millis() as f64;
     let requests_rate = 1000.0 * (total_requests as f64) / duration_in_ms;
 
-    let success_files = runs.iter().filter(|r| r.hurl_result.success).count();
+    let success_files = runs.iter().filter(|r| r.last_hurl_result().success).count();
     let success_percent = 100.0 * success_files as f32 / total_files as f32;
     let failed = total_files - success_files;
     let failed_percent = 100.0 * failed as f32 / total_files as f32;
@@ -48,13 +48,8 @@ fn requests_count(runs: &[HurlRun]) -> usize {
     // so, for a given entry, the number of executed requests is the number of calls. This count
     // also the retries.
     runs.iter()
-        .map(|r| {
-            r.hurl_result
-                .entries
-                .iter()
-                .map(|e| e.calls.len())
-                .sum::<usize>()
-        })
+        .flat_map(|r| &r.hurl_results)
+        .map(|r| r.entries.iter().map(|e| e.calls.len()).sum::<usize>())
         .sum()
 }
 
@@ -85,11 +80,11 @@ pub mod tests {
             HurlRun {
                 content: String::new(),
                 filename: Input::new(""),
-                hurl_result: HurlResult {
+                hurl_results: vec![HurlResult {
                     entries: vec![dummy_entry; entries_count],
                     success,
                     ..Default::default()
-                },
+                }],
             }
         }
 
