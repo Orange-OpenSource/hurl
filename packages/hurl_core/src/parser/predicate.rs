@@ -309,12 +309,12 @@ fn is_number_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 }
 
 fn is_ipv4_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    try_literal("isIPv4", reader)?;
+    try_literal("isIpv4", reader)?;
     Ok(PredicateFuncValue::IsIpv4)
 }
 
 fn is_ipv6_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
-    try_literal("isIPv6", reader)?;
+    try_literal("isIpv6", reader)?;
     Ok(PredicateFuncValue::IsIpv6)
 }
 
