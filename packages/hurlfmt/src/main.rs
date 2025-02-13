@@ -24,6 +24,7 @@ use hurl_core::{parser, text};
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
 use hurlfmt::command::check::CheckError;
+use hurlfmt::command::format::FormatError;
 use hurlfmt::{cli, command, curl, format, linter};
 
 const EXIT_OK: i32 = 0;
@@ -55,8 +56,10 @@ fn main() {
     // Check command
     if opts.check {
         process_check_command(&opts.input_files, opts.output_file, &logger);
+    } else if opts.in_place {
+        process_format_command(&opts.input_files, &logger);
     } else {
-        // TODO: Move code within command module like the check command above
+        // TODO: Move code within command module like the check/format command above
         for input_file in &opts.input_files {
             // Get content of the input
             let content = match input_file.read_to_string() {
@@ -90,18 +93,6 @@ fn main() {
                     process::exit(EXIT_INVALID_INPUT);
                 }
             };
-
-            // Only checks
-            if opts.check {
-                let hurl_file = linter::lint_hurl_file(&hurl_file);
-                let formatted = format::format_text(&hurl_file, false);
-                if formatted == content {
-                    process::exit(EXIT_OK);
-                } else {
-                    logger.error(&format!("Would reformat: {}", input_file));
-                    process::exit(EXIT_LINT_ISSUE);
-                }
-            }
 
             // Output files
             let output = match opts.output_format {
@@ -168,6 +159,39 @@ fn process_check_command(input_files: &[Input], output_file: Option<PathBuf>, lo
         } else {
             process::exit(EXIT_LINT_ISSUE);
         }
+    }
+}
+
+fn process_format_command(input_files: &[Input], logger: &Logger) {
+    let mut input_files2 = vec![];
+    for input_file in input_files {
+        if let InputKind::File(path) = input_file.kind() {
+            input_files2.push(path.clone());
+        } else {
+            logger.error("Standard input can be formatted in place!");
+            process::exit(EXIT_INVALID_INPUT);
+        }
+    }
+
+    let errors = command::format::run(&input_files2);
+    if errors.is_empty() {
+        process::exit(EXIT_OK);
+    } else {
+        for e in &errors {
+            match e {
+                FormatError::IO(filename) => {
+                    logger.error(&format!("Input file {filename} can not be read"));
+                }
+                FormatError::Parse {
+                    content,
+                    input_file,
+                    error,
+                } => {
+                    logger.error_parsing(content, input_file, error);
+                }
+            }
+        }
+        process::exit(EXIT_INVALID_INPUT);
     }
 }
 

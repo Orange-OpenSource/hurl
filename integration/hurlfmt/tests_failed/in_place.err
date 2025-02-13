@@ -1,0 +1,7 @@
+error: Parsing space
+  --> tests_failed/in_place.hurl:1:4
+   |
+ 1 | GET
+   |    ^ expecting a space
+   |
+
