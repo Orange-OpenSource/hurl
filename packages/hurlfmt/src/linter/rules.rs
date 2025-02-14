@@ -365,6 +365,8 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
         PredicateFuncValue::Exist => PredicateFuncValue::Exist,
         PredicateFuncValue::IsEmpty => PredicateFuncValue::IsEmpty,
         PredicateFuncValue::IsNumber => PredicateFuncValue::IsNumber,
+        PredicateFuncValue::IsIpv4 => PredicateFuncValue::IsIpv4,
+        PredicateFuncValue::IsIpv6 => PredicateFuncValue::IsIpv6,
     }
 }
 

@@ -15,16 +15,17 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo};
-use hurl_core::reader::Pos;
-use std::cmp::Ordering;
-
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
 use crate::runner::result::PredicateResult;
 use crate::runner::value::{EvalError, Value};
 use crate::runner::{Number, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
+use hurl_core::ast::{Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo};
+use hurl_core::reader::Pos;
+use std::cmp::Ordering;
+use std::net::IpAddr;
+use std::str::FromStr;
 
 /// Evaluates a `predicate` against an actual `value`.
 ///
@@ -201,6 +202,8 @@ fn expected_no_value(
         PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
         PredicateFuncValue::IsNumber => Ok("number".to_string()),
+        PredicateFuncValue::IsIpv4 => Ok("ipv4".to_string()),
+        PredicateFuncValue::IsIpv6 => Ok("ipv6".to_string()),
     }
 }
 
@@ -276,6 +279,8 @@ fn eval_predicate_func(
         PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
         PredicateFuncValue::IsNumber => eval_is_number(value),
+        PredicateFuncValue::IsIpv4 => eval_is_ipv4(value),
+        PredicateFuncValue::IsIpv6 => eval_is_ipv6(value),
     }
 }
 
@@ -599,6 +604,52 @@ fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
         success: actual.is_number(),
         actual: actual.repr(),
         expected: "number".to_string(),
+        type_mismatch: false,
+    })
+}
+
+/// Evaluates if an `actual` value is an IPv4 address.
+fn eval_is_ipv4(actual: &Value) -> Result<AssertResult, RunnerError> {
+    let ip = actual.to_string();
+    let parsed = match IpAddr::from_str(&ip) {
+        Ok(ip) => ip,
+        Err(_) => {
+            return Ok(AssertResult {
+                success: false,
+                actual: actual.repr(),
+                expected: "ipv4".to_string(),
+                type_mismatch: true,
+            })
+        }
+    };
+
+    Ok(AssertResult {
+        success: parsed.is_ipv4(),
+        actual: actual.repr(),
+        expected: "ipv4".to_string(),
+        type_mismatch: false,
+    })
+}
+
+/// Evaluates if an `actual` value is an IPv6 address.
+fn eval_is_ipv6(actual: &Value) -> Result<AssertResult, RunnerError> {
+    let ip = actual.to_string();
+    let parsed = match IpAddr::from_str(&ip) {
+        Ok(ip) => ip,
+        Err(_) => {
+            return Ok(AssertResult {
+                success: false,
+                actual: actual.repr(),
+                expected: "ipv6".to_string(),
+                type_mismatch: true,
+            })
+        }
+    };
+
+    Ok(AssertResult {
+        success: parsed.is_ipv6(),
+        actual: actual.repr(),
+        expected: "ipv6".to_string(),
         type_mismatch: false,
     })
 }
