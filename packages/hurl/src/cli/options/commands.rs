@@ -123,7 +123,7 @@ pub fn cookies_output_file() -> clap::Arg {
         .long("cookie-jar")
         .short('c')
         .value_name("FILE")
-        .help("Write cookies to FILE after running the session (only for one session)")
+        .help("Write cookies to FILE after running the session")
         .help_heading("Other options")
         .num_args(1)
 }
