@@ -52,7 +52,7 @@ termion = "4.0.3"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.13"
+cc = "1.2.14"
 
 [lints]
 workspace = true
