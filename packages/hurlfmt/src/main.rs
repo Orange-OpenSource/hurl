@@ -20,12 +20,13 @@ use std::path::PathBuf;
 use std::process;
 
 use hurl_core::input::{Input, InputKind};
-use hurl_core::{parser, text};
+use hurl_core::text;
 use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
 use hurlfmt::command::check::CheckError;
+use hurlfmt::command::export::ExportError;
 use hurlfmt::command::format::FormatError;
-use hurlfmt::{cli, command, curl, format, linter};
+use hurlfmt::{cli, command};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR: i32 = 1;
@@ -51,70 +52,21 @@ fn main() {
     };
 
     let logger = Logger::new(opts.color);
-    let mut output_all = String::new();
 
-    // Check command
     if opts.check {
         process_check_command(&opts.input_files, opts.output_file, &logger);
     } else if opts.in_place {
         process_format_command(&opts.input_files, &logger);
     } else {
-        // TODO: Move code within command module like the check/format command above
-        for input_file in &opts.input_files {
-            // Get content of the input
-            let content = match input_file.read_to_string() {
-                Ok(c) => c,
-                Err(e) => {
-                    logger.error(&format!(
-                        "Input file {} can not be read - {e}",
-                        &input_file.to_string()
-                    ));
-                    process::exit(EXIT_INVALID_INPUT);
-                }
-            };
-
-            // Parse input curl or Hurl file
-            let input = match opts.input_format {
-                InputFormat::Hurl => content.to_string(),
-                InputFormat::Curl => match curl::parse(&content) {
-                    Ok(s) => s,
-                    Err(e) => {
-                        logger.error(&e.to_string());
-                        process::exit(EXIT_INVALID_INPUT);
-                    }
-                },
-            };
-
-            // Parse Hurl content
-            let hurl_file = match parser::parse_hurl_file(&input) {
-                Ok(h) => h,
-                Err(e) => {
-                    logger.error_parsing(&content, input_file, &e);
-                    process::exit(EXIT_INVALID_INPUT);
-                }
-            };
-
-            // Output files
-            let output = match opts.output_format {
-                OutputFormat::Hurl => {
-                    let hurl_file = linter::lint_hurl_file(&hurl_file);
-                    format::format_text(&hurl_file, opts.color)
-                }
-                OutputFormat::Json => format::format_json(&hurl_file),
-                OutputFormat::Html => hurl_core::format::format_html(&hurl_file, opts.standalone),
-            };
-            if opts.in_place {
-                let InputKind::File(path) = input_file.kind() else {
-                    unreachable!("--in-place and standard input have been filtered in args parsing")
-                };
-                write_output(&output, Some(path.clone()), &logger);
-            } else {
-                output_all.push_str(&output);
-            }
-        }
-        if !opts.in_place {
-            write_output(&output_all, opts.output_file, &logger);
-        }
+        process_export_command(
+            &opts.input_files,
+            opts.output_file,
+            &logger,
+            &opts.input_format,
+            &opts.output_format,
+            opts.standalone,
+            opts.color,
+        );
     }
 }
 
@@ -192,6 +144,51 @@ fn process_format_command(input_files: &[Input], logger: &Logger) {
             }
         }
         process::exit(EXIT_INVALID_INPUT);
+    }
+}
+
+fn process_export_command(
+    input_files: &[Input],
+    output_file: Option<PathBuf>,
+    logger: &Logger,
+    input_format: &InputFormat,
+    output_format: &OutputFormat,
+    standalone: bool,
+    color: bool,
+) {
+    let mut error = false;
+    let mut output_all = String::new();
+    let results = command::export::run(input_files, input_format, output_format, standalone, color);
+    for result in &results {
+        match result {
+            Ok(output) => output_all.push_str(output),
+            Err(e) => {
+                error = true;
+                match e {
+                    ExportError::IO { filename, message } => {
+                        logger.error(&format!(
+                            "Input file {filename} can not be read - {message}"
+                        ));
+                        error = true;
+                    }
+                    ExportError::Parse {
+                        content,
+                        input_file,
+                        error,
+                    } => {
+                        logger.error_parsing(content, input_file, error);
+                    }
+                    ExportError::Curl(s) => logger.error(&format!("error curl {s} d")),
+                }
+            }
+        }
+    }
+    write_output(&output_all, output_file, logger);
+
+    if error {
+        process::exit(EXIT_INVALID_INPUT);
+    } else {
+        process::exit(EXIT_OK);
     }
 }
 

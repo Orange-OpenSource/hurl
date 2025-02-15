@@ -25,7 +25,7 @@ use crate::{format, linter};
 
 /// Represents a check error.
 pub enum CheckError {
-    IO(String),
+    IO(String), // TODO: Rajouter message / consistent with FormatError
     Parse {
         content: String,
         input_file: Input,
