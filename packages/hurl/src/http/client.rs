@@ -56,38 +56,11 @@ use crate::util::path::ContextDir;
 pub struct Client {
     /// The handle to libcurl binding
     handle: easy::Easy,
-    /// Current State
-    state: ClientState,
     /// HTTP version support
     http2: bool,
     http3: bool,
     /// Certificates cache to get SSL certificates on reused libcurl connections.
     certificates: HashMap<i64, Certificate>,
-}
-
-/// Represents the state of the HTTP client.
-/// We only keep the last requested HTTP version because it's the only property which change
-/// must trigger a connection reset on the libcurl handle. The state can be queried to check
-/// if there has been change from the previous HTTP request.
-#[derive(Copy, Clone, Eq, PartialEq, Default, Debug)]
-struct ClientState {
-    changed: bool,
-    requested_http_version: Option<RequestedHttpVersion>,
-}
-
-impl ClientState {
-    /// Set a new requested HTTP version.
-    pub fn set_requested_http_version(&mut self, version: RequestedHttpVersion) {
-        if let Some(prev_version) = self.requested_http_version {
-            self.changed = prev_version != version;
-        }
-        self.requested_http_version = Some(version);
-    }
-
-    /// Returns true if state has changed from the previous request.
-    pub fn has_changed(&self) -> bool {
-        self.changed
-    }
 }
 
 impl Client {
@@ -97,7 +70,6 @@ impl Client {
         let version = Version::get();
         Client {
             handle,
-            state: ClientState::default(),
             http2: version.feature_http2(),
             http3: version.feature_http3(),
             certificates: HashMap::new(),
@@ -404,11 +376,11 @@ impl Client {
         //
         // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
         // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
-        self.state.set_requested_http_version(http_version);
-        if self.state.has_changed() {
+        if !options.allow_reuse {
             logger.debug("Force refreshing connections because requested HTTP version change");
-            self.handle.fresh_connect(true)?;
         }
+        self.handle.fresh_connect(!options.allow_reuse)?;
+        self.handle.forbid_reuse(!options.allow_reuse)?;
         self.handle.http_version(options.http_version.into())?;
 
         self.handle.ip_resolve(options.ip_resolve.into())?;
@@ -1115,66 +1087,6 @@ mod tests {
                 Method(redirected.to_string())
             );
         }
-    }
-
-    #[test]
-    fn http_client_state_always_http2() {
-        let mut state = ClientState::default();
-        assert!(!state.has_changed());
-
-        // Client set HTTP 2 on all request, client state never changed
-
-        // - => HTTP/2: no change
-        state.set_requested_http_version(RequestedHttpVersion::Http2);
-        assert!(!state.has_changed());
-
-        // HTTP/2 => HTTP/2: no change
-        state.set_requested_http_version(RequestedHttpVersion::Http2);
-        assert!(!state.has_changed());
-    }
-
-    #[test]
-    fn http_client_state_always_default() {
-        let mut state = ClientState::default();
-        assert!(!state.has_changed());
-
-        // Client doesn't set HTTP version, client state never changed
-
-        // - => Default: no change
-        state.set_requested_http_version(RequestedHttpVersion::Default);
-        assert!(!state.has_changed());
-
-        // Default => Default: no change
-        state.set_requested_http_version(RequestedHttpVersion::Default);
-        assert!(!state.has_changed());
-    }
-
-    #[test]
-    fn http_client_state_changes() {
-        let mut state = ClientState::default();
-        assert!(!state.has_changed());
-
-        // Client set HTTP 2 on all request, client state never changed
-
-        // - => HTTP/2: no change
-        state.set_requested_http_version(RequestedHttpVersion::Http2);
-        assert!(!state.has_changed());
-
-        // HTTP/2 => HTTP/1.1: change
-        state.set_requested_http_version(RequestedHttpVersion::Http11);
-        assert!(state.has_changed());
-
-        // HTTP/1.1 => HTTP/1.1: no change
-        state.set_requested_http_version(RequestedHttpVersion::Http11);
-        assert!(!state.has_changed());
-
-        // HTTP/1.1 => Default: change
-        state.set_requested_http_version(RequestedHttpVersion::Default);
-        assert!(state.has_changed());
-
-        // Default => Default: no change
-        state.set_requested_http_version(RequestedHttpVersion::Default);
-        assert!(!state.has_changed());
     }
 
     #[test]

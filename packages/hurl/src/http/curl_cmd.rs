@@ -617,6 +617,7 @@ mod tests {
         let context_dir = &ContextDir::default();
         let cookies = vec![];
         let options = ClientOptions {
+            allow_reuse: true,
             aws_sigv4: None,
             cacert_file: None,
             client_cert_file: None,

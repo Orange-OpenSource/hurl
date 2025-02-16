@@ -241,6 +241,7 @@ fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<RunnerError> {
 impl ClientOptions {
     fn from(runner_options: &RunnerOptions, verbosity: Option<Verbosity>) -> Self {
         ClientOptions {
+            allow_reuse: true,
             aws_sigv4: runner_options.aws_sigv4.clone(),
             cacert_file: runner_options.cacert_file.clone(),
             client_cert_file: runner_options.client_cert_file.clone(),

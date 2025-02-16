@@ -23,6 +23,15 @@ use crate::http::IpResolve;
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
+    /// Allow reusing internal connections, `true` by default. Setting this to `false` forces the
+    /// HTTP client to use a new HTTP connection, and also marks this new connection as not reusable.
+    /// Under the hood, this activates libcurl [`CURLOPT_FRESH_CONNECT`](https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html)
+    /// and [`CURLOPT_FORBID_REUSE`](https://curl.se/libcurl/c/CURLOPT_FORBID_REUSE.html).
+    /// The main use-case for not allowing connection reuse is when we want to switch HTTP version
+    /// mid-file with an `[Options]` section. As the HTTP version setter is just a query, and is not
+    /// always honored by libcurl when reusing connection, this allows to be sure that the client
+    /// will set the queried HTTP version.
+    pub allow_reuse: bool,
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
@@ -66,6 +75,7 @@ pub enum Verbosity {
 impl Default for ClientOptions {
     fn default() -> Self {
         ClientOptions {
+            allow_reuse: true,
             aws_sigv4: None,
             cacert_file: None,
             client_cert_file: None,
