@@ -3,6 +3,7 @@
 
 Thanks to
 [@ashishajr](https://github.com/ashishajr),
+[@kidbrax](https://github.com/kidbrax),
 [@theoforger](https://github.com/theoforger),
 [@docwhat](https://github.com/docwhat),
 [@glb-cblin](https://github.com/glb-cblin),
@@ -22,7 +23,9 @@ Enhancements:
 
 * Add version query and integration tests [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
 * Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
-* Add curl -H/--header option to globally add headers to all requests [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
+* Add curl -H/--header option to globally add headers to all requests [#1905](https://github.com/Orange-OpenSource/hurl/issues/1905) [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
+* Add base64 decode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
+* Add base64 encode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
 * Redacts secrets from JUnit reports [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Redacts secrets from JSON report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Redact secret in HTML report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
@@ -43,6 +46,7 @@ Bugs Fixed:
 * Create parent folders if missing when using --cookie-jar FILE [#3637](https://github.com/Orange-OpenSource/hurl/issues/3637)
 * Remove lint errors [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
 * Support BigInteger in variable [#3656](https://github.com/Orange-OpenSource/hurl/issues/3656)
+* Fix changing HTTP version per request sometimes not effective [#3719](https://github.com/Orange-OpenSource/hurl/issues/3719)
 
 
 [6.0.0 (2024-12-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
