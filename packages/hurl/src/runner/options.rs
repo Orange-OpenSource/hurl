@@ -118,11 +118,20 @@ pub fn get_entry_options(
                     // [Options]
                     // http2: false
                     // ```
+                    //
+                    // As libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
+                    // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
+                    // > existing connections so it might then reuse a connection using a HTTP version you
+                    // > have not asked for.
+                    // we don't allow our HTTP client to reuse connection if the user asks for a specific
+                    // HTTP version per request.
+                    //
                     OptionKind::Http10(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         if value {
                             entry_options.http_version = RequestedHttpVersion::Http10;
                         }
+                        entry_options.allow_reuse = false;
                     }
                     OptionKind::Http11(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -131,6 +140,7 @@ pub fn get_entry_options(
                         } else {
                             entry_options.http_version = RequestedHttpVersion::Http10;
                         }
+                        entry_options.allow_reuse = false;
                     }
                     OptionKind::Http2(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -139,6 +149,7 @@ pub fn get_entry_options(
                         } else {
                             entry_options.http_version = RequestedHttpVersion::Http11;
                         }
+                        entry_options.allow_reuse = false;
                     }
                     OptionKind::Http3(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -147,6 +158,7 @@ pub fn get_entry_options(
                         } else {
                             entry_options.http_version = RequestedHttpVersion::Http2;
                         }
+                        entry_options.allow_reuse = false;
                     }
                     OptionKind::FollowLocation(value) => {
                         let value = eval_boolean_option(value, variables)?;

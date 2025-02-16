@@ -26,6 +26,7 @@ use crate::util::path::ContextDir;
 
 /// Build a [`RunnerOptions`] instance.
 pub struct RunnerOptionsBuilder {
+    allow_reuse: bool,
     aws_sigv4: Option<String>,
     cacert_file: Option<String>,
     client_cert_file: Option<String>,
@@ -74,6 +75,7 @@ pub struct RunnerOptionsBuilder {
 impl Default for RunnerOptionsBuilder {
     fn default() -> Self {
         RunnerOptionsBuilder {
+            allow_reuse: true,
             aws_sigv4: None,
             cacert_file: None,
             client_cert_file: None,
@@ -125,6 +127,17 @@ impl RunnerOptionsBuilder {
     /// Returns a new Hurl runner options builder with a default values.
     pub fn new() -> Self {
         RunnerOptionsBuilder::default()
+    }
+
+    /// Allow reusing internal connections, `true` by default. Setting this to `false` forces the
+    /// HTTP client to use a new HTTP connection, and also marks this new connection as not reusable.
+    /// The main use-case for not allowing connection reuse is when we want to switch HTTP version
+    /// mid-file with an `[Options]` section. As the HTTP version setter is just a query, and is not
+    /// always honored by libcurl when reusing connection, this allows to be sure that the client
+    /// will set the queried HTTP version.
+    pub fn allow_reuse(&mut self, allow_reuse: bool) -> &mut Self {
+        self.allow_reuse = allow_reuse;
+        self
     }
 
     /// Specifies the AWS SigV4 option
@@ -427,6 +440,7 @@ impl RunnerOptionsBuilder {
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
+            allow_reuse: self.allow_reuse,
             aws_sigv4: self.aws_sigv4.clone(),
             cacert_file: self.cacert_file.clone(),
             client_cert_file: self.client_cert_file.clone(),
@@ -480,6 +494,8 @@ impl RunnerOptionsBuilder {
 /// are used to configure asserts settings, output etc....
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
+    /// Allow reusing internal connections.
+    pub(crate) allow_reuse: bool,
     /// Specifies the AWS SigV4 option.
     pub(crate) aws_sigv4: Option<String>,
     /// Specifies the certificate file for peer verification.

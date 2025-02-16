@@ -366,16 +366,6 @@ impl Client {
             return Err(HttpError::UnsupportedHttpVersion(http_version));
         }
 
-        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
-        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
-        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
-        // instance).
-        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
-        // > existing connections so it might then reuse a connection using a HTTP version you
-        // > have not asked for.
-        //
-        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
-        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
         if !options.allow_reuse {
             logger.debug("Force refreshing connections because requested HTTP version change");
         }
