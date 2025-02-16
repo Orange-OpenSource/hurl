@@ -24,6 +24,7 @@ use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;
 use crate::util::path::ContextDir;
 
+/// Build a [`RunnerOptions`] instance.
 pub struct RunnerOptionsBuilder {
     aws_sigv4: Option<String>,
     cacert_file: Option<String>,
@@ -379,6 +380,13 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Skip the run without executing any request.
+    pub fn skip(&mut self, skip: bool) -> &mut Self {
+        self.skip = skip;
+        self
+    }
+
+    /// Disables certificate revocation checks for SSL backends where such behavior is present.
     pub fn ssl_no_revoke(&mut self, ssl_no_revoke: bool) -> &mut Self {
         self.ssl_no_revoke = ssl_no_revoke;
         self
@@ -466,50 +474,97 @@ impl RunnerOptionsBuilder {
     }
 }
 
+/// Represents the configuration options to run an Hurl file.
+///
+/// Most options are used to configure the HTTP client used for running requests, while other
+/// are used to configure asserts settings, output etc....
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
+    /// Specifies the AWS SigV4 option.
     pub(crate) aws_sigv4: Option<String>,
+    /// Specifies the certificate file for peer verification.
     pub(crate) cacert_file: Option<String>,
+    /// Sets Client certificate file and password.
     pub(crate) client_cert_file: Option<String>,
+    /// Sets private key file name.
     pub(crate) client_key_file: Option<String>,
+    /// Requests a compressed response using one of the algorithms br, gzip, deflate and
+    /// automatically decompress the content.
     pub(crate) compressed: bool,
+    /// Sets maximum time that you allow Hurl’s connection to take.
     pub(crate) connect_timeout: Duration,
+    /// Sets hosts mappings.
     pub(crate) connects_to: Vec<String>,
+    /// Sets delay (timeout) before the request.
     pub(crate) delay: Duration,
+    /// Sets root file system to import files in Hurl.
     pub(crate) context_dir: ContextDir,
+    /// Sets stopping or continuing executing requests to the end of the Hurl file even when an error occurs.
     pub(crate) continue_on_error: bool,
+    /// Reads cookies from this file (using the Netscape cookie file format).
     pub(crate) cookie_input_file: Option<String>,
+    /// Sets follow redirect.
     pub(crate) follow_location: bool,
+    /// Sets follow redirect with trust.
     pub(crate) follow_location_trusted: bool,
+    /// Executes Hurl file from from_entry (starting at 1), ignores the beginning of the file.
     pub(crate) from_entry: Option<usize>,
+    /// Sets additional headers (overrides if a header already exists).
     pub(crate) headers: Vec<String>,
+    /// Set requested HTTP version (can be different of the effective HTTP version).
     pub(crate) http_version: RequestedHttpVersion,
+    /// Ignores all asserts defined in the Hurl file.
     pub(crate) ignore_asserts: bool,
+    /// Set IP version.
     pub(crate) ip_resolve: IpResolve,
+    /// Allows Hurl to perform “insecure” SSL connections and transfers.
     pub(crate) insecure: bool,
+    /// Set the file size limit.
     pub(crate) max_filesize: Option<u64>,
+    /// Set the maximum download speed.
     pub(crate) max_recv_speed: Option<BytesPerSec>,
+    /// Set maximum number of redirection-followings allowed.
     pub(crate) max_redirect: Count,
+    /// Set the maximum upload speed.
     pub(crate) max_send_speed: Option<BytesPerSec>,
+    /// Sets the netrc flag.
     pub(crate) netrc: bool,
+    /// Sets the netrc file.
     pub(crate) netrc_file: Option<String>,
+    /// Sets the optional netrc flag.
     pub(crate) netrc_optional: bool,
+    /// Sets list of hosts which do not use a proxy.
     pub(crate) no_proxy: Option<String>,
+    /// Specifies the file to output the HTTP response.
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
+    /// Sets function to be executed before each entry execution.
     pub(crate) post_entry: Option<fn() -> bool>,
+    /// Sets function to be executed after each entry execution.
     pub(crate) pre_entry: Option<fn(&Entry) -> bool>,
+    /// Sets the specified proxy to be used.
     pub(crate) proxy: Option<String>,
+    /// Set the number of repetition for a given entry.
     pub(crate) repeat: Option<Count>,
+    /// Provides a custom address for a specific host and port pair.
     pub(crate) resolves: Vec<String>,
+    /// Sets maximum number of retries.
     pub(crate) retry: Option<Count>,
+    /// Sets duration between each retry.
     pub(crate) retry_interval: Duration,
+    /// Skip the run without executing any request.
     pub(crate) skip: bool,
+    /// Disables certificate revocation checks for SSL backends where such behavior is present.
     pub(crate) ssl_no_revoke: bool,
+    /// Sets maximum time allowed for the transfer.
     pub(crate) timeout: Duration,
+    /// Executes Hurl file to to_entry (starting at 1), ignores the remaining of the file.
     pub(crate) to_entry: Option<usize>,
+    /// Sets the specified unix domain socket to connect through, instead of using the network.
     pub(crate) unix_socket: Option<String>,
+    /// Adds basic Authentication header to each request.
     pub(crate) user: Option<String>,
+    /// Specifies the User-Agent string to send to the HTTP server.
     pub(crate) user_agent: Option<String>,
 }
 
