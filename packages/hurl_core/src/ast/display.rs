@@ -18,6 +18,8 @@
 //! This module regroups methods on AST nodes to be serialized as Hurl strings and expose
 //! Hurl file format identifier that can be used, for instance, as identifier when exporting
 //! an Hurl AST to a JSON representation.
+use core::fmt;
+
 use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
     CountOption, DurationOption, Expr, ExprKind, FilterValue, Function, Hex, Method,
@@ -26,7 +28,6 @@ use crate::ast::{
     StatusValue, Template, TemplateElement, Variable, VariableDefinition, VariableValue, Version,
     VersionValue,
 };
-use core::fmt;
 
 impl fmt::Display for BooleanOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -18,11 +18,12 @@
 use std::fs;
 use std::path::Path;
 
-use crate::runner::{EntryResult, HurlResult, RunnerError};
 use hurl_core::ast::SourceInfo;
 use hurl_core::input::Input;
 use hurl_core::parser;
 use uuid::Uuid;
+
+use crate::runner::{EntryResult, HurlResult, RunnerError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {

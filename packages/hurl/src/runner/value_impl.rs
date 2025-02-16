@@ -17,7 +17,8 @@
  */
 use std::cmp::Ordering;
 
-use super::{value::ValueKind, EvalError, Value};
+use super::value::ValueKind;
+use super::{EvalError, Value};
 
 impl Value {
     /// Compare with another value.
@@ -217,9 +218,8 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::runner::Number;
-
     use super::*;
+    use crate::runner::Number;
 
     #[test]
     fn test_compare() {

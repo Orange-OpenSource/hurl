@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
+use chrono::Utc;
 use hurl_core::ast::Function;
 use uuid::Uuid;
 
 use crate::runner::error::RunnerError;
 use crate::runner::value::Value;
-use chrono::Utc;
 
 /// Evaluates the function `function`, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(function: &Function) -> Result<Value, RunnerError> {

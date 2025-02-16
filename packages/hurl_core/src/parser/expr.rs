@@ -16,8 +16,7 @@
  *
  */
 use crate::ast::{Expr, ExprKind, SourceInfo, Variable};
-use crate::parser::ParseResult;
-use crate::parser::{function, ParseError, ParseErrorKind};
+use crate::parser::{function, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 
 /// Parse an expression

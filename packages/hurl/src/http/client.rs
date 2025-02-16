@@ -973,11 +973,12 @@ impl From<IpResolve> for easy::IpResolve {
 
 #[cfg(test)]
 mod tests {
+    use std::default::Default;
+    use std::path::PathBuf;
+
     use super::*;
     use crate::util::logger::LoggerOptionsBuilder;
     use crate::util::term::{Stderr, WriteMode};
-    use std::default::Default;
-    use std::path::PathBuf;
 
     #[test]
     fn test_parse_header() {

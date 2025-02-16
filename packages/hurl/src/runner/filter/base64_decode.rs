@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use base64::{prelude::BASE64_STANDARD, Engine};
+use base64::prelude::BASE64_STANDARD;
+use base64::Engine;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};

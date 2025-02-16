@@ -39,9 +39,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Function> {
 
 #[cfg(test)]
 mod tests {
-    use crate::reader::Pos;
-
     use super::*;
+    use crate::reader::Pos;
 
     #[test]
     fn test_exist() {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use crate::format::serialize_json::JValue;
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::{
@@ -27,6 +26,8 @@ use hurl_core::ast::{
     VersionValue,
 };
 use hurl_core::typing::{Count, Duration};
+
+use crate::format::serialize_json::JValue;
 
 pub fn format(hurl_file: &HurlFile) -> String {
     hurl_file.to_json().format()
@@ -701,13 +702,14 @@ impl ToJson for NaturalOption {
 }
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use hurl_core::ast::{
         LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
         TemplateElement, Version, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::*;
 
     fn whitespace() -> Whitespace {
         Whitespace {

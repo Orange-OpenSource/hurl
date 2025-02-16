@@ -16,16 +16,12 @@
  *
  */
 
-use std::{
-    fs,
-    io::Write,
-    path::{Path, PathBuf},
-};
+use std::fs;
+use std::io::Write;
+use std::path::{Path, PathBuf};
 
-use hurl_core::{
-    input::Input,
-    parser::{self, ParseError},
-};
+use hurl_core::input::Input;
+use hurl_core::parser::{self, ParseError};
 
 use crate::{format, linter};
 

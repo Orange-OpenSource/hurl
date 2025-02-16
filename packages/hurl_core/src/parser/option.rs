@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::{
     is_variable_reserved, BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption,
     OptionKind, SourceInfo, VariableDefinition, VariableValue,
@@ -30,8 +31,6 @@ use crate::parser::string::{quoted_template, unquoted_template};
 use crate::parser::{filename, filename_password, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::typing::Count;
-
-use super::placeholder;
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {

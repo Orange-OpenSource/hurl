@@ -16,10 +16,8 @@
  *
  */
 
-use hurl_core::{
-    input::Input,
-    parser::{self, ParseError},
-};
+use hurl_core::input::Input;
+use hurl_core::parser::{self, ParseError};
 
 use crate::{format, linter};
 

@@ -240,11 +240,12 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
 
 #[cfg(test)]
 mod tests {
+    use std::time::SystemTime;
+
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, TemplateElement, Variable, Whitespace};
     use crate::reader::Pos;
     use crate::typing::ToSource;
-    use std::time::SystemTime;
 
     #[test]
     fn test_unquoted_template_empty() {

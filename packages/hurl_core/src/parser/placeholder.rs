@@ -38,7 +38,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Placeholder> {
 mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
-    use crate::{parser::ParseErrorKind, reader::Pos};
+    use crate::parser::ParseErrorKind;
+    use crate::reader::Pos;
 
     #[test]
     fn test_ok() {

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::PredicateValue;
 use crate::combinator::choice;
 use crate::parser::multiline::multiline_string;
@@ -23,8 +24,6 @@ use crate::parser::primitives::{base64, boolean, file, hex, null, regex};
 use crate::parser::string::{backtick_template, quoted_template};
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-
-use super::placeholder;
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(

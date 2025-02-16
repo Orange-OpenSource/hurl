@@ -207,16 +207,17 @@ pub fn eval_explicit_assert(
 pub mod tests {
     use std::path::Path;
 
-    use super::super::query;
-    use super::*;
-    use crate::http::xml_three_users_http_response;
-    use crate::runner::Number;
     use hurl_core::ast::{
         Filter, FilterValue, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
         PredicateValue, SourceInfo, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::super::query;
+    use super::*;
+    use crate::http::xml_three_users_http_response;
+    use crate::runner::Number;
 
     // `xpath "//user" count == 3`
     pub fn assert_count_user() -> Assert {

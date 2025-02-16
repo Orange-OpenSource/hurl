@@ -45,11 +45,12 @@ fn eval_template_element(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::runner::{Number, RunnerErrorKind, Value};
     use hurl_core::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::*;
+    use crate::runner::{Number, RunnerErrorKind, Value};
 
     fn template_element_expression() -> TemplateElement {
         // {{name}}

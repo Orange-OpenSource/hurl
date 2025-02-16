@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
-use hurl_core::ast::SourceInfo;
 use std::collections::HashMap;
+
+use hurl_core::ast::SourceInfo;
+
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 /// Represents a variable named to hold `Value`.
 #[derive(Clone, Debug, Eq, PartialEq)]

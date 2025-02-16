@@ -51,12 +51,13 @@ pub fn eval_to_date(
 
 #[cfg(test)]
 mod tests {
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Value, VariableSet};
     use chrono::{DateTime, NaiveDate, Utc};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     fn eval_filter_to_date() {

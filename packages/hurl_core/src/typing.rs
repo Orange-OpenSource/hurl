@@ -16,9 +16,10 @@
  *
  */
 //! Hurl common types.
-use crate::ast::U64;
 use core::fmt;
 use std::str::FromStr;
+
+use crate::ast::U64;
 
 /// Represents a count operation, either finite or infinite.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

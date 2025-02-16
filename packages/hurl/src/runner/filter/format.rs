@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use std::fmt::Write;
+
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
-use std::fmt::Write;
 
 /// Formats a date `value` to a string given a specification `format`.
 /// See <https://docs.rs/chrono/latest/chrono/format/strftime/index.html>
@@ -52,14 +53,15 @@ pub fn eval_format(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::VariableSet;
     use chrono::offset::Utc;
     use chrono::TimeZone;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::*;
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::VariableSet;
 
     /// Helper function to return a new filter given a `fmt`
     fn new_format_filter(fmt: &str) -> Filter {

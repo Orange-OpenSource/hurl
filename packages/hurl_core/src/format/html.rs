@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::fmt::Display;
+
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FileParam,
@@ -25,7 +27,6 @@ use crate::ast::{
     TemplateElement, VariableDefinition, VariableValue, Version, Whitespace,
 };
 use crate::typing::Count;
-use std::fmt::Display;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///

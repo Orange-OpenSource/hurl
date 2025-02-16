@@ -17,11 +17,10 @@
  */
 use hurl_core::ast::{Expr, ExprKind};
 
+use super::function;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::value::Value;
 use crate::runner::VariableSet;
-
-use super::function;
 
 /// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {
@@ -56,11 +55,10 @@ pub fn render(expr: &Expr, variables: &VariableSet) -> Result<String, RunnerErro
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::{ExprKind, SourceInfo, Variable};
+    use hurl_core::reader::Pos;
+
     use super::*;
-    use hurl_core::{
-        ast::{ExprKind, SourceInfo, Variable},
-        reader::Pos,
-    };
 
     #[test]
     fn test_render_expression() {

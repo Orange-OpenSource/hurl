@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
+use std::fs::OpenOptions;
+use std::io::Write;
+use std::path::Path;
+
 use crate::report::ReportError;
 use crate::runner::HurlResult;
 use crate::util::path::create_dir_all;
 use crate::util::redacted::Redact;
-use std::fs::OpenOptions;
-use std::io::Write;
-use std::path::Path;
 
 /// Creates a curl export from a list of `hurl_results`.
 ///

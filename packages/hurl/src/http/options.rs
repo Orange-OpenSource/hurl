@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::typing::{BytesPerSec, Count};
 use std::time::Duration;
+
+use hurl_core::typing::{BytesPerSec, Count};
 
 use crate::http::request::RequestedHttpVersion;
 use crate::http::IpResolve;

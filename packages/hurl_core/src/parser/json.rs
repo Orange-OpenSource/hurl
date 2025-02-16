@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
+use super::placeholder;
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
 use crate::combinator::{choice, non_recover, ParseError as ParseErrorTrait};
 use crate::parser::primitives::{boolean, hex_digit, literal, try_literal};
 use crate::parser::template::EncodedString;
 use crate::parser::{templatize, JsonErrorVariant, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
-
-use super::placeholder;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(

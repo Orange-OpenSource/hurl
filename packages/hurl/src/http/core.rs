@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::util::redacted::Redact;
 use core::fmt;
 use std::str::FromStr;
+
+use crate::util::redacted::Redact;
 
 /// [Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) returned by
 /// the server with `Set-Cookie` header, and saved in the cookie storage of the internal HTTP

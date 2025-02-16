@@ -469,12 +469,14 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
-    use crate::http::{HeaderVec, HttpError, HttpVersion};
+    use std::num::ParseIntError;
+
     use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
-    use std::num::ParseIntError;
+
+    use super::*;
+    use crate::http::{HeaderVec, HttpError, HttpVersion};
 
     fn default_response() -> http::Response {
         http::Response {

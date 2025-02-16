@@ -46,13 +46,14 @@ pub fn eval_replace(
 
 #[cfg(test)]
 mod tests {
-    use crate::runner::filter::eval::eval_filter;
-    use crate::runner::{Value, VariableSet};
     use hurl_core::ast::{
         Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::{Value, VariableSet};
 
     #[test]
     fn eval_filter_replace() {

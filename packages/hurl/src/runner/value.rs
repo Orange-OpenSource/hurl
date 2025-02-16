@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use std::{cmp::Ordering, fmt};
+use std::cmp::Ordering;
+use std::fmt;
 
 use crate::runner::Number;
 
@@ -189,9 +190,10 @@ impl fmt::Display for ValueKind {
 #[cfg(test)]
 mod tests {
 
-    use super::*;
     use chrono::{DateTime, NaiveDate, Utc};
     use regex::Regex;
+
+    use super::*;
 
     #[test]
     fn test_repr() {

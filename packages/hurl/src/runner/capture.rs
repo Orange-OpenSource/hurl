@@ -74,14 +74,15 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
-    use self::super::super::query;
-    use super::*;
-    use crate::runner::{Number, Value};
     use hurl_core::ast::{
         LineTerminator, Query, QueryValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use self::super::super::query;
+    use super::*;
+    use crate::runner::{Number, Value};
 
     pub fn user_count_capture() -> Capture {
         // non scalar value

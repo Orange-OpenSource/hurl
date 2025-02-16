@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use std::str::FromStr;
+
 use crate::parser::number::natural;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::typing::{Duration, DurationUnit};
-use std::str::FromStr;
 
 pub fn duration(reader: &mut Reader) -> ParseResult<Duration> {
     let value = natural(reader)?;
@@ -49,7 +50,6 @@ mod tests {
     use super::*;
     use crate::ast::U64;
     use crate::reader::Pos;
-
     use crate::typing::{DurationUnit, ToSource};
 
     #[test]

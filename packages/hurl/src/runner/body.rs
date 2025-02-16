@@ -91,10 +91,11 @@ pub fn eval_file(
 mod tests {
     use std::path::Path;
 
-    use super::*;
     use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::*;
 
     #[test]
     pub fn test_body_file() {

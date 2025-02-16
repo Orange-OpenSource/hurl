@@ -93,10 +93,11 @@ pub fn file_value_content_type(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use hurl_core::ast::{LineTerminator, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::*;
 
     pub fn whitespace() -> Whitespace {
         Whitespace {

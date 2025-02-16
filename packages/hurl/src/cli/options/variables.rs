@@ -16,9 +16,10 @@
  *
  */
 
+use hurl_core::ast::is_variable_reserved;
+
 use super::CliOptionsError;
 use crate::runner::{Number, Value};
-use hurl_core::ast::is_variable_reserved;
 
 /// Parses a string "name=value" as a pair of `String` and `Value`.
 ///

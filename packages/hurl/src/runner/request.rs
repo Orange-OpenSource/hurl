@@ -192,15 +192,16 @@ fn eval_method(method: &Method) -> http::Method {
 
 #[cfg(test)]
 mod tests {
-    use super::super::error::RunnerErrorKind;
-    use super::*;
-    use crate::runner::Value;
     use hurl_core::ast::{
         Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, Section, SectionValue,
         SourceInfo, TemplateElement, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use super::super::error::RunnerErrorKind;
+    use super::*;
+    use crate::runner::Value;
 
     fn whitespace() -> Whitespace {
         Whitespace {

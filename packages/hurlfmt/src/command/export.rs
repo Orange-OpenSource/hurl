@@ -16,12 +16,11 @@
  *
  */
 
-use hurl_core::{
-    input::Input,
-    parser::{self, ParseError},
-};
+use hurl_core::input::Input;
+use hurl_core::parser::{self, ParseError};
 
-use crate::{cli::options::InputFormat, cli::options::OutputFormat, curl, format, linter};
+use crate::cli::options::{InputFormat, OutputFormat};
+use crate::{curl, format, linter};
 
 /// Represents an export error.
 pub enum ExportError {

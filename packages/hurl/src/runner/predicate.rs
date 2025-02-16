@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::cmp::Ordering;
+
 use hurl_core::ast::{Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo};
 use hurl_core::reader::Pos;
-use std::cmp::Ordering;
 
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
@@ -727,13 +728,15 @@ fn assert_include(value: &Value, element: &Value) -> AssertResult {
 
 #[cfg(test)]
 mod tests {
-    use super::{AssertResult, *};
+    use std::path::Path;
+
     use hurl_core::ast::{
         Expr, ExprKind, Float, Placeholder, Regex, Template, TemplateElement, Variable, Whitespace,
         I64,
     };
     use hurl_core::typing::ToSource;
-    use std::path::Path;
+
+    use super::{AssertResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {

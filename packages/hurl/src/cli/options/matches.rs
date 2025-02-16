@@ -27,9 +27,9 @@ use hurl::runner::Value;
 use hurl_core::input::Input;
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
-use crate::cli::options::variables;
-use crate::cli::options::{duration, CliOptionsError};
-use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
+use crate::cli::options::{
+    duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output,
+};
 use crate::cli::OutputType;
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {

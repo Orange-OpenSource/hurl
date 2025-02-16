@@ -63,14 +63,15 @@ pub fn eval_multiline(
 
 #[cfg(test)]
 mod tests {
-    use crate::runner::multiline::eval_multiline;
-    use crate::runner::VariableSet;
     use hurl_core::ast::{
         GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
         MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
+
+    use crate::runner::multiline::eval_multiline;
+    use crate::runner::VariableSet;
 
     fn whitespace() -> Whitespace {
         Whitespace {

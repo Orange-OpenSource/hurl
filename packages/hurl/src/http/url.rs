@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use regex::Regex;
 use std::fmt;
 use std::str::FromStr;
+
+use regex::Regex;
 
 use crate::http::{HttpError, Param};
 

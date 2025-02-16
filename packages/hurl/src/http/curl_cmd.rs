@@ -15,6 +15,12 @@
  * limitations under the License.
  *
  */
+use core::fmt;
+use std::collections::HashMap;
+use std::path::Path;
+
+use hurl_core::typing::Count;
+
 use crate::http::client::all_cookies;
 use crate::http::{
     Body, ClientOptions, Cookie, FileParam, Header, HeaderVec, IpResolve, Method, MultipartParam,
@@ -22,10 +28,6 @@ use crate::http::{
 };
 use crate::runner::Output;
 use crate::util::path::ContextDir;
-use core::fmt;
-use hurl_core::typing::Count;
-use std::collections::HashMap;
-use std::path::Path;
 
 /// Represents a curl command, with arguments.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -522,13 +524,14 @@ fn escape_string(s: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::http::{HeaderVec, Url};
-    use hurl_core::typing::BytesPerSec;
     use std::path::Path;
     use std::str::FromStr;
     use std::time::Duration;
 
+    use hurl_core::typing::BytesPerSec;
+
     use super::*;
+    use crate::http::{HeaderVec, Url};
 
     #[test]
     fn hello_request_with_default_options() {
