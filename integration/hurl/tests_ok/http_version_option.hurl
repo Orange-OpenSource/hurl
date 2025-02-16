@@ -13,13 +13,13 @@ GET http://localhost:8000/http_version/10
 http1.0: true
 HTTP/1.1 200
 
+# Same request using explicit version query
 GET http://localhost:8000/http_version/10
 [Options]
 http1.0: true
 HTTP 200
 [Asserts]
 version == "1.1"
-
 
 # Default HTTP version for Flask is HTTP/1.1
 GET http://localhost:8000/http_version/11
@@ -52,3 +52,10 @@ HEAD https://google.com
 [Options]
 http1.1: true
 HTTP/1.1 *
+
+HEAD https://google.com
+[Options]
+http1.1: true
+HTTP *
+[Asserts]
+version == "1.1"
