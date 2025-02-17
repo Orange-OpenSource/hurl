@@ -23,7 +23,10 @@ use crate::{format, linter};
 
 /// Represents a check error.
 pub enum CheckError {
-    IO(String), // TODO: Rajouter message / consistent with FormatError
+    IO {
+        filename: String,
+        message: String,
+    },
     Parse {
         content: String,
         input_file: Input,
@@ -45,9 +48,10 @@ pub fn run(input_files: &[Input]) -> Vec<CheckError> {
 
 /// Run the check command for one input file
 fn run_check(input_file: &Input) -> Result<(), CheckError> {
-    let content = input_file
-        .read_to_string()
-        .map_err(|_| CheckError::IO(input_file.to_string()))?;
+    let content = input_file.read_to_string().map_err(|e| CheckError::IO {
+        filename: input_file.to_string(),
+        message: e.to_string(),
+    })?;
     let hurl_file = parser::parse_hurl_file(&content).map_err(|error| CheckError::Parse {
         content: content.clone(),
         input_file: input_file.clone(),

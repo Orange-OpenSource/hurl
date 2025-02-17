@@ -27,7 +27,10 @@ use crate::{format, linter};
 
 /// Represents a check error.
 pub enum FormatError {
-    IO(String), // TODO: Rajouter message / consistent with FormatError
+    IO {
+        filename: String,
+        message: String,
+    },
     Parse {
         content: String,
         input_file: Input,
@@ -48,8 +51,11 @@ pub fn run(input_files: &[PathBuf]) -> Vec<FormatError> {
 
 /// Run the format command for one input file
 fn run_format(input_file: &Path) -> Result<(), FormatError> {
-    let content = fs::read_to_string(input_file.display().to_string())
-        .map_err(|_| FormatError::IO(input_file.display().to_string()))?;
+    let content =
+        fs::read_to_string(input_file.display().to_string()).map_err(|e| FormatError::IO {
+            filename: input_file.display().to_string(),
+            message: e.to_string(),
+        })?;
     let hurl_file = parser::parse_hurl_file(&content).map_err(|error| FormatError::Parse {
         content: content.clone(),
         input_file: Input::new(input_file.display().to_string().as_str()),
@@ -59,10 +65,18 @@ fn run_format(input_file: &Path) -> Result<(), FormatError> {
     let formatted = format::format_text(&hurl_file, false);
 
     let mut file = match std::fs::File::create(input_file) {
-        Err(_) => return Err(FormatError::IO(input_file.display().to_string())),
+        Err(e) => {
+            return Err(FormatError::IO {
+                filename: input_file.display().to_string(),
+                message: e.to_string(),
+            })
+        }
         Ok(file) => file,
     };
     file.write_all(formatted.as_bytes())
-        .map_err(|_| FormatError::IO(input_file.display().to_string()))?;
+        .map_err(|e| FormatError::IO {
+            filename: input_file.display().to_string(),
+            message: e.to_string(),
+        })?;
     Ok(())
 }

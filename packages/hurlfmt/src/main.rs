@@ -81,8 +81,10 @@ fn process_check_command(input_files: &[Input], output_file: Option<PathBuf>, lo
 
         for e in &errors {
             match e {
-                CheckError::IO(filename) => {
-                    logger.error(&format!("Input file {filename} can not be read"));
+                CheckError::IO { filename, message } => {
+                    logger.error(&format!(
+                        "Input file {filename} can not be read - {message}"
+                    ));
                     invalid_input = true;
                 }
                 CheckError::Parse {
@@ -131,8 +133,10 @@ fn process_format_command(input_files: &[Input], logger: &Logger) {
     } else {
         for e in &errors {
             match e {
-                FormatError::IO(filename) => {
-                    logger.error(&format!("Input file {filename} can not be read"));
+                FormatError::IO { filename, message } => {
+                    logger.error(&format!(
+                        "Input file {filename} can not be read - {message}"
+                    ));
                 }
                 FormatError::Parse {
                     content,

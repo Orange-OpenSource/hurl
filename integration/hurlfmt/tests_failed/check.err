@@ -1,4 +1,4 @@
-error: Input file tests_failed/check_error_io.hurl can not be read
+error: Input file tests_failed/check_error_io.hurl can not be read - invalid utf-8 sequence of 1 bytes from index 0
 error: Parsing space
   --> tests_failed/check_error_parse.hurl:1:4
    |
