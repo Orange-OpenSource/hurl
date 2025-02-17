@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::typing::{Count, Duration};</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::typing::{Count, Duration, ToSource};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15621,7 +15621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        vec![Token::Number(self.to_string())]</pre>
+                <pre class="has-background-success-light py-0 px-2">        vec![Token::Number(self.to_source().to_string())]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16245,7 +16245,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut tokens = vec![Token::Number(self.value.to_string())];</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut tokens = vec![Token::Number(self.value.to_source().to_string())];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17013,7 +17013,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                tokens.push(Token::Number(n.to_string()));</pre>
+                <pre class="has-background-success-light py-0 px-2">                tokens.push(Token::Number(n.to_source().to_string()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17547,7 +17547,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-02-17 12:50</p>
+                <p class="heading">Date: 2025-02-17 14:32</p>
             </div>
         </footer>
     </body>
