@@ -26,7 +26,7 @@ use crate::ast::{
     QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, Template,
     TemplateElement, VariableDefinition, VariableValue, Version, Whitespace,
 };
-use crate::typing::Count;
+use crate::typing::{Count, ToSource};
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
@@ -695,7 +695,9 @@ impl HtmlFormatter {
 
     fn fmt_natural_option(&mut self, value: &NaturalOption) {
         match value {
-            NaturalOption::Literal(value) => self.fmt_span("number", &value.to_string()),
+            NaturalOption::Literal(value) => {
+                self.fmt_span("number", &value.to_source().to_string());
+            }
             NaturalOption::Placeholder(value) => self.fmt_placeholder(value),
         }
     }
@@ -703,7 +705,7 @@ impl HtmlFormatter {
     fn fmt_duration_option(&mut self, value: &DurationOption) {
         match value {
             DurationOption::Literal(literal) => {
-                self.fmt_span("number", &literal.value.to_string());
+                self.fmt_span("number", &literal.value.to_source().to_string());
                 if let Some(unit) = literal.unit {
                     self.fmt_span("unit", &unit.to_string());
                 }
@@ -807,7 +809,7 @@ impl HtmlFormatter {
             }
             FilterValue::Nth { space0, n: value } => {
                 self.fmt_space(space0);
-                self.fmt_number(value);
+                self.fmt_number(value.to_source());
             }
             FilterValue::Regex { space0, value } => {
                 self.fmt_space(space0);

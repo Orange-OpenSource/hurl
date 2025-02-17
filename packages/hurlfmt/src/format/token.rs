@@ -26,7 +26,7 @@ use hurl_core::ast::{
     Template, TemplateElement, Text, Variable, VariableDefinition, VariableValue, Version,
     Whitespace, I64, U64,
 };
-use hurl_core::typing::{Count, Duration};
+use hurl_core::typing::{Count, Duration, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -971,7 +971,7 @@ impl Tokenizable for NaturalOption {
 
 impl Tokenizable for U64 {
     fn tokenize(&self) -> Vec<Token> {
-        vec![Token::Number(self.to_string())]
+        vec![Token::Number(self.to_source().to_string())]
     }
 }
 
@@ -1010,7 +1010,7 @@ impl Tokenizable for DurationOption {
 
 impl Tokenizable for Duration {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens = vec![Token::Number(self.value.to_string())];
+        let mut tokens = vec![Token::Number(self.value.to_source().to_string())];
         if let Some(unit) = self.unit {
             tokens.push(Token::Unit(unit.to_string()));
         }
@@ -1058,7 +1058,7 @@ impl Tokenizable for Filter {
             }
             FilterValue::Nth { space0, n } => {
                 tokens.append(&mut space0.tokenize());
-                tokens.push(Token::Number(n.to_string()));
+                tokens.push(Token::Number(n.to_source().to_string()));
             }
             FilterValue::Regex { space0, value } => {
                 tokens.append(&mut space0.tokenize());

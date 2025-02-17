@@ -19,7 +19,7 @@ use std::fmt;
 
 use crate::ast::json;
 use crate::reader::Pos;
-use crate::typing::{Count, Duration, SourceString};
+use crate::typing::{Count, Duration, SourceString, ToSource};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -655,7 +655,13 @@ impl U64 {
 
 impl fmt::Display for U64 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.source)
+        write!(f, "{}", self.value)
+    }
+}
+
+impl ToSource for U64 {
+    fn to_source(&self) -> SourceString {
+        self.source.clone()
     }
 }
 
