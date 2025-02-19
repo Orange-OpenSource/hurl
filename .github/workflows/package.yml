@@ -568,7 +568,7 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v4.2.0
+      uses: actions/cache@v4.2.1
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-release-windows-x64
