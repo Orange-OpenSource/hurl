@@ -613,6 +613,16 @@ pub enum Number {
     BigInteger(String),
 }
 
+impl ToSource for Number {
+    fn to_source(&self) -> SourceString {
+        match self {
+            Number::Float(value) => value.to_source(),
+            Number::Integer(value) => value.to_source(),
+            Number::BigInteger(value) => value.to_source(),
+        }
+    }
+}
+
 // keep Number terminology for both Integer and Decimal Numbers
 // different representation for the same float value
 // 1.01 and 1.010
@@ -635,7 +645,13 @@ impl Float {
 
 impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.source)
+        write!(f, "{}", self.value)
+    }
+}
+
+impl ToSource for Float {
+    fn to_source(&self) -> SourceString {
+        self.source.clone()
     }
 }
 
@@ -685,7 +701,13 @@ impl I64 {
 
 impl fmt::Display for I64 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.source)
+        write!(f, "{}", self.value)
+    }
+}
+
+impl ToSource for I64 {
+    fn to_source(&self) -> SourceString {
+        self.source.clone()
     }
 }
 
@@ -694,6 +716,7 @@ impl PartialEq for Float {
         self.source == other.source
     }
 }
+
 impl Eq for Float {}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -876,6 +899,17 @@ pub enum VariableValue {
     String(Template),
 }
 
+impl ToSource for VariableValue {
+    fn to_source(&self) -> SourceString {
+        match self {
+            VariableValue::Null => "null".to_source(),
+            VariableValue::Bool(value) => value.to_string().to_source(),
+            VariableValue::Number(value) => value.to_source(),
+            VariableValue::String(value) => value.to_string().to_source(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Filter {
     pub source_info: SourceInfo,
@@ -947,8 +981,27 @@ mod tests {
                 value: 1.0,
                 source: "1.0".to_source()
             }
-            .to_string(),
+            .to_source()
+            .as_str(),
             "1.0"
+        );
+        assert_eq!(
+            Float {
+                value: 1.0,
+                source: "1.0".to_source()
+            }
+            .to_string(),
+            "1"
+        );
+
+        assert_eq!(
+            Float {
+                value: 1.01,
+                source: "1.01".to_source()
+            }
+            .to_source()
+            .as_str(),
+            "1.01"
         );
         assert_eq!(
             Float {
@@ -958,13 +1011,33 @@ mod tests {
             .to_string(),
             "1.01"
         );
+
+        assert_eq!(
+            Float {
+                value: 1.01,
+                source: "1.010".to_source()
+            }
+            .to_source()
+            .as_str(),
+            "1.010"
+        );
         assert_eq!(
             Float {
                 value: 1.01,
                 source: "1.010".to_source()
             }
             .to_string(),
-            "1.010"
+            "1.01"
+        );
+
+        assert_eq!(
+            Float {
+                value: -1.333,
+                source: "-1.333".to_source()
+            }
+            .to_source()
+            .as_str(),
+            "-1.333"
         );
         assert_eq!(
             Float {

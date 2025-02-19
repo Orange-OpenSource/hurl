@@ -628,7 +628,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::MultilineString(value) => value.tokenize(),
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
             PredicateValue::Null => vec![Token::Keyword("null".to_string())],
-            PredicateValue::Number(value) => vec![Token::Number(value.to_string())],
+            PredicateValue::Number(value) => vec![Token::Number(value.to_source().to_string())],
             PredicateValue::File(value) => value.tokenize(),
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
@@ -983,7 +983,7 @@ impl Tokenizable for U64 {
 
 impl Tokenizable for I64 {
     fn tokenize(&self) -> Vec<Token> {
-        vec![Token::Number(self.to_string())]
+        vec![Token::Number(self.to_source().to_string())]
     }
 }
 
@@ -1040,7 +1040,7 @@ impl Tokenizable for VariableValue {
         match self {
             VariableValue::Null => vec![Token::Keyword("null".to_string())],
             VariableValue::Bool(v) => vec![Token::Boolean(v.to_string())],
-            VariableValue::Number(v) => vec![Token::Number(v.to_string())],
+            VariableValue::Number(v) => vec![Token::Number(v.to_source().to_string())],
             VariableValue::String(v) => v.tokenize(),
         }
     }

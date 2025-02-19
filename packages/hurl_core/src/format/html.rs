@@ -290,7 +290,7 @@ impl HtmlFormatter {
         match option {
             VariableValue::Null => self.fmt_span("null", "null"),
             VariableValue::Bool(v) => self.fmt_bool(*v),
-            VariableValue::Number(v) => self.fmt_number(v),
+            VariableValue::Number(v) => self.fmt_number(v.to_source()),
             VariableValue::String(t) => self.fmt_template(t),
         }
     }
@@ -550,7 +550,7 @@ impl HtmlFormatter {
         match predicate_value {
             PredicateValue::String(value) => self.fmt_template(value),
             PredicateValue::MultilineString(value) => self.fmt_multiline_string(value, false),
-            PredicateValue::Number(value) => self.fmt_number(value),
+            PredicateValue::Number(value) => self.fmt_number(value.to_source()),
             PredicateValue::Bool(value) => self.fmt_bool(*value),
             PredicateValue::File(value) => self.fmt_file(value),
             PredicateValue::Hex(value) => self.fmt_hex(value),

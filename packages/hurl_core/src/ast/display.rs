@@ -18,8 +18,7 @@
 //! This module regroups methods on AST nodes to be serialized as Hurl strings and expose
 //! Hurl file format identifier that can be used, for instance, as identifier when exporting
 //! an Hurl AST to a JSON representation.
-use core::fmt;
-use std::fmt::Formatter;
+use std::fmt;
 
 use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
@@ -261,7 +260,7 @@ impl OptionKind {
 }
 
 impl fmt::Display for OptionKind {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let value = match self {
             OptionKind::AwsSigV4(value) => value.to_string(),
             OptionKind::CaCertificate(filename) => filename.to_string(),

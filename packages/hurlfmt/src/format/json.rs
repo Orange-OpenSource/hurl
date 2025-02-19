@@ -25,7 +25,7 @@ use hurl_core::ast::{
     PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, StatusValue,
     VersionValue,
 };
-use hurl_core::typing::{Count, Duration};
+use hurl_core::typing::{Count, Duration, ToSource};
 
 use crate::format::serialize_json::JValue;
 
@@ -338,7 +338,7 @@ impl ToJson for EntryOption {
             OptionKind::UnixSocket(value) => JValue::String(value.to_string()),
             OptionKind::User(value) => JValue::String(value.to_string()),
             OptionKind::Variable(value) => {
-                JValue::String(format!("{}={}", value.name, value.value))
+                JValue::String(format!("{}={}", value.name, value.value.to_source()))
             }
             OptionKind::Verbose(value) => value.to_json(),
             OptionKind::VeryVerbose(value) => value.to_json(),
