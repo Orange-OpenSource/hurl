@@ -19,6 +19,7 @@
 //! Hurl file format identifier that can be used, for instance, as identifier when exporting
 //! an Hurl AST to a JSON representation.
 use core::fmt;
+use std::fmt::Formatter;
 
 use crate::ast::{
     BooleanOption, CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath,
@@ -257,10 +258,11 @@ impl OptionKind {
             OptionKind::VeryVerbose(_) => "very-verbose",
         }
     }
+}
 
-    /// Returns the string representation of this option.
-    pub fn value_as_str(&self) -> String {
-        match self {
+impl fmt::Display for OptionKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let value = match self {
             OptionKind::AwsSigV4(value) => value.to_string(),
             OptionKind::CaCertificate(filename) => filename.to_string(),
             OptionKind::ClientCert(filename) => filename.to_string(),
@@ -294,12 +296,11 @@ impl OptionKind {
             OptionKind::Skip(value) => value.to_string(),
             OptionKind::UnixSocket(value) => value.to_string(),
             OptionKind::User(value) => value.to_string(),
-            OptionKind::Variable(VariableDefinition { name, value, .. }) => {
-                format!("{name}={value}")
-            }
+            OptionKind::Variable(value) => value.to_string(),
             OptionKind::Verbose(value) => value.to_string(),
             OptionKind::VeryVerbose(value) => value.to_string(),
-        }
+        };
+        write!(f, "{}: {}", self.identifier(), value)
     }
 }
 

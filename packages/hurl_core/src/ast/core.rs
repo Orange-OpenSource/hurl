@@ -833,8 +833,6 @@ pub enum OptionKind {
     VeryVerbose(BooleanOption),
 }
 
-impl OptionKind {}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BooleanOption {
     Literal(bool),

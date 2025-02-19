@@ -16,8 +16,8 @@
  *
  */
 use hurl_core::ast::{
-    BooleanOption, CountOption, DurationOption, Entry, EntryOption, NaturalOption,
-    Number as AstNumber, OptionKind, Placeholder, SectionValue, VariableDefinition, VariableValue,
+    BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
+    OptionKind, Placeholder, SectionValue, VariableDefinition, VariableValue,
 };
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
@@ -275,18 +275,11 @@ pub fn get_entry_options(
                         eval_boolean_option(value, variables)?;
                     }
                 }
-                log_option(option, logger);
+                logger.debug(&option.kind.to_string());
             }
         }
     }
     Ok(entry_options)
-}
-
-/// Logs an entry option.
-fn log_option(option: &EntryOption, logger: &mut Logger) {
-    let name = option.kind.identifier();
-    let value = option.kind.value_as_str();
-    logger.debug(&format!("{name}: {value}"));
 }
 
 /// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.
