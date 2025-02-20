@@ -21,7 +21,7 @@ Breaking Changes:
 
 Enhancements:
 
-* Add version query and integration tests [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
+* Add HTTP version query [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
 * Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
 * Add curl -H/--header option to globally add headers to all requests [#1905](https://github.com/Orange-OpenSource/hurl/issues/1905) [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
 * Add base64 decode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
@@ -31,6 +31,8 @@ Enhancements:
 * Redact secret in HTML report [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Redact secrets from curl export [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
 * Redact secrets from cookies export [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
+* Add IP address query [#3106](https://github.com/Orange-OpenSource/hurl/issues/3106)
+* Add isIpv4 / isIpv6 asserts on IP versions [#3106](https://github.com/Orange-OpenSource/hurl/issues/3106)
 * Allow sending empty HTTP header [#3536](https://github.com/Orange-OpenSource/hurl/issues/3536)
 * Redact dynamic values from logs [#3543](https://github.com/Orange-OpenSource/hurl/issues/3543)
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
