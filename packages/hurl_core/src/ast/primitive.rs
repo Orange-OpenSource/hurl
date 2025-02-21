@@ -159,6 +159,21 @@ impl fmt::Display for Template {
     }
 }
 
+impl ToSource for Template {
+    fn to_source(&self) -> SourceString {
+        let mut s = SourceString::new();
+        if let Some(d) = self.delimiter {
+            s.push(d);
+        }
+        let elements: Vec<SourceString> = self.elements.iter().map(|e| e.to_source()).collect();
+        s.push_str(elements.join("").as_str());
+        if let Some(d) = self.delimiter {
+            s.push(d);
+        }
+        s
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TemplateElement {
     String { value: String, source: SourceString },
@@ -172,6 +187,15 @@ impl fmt::Display for TemplateElement {
             TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}"),
         };
         write!(f, "{s}")
+    }
+}
+
+impl ToSource for TemplateElement {
+    fn to_source(&self) -> SourceString {
+        match self {
+            TemplateElement::String { source, .. } => source.clone(),
+            TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}").to_source(),
+        }
     }
 }
 
@@ -449,6 +473,7 @@ impl fmt::Display for Function {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::json::{ListElement, ObjectElement, Value};
     use crate::typing::ToSource;
 
     #[test]
@@ -568,5 +593,157 @@ mod tests {
     #[test]
     fn test_template() {
         assert_eq!(hello_template().to_string(), "Hello {{name}}!");
+    }
+
+    #[test]
+    fn test_template_to_string() {
+        assert_eq!(
+            "{{x}}".to_string(),
+            Value::Placeholder(Placeholder {
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
+                expr: Expr {
+                    kind: ExprKind::Variable(Variable {
+                        name: "x".to_string(),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                },
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
+            })
+            .to_string()
+        );
+        assert_eq!("1".to_string(), Value::Number("1".to_string()).to_string());
+        assert_eq!(
+            "\"hello\"".to_string(),
+            Value::String(Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "hello".to_string(),
+                    source: "hello".to_source(),
+                }],
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            })
+            .to_string()
+        );
+        assert_eq!("true".to_string(), Value::Boolean(true).to_string());
+        assert_eq!(
+            "[]".to_string(),
+            Value::List {
+                space0: String::new(),
+                elements: vec![],
+            }
+            .to_string()
+        );
+        assert_eq!(
+            "[1, 2, 3]".to_string(),
+            Value::List {
+                space0: String::new(),
+                elements: vec![
+                    ListElement {
+                        space0: String::new(),
+                        value: Value::Number("1".to_string()),
+                        space1: String::new(),
+                    },
+                    ListElement {
+                        space0: " ".to_string(),
+                        value: Value::Number("2".to_string()),
+                        space1: String::new(),
+                    },
+                    ListElement {
+                        space0: " ".to_string(),
+                        value: Value::Number("3".to_string()),
+                        space1: String::new(),
+                    }
+                ],
+            }
+            .to_string()
+        );
+        assert_eq!(
+            "{}".to_string(),
+            Value::Object {
+                space0: String::new(),
+                elements: vec![],
+            }
+            .to_string()
+        );
+        assert_eq!(
+            "{ \"id\": 123 }".to_string(),
+            Value::Object {
+                space0: String::new(),
+                elements: vec![ObjectElement {
+                    space0: " ".to_string(),
+                    name: Template {
+                        delimiter: Some('"'),
+                        elements: vec![TemplateElement::String {
+                            value: "id".to_string(),
+                            source: "id".to_source(),
+                        }],
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                    },
+                    space1: String::new(),
+                    space2: " ".to_string(),
+                    value: Value::Number("123".to_string()),
+                    space3: " ".to_string(),
+                }],
+            }
+            .to_string()
+        );
+        assert_eq!("null".to_string(), Value::Null.to_string());
+    }
+
+    #[test]
+    fn test_template_to_source() {
+        assert_eq!(
+            TemplateElement::Placeholder(Placeholder {
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                },
+                expr: Expr {
+                    kind: ExprKind::Variable(Variable {
+                        name: "name".to_string(),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                    }),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                },
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                },
+            })
+            .to_source(),
+            "{{name}}".to_source()
+        );
+        assert_eq!(
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::Placeholder(Placeholder {
+                    space0: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                    },
+                    expr: Expr {
+                        kind: ExprKind::Variable(Variable {
+                            name: "name".to_string(),
+                            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                        }),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                    },
+                    space1: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                    },
+                })],
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            }
+            .to_source(),
+            "{{name}}".to_source()
+        );
     }
 }

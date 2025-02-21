@@ -17,6 +17,7 @@
  */
 //! Hurl common types.
 use core::fmt;
+use std::borrow::Borrow;
 use std::str::FromStr;
 
 use crate::ast::U64;
@@ -168,5 +169,11 @@ impl ToSource for &str {
 impl fmt::Display for SourceString {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl Borrow<str> for SourceString {
+    fn borrow(&self) -> &str {
+        &self.0
     }
 }
