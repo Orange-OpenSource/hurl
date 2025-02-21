@@ -34,14 +34,14 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.11.1"
-serde = { version = "1.0.217", features = ["derive"] }
+serde = { version = "1.0.218", features = ["derive"] }
 serde_json = { version = "1.0.139", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.4"
 xml-rs = { version = "0.8.25" }
 lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.13.2", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.14.0", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"
 terminal_size = "0.4.1"
 
