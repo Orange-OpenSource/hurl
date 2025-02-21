@@ -36,73 +36,73 @@ use crate::typing::ToSource;
 ///
 /// It is a superset of the standard JSON spec. Strings have been replaced by Hurl [`Placeholder`].
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Value {
+pub enum JsonValue {
     Placeholder(Placeholder),
     Number(String),
     String(Template),
     Boolean(bool),
     List {
         space0: String,
-        elements: Vec<ListElement>,
+        elements: Vec<JsonListElement>,
     },
     Object {
         space0: String,
-        elements: Vec<ObjectElement>,
+        elements: Vec<JsonObjectElement>,
     },
     Null,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ListElement {
+pub struct JsonListElement {
     pub space0: String,
-    pub value: Value,
+    pub value: JsonValue,
     pub space1: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ObjectElement {
+pub struct JsonObjectElement {
     pub space0: String,
     pub name: Template,
     pub space1: String,
     pub space2: String,
-    pub value: Value,
+    pub value: JsonValue,
     pub space3: String,
 }
 
-impl fmt::Display for Value {
+impl fmt::Display for JsonValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
-            Value::Placeholder(expr) => format!("{{{{{expr}}}}}"),
-            Value::Number(s) => s.to_string(),
-            Value::String(template) => format!("\"{template}\""),
-            Value::Boolean(value) => {
+            JsonValue::Placeholder(expr) => format!("{{{{{expr}}}}}"),
+            JsonValue::Number(s) => s.to_string(),
+            JsonValue::String(template) => format!("\"{template}\""),
+            JsonValue::Boolean(value) => {
                 if *value {
                     "true".to_string()
                 } else {
                     "false".to_string()
                 }
             }
-            Value::List { space0, elements } => {
+            JsonValue::List { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.to_string())
                     .collect::<Vec<String>>();
                 format!("[{}{}]", space0, elements.join(","))
             }
-            Value::Object { space0, elements } => {
+            JsonValue::Object { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.to_string())
                     .collect::<Vec<String>>();
                 format!("{{{}{}}}", space0, elements.join(","))
             }
-            Value::Null => "null".to_string(),
+            JsonValue::Null => "null".to_string(),
         };
         write!(f, "{s}")
     }
 }
 
-impl fmt::Display for ListElement {
+impl fmt::Display for JsonListElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut s = String::new();
         s.push_str(self.space0.as_str());
@@ -112,7 +112,7 @@ impl fmt::Display for ListElement {
     }
 }
 
-impl fmt::Display for ObjectElement {
+impl fmt::Display for JsonObjectElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut s = String::new();
         s.push_str(self.space0.as_str());
@@ -128,39 +128,39 @@ impl fmt::Display for ObjectElement {
     }
 }
 
-impl Value {
+impl JsonValue {
     pub fn encoded(&self) -> String {
         match self {
-            Value::Placeholder(expr) => format!("{{{{{expr}}}}}"),
-            Value::Number(s) => s.to_string(),
-            Value::String(template) => template.to_source().to_string(),
-            Value::Boolean(value) => {
+            JsonValue::Placeholder(expr) => format!("{{{{{expr}}}}}"),
+            JsonValue::Number(s) => s.to_string(),
+            JsonValue::String(template) => template.to_source().to_string(),
+            JsonValue::Boolean(value) => {
                 if *value {
                     "true".to_string()
                 } else {
                     "false".to_string()
                 }
             }
-            Value::List { space0, elements } => {
+            JsonValue::List { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.encoded())
                     .collect::<Vec<String>>();
                 format!("[{}{}]", space0, elements.join(","))
             }
-            Value::Object { space0, elements } => {
+            JsonValue::Object { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.encoded())
                     .collect::<Vec<String>>();
                 format!("{{{}{}}}", space0, elements.join(","))
             }
-            Value::Null => "null".to_string(),
+            JsonValue::Null => "null".to_string(),
         }
     }
 }
 
-impl ListElement {
+impl JsonListElement {
     fn encoded(&self) -> String {
         let mut s = String::new();
         s.push_str(self.space0.as_str());
@@ -170,7 +170,7 @@ impl ListElement {
     }
 }
 
-impl ObjectElement {
+impl JsonObjectElement {
     fn encoded(&self) -> String {
         let mut s = String::new();
         s.push_str(self.space0.as_str());

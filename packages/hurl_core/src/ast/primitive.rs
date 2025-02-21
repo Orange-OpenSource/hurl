@@ -17,7 +17,7 @@
  */
 use std::fmt;
 
-use crate::ast::json;
+use crate::ast::JsonValue;
 use crate::reader::Pos;
 use crate::typing::{SourceString, ToSource};
 
@@ -123,7 +123,7 @@ pub struct GraphQl {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GraphQlVariables {
     pub space: Whitespace,
-    pub value: json::Value,
+    pub value: JsonValue,
     pub whitespace: Whitespace,
 }
 
@@ -344,7 +344,7 @@ pub struct LineTerminator {
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Bytes {
-    Json(json::Value),
+    Json(JsonValue),
     Xml(String),
     MultilineString(MultilineString),
     OnelineString(Template),
@@ -473,7 +473,7 @@ impl fmt::Display for Function {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::json::{ListElement, ObjectElement, Value};
+    use crate::ast::json::{JsonListElement, JsonObjectElement, JsonValue};
     use crate::typing::ToSource;
 
     #[test]
@@ -599,7 +599,7 @@ mod tests {
     fn test_template_to_string() {
         assert_eq!(
             "{{x}}".to_string(),
-            Value::Placeholder(Placeholder {
+            JsonValue::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -618,10 +618,13 @@ mod tests {
             })
             .to_string()
         );
-        assert_eq!("1".to_string(), Value::Number("1".to_string()).to_string());
+        assert_eq!(
+            "1".to_string(),
+            JsonValue::Number("1".to_string()).to_string()
+        );
         assert_eq!(
             "\"hello\"".to_string(),
-            Value::String(Template {
+            JsonValue::String(Template {
                 delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
@@ -631,10 +634,10 @@ mod tests {
             })
             .to_string()
         );
-        assert_eq!("true".to_string(), Value::Boolean(true).to_string());
+        assert_eq!("true".to_string(), JsonValue::Boolean(true).to_string());
         assert_eq!(
             "[]".to_string(),
-            Value::List {
+            JsonValue::List {
                 space0: String::new(),
                 elements: vec![],
             }
@@ -642,22 +645,22 @@ mod tests {
         );
         assert_eq!(
             "[1, 2, 3]".to_string(),
-            Value::List {
+            JsonValue::List {
                 space0: String::new(),
                 elements: vec![
-                    ListElement {
+                    JsonListElement {
                         space0: String::new(),
-                        value: Value::Number("1".to_string()),
+                        value: JsonValue::Number("1".to_string()),
                         space1: String::new(),
                     },
-                    ListElement {
+                    JsonListElement {
                         space0: " ".to_string(),
-                        value: Value::Number("2".to_string()),
+                        value: JsonValue::Number("2".to_string()),
                         space1: String::new(),
                     },
-                    ListElement {
+                    JsonListElement {
                         space0: " ".to_string(),
-                        value: Value::Number("3".to_string()),
+                        value: JsonValue::Number("3".to_string()),
                         space1: String::new(),
                     }
                 ],
@@ -666,7 +669,7 @@ mod tests {
         );
         assert_eq!(
             "{}".to_string(),
-            Value::Object {
+            JsonValue::Object {
                 space0: String::new(),
                 elements: vec![],
             }
@@ -674,9 +677,9 @@ mod tests {
         );
         assert_eq!(
             "{ \"id\": 123 }".to_string(),
-            Value::Object {
+            JsonValue::Object {
                 space0: String::new(),
-                elements: vec![ObjectElement {
+                elements: vec![JsonObjectElement {
                     space0: " ".to_string(),
                     name: Template {
                         delimiter: Some('"'),
@@ -688,13 +691,13 @@ mod tests {
                     },
                     space1: String::new(),
                     space2: " ".to_string(),
-                    value: Value::Number("123".to_string()),
+                    value: JsonValue::Number("123".to_string()),
                     space3: " ".to_string(),
                 }],
             }
             .to_string()
         );
-        assert_eq!("null".to_string(), Value::Null.to_string());
+        assert_eq!("null".to_string(), JsonValue::Null.to_string());
     }
 
     #[test]
