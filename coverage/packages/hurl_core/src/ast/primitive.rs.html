@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::ast::json;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::ast::JsonValue;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: json::Value,</pre>
+                <pre class="has-background-white py-0 px-2">    pub value: JsonValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5589,7 +5589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Json(json::Value),</pre>
+                <pre class="has-background-white py-0 px-2">    Json(JsonValue),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7653,7 +7653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::ast::json::{ListElement, ObjectElement, Value};</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::ast::json::{JsonListElement, JsonObjectElement, JsonValue};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9669,7 +9669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Placeholder(Placeholder {</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::Placeholder(Placeholder {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9973,7 +9973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(&quot;1&quot;.to_string(), Value::Number(&quot;1&quot;.to_string()).to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9989,7 +9989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10005,7 +10005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;\&quot;hello\&quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::Number(&quot;1&quot;.to_string()).to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10021,7 +10021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(Template {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10037,7 +10037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10053,7 +10053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;\&quot;hello\&quot;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10069,7 +10069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: &quot;hello&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::String(Template {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10085,7 +10085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;hello&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10101,7 +10101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }],</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10117,7 +10117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: &quot;hello&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10133,7 +10133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            })</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;hello&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10149,7 +10149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10165,7 +10165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10181,7 +10181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(&quot;true&quot;.to_string(), Value::Boolean(true).to_string());</pre>
+                <pre class="has-background-white py-0 px-2">            })</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10197,7 +10197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10213,7 +10213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;[]&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10229,7 +10229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::List {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(&quot;true&quot;.to_string(), JsonValue::Boolean(true).to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10245,7 +10245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10261,7 +10261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;[]&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10277,7 +10277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::List {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10293,7 +10293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10309,7 +10309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10325,7 +10325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10341,7 +10341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;[1, 2, 3]&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10357,7 +10357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::List {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10373,7 +10373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10389,7 +10389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;[1, 2, 3]&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10405,7 +10405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::List {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10421,7 +10421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10437,7 +10437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: Value::Number(&quot;1&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10453,7 +10453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                    JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10469,7 +10469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                        space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10485,7 +10485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">                        value: JsonValue::Number(&quot;1&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10501,7 +10501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space0: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10517,7 +10517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: Value::Number(&quot;2&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10533,7 +10533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                    JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10549,7 +10549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                        space0: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10565,7 +10565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">                        value: JsonValue::Number(&quot;2&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10581,7 +10581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space0: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10597,7 +10597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: Value::Number(&quot;3&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10613,7 +10613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                    JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10629,7 +10629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }</pre>
+                <pre class="has-background-white py-0 px-2">                        space0: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10645,7 +10645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ],</pre>
+                <pre class="has-background-white py-0 px-2">                        value: JsonValue::Number(&quot;3&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10661,7 +10661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                        space1: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10677,7 +10677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10693,7 +10693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                ],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10709,7 +10709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10725,7 +10725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;{}&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10741,7 +10741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Object {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10757,7 +10757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10773,7 +10773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;{}&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10789,7 +10789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::Object {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10805,7 +10805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10821,7 +10821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10837,7 +10837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10853,7 +10853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;{ \&quot;id\&quot;: 123 }&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10869,7 +10869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Object {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10885,7 +10885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10901,7 +10901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![ObjectElement {</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;{ \&quot;id\&quot;: 123 }&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10917,7 +10917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            JsonValue::Object {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10933,7 +10933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    name: Template {</pre>
+                <pre class="has-background-white py-0 px-2">                space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10949,7 +10949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        delimiter: Some(&#x27;&quot;&#x27;),</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![JsonObjectElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10965,7 +10965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        elements: vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10981,7 +10981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;id&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    name: Template {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10997,7 +10997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;id&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                        delimiter: Some(&#x27;&quot;&#x27;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11013,7 +11013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2">                        elements: vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11029,7 +11029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;id&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11045,7 +11045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;id&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11061,7 +11061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11077,7 +11077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11093,7 +11093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: Value::Number(&quot;123&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11109,7 +11109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space3: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11125,7 +11125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }],</pre>
+                <pre class="has-background-white py-0 px-2">                    space2: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11141,7 +11141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                    value: JsonValue::Number(&quot;123&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11157,7 +11157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                    space3: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11173,7 +11173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11189,7 +11189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(&quot;null&quot;.to_string(), Value::Null.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11205,7 +11205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11221,7 +11221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11237,7 +11237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(&quot;null&quot;.to_string(), JsonValue::Null.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11253,7 +11253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_template_to_source() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11269,7 +11269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11285,7 +11285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            TemplateElement::Placeholder(Placeholder {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11301,7 +11301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_template_to_source() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11317,7 +11317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11333,7 +11333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">            TemplateElement::Placeholder(Placeholder {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11349,7 +11349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                space0: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11365,7 +11365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expr: Expr {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11381,7 +11381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    kind: ExprKind::Variable(Variable {</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11397,7 +11397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        name: &quot;name&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11413,7 +11413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                expr: Expr {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11429,7 +11429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }),</pre>
+                <pre class="has-background-white py-0 px-2">                    kind: ExprKind::Variable(Variable {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11445,7 +11445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                        name: &quot;name&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11461,7 +11461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11477,7 +11477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space1: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">                    }),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11493,7 +11493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11509,7 +11509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11525,7 +11525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                space1: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11541,7 +11541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            })</pre>
+                <pre class="has-background-white py-0 px-2">                    value: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11557,7 +11557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11573,7 +11573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;{{name}}&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11589,7 +11589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            })</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11605,7 +11605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            .to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11621,7 +11621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Template {</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;{{name}}&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11637,7 +11637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11653,7 +11653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                elements: vec![TemplateElement::Placeholder(Placeholder {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11669,7 +11669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">            Template {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11685,7 +11685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11701,7 +11701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                elements: vec![TemplateElement::Placeholder(Placeholder {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11717,7 +11717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11733,7 +11733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    expr: Expr {</pre>
+                <pre class="has-background-white py-0 px-2">                        value: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11749,7 +11749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        kind: ExprKind::Variable(Variable {</pre>
+                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11765,7 +11765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            name: &quot;name&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11781,7 +11781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                    expr: Expr {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11797,7 +11797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }),</pre>
+                <pre class="has-background-white py-0 px-2">                        kind: ExprKind::Variable(Variable {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11813,7 +11813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                            name: &quot;name&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11829,7 +11829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11845,7 +11845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">                        }),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11861,7 +11861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11877,7 +11877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11893,7 +11893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11909,7 +11909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                })],</pre>
+                <pre class="has-background-white py-0 px-2">                        value: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11925,7 +11925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
+                <pre class="has-background-white py-0 px-2">                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11941,7 +11941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11957,7 +11957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                })],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11973,7 +11973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;{{name}}&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11989,7 +11989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12005,7 +12005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12021,13 +12021,61 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">            &quot;{{name}}&quot;.to_source()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="750"
+                role="cell">
+                <a href="#750">750</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="751"
+                role="cell">
+                <a href="#751">751</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="752"
+                role="cell">
+                <a href="#752">752</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-02-21 14:14</p>
+                <p class="heading">Date: 2025-02-21 16:35</p>
             </div>
         </footer>
     </body>

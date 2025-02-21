@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum Value {</pre>
+                <pre class="has-background-white py-0 px-2">pub enum JsonValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        elements: Vec&lt;ListElement&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        elements: Vec&lt;JsonListElement&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        elements: Vec&lt;ObjectElement&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        elements: Vec&lt;JsonObjectElement&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -933,7 +933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -965,7 +965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: Value,</pre>
+                <pre class="has-background-white py-0 px-2">    pub value: JsonValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1045,7 +1045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct ObjectElement {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct JsonObjectElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1125,7 +1125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: Value,</pre>
+                <pre class="has-background-white py-0 px-2">    pub value: JsonValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1189,7 +1189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl fmt::Display for Value {</pre>
+                <pre class="has-background-white py-0 px-2">impl fmt::Display for JsonValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1237,7 +1237,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Placeholder(expr) =&gt; format!(&quot;{{{{{expr}}}}}&quot;),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::Placeholder(expr) =&gt; format!(&quot;{{{{{expr}}}}}&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1253,7 +1253,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Number(s) =&gt; s.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::Number(s) =&gt; s.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1269,7 +1269,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::String(template) =&gt; format!(&quot;\&quot;{template}\&quot;&quot;),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::String(template) =&gt; format!(&quot;\&quot;{template}\&quot;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1285,7 +1285,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Boolean(value) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::Boolean(value) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1397,7 +1397,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::List { space0, elements } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::List { space0, elements } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1509,7 +1509,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Object { space0, elements } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::Object { space0, elements } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Null =&gt; &quot;null&quot;.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            JsonValue::Null =&gt; &quot;null&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1717,7 +1717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl fmt::Display for ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">impl fmt::Display for JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1877,7 +1877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl fmt::Display for ObjectElement {</pre>
+                <pre class="has-background-white py-0 px-2">impl fmt::Display for JsonObjectElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2133,7 +2133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Value {</pre>
+                <pre class="has-background-white py-0 px-2">impl JsonValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Placeholder(expr) =&gt; format!(&quot;{{{{{expr}}}}}&quot;),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::Placeholder(expr) =&gt; format!(&quot;{{{{{expr}}}}}&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Number(s) =&gt; s.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::Number(s) =&gt; s.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2213,7 +2213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::String(template) =&gt; template.to_source().to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::String(template) =&gt; template.to_source().to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2229,7 +2229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Boolean(value) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::Boolean(value) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::List { space0, elements } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::List { space0, elements } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Object { space0, elements } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::Object { space0, elements } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Null =&gt; &quot;null&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValue::Null =&gt; &quot;null&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2645,7 +2645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl ListElement {</pre>
+                <pre class="has-background-white py-0 px-2">impl JsonListElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2805,7 +2805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl ObjectElement {</pre>
+                <pre class="has-background-white py-0 px-2">impl JsonObjectElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3003,7 +3003,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-02-21 14:14</p>
+                <p class="heading">Date: 2025-02-21 16:35</p>
             </div>
         </footer>
     </body>
