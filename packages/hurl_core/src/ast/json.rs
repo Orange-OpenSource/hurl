@@ -17,8 +17,8 @@
  */
 use core::fmt;
 
-use crate::ast::core::Template;
-use crate::ast::{Placeholder, TemplateElement};
+use crate::ast::primitive::{Placeholder, TemplateElement};
+use crate::ast::Template;
 
 /// This the AST for the JSON used within Hurl (for instance in [implicit JSON body request](https://hurl.dev/docs/request.html#json-body)).
 ///
@@ -210,7 +210,7 @@ impl TemplateElement {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Expr, ExprKind, SourceInfo, TemplateElement, Variable, Whitespace};
+    use crate::ast::primitive::{Expr, ExprKind, SourceInfo, Template, Variable, Whitespace};
     use crate::reader::Pos;
     use crate::typing::ToSource;
 

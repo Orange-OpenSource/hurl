@@ -151,7 +151,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
             for (s, value) in available_version.iter() {
                 if try_literal(s, reader).is_ok() {
                     return Ok(Version {
-                        value: value.clone(),
+                        value: *value,
                         source_info: SourceInfo::new(start.pos, reader.cursor().pos),
                     });
                 }

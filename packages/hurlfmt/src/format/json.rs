@@ -19,8 +19,8 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
-    CountOption, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, Header,
-    Hex, HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString, MultilineStringKind,
+    CountOption, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, Hex,
+    HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString, MultilineStringKind,
     MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFuncValue,
     PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, StatusValue,
     VersionValue,
@@ -140,7 +140,7 @@ impl ToJson for Response {
     }
 }
 
-fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &[Header]) {
+fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &[KeyValue]) {
     if !headers.is_empty() {
         let headers = JValue::List(headers.iter().map(|h| h.to_json()).collect());
         attributes.push(("headers".to_string(), headers));

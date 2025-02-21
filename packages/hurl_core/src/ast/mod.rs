@@ -20,7 +20,12 @@ pub use self::core::*;
 pub use self::json::{
     ListElement as JsonListElement, ObjectElement as JsonObjectElement, Value as JsonValue,
 };
+pub use self::option::*;
+pub use self::primitive::*;
+pub use self::section::*;
 
 mod core;
-mod display;
 mod json;
+mod option;
+mod primitive;
+mod section;

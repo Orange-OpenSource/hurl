@@ -17,9 +17,13 @@
  */
 use std::fmt;
 
-use crate::ast::json;
-use crate::reader::Pos;
-use crate::typing::{Count, Duration, SourceString, ToSource};
+use crate::ast::option::EntryOption;
+use crate::ast::primitive::{
+    Bytes, KeyValue, LineTerminator, SourceInfo, Template, Whitespace, U64,
+};
+use crate::ast::section::{
+    Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
+};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -49,7 +53,7 @@ pub struct Request {
     pub space1: Whitespace,
     pub url: Template,
     pub line_terminator0: LineTerminator,
-    pub headers: Vec<Header>,
+    pub headers: Vec<KeyValue>,
     pub sections: Vec<Section>,
     pub body: Option<Body>,
     pub source_info: SourceInfo,
@@ -135,7 +139,7 @@ pub struct Response {
     pub status: Status,
     pub space1: Whitespace,
     pub line_terminator0: LineTerminator,
-    pub headers: Vec<Header>,
+    pub headers: Vec<KeyValue>,
     pub sections: Vec<Section>,
     pub body: Option<Body>,
     pub source_info: SourceInfo,
@@ -166,13 +170,25 @@ impl Response {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Method(pub String);
 
+impl fmt::Display for Method {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Version {
     pub value: VersionValue,
     pub source_info: SourceInfo,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum VersionValue {
     Version1,
     Version11,
@@ -181,10 +197,29 @@ pub enum VersionValue {
     VersionAny,
 }
 
+impl fmt::Display for VersionValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            VersionValue::Version1 => "HTTP/1.0",
+            VersionValue::Version11 => "HTTP/1.1",
+            VersionValue::Version2 => "HTTP/2",
+            VersionValue::Version3 => "HTTP/3",
+            VersionValue::VersionAny => "HTTP",
+        };
+        write!(f, "{s}")
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Status {
     pub value: StatusValue,
     pub source_info: SourceInfo,
+}
+
+impl fmt::Display for Status {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -193,7 +228,14 @@ pub enum StatusValue {
     Specific(u64),
 }
 
-pub type Header = KeyValue;
+impl fmt::Display for StatusValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            StatusValue::Any => write!(f, "*"),
+            StatusValue::Specific(v) => write!(f, "{v}"),
+        }
+    }
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Body {
@@ -203,711 +245,10 @@ pub struct Body {
     pub line_terminator0: LineTerminator,
 }
 
-//
-// Sections
-//
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Section {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub line_terminator0: LineTerminator,
-    pub value: SectionValue,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::large_enum_variant)]
-pub enum SectionValue {
-    QueryParams(Vec<KeyValue>, bool), // boolean param indicates if we use the short syntax
-    BasicAuth(Option<KeyValue>),      // boolean param indicates if we use the short syntax
-    FormParams(Vec<KeyValue>, bool),
-    MultipartFormData(Vec<MultipartParam>, bool), // boolean param indicates if we use the short syntax
-    Cookies(Vec<Cookie>),
-    Captures(Vec<Capture>),
-    Asserts(Vec<Assert>),
-    Options(Vec<EntryOption>),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Cookie {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub name: Template,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: Template,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct KeyValue {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub key: Template,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: Template,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum MultipartParam {
-    Param(KeyValue),
-    FileParam(FileParam),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FileParam {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub key: Template,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: FileValue,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FileValue {
-    pub space0: Whitespace,
-    pub filename: Template,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub content_type: Option<String>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Capture {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub name: Template,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub query: Query,
-    pub filters: Vec<(Whitespace, Filter)>,
-    pub space3: Whitespace,
-    pub redact: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Assert {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub query: Query,
-    pub filters: Vec<(Whitespace, Filter)>,
-    pub space1: Whitespace,
-    pub predicate: Predicate,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Query {
-    pub source_info: SourceInfo,
-    pub value: QueryValue,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::large_enum_variant)]
-pub enum QueryValue {
-    Status,
-    Version,
-    Url,
-    Header {
-        space0: Whitespace,
-        name: Template,
-    },
-    Cookie {
-        space0: Whitespace,
-        expr: CookiePath,
-    },
-    Body,
-    Xpath {
-        space0: Whitespace,
-        expr: Template,
-    },
-    Jsonpath {
-        space0: Whitespace,
-        expr: Template,
-    },
-    Regex {
-        space0: Whitespace,
-        value: RegexValue,
-    },
-    Variable {
-        space0: Whitespace,
-        name: Template,
-    },
-    Duration,
-    Bytes,
-    Sha256,
-    Md5,
-    Certificate {
-        space0: Whitespace,
-        attribute_name: CertificateAttributeName,
-    },
-    Ip,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum RegexValue {
-    Template(Template),
-    Regex(Regex),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CookiePath {
-    pub name: Template,
-    pub attribute: Option<CookieAttribute>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CookieAttribute {
-    pub space0: Whitespace,
-    pub name: CookieAttributeName,
-    pub space1: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum CookieAttributeName {
-    Value(String),
-    Expires(String),
-    MaxAge(String),
-    Domain(String),
-    Path(String),
-    Secure(String),
-    HttpOnly(String),
-    SameSite(String),
-}
-
-impl CookieAttributeName {
-    pub fn value(&self) -> String {
-        match self {
-            CookieAttributeName::Value(value)
-            | CookieAttributeName::Expires(value)
-            | CookieAttributeName::MaxAge(value)
-            | CookieAttributeName::Domain(value)
-            | CookieAttributeName::Path(value)
-            | CookieAttributeName::Secure(value)
-            | CookieAttributeName::HttpOnly(value)
-            | CookieAttributeName::SameSite(value) => value.to_string(),
-        }
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum CertificateAttributeName {
-    Subject,
-    Issuer,
-    StartDate,
-    ExpireDate,
-    SerialNumber,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Predicate {
-    pub not: bool,
-    pub space0: Whitespace,
-    pub predicate_func: PredicateFunc,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Not {
-    pub value: bool,
-    pub space0: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct PredicateFunc {
-    pub source_info: SourceInfo,
-    pub value: PredicateFuncValue,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::large_enum_variant)]
-pub enum PredicateValue {
-    Base64(Base64),
-    Bool(bool),
-    File(File),
-    Hex(Hex),
-    MultilineString(MultilineString),
-    Null,
-    Number(Number),
-    Placeholder(Placeholder),
-    Regex(Regex),
-    String(Template),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::large_enum_variant)]
-pub enum PredicateFuncValue {
-    Equal {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    NotEqual {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    GreaterThan {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    GreaterThanOrEqual {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    LessThan {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    LessThanOrEqual {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    StartWith {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    EndWith {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    Contain {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    Include {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    Match {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
-    IsInteger,
-    IsFloat,
-    IsBoolean,
-    IsString,
-    IsCollection,
-    IsDate,
-    IsIsoDate,
-    Exist,
-    IsEmpty,
-    IsNumber,
-    IsIpv4,
-    IsIpv6,
-}
-
-//
-// Primitives
-//
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct MultilineString {
-    pub kind: MultilineStringKind,
-    pub attributes: Vec<MultilineStringAttribute>,
-}
-
-#[allow(clippy::large_enum_variant)]
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum MultilineStringKind {
-    Text(Text),
-    Json(Text),
-    Xml(Text),
-    GraphQl(GraphQl),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum MultilineStringAttribute {
-    Escape,
-    NoVariable,
-}
-
-impl MultilineString {
-    pub fn lang(&self) -> &'static str {
-        match self.kind {
-            MultilineStringKind::Text(_) => "",
-            MultilineStringKind::Json(_) => "json",
-            MultilineStringKind::Xml(_) => "xml",
-            MultilineStringKind::GraphQl(_) => "graphql",
-        }
-    }
-
-    pub fn value(&self) -> Template {
-        match &self.kind {
-            MultilineStringKind::Text(text)
-            | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.value.clone(),
-            MultilineStringKind::GraphQl(text) => text.value.clone(),
-        }
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Text {
-    pub space: Whitespace,
-    pub newline: Whitespace,
-    pub value: Template,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct GraphQl {
-    pub space: Whitespace,
-    pub newline: Whitespace,
-    pub value: Template,
-    pub variables: Option<GraphQlVariables>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct GraphQlVariables {
-    pub space: Whitespace,
-    pub value: json::Value,
-    pub whitespace: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Base64 {
-    pub space0: Whitespace,
-    pub value: Vec<u8>,
-    pub source: SourceString,
-    pub space1: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct File {
-    pub space0: Whitespace,
-    pub filename: Template,
-    pub space1: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Template {
-    pub delimiter: Option<char>,
-    pub elements: Vec<TemplateElement>,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum TemplateElement {
-    String { value: String, source: SourceString },
-    Placeholder(Placeholder),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Comment {
-    pub value: String,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Whitespace {
-    pub value: String,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Number {
-    Float(Float),
-    Integer(I64),
-    BigInteger(String),
-}
-
-impl ToSource for Number {
-    fn to_source(&self) -> SourceString {
-        match self {
-            Number::Float(value) => value.to_source(),
-            Number::Integer(value) => value.to_source(),
-            Number::BigInteger(value) => value.to_source(),
-        }
-    }
-}
-
-// keep Number terminology for both Integer and Decimal Numbers
-// different representation for the same float value
-// 1.01 and 1.010
-
-#[derive(Clone, Debug)]
-pub struct Float {
-    value: f64,
-    source: SourceString,
-}
-
-impl Float {
-    pub fn new(value: f64, source: SourceString) -> Float {
-        Float { value, source }
-    }
-
-    pub fn as_f64(&self) -> f64 {
-        self.value
-    }
-}
-
-impl fmt::Display for Float {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-impl ToSource for Float {
-    fn to_source(&self) -> SourceString {
-        self.source.clone()
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct U64 {
-    value: u64,
-    source: SourceString,
-}
-
-impl U64 {
-    pub fn new(value: u64, source: SourceString) -> U64 {
-        U64 { value, source }
-    }
-
-    pub fn as_u64(&self) -> u64 {
-        self.value
-    }
-}
-
-impl fmt::Display for U64 {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-impl ToSource for U64 {
-    fn to_source(&self) -> SourceString {
-        self.source.clone()
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct I64 {
-    value: i64,
-    source: SourceString,
-}
-
-impl I64 {
-    pub fn new(value: i64, source: SourceString) -> I64 {
-        I64 { value, source }
-    }
-
-    pub fn as_i64(&self) -> i64 {
-        self.value
-    }
-}
-
-impl fmt::Display for I64 {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-impl ToSource for I64 {
-    fn to_source(&self) -> SourceString {
-        self.source.clone()
-    }
-}
-
-impl PartialEq for Float {
-    fn eq(&self, other: &Self) -> bool {
-        self.source == other.source
-    }
-}
-
-impl Eq for Float {}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct LineTerminator {
-    pub space0: Whitespace,
-    pub comment: Option<Comment>,
-    pub newline: Whitespace,
-}
-
-#[allow(clippy::large_enum_variant)]
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Bytes {
-    Json(json::Value),
-    Xml(String),
-    MultilineString(MultilineString),
-    OnelineString(Template),
-    Base64(Base64),
-    File(File),
-    Hex(Hex),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Hex {
-    pub space0: Whitespace,
-    pub value: Vec<u8>,
-    pub source: SourceString,
-    pub space1: Whitespace,
-}
-
-// Literal Regex
-#[derive(Clone, Debug)]
-pub struct Regex {
-    pub inner: regex::Regex,
-}
-
-impl PartialEq for Regex {
-    fn eq(&self, other: &Self) -> bool {
-        self.inner.to_string() == other.inner.to_string()
-    }
-}
-impl Eq for Regex {}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct SourceInfo {
-    pub start: Pos,
-    pub end: Pos,
-}
-
-impl SourceInfo {
-    pub fn new(start: Pos, end: Pos) -> SourceInfo {
-        SourceInfo { start, end }
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Placeholder {
-    pub space0: Whitespace,
-    pub expr: Expr,
-    pub space1: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Expr {
-    pub source_info: SourceInfo,
-    pub kind: ExprKind,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ExprKind {
-    Variable(Variable),
-    Function(Function),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Variable {
-    pub name: String,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Function {
-    NewDate,
-    NewUuid,
-}
-
 /// Check that variable name is not reserved
 /// (would conflicts with an existing function)
 pub fn is_variable_reserved(name: &str) -> bool {
     ["getEnv", "newDate", "newUuid"].contains(&name)
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct EntryOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub kind: OptionKind,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum OptionKind {
-    AwsSigV4(Template),
-    CaCertificate(Template),
-    ClientCert(Template),
-    ClientKey(Template),
-    Compressed(BooleanOption),
-    ConnectTo(Template),
-    ConnectTimeout(DurationOption),
-    Delay(DurationOption),
-    Header(Template),
-    Http10(BooleanOption),
-    Http11(BooleanOption),
-    Http2(BooleanOption),
-    Http3(BooleanOption),
-    Insecure(BooleanOption),
-    IpV4(BooleanOption),
-    IpV6(BooleanOption),
-    FollowLocation(BooleanOption),
-    FollowLocationTrusted(BooleanOption),
-    LimitRate(NaturalOption),
-    MaxRedirect(CountOption),
-    NetRc(BooleanOption),
-    NetRcFile(Template),
-    NetRcOptional(BooleanOption),
-    Output(Template),
-    PathAsIs(BooleanOption),
-    Proxy(Template),
-    Repeat(CountOption),
-    Resolve(Template),
-    Retry(CountOption),
-    RetryInterval(DurationOption),
-    Skip(BooleanOption),
-    UnixSocket(Template),
-    User(Template),
-    Variable(VariableDefinition),
-    Verbose(BooleanOption),
-    VeryVerbose(BooleanOption),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum BooleanOption {
-    Literal(bool),
-    Placeholder(Placeholder),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum NaturalOption {
-    Literal(U64),
-    Placeholder(Placeholder),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum CountOption {
-    Literal(Count),
-    Placeholder(Placeholder),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum DurationOption {
-    Literal(Duration),
-    Placeholder(Placeholder),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct VariableDefinition {
-    pub source_info: SourceInfo,
-    pub name: String,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub value: VariableValue,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum VariableValue {
-    Null,
-    Bool(bool),
-    Number(Number),
-    String(Template),
-}
-
-impl ToSource for VariableValue {
-    fn to_source(&self) -> SourceString {
-        match self {
-            VariableValue::Null => "null".to_source(),
-            VariableValue::Bool(value) => value.to_string().to_source(),
-            VariableValue::Number(value) => value.to_source(),
-            VariableValue::String(value) => value.to_string().to_source(),
-        }
-    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -969,83 +310,30 @@ pub enum FilterValue {
     },
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::ast::Float;
-    use crate::typing::ToSource;
-
-    #[test]
-    fn test_float() {
-        assert_eq!(
-            Float {
-                value: 1.0,
-                source: "1.0".to_source()
-            }
-            .to_source()
-            .as_str(),
-            "1.0"
-        );
-        assert_eq!(
-            Float {
-                value: 1.0,
-                source: "1.0".to_source()
-            }
-            .to_string(),
-            "1"
-        );
-
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.01".to_source()
-            }
-            .to_source()
-            .as_str(),
-            "1.01"
-        );
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.01".to_source()
-            }
-            .to_string(),
-            "1.01"
-        );
-
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.010".to_source()
-            }
-            .to_source()
-            .as_str(),
-            "1.010"
-        );
-        assert_eq!(
-            Float {
-                value: 1.01,
-                source: "1.010".to_source()
-            }
-            .to_string(),
-            "1.01"
-        );
-
-        assert_eq!(
-            Float {
-                value: -1.333,
-                source: "-1.333".to_source()
-            }
-            .to_source()
-            .as_str(),
-            "-1.333"
-        );
-        assert_eq!(
-            Float {
-                value: -1.333,
-                source: "-1.333".to_source()
-            }
-            .to_string(),
-            "-1.333"
-        );
+impl FilterValue {
+    /// Returns the Hurl identifier for this filter type.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            FilterValue::Base64Decode => "base64Decode",
+            FilterValue::Base64Encode => "base64Encode",
+            FilterValue::Count => "count",
+            FilterValue::DaysAfterNow => "daysAfterNow",
+            FilterValue::DaysBeforeNow => "daysBeforeNow",
+            FilterValue::Decode { .. } => "decode",
+            FilterValue::Format { .. } => "format",
+            FilterValue::HtmlEscape => "htmlEscape",
+            FilterValue::HtmlUnescape => "htmlUnescape",
+            FilterValue::JsonPath { .. } => "jsonpath",
+            FilterValue::Nth { .. } => "nth",
+            FilterValue::Regex { .. } => "regex",
+            FilterValue::Replace { .. } => "replace",
+            FilterValue::Split { .. } => "split",
+            FilterValue::ToDate { .. } => "toDate",
+            FilterValue::ToFloat => "toFloat",
+            FilterValue::ToInt => "toInt",
+            FilterValue::UrlDecode => "urlDecode",
+            FilterValue::UrlEncode => "urlEncode",
+            FilterValue::XPath { .. } => "xpath",
+        }
     }
 }
