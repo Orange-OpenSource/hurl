@@ -19,7 +19,7 @@ use std::fmt;
 
 use crate::ast::primitive::Placeholder;
 use crate::ast::Template;
-use crate::typing::ToSource;
+use crate::typing::{SourceString, ToSource};
 
 /// This the AST for the JSON used within Hurl (for instance in [implicit JSON body request](https://hurl.dev/docs/request.html#json-body)).
 ///
@@ -69,6 +69,36 @@ pub struct JsonObjectElement {
     pub space3: String,
 }
 
+impl fmt::Display for JsonObjectElement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut s = String::new();
+        s.push_str(self.space0.as_str());
+        s.push('"');
+        s.push_str(self.name.to_string().as_str());
+        s.push('"');
+        s.push_str(self.space1.as_str());
+        s.push(':');
+        s.push_str(self.space2.as_str());
+        s.push_str(self.value.to_string().as_str());
+        s.push_str(self.space3.as_str());
+        write!(f, "{s}")
+    }
+}
+
+impl ToSource for JsonObjectElement {
+    fn to_source(&self) -> SourceString {
+        let mut s = SourceString::new();
+        s.push_str(self.space0.as_str());
+        s.push_str(self.name.to_source().as_str());
+        s.push_str(self.space1.as_str());
+        s.push(':');
+        s.push_str(self.space2.as_str());
+        s.push_str(self.value.encoded().as_str());
+        s.push_str(self.space3.as_str());
+        s
+    }
+}
+
 impl fmt::Display for JsonValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
@@ -112,22 +142,6 @@ impl fmt::Display for JsonListElement {
     }
 }
 
-impl fmt::Display for JsonObjectElement {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut s = String::new();
-        s.push_str(self.space0.as_str());
-        s.push('"');
-        s.push_str(self.name.to_string().as_str());
-        s.push('"');
-        s.push_str(self.space1.as_str());
-        s.push(':');
-        s.push_str(self.space2.as_str());
-        s.push_str(self.value.to_string().as_str());
-        s.push_str(self.space3.as_str());
-        write!(f, "{s}")
-    }
-}
-
 impl JsonValue {
     pub fn encoded(&self) -> String {
         match self {
@@ -151,7 +165,7 @@ impl JsonValue {
             JsonValue::Object { space0, elements } => {
                 let elements = elements
                     .iter()
-                    .map(|e| e.encoded())
+                    .map(|e| e.to_source().to_string())
                     .collect::<Vec<String>>();
                 format!("{{{}{}}}", space0, elements.join(","))
             }
@@ -166,20 +180,6 @@ impl JsonListElement {
         s.push_str(self.space0.as_str());
         s.push_str(self.value.encoded().as_str());
         s.push_str(self.space1.as_str());
-        s
-    }
-}
-
-impl JsonObjectElement {
-    fn encoded(&self) -> String {
-        let mut s = String::new();
-        s.push_str(self.space0.as_str());
-        s.push_str(self.name.to_source().as_str());
-        s.push_str(self.space1.as_str());
-        s.push(':');
-        s.push_str(self.space2.as_str());
-        s.push_str(self.value.encoded().as_str());
-        s.push_str(self.space3.as_str());
         s
     }
 }
