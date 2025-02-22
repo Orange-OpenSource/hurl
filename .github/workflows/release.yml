@@ -267,7 +267,7 @@ jobs:
           fi
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         if: ${{ always() }}
         with:
           name: release-changelog
@@ -347,7 +347,7 @@ jobs:
             find ./artifacts -name "*sha256" | xargs -I FILE sh -c 'echo "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/releases/download/${RELEASE_VERSION}/$(basename FILE),$(cat FILE)"' >> release-"${RELEASE_VERSION}".sha256.csv
 
       - name: Archive sha256 artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: release-sha256-csv
           path: release-${{ needs.set-context.outputs.release_version }}.sha256.csv
