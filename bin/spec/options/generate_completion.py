@@ -21,8 +21,7 @@ _"""
         + name
         + """()
 {
-    local cur prev words cword
-    _init_completion || return
+    cur="${COMP_WORDS[COMP_CWORD]}"
 
     if [[ $cur == -* ]]; then
         COMPREPLY=($(compgen -W '"""
