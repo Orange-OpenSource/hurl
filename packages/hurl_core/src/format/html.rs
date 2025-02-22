@@ -726,7 +726,7 @@ impl HtmlFormatter {
     }
 
     fn fmt_json_value(&mut self, json_value: &JsonValue) {
-        let json = format_multilines(&json_value.encoded());
+        let json = format_multilines(json_value.to_source().as_str());
         self.fmt_span("json", &json);
     }
 
@@ -917,7 +917,7 @@ impl GraphQlVariables {
     fn to_encoded_string(&self) -> String {
         let mut s = "variables".to_string();
         s.push_str(&self.space.value);
-        s.push_str(&self.value.encoded());
+        s.push_str(self.value.to_source().as_str());
         s.push_str(&self.whitespace.value);
         s
     }

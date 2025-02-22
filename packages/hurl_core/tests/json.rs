@@ -21,12 +21,13 @@ use std::io::Read;
 
 use hurl_core::ast::JsonValue;
 use hurl_core::parser::ParseError;
+use hurl_core::typing::ToSource;
 
 #[test]
 fn debug() {
     let content = r#""{{name}}""#;
     let value = parse_json(content.to_string()).unwrap();
-    eprintln!("{}", value.encoded());
+    eprintln!("{}", value.to_source());
 }
 
 #[test]
@@ -35,7 +36,7 @@ fn test_echo() {
         eprintln!("{file}");
         let content = read_content(file);
         let value = parse_json(content.to_string()).unwrap();
-        assert_eq!(value.encoded(), content);
+        assert_eq!(value.to_source().as_str(), content);
     }
 }
 
