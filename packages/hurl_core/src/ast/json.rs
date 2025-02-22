@@ -59,6 +59,26 @@ pub struct JsonListElement {
     pub space1: String,
 }
 
+impl fmt::Display for JsonListElement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut s = String::new();
+        s.push_str(self.space0.as_str());
+        s.push_str(self.value.to_string().as_str());
+        s.push_str(self.space1.as_str());
+        write!(f, "{s}")
+    }
+}
+
+impl ToSource for JsonListElement {
+    fn to_source(&self) -> SourceString {
+        let mut s = SourceString::new();
+        s.push_str(self.space0.as_str());
+        s.push_str(self.value.encoded().as_str());
+        s.push_str(self.space1.as_str());
+        s
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct JsonObjectElement {
     pub space0: String,
@@ -132,16 +152,6 @@ impl fmt::Display for JsonValue {
     }
 }
 
-impl fmt::Display for JsonListElement {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut s = String::new();
-        s.push_str(self.space0.as_str());
-        s.push_str(self.value.to_string().as_str());
-        s.push_str(self.space1.as_str());
-        write!(f, "{s}")
-    }
-}
-
 impl JsonValue {
     pub fn encoded(&self) -> String {
         match self {
@@ -158,7 +168,7 @@ impl JsonValue {
             JsonValue::List { space0, elements } => {
                 let elements = elements
                     .iter()
-                    .map(|e| e.encoded())
+                    .map(|e| e.to_source().to_string())
                     .collect::<Vec<String>>();
                 format!("[{}{}]", space0, elements.join(","))
             }
@@ -171,15 +181,5 @@ impl JsonValue {
             }
             JsonValue::Null => "null".to_string(),
         }
-    }
-}
-
-impl JsonListElement {
-    fn encoded(&self) -> String {
-        let mut s = String::new();
-        s.push_str(self.space0.as_str());
-        s.push_str(self.value.encoded().as_str());
-        s.push_str(self.space1.as_str());
-        s
     }
 }
