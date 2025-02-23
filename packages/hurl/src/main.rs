@@ -305,17 +305,15 @@ fn create_cookies_file(
 "#
     .to_string();
 
-    // TODO: We only serialize the first file. I don't see any valid reason why we're not
-    // serializing every file see issue <https://github.com/Orange-OpenSource/hurl/issues/2537>
-    match runs.first() {
-        None => {
-            return Err(CliError::IO("Issue fetching results".to_string()));
-        }
-        Some(run) => {
-            for cookie in run.hurl_result.cookies.iter() {
-                s.push_str(&cookie.redact(secrets));
-                s.push('\n');
-            }
+    if runs.is_empty() {
+        return Err(CliError::IO("Issue fetching results".to_string()));
+    }
+    for run in runs.iter() {
+        s.push_str(&format!("# Cookies for file <{}>", run.filename));
+        s.push('\n');
+        for cookie in run.hurl_result.cookies.iter() {
+            s.push_str(&cookie.redact(secrets));
+            s.push('\n');
         }
     }
 

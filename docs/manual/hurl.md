@@ -209,7 +209,7 @@ This is a cli-only option.
 
 ### -c, --cookie-jar <FILE> {#cookie-jar}
 
-Write cookies to FILE after running the session (only for one session).
+Write cookies to FILE after running the session.
 The file will be written using the Netscape cookie file format.
 
 Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.

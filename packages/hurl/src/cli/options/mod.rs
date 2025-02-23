@@ -261,11 +261,6 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         ));
     }
 
-    if opts.cookie_output_file.is_some() && opts.input_files.len() > 1 {
-        return Err(CliOptionsError::Error(
-            "Only save cookies for a unique session".to_string(),
-        ));
-    }
     Ok(opts)
 }
 
