@@ -89,6 +89,7 @@ function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" 
 function clean_indent { sed "s/^ *hurl/hurl/g" ;}
 function uncomment { sed "s/^#//g" ;}
 function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
+function clean_completion_function { grep -v _hurl || true ; }
 function clean_ps1_var_redirect { sed "s/.*=hurl/hurl/g" ;}
 function clean_c_drive { sed "s/C://g" ;}
 function conv_ps1_antislash_to_sh { sed "s#\`\$#\\\#g" | sed "s#\`\\\#\\\\\\\#g" ;}
@@ -96,7 +97,7 @@ function conv_ps1_null_to_sh { sed "s#\$null#/dev/null#g" | sed "s#--output NUL#
 while read -r script_sh ; do
     script_ps1="${script_sh%.sh}.ps1"
     if [[ -f "${script_ps1}" ]] ; then
-        filter_hurl_and_hurlfmt "${script_sh}" | clean_sh_var_redirect | clean_indent | uncomment > "${tmp_sh}"
+        filter_hurl_and_hurlfmt "${script_sh}" | clean_completion_function | clean_sh_var_redirect | clean_indent | uncomment > "${tmp_sh}"
         filter_hurl_and_hurlfmt "${script_ps1}" | clean_ps1_var_redirect | clean_c_drive | conv_ps1_antislash_to_sh | conv_ps1_null_to_sh | clean_indent | uncomment > "${tmp_ps1}"
         if ! cmp -s "${tmp_sh}" "${tmp_ps1}" >/dev/null 2>&1 ; then
             icdiff \
