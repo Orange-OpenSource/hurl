@@ -34,8 +34,10 @@ pub struct KeyValue {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MultilineString {
-    pub kind: MultilineStringKind,
     pub attributes: Vec<MultilineStringAttribute>,
+    pub space: Whitespace,
+    pub newline: Whitespace,
+    pub kind: MultilineStringKind,
 }
 
 impl fmt::Display for MultilineString {
@@ -43,7 +45,7 @@ impl fmt::Display for MultilineString {
         let body = match &self.kind {
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.value.to_string(),
+            | MultilineStringKind::Xml(text) => text.to_string(),
             MultilineStringKind::GraphQl(graphql) => {
                 let var = match &graphql.variables {
                     None => String::new(),
@@ -75,7 +77,7 @@ impl MultilineString {
         match &self.kind {
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.value.clone(),
+            | MultilineStringKind::Xml(text) => text.clone(),
             MultilineStringKind::GraphQl(text) => text.value.clone(),
         }
     }
@@ -84,9 +86,9 @@ impl MultilineString {
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultilineStringKind {
-    Text(Text),
-    Json(Text),
-    Xml(Text),
+    Text(Template),
+    Json(Template),
+    Xml(Template),
     GraphQl(GraphQl),
 }
 
@@ -106,16 +108,7 @@ impl fmt::Display for MultilineStringAttribute {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Text {
-    pub space: Whitespace,
-    pub newline: Whitespace,
-    pub value: Template,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GraphQl {
-    pub space: Whitespace,
-    pub newline: Whitespace,
     pub value: Template,
     pub variables: Option<GraphQlVariables>,
 }

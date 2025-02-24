@@ -23,8 +23,8 @@ use hurl_core::ast::{
     MultilineString, MultilineStringAttribute, MultilineStringKind, MultipartParam, NaturalOption,
     OptionKind, Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query,
     QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, StatusValue,
-    Template, TemplateElement, Text, Variable, VariableDefinition, VariableValue, Version,
-    Whitespace, I64, U64,
+    Template, TemplateElement, Variable, VariableDefinition, VariableValue, Version, Whitespace,
+    I64, U64,
 };
 use hurl_core::typing::{Count, Duration, ToSource};
 
@@ -648,23 +648,13 @@ impl Tokenizable for MultilineString {
             }
             tokens.append(&mut attribute.tokenize());
         }
-        match self {
-            MultilineString {
-                kind: MultilineStringKind::Text(text),
-                ..
-            }
-            | MultilineString {
-                kind: MultilineStringKind::Json(text),
-                ..
-            }
-            | MultilineString {
-                kind: MultilineStringKind::Xml(text),
-                ..
-            } => tokens.append(&mut text.tokenize()),
-            MultilineString {
-                kind: MultilineStringKind::GraphQl(graphql),
-                ..
-            } => tokens.append(&mut graphql.tokenize()),
+        tokens.append(&mut self.space.tokenize());
+        tokens.append(&mut self.newline.tokenize());
+        match &self.kind {
+            MultilineStringKind::Text(value)
+            | MultilineStringKind::Json(value)
+            | MultilineStringKind::Xml(value) => tokens.append(&mut value.tokenize()),
+            MultilineStringKind::GraphQl(graphql) => tokens.append(&mut graphql.tokenize()),
         }
         tokens.push(Token::StringDelimiter("```".to_string()));
         tokens
@@ -680,21 +670,9 @@ impl Tokenizable for MultilineStringAttribute {
     }
 }
 
-impl Tokenizable for Text {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(&mut self.space.tokenize());
-        tokens.append(&mut self.newline.tokenize());
-        tokens.append(&mut self.value.tokenize());
-        tokens
-    }
-}
-
 impl Tokenizable for GraphQl {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        tokens.append(&mut self.space.tokenize());
-        tokens.append(&mut self.newline.tokenize());
         tokens.append(&mut self.value.tokenize());
         if let Some(vars) = &self.variables {
             tokens.append(&mut vars.tokenize());

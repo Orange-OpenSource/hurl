@@ -215,7 +215,7 @@ mod tests {
     use super::*;
     use crate::ast::{
         Bytes, Comment, JsonListElement, JsonValue, LineTerminator, MultilineString,
-        MultilineStringKind, Template, TemplateElement, Text, Whitespace,
+        MultilineStringKind, Template, TemplateElement, Whitespace,
     };
     use crate::reader::Pos;
     use crate::typing::ToSource;
@@ -379,25 +379,23 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
                 value: Bytes::MultilineString(MultilineString {
-                    kind: MultilineStringKind::Text(Text {
-                        space: Whitespace {
-                            value: String::new(),
-                            source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),
-                        },
-                        newline: Whitespace {
-                            source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
-                            value: "\n".to_string(),
-                        },
-                        value: Template {
-                            elements: vec![TemplateElement::String {
-                                value: "Hello World!\n".to_string(),
-                                source: "Hello World!\n".to_source(),
-                            }],
-                            delimiter: None,
-                            source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
-                        },
-                    }),
-                    attributes: vec![]
+                    attributes: vec![],
+                    space: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),
+                    },
+                    newline: Whitespace {
+                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
+                        value: "\n".to_string(),
+                    },
+                    kind: MultilineStringKind::Text(Template {
+                        elements: vec![TemplateElement::String {
+                            value: "Hello World!\n".to_string(),
+                            source: "Hello World!\n".to_source(),
+                        }],
+                        delimiter: None,
+                        source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
+                    },),
                 }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {

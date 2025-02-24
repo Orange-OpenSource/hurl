@@ -897,7 +897,7 @@ impl MultilineStringKind {
         match self {
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.value.to_encoded_string(),
+            | MultilineStringKind::Xml(text) => text.to_encoded_string(),
             MultilineStringKind::GraphQl(graphql) => graphql.to_encoded_string(),
         }
     }
@@ -946,7 +946,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{JsonObjectElement, SourceInfo, Text};
+    use crate::ast::{JsonObjectElement, SourceInfo};
     use crate::reader::Pos;
     use crate::typing::ToSource;
 
@@ -956,7 +956,17 @@ mod tests {
         // line1
         // line2
         // ```
-        let kind = MultilineStringKind::Text(Text {
+        let kind = MultilineStringKind::Text(Template {
+            delimiter: None,
+            elements: vec![TemplateElement::String {
+                value: "line1\nline2\n".to_string(),
+                source: "line1\nline2\n".to_source(),
+            }],
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+        });
+        let attributes = vec![];
+        let multiline_string = MultilineString {
+            attributes,
             space: Whitespace {
                 value: String::new(),
                 source_info: SourceInfo {
@@ -971,17 +981,8 @@ mod tests {
                     end: Pos { line: 2, column: 1 },
                 },
             },
-            value: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: "line1\nline2\n".to_string(),
-                    source: "line1\nline2\n".to_source(),
-                }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
-        });
-        let attributes = vec![];
-        let multiline_string = MultilineString { kind, attributes };
+            kind,
+        };
         let mut fmt = HtmlFormatter::new();
         fmt.fmt_multiline_string(&multiline_string, true);
         assert_eq!(

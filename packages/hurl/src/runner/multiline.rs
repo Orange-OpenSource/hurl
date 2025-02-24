@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{MultilineString, MultilineStringKind, Text};
+use hurl_core::ast::{MultilineString, MultilineStringKind};
 use serde_json::json;
 
 use crate::runner::json::eval_json_value;
@@ -27,26 +27,14 @@ pub fn eval_multiline(
     multiline: &MultilineString,
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
-    match multiline {
-        MultilineString {
-            kind: MultilineStringKind::Text(Text { value, .. }),
-            ..
-        }
-        | MultilineString {
-            kind: MultilineStringKind::Json(Text { value, .. }),
-            ..
-        }
-        | MultilineString {
-            kind: MultilineStringKind::Xml(Text { value, .. }),
-            ..
-        } => {
+    match &multiline.kind {
+        MultilineStringKind::Text(value)
+        | MultilineStringKind::Json(value)
+        | MultilineStringKind::Xml(value) => {
             let s = eval_template(value, variables)?;
             Ok(s)
         }
-        MultilineString {
-            kind: MultilineStringKind::GraphQl(graphql),
-            ..
-        } => {
+        MultilineStringKind::GraphQl(graphql) => {
             let query = eval_template(&graphql.value, variables)?;
             let body = match &graphql.variables {
                 None => json!({ "query": query.trim()}).to_string(),
@@ -101,9 +89,10 @@ mod tests {
 }"#;
         let variables = VariableSet::new();
         let multiline = MultilineString {
+            attributes: vec![],
+            space: whitespace(),
+            newline: newline(),
             kind: MultilineStringKind::GraphQl(GraphQl {
-                space: whitespace(),
-                newline: newline(),
                 value: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
@@ -114,7 +103,6 @@ mod tests {
                 },
                 variables: None,
             }),
-            attributes: vec![],
         };
         let body = eval_multiline(&multiline, &variables).unwrap();
         assert_eq!(
@@ -180,9 +168,10 @@ mod tests {
             whitespace: whitespace(),
         };
         let multiline = MultilineString {
+            attributes: vec![],
+            space: whitespace(),
+            newline: newline(),
             kind: MultilineStringKind::GraphQl(GraphQl {
-                space: whitespace(),
-                newline: newline(),
                 value: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
@@ -193,7 +182,6 @@ mod tests {
                 },
                 variables: Some(graphql_variables),
             }),
-            attributes: vec![],
         };
 
         let body = eval_multiline(&multiline, &hurl_variables).unwrap();

@@ -21,7 +21,7 @@ use hurl_core::ast::{
     Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
     MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
     PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
-    SourceInfo, Template, Text, VariableDefinition, Whitespace,
+    SourceInfo, Template, VariableDefinition, Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -388,34 +388,48 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
 }
 
 fn lint_multiline_string(multiline_string: &MultilineString) -> MultilineString {
+    let space = empty_whitespace();
+    let newline = multiline_string.newline.clone();
     match multiline_string {
         MultilineString {
+            attributes,
             kind: MultilineStringKind::Text(value),
-            attributes,
+            ..
         } => MultilineString {
-            kind: MultilineStringKind::Text(lint_text(value)),
             attributes: lint_multiline_string_attributes(attributes),
+            space,
+            newline,
+            kind: MultilineStringKind::Text(lint_template(value)),
         },
         MultilineString {
+            attributes,
             kind: MultilineStringKind::Json(value),
-            attributes,
+            ..
         } => MultilineString {
-            kind: MultilineStringKind::Json(lint_text(value)),
             attributes: lint_multiline_string_attributes(attributes),
+            space,
+            newline,
+            kind: MultilineStringKind::Json(lint_template(value)),
         },
         MultilineString {
+            attributes,
             kind: MultilineStringKind::Xml(value),
-            attributes,
+            ..
         } => MultilineString {
-            kind: MultilineStringKind::Xml(lint_text(value)),
             attributes: lint_multiline_string_attributes(attributes),
+            space,
+            newline,
+            kind: MultilineStringKind::Xml(lint_template(value)),
         },
         MultilineString {
-            kind: MultilineStringKind::GraphQl(value),
             attributes,
+            kind: MultilineStringKind::GraphQl(value),
+            ..
         } => MultilineString {
-            kind: MultilineStringKind::GraphQl(lint_graphql(value)),
             attributes: lint_multiline_string_attributes(attributes),
+            space,
+            newline,
+            kind: MultilineStringKind::GraphQl(lint_graphql(value)),
         },
     }
 }
@@ -426,28 +440,10 @@ fn lint_multiline_string_attributes(
     attributes.to_vec()
 }
 
-fn lint_text(text: &Text) -> Text {
-    let space = empty_whitespace();
-    let newline = text.newline.clone();
-    let value = lint_template(&text.value);
-    Text {
-        space,
-        newline,
-        value,
-    }
-}
-
 fn lint_graphql(graphql: &GraphQl) -> GraphQl {
-    let space = empty_whitespace();
-    let newline = graphql.newline.clone();
     let value = lint_template(&graphql.value);
     let variables = graphql.variables.clone();
-    GraphQl {
-        space,
-        newline,
-        value,
-        variables,
-    }
+    GraphQl { value, variables }
 }
 
 fn lint_cookie(cookie: &Cookie) -> Cookie {
