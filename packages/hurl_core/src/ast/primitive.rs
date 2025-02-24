@@ -92,17 +92,28 @@ pub enum MultilineStringKind {
     GraphQl(GraphQl),
 }
 
+impl ToSource for MultilineStringKind {
+    fn to_source(&self) -> SourceString {
+        match self {
+            MultilineStringKind::Text(value)
+            | MultilineStringKind::Json(value)
+            | MultilineStringKind::Xml(value) => value.to_source(),
+            MultilineStringKind::GraphQl(value) => value.to_source(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultilineStringAttribute {
     Escape,
     NoVariable,
 }
 
-impl fmt::Display for MultilineStringAttribute {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl ToSource for MultilineStringAttribute {
+    fn to_source(&self) -> SourceString {
         match self {
-            MultilineStringAttribute::Escape => write!(f, "escape"),
-            MultilineStringAttribute::NoVariable => write!(f, "novariable"),
+            MultilineStringAttribute::Escape => "escape".to_source(),
+            MultilineStringAttribute::NoVariable => "novariable".to_source(),
         }
     }
 }
@@ -113,11 +124,32 @@ pub struct GraphQl {
     pub variables: Option<GraphQlVariables>,
 }
 
+impl ToSource for GraphQl {
+    fn to_source(&self) -> SourceString {
+        let mut source = SourceString::new();
+        source.push_str(self.value.to_source().as_str());
+        if let Some(vars) = &self.variables {
+            source.push_str(vars.to_source().as_str());
+        }
+        source
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GraphQlVariables {
     pub space: Whitespace,
     pub value: JsonValue,
     pub whitespace: Whitespace,
+}
+
+impl ToSource for GraphQlVariables {
+    fn to_source(&self) -> SourceString {
+        let mut source = "variable".to_source();
+        source.push_str(&self.space.value);
+        source.push_str(self.value.to_source().as_str());
+        source.push_str(&self.whitespace.value);
+        source
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

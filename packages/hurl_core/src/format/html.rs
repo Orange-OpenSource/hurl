@@ -20,11 +20,11 @@ use std::fmt::Display;
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FileParam,
-    FileValue, Filter, FilterValue, GraphQl, GraphQlVariables, Hex, HurlFile, JsonValue, KeyValue,
-    LineTerminator, Method, MultilineString, MultilineStringKind, MultipartParam, NaturalOption,
-    OptionKind, Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query,
-    QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, Template,
-    VariableDefinition, VariableValue, Version, Whitespace,
+    FileValue, Filter, FilterValue, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method,
+    MultilineString, MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate,
+    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue,
+    Request, Response, Section, SectionValue, Status, Template, VariableDefinition, VariableValue,
+    Version, Whitespace,
 };
 use crate::typing::{Count, ToSource};
 
@@ -622,11 +622,11 @@ impl HtmlFormatter {
                 if i > 0 || !lang.is_empty() {
                     attributes.push_str(", ");
                 }
-                attributes.push_str(attribute.to_string().as_str());
+                attributes.push_str(attribute.to_source().as_str());
             }
-            // Keep original encoded string
-            let multiline_string_encoded = multiline_string.kind.to_encoded_string();
-            let body = format!("```{lang}{attributes}\n{multiline_string_encoded}```");
+            // Keep original source string
+            let multiline_string_source = multiline_string.kind.to_source().to_string();
+            let body = format!("```{lang}{attributes}\n{multiline_string_source}```");
             let body = format_multilines(&body);
             self.fmt_span("multiline", &body);
         } else {
@@ -871,37 +871,6 @@ fn escape_xml(s: &str) -> String {
         .replace('>', "&gt;")
 }
 
-impl MultilineStringKind {
-    fn to_encoded_string(&self) -> String {
-        match self {
-            MultilineStringKind::Text(text)
-            | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.to_source().to_string(),
-            MultilineStringKind::GraphQl(graphql) => graphql.to_encoded_string(),
-        }
-    }
-}
-
-impl GraphQl {
-    fn to_encoded_string(&self) -> String {
-        let mut s = self.value.to_source().to_string();
-        if let Some(vars) = &self.variables {
-            s.push_str(&vars.to_encoded_string());
-        }
-        s
-    }
-}
-
-impl GraphQlVariables {
-    fn to_encoded_string(&self) -> String {
-        let mut s = "variables".to_string();
-        s.push_str(&self.space.value);
-        s.push_str(self.value.to_source().as_str());
-        s.push_str(&self.whitespace.value);
-        s
-    }
-}
-
 fn encode_html(s: &str) -> String {
     s.replace('>', "&gt;").replace('<', "&lt;")
 }
@@ -925,7 +894,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{JsonObjectElement, SourceInfo, TemplateElement};
+    use crate::ast::{JsonObjectElement, MultilineStringKind, SourceInfo, TemplateElement};
     use crate::reader::Pos;
     use crate::typing::ToSource;
 
