@@ -85,7 +85,7 @@ if tput cols >/dev/null 2>&1 ; then
 else
     nb_cols=220
 fi
-function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" || true ;}
+function filter_hurl_and_hurlfmt { grep -E "^hurl | hurl|^hurlfmt | hurlfmt" "$1" || true ;}
 function clean_indent { sed "s/^ *hurl/hurl/g" ;}
 function uncomment { sed "s/^#//g" ;}
 function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
