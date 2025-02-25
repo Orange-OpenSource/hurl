@@ -29,7 +29,8 @@ _"""
         + """' -- "$cur"))
         return
     fi
- 
+    # Generate filenames by default
+    COMPREPLY=($(compgen -f "$cur" | sort))
 } &&
     complete -F _"""
         + name

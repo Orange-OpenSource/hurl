@@ -1,2 +1,3 @@
 --verbose --very-verbose --version
 --verbose
+tests_ok/completion_bash.out tests_ok/completion_bash.ps1 tests_ok/completion_bash.sh

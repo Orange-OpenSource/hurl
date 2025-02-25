@@ -4,12 +4,14 @@ set -Eeuo pipefail
 # shellcheck source=/dev/null
 source ../../completions/hurl.bash
 
-export COMP_WORDS=(curl --ver)
-export COMP_CWORD=1
-_hurl 
-echo "${COMPREPLY[*]}"
+test () {
+    unset COMPREPLY
+    export COMP_WORDS=( hurl "$@" )
+    export COMP_CWORD=$(( ${#COMP_WORDS[@]} -1 ))   # last parameter
+    _hurl 
+    echo "${COMPREPLY[*]}"
+}
 
-export COMP_WORDS=(curl --verb)
-export COMP_CWORD=1
-_hurl 
-echo "${COMPREPLY[*]}"
+test --ver
+test --verb
+test --verbose tests_ok/completion_b
