@@ -24,7 +24,7 @@ use crate::ast::{
     LineTerminator, Method, MultilineString, MultilineStringKind, MultipartParam, NaturalOption,
     OptionKind, Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query,
     QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, Template,
-    TemplateElement, VariableDefinition, VariableValue, Version, Whitespace,
+    VariableDefinition, VariableValue, Version, Whitespace,
 };
 use crate::typing::{Count, ToSource};
 
@@ -127,7 +127,7 @@ impl HtmlFormatter {
         self.fmt_space(&request.space0);
         self.fmt_method(&request.method);
         self.fmt_space(&request.space1);
-        let url = escape_xml(&request.url.to_encoded_string());
+        let url = escape_xml(request.url.to_source().as_str());
         self.fmt_span("url", &url);
         self.fmt_span_close();
         self.fmt_lt(&request.line_terminator0);
@@ -429,8 +429,7 @@ impl HtmlFormatter {
     fn fmt_cookie_path(&mut self, cookie_path: &CookiePath) {
         self.fmt_span_open("string");
         self.buffer.push('"');
-        self.buffer
-            .push_str(cookie_path.name.to_encoded_string().as_str());
+        self.buffer.push_str(cookie_path.name.to_source().as_str());
         if let Some(attribute) = &cookie_path.attribute {
             self.buffer.push('[');
             self.fmt_cookie_attribute(attribute);
@@ -781,13 +780,13 @@ impl HtmlFormatter {
     }
 
     fn fmt_template(&mut self, template: &Template) {
-        let s = template.to_encoded_string();
-        self.fmt_string(&escape_xml(&s));
+        let s = template.to_source();
+        self.fmt_string(&escape_xml(s.as_str()));
     }
 
     fn fmt_placeholder(&mut self, placeholder: &Placeholder) {
-        let placeholder = format!("{{{{{}}}}}", &placeholder.to_string());
-        self.fmt_span("expr", &placeholder);
+        let placeholder = placeholder.to_source();
+        self.fmt_span("expr", placeholder.as_str());
     }
 
     fn fmt_filter(&mut self, filter: &Filter) {
@@ -872,32 +871,12 @@ fn escape_xml(s: &str) -> String {
         .replace('>', "&gt;")
 }
 
-impl Template {
-    fn to_encoded_string(&self) -> String {
-        let mut s = String::new();
-        if let Some(d) = self.delimiter {
-            s.push(d);
-        }
-        for element in self.elements.iter() {
-            let elem_str = match element {
-                TemplateElement::String { source, .. } => source.to_string(),
-                TemplateElement::Placeholder(expr) => format!("{{{{{expr}}}}}"),
-            };
-            s.push_str(elem_str.as_str());
-        }
-        if let Some(d) = self.delimiter {
-            s.push(d);
-        }
-        s
-    }
-}
-
 impl MultilineStringKind {
     fn to_encoded_string(&self) -> String {
         match self {
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.to_encoded_string(),
+            | MultilineStringKind::Xml(text) => text.to_source().to_string(),
             MultilineStringKind::GraphQl(graphql) => graphql.to_encoded_string(),
         }
     }
@@ -905,7 +884,7 @@ impl MultilineStringKind {
 
 impl GraphQl {
     fn to_encoded_string(&self) -> String {
-        let mut s = self.value.to_encoded_string();
+        let mut s = self.value.to_source().to_string();
         if let Some(vars) = &self.variables {
             s.push_str(&vars.to_encoded_string());
         }
@@ -946,7 +925,7 @@ fn pop_str(string: &mut String, suffix: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{JsonObjectElement, SourceInfo};
+    use crate::ast::{JsonObjectElement, SourceInfo, TemplateElement};
     use crate::reader::Pos;
     use crate::typing::ToSource;
 

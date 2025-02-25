@@ -177,6 +177,7 @@ impl fmt::Display for TemplateElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
             TemplateElement::String { value, .. } => value.clone(),
+            // TODO: see why we can't need to us `{{` and `}}` in a to_string method
             TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}"),
         };
         write!(f, "{s}")
@@ -187,7 +188,7 @@ impl ToSource for TemplateElement {
     fn to_source(&self) -> SourceString {
         match self {
             TemplateElement::String { source, .. } => source.clone(),
-            TemplateElement::Placeholder(value) => format!("{{{{{value}}}}}").to_source(),
+            TemplateElement::Placeholder(value) => value.to_source(),
         }
     }
 }
@@ -409,6 +410,18 @@ impl fmt::Display for Placeholder {
     }
 }
 
+impl ToSource for Placeholder {
+    fn to_source(&self) -> SourceString {
+        let mut source = SourceString::new();
+        source.push_str("{{");
+        source.push_str(&self.space0.value);
+        source.push_str(self.expr.to_source().as_str());
+        source.push_str(&self.space1.value);
+        source.push_str("}}");
+        source
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Expr {
     pub source_info: SourceInfo,
@@ -418,6 +431,12 @@ pub struct Expr {
 impl fmt::Display for Expr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.kind)
+    }
+}
+
+impl ToSource for Expr {
+    fn to_source(&self) -> SourceString {
+        self.kind.to_string().to_source()
     }
 }
 
