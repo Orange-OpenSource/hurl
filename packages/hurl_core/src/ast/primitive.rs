@@ -40,26 +40,20 @@ pub struct MultilineString {
     pub kind: MultilineStringKind,
 }
 
-impl fmt::Display for MultilineString {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let body = match &self.kind {
-            MultilineStringKind::Text(text)
-            | MultilineStringKind::Json(text)
-            | MultilineStringKind::Xml(text) => text.to_string(),
-            MultilineStringKind::GraphQl(graphql) => {
-                let var = match &graphql.variables {
-                    None => String::new(),
-                    Some(var) => {
-                        format!(
-                            "variables{}{}{}",
-                            var.space.value, var.value, var.whitespace.value
-                        )
-                    }
-                };
-                format!("{}{}", graphql.value, var)
-            }
-        };
-        write!(f, "{body}")
+impl ToSource for MultilineString {
+    fn to_source(&self) -> SourceString {
+        let mut source = SourceString::new();
+        let att = self
+            .attributes
+            .iter()
+            .map(|att| att.to_source())
+            .collect::<Vec<_>>()
+            .join(",");
+        source.push_str(&att);
+        source.push_str(&self.space.value);
+        source.push_str(&self.newline.value);
+        source.push_str(self.kind.to_source().as_str());
+        source
     }
 }
 
@@ -640,9 +634,9 @@ mod tests {
     }
 
     #[test]
-    fn test_template_to_string() {
+    fn test_template_to_source() {
         assert_eq!(
-            "{{x}}".to_string(),
+            "{{x}}",
             JsonValue::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
@@ -660,35 +654,35 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             })
-            .to_string()
+            .to_source()
+            .as_str()
         );
+        assert_eq!("1", JsonValue::Number("1".to_string()).to_source().as_str());
         assert_eq!(
-            "1".to_string(),
-            JsonValue::Number("1".to_string()).to_string()
-        );
-        assert_eq!(
-            "\"hello\"".to_string(),
+            "\"hello\"",
             JsonValue::String(Template {
-                delimiter: None,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
                     source: "hello".to_source(),
                 }],
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             })
-            .to_string()
+            .to_source()
+            .as_str()
         );
-        assert_eq!("true".to_string(), JsonValue::Boolean(true).to_string());
+        assert_eq!("true", JsonValue::Boolean(true).to_source().as_str());
         assert_eq!(
-            "[]".to_string(),
+            "[]",
             JsonValue::List {
                 space0: String::new(),
                 elements: vec![],
             }
-            .to_string()
+            .to_source()
+            .as_str()
         );
         assert_eq!(
-            "[1, 2, 3]".to_string(),
+            "[1, 2, 3]",
             JsonValue::List {
                 space0: String::new(),
                 elements: vec![
@@ -709,18 +703,20 @@ mod tests {
                     }
                 ],
             }
-            .to_string()
+            .to_source()
+            .as_str()
         );
         assert_eq!(
-            "{}".to_string(),
+            "{}",
             JsonValue::Object {
                 space0: String::new(),
                 elements: vec![],
             }
-            .to_string()
+            .to_source()
+            .as_str()
         );
         assert_eq!(
-            "{ \"id\": 123 }".to_string(),
+            "{ \"id\": 123 }",
             JsonValue::Object {
                 space0: String::new(),
                 elements: vec![JsonObjectElement {
@@ -739,14 +735,13 @@ mod tests {
                     space3: " ".to_string(),
                 }],
             }
-            .to_string()
+            .to_source()
+            .as_str()
         );
-        assert_eq!("null".to_string(), JsonValue::Null.to_string());
-    }
+        assert_eq!("null", JsonValue::Null.to_source().as_str());
 
-    #[test]
-    fn test_template_to_source() {
         assert_eq!(
+            "{{name}}",
             TemplateElement::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
@@ -764,10 +759,12 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
             })
-            .to_source(),
-            "{{name}}".to_source()
+            .to_source()
+            .as_str(),
         );
+
         assert_eq!(
+            "{{name}}",
             Template {
                 delimiter: None,
                 elements: vec![TemplateElement::Placeholder(Placeholder {
@@ -789,8 +786,8 @@ mod tests {
                 })],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
-            .to_source(),
-            "{{name}}".to_source()
+            .to_source()
+            .as_str(),
         );
     }
 }

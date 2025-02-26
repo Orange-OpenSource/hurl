@@ -635,7 +635,8 @@ impl HtmlFormatter {
             // We close the current span line opened by the assert
             self.fmt_span_close();
             self.buffer.push('\n');
-            let tail = format!("{multiline_string}```");
+            let multiline_string_source = multiline_string.kind.to_source().to_string();
+            let tail = format!("{multiline_string_source}```");
             let tail = format_multilines(&tail);
             self.fmt_span("multiline", &tail);
             // As we have added a span close, we must remove one to have the right number
