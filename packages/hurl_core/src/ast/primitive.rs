@@ -16,6 +16,7 @@
  *
  */
 use std::fmt;
+use std::fmt::Formatter;
 
 use crate::ast::JsonValue;
 use crate::reader::Pos;
@@ -40,6 +41,17 @@ pub struct MultilineString {
     pub kind: MultilineStringKind,
 }
 
+impl fmt::Display for MultilineString {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self.kind {
+            MultilineStringKind::Text(value)
+            | MultilineStringKind::Json(value)
+            | MultilineStringKind::Xml(value) => write!(f, "{value}"),
+            MultilineStringKind::GraphQl(value) => write!(f, "{value}"),
+        }
+    }
+}
+
 impl ToSource for MultilineString {
     fn to_source(&self) -> SourceString {
         let mut source = SourceString::new();
@@ -50,8 +62,8 @@ impl ToSource for MultilineString {
             .collect::<Vec<_>>()
             .join(",");
         source.push_str(&att);
-        source.push_str(&self.space.value);
-        source.push_str(&self.newline.value);
+        source.push_str(self.space.as_str());
+        source.push_str(self.newline.as_str());
         source.push_str(self.kind.to_source().as_str());
         source
     }
@@ -118,6 +130,16 @@ pub struct GraphQl {
     pub variables: Option<GraphQlVariables>,
 }
 
+impl fmt::Display for GraphQl {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)?;
+        if let Some(vars) = &self.variables {
+            write!(f, "{}", vars.to_source())?;
+        }
+        Ok(())
+    }
+}
+
 impl ToSource for GraphQl {
     fn to_source(&self) -> SourceString {
         let mut source = SourceString::new();
@@ -139,9 +161,9 @@ pub struct GraphQlVariables {
 impl ToSource for GraphQlVariables {
     fn to_source(&self) -> SourceString {
         let mut source = "variable".to_source();
-        source.push_str(&self.space.value);
+        source.push_str(self.space.as_str());
         source.push_str(self.value.to_source().as_str());
-        source.push_str(&self.whitespace.value);
+        source.push_str(self.whitespace.as_str());
         source
     }
 }
@@ -169,7 +191,7 @@ pub struct Template {
 }
 
 impl fmt::Display for Template {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         let mut buffer = String::new();
         for element in self.elements.iter() {
             buffer.push_str(element.to_string().as_str());
@@ -200,7 +222,7 @@ pub enum TemplateElement {
 }
 
 impl fmt::Display for TemplateElement {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         let s = match self {
             TemplateElement::String { value, .. } => value.clone(),
             // TODO: see why we can't need to us `{{` and `}}` in a to_string method
@@ -231,6 +253,18 @@ pub struct Whitespace {
     pub source_info: SourceInfo,
 }
 
+impl fmt::Display for Whitespace {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl Whitespace {
+    pub fn as_str(&self) -> &str {
+        &self.value
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Number {
     Float(Float),
@@ -239,7 +273,7 @@ pub enum Number {
 }
 
 impl fmt::Display for Number {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             Number::Float(value) => write!(f, "{}", value),
             Number::Integer(value) => write!(f, "{}", value),
@@ -279,7 +313,7 @@ impl Float {
 }
 
 impl fmt::Display for Float {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.value)
     }
 }
@@ -307,7 +341,7 @@ impl U64 {
 }
 
 impl fmt::Display for U64 {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.value)
     }
 }
@@ -335,7 +369,7 @@ impl I64 {
 }
 
 impl fmt::Display for I64 {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.value)
     }
 }
@@ -382,12 +416,8 @@ pub struct Hex {
 }
 
 impl fmt::Display for Hex {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "hex,{}{}{};",
-            self.space0.value, self.source, self.space1.value
-        )
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "hex,{}{}{};", self.space0, self.source, self.space1)
     }
 }
 
@@ -398,7 +428,7 @@ pub struct Regex {
 }
 
 impl fmt::Display for Regex {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.inner)
     }
 }
@@ -431,7 +461,7 @@ pub struct Placeholder {
 }
 
 impl fmt::Display for Placeholder {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.expr)
     }
 }
@@ -440,9 +470,9 @@ impl ToSource for Placeholder {
     fn to_source(&self) -> SourceString {
         let mut source = SourceString::new();
         source.push_str("{{");
-        source.push_str(&self.space0.value);
+        source.push_str(self.space0.as_str());
         source.push_str(self.expr.to_source().as_str());
-        source.push_str(&self.space1.value);
+        source.push_str(self.space1.as_str());
         source.push_str("}}");
         source
     }
@@ -455,7 +485,7 @@ pub struct Expr {
 }
 
 impl fmt::Display for Expr {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.kind)
     }
 }
@@ -473,7 +503,7 @@ pub enum ExprKind {
 }
 
 impl fmt::Display for ExprKind {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             ExprKind::Variable(variable) => write!(f, "{}", variable),
             ExprKind::Function(function) => write!(f, "{}", function),
@@ -488,7 +518,7 @@ pub struct Variable {
 }
 
 impl fmt::Display for Variable {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "{}", self.name)
     }
 }
@@ -500,7 +530,7 @@ pub enum Function {
 }
 
 impl fmt::Display for Function {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             Function::NewDate => write!(f, "newDate"),
             Function::NewUuid => write!(f, "newUuid"),

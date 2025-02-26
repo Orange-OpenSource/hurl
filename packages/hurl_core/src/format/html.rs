@@ -742,7 +742,7 @@ impl HtmlFormatter {
         if let Some(v) = &lt.comment {
             self.fmt_comment(v);
         }
-        self.buffer.push_str(lt.newline.value.as_str());
+        self.buffer.push_str(lt.newline.as_str());
     }
 
     fn fmt_comment(&mut self, comment: &Comment) {

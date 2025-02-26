@@ -207,10 +207,7 @@ impl ToJson for Bytes {
                 };
                 JValue::Object(vec![
                     ("type".to_string(), JValue::String(lang.to_string())),
-                    (
-                        "value".to_string(),
-                        JValue::String(multi.to_source().to_string()),
-                    ),
+                    ("value".to_string(), JValue::String(multi.to_string())),
                 ])
             }
         }
