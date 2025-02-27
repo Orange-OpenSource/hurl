@@ -552,6 +552,7 @@ filter:
   | to-date-filter
   | to-float-filter
   | to-int-filter
+  | to-string-filter
   | url-decode-filter
   | url-encode-filter
   | xpath-filter
@@ -589,6 +590,8 @@ to-date-filter: "toDate"
 to-float-filter: "toFloat"
 
 to-int-filter: "toInt"
+
+to-string-filter: "toString"
 
 url-decode-filter: "urlDecode"
 

@@ -21,6 +21,7 @@ jsonpath "$.ips" split ", " count == 3                                          
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000                    # toDate
 jsonpath "$.pi" toFloat == 3.14                                                             # toFloat
 jsonpath "$.id" toInt == 123                                                                # toInt
+jsonpath "$.id" toString == "123"                                                           # toString
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"                        # urlDecode
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B" # urlEncode
 bytes decode "iso-8859-1" xpath "string(//p)" == "Hello"                                    # xpath

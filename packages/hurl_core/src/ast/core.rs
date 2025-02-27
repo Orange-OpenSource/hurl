@@ -302,6 +302,7 @@ pub enum FilterValue {
     },
     ToFloat,
     ToInt,
+    ToString,
     UrlDecode,
     UrlEncode,
     XPath {
@@ -331,6 +332,7 @@ impl FilterValue {
             FilterValue::ToDate { .. } => "toDate",
             FilterValue::ToFloat => "toFloat",
             FilterValue::ToInt => "toInt",
+            FilterValue::ToString => "toString",
             FilterValue::UrlDecode => "urlDecode",
             FilterValue::UrlEncode => "urlEncode",
             FilterValue::XPath { .. } => "xpath",

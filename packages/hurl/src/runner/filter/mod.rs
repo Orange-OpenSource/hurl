@@ -38,6 +38,7 @@ mod split;
 mod to_date;
 mod to_float;
 mod to_int;
+mod to_string;
 mod url_decode;
 mod url_encode;
 mod xpath;

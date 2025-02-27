@@ -796,6 +796,7 @@ impl HtmlFormatter {
             | FilterValue::HtmlUnescape
             | FilterValue::ToFloat
             | FilterValue::ToInt
+            | FilterValue::ToString
             | FilterValue::UrlDecode
             | FilterValue::UrlEncode => {}
         };

@@ -214,3 +214,12 @@ error: Filter error
    |                     ^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
+error: Filter error
+  --> tests_failed/filter.hurl:28:19
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+28 | jsonpath "$.list" toString == "[]"
+   |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
+   |
+
