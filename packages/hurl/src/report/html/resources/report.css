@@ -21,6 +21,16 @@ h2 {
     font-size: 1.25rem;
 }
 
+a {
+    color: royalblue;
+}
+
+@media (prefers-color-scheme: dark) {
+    a {
+        color: #34a7ff;
+    }
+}
+
 .date {
     margin-bottom: 20px;
 }

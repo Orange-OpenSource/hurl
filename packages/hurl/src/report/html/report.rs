@@ -169,11 +169,10 @@ fn create_html_table_row(result: &HTMLResult) -> String {
             .unwrap()
             .to_rfc3339()
     };
-
     format!(
-        r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}" data-timestamp="{timestamp}">
-    <td><a href="store/{id}-timeline.html">{displayed_filename}</a></td>
-    <td>{status}</td>
+        r#"<tr data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}" data-timestamp="{timestamp}">
+    <td><a href="store/{id}-source.html">{displayed_filename}</a></td>
+    <td class="{status}"><a href="store/{id}-timeline.html">{status}</a></td>
     <td>{displayed_time}</td>
     <td>{duration_in_s}</td>
 </tr>
