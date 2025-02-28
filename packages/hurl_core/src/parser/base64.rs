@@ -156,20 +156,20 @@ fn padding(reader: &mut Reader) -> String {
 }
 
 fn decode_two_chars(c1: i32, c2: i32) -> Vec<u8> {
-    vec![((c1 << 2 & 255) + (c2 >> 4)) as u8]
+    vec![(((c1 << 2) & 255) + (c2 >> 4)) as u8]
 }
 
 fn decode_three_chars(c1: i32, c2: i32, c3: i32) -> Vec<u8> {
     vec![
-        ((c1 << 2 & 255) + (c2 >> 4)) as u8,
-        ((c2 << 4 & 255) + (c3 >> 2)) as u8,
+        (((c1 << 2) & 255) + (c2 >> 4)) as u8,
+        (((c2 << 4) & 255) + (c3 >> 2)) as u8,
     ]
 }
 
 fn decode_four_chars(c1: i32, c2: i32, c3: i32, c4: i32) -> Vec<u8> {
     vec![
-        ((c1 << 2 & 255) + (c2 >> 4)) as u8,
-        ((c2 << 4 & 255) + (c3 >> 2)) as u8,
+        (((c1 << 2) & 255) + (c2 >> 4)) as u8,
+        (((c2 << 4) & 255) + (c3 >> 2)) as u8,
         (((c3 << 6) & 255) + c4) as u8,
     ]
 }
