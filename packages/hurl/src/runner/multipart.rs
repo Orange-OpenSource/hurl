@@ -121,26 +121,26 @@ mod tests {
             &FileParam {
                 line_terminators: vec![],
                 space0: whitespace(),
-                key: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                key: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "upload1".to_string(),
                         source: "upload1".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 space1: whitespace(),
                 space2: whitespace(),
                 value: FileValue {
                     space0: whitespace(),
-                    filename: Template {
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        elements: vec![TemplateElement::String {
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
                             source: "hello.txt".to_source(),
                         }],
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
                     content_type: None,
@@ -169,14 +169,14 @@ mod tests {
             file_value_content_type(
                 &FileValue {
                     space0: whitespace(),
-                    filename: Template {
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        elements: vec![TemplateElement::String {
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
                             source: "hello.txt".to_source()
                         }],
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
                     content_type: None,
@@ -191,14 +191,14 @@ mod tests {
             file_value_content_type(
                 &FileValue {
                     space0: whitespace(),
-                    filename: Template {
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        elements: vec![TemplateElement::String {
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "hello.html".to_string(),
                             source: "hello.html".to_source()
                         }],
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
                     content_type: None,
@@ -213,14 +213,14 @@ mod tests {
             file_value_content_type(
                 &FileValue {
                     space0: whitespace(),
-                    filename: Template {
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        elements: vec![TemplateElement::String {
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "hello.txt".to_string(),
                             source: "hello.txt".to_source()
                         }],
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
                     content_type: Some("text/html".to_string()),
@@ -235,14 +235,14 @@ mod tests {
             file_value_content_type(
                 &FileValue {
                     space0: whitespace(),
-                    filename: Template {
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                        elements: vec![TemplateElement::String {
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "hello".to_string(),
                             source: "hello".to_source()
                         }],
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
                     content_type: None,

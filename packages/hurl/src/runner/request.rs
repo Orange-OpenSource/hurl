@@ -221,8 +221,9 @@ mod tests {
             space0: whitespace(),
             method: Method("GET".to_string()),
             space1: whitespace(),
-            url: Template {
-                elements: vec![
+            url: Template::new(
+                None,
+                vec![
                     TemplateElement::Placeholder(Placeholder {
                         space0: whitespace(),
                         expr: Expr {
@@ -239,9 +240,8 @@ mod tests {
                         source: "/hello".to_source(),
                     },
                 ],
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             line_terminator0: line_terminator,
             headers: vec![],
             sections: vec![],
@@ -278,14 +278,14 @@ mod tests {
             space0: whitespace(),
             method: Method("GET".to_string()),
             space1: whitespace(),
-            url: Template {
-                elements: vec![TemplateElement::String {
+            url: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "http://localhost:8000/querystring-params".to_string(),
                     source: "http://localhost:8000/querystring-params".to_source(),
                 }],
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             line_terminator0: line_terminator.clone(),
             headers: vec![],
             sections: vec![Section {
@@ -295,17 +295,17 @@ mod tests {
                 value: SectionValue::QueryParams(
                     vec![
                         simple_key_value(
-                            Template {
-                                delimiter: None,
-                                elements: vec![TemplateElement::String {
+                            Template::new(
+                                None,
+                                vec![TemplateElement::String {
                                     value: "param1".to_string(),
                                     source: "param1".to_source(),
                                 }],
-                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                            },
-                            Template {
-                                delimiter: None,
-                                elements: vec![TemplateElement::Placeholder(Placeholder {
+                                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            ),
+                            Template::new(
+                                None,
+                                vec![TemplateElement::Placeholder(Placeholder {
                                     space0: whitespace(),
                                     expr: Expr {
                                         kind: ExprKind::Variable(Variable {
@@ -322,26 +322,26 @@ mod tests {
                                     },
                                     space1: whitespace(),
                                 })],
-                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                            },
+                                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            ),
                         ),
                         simple_key_value(
-                            Template {
-                                delimiter: None,
-                                elements: vec![TemplateElement::String {
+                            Template::new(
+                                None,
+                                vec![TemplateElement::String {
                                     value: "param2".to_string(),
                                     source: "param2".to_source(),
                                 }],
-                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                            },
-                            Template {
-                                delimiter: None,
-                                elements: vec![TemplateElement::String {
+                                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            ),
+                            Template::new(
+                                None,
+                                vec![TemplateElement::String {
                                     value: "a b".to_string(),
                                     source: "a b".to_source(),
                                 }],
-                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                            },
+                                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                            ),
                         ),
                     ],
                     false,
@@ -420,14 +420,14 @@ mod tests {
             space0: whitespace(),
             method: Method("GET".to_string()),
             space1: whitespace(),
-            url: Template {
-                elements: vec![TemplateElement::String {
+            url: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "http:///localhost".to_string(),
                     source: "http://localhost".to_source(),
                 },],
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+            ),
             line_terminator0: line_terminator,
             headers: vec![],
             sections: vec![],
@@ -461,14 +461,14 @@ mod tests {
                 space0: whitespace(),
                 method: Method("GET".to_string()),
                 space1: whitespace(),
-                url: Template {
-                    elements: vec![TemplateElement::String {
+                url: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "http:///localhost".to_string(),
                         source: "http://localhost".to_source(),
                     },],
-                    delimiter: None,
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+                ),
                 line_terminator0: line_terminator,
                 headers: vec![],
                 sections: vec![],

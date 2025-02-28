@@ -988,14 +988,14 @@ mod tests {
             space0: String::new(),
             elements: vec![JsonObjectElement {
                 space0: "\n   ".to_string(),
-                name: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "id".to_string(),
                         source: "id".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 space1: String::new(),
                 space2: " ".to_string(),
                 value: JsonValue::Number("1".to_string()),
@@ -1016,14 +1016,14 @@ mod tests {
     #[test]
     fn test_json_encoded_newline() {
         let mut fmt = HtmlFormatter::new();
-        let value = JsonValue::String(Template {
-            delimiter: Some('"'),
-            elements: vec![TemplateElement::String {
+        let value = JsonValue::String(Template::new(
+            Some('"'),
+            vec![TemplateElement::String {
                 value: "\n".to_string(),
                 source: "\\n".to_source(),
             }],
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        });
+            SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+        ));
         fmt.fmt_json_value(&value);
         assert_eq!(
             fmt.buffer,

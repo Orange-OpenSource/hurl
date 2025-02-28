@@ -107,14 +107,14 @@ mod tests {
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
-            filename: Template {
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
-                elements: vec![TemplateElement::String {
+            filename: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "tests/data.bin".to_string(),
                     source: "tests/data.bin".to_source(),
                 }],
-            },
+                SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+            ),
             space1: whitespace,
         });
 
@@ -138,14 +138,14 @@ mod tests {
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
-            filename: Template {
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
-                elements: vec![TemplateElement::String {
+            filename: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "data.bin".to_string(),
                     source: "data.bin".to_source(),
                 }],
-            },
+                SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+            ),
             space1: whitespace,
         });
 

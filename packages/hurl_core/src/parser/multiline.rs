@@ -114,11 +114,8 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
                     };
 
                     let elements = template::templatize(encoded_string)?;
-                    let template = Template {
-                        delimiter: None,
-                        elements,
-                        source_info: SourceInfo::new(start.pos, end.pos),
-                    };
+                    let template =
+                        Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
                     let kind = MultilineStringKind::GraphQl(GraphQl {
                         value: template,
                         variables: Some(variables),
@@ -143,12 +140,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
     };
 
     let elements = template::templatize(encoded_string)?;
-    let template = Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    };
-
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
     let kind = MultilineStringKind::GraphQl(GraphQl {
         value: template,
         variables: None,
@@ -278,12 +270,8 @@ fn multiline_string_value(reader: &mut Reader, escape: bool) -> ParseResult<Temp
     };
 
     let elements = template::templatize(encoded_string)?;
-
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    })
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
+    Ok(template)
 }
 
 #[cfg(test)]
@@ -308,14 +296,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         source: "line1\nline2\nline3\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1))
+                )),
             }
         );
 
@@ -332,14 +320,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         source: "line1\nline2\nline3\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1))
+                )),
             }
         );
 
@@ -359,14 +347,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 30), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         source: "line1\nline2\nline3\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1))
+                )),
             }
         );
     }
@@ -386,14 +374,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Json(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Json(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         source: "line1\nline2\nline3\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                },),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                )),
             }
         );
 
@@ -416,14 +404,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Json(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Json(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "{\n  \"g_clef\": \"𝄞\"\n}\n".to_string(),
                         source: "{\n  \"g_clef\": \"\\u{1D11E}\"\n}\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                }),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                )),
             }
         );
     }
@@ -444,14 +432,14 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
                 },
                 kind: MultilineStringKind::GraphQl(GraphQl {
-                    value: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
                             source: "line1\nline2\nline3\n".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                    },
+                        SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1))
+                    ),
                     variables: None,
                 }),
             }
@@ -471,14 +459,14 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 17), Pos::new(2, 1)),
                 },
                 kind: MultilineStringKind::GraphQl(GraphQl {
-                    value: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "line1\nline2\nline3\n".to_string(),
                             source: "line1\nline2\nline3\n".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                    },
+                        SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                    ),
                     variables: None,
                 }),
             }
@@ -513,11 +501,11 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
-                }),
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![],
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1))
+                )),
             }
         );
         let mut reader = Reader::new("```\r\n```");
@@ -533,11 +521,11 @@ mod tests {
                     value: "\r\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
-                }),
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![],
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
+                )),
             }
         );
     }
@@ -568,14 +556,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         source: "line1\nline2\nline3\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
-                }),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+                )),
             }
         );
     }
@@ -586,14 +574,14 @@ mod tests {
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString {
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\n".to_string(),
                         source: "\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
-                }),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                )),
                 attributes: vec![],
                 space: Whitespace {
                     value: String::new(),
@@ -620,14 +608,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\r\n".to_string(),
                         source: "\r\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
-                }),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                )),
             }
         );
     }
@@ -681,14 +669,14 @@ mod tests {
                     value: "\n".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(2, 1)),
                 },
-                kind: MultilineStringKind::Text(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: MultilineStringKind::Text(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\t\n".to_string(),
                         source: "\\t\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
-                }),
+                    SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
+                )),
             }
         );
     }
@@ -732,25 +720,25 @@ mod tests {
         let mut reader = Reader::new("```");
         assert_eq!(
             multiline_string_value(&mut reader, false).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            }
+            Template::new(
+                None,
+                vec![],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
+            )
         );
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("hello```");
         assert_eq!(
             multiline_string_value(&mut reader, false).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "hello".to_string(),
                     source: "hello".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+            )
         );
         assert_eq!(reader.cursor().index, 8);
     }
@@ -784,15 +772,15 @@ variables {
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
                 },
                 kind: MultilineStringKind::GraphQl(GraphQl {
-                    value: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string(),
                             source:
                             "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_source()
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(8, 1)),
-                    },
+                        SourceInfo::new(Pos::new(2, 1), Pos::new(8, 1)),
+                    ),
                     variables: Some(GraphQlVariables {
                         space: Whitespace {
                             value: " ".to_string(),
@@ -802,28 +790,28 @@ variables {
                             space0: "\n  ".to_string(),
                             elements: vec![JsonObjectElement {
                                 space0: String::new(),
-                                name: Template {
-                                    delimiter: Some('"'),
-                                    elements: vec![
+                                name: Template::new(
+                                    Some('"'),
+                                    vec![
                                         TemplateElement::String {
                                             value: "name".to_string(),
                                             source: "name".to_source()
                                         }
                                     ],
-                                    source_info: SourceInfo::new(Pos::new(9, 4), Pos::new(9, 8))
-                                },
+                                    SourceInfo::new(Pos::new(9, 4), Pos::new(9, 8))
+                                ),
                                 space1: String::new(),
                                 space2: " ".to_string(),
-                                value: JsonValue::String(Template {
-                                    delimiter: Some('"'),
-                                    elements: vec![
+                                value: JsonValue::String(Template::new(
+                                    Some('"'),
+                                    vec![
                                         TemplateElement::String {
                                             value: "Han Solo".to_string(),
                                             source: "Han Solo".to_source()
                                         }
                                     ],
-                                    source_info: SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))
-                                }),
+                                    SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))
+                                )),
                                 space3: "\n".to_string()
                             }]
                         },

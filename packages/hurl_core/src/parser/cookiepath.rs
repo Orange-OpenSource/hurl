@@ -81,14 +81,14 @@ mod tests {
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
             CookiePath {
-                name: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "cookie1".to_string(),
                         source: "cookie1".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
-                },
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
+                ),
                 attribute: None,
             }
         );
@@ -101,14 +101,14 @@ mod tests {
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
             CookiePath {
-                name: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "cookie1".to_string(),
                         source: "cookie1".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
-                },
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
+                ),
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
                         value: String::new(),
@@ -131,9 +131,9 @@ mod tests {
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
             CookiePath {
-                name: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::Placeholder(Placeholder {
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::Placeholder(Placeholder {
                         space0: Whitespace {
                             value: String::new(),
                             source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
@@ -150,8 +150,8 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
                     })],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
-                },
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
+                ),
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
                         value: String::new(),

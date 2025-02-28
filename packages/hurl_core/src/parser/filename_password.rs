@@ -69,14 +69,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     let end = reader.cursor();
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo {
-            start: start.pos,
-            end: end.pos,
-        },
-    })
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
+    Ok(template)
 }
 
 fn filename_password_content(reader: &mut Reader) -> ParseResult<String> {
@@ -162,14 +156,14 @@ mod tests {
         let mut reader = Reader::new("file\\:123:pwd\\:\\#:");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "file\\:123:pwd\\:#:".to_string(),
                     source: "file\\:123:pwd\\:\\#:".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
+            )
         );
         assert_eq!(reader.cursor().index, 18);
     }
@@ -179,14 +173,14 @@ mod tests {
         let mut reader = Reader::new("/etc/client-cert.pem #foo");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "/etc/client-cert.pem".to_string(),
                     source: "/etc/client-cert.pem".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
+            )
         );
         assert_eq!(reader.cursor().index, 20);
     }

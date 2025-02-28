@@ -63,11 +63,8 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
         chars,
     };
     let elements = template::templatize(encoded_string)?;
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    })
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
+    Ok(template)
 }
 
 // TODO: should return an EncodedString
@@ -108,11 +105,12 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
         chars,
     };
     let elements = template::templatize(encoded_string)?;
-    Ok(Template {
-        delimiter: Some('"'),
+    let template = Template::new(
+        Some('"'),
         elements,
-        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
-    })
+        SourceInfo::new(start.pos, reader.cursor().pos),
+    );
+    Ok(template)
 }
 
 pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
@@ -145,11 +143,12 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
         chars,
     };
     let elements = template::templatize(encoded_string)?;
-    Ok(Template {
+    let template = Template::new(
         delimiter,
         elements,
-        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
-    })
+        SourceInfo::new(start.pos, reader.cursor().pos),
+    );
+    Ok(template)
 }
 
 fn any_char(except: &[char], reader: &mut Reader) -> ParseResult<(char, String)> {
@@ -252,11 +251,11 @@ mod tests {
         let mut reader = Reader::new("");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            }
+            Template::new(
+                None,
+                vec![],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            )
         );
         assert_eq!(reader.cursor().index, 0);
     }
@@ -266,14 +265,14 @@ mod tests {
         let mut reader = Reader::new("a#");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "a".to_string(),
                     source: "a".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2))
+            )
         );
         assert_eq!(reader.cursor().index, 1);
     }
@@ -283,14 +282,14 @@ mod tests {
         let mut reader = Reader::new("a\\u{23}");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "a#".to_string(),
                     source: "a\\u{23}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8))
+            )
         );
         assert_eq!(reader.cursor().index, 7);
     }
@@ -300,14 +299,14 @@ mod tests {
         let mut reader = Reader::new("\"hi\"");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
                     source: "\"hi\"".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5))
+            )
         );
         assert_eq!(reader.cursor().index, 4);
     }
@@ -317,9 +316,9 @@ mod tests {
         let mut reader = Reader::new("hello\\u{20}{{name}}!");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![
+            Template::new(
+                None,
+                vec![
                     TemplateElement::String {
                         value: "hello ".to_string(),
                         source: "hello\\u{20}".to_source(),
@@ -346,8 +345,8 @@ mod tests {
                         source: "!".to_source(),
                     },
                 ],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21))
+            )
         );
         assert_eq!(reader.cursor().index, 20);
     }
@@ -357,39 +356,39 @@ mod tests {
         let mut reader = Reader::new("\"\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('"'),
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
-            }
+            Template::new(
+                Some('"'),
+                vec![],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
+            )
         );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("\"a#\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "a#".to_string(),
                     source: "a#".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5))
+            )
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("\"{0}\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "{0}".to_string(),
                     source: "{0}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+            )
         );
         assert_eq!(reader.cursor().index, 5);
     }
@@ -400,14 +399,14 @@ mod tests {
         let mut reader = Reader::new("\"\\\"hi\\\"\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
                     source: "\\\"hi\\\"".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9))
+            )
         );
         assert_eq!(reader.cursor().index, 8);
     }
@@ -442,39 +441,39 @@ mod tests {
         let mut reader = Reader::new("``");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('`'),
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
-            }
+            Template::new(
+                Some('`'),
+                vec![],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3))
+            )
         );
         assert_eq!(reader.cursor().index, 2);
 
         let mut reader = Reader::new("`foo#`");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('`'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('`'),
+                vec![TemplateElement::String {
                     value: "foo#".to_string(),
                     source: "foo#".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7))
+            )
         );
         assert_eq!(reader.cursor().index, 6);
 
         let mut reader = Reader::new("`{0}`");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('`'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('`'),
+                vec![TemplateElement::String {
                     value: "{0}".to_string(),
                     source: "{0}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+            )
         );
         assert_eq!(reader.cursor().index, 5);
     }
@@ -485,14 +484,14 @@ mod tests {
         let mut reader = Reader::new("`\\`hi\\``");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
-            Template {
-                delimiter: Some('`'),
-                elements: vec![TemplateElement::String {
+            Template::new(
+                Some('`'),
+                vec![TemplateElement::String {
                     value: "`hi`".to_string(),
                     source: "\\`hi\\`".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9))
+            )
         );
         assert_eq!(reader.cursor().index, 8);
     }

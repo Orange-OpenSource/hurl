@@ -93,14 +93,14 @@ mod tests {
             space: whitespace(),
             newline: newline(),
             kind: MultilineStringKind::GraphQl(GraphQl {
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                value: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: query.to_string(),
                         source: query.to_source(),
                     }],
-                    source_info: empty_source_info(),
-                },
+                    empty_source_info(),
+                ),
                 variables: None,
             }),
         };
@@ -128,36 +128,36 @@ mod tests {
                 elements: vec![
                     JsonObjectElement {
                         space0: String::new(),
-                        name: Template {
-                            delimiter: Some('"'),
-                            elements: vec![TemplateElement::String {
+                        name: Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
                                 value: "episode".to_string(),
                                 source: "episode".to_source(),
                             }],
-                            source_info: empty_source_info(),
-                        },
+                            empty_source_info(),
+                        ),
                         space1: String::new(),
                         space2: String::new(),
-                        value: JsonValue::String(Template {
-                            delimiter: Some('"'),
-                            elements: vec![TemplateElement::String {
+                        value: JsonValue::String(Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
                                 value: "JEDI".to_string(),
                                 source: "JEDI".to_source(),
                             }],
-                            source_info: empty_source_info(),
-                        }),
+                            empty_source_info(),
+                        )),
                         space3: String::new(),
                     },
                     JsonObjectElement {
                         space0: String::new(),
-                        name: Template {
-                            delimiter: Some('"'),
-                            elements: vec![TemplateElement::String {
+                        name: Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
                                 value: "withFriends".to_string(),
                                 source: "withFriends".to_source(),
                             }],
-                            source_info: empty_source_info(),
-                        },
+                            empty_source_info(),
+                        ),
                         space1: String::new(),
                         space2: String::new(),
                         value: JsonValue::Boolean(false),
@@ -172,14 +172,14 @@ mod tests {
             space: whitespace(),
             newline: newline(),
             kind: MultilineStringKind::GraphQl(GraphQl {
-                value: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                value: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: query.to_string(),
                         source: query.to_source(),
                     }],
-                    source_info: empty_source_info(),
-                },
+                    empty_source_info(),
+                ),
                 variables: Some(graphql_variables),
             }),
         };

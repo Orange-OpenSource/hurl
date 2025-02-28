@@ -68,14 +68,14 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             value: FilterValue::Regex {
                 space0: whitespace,
-                value: RegexValue::Template(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                value: RegexValue::Template(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "Hello (.*)!".to_string(),
                         source: "Hello (.*)!".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
-                }),
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
+                )),
             },
         };
         assert_eq!(
@@ -114,14 +114,14 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             value: FilterValue::Regex {
                 space0: whitespace,
-                value: RegexValue::Template(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                value: RegexValue::Template(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "???".to_string(),
                         source: "???".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
-                }),
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
+                )),
             },
         };
         let error = eval_filter(

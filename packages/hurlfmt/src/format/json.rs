@@ -736,36 +736,36 @@ pub mod tests {
                 space0: whitespace(),
                 method: Method("GET".to_string()),
                 space1: whitespace(),
-                url: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                url: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "http://example.com".to_string(),
                         source: "not_used".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 line_terminator0: line_terminator(),
                 headers: vec![KeyValue {
                     line_terminators: vec![],
                     space0: whitespace(),
-                    key: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    key: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "Foo".to_string(),
                             source: "unused".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+                    ),
                     space1: whitespace(),
                     space2: whitespace(),
-                    value: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "Bar".to_string(),
                             source: "unused".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+                    ),
                     line_terminator0: line_terminator(),
                 }],
                 sections: vec![],
@@ -849,14 +849,14 @@ pub mod tests {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Header {
                 space0: whitespace(),
-                name: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "Content-Length".to_string(),
                         source: "Content-Length".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
             },
         }
     }
@@ -865,14 +865,14 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace(),
-            name: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            name: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "size".to_string(),
                     source: "unused".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             space1: whitespace(),
             space2: whitespace(),
             query: header_query(),

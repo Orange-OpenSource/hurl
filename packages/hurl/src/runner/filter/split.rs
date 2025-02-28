@@ -59,14 +59,14 @@ mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Split {
-                sep: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                sep: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: ",".to_string(),
                         source: ",".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

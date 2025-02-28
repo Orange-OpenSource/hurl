@@ -93,14 +93,14 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            name: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "UserCount".to_string(),
                     source: "UserCount".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             space1: whitespace.clone(),
             space2: whitespace.clone(),
 
@@ -126,14 +126,14 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            name: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "duration".to_string(),
                     source: "duration".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             space1: whitespace.clone(),
             space2: whitespace.clone(),
 
@@ -161,14 +161,14 @@ pub mod tests {
         let capture = Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            name: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "count".to_string(),
                     source: "count".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             filters: vec![],
             space1: whitespace.clone(),
             space2: whitespace.clone(),
@@ -205,14 +205,14 @@ pub mod tests {
         let _capture = Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            name: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "???".to_string(),
                     source: "???".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            },
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            ),
             space1: whitespace.clone(),
             space2: whitespace.clone(),
 
@@ -221,14 +221,14 @@ pub mod tests {
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
                 value: QueryValue::Xpath {
                     space0: whitespace.clone(),
-                    expr: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    expr: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "//user".to_string(),
                             source: "//user".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 13)),
-                    },
+                        SourceInfo::new(Pos::new(1, 7), Pos::new(1, 13)),
+                    ),
                 },
             },
             filters: vec![],

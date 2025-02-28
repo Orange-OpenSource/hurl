@@ -65,11 +65,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     let end = reader.cursor();
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    })
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
+    Ok(template)
 }
 
 fn key_string_content(reader: &mut Reader) -> ParseResult<String> {
@@ -156,84 +153,84 @@ mod tests {
         let mut reader = Reader::new("aaa\\: ");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "aaa:".to_string(),
                     source: "aaa\\:".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
+            )
         );
         assert_eq!(reader.cursor().index, 5);
 
         let mut reader = Reader::new("$top:");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "$top".to_string(),
                     source: "$top".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+            )
         );
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("key\\u{20}\\u{3a} :");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "key :".to_string(),
                     source: "key\\u{20}\\u{3a}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16))
+            )
         );
         assert_eq!(reader.cursor().index, 15);
 
         let mut reader = Reader::new("values\\u{5b}0\\u{5d} :");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "values[0]".to_string(),
                     source: "values\\u{5b}0\\u{5d}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20))
+            )
         );
         assert_eq!(reader.cursor().index, 19);
 
         let mut reader = Reader::new("values[0] :");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "values[0]".to_string(),
                     source: "values[0]".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
+            )
         );
         assert_eq!(reader.cursor().index, 9);
 
         let mut reader = Reader::new("\\u{5b}0\\u{5d}");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "[0]".to_string(),
                     source: "\\u{5b}0\\u{5d}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
+            )
         );
         assert_eq!(reader.cursor().index, 13);
     }

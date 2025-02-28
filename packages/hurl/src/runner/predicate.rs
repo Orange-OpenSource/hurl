@@ -1100,9 +1100,9 @@ mod tests {
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // {{base_url}}
-        let template = Template {
-            delimiter: Some('"'),
-            elements: vec![TemplateElement::Placeholder(Placeholder {
+        let template = Template::new(
+            Some('"'),
+            vec![TemplateElement::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
@@ -1119,8 +1119,8 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
                 },
             })],
-            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-        };
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+        );
 
         // predicate: `== "{{base_url}}"`
         // value: "http://localhost:8000"
@@ -1311,14 +1311,14 @@ mod tests {
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::StartWith {
                     space0: whitespace(),
-                    value: PredicateValue::String(Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: PredicateValue::String(Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "toto".to_string(),
                             source: "toto".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    }),
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    )),
                 },
             },
         };

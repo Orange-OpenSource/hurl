@@ -383,14 +383,14 @@ mod tests {
                                 value: String::from(" "),
                                 source_info: SourceInfo::new(Pos::new(2, 7), Pos::new(2, 8)),
                             },
-                            name: Template {
-                                delimiter: Some('"'),
-                                elements: vec![TemplateElement::String {
+                            name: Template::new(
+                                Some('"'),
+                                vec![TemplateElement::String {
                                     value: "Location".to_string(),
                                     source: "Location".to_source(),
                                 }],
-                                source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 18)),
-                            },
+                                SourceInfo::new(Pos::new(2, 8), Pos::new(2, 18)),
+                            ),
                         },
                     },
                     filters: vec![],
@@ -411,14 +411,14 @@ mod tests {
                                     value: String::from(" "),
                                     source_info: SourceInfo::new(Pos::new(2, 21), Pos::new(2, 22)),
                                 },
-                                value: PredicateValue::String(Template {
-                                    delimiter: Some('"'),
-                                    elements: vec![TemplateElement::String {
+                                value: PredicateValue::String(Template::new(
+                                    Some('"'),
+                                    vec![TemplateElement::String {
                                         value: "https://google.fr".to_string(),
                                         source: "https://google.fr".to_source(),
                                     }],
-                                    source_info: SourceInfo::new(Pos::new(2, 22), Pos::new(2, 41)),
-                                }),
+                                    SourceInfo::new(Pos::new(2, 22), Pos::new(2, 41))
+                                )),
                             },
                         },
                     },
@@ -471,14 +471,14 @@ mod tests {
         assert_eq!(c.name.to_string(), String::from("Foo"));
         assert_eq!(
             c.value,
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "Bar".to_string(),
                     source: "Bar".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 9)),
-            }
+                SourceInfo::new(Pos::new(1, 6), Pos::new(1, 9))
+            )
         );
     }
 
@@ -512,14 +512,14 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
-                filename: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                filename: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "hello.txt".to_string(),
                         source: "hello.txt".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
-                },
+                    SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
+                ),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
@@ -539,14 +539,14 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
-                filename: Template {
-                    elements: vec![TemplateElement::String {
+                filename: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "hello.txt".to_string(),
                         source: "hello.txt".to_source(),
                     }],
-                    delimiter: None,
-                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
-                },
+                    SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
+                ),
                 space1: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
@@ -591,14 +591,14 @@ mod tests {
 
         assert_eq!(
             capture0.name,
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "url".to_string(),
                     source: "url".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
-            },
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4))
+            ),
         );
         assert_eq!(
             capture0.query,
@@ -609,15 +609,15 @@ mod tests {
                         value: String::from(" "),
                         source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 13)),
                     },
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "Location".to_string(),
                             source: "Location".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23)),
-                    },
-                },
+                        SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23))
+                    )
+                }
             }
         );
 
@@ -640,15 +640,15 @@ mod tests {
                         value: String::from(" "),
                         source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 15)),
                     },
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "Location".to_string(),
                             source: "Location".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 25)),
-                    },
-                },
+                        SourceInfo::new(Pos::new(1, 15), Pos::new(1, 25))
+                    )
+                }
             }
         );
         assert_eq!(reader.cursor().index, 43);
@@ -705,15 +705,15 @@ mod tests {
                         value: String::from(" "),
                         source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                     },
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "Location".to_string(),
                             source: "Location".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 18)),
-                    },
-                },
+                        SourceInfo::new(Pos::new(1, 8), Pos::new(1, 18)),
+                    )
+                }
             }
         );
     }
@@ -776,14 +776,14 @@ mod tests {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1))
                     },
-                    key: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    key: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "user".to_string(),
                             source: "user".to_source()
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 5)),
-                    },
+                        SourceInfo::new(Pos::new(2, 1), Pos::new(2, 5)),
+                    ),
                     space1: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 5), Pos::new(2, 5))
@@ -792,14 +792,14 @@ mod tests {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 6))
                     },
-                    value: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    value: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "password".to_string(),
                             source: "password".to_source()
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 14)),
-                    },
+                        SourceInfo::new(Pos::new(2, 6), Pos::new(2, 14)),
+                    ),
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
                             value: String::new(),

@@ -501,14 +501,14 @@ pub mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "???".to_string(),
                         source: "???".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
-                },
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                ),
             },
         }
     }
@@ -522,14 +522,14 @@ pub mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "count(//user)".to_string(),
                         source: "count(//user)".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
             },
         }
     }
@@ -543,14 +543,14 @@ pub mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "//user".to_string(),
                         source: "/user".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
             },
         }
     }
@@ -564,14 +564,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "$.success".to_string(),
                         source: "$.success".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 19)),
-                },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 19)),
+                ),
             },
         }
     }
@@ -585,14 +585,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "$.errors".to_string(),
                         source: "$.errors".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
-                },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
+                ),
             },
         }
     }
@@ -606,14 +606,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "$.duration".to_string(),
                         source: "$.duration".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
-                },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
+                ),
             },
         }
     }
@@ -627,14 +627,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                value: RegexValue::Template(Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                value: RegexValue::Template(Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "Hello ([a-zA-Z]+)!".to_string(),
                         source: "Hello ([a-zA-Z]+)!".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 26)),
-                }),
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 26)),
+                )),
             },
         }
     }
@@ -648,14 +648,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                value: RegexValue::Template(Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                value: RegexValue::Template(Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "???".to_string(),
                         source: "???".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
-                }),
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                )),
             },
         }
     }
@@ -722,14 +722,14 @@ pub mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
-                name: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "Custom".to_string(),
                         source: "Custom".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 14)),
-                },
+                    SourceInfo::new(Pos::new(2, 8), Pos::new(2, 14)),
+                ),
             },
         };
         //    let error = query_header.eval(http::hello_http_response()).err().unwrap();
@@ -760,14 +760,14 @@ pub mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
-                name: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "Content-Type".to_string(),
                         source: "Content-Type".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 16)),
-                },
+                    SourceInfo::new(Pos::new(1, 8), Pos::new(1, 16)),
+                ),
             },
         };
         assert_eq!(
@@ -806,14 +806,14 @@ pub mod tests {
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             source: "LSID".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     attribute: None,
                 },
             },
@@ -831,14 +831,14 @@ pub mod tests {
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             source: "LSID".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
                         name: CookieAttributeName::Path("Path".to_string()),
@@ -860,14 +860,14 @@ pub mod tests {
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             source: "LSID".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
                         name: CookieAttributeName::Secure("Secure".to_string()),
@@ -889,14 +889,14 @@ pub mod tests {
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             source: "LSID".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                    },
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ),
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
                         name: CookieAttributeName::Domain("Domain".to_string()),
@@ -1069,14 +1069,14 @@ pub mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "^^^".to_string(),
                         source: "^^^".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
-                },
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
+                ),
             },
         };
         let error = eval_query(
@@ -1130,14 +1130,14 @@ pub mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "normalize-space(/html/head/meta/@charset)".to_string(),
                         source: "normalize-space(/html/head/meta/@charset)".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
             },
         }
     }
@@ -1173,14 +1173,14 @@ pub mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "xxx".to_string(),
                         source: "xxx".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 13)),
-                },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 13)),
+                ),
             },
         };
 

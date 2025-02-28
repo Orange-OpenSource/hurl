@@ -61,22 +61,22 @@ mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Replace {
-                old_value: RegexValue::Template(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                old_value: RegexValue::Template(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\\s+".to_string(),
                         source: ",".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
-                }),
-                new_value: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
+                )),
+                new_value: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: ",".to_string(),
                         source: ",".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),

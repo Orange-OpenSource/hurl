@@ -68,14 +68,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     let end = reader.cursor();
-    Ok(Template {
-        delimiter: None,
-        elements,
-        source_info: SourceInfo {
-            start: start.pos,
-            end: end.pos,
-        },
-    })
+    let template = Template::new(None, elements, SourceInfo::new(start.pos, end.pos));
+    Ok(template)
 }
 
 fn filename_content(reader: &mut Reader) -> ParseResult<String> {
@@ -156,29 +150,28 @@ mod tests {
         let mut reader = Reader::new("data/data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "data/data.bin".to_string(),
                     source: "data/data.bin".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
+            )
         );
         assert_eq!(reader.cursor().index, 13);
 
         let mut reader = Reader::new("data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                //value: String::from("data.bin"),
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "data.bin".to_string(),
                     source: "data.bin".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
+            )
         );
         assert_eq!(reader.cursor().index, 8);
     }
@@ -188,14 +181,14 @@ mod tests {
         let mut reader = Reader::new("file\\ with\\ spaces");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "file with spaces".to_string(),
                     source: "file\\ with\\ spaces".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
+            )
         );
         assert_eq!(reader.cursor().index, 18);
     }
@@ -205,14 +198,14 @@ mod tests {
         let mut reader = Reader::new("filename\\{"); // to the possible escaped chars
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "filename{".to_string(),
                     source: "filename\\{".to_source()
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11))
+            )
         );
         assert_eq!(reader.cursor().index, 10);
     }
@@ -235,9 +228,9 @@ mod tests {
         let mut reader = Reader::new("foo_{{bar}}");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![
+            Template::new(
+                None,
+                vec![
                     TemplateElement::String {
                         value: "foo_".to_string(),
                         source: "foo_".to_source(),
@@ -260,16 +253,16 @@ mod tests {
                         },
                     })
                 ],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
+            )
         );
 
         let mut reader = Reader::new("foo_{{bar}}_baz");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![
+            Template::new(
+                None,
+                vec![
                     TemplateElement::String {
                         value: "foo_".to_string(),
                         source: "foo_".to_source(),
@@ -296,8 +289,8 @@ mod tests {
                         source: "_baz".to_source(),
                     },
                 ],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
+            )
         );
     }
 }

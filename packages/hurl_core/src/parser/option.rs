@@ -553,20 +553,20 @@ mod tests {
                         end: Pos { line: 1, column: 9 },
                     },
                 },
-                kind: OptionKind::CaCertificate(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                kind: OptionKind::CaCertificate(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "/home/foo/cert.pem".to_string(),
                         source: "/home/foo/cert.pem".to_source()
                     }],
-                    source_info: SourceInfo {
+                    SourceInfo {
                         start: Pos { line: 1, column: 9 },
                         end: Pos {
                             line: 1,
                             column: 27,
                         },
-                    },
-                }),
+                    }
+                )),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
@@ -613,20 +613,20 @@ mod tests {
 
         assert_eq!(
             option_cert(&mut reader).unwrap(),
-            OptionKind::ClientCert(Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            OptionKind::ClientCert(Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "/etc/client-cert.pem".to_string(),
                     source: "/etc/client-cert.pem".to_source()
                 }],
-                source_info: SourceInfo {
+                SourceInfo {
                     start: Pos { line: 1, column: 1 },
                     end: Pos {
                         line: 1,
                         column: 21,
                     },
                 },
-            }),
+            )),
         );
     }
 
@@ -685,32 +685,26 @@ mod tests {
         let mut reader = Reader::new("toto");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
-            VariableValue::String(Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
+            VariableValue::String(Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "toto".to_string(),
                     source: "toto".to_source(),
                 }],
-                source_info: SourceInfo {
-                    start: Pos { line: 1, column: 1 },
-                    end: Pos { line: 1, column: 5 },
-                },
-            })
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+            ))
         );
         let mut reader = Reader::new("\"123\"");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
-            VariableValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            VariableValue::String(Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "123".to_string(),
                     source: "123".to_source(),
                 }],
-                source_info: SourceInfo {
-                    start: Pos { line: 1, column: 1 },
-                    end: Pos { line: 1, column: 6 },
-                },
-            })
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+            ))
         );
     }
 }

@@ -99,11 +99,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<Template> {
     literal("\"", reader)?;
     let elements = templatize(encoded_string)?;
 
-    let template = Template {
-        delimiter,
-        elements,
-        source_info: SourceInfo::new(start.pos, end.pos),
-    };
+    let template = Template::new(delimiter, elements, SourceInfo::new(start.pos, end.pos));
     Ok(template)
 }
 
@@ -506,9 +502,9 @@ mod tests {
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
-        JsonValue::String(Template {
-            delimiter: Some('"'),
-            elements: vec![
+        JsonValue::String(Template::new(
+            Some('"'),
+            vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
                     source: "Hello\\u0020".to_source(),
@@ -535,8 +531,8 @@ mod tests {
                     source: "!".to_source(),
                 },
             ],
-            source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
-        })
+            SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
+        ))
     }
 
     #[test]
@@ -544,11 +540,11 @@ mod tests {
         let mut reader = Reader::new("\"\"");
         assert_eq!(
             string_value(&mut reader).unwrap(),
-            JsonValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
-            })
+            JsonValue::String(Template::new(
+                Some('"'),
+                vec![],
+                SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
+            ))
         );
         assert_eq!(reader.cursor().index, 2);
 
@@ -559,14 +555,14 @@ mod tests {
         let mut reader = Reader::new("\"{}\"");
         assert_eq!(
             string_value(&mut reader).unwrap(),
-            JsonValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            JsonValue::String(Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "{}".to_string(),
                     source: "{}".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
-            })
+                SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
+            ))
         );
         assert_eq!(reader.cursor().index, 4);
     }
@@ -941,14 +937,14 @@ mod tests {
                 space0: "\n  ".to_string(),
                 elements: vec![JsonObjectElement {
                     space0: String::new(),
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "a".to_string(),
                             source: "a".to_source()
                         }],
-                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
-                    },
+                        SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
+                    ),
                     space1: String::new(),
                     space2: " ".to_string(),
                     value: JsonValue::Boolean(true),
@@ -989,14 +985,14 @@ mod tests {
             object_element(&mut reader).unwrap(),
             JsonObjectElement {
                 space0: String::new(),
-                name: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "a".to_string(),
                         source: "a".to_source()
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3))
-                },
+                    SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3))
+                ),
                 space1: String::new(),
                 space2: " ".to_string(),
                 value: JsonValue::Boolean(true),

@@ -285,14 +285,14 @@ mod tests {
                 value: " ".to_string(),
                 source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 5)),
             },
-            url: Template {
-                elements: vec![TemplateElement::String {
+            url: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "http://google.fr".to_string(),
                     source: "http://google.fr".to_source(),
                 }],
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
-            },
+                SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
+            ),
             line_terminator0: LineTerminator {
                 space0: Whitespace {
                     value: String::new(),
@@ -324,14 +324,14 @@ mod tests {
                 value: "  ".to_string(),
                 source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 6)),
             },
-            url: Template {
-                elements: vec![TemplateElement::String {
+            url: Template::new(
+                None,
+                vec![TemplateElement::String {
                     value: "http://google.fr".to_string(),
                     source: "http://google.fr".to_source(),
                 }],
-                delimiter: None,
-                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
-            },
+                SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
+            ),
             line_terminator0: LineTerminator {
                 space0: Whitespace {
                     value: " ".to_string(),
@@ -388,14 +388,14 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
                         value: "\n".to_string(),
                     },
-                    kind: MultilineStringKind::Text(Template {
-                        elements: vec![TemplateElement::String {
+                    kind: MultilineStringKind::Text(Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "Hello World!\n".to_string(),
                             source: "Hello World!\n".to_source(),
                         }],
-                        delimiter: None,
-                        source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
-                    },),
+                        SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
+                    )),
                 }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
@@ -446,14 +446,14 @@ mod tests {
         assert_eq!(r.method, Method("POST".to_string()));
         assert_eq!(
             r.body.unwrap().value,
-            Bytes::Json(JsonValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            Bytes::Json(JsonValue::String(Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "Hello".to_string(),
                     source: "Hello".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
-            }))
+                SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
+            )))
         );
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-number\n100");

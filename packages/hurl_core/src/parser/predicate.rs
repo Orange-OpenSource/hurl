@@ -432,14 +432,14 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::String(Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                value: PredicateValue::String(Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "Bob".to_string(),
                         source: "Bob".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 9)),
-                }),
+                    SourceInfo::new(Pos::new(1, 4), Pos::new(1, 9)),
+                )),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),

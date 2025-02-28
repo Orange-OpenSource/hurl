@@ -73,14 +73,14 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(8, 1)),
                 },
-                fmt: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                fmt: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: fmt.to_string(),
                         source: fmt.to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(8, 1), Pos::new(8 + fmt.len(), 1)),
-                },
+                    SourceInfo::new(Pos::new(8, 1), Pos::new(8 + fmt.len(), 1)),
+                ),
             },
         }
     }

@@ -267,14 +267,14 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
-                name: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "Foo".to_string(),
                         source: "Foo".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 13)),
-                },
+                    SourceInfo::new(Pos::new(1, 8), Pos::new(1, 13))
+                )
             }
         );
     }
@@ -290,14 +290,14 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
                 expr: CookiePath {
-                    name: Template {
-                        delimiter: None,
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        None,
+                        vec![TemplateElement::String {
                             value: "Foo".to_string(),
                             source: "Foo".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 12)),
-                    },
+                        SourceInfo::new(Pos::new(1, 9), Pos::new(1, 12))
+                    ),
                     attribute: Some(CookieAttribute {
                         space0: Whitespace {
                             value: String::new(),
@@ -328,31 +328,30 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                expr: Template {
-                    delimiter: Some('"'),
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "normalize-space(//head/title)".to_string(),
                         source: "normalize-space(//head/title)".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 38)),
-                },
+                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 38))
+                ),
             },
         );
 
         let mut reader = Reader::new("xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"");
         assert_eq!(xpath_query(&mut reader).unwrap(), QueryValue::Xpath {
             space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)) },
-            expr: Template {
-                delimiter: Some('"'),
-                elements: vec![
+            expr: Template::new(
+                Some('"'),
+                vec![
                     TemplateElement::String {
                         value: "normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])".to_string(),
                         source: "normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])".to_source(),
                     }
                 ],
-                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 100)),
-            },
-
+                SourceInfo::new(Pos::new(1, 7), Pos::new(1, 100))
+            )
         });
     }
 
@@ -366,15 +365,15 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "$['statusCode']".to_string(),
                         source: "$['statusCode']".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 27)),
-                },
-            },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 27))
+                )
+            }
         );
         let mut reader = Reader::new("jsonpath \"$.success\"");
         assert_eq!(
@@ -384,15 +383,15 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
+                expr: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
                         value: "$.success".to_string(),
                         source: "$.success".to_source(),
                     }],
-                    delimiter: Some('"'),
-                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 21)),
-                },
-            },
+                    SourceInfo::new(Pos::new(1, 10), Pos::new(1, 21))
+                )
+            }
         );
     }
 

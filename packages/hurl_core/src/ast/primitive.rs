@@ -215,6 +215,21 @@ impl ToSource for Template {
     }
 }
 
+impl Template {
+    /// Creates a new template.
+    pub fn new(
+        delimiter: Option<char>,
+        elements: Vec<TemplateElement>,
+        source_info: SourceInfo,
+    ) -> Template {
+        Template {
+            delimiter,
+            elements,
+            source_info,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TemplateElement {
     String { value: String, source: SourceString },
@@ -641,9 +656,9 @@ mod tests {
     }
 
     fn hello_template() -> Template {
-        Template {
-            delimiter: None,
-            elements: vec![
+        Template::new(
+            None,
+            vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
                     source: "Hello ".to_source(),
@@ -654,8 +669,8 @@ mod tests {
                     source: "!".to_source(),
                 },
             ],
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        }
+            SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+        )
     }
 
     #[test]
@@ -690,14 +705,14 @@ mod tests {
         assert_eq!("1", JsonValue::Number("1".to_string()).to_source().as_str());
         assert_eq!(
             "\"hello\"",
-            JsonValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![TemplateElement::String {
+            JsonValue::String(Template::new(
+                Some('"'),
+                vec![TemplateElement::String {
                     value: "hello".to_string(),
                     source: "hello".to_source(),
                 }],
-                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-            })
+                SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+            ))
             .to_source()
             .as_str()
         );
@@ -751,14 +766,14 @@ mod tests {
                 space0: String::new(),
                 elements: vec![JsonObjectElement {
                     space0: " ".to_string(),
-                    name: Template {
-                        delimiter: Some('"'),
-                        elements: vec![TemplateElement::String {
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
                             value: "id".to_string(),
                             source: "id".to_source(),
                         }],
-                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                    },
+                        SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
+                    ),
                     space1: String::new(),
                     space2: " ".to_string(),
                     value: JsonValue::Number("123".to_string()),
@@ -795,9 +810,9 @@ mod tests {
 
         assert_eq!(
             "{{name}}",
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::Placeholder(Placeholder {
+            Template::new(
+                None,
+                vec![TemplateElement::Placeholder(Placeholder {
                     space0: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
@@ -814,8 +829,8 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                 })],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            }
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
+            )
             .to_source()
             .as_str(),
         );

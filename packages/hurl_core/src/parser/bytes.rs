@@ -126,13 +126,14 @@ mod tests {
         assert_eq!(reader.cursor().index, 4);
 
         let mut reader = Reader::new("\"\" x");
+        let template = Template::new(
+            Some('"'),
+            vec![],
+            SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
+        );
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Json(JsonValue::String(Template {
-                delimiter: Some('"'),
-                elements: vec![],
-                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
-            }))
+            Bytes::Json(JsonValue::String(template))
         );
         assert_eq!(reader.cursor().index, 2);
     }
@@ -197,17 +198,15 @@ mod tests {
     #[test]
     fn test_bytes_string() {
         let mut reader = Reader::new("`foo`  ");
-        assert_eq!(
-            bytes(&mut reader).unwrap(),
-            Bytes::OnelineString(Template {
-                delimiter: Some('`'),
-                elements: vec![TemplateElement::String {
-                    value: "foo".to_string(),
-                    source: "foo".to_source()
-                }],
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
-            })
+        let template = Template::new(
+            Some('`'),
+            vec![TemplateElement::String {
+                value: "foo".to_string(),
+                source: "foo".to_source(),
+            }],
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
         );
+        assert_eq!(bytes(&mut reader).unwrap(), Bytes::OnelineString(template));
         assert_eq!(reader.cursor().index, 5);
     }
 }

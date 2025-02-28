@@ -188,9 +188,9 @@ mod tests {
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
-        JsonValue::String(Template {
-            delimiter: Some('"'),
-            elements: vec![
+        JsonValue::String(Template::new(
+            Some('"'),
+            vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
                     source: "Hello\\u0020".to_source(),
@@ -217,8 +217,8 @@ mod tests {
                     source: "!".to_source(),
                 },
             ],
-            source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
-        })
+            SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
+        ))
     }
 
     pub fn json_person_value() -> JsonValue {
@@ -226,24 +226,24 @@ mod tests {
             space0: "\n    ".to_string(),
             elements: vec![JsonObjectElement {
                 space0: String::new(),
-                name: Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "firstName".to_string(),
                         source: "firstName".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                },
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                ),
                 space1: String::new(),
                 space2: " ".to_string(),
-                value: JsonValue::String(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                value: JsonValue::String(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "John".to_string(),
                         source: "John".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                }),
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                )),
                 space3: "\n".to_string(),
             }],
         }
@@ -339,14 +339,14 @@ mod tests {
             "[1, -2, 3.0]".to_string()
         );
 
-        let template = Template {
-            delimiter: Some('"'),
-            elements: vec![TemplateElement::String {
+        let template = Template::new(
+            Some('"'),
+            vec![TemplateElement::String {
                 value: "Hi".to_string(),
                 source: "Hi".to_source(),
             }],
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        };
+            SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+        );
         assert_eq!(
             eval_json_value(
                 &JsonValue::List {
@@ -401,14 +401,14 @@ mod tests {
         let variables = VariableSet::new();
         assert_eq!(
             eval_json_value(
-                &JsonValue::String(Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                &JsonValue::String(Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\n".to_string(),
                         source: "\\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                }),
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
+                )),
                 &variables,
                 true
             )
@@ -422,14 +422,14 @@ mod tests {
         let variables = VariableSet::new();
         assert_eq!(
             eval_json_template(
-                &Template {
-                    delimiter: None,
-                    elements: vec![TemplateElement::String {
+                &Template::new(
+                    None,
+                    vec![TemplateElement::String {
                         value: "\n".to_string(),
                         source: "\\n".to_source(),
                     }],
-                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                },
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+                ),
                 &variables,
             )
             .unwrap(),
@@ -442,9 +442,9 @@ mod tests {
             .unwrap();
         assert_eq!(
             eval_json_template(
-                &Template {
-                    delimiter: Some('"'),
-                    elements: vec![
+                &Template::new(
+                    Some('"'),
+                    vec![
                         TemplateElement::String {
                             value: "Hello ".to_string(),
                             source: "Hello ".to_source(),
@@ -461,8 +461,8 @@ mod tests {
                             space1: whitespace(),
                         }),
                     ],
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-                },
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 &variables,
             )
             .unwrap(),
