@@ -21,7 +21,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 [dependencies]
 base64 = "0.22.1"
 brotli = "7.0.0"
-chrono = { version = "0.4.39", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 clap = { version = "4.5.31", features = ["string", "wrap_help"] }
 curl = "0.4.47"
 curl-sys = "0.4.80"
@@ -41,7 +41,7 @@ url = "2.5.4"
 xml-rs = { version = "0.8.25" }
 lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.14.0", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.15.1", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"
 terminal_size = "0.4.1"
 
