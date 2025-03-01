@@ -14,18 +14,52 @@
 <span class="line">  "name": {{name}}</span>
 <span class="line">}</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span></span>
+<span class="line"><span class="multiline">```json</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  "message": "Hello",</span></span>
+<span class="line"><span class="multiline">  "count": 5,</span></span>
+<span class="line"><span class="multiline">  "success": false,</span></span>
+<span class="line"><span class="multiline">  "errors": [{"id":"error1"},{"id":"error2"}],</span></span>
+<span class="line"><span class="multiline">  "failures": [{"id":"failure1"}],</span></span>
+<span class="line"><span class="multiline">  "warnings": [],</span></span>
+<span class="line"><span class="multiline">  "duration": 1.5,</span></span>
+<span class="line"><span class="multiline">  "tags": ["test"],</span></span>
+<span class="line"><span class="multiline">  "nullable": null,</span></span>
+<span class="line"><span class="multiline">  "profile-id": "123abc",</span></span>
+<span class="line"><span class="multiline">  "empty": {},</span></span>
+<span class="line"><span class="multiline">  "name": {{name}}</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/xml</span></span>
 <span class="xml"><span class="line">&lt;message&gt;Hello&lt;/message&gt;</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
-<span class="multiline"><span class="line">```</span>
-<span class="line">Hello</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```</span></span>
+<span class="line"><span class="multiline">Hello\tWord</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">A template {{ var }}</span></span>
+<span class="line"><span class="multiline">A template {{     var   }}</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># escape novariable are attributes of multi-linestring</span>
+<span class="line"></span><span class="comment"># going to be deprecated</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
+<span class="line"><span class="multiline">```escape</span></span>
+<span class="line"><span class="multiline">Hello\tWord</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">A template {{ var }}</span></span>
+<span class="line"><span class="multiline">A template {{     var   }}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
-<span class="multiline"><span class="line">```escape</span>
-<span class="line">Hello\tWorld!</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```escape,novariable</span></span>
+<span class="line"><span class="multiline">Hello\tWord</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">A template {{ var }}</span></span>
+<span class="line"><span class="multiline">A template {{     var   }}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-string</span></span>
 <span class="line"><span class="string">`Hello`</span></span>

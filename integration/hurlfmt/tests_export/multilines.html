@@ -3,150 +3,161 @@
 <span class="line"></span><span class="comment"># and we assert the response here.</span>
 <span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span></span>
-<span class="multiline"><span class="line">```</span>
-<span class="line">line1</span>
-<span class="line">line2</span>
-<span class="line">line3</span>
-<span class="line">```</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="multiline">```</span></span>
+<span class="line"><span class="multiline">line1</span></span>
+<span class="line"><span class="multiline">line2</span></span>
+<span class="line"><span class="multiline">line3</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"></span><span class="comment"># Different ways of testing body response:</span>
 <span class="line"></span><span class="comment"># with explicit asserts:</span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"line1\nline2\nline3\n"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"line1\nline2\nline3\nA beautiful \u{2708}\n"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```</span></span>
-<span class="multiline"><span class="line">line1</span>
-<span class="line">line2</span>
-<span class="line">line3</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">line1</span></span>
+<span class="line"><span class="multiline">line2</span></span>
+<span class="line"><span class="multiline">line3</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 <span class="line"></span><span class="comment"># Or we can just test the body (implicit assert):</span>
-<span class="multiline"><span class="line">```</span>
-<span class="line">line1</span>
-<span class="line">line2</span>
-<span class="line">line3</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```</span></span>
+<span class="line"><span class="multiline">line1</span></span>
+<span class="line"><span class="multiline">line2</span></span>
+<span class="line"><span class="multiline">line3</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># escape attributes are going to be deprecated</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```escape</span></span>
+<span class="line"><span class="multiline">line1</span></span>
+<span class="line"><span class="multiline">line2</span></span>
+<span class="line"><span class="multiline">line3</span></span>
+<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/json</span></span>
-<span class="multiline"><span class="line">```json</span>
-<span class="line">{</span>
-<span class="line">  "foo": "bar"</span>
-<span class="line">  "baz": 123456</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="multiline">```json</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  "foo": "bar"</span></span>
+<span class="line"><span class="multiline">  "baz": 123456</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"></span><span class="comment"># Different ways of testing body response:</span>
 <span class="line"></span><span class="comment"># with explicit asserts:</span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\n  \"foo\": \"bar\"\n  \"baz\": 123456\n}\n"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```json</span></span>
-<span class="multiline"><span class="line">{</span>
-<span class="line">  "foo": "bar"</span>
-<span class="line">  "baz": 123456</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  "foo": "bar"</span></span>
+<span class="line"><span class="multiline">  "baz": 123456</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 <span class="line"></span><span class="comment"># Or we can just test the body (implicit assert):</span>
-<span class="multiline"><span class="line">```json</span>
-<span class="line">{</span>
-<span class="line">  "foo": "bar"</span>
-<span class="line">  "baz": 123456</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```json</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  "foo": "bar"</span></span>
+<span class="line"><span class="multiline">  "baz": 123456</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/xml</span></span>
-<span class="multiline"><span class="line">```xml</span>
-<span class="line">&lt;?xml version="1.0"?&gt;</span>
-<span class="line">&lt;catalog&gt;</span>
-<span class="line">    &lt;book id="bk101"&gt;</span>
-<span class="line">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span>
-<span class="line">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span>
-<span class="line">        &lt;genre&gt;Computer&lt;/genre&gt;</span>
-<span class="line">        &lt;price&gt;44.95&lt;/price&gt;</span>
-<span class="line">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span>
-<span class="line">        &lt;description&gt;An in-depth look at creating applications</span>
-<span class="line">        with XML.&lt;/description&gt;</span>
-<span class="line">    &lt;/book&gt;</span>
-<span class="line">&lt;/catalog&gt;</span>
-<span class="line">```</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="multiline">```xml</span></span>
+<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
+<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
+<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
+<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
+<span class="line"><span class="multiline">```</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"></span><span class="comment"># Different ways of testing body response:</span>
 <span class="line"></span><span class="comment"># with explicit asserts:</span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"&lt;?xml version=\"1.0\"?&gt;\n&lt;catalog&gt;\n    &lt;book id=\"bk101\"&gt;\n        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;\n        &lt;title&gt;XML Developer's Guide&lt;/title&gt;\n        &lt;genre&gt;Computer&lt;/genre&gt;\n        &lt;price&gt;44.95&lt;/price&gt;\n        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;\n        &lt;description&gt;An in-depth look at creating applications\n        with XML.&lt;/description&gt;\n    &lt;/book&gt;\n&lt;/catalog&gt;\n"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```xml</span></span>
-<span class="multiline"><span class="line">&lt;?xml version="1.0"?&gt;</span>
-<span class="line">&lt;catalog&gt;</span>
-<span class="line">    &lt;book id="bk101"&gt;</span>
-<span class="line">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span>
-<span class="line">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span>
-<span class="line">        &lt;genre&gt;Computer&lt;/genre&gt;</span>
-<span class="line">        &lt;price&gt;44.95&lt;/price&gt;</span>
-<span class="line">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span>
-<span class="line">        &lt;description&gt;An in-depth look at creating applications</span>
-<span class="line">        with XML.&lt;/description&gt;</span>
-<span class="line">    &lt;/book&gt;</span>
-<span class="line">&lt;/catalog&gt;</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
+<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
+<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
+<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
+<span class="line"><span class="multiline">```</span></span>
 <span class="line"></span><span class="comment"># Or we can just test the body (implicit assert):</span>
-<span class="multiline"><span class="line">```xml</span>
-<span class="line">&lt;?xml version="1.0"?&gt;</span>
-<span class="line">&lt;catalog&gt;</span>
-<span class="line">    &lt;book id="bk101"&gt;</span>
-<span class="line">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span>
-<span class="line">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span>
-<span class="line">        &lt;genre&gt;Computer&lt;/genre&gt;</span>
-<span class="line">        &lt;price&gt;44.95&lt;/price&gt;</span>
-<span class="line">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span>
-<span class="line">        &lt;description&gt;An in-depth look at creating applications</span>
-<span class="line">        with XML.&lt;/description&gt;</span>
-<span class="line">    &lt;/book&gt;</span>
-<span class="line">&lt;/catalog&gt;</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```xml</span></span>
+<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
+<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
+<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
+<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
+<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
+<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/graphql</span></span>
-<span class="multiline"><span class="line">```graphql</span>
-<span class="line">{</span>
-<span class="line">  hero {</span>
-<span class="line">    name</span>
-<span class="line">    # Queries can have comments!</span>
-<span class="line">    friends {</span>
-<span class="line">      name</span>
-<span class="line">    }</span>
-<span class="line">  }</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```graphql</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  hero {</span></span>
+<span class="line"><span class="multiline">    name</span></span>
+<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
+<span class="line"><span class="multiline">    friends {</span></span>
+<span class="line"><span class="multiline">      name</span></span>
+<span class="line"><span class="multiline">    }</span></span>
+<span class="line"><span class="multiline">  }</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"></span><span class="comment"># Different ways of testing body response:</span>
 <span class="line"></span><span class="comment"># with explicit asserts:</span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\"query\":\"{\\n  hero {\\n    name\\n    # Queries can have comments!\\n    friends {\\n      name\\n    }\\n  }\\n}\"}"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```graphql</span></span>
-<span class="multiline"><span class="line">{</span>
-<span class="line">  hero {</span>
-<span class="line">    name</span>
-<span class="line">    # Queries can have comments!</span>
-<span class="line">    friends {</span>
-<span class="line">      name</span>
-<span class="line">    }</span>
-<span class="line">  }</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  hero {</span></span>
+<span class="line"><span class="multiline">    name</span></span>
+<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
+<span class="line"><span class="multiline">    friends {</span></span>
+<span class="line"><span class="multiline">      name</span></span>
+<span class="line"><span class="multiline">    }</span></span>
+<span class="line"><span class="multiline">  }</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 <span class="line"></span><span class="comment"># Or we can just test the body (implicit assert):</span>
-<span class="multiline"><span class="line">```graphql</span>
-<span class="line">{</span>
-<span class="line">  hero {</span>
-<span class="line">    name</span>
-<span class="line">    # Queries can have comments!</span>
-<span class="line">    friends {</span>
-<span class="line">      name</span>
-<span class="line">    }</span>
-<span class="line">  }</span>
-<span class="line">}</span>
-<span class="line">```</span></span>
+<span class="line"><span class="multiline">```graphql</span></span>
+<span class="line"><span class="multiline">{</span></span>
+<span class="line"><span class="multiline">  hero {</span></span>
+<span class="line"><span class="multiline">    name</span></span>
+<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
+<span class="line"><span class="multiline">    friends {</span></span>
+<span class="line"><span class="multiline">      name</span></span>
+<span class="line"><span class="multiline">    }</span></span>
+<span class="line"><span class="multiline">  }</span></span>
+<span class="line"><span class="multiline">}</span></span>
+<span class="line"><span class="multiline">```</span></span>
 </span></span></code></pre>

@@ -14,17 +14,51 @@ POST http://localhost:8000/json
   "name": {{name}}
 }
 
+POST http://localhost:8000/json
+```json
+{
+  "message": "Hello",
+  "count": 5,
+  "success": false,
+  "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
+  "warnings": [],
+  "duration": 1.5,
+  "tags": ["test"],
+  "nullable": null,
+  "profile-id": "123abc",
+  "empty": {},
+  "name": {{name}}
+}
+```
+
 POST http://localhost:8000/xml
 <message>Hello</message>
 
 POST http://localhost:8000/multiline-string
 ```
-Hello
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
+```
+
+# escape novariable are attributes of multi-linestring
+# going to be deprecated
+POST http://localhost:8000/multiline-string
+```escape
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
 ```
 
 POST http://localhost:8000/multiline-string
-```escape
-Hello\tWorld!
+```escape,novariable
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
 ```
 
 POST http://localhost:8000/oneline-string

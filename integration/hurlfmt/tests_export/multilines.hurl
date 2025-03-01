@@ -7,23 +7,36 @@ POST http://localhost:8000/multilines/plain-text
 line1
 line2
 line3
+A beautiful \u{2708}
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
 [Asserts]
-body == "line1\nline2\nline3\n"
+body == "line1\nline2\nline3\nA beautiful \u{2708}\n"
 body == ```
 line1
 line2
 line3
+A beautiful \u{2708}
 ```
 # Or we can just test the body (implicit assert):
 ```
 line1
 line2
 line3
+A beautiful \u{2708}
+```
+
+# escape attributes are going to be deprecated
+POST http://localhost:8000/multilines/plain-text
+HTTP 200
+[Asserts]
+body == ```escape
+line1
+line2
+line3
+A beautiful \u{2708}
 ```
 
 
@@ -34,7 +47,6 @@ POST http://localhost:8000/multilines/json
   "baz": 123456
 }
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
@@ -71,7 +83,6 @@ POST http://localhost:8000/multilines/xml
     </book>
 </catalog>
 ```
-
 HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
