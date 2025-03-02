@@ -327,8 +327,8 @@ impl Tokenizable for FileValue {
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Keyword(";".to_string()));
         tokens.append(&mut self.space2.tokenize());
-        if let Some(content_type) = self.content_type.clone() {
-            tokens.push(Token::String(content_type));
+        if let Some(content_type) = &self.content_type {
+            tokens.push(Token::String(content_type.to_string()));
         }
         tokens
     }

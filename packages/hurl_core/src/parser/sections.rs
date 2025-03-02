@@ -240,7 +240,14 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
         Err(_) => {
             reader.seek(save);
             let space2 = zero_or_more_spaces(reader)?;
-            let content_type = file_content_type(reader)?;
+            let start = reader.cursor();
+            let Ok(content_type) = unquoted_template(reader) else {
+                return Err(ParseError::new(
+                    start.pos,
+                    false,
+                    ParseErrorKind::FileContentType,
+                ));
+            };
             (space2, Some(content_type))
         }
     };
@@ -252,35 +259,6 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
         space2,
         content_type,
     })
-}
-
-fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.cursor();
-    let mut buf = String::new();
-    let mut spaces = String::new();
-    let mut save = reader.cursor();
-    while let Some(c) = reader.read() {
-        if c.is_alphanumeric() || c == '/' || c == ';' || c == '=' || c == '-' {
-            buf.push_str(spaces.as_str());
-            spaces = String::new();
-            buf.push(c);
-            save = reader.cursor();
-        } else if c == ' ' {
-            spaces.push(' ');
-        } else {
-            break;
-        }
-    }
-
-    reader.seek(save);
-    if buf.is_empty() {
-        return Err(ParseError::new(
-            start.pos,
-            false,
-            ParseErrorKind::FileContentType,
-        ));
-    }
-    Ok(buf)
 }
 
 fn capture(reader: &mut Reader) -> ParseResult<Capture> {
@@ -555,33 +533,58 @@ mod tests {
                     value: " ".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 16), Pos::new(1, 17)),
                 },
-                content_type: Some("text/html".to_string()),
+                content_type: Some(Template::new(
+                    None,
+                    vec![TemplateElement::String {
+                        value: "text/html".to_string(),
+                        source: "text/html".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(1, 17), Pos::new(1, 26)),
+                )),
             }
         );
     }
 
     #[test]
     fn test_file_content_type() {
-        let mut reader = Reader::new("text/html");
-        assert_eq!(
-            file_content_type(&mut reader).unwrap(),
-            "text/html".to_string()
-        );
-        assert_eq!(reader.cursor().index, 9);
+        let mut reader = Reader::new("file,hello.txt; text/html");
+        let file_value = file_value(&mut reader).unwrap();
+        let content_type = file_value.content_type.unwrap();
+        assert_eq!(content_type.to_string(), "text/html".to_string());
+        assert_eq!(reader.cursor().index, 25);
 
-        let mut reader = Reader::new("text/plain; charset=us-ascii");
+        let mut reader = Reader::new("file,------; text/plain; charset=us-ascii");
+        let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
+        let content_type = file_value.content_type.unwrap();
         assert_eq!(
-            file_content_type(&mut reader).unwrap(),
+            content_type.to_string(),
             "text/plain; charset=us-ascii".to_string()
         );
-        assert_eq!(reader.cursor().index, 28);
+        assert_eq!(reader.cursor().index, 41);
 
-        let mut reader = Reader::new("text/html # comment");
+        let mut reader = Reader::new("file,******; text/html # comment");
+        let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
+        let content_type = file_value.content_type.unwrap();
+        assert_eq!(content_type.to_string(), "text/html".to_string());
+        assert_eq!(reader.cursor().index, 22);
+
+        let mut reader = Reader::new("file,{{some_file}}; application/vnd.openxmlformats-officedocument.wordprocessingml.document # comment");
+        let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
+        let content_type = file_value.content_type.unwrap();
         assert_eq!(
-            file_content_type(&mut reader).unwrap(),
-            "text/html".to_string()
+            content_type.to_string(),
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document".to_string()
         );
-        assert_eq!(reader.cursor().index, 9);
+        assert_eq!(reader.cursor().index, 91);
+
+        let mut reader = Reader::new("file,{{some_file}}; {{some_content_type}} # comment");
+        let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
+        let content_type = file_value.content_type.unwrap();
+        assert_eq!(
+            content_type.to_string(),
+            "{{some_content_type}}".to_string()
+        );
+        assert_eq!(reader.cursor().index, 41);
     }
 
     #[test]

@@ -66,7 +66,8 @@ pub fn file_value_content_type(
     file_value: &FileValue,
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
-    let value = match file_value.content_type.clone() {
+    let value = match &file_value.content_type {
+        Some(content_type) => eval_template(content_type, variables)?,
         None => {
             let value = eval_template(&file_value.filename, variables)?;
             match Path::new(value.as_str())
@@ -86,18 +87,20 @@ pub fn file_value_content_type(
                 _ => "application/octet-stream".to_string(),
             }
         }
-        Some(content_type) => content_type,
     };
     Ok(value)
 }
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{LineTerminator, SourceInfo, Template, TemplateElement, Whitespace};
+    use super::*;
+    use crate::runner::Value;
+    use hurl_core::ast::{
+        Expr, ExprKind, LineTerminator, Placeholder, SourceInfo, Template, TemplateElement,
+        Variable, Whitespace,
+    };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
-
-    use super::*;
 
     pub fn whitespace() -> Whitespace {
         Whitespace {
@@ -164,7 +167,14 @@ mod tests {
 
     #[test]
     pub fn test_file_value_content_type() {
-        let variables = VariableSet::default();
+        let mut variables = VariableSet::default();
+        variables
+            .insert(
+                "ct".to_string(),
+                Value::String("application/json".to_string()),
+            )
+            .unwrap();
+
         assert_eq!(
             file_value_content_type(
                 &FileValue {
@@ -223,7 +233,14 @@ mod tests {
                     ),
                     space1: whitespace(),
                     space2: whitespace(),
-                    content_type: Some("text/html".to_string()),
+                    content_type: Some(Template::new(
+                        None,
+                        vec![TemplateElement::String {
+                            value: "text/html".to_string(),
+                            source: "text/html".to_source()
+                        }],
+                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    ))
                 },
                 &variables
             )
@@ -251,6 +268,48 @@ mod tests {
             )
             .unwrap(),
             "application/octet-stream".to_string()
+        );
+
+        assert_eq!(
+            file_value_content_type(
+                &FileValue {
+                    space0: whitespace(),
+                    filename: Template::new(
+                        None,
+                        vec![TemplateElement::String {
+                            value: "hello.txt".to_string(),
+                            source: "hello.txt".to_source()
+                        }],
+                        SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
+                    ),
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: Some(Template::new(
+                        None,
+                        vec![TemplateElement::Placeholder(Placeholder {
+                            space0: Whitespace {
+                                value: String::new(),
+                                source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 9)),
+                            },
+                            expr: Expr {
+                                kind: ExprKind::Variable(Variable {
+                                    name: "ct".to_string(),
+                                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 13)),
+                                }),
+                                source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 15)),
+                            },
+                            space1: Whitespace {
+                                value: String::new(),
+                                source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
+                            },
+                        })],
+                        SourceInfo::new(Pos::new(1, 9), Pos::new(1, 15)),
+                    ))
+                },
+                &variables
+            )
+            .unwrap(),
+            "application/json".to_string()
         );
     }
 }

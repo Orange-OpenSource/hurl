@@ -284,8 +284,11 @@ impl ToJson for FileParam {
                 JValue::String(self.value.filename.to_string()),
             ),
         ];
-        if let Some(content_type) = self.value.content_type.clone() {
-            attributes.push(("content_type".to_string(), JValue::String(content_type)));
+        if let Some(content_type) = &self.value.content_type {
+            attributes.push((
+                "content_type".to_string(),
+                JValue::String(content_type.to_string()),
+            ));
         }
         JValue::Object(attributes)
     }

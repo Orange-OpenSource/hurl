@@ -323,7 +323,7 @@ impl HtmlFormatter {
         self.buffer.push(';');
         self.fmt_space(&file_value.space2);
         if let Some(content_type) = &file_value.content_type {
-            self.fmt_string(content_type);
+            self.fmt_template(content_type);
         }
     }
 

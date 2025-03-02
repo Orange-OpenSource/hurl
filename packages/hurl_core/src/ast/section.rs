@@ -76,6 +76,7 @@ pub struct Cookie {
     pub line_terminator0: LineTerminator,
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultipartParam {
     Param(KeyValue),
@@ -99,7 +100,7 @@ pub struct FileValue {
     pub filename: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
-    pub content_type: Option<String>,
+    pub content_type: Option<Template>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
