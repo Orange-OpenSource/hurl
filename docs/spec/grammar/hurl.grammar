@@ -104,7 +104,7 @@ file-param :
 
 file-value: "file," filename ";" (file-contenttype)?
 
-file-contenttype: [a-zA-Z0-9/+-]+
+file-contenttype: value-string
 
 capture:
   lt*
