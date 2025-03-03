@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@lilyhuang-github](https://github.com/lilyhuang-github),
 [@ashishajr](https://github.com/ashishajr),
 [@kidbrax](https://github.com/kidbrax),
 [@theoforger](https://github.com/theoforger),
@@ -12,6 +13,7 @@ Thanks to
 [@uday-rana](https://github.com/uday-rana),
 [@lu-zero](https://github.com/lu-zero),
 [@nghiab1906724](https://github.com/nghiab1906724),
+[@overbyte](https://github.com/overbyte),
 
 Breaking Changes:
 
@@ -21,6 +23,7 @@ Breaking Changes:
 
 Enhancements:
 
+* Removed limitation for --cookie-jar to use only one hurl file [#2537](https://github.com/Orange-OpenSource/hurl/issues/2537)
 * Add HTTP version query [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
 * Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
 * Add curl -H/--header option to globally add headers to all requests [#1905](https://github.com/Orange-OpenSource/hurl/issues/1905) [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
@@ -38,6 +41,7 @@ Enhancements:
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
 * Fix invalid escape in hurlfmt parse func [#3615](https://github.com/Orange-OpenSource/hurl/issues/3615)
 * hurlfmt: Use Hurl predicates identifiers for Hurl to JSON file export [#3662](https://github.com/Orange-OpenSource/hurl/issues/3662)
+* Add toString Filter [#3798](https://github.com/Orange-OpenSource/hurl/issues/3798)
 
 
 Bugs Fixed:
@@ -49,6 +53,8 @@ Bugs Fixed:
 * Remove lint errors [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
 * Support BigInteger in variable [#3656](https://github.com/Orange-OpenSource/hurl/issues/3656)
 * Fix changing HTTP version per request sometimes not effective [#3719](https://github.com/Orange-OpenSource/hurl/issues/3719)
+* Fix multilines HTML export [#3768](https://github.com/Orange-OpenSource/hurl/issues/3768)
+* Change parsing file content type in multipart form data [#3796](https://github.com/Orange-OpenSource/hurl/issues/3796)
 
 
 [6.0.0 (2024-12-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.0.0)
