@@ -50,9 +50,10 @@ Bugs Fixed:
 * Eval template in JSON object key [#3593](https://github.com/Orange-OpenSource/hurl/issues/3593)
 * Show error message if format is invalid in `format` filter [#3613](https://github.com/Orange-OpenSource/hurl/issues/3613)
 * Create parent folders if missing when using --cookie-jar FILE [#3637](https://github.com/Orange-OpenSource/hurl/issues/3637)
-* Remove lint errors [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
+* Remove lint errors and Fix non-zero exit code in case of error [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
 * Support BigInteger in variable [#3656](https://github.com/Orange-OpenSource/hurl/issues/3656)
 * Fix changing HTTP version per request sometimes not effective [#3719](https://github.com/Orange-OpenSource/hurl/issues/3719)
+* Add bash file completion for hurl/hurlfmt [#3750](https://github.com/Orange-OpenSource/hurl/issues/3750)
 * Fix multilines HTML export [#3768](https://github.com/Orange-OpenSource/hurl/issues/3768)
 * Change parsing file content type in multipart form data [#3796](https://github.com/Orange-OpenSource/hurl/issues/3796)
 
