@@ -1141,7 +1141,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = match file_value.content_type.clone() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = match &amp;file_value.content_type {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1151,13 +1151,13 @@
                 <a href="#70">70</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="24">
+                24
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        None =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(content_type) =&gt; eval_template(content_type, variables)?,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1167,13 +1167,13 @@
                 <a href="#71">71</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let value = eval_template(&amp;file_value.filename, variables)?;</pre>
+                <pre class="has-background-white py-0 px-2">        None =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1189,7 +1189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            match Path::new(value.as_str())</pre>
+                <pre class="has-background-success-light py-0 px-2">            let value = eval_template(&amp;file_value.filename, variables)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1205,7 +1205,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                .extension()</pre>
+                <pre class="has-background-success-light py-0 px-2">            match Path::new(value.as_str())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1221,7 +1221,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                .and_then(OsStr::to_str)</pre>
+                <pre class="has-background-success-light py-0 px-2">                .extension()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1231,13 +1231,13 @@
                 <a href="#75">75</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="42">
+                42
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            {</pre>
+                <pre class="has-background-success-light py-0 px-2">                .and_then(OsStr::to_str)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1247,13 +1247,13 @@
                 <a href="#76">76</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;gif&quot;) =&gt; &quot;image&#x2F;gif&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1269,7 +1269,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;jpg&quot;) =&gt; &quot;image&#x2F;jpeg&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;gif&quot;) =&gt; &quot;image&#x2F;gif&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1285,7 +1285,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;jpeg&quot;) =&gt; &quot;image&#x2F;jpeg&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;jpg&quot;) =&gt; &quot;image&#x2F;jpeg&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1301,7 +1301,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;png&quot;) =&gt; &quot;image&#x2F;png&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;jpeg&quot;) =&gt; &quot;image&#x2F;jpeg&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1317,7 +1317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;svg&quot;) =&gt; &quot;image&#x2F;svg+xml&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;png&quot;) =&gt; &quot;image&#x2F;png&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1333,7 +1333,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;txt&quot;) =&gt; &quot;text&#x2F;plain&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;svg&quot;) =&gt; &quot;image&#x2F;svg+xml&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1344,12 +1344,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                role="cell" aria-label="42">
+                42
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;htm&quot;) =&gt; &quot;text&#x2F;html&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;txt&quot;) =&gt; &quot;text&#x2F;plain&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1365,7 +1365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(&quot;html&quot;) =&gt; &quot;text&#x2F;html&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;htm&quot;) =&gt; &quot;text&#x2F;html&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1375,13 +1375,13 @@
                 <a href="#84">84</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="18">
+                18
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Some(&quot;pdf&quot;) =&gt; &quot;application&#x2F;pdf&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(&quot;html&quot;) =&gt; &quot;text&#x2F;html&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1397,7 +1397,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Some(&quot;xml&quot;) =&gt; &quot;application&#x2F;xml&quot;.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Some(&quot;pdf&quot;) =&gt; &quot;application&#x2F;pdf&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1413,7 +1413,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                _ =&gt; &quot;application&#x2F;octet-stream&quot;.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Some(&quot;xml&quot;) =&gt; &quot;application&#x2F;xml&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1423,13 +1423,13 @@
                 <a href="#87">87</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                _ =&gt; &quot;application&#x2F;octet-stream&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1445,7 +1445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1455,13 +1455,13 @@
                 <a href="#89">89</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="24">
-                24
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(content_type) =&gt; content_type,</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1573,7 +1573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::{LineTerminator, SourceInfo, Template, TemplateElement, Whitespace};</pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1589,7 +1589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::reader::Pos;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::runner::Value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1605,7 +1605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::ToSource;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::{</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        Expr, ExprKind, LineTerminator, Placeholder, SourceInfo, Template, TemplateElement,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1637,7 +1637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">        Variable, Whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1653,7 +1653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1669,7 +1669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn whitespace() -&gt; Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::reader::Pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1685,7 +1685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            value: String::from(&quot; &quot;),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1717,7 +1717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn whitespace() -&gt; Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1733,7 +1733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">        Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1749,7 +1749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            value: String::from(&quot; &quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1765,7 +1765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1781,7 +1781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1797,7 +1797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_eval_file_param() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1813,7 +1813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let line_terminator = LineTerminator {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1829,7 +1829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1845,7 +1845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            comment: None,</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_eval_file_param() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1861,7 +1861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            newline: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">        let line_terminator = LineTerminator {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1877,7 +1877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1893,7 +1893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">            comment: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1909,7 +1909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;tests&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">            newline: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1925,7 +1925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1941,7 +1941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::default();</pre>
+                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let param = eval_file_param(</pre>
+                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;tests&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;FileParam {</pre>
+                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1989,7 +1989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                line_terminators: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::default();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2005,7 +2005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">        let param = eval_file_param(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                key: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;FileParam {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2037,7 +2037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    None,</pre>
+                <pre class="has-background-white py-0 px-2">                line_terminators: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: &quot;upload1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                key: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2085,7 +2085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;upload1&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                    None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2101,7 +2101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }],</pre>
+                <pre class="has-background-white py-0 px-2">                    vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2117,7 +2117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;upload1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2133,7 +2133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ),</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;upload1&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2149,7 +2149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                    }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2165,7 +2165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: FileValue {</pre>
+                <pre class="has-background-white py-0 px-2">                ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                space1: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2213,7 +2213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                space2: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2229,7 +2229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">                value: FileValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2245,7 +2245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2325,7 +2325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2357,7 +2357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                line_terminator0: line_terminator,</pre>
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;context_dir,</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">                line_terminator0: line_terminator,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;context_dir,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2501,7 +2501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,7 +2517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            param,</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2533,7 +2533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            http::FileParam {</pre>
+                <pre class="has-background-white py-0 px-2">        .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2549,7 +2549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;upload1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                filename: &quot;hello.txt&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            param,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2581,7 +2581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                data: b&quot;Hello World!&quot;.to_vec(),</pre>
+                <pre class="has-background-white py-0 px-2">            http::FileParam {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2597,7 +2597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                content_type: &quot;text&#x2F;plain&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                name: &quot;upload1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2613,7 +2613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                filename: &quot;hello.txt&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2629,7 +2629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                data: b&quot;Hello World!&quot;.to_vec(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2645,7 +2645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                content_type: &quot;text&#x2F;plain&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2661,7 +2661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2677,7 +2677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_file_value_content_type() {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2709,7 +2709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::default();</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2725,7 +2725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2741,7 +2741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_file_value_content_type() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2757,7 +2757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
+                <pre class="has-background-white py-0 px-2">        let mut variables = VariableSet::default();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2773,7 +2773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">        variables</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2789,7 +2789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">            .insert(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2805,7 +2805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;ct&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                Value::String(&quot;application&#x2F;json&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2837,7 +2837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2869,7 +2869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2885,7 +2885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2901,7 +2901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ),</pre>
+                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2917,7 +2917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2933,7 +2933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2949,7 +2949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2965,7 +2965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2981,7 +2981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2997,7 +2997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3013,7 +3013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3029,7 +3029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;plain&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3045,7 +3045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3061,7 +3061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3077,7 +3077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3109,7 +3109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
+                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3125,7 +3125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3141,7 +3141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3157,7 +3157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3173,7 +3173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3189,7 +3189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.html&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;plain&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3205,7 +3205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.html&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3221,7 +3221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3237,7 +3237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3253,7 +3253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ),</pre>
+                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3269,7 +3269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3285,7 +3285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3301,7 +3301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3317,7 +3317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3333,7 +3333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3349,7 +3349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.html&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.html&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3381,7 +3381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;html&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3397,7 +3397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3413,7 +3413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3429,7 +3429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3445,7 +3445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3461,7 +3461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
+                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3477,7 +3477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3493,7 +3493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3509,7 +3509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3525,7 +3525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3541,7 +3541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;html&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3557,7 +3557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3573,7 +3573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3589,7 +3589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3605,7 +3605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ),</pre>
+                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3621,7 +3621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3637,7 +3637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3653,7 +3653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    content_type: Some(&quot;text&#x2F;html&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3669,7 +3669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3685,7 +3685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3701,7 +3701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3717,7 +3717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3733,7 +3733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;html&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3749,7 +3749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3765,7 +3765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3781,7 +3781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3797,7 +3797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
+                <pre class="has-background-white py-0 px-2">                    content_type: Some(Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3829,7 +3829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3845,7 +3845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3861,7 +3861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;text&#x2F;html&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3877,7 +3877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;text&#x2F;html&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3893,7 +3893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;hello&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3909,7 +3909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;hello&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3925,7 +3925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2">                    ))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3941,7 +3941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3957,7 +3957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    ),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3973,7 +3973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3989,7 +3989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4005,7 +4005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;text&#x2F;html&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4021,7 +4021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4037,7 +4037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4053,7 +4053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4069,7 +4069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4085,7 +4085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;application&#x2F;octet-stream&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4101,7 +4101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4117,7 +4117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4133,13 +4133,957 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="257"
+                role="cell">
+                <a href="#257">257</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="258"
+                role="cell">
+                <a href="#258">258</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello&quot;.to_string(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="259"
+                role="cell">
+                <a href="#259">259</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello&quot;.to_source()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="260"
+                role="cell">
+                <a href="#260">260</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="261"
+                role="cell">
+                <a href="#261">261</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="262"
+                role="cell">
+                <a href="#262">262</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="263"
+                role="cell">
+                <a href="#263">263</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="264"
+                role="cell">
+                <a href="#264">264</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="265"
+                role="cell">
+                <a href="#265">265</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    content_type: None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="266"
+                role="cell">
+                <a href="#266">266</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="267"
+                role="cell">
+                <a href="#267">267</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="268"
+                role="cell">
+                <a href="#268">268</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            )</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="269"
+                role="cell">
+                <a href="#269">269</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="270"
+                role="cell">
+                <a href="#270">270</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            &quot;application&#x2F;octet-stream&quot;.to_string()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="271"
+                role="cell">
+                <a href="#271">271</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="272"
+                role="cell">
+                <a href="#272">272</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="273"
+                role="cell">
+                <a href="#273">273</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="274"
+                role="cell">
+                <a href="#274">274</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            file_value_content_type(</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="275"
+                role="cell">
+                <a href="#275">275</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                &amp;FileValue {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="276"
+                role="cell">
+                <a href="#276">276</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="277"
+                role="cell">
+                <a href="#277">277</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    filename: Template::new(</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="278"
+                role="cell">
+                <a href="#278">278</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="279"
+                role="cell">
+                <a href="#279">279</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="280"
+                role="cell">
+                <a href="#280">280</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            value: &quot;hello.txt&quot;.to_string(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="281"
+                role="cell">
+                <a href="#281">281</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            source: &quot;hello.txt&quot;.to_source()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="282"
+                role="cell">
+                <a href="#282">282</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="283"
+                role="cell">
+                <a href="#283">283</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="284"
+                role="cell">
+                <a href="#284">284</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    ),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="285"
+                role="cell">
+                <a href="#285">285</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    space1: whitespace(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="286"
+                role="cell">
+                <a href="#286">286</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    space2: whitespace(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="287"
+                role="cell">
+                <a href="#287">287</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    content_type: Some(Template::new(</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="288"
+                role="cell">
+                <a href="#288">288</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="289"
+                role="cell">
+                <a href="#289">289</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::Placeholder(Placeholder {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="290"
+                role="cell">
+                <a href="#290">290</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            space0: Whitespace {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="291"
+                role="cell">
+                <a href="#291">291</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                value: String::new(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="292"
+                role="cell">
+                <a href="#292">292</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 9)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="293"
+                role="cell">
+                <a href="#293">293</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="294"
+                role="cell">
+                <a href="#294">294</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            expr: Expr {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="295"
+                role="cell">
+                <a href="#295">295</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                kind: ExprKind::Variable(Variable {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="296"
+                role="cell">
+                <a href="#296">296</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                    name: &quot;ct&quot;.to_string(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="297"
+                role="cell">
+                <a href="#297">297</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 13)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="298"
+                role="cell">
+                <a href="#298">298</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                }),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="299"
+                role="cell">
+                <a href="#299">299</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 15)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="300"
+                role="cell">
+                <a href="#300">300</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="301"
+                role="cell">
+                <a href="#301">301</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            space1: Whitespace {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="302"
+                role="cell">
+                <a href="#302">302</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                value: String::new(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="303"
+                role="cell">
+                <a href="#303">303</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                                source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="304"
+                role="cell">
+                <a href="#304">304</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                            },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="305"
+                role="cell">
+                <a href="#305">305</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        })],</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="306"
+                role="cell">
+                <a href="#306">306</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(1, 9), Pos::new(1, 15)),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="307"
+                role="cell">
+                <a href="#307">307</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                    ))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="308"
+                role="cell">
+                <a href="#308">308</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="309"
+                role="cell">
+                <a href="#309">309</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                &amp;variables</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="310"
+                role="cell">
+                <a href="#310">310</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            )</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="311"
+                role="cell">
+                <a href="#311">311</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="312"
+                role="cell">
+                <a href="#312">312</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            &quot;application&#x2F;json&quot;.to_string()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="313"
+                role="cell">
+                <a href="#313">313</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="314"
+                role="cell">
+                <a href="#314">314</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="315"
+                role="cell">
+                <a href="#315">315</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-03-03 08:59</p>
+                <p class="heading">Date: 2025-03-03 09:42</p>
             </div>
         </footer>
     </body>
