@@ -1,6 +1,9 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+# package-anatomy.sh is disabled waiting for compatibility fix with ubuntu-22.04 github runners (create_deb.sh makes data.tar.zstd instead of data.tar) 
+exit 0
+
 # functions
 function init_terminal_colors(){
     color_red=$(echo -ne "\033[1;31m")
