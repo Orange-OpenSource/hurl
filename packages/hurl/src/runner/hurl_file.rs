@@ -107,6 +107,12 @@ pub fn run(
         }
     };
 
+    if runner_options.pre_entry.is_some() {
+        logger.warning(
+            "--interactive mode is now deprecated, it will be remove in next Hurl versions",
+        );
+    }
+
     // Now, we have a syntactically correct HurlFile instance, we can run it.
     let result = run_entries(
         &hurl_file.entries,
