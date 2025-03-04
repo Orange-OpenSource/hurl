@@ -115,8 +115,8 @@ jobs:
           ./**/report/*.json
           ./**/report/*.xml
 
-  test-ubuntu-x64-20-04:
-    runs-on: ubuntu-20.04
+  test-ubuntu-x64-22-04:
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         rust: [stable]
@@ -154,7 +154,7 @@ jobs:
       uses: actions/upload-artifact@v4.6.1
       if: ${{ always() }}
       with:
-        name: tests-ubuntu-20.04-${{ matrix.rust }}-artifacts
+        name: tests-ubuntu-22.04-${{ matrix.rust }}-artifacts
         path: |
           ./**/*.log
           ./**/report/*.json

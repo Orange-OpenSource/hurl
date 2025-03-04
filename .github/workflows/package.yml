@@ -18,7 +18,7 @@ permissions: {}
 
 jobs:
   package-generic-linux-x64:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
@@ -399,7 +399,7 @@ jobs:
         path: target/upload/*
 
   package-deb-x64:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.2
