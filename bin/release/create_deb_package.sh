@@ -36,7 +36,6 @@ Description: Run and test HTTP requests
 END
 dpkg --build target/debian
 
-
 echo "Check Lintian"
 sudo apt-get install -y lintian
 lintian --verbose target/debian.deb

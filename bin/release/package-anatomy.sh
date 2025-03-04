@@ -1,9 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-# package-anatomy.sh is disabled waiting for compatibility fix with ubuntu-22.04 github runners (create_deb.sh makes data.tar.zstd instead of data.tar) 
-exit 0
-
 # functions
 function init_terminal_colors(){
     color_red=$(echo -ne "\033[1;31m")
@@ -33,7 +30,10 @@ function prerequisites(){
 if ! command -v 7z >/dev/null 2>&1 ; then
     log_error "prerequisite" "Please install p7zip-full to make $(basename "$0") work."
     return 1
-elif ! command -v tar >/dev/null 2>&1 ; then
+elif ! command -v tar --version >/dev/null 2>&1 ; then
+    log_error "prerequisite" "Please install tar to make $(basename "$0") work."
+    return 1
+elif ! command -v zstd --version >/dev/null 2>&1 ; then
     log_error "prerequisite" "Please install tar to make $(basename "$0") work."
     return 1
 elif ! command -v unzip >/dev/null 2>&1 ; then
@@ -225,12 +225,12 @@ function format_tree(){
 function tree_file(){
     file="$1"
     if [[ ${file} =~ \.deb$ ]] ; then
-        if ! (7z l "${file}" 2>/dev/null | grep data.tar >/dev/null 2>&1) ; then
-            log_error "package integrity" "${file} is not a valid deb package as it does not contain a root file named data.tar"
+        if ! (7z l "${file}" 2>/dev/null | grep data.tar.zst >/dev/null 2>&1) ; then
+            log_error "package integrity" "${file} is not a valid deb package as it does not contain a root file named data.tar.zst"
             return 1
         fi
-        if ! (7z e -so "${file}" data.tar 2>/dev/null | tar -tvf - >/dev/null 2>&1) ; then
-            log_error "package integrity" "${file} is not a valid deb package as his data.tar file is not a valid tar package"
+        if ! (7z e -so "${file}" data.tar.zst 2>/dev/null | tar --use-compress-program=unzstd -tvf - >/dev/null 2>&1) ; then
+            log_error "package integrity" "${file} is not a valid deb package as his data.tar.zst file is not a valid tar package"
             return 1
         fi
         raw_tree=$(tree_deb "${file}")
@@ -258,7 +258,7 @@ function tree_file(){
 
 function tree_deb(){
     file="$1"
-    raw_tree=$(7z e -so "${file}" data.tar | tar -tvf - | grep -vE "\./$" | tr -s ' ' | cut --delimiter " " --field 1,2,3,6)
+    raw_tree=$(7z e -so "${file}" data.tar.zst | tar --use-compress-program=unzstd -tvf - | grep -vE "\./$" | tr -s ' ' | cut --delimiter " " --field 1,2,3,6)
     echo "${raw_tree}"
 }
 
