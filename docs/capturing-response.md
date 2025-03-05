@@ -50,6 +50,7 @@ A query can be of the following type:
 - [`version`](#version-capture)
 - [`header`](#header-capture)
 - [`url`](#url-capture)
+- [`ip`](#ip-capture)
 - [`cookie`](#cookie-capture)
 - [`body`](#body-capture)
 - [`bytes`](#bytes-capture)
@@ -113,6 +114,18 @@ location: true
 HTTP 200
 [Captures]
 landing_url: url
+```
+
+### IP capture
+
+Capture the IP address of the last connection. IP capture consists of a variable name, followed by a `:`,
+and the keyword `ip`.
+
+```hurl
+GET https://example.org/hello
+HTTP 200
+[Captures]
+server_ip: ip
 ```
 
 ### Cookie capture

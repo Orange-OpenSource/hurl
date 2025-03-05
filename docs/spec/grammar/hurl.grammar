@@ -250,6 +250,7 @@ query:
     status-query
   | version-query
   | url-query
+  | ip-query
   | header-query
   | certificate-query
   | cookie-query
@@ -268,6 +269,8 @@ status-query: "status"
 version-query: "version"
 
 url-query: "url"
+
+ip-query: "ip"
 
 header-query: "header" sp quoted-string
 
@@ -319,6 +322,8 @@ predicate-func:
   | collection-predicate
   | date-predicate
   | iso-date-predicate
+  | is-ipv4-predicate
+  | is-ipv6-predicate
 
 equal-predicate: "==" sp predicate-value
 
@@ -359,6 +364,10 @@ collection-predicate: "isCollection"
 date-predicate: "isDate"
 
 iso-date-predicate: "isIsoDate"
+
+is-ipv4-predicate: "isIpv4"
+
+is-ipv6-predicate: "isIpv6"
 
 predicate-value:
     boolean

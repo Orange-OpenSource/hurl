@@ -155,6 +155,7 @@ is shared with [captures], and can be one of :
 - [`version`](#version-assert)
 - [`header`](#header-assert)
 - [`url`](#url-assert)
+- [`ip`](#ip-assert)
 - [`cookie`](#cookie-assert)
 - [`body`](#body-assert)
 - [`bytes`](#bytes-assert)
@@ -196,6 +197,8 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                 | `jsonpath "$.publication_date" isIsoDate`                                             |
 | __`isNumber`__     | Query returns an integer or a float                                                 | `jsonpath "$.count" isNumber`                                                         |
 | __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
+| __`isIpv4`__       | Query returns an IPv4 address                                                       | `ip isIpv4`                                                                           |
+| __`isIpv6`__       | Query returns an IPv6 address                                                       | `ip isIpv6`                                                                           |
 
 
 Each predicate can be negated by prefixing it with `not` (for instance, `not contains` or `not exists`)
@@ -357,6 +360,20 @@ HTTP 200
 url == "https://example.org/redirected"
 ```
 
+### IP assert
+
+Check the IP address of the last connection. IP assert consists of the keyword `ip` followed by a predicate function
+and value.
+
+Predicates `isIpv4` and `isIpv6` are available to this query to check the IP version.
+
+```hurl
+GET https://example.org/hello
+HTTP 200
+[Asserts]
+ip isIpv4
+ip == "172.16.45.87"
+```
 
 ### Cookie assert
 
