@@ -19,6 +19,7 @@ Breaking Changes:
 
 * Remove deprecated predicates (notEquals, greaterThan etc...) in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
 * Remove deprecated keyword HTTP/* for HTTP [#3697](https://github.com/Orange-OpenSource/hurl/issues/3697)
+* Warn for --interactive deprecation [#3763](https://github.com/Orange-OpenSource/hurl/issues/3763)
 
 
 Enhancements:
@@ -52,6 +53,8 @@ Bugs Fixed:
 * Create parent folders if missing when using --cookie-jar FILE [#3637](https://github.com/Orange-OpenSource/hurl/issues/3637)
 * Remove lint errors and Fix non-zero exit code in case of error [#3648](https://github.com/Orange-OpenSource/hurl/issues/3648)
 * Support BigInteger in variable [#3656](https://github.com/Orange-OpenSource/hurl/issues/3656)
+* fix hurlfmt html export loosing some whitespaces [#3675](https://github.com/Orange-OpenSource/hurl/issues/3675)
+* Fix template to source [#3675](https://github.com/Orange-OpenSource/hurl/issues/3675)
 * Fix changing HTTP version per request sometimes not effective [#3719](https://github.com/Orange-OpenSource/hurl/issues/3719)
 * Add bash file completion for hurl/hurlfmt [#3750](https://github.com/Orange-OpenSource/hurl/issues/3750)
 * Fix multilines HTML export [#3768](https://github.com/Orange-OpenSource/hurl/issues/3768)
