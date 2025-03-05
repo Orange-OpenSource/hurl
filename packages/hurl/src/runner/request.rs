@@ -187,7 +187,7 @@ pub fn cookie_storage_clear(request: &Request) -> bool {
 }
 
 fn eval_method(method: &Method) -> http::Method {
-    http::Method(method.0.clone())
+    http::Method(method.to_string())
 }
 
 #[cfg(test)]
@@ -219,7 +219,7 @@ mod tests {
         Request {
             line_terminators: vec![],
             space0: whitespace(),
-            method: Method("GET".to_string()),
+            method: Method::new("GET"),
             space1: whitespace(),
             url: Template::new(
                 None,
@@ -276,7 +276,7 @@ mod tests {
         Request {
             line_terminators: vec![],
             space0: whitespace(),
-            method: Method("GET".to_string()),
+            method: Method::new("GET"),
             space1: whitespace(),
             url: Template::new(
                 None,
@@ -418,7 +418,7 @@ mod tests {
                 newline: whitespace(),
             }],
             space0: whitespace(),
-            method: Method("GET".to_string()),
+            method: Method::new("GET"),
             space1: whitespace(),
             url: Template::new(
                 None,
@@ -459,7 +459,7 @@ mod tests {
                     newline: whitespace(),
                 }],
                 space0: whitespace(),
-                method: Method("GET".to_string()),
+                method: Method::new("GET"),
                 space1: whitespace(),
                 url: Template::new(
                     None,

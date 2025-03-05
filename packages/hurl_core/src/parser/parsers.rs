@@ -131,7 +131,7 @@ fn method(reader: &mut Reader) -> ParseResult<Method> {
         let kind = ParseErrorKind::Method { name };
         Err(ParseError::new(start.pos, false, kind))
     } else {
-        Ok(Method(name))
+        Ok(Method::new(&name))
     }
 }
 
@@ -231,7 +231,7 @@ mod tests {
     fn test_entry() {
         let mut reader = Reader::new("GET http://google.fr");
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 20);
     }
 
@@ -240,12 +240,12 @@ mod tests {
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 21);
         assert_eq!(reader.cursor().pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 41);
         assert_eq!(reader.cursor().pos.line, 2);
 
@@ -253,12 +253,12 @@ mod tests {
             Reader::new("GET http://google.fr # comment1\nGET http://google.fr # comment2");
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 32);
         assert_eq!(reader.cursor().pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 63);
         assert_eq!(reader.cursor().pos.line, 2);
     }
@@ -267,7 +267,7 @@ mod tests {
     fn test_entry_with_response() {
         let mut reader = Reader::new("GET http://google.fr\nHTTP/1.1 200");
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method("GET".to_string()));
+        assert_eq!(e.request.method, Method::new("GET"));
         assert_eq!(e.response.unwrap().status.value, StatusValue::Specific(200));
     }
 
@@ -280,7 +280,7 @@ mod tests {
                 value: String::new(),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             },
-            method: Method("GET".to_string()),
+            method: Method::new("GET"),
             space1: Whitespace {
                 value: " ".to_string(),
                 source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 5)),
@@ -319,7 +319,7 @@ mod tests {
                 value: String::new(),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             },
-            method: Method("GET".to_string()),
+            method: Method::new("GET"),
             space1: Whitespace {
                 value: "  ".to_string(),
                 source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 6)),
@@ -356,10 +356,10 @@ mod tests {
 
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method("GET".to_string()));
+        assert_eq!(r.method, Method::new("GET"));
         assert_eq!(reader.cursor().index, 21);
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method("GET".to_string()));
+        assert_eq!(r.method, Method::new("GET"));
     }
 
     #[test]
@@ -416,7 +416,7 @@ mod tests {
     fn test_request_post_json() {
         let mut reader = Reader::new("POST http://localhost:8000/post-json-array\n[1,2,3]");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method("POST".to_string()));
+        assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::List {
@@ -443,7 +443,7 @@ mod tests {
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-string\n\"Hello\"");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method("POST".to_string()));
+        assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::String(Template::new(
@@ -458,7 +458,7 @@ mod tests {
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-number\n100");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method("POST".to_string()));
+        assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::Number("100".to_string()))
@@ -495,11 +495,11 @@ mod tests {
         assert_eq!(reader.cursor().index, 0);
 
         let mut reader = Reader::new("GET ");
-        assert_eq!(method(&mut reader).unwrap(), Method("GET".to_string()));
+        assert_eq!(method(&mut reader).unwrap(), Method::new("GET"));
         assert_eq!(reader.cursor().index, 3);
 
         let mut reader = Reader::new("CUSTOM");
-        assert_eq!(method(&mut reader).unwrap(), Method("CUSTOM".to_string()));
+        assert_eq!(method(&mut reader).unwrap(), Method::new("CUSTOM"));
         assert_eq!(reader.cursor().index, 6);
     }
 

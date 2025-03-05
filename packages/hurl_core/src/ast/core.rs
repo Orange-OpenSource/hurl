@@ -168,7 +168,14 @@ impl Response {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Method(pub String);
+pub struct Method(String);
+
+impl Method {
+    /// Creates a new AST element method/
+    pub fn new(method: &str) -> Method {
+        Method(method.to_string())
+    }
+}
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -180,12 +187,6 @@ impl fmt::Display for Method {
 pub struct Version {
     pub value: VersionValue,
     pub source_info: SourceInfo,
-}
-
-impl fmt::Display for Version {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -214,12 +215,6 @@ impl fmt::Display for VersionValue {
 pub struct Status {
     pub value: StatusValue,
     pub source_info: SourceInfo,
-}
-
-impl fmt::Display for Status {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

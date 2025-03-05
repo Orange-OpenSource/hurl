@@ -737,7 +737,7 @@ pub mod tests {
             Request {
                 line_terminators: vec![],
                 space0: whitespace(),
-                method: Method("GET".to_string()),
+                method: Method::new("GET"),
                 space1: whitespace(),
                 url: Template::new(
                     None,
