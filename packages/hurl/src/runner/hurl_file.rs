@@ -107,12 +107,6 @@ pub fn run(
         }
     };
 
-    if runner_options.pre_entry.is_some() {
-        logger.warning(
-            "--interactive mode is now deprecated, it will be remove in next Hurl versions",
-        );
-    }
-
     // Now, we have a syntactically correct HurlFile instance, we can run it.
     let result = run_entries(
         &hurl_file.entries,
@@ -159,6 +153,22 @@ pub fn run_entries(
     let default_verbosity = logger.verbosity;
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
+
+    // Warn deprecations
+    if runner_options.pre_entry.is_some() {
+        logger.warning(
+            "--interactive mode is now deprecated, it will be removed in next Hurl versions",
+        );
+    }
+
+    if entries
+        .iter()
+        .any(|e| e.use_multiline_string_body_with_attributes())
+    {
+        logger.warning(
+            "multilines string attributes are now deprecated, they will be removed in next Hurl versions",
+        );
+    }
 
     log_run_info(entries, runner_options, &variables, logger);
 

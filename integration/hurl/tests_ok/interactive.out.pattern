@@ -1,5 +1,5 @@
 spawn hurl --no-color --verbose --interactive tests_ok/interactive.hurl
-warning: --interactive mode is now deprecated, it will be remove in next Hurl versions
+warning: --interactive mode is now deprecated, it will be removed in next Hurl versions
 
 Interactive mode
 

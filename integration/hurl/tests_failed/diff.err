@@ -1,3 +1,4 @@
+warning: multilines string attributes are now deprecated, they will be removed in next Hurl versions
 error: Assert body value
    --> tests_failed/diff.hurl:6:1
     |

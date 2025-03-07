@@ -93,6 +93,11 @@ impl MultilineString {
             MultilineStringKind::GraphQl(text) => text.value.clone(),
         }
     }
+
+    /// Returns true if this multiline string has `escape` or `novariable` attributes.
+    pub fn has_attributes(&self) -> bool {
+        !self.attributes.is_empty()
+    }
 }
 
 #[allow(clippy::large_enum_variant)]

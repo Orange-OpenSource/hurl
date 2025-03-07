@@ -43,6 +43,31 @@ impl Entry {
     pub fn source_info(&self) -> SourceInfo {
         self.request.space0.source_info
     }
+
+    /// Returns true if the request or the response uses multilines string attributes
+    pub fn use_multiline_string_body_with_attributes(&self) -> bool {
+        if let Some(Body {
+            value: Bytes::MultilineString(multiline),
+            ..
+        }) = &self.request.body
+        {
+            if multiline.has_attributes() {
+                return true;
+            }
+        }
+        if let Some(response) = &self.response {
+            if let Some(Body {
+                value: Bytes::MultilineString(multiline),
+                ..
+            }) = &response.body
+            {
+                if multiline.has_attributes() {
+                    return true;
+                }
+            }
+        }
+        false
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
