@@ -1,12 +1,12 @@
 beautifulsoup4==4.12.3
 blinker==1.9.0
-certifi==2024.12.14
+certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
 Flask==3.0.3
 idna==3.10
 itsdangerous==2.2.0
-Jinja2==3.1.5
+Jinja2==3.1.6
 lxml==5.2.2
 MarkupSafe==3.0.2
 mypy==1.10.0
