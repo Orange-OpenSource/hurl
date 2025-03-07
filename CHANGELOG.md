@@ -17,7 +17,9 @@ Thanks to
 
 Breaking Changes:
 
+* Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
 * Remove deprecated predicates (notEquals, greaterThan etc...) in favor of operators [#3532](https://github.com/Orange-OpenSource/hurl/issues/3532)
+* Warn for deprecated multilines string attributes [#3622](https://github.com/Orange-OpenSource/hurl/issues/3622)
 * Remove deprecated keyword HTTP/* for HTTP [#3697](https://github.com/Orange-OpenSource/hurl/issues/3697)
 * Warn for --interactive deprecation [#3763](https://github.com/Orange-OpenSource/hurl/issues/3763)
 
@@ -26,7 +28,6 @@ Enhancements:
 
 * Removed limitation for --cookie-jar to use only one hurl file [#2537](https://github.com/Orange-OpenSource/hurl/issues/2537)
 * Add HTTP version query [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
-* Deprecate includes in favor of contains predicate [#1896](https://github.com/Orange-OpenSource/hurl/issues/1896)
 * Add curl -H/--header option to globally add headers to all requests [#1905](https://github.com/Orange-OpenSource/hurl/issues/1905) [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
 * Add base64 decode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
 * Add base64 encode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
