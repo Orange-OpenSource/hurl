@@ -232,7 +232,7 @@ use an `[Options]` section that will activate logs only for the specified entry:
 GET http://localhost:3000/api/search
 [Options]
 verbose: true
-[QueryStringParams]
+[Query]
 q: 1982
 sort: name
 
@@ -255,7 +255,7 @@ $ hurl --no-output basic.hurl
 [1;34m*[0m
 [1;34m*[0m [1mRequest:[0m
 [1;34m*[0m GET http://localhost:3000/api/search
-[1;34m*[0m [QueryStringParams]
+[1;34m*[0m [Query]
 [1;34m*[0m q: 1982
 [1;34m*[0m sort: name
 [1;34m*[0m

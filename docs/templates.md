@@ -50,7 +50,7 @@ In the following example, we use `newDate` to generate a dynamic query parameter
 
 ```hurl
 GET https://example.org/api/foo
-[QueryStringParams]
+[Query]
 date: {{newDate}}
 HTTP 200
 ```

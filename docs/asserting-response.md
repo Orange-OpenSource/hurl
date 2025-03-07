@@ -75,7 +75,7 @@ descriptive: headers present in the response and not in the expected list doesn'
 ```hurl
 # Check that user toto is redirected to home after login.
 POST https://example.org/login
-[FormParams]
+[Form]
 user: toto
 password: 12345678
 HTTP 302
@@ -186,7 +186,6 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`startsWith`__   | Query starts with the predicate value<br>Value is string or a binary content        | `jsonpath "$.movie" startsWith "The"`<br><br>`bytes startsWith hex,efbbbf;`           |
 | __`endsWith`__     | Query ends with the predicate value<br>Value is string or a binary content          | `jsonpath "$.movie" endsWith "Back"`<br><br>`bytes endsWith hex,ab23456;`             |
 | __`contains`__     | Query contains the predicate value<br>Value is string or a binary content           | `jsonpath "$.movie" contains "Empire"`<br><br>`bytes contains hex,beef;`              |
-| __`includes`__     | Query collections includes the predicate value                                      | `jsonpath "$.nooks" includes "Dune"`                                                  |
 | __`matches`__      | Part of the query string matches the regex pattern described by the predicate value | `jsonpath "$.release" matches "\\d{4}"`<br><br>`jsonpath "$.release" matches /\d{4}/` |
 | __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
 | __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                    |
@@ -302,7 +301,7 @@ header "Location" contains "www.example.net"
 header "Last-Modified" matches /\d{2} [a-z-A-Z]{3} \d{4}/
 ```
 
-If there are multiple headers with the same name, the header assert returns a collection, so `count`, `includes` can be
+If there are multiple headers with the same name, the header assert returns a collection, so `count`, `contains` can be
 used in this case to test the header list.
 
 Let's say we have this request and response:
@@ -331,8 +330,8 @@ GET https://example.org/hello
 HTTP 200
 [Asserts]
 header "Vary" count == 2
-header "Vary" includes "User-Agent"
-header "Vary" includes "Content-Type"
+header "Vary" contains "User-Agent"
+header "Vary" contains "Content-Type"
 ```
 
 Or implicit header asserts:
@@ -600,7 +599,7 @@ jsonpath "$.slideshow.author" == "Yours Truly"
 jsonpath "$.slideshow.slides[0].title" contains "Wonder"
 jsonpath "$.slideshow.slides" count == 2
 jsonpath "$.slideshow.date" != null
-jsonpath "$.slideshow.slides[*].title" includes "Mind Blowing!"
+jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 ```
 
 > Explain that the value selected by the JSONPath is coerced to a string when only

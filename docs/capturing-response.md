@@ -93,7 +93,7 @@ then the keyword `header` and a header name.
 
 ```hurl
 POST https://example.org/login
-[FormParams]
+[Form]
 user: toto
 password: 12345678
 HTTP 302
@@ -228,7 +228,7 @@ Capture a [JSONPath] query from the received HTTP body.
 
 ```hurl
 POST https://example.org/api/contact
-[FormParams]
+[Form]
 token: {{token}}
 email: toto@rookie.net
 HTTP 200

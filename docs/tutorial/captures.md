@@ -39,7 +39,7 @@ Form values can be sent using a [Form parameters section], with each key followe
 
 ```hurl
 POST http://localhost:3000/login
-[FormParams]
+[Form]
 username: fab
 password: 12345678
 HTTP 302
@@ -89,7 +89,7 @@ and will reject the request if the token is missing or invalid.
 In our Hurl file, we're not sending any token, so the server is rejecting our request with a [`403 Forbidden`]
 HTTP response.
 
-Unfortunately, we can't hard code the value of a token in our `[FormParams]` section because the token is dynamically 
+Unfortunately, we can't hard code the value of a token in our `[Form]` section because the token is dynamically 
 generated on each request, and a certain fixed value would be valid only during a small period of time.
 
 We need to dynamically _capture_ the value of the CSRF token and pass it to our form. To do so, we are going to:
@@ -138,7 +138,7 @@ csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 
 # Log in user, using the captured CSRF token:
 POST http://localhost:3000/login
-[FormParams]
+[Form]
 username: fab
 password: 12345678
 _csrf: {{csrf_token}}
@@ -176,7 +176,7 @@ are going to assert the [`Location`] header, which indicates the redirection URL
 
 # Log in user, using the captured CSRF token:
 POST http://localhost:3000/login
-[FormParams]
+[Form]
 username: fab
 password: 12345678
 _csrf: {{csrf_token}}
@@ -242,7 +242,7 @@ csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 
 # Log in user, using the captured CSRF token:
 POST http://localhost:3000/login
-[FormParams]
+[Form]
 username: fab
 password: 12345678
 _csrf: {{csrf_token}}

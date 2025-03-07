@@ -34,10 +34,10 @@ alice: secret
             [Options]<br>...
         </div>
         <div class="hurl-part-2">
-            [QueryStringParams]<br>...
+            [Query]<br>...
         </div>
         <div class="hurl-part-2">
-            [FormParams]<br>...
+            [Form]<br>...
         </div>
         <div class="hurl-part-2">
             [BasicAuth]<br>...
@@ -95,13 +95,13 @@ alice: secret
 
 
 [Headers], if present, follow directly after the [method] and [URL]. This allows Hurl format to 'look like' the real HTTP format.
-Contrary to HTTP headers, other parameters are defined in sections (`[Cookies]`, `[QueryStringParams]`, `[FormParams]` etc...)
+Contrary to HTTP headers, other parameters are defined in sections (`[Cookies]`, `[Query]`, `[Form]` etc...)
 These sections are not ordered and can be mixed in any way:
 
 ```hurl
 GET https://example.org/api/dogs
 User-Agent: My User Agent
-[QueryStringParams]
+[Query]
 id: 4567
 order: newest
 [BasicAuth]
@@ -113,7 +113,7 @@ GET https://example.org/api/dogs
 User-Agent: My User Agent
 [BasicAuth]
 alice: secret
-[QueryStringParams]
+[Query]
 id: 4567
 order: newest
 ```
@@ -150,7 +150,7 @@ GET https://example.org/forum/questions/?search=Install%20Linux&order=newest
 
 # A request with query parameters section, equivalent to the first request.
 GET https://example.org/forum/questions/
-[QueryStringParams]
+[Query]
 search: Install Linux
 order: newest
 ```
@@ -238,13 +238,13 @@ very-verbose: true         # allow more verbose output
 Optional list of query parameters.
 
 A query parameter consists of a field, followed by a `:` and a value. The query parameters section starts with
-`[QueryStringParams]`. Contrary to query parameters in the URL, each value in the query parameters section is not
+`[Query]`. Contrary to query parameters in the URL, each value in the query parameters section is not
 URL encoded.
 
 ```hurl
 GET https://example.org/news
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:70.0) Gecko/20100101 Firefox/70.0
-[QueryStringParams]
+[Query]
 order: newest
 search: {{custom-search}}
 count: 100
@@ -259,11 +259,11 @@ A form parameters section can be used to send data, like [HTML form].
 This section contains an optional list of key values, each key followed by a `:` and a value. Key values will be
 encoded in key-value tuple separated by '&', with a '=' between the key and the value, and sent in the body request.
 The content type of the request is `application/x-www-form-urlencoded`. The form parameters section starts
-with `[FormParams]`.
+with `[Form]`.
 
 ```hurl
 POST https://example.org/contact
-[FormParams]
+[Form]
 default: false
 token: {{token}}
 email: john.doe@rookie.org
@@ -276,7 +276,7 @@ are not URL encoded.). A [oneline string body] could be used instead of a forms 
 ~~~hurl
 # Run a POST request with form parameters section:
 POST https://example.org/test
-[FormParams]
+[Form]
 name: John Doe
 key1: value1
 
@@ -293,11 +293,11 @@ When both [body section] and form parameters section are present, only the body 
 A multipart form data section can be used to send data, with key / value and file content
 (see [multipart/form-data on MDN]).
 
-The form parameters section starts with `[MultipartFormData]`.
+The form parameters section starts with `[Multipart]`.
 
 ```hurl
 POST https://example.org/upload
-[MultipartFormData]
+[Multipart]
 field1: value1
 field2: file,example.txt;
 # One can specify the file content type:
@@ -322,7 +322,7 @@ Content type can be specified or inferred based on the filename extension:
 
 By default, content type is `application/octet-stream`.
 
-As an alternative to a `[MultipartFormData]` section, multipart forms can also be sent with a [multiline string body]:
+As an alternative to a `[Multipart]` section, multipart forms can also be sent with a [multiline string body]:
 
 ~~~hurl
 POST https://example.org/upload

@@ -22,7 +22,7 @@ GET https://acmecorp.net/news
 # Do a POST request without CSRF token and check
 # that status code is Forbidden 403
 POST https://acmecorp.net/contact
-[FormParams]
+[Form]
 default: false
 email: john.doe@rookie.org
 number: 33611223344

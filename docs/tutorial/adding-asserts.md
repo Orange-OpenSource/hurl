@@ -183,7 +183,7 @@ header "Content-Type" == "text/html; charset=utf-8"
 > Our HTTP response has only one `Content-Type` header, so we're testing this header value as string.
 > The same header could be present multiple times in an HTTP response, with different values.
 > In this case, the `header` query will return collections and could be tested with
-> [`count`] or [`includes`].
+> [`count`] or [`contains`].
 
 For HTTP headers, we can also use an [implicit header assert]. You can use either implicit or
 explicit header assert: the implicit one allows you to only check the exact value of the header,
@@ -305,5 +305,5 @@ In the next session, we're going to see how we chain request tests, and how we a
 [cookie attributes]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes
 [curl]: https://curl.se
 [`count`]: /docs/filters.md#count
-[`includes`]: /docs/asserting-response.md#predicates
+[`contains`]: /docs/asserting-response.md#predicates
 
