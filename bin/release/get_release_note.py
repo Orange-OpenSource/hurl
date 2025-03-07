@@ -213,6 +213,7 @@ def generate_md(
         "enhancement": "Enhancements",
         "bug": "Bugs Fixed",
         "security": "Security Issues Fixed",
+        "deprecation": "Deprecations",
     }
 
     for category in categories:
