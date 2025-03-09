@@ -43,7 +43,7 @@ lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.15.1", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"
-terminal_size = "0.4.1"
+terminal_size = "0.4.2"
 
 [target.'cfg(unix)'.dependencies]
 termion = "4.0.4"
