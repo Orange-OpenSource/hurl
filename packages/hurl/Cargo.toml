@@ -34,7 +34,7 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.11.1"
-serde = { version = "1.0.218", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
 serde_json = { version = "1.0.140", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.4"
