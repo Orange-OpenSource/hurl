@@ -59,7 +59,7 @@ A query can be of the following type:
 - [`regex`](#regex-capture)
 - [`variable`](#variable-capture)
 - [`duration`](#duration-capture)
-- [`certificate`](#certificate-capture)
+- [`certificate`](#ssl-certificate-capture)
 
 Extracted data can then be further refined using [filters].
 
