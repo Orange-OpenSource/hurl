@@ -6,7 +6,6 @@ Asserts are used to test various properties of an HTTP response. Asserts can be 
 headers) or explicit within an `[Asserts]` section. The delimiter of the request / response is `HTTP <STATUS-CODE>`: 
 after this delimiter, you'll find the implicit asserts, then an `[Asserts]` section with all the explicit checks.
 
-
 ```hurl
 GET https://example.org/api/cats
 HTTP 200
@@ -60,7 +59,6 @@ GET https://example.org/api/pets
 HTTP/2 200 
 ```
 
-
 ### Headers
 
 Optional list of the expected HTTP response headers that must be in the received response.
@@ -90,7 +88,6 @@ Location: https://example.org/home
 > ETag: "<etag_value>"
 > ```
 
-
 Testing duplicated headers is also possible.
 
 For example with the `Set-Cookie` header:
@@ -119,10 +116,8 @@ HTTP 200
 Set-Cookie: theme=light
 ```
 
-If you want to test specifically the number of headers returned for a given header name, or
-if you want to test header value with [predicates] (like `startsWith`, `contains`, `exists`)
-you can use the explicit [header assert].
-
+If you want to test specifically the number of headers returned for a given header name, or if you want to test header 
+value with [predicates] (like `startsWith`, `contains`, `exists`)you can use the explicit [header assert].
 
 ## Explicit asserts
 
@@ -148,29 +143,32 @@ Structure of an assert:
 </div>
 
 
-An assert consists of a query followed by a predicate. The format of the query
-is shared with [captures], and can be one of :
+An assert consists of a query followed by a predicate. The format of the query is shared with [captures], and queries 
+can extract data from
 
-- [`status`](#status-assert)
-- [`version`](#version-assert)
-- [`header`](#header-assert)
-- [`url`](#url-assert)
-- [`ip`](#ip-assert)
-- [`cookie`](#cookie-assert)
-- [`body`](#body-assert)
-- [`bytes`](#bytes-assert)
-- [`xpath`](#xpath-assert)
-- [`jsonpath`](#jsonpath-assert)
-- [`regex`](#regex-assert)
-- [`sha256`](#sha-256-assert)
-- [`md5`](#md5-assert)
-- [`variable`](#variable-assert)
-- [`duration`](#duration-assert)
-- [`certificate`](#ssl-certificate-assert)
+- status line:
+  - [`status`](#status-assert)
+  - [`version`](#version-assert)
+- headers:
+  - [`header`](#header-assert)
+  - [`cookie`](#cookie-assert)
+- body:
+  - [`body`](#body-assert)
+  - [`bytes`](#bytes-assert)
+  - [`xpath`](#xpath-assert)
+  - [`jsonpath`](#jsonpath-assert)
+  - [`regex`](#regex-assert)
+  - [`sha256`](#sha-256-assert)
+  - [`md5`](#md5-assert)
+- others:
+  - [`url`](#url-assert)
+  - [`ip`](#ip-address-assert)
+  - [`variable`](#variable-assert)
+  - [`duration`](#duration-assert)
+  - [`certificate`](#ssl-certificate-assert)
 
-Queries are used to extract data from the HTTP response. Queries, in asserts and in captures, can be refined with [filters], like 
-[`count`][count] to add tests on collections sizes.
-
+Queries, in asserts and in captures, can be refined with [filters], like [`count`][count] to add tests on collections
+sizes.
 
 ### Predicates
 
@@ -210,7 +208,6 @@ Each predicate can be negated by prefixing it with `not` (for instance, `not con
    <span class="schema-token schema-color-3">"Dune"<span class="schema-label">predicate value</span></span>
  </div>
 </div>
-
 
 A predicate value is typed, and can be a string, a boolean, a number, a bytestream, `null` or a collection. Note that
 `"true"` is a string, whereas `true` is a boolean.
@@ -280,8 +277,8 @@ status < 300
 
 ### Version assert
 
-Check the received HTTP version. Version assert consists of the keyword `version` followed by a predicate
-function and value.
+Check the received HTTP version. Version assert consists of the keyword `version` followed by a predicate function
+and value. The value returns by `version` is a string:
 
 ```hurl
 GET https://example.org
@@ -346,44 +343,13 @@ Vary: User-Agent
 Vary: Content-Type
 ```
 
-### URL assert
-
-Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
-[`--location` option]). URL assert consists of the keyword `url` followed by a predicate function and value.
-
-```hurl
-GET https://example.org/redirecting
-[Options]
-location: true
-HTTP 200
-[Asserts]
-url == "https://example.org/redirected"
-```
-
-### IP assert
-
-Check the IP address of the last connection. IP assert consists of the keyword `ip` followed by a predicate function
-and value.
-
-Predicates `isIpv4` and `isIpv6` are available to this query to check the IP version.
-
-```hurl
-GET https://example.org/hello
-HTTP 200
-[Asserts]
-ip isIpv4
-ip == "172.16.45.87"
-```
-
 ### Cookie assert
 
-Check value or attributes of a [`Set-Cookie`] response header. Cookie assert
-consists of the keyword `cookie`, followed by the cookie name (and optionally a
-cookie attribute), a predicate function and value.
+Check value or attributes of a [`Set-Cookie`] response header. Cookie assert consists of the keyword `cookie`, followed 
+by the cookie name (and optionally a cookie attribute), a predicate function and value.
 
-Cookie attributes value can be checked by using the following format:
-`<cookie-name>[cookie-attribute]`. The following attributes are supported: `Value`,
-`Expires`, `Max-Age`, `Domain`, `Path`, `Secure`, `HttpOnly` and `SameSite`.
+Cookie attributes value can be checked by using the following format:`<cookie-name>[cookie-attribute]`. The following 
+attributes are supported: `Value`, `Expires`, `Max-Age`, `Domain`, `Path`, `Secure`, `HttpOnly` and `SameSite`.
 
 ```hurl
 GET http://localhost:8000/cookies/set
@@ -415,7 +381,7 @@ cookie "LSID[SameSite]" == "Lax"
 
 ### Body assert
 
-Check the value of the received HTTP response body when decoded as a string. Body assert consists of the keyword `body` 
+Check the value of the received HTTP response body when decoded as a string. Body assert consists of the keyword `body`
 followed by a predicate function and value.
 
 ```hurl
@@ -425,7 +391,7 @@ HTTP 200
 body contains "<h1>Welcome!</h1>"
 ```
 
-The encoding used to decode the response body bytes to a string is based on the `charset` value in the `Content-Type` 
+The encoding used to decode the response body bytes to a string is based on the `charset` value in the `Content-Type`
 header response.
 
 ```hurl
@@ -440,7 +406,7 @@ bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB 2312
 body contains "你好世界"
 ```
 
-If the `Content-Type` response header doesn't include any encoding hint, a [`decode` filter] can be used to explicitly 
+If the `Content-Type` response header doesn't include any encoding hint, a [`decode` filter] can be used to explicitly
 decode the response body bytes.
 
 ```hurl
@@ -475,10 +441,9 @@ header "Content-Encoding" not exists
 body contains "<h1>Welcome!</h1>"
 ```
 
-
 ### Bytes assert
 
-Check the value of the received HTTP response body as a bytestream. Body assert consists of the keyword `bytes` 
+Check the value of the received HTTP response body as a bytestream. Body assert consists of the keyword `bytes`
 followed by a predicate function and value.
 
 ```hurl
@@ -492,7 +457,6 @@ header "Content-Length" == "12424"
 
 Like `body` assert, `bytes` assert works _after_ content encoding decompression (so the predicates values are not
 affected by `Content-Encoding` response header value).
-
 
 ### XPath assert
 
@@ -573,12 +537,10 @@ namespaces.
 
 > For convenience, the first default namespace can be used with `_`
 
-
 ### JSONPath assert
 
-Check the value of a [JSONPath] query on the received HTTP body decoded as a JSON
-document. JSONPath assert consists of the keyword `jsonpath` followed by a predicate
-function and value.
+Check the value of a [JSONPath] query on the received HTTP body decoded as a JSON document. JSONPath assert consists 
+of the keyword `jsonpath` followed by a predicate function and value.
 
 Let's say we want to check this JSON response:
 
@@ -607,7 +569,6 @@ curl -v http://httpbin.org/json
 
 With Hurl, we can write multiple JSONPath asserts describing the DOM content:
 
-
 ```hurl
 GET http://httpbin.org/json
 HTTP 200
@@ -622,9 +583,8 @@ jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 > Explain that the value selected by the JSONPath is coerced to a string when only
 > one node is selected.
 
-In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped.
-Alternatively, `matches` predicate support [JavaScript-like Regular expression syntax] to enhance
-the readability:
+In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped. Alternatively, 
+`matches` predicate support [JavaScript-like Regular expression syntax] to enhance the readability:
 
 ```hurl
 GET https://example.org/hello
@@ -653,11 +613,10 @@ regex "^(\\d{4}-\\d{2}-\\d{2})$" == "2018-12-31"
 regex /^(\d{4}-\d{2}-\d{2})$/ == "2018-12-31"
 ```
 
-The regex pattern must have at least one capture group, otherwise the
-assert will fail. The assertion is done on the captured group value. When the regex pattern is a double-quoted string, 
-metacharacters beginning with a backslash in the pattern (like `\d`, `\s`) must be escaped; literal pattern enclosed by
-`/` can also be used to avoid metacharacters escaping.
-
+The regex pattern must have at least one capture group, otherwise the assert will fail. The assertion is done on the 
+captured group value. When the regex pattern is a double-quoted string, metacharacters beginning with a backslash in the
+pattern (like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters
+escaping.
 
 ### SHA-256 assert
 
@@ -671,7 +630,7 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
 Like `body` assert, `sha256` assert works _after_ content encoding decompression (so the predicates values are not
-affected by `Content-Encoding` response header). For instance, if we have a resource `a.txt` on a server with a 
+affected by `Content-Encoding` response header). For instance, if we have a resource `a.txt` on a server with a
 given hash `abcdef`, `sha256` value is not affected by `Content-Encoding`:
 
 ```hurl
@@ -704,6 +663,36 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 Like `sha256` asserts, `md5` assert works _after_ content encoding decompression (so the predicates values are not
 affected by `Content-Encoding` response header)
 
+### URL assert
+
+Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+[`--location` option]). URL assert consists of the keyword `url` followed by a predicate function and value.
+
+```hurl
+GET https://example.org/redirecting
+[Options]
+location: true
+HTTP 200
+[Asserts]
+url == "https://example.org/redirected"
+```
+
+### IP address assert
+
+Check the IP address of the last connection. The value of the `ip` query is a string.
+
+> Predicates `isIpv4` and `isIpv6` are available to check if a particular string matches an IPv4 or IPv6 address and
+> can use with `ip` queries.
+
+```hurl
+GET https://example.org/hello
+HTTP 200
+[Asserts]
+ip isIpv4
+ip not isIpv6
+ip == "172.16.45.87"
+```
+
 ### Variable assert
 
 ```hurl
@@ -729,7 +718,8 @@ duration < 1000   # Check that response time is less than one second
 
 ### SSL certificate assert
 
-Check the SSL certificate properties. Certificate assert consists of the keyword `certificate`, followed by the certificate attribute value.
+Check the SSL certificate properties. Certificate assert consists of the keyword `certificate`, followed by the 
+certificate attribute value.
 
 The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date` and `Serial-Number`.
 
@@ -745,14 +735,12 @@ certificate "Serial-Number" matches "[0-9af]+"
 
 ## Body
 
-Optional assertion on the received HTTP response body. Body section can be seen
-as syntactic sugar over [body asserts] (with `==` predicate). If the
-body of the response is a [JSON] string or a [XML] string, the body assertion can
-be directly inserted without any modification. For a text based body that is neither JSON nor XML,
-one can use multiline string that starts with <code>&#96;&#96;&#96;</code> and ends
-with <code>&#96;&#96;&#96;</code>. For a precise byte control of the response body,
-a [Base64] encoded string or an input file can be used to describe exactly
-the body byte content to check.
+Optional assertion on the received HTTP response body. Body section can be seen as syntactic sugar over [body asserts] 
+(with `==` predicate). If the body of the response is a [JSON] string or a [XML] string, the body assertion can be 
+directly inserted without any modification. For a text based body that is neither JSON nor XML, one can use multiline 
+string that starts with <code>&#96;&#96;&#96;</code> and ends with <code>&#96;&#96;&#96;</code>. For a precise byte 
+control of the response body, a [Base64] encoded string or an input file can be used to describe exactly the body byte
+content to check.
 
 Like explicit [`body` assert], the body section is automatically decompressed based on the value of `Content-Encoding` 
 response header. So, whatever is the response compression (`gzip`, `brotli`, etc...) body section doesn't depend on
@@ -793,7 +781,6 @@ HTTP 200
 ```
 ~~~
 
-
 ### XML body
 
 ~~~hurl
@@ -832,7 +819,6 @@ HTTP 200
 ```
 ~~~
 
-
 ### Multiline string body
 
 ~~~hurl
@@ -867,12 +853,10 @@ HTTP 200
 `Hello world!`
 ~~~
 
-
 ### Base64 body
 
-Base64 response body assert starts with `base64,` and end with `;`. MIME's Base64 encoding
-is supported (newlines and white spaces may be present anywhere but are to be
-ignored on decoding), and `=` padding characters might be added.
+Base64 response body assert starts with `base64,` and end with `;`. MIME's Base64 encoding is supported (newlines and
+white spaces may be present anywhere but are to be ignored on decoding), and `=` padding characters might be added.
 
 ```hurl
 GET https://example.org
@@ -894,10 +878,8 @@ HTTP 200
 file,data.bin;
 ```
 
-File are relative to the input Hurl file, and cannot contain implicit parent
-directory (`..`). You can use [`--file-root` option] to specify the root directory
-of all file nodes.
-
+File are relative to the input Hurl file, and cannot contain implicit parent directory (`..`). You can use [`--file-root` option] 
+to specify the root directory of all file nodes.
 
 [predicates]: #predicates
 [header assert]: #header-assert

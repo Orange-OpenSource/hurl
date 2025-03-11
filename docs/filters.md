@@ -236,7 +236,6 @@ HTTP 200
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000
 ```
 
-
 ISO 8601 / RFC 3339 date and time format have shorthand format `%+`:
 
 ```hurl
@@ -250,7 +249,7 @@ jsonpath "$.published" toDate "%+" format "%A" == "Monday" # %+ can be used to p
 
 ### toFloat
 
-Converts to float number.
+Converts value to float number.
 
 ```hurl
 GET https://example.org/foo
@@ -261,13 +260,24 @@ jsonpath "$.pi" toFloat == 3.14
 
 ### toInt
 
-Converts to integer number.
+Converts value to integer number.
 
 ```hurl
 GET https://example.org/foo
 HTTP 200
 [Asserts]
 jsonpath "$.id" toInt == 123
+```
+
+### toString
+
+Converts value to string.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+jsonpath "$.count" toString == "42"
 ```
 
 ### urlDecode

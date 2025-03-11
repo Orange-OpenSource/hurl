@@ -140,19 +140,19 @@ def replace(text: str, dest: str) -> str:
         ),
         # TODO: extract version from Cargo.toml
         (
-            "[HTML]: /docs/standalone/hurl-6.0.0.html",
-            "[HTML]: /docs/standalone/hurl-6.0.0.html",
-            "[HTML]: https://hurl.dev/assets/docs/hurl-6.0.0.html.gz",
+            "[HTML]: /docs/standalone/hurl-6.1.0.html",
+            "[HTML]: /docs/standalone/hurl-6.1.0.html",
+            "[HTML]: https://hurl.dev/assets/docs/hurl-6.1.0.html.gz",
         ),
         (
-            "[PDF]: /docs/standalone/hurl-6.0.0.pdf",
-            "[PDF]: /docs/standalone/hurl-6.0.0.pdf",
-            "[PDF]: https://hurl.dev/assets/docs/hurl-6.0.0.pdf.gz",
+            "[PDF]: /docs/standalone/hurl-6.1.0.pdf",
+            "[PDF]: /docs/standalone/hurl-6.1.0.pdf",
+            "[PDF]: https://hurl.dev/assets/docs/hurl-6.1.0.pdf.gz",
         ),
         (
-            "[Markdown]: https://hurl.dev/docs/standalone/hurl-6.0.0.html",
-            "[Markdown]: /docs/standalone/hurl-6.0.0.md",
-            "[Markdown]: https://hurl.dev/assets/docs/hurl-6.0.0.md.gz",
+            "[Markdown]: https://hurl.dev/docs/standalone/hurl-6.1.0.html",
+            "[Markdown]: /docs/standalone/hurl-6.1.0.md",
+            "[Markdown]: https://hurl.dev/assets/docs/hurl-6.1.0.md.gz",
         ),
     ]
     for old, new_for_github, new_for_crates in snippets:

@@ -645,7 +645,7 @@ $ hurl --json *.hurl
 
 ### HTTP Version
 
-Testing HTTP version (HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3):
+Testing HTTP version (HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3) can be done using implicit asserts:
 
 ```hurl
 GET https://foo.com
@@ -656,6 +656,37 @@ HTTP/2 200
 ```
 
 [Doc](/docs/asserting-response.md#version-status)
+
+Or explicit:
+
+```hurl
+GET https://foo.com
+HTTP 200
+[Asserts]
+version == "3"
+
+GET https://bar.com
+HTTP 200
+[Asserts]
+version == "2"
+version toFloat > 1.1
+```
+
+[Doc](/docs/asserting-response.md#version-assert)
+
+### IP Address
+
+Testing the IP address of the response, as a string. This string may be IPv6 address:
+
+```hurl
+GET https://foo.com
+HTTP 200
+[Asserts]
+ip == " 2001:0db8:85a3:0000:0000:8a2e:0370:733"
+ip startsWith "2001"
+ip isIpv6
+```
+
 
 ### Polling and Retry
 

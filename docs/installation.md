@@ -8,7 +8,7 @@ Precompiled binary is available at [Hurl latest GitHub release]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
 $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 ```
@@ -18,7 +18,7 @@ $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl_${VERSION}_amd64.deb
 $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 ```
@@ -26,7 +26,7 @@ $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 For Ubuntu (bionic, focal, jammy, noble), Hurl can be installed from `ppa:lepapareil/hurl`
 
 ```shell
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ sudo apt-add-repository -y ppa:lepapareil/hurl
 $ sudo apt install hurl="${VERSION}"*
 ```

@@ -147,7 +147,7 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit, TAP and HT
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
 powered by [libcurl], one of the most powerful and reliable file transfer libraries.
 With its text file format, Hurl adds syntactic sugar to run and test HTTP requests,
-but it's still the [curl] that we love: __fast__, __efficient__ and __HTTP/3 ready__.
+but it's still the [curl] that we love: __fast__, __efficient__ and __IPv6 / HTTP/3 ready__.
 
 # Feedbacks
 
@@ -209,6 +209,7 @@ HTTP 200
         * [JSON Output](#json-output)
     * [Others](#others)
         * [HTTP Version](#http-version)
+        * [IP Address](#ip-address)
         * [Polling and Retry](#polling-and-retry)
         * [Delaying Requests](#delaying-requests)
         * [Skipping Requests](#skipping-requests)
@@ -909,7 +910,7 @@ $ hurl --json *.hurl
 
 ### HTTP Version
 
-Testing HTTP version (HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3):
+Testing HTTP version (HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3) can be done using implicit asserts:
 
 ```hurl
 GET https://foo.com
@@ -920,6 +921,37 @@ HTTP/2 200
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#version-status)
+
+Or explicit:
+
+```hurl
+GET https://foo.com
+HTTP 200
+[Asserts]
+version == "3"
+
+GET https://bar.com
+HTTP 200
+[Asserts]
+version == "2"
+version toFloat > 1.1
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#version-assert)
+
+### IP Address
+
+Testing the IP address of the response, as a string. This string may be IPv6 address:
+
+```hurl
+GET https://foo.com
+HTTP 200
+[Asserts]
+ip == " 2001:0db8:85a3:0000:0000:8a2e:0370:733"
+ip startsWith "2001"
+ip isIpv6
+```
+
 
 ### Polling and Retry
 
@@ -1042,7 +1074,7 @@ POST https://example.org
 X-Token: {{token}}
 {
   "name": "Alice",
-  "value: 100
+  "value": 100
 }
 HTTP 200
 ```
@@ -1063,7 +1095,7 @@ POST https://example.org
 X-Token: {{token}}
 {
   "name": "Alice",
-  "value: 100
+  "value": 100
 }
 HTTP 200
 ```
@@ -1397,7 +1429,7 @@ Precompiled binary is available at [Hurl latest GitHub release]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
 $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 ```
@@ -1407,7 +1439,7 @@ $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl_${VERSION}_amd64.deb
 $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 ```
@@ -1415,7 +1447,7 @@ $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 For Ubuntu (bionic, focal, jammy, noble), Hurl can be installed from `ppa:lepapareil/hurl`
 
 ```shell
-$ VERSION=6.0.0
+$ VERSION=6.1.0
 $ sudo apt-add-repository -y ppa:lepapareil/hurl
 $ sudo apt install hurl="${VERSION}"*
 ```
@@ -1600,9 +1632,9 @@ Please follow the [contrib on Windows section].
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
-[HTML]: https://hurl.dev/assets/docs/hurl-6.0.0.html.gz
-[PDF]: https://hurl.dev/assets/docs/hurl-6.0.0.pdf.gz
-[Markdown]: https://hurl.dev/assets/docs/hurl-6.0.0.md.gz
+[HTML]: https://hurl.dev/assets/docs/hurl-6.1.0.html.gz
+[PDF]: https://hurl.dev/assets/docs/hurl-6.1.0.pdf.gz
+[Markdown]: https://hurl.dev/assets/docs/hurl-6.1.0.md.gz
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
 [XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body

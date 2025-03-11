@@ -44,22 +44,28 @@ section starts with `[Captures]`.
 
 Queries are used to extract data from an HTTP response.
 
-A query can be of the following type:
+A query can extract data from
 
-- [`status`](#status-capture)
-- [`version`](#version-capture)
-- [`header`](#header-capture)
-- [`url`](#url-capture)
-- [`ip`](#ip-capture)
-- [`cookie`](#cookie-capture)
-- [`body`](#body-capture)
-- [`bytes`](#bytes-capture)
-- [`xpath`](#xpath-capture)
-- [`jsonpath`](#jsonpath-capture)
-- [`regex`](#regex-capture)
-- [`variable`](#variable-capture)
-- [`duration`](#duration-capture)
-- [`certificate`](#ssl-certificate-capture)
+- status line:
+  - [`status`](#status-capture)
+  - [`version`](#version-capture)
+- headers:
+  - [`header`](#header-capture)
+  - [`cookie`](#cookie-capture)
+- body:
+  - [`body`](#body-capture)
+  - [`bytes`](#bytes-capture)
+  - [`xpath`](#xpath-capture)
+  - [`jsonpath`](#jsonpath-capture)
+  - [`regex`](#regex-capture)
+  - [`sha256`](#sha-256-capture)
+  - [`md5`](#md5-capture)
+- others:
+  - [`url`](#url-capture)
+  - [`ip`](#ip-address-capture)
+  - [`variable`](#variable-capture)
+  - [`duration`](#duration-capture)
+  - [`certificate`](#ssl-certificate-capture)
 
 Extracted data can then be further refined using [filters].
 
@@ -78,7 +84,7 @@ my_status: status
 ### Version capture
 
 Capture the received HTTP version. Version capture consists of a variable name, followed by a `:`, and the
-keyword `version`.
+keyword `version`. The value captured is a string:
 
 ```hurl
 GET https://example.org
@@ -100,32 +106,6 @@ password: 12345678
 HTTP 302
 [Captures]
 next_url: header "Location"
-```
-
-### URL capture
-
-Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section][options] or
-[`--location` option]). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
-
-```hurl
-GET https://example.org/redirecting
-[Options]
-location: true
-HTTP 200
-[Captures]
-landing_url: url
-```
-
-### IP capture
-
-Capture the IP address of the last connection. IP capture consists of a variable name, followed by a `:`,
-and the keyword `ip`.
-
-```hurl
-GET https://example.org/hello
-HTTP 200
-[Captures]
-server_ip: ip
 ```
 
 ### Cookie capture
@@ -306,6 +286,59 @@ The regex pattern must have at least one capture group, otherwise the
 capture will fail. When the pattern is a double-quoted string, metacharacters beginning with a backslash in the pattern
 (like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters escaping. 
 
+### SHA-256 capture
+
+Capture the [SHA-256] hash of the response body.
+
+```hurl
+GET https://example.org/data.tar.gz
+HTTP 200
+[Captures]
+my_hash: sha256
+```
+
+Like `body` assert, `sha256` capture works _after_ content encoding decompression (so the captured value is not
+affected by `Content-Encoding` response header).
+
+### MD5 capture
+
+Capture the [MD5] hash of the response body.
+
+```hurl
+GET https://example.org/data.tar.gz
+HTTP 200
+[Captures]
+my_hash: md5
+```
+
+Like `sha256` asserts, `md5` assert works _after_ content encoding decompression (so the predicates values are not
+affected by `Content-Encoding` response header)
+
+### URL capture
+
+Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section][options] or
+[`--location` option]). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
+
+```hurl
+GET https://example.org/redirecting
+[Options]
+location: true
+HTTP 200
+[Captures]
+landing_url: url
+```
+
+### IP address capture
+
+Capture the IP address of the last connection. The value of the `ip` query is a string.
+
+```hurl
+GET https://example.org/hello
+HTTP 200
+[Captures]
+server_ip: ip
+```
+
 ### Variable capture
 
 Capture the value of a variable into another.
@@ -347,7 +380,8 @@ cert_serial_number: certificate "Serial-Number"
 
 ## Redacting Secrets
 
-Secrets can be redacted from logs and reports using [`--secret` option]:
+When capturing data, you may need to hide captured values from logs and report. To do this, captures can use secrets
+which are redacted from logs and reports, using [`--secret` option]:
 
 ```shell
 $ hurl --secret pass=sesame-ouvre-toi file.hurl
@@ -376,3 +410,5 @@ pass: header "token" redact
 [`xpath` filter]: /docs/filters.md#xpath
 [`decode` filter]: /docs/filters.md#decode
 [`--secret` option]: /docs/templates.md#secrets
+[MD5]: https://en.wikipedia.org/wiki/MD5
+[SHA-256]: https://en.wikipedia.org/wiki/SHA-2
