@@ -1,6 +1,12 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+case $(uname -m) in
+    x86_64) arch="amd64" ;;
+    aarch64) arch="arm64" ;;
+    *) echo "Unkown arch" ; uname -m  ;;
+esac
+
 sudo rm -rf target/debian
 mkdir target/debian
 mkdir -p target/debian/usr/bin target/debian/DEBIAN
@@ -22,7 +28,7 @@ cat <<END >target/debian/DEBIAN/control
 Package: hurl
 Version: $VERSION
 Section: web
-Architecture: amd64
+Architecture: $arch
 Priority: optional
 Standards-Version: 3.9.4
 Maintainer: Fabrice Reix <fabrice.reix@orange.com>
@@ -41,5 +47,5 @@ sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload
-cp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
+cp target/debian.deb "target/upload/hurl_${VERSION}_${arch}.deb"
 

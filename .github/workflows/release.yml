@@ -337,6 +337,7 @@ jobs:
         run: |
             bin/release/sha256sum.sh --write \
             artifacts/release-deb-x64-artifacts/hurl_"${RELEASE_VERSION}"_amd64.deb \
+            artifacts/release-deb-aarch64-artifacts/hurl_"${RELEASE_VERSION}"_arm64.deb \
             artifacts/release-generic-linux-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-unknown-linux-gnu.tar.gz \
             artifacts/release-generic-linux-aarch64-artifacts/hurl-"${RELEASE_VERSION}"-aarch64-unknown-linux-gnu.tar.gz \
             artifacts/release-macos-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-apple-darwin.tar.gz \
@@ -364,6 +365,7 @@ jobs:
           echo "::group::List artifacts"
             ls -l \
                 artifacts/release-deb-x64-artifacts/* \
+                artifacts/release-deb-aarch64-artifacts/* \
                 artifacts/release-generic-linux-x64-artifacts/* \
                 artifacts/release-generic-linux-aarch64-artifacts/* \
                 artifacts/release-macos-x64-artifacts/* \
@@ -378,6 +380,8 @@ jobs:
                 --draft \
                 artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb \
                 artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb.sha256 \
+                artifacts/release-deb-aarch64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_arm64.deb \
+                artifacts/release-deb-aarch64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_arm64.deb.sha256 \
                 artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz \
                 artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz.sha256 \
                 artifacts/release-generic-linux-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-unknown-linux-gnu.tar.gz \
