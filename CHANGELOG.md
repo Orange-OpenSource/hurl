@@ -1,4 +1,4 @@
-[6.1.0 (2024-03-12)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.0)
+[6.1.0 (2025-03-12)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.0)
 ========================================================================================================================
 
 Thanks to
@@ -6,6 +6,7 @@ Thanks to
 [@ashishajr](https://github.com/ashishajr),
 [@kidbrax](https://github.com/kidbrax),
 [@theoforger](https://github.com/theoforger),
+[@smokedlinq](https://github.com/smokedlinq),
 [@docwhat](https://github.com/docwhat),
 [@glb-cblin](https://github.com/glb-cblin),
 [@Enoz](https://github.com/Enoz),
@@ -26,6 +27,7 @@ Enhancements:
 * Removed limitation for --cookie-jar to use only one hurl file [#2537](https://github.com/Orange-OpenSource/hurl/issues/2537)
 * Add HTTP version query [#1706](https://github.com/Orange-OpenSource/hurl/issues/1706)
 * Add curl -H/--header option to globally add headers to all requests [#1905](https://github.com/Orange-OpenSource/hurl/issues/1905) [#2144](https://github.com/Orange-OpenSource/hurl/issues/2144)
+* Add toString Filter [#2035](https://github.com/Orange-OpenSource/hurl/issues/2035) [#3798](https://github.com/Orange-OpenSource/hurl/issues/3798)
 * Add base64 decode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
 * Add base64 encode filter [#2145](https://github.com/Orange-OpenSource/hurl/issues/2145)
 * Redacts secrets from JUnit reports [#2947](https://github.com/Orange-OpenSource/hurl/issues/2947) [#2972](https://github.com/Orange-OpenSource/hurl/issues/2972)
@@ -40,7 +42,7 @@ Enhancements:
 * Add header option per request [#3575](https://github.com/Orange-OpenSource/hurl/issues/3575)
 * Fix invalid escape in hurlfmt parse func [#3615](https://github.com/Orange-OpenSource/hurl/issues/3615)
 * hurlfmt: Use Hurl predicates identifiers for Hurl to JSON file export [#3662](https://github.com/Orange-OpenSource/hurl/issues/3662)
-* Add toString Filter [#3798](https://github.com/Orange-OpenSource/hurl/issues/3798)
+* Add aarch64 deb package [#3829](https://github.com/Orange-OpenSource/hurl/issues/3829)
 
 
 Bugs Fixed:
