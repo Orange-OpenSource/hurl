@@ -13,7 +13,7 @@ concurrency: release
 jobs:
   set-context:
     env:
-      GITHUB_REF: ${{ github.ref_name }}
+      GITHUB_BRANCH_NAME: ${{ github.ref_name }}
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       SET_RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
@@ -25,10 +25,10 @@ jobs:
     steps:
       - name: Check trigger branch
         run: |
-          if [ $(echo "${GITHUB_REF}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
-            echo "  - ✅ The branch triggering this workflow is ${GITHUB_REF}."
+          if [ $(echo "${GITHUB_BRANCH_NAME}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
+            echo "  - ✅ The branch triggering this workflow is ${GITHUB_BRANCH_NAME}."
           else
-            echo "  - ❌ The branch triggering this workflow is ${GITHUB_REF} instead of master or release/[0-9].[0-9].[0-9]."
+            echo "  - ❌ The branch triggering this workflow is ${GITHUB_BRANCH_NAME} instead of master or release/[0-9].[0-9].[0-9]."
             exit 1
           fi
 
@@ -40,8 +40,8 @@ jobs:
       - name: Set release branch
         id: set-release-branch
         run: |
-          if [ $(echo "${GITHUB_REF}" | grep -c "^release/") -eq 1 ] ; then
-            echo "release_branch=${GITHUB_REF}" | tee -a $GITHUB_OUTPUT
+          if [ $(echo "${GITHUB_BRANCH_NAME}" | grep -c "^release/") -eq 1 ] ; then
+            echo "release_branch=${GITHUB_BRANCH_NAME}" | tee -a $GITHUB_OUTPUT
           else
             echo "release_branch=release/${SET_RELEASE_VERSION}" | tee -a $GITHUB_OUTPUT
           fi
@@ -286,7 +286,7 @@ jobs:
 
   deliver-github-release:
     env:
-      GITHUB_REF: ${{ github.ref_name }}
+      GITHUB_BRANCH_NAME: ${{ github.ref_name }}
       GITHUB_OWNER: ${{ github.repository_owner }}
       GITHUB_REPO_NAME: ${{ github.event.repository.name }}
       GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -416,7 +416,7 @@ jobs:
           echo "- Please use \`/accept\` as usual then run the \`update-branch-version\` github workflow if you want to automatically update master branch to next SNAPSHOT version"
           } > file-body.txt
           gh pr create \
-            --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into ${GITHUB_REF}" \
+            --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into ${GITHUB_BRANCH_NAME}" \
             --body-file file-body.txt \
             --base master \
             --label bot && gh_exit_code=0 || gh_exit_code=$?
