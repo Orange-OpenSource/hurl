@@ -695,6 +695,15 @@ mod tests {
     }
 
     #[test]
+    fn test_capture_with_comment() {
+        let mut reader = Reader::new("name: jsonpath \"$.name\"          # name");
+        let capture0 = capture(&mut reader).unwrap();
+        assert!(capture0.filters.is_empty());
+        assert_eq!(capture0.space3.as_str(), "          ");
+        assert_eq!(capture0.line_terminator0.space0.as_str(), "");
+    }
+
+    #[test]
     fn test_assert() {
         let mut reader = Reader::new("header \"Location\" == \"https://google.fr\"");
         let assert0 = assert(&mut reader).unwrap();
