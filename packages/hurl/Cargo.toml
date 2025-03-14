@@ -1,6 +1,6 @@
 [package]
 name = "hurl"
-version = "6.1.0"
+version = "6.2.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -28,7 +28,7 @@ curl-sys = "0.4.80"
 encoding = "0.2.33"
 glob = "0.3.2"
 hex = "0.4.3"
-hurl_core = { version = "6.1.0", path = "../hurl_core" }
+hurl_core = { version = "6.2.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.1.0"
 libxml = "0.3.3"
 md5 = "0.7.0"
@@ -41,7 +41,7 @@ url = "2.5.4"
 xml-rs = { version = "0.8.25" }
 lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.15.1", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.16.0", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"
 terminal_size = "0.4.2"
 
