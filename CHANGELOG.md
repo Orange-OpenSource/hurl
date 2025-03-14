@@ -1,3 +1,14 @@
+[6.1.1 (2025-03-14)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
+========================================================================================================================
+
+Thanks to
+[@lu-zero](https://github.com/lu-zero)
+
+Bugs Fixed:
+
+* Fix hurlfmt spacing [#3839](https://github.com/Orange-OpenSource/hurl/issues/3839)
+
+
 [6.1.0 (2025-03-12)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.0)
 ========================================================================================================================
 
