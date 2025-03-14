@@ -14,17 +14,17 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
 Used to publish a new release from master branch (normal process).
 
 - Run `release.yml` workflow on `master` branch
-- Fill `Desired delivery version` input with the `x.y.z` version you want to publish, it will:
-  - Clean pending release
-  - Create new `release/x.y.0` branch
-  - Checkout this new branch
-  - Update all toml, crates, man and docs with `x.y.0`
-  - Generate CHANGELOG
-  - Commit all updates
-  - Create the `x.y.0` tag
-  - Create draft GitHub release `x.y.0`
-  - Create PR from `release/x.y.0` to `master`
-  - Publish the draft release
+  - Fill `Desired delivery version` input with the `x.y.z` version you want to publish, it will:
+    - Clean pending release
+    - Create new `release/x.y.0` branch
+    - Checkout this new branch
+    - Update all toml, crates, man and docs with `x.y.0`
+    - Generate CHANGELOG
+    - Commit all updates
+    - Create the `x.y.0` tag
+    - Create draft GitHub release `x.y.0`
+    - Create PR from `release/x.y.0` to `master`
+    - Publish the draft release
 - Test release on external test project
 - Change the release status from draft to public on github
 - Accept the PR from `release/x.y.0` to `master` with `/accept`
@@ -43,18 +43,19 @@ Used to publish a new release from master branch (normal process).
 
 Used when you want to deliver a fix from a published release (tag).
 
-- Create a new branch `release/x.y.z` from desired tag `x.y.z` by increasing the patch version, for example `release/4.0.1` from tag `4.0.0`
+- Create a new branch `release/x.y.z` from desired tag `x.y.z` manually by increasing the patch version, for example `release/6.1.1` from tag `6.1.0`
+- Create your fix branch, work on it then merge it to the new fresh `release/x.y.z`
 - Run `release.yml` workflow on existing `release/x.y.z` branch
-- Fill `Desired delivery version` input your `x.y.z` version, it will:
-  - Clean pending release
-  - Checkout this new branch
-  - Update all toml, crates, man and docs with `x.y.z`
-  - Generate CHANGELOG
-  - Commit all updates
-  - Create the `x.y.z` tag
-  - Create draft GitHub release `x.y.z`
-  - Create PR from `release/x.y.z` to `master`
-  - Publish the draft release
+  - Fill `Desired delivery version` input your `x.y.z` version, it will:
+    - Clean pending release
+    - Checkout this new branch
+    - Update all toml, crates, man and docs with `x.y.z`
+    - Generate CHANGELOG
+    - Commit all updates
+    - Create the `x.y.z` tag
+    - Create draft GitHub release `x.y.z`
+    - Create PR from `release/x.y.z` to `master`
+    - Publish the draft release
 - Change the release status from draft to public on github
 - Close the PR from `release/x.y.z` to `master` and manage it manually rebasing commits to reorder history and keep it linear
 
