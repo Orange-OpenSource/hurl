@@ -201,3 +201,126 @@ Each diff has its own context. For example, if both numbers have been changed:
    For example  `@ [$.phone_numbers[0].number]` could be used instead of `@ ["phone_numbers",0,"number"]`.
 
 
+## Using Jsonpath-like error
+
+
+Let' take the following Hurl file (expected JSON)
+
+    1  GET http://localhost:8000/bob
+    2  {
+    3    "name": "Bob",
+    4    "age": 22,
+    5    "hobbies": ["biking", "swimming"]
+    6  }
+    7
+
+
+### Case Modified field
+
+Response from server (actual)
+
+    {
+      "name": "Bob",
+      "age": 20,
+      "hobbies": ["biking", "swimming"]
+    }
+
+Error
+
+      --> /home/fab/tmp/test_jsondiff/modify.hurl:4:0
+      |
+      | GET http://localhost:8000/modify
+      | ...
+    4 | jsonpath "$.age"
+      |   actual:   int <20>
+      |   expected: int <22>
+      |
+
+### Case Deleted field
+
+Response from server (actual)
+
+    {
+      "name": "Bob",
+      "hobbies": ["biking", "swimming"]
+    }
+
+Error
+
+    error: Assert failure
+      --> /home/fab/tmp/test_jsondiff/delete.hurl:4:0
+      |
+      | GET http://localhost:8000/delete
+      | ...
+    4 | jsonpath "$.age
+      |   actual:   
+      |   expected: integer <22>
+      |
+
+A deleted field is characterised by the absence of an actual value.
+
+
+### Case New field
+
+Response from server (actual)
+
+    {
+      "name": "Bob",
+      "age": 22,
+      "hobbies": ["biking", "swimming"]
+      "country": "Spain"
+    }
+
+Error
+
+    error: Assert failure
+      --> /home/fab/tmp/test_jsondiff/add.hurl:2:0
+      |
+      | GET http://localhost:8000/add
+      | ...
+    2 | jsonpath "$.country
+      |   actual:   string <Spain>
+      |   expected: 
+      |
+
+An additional field can be characterised by an absence of expected value.
+The error source line will match the enclosing context (parent)
+
+
+### Case new array element
+
+Response from server (actual)
+
+    {
+      "name": "Bob",
+      "age": 20,
+      "hobbies": ["biking", "guitar", "swimming"]
+    }
+
+
+Error
+
+    error: Assert failure
+      --> /home/fab/tmp/test_jsondiff/add_array_item.hurl:5:0
+      |
+      | GET http://localhost:8000/add_array_item
+      | ...
+    5 | jsonpath "$.hobbies[1]"
+      |   actual:   string <guitar>
+      |   expected: 
+      |
+
+An additional value is characterized by an absence of expected value.
+This can be confusing though, as the jsonpath expression "$.hobbies[1]" is valid from the JSON source, and point to the next element.
+
+In this case, the standard diff representation is less ambigous.
+
+    error: Assert failure
+      --> /home/fab/tmp/test_jsondiff/add_array_item.hurl:5:0
+      |
+      | GET http://localhost:8000/add_array_item
+      | ...
+    5 | jsonpath "$.hobbies[1]"
+      |   + "guitar" 
+      |
+
