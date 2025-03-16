@@ -103,7 +103,7 @@ fn filename_text(reader: &mut Reader) -> String {
         match reader.read() {
             None => break,
             Some(c) => {
-                if ['#', ';', '{', '}', ' ', '\n', '\\'].contains(&c) {
+                if ['#', ';', '{', '}', ' ', '\n', '\r', '\\'].contains(&c) {
                     reader.seek(save);
                     break;
                 } else {
@@ -290,6 +290,22 @@ mod tests {
                     },
                 ],
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
+            )
+        );
+    }
+
+    #[test]
+    fn test_filename_with_crlf() {
+        let mut reader = Reader::new("foo\r\n");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "foo".to_string(),
+                    source: "foo".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
             )
         );
     }
