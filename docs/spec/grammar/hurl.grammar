@@ -468,7 +468,7 @@ filename: (filename-content | placeholder)*
 
 filename-content: (filename-text | filename-escaped-char)*
 
-filename-text: ~[#;{} \n\\]+
+filename-text: ~[#;{} \n\r\\]+
 
 filename-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";"| " " | "{" | "}" | "u" unicode-char)
 
@@ -477,7 +477,7 @@ filename-password: (filename-password-content | placeholder)*
 
 filename-password-content: (filename-password-text | filename-password-escaped-char)*
 
-filename-password-text: ~[#;{} \n\\]+
+filename-password-text: ~[#;{} \n\r\\]+
 
 filename-password-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "#" | ";" | " " | "{" | "}" | ":" | "u" unicode-char)
 
