@@ -1,4 +1,4 @@
-.TH hurl 1 "04 Dec 2024" "hurl 6.0.0" " Hurl Manual"
+.TH hurl 1 "14 Mar 2025" "hurl 6.2.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -237,6 +237,12 @@ However, to avoid your shell accidentally expanding glob patterns before Hurl ha
 
 This is a cli-only option.
 
+.IP "-H, --header <HEADER> "
+
+Add an extra header to include in information sent. Can be used several times in a command
+
+Do not add newlines or carriage returns
+
 .IP "-0, --http1.0 "
 
 Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.
@@ -452,6 +458,10 @@ Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry hap
 Duration in milliseconds between each retry. Default is 1000 ms.
 
 You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
+
+.IP "--secret <NAME=VALUE> "
+
+Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
 
 .IP "--ssl-no-revoke "
 
