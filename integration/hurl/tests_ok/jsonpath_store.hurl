@@ -34,7 +34,8 @@ jsonpath "$..book[?(@.author != 'Charles Dickens')]" count == 4            # fil
 jsonpath "$..book[?(@.author != 'Nigel Rees')]" count == 3                 # filter all books for author other than Nogen Rees
 jsonpath "$..book[?(@.price != 10.00)]" count == 4                         # filter all books for price different from 10.00
 jsonpath "$..book[?(@.price != 8.95)]" count == 3                          # filter all books for price different from 8.95
-jsonpath "$..*" count == 31             	                               # all members of JSON structure.
+jsonpath "$..*" count == 31             	                           # all members of JSON structure.
+jsonpath "$..book[*].isbn" count == 2                                      # get list of isbn numbers
 
 {
   "store": {

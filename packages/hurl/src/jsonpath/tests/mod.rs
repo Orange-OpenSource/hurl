@@ -476,3 +476,12 @@ fn test_parsing_error() {
     // not supported yet
     assert!(jsonpath::parse("$..book[(@.length-1)]").is_err());
 }
+
+#[test]
+fn test_filter_collection_with_nonexisting_field() {
+    let expr = jsonpath::parse("$.book[*].isbn").unwrap();
+    assert_eq!(
+        expr.eval(&store_value()).unwrap(),
+        JsonpathResult::Collection(vec![json!("0-553-21311-3"), json!("0-395-19395-8"),])
+    );
+}

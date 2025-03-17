@@ -32,12 +32,14 @@ impl Query {
                 JsonpathResult::Collection(values) => {
                     let mut elements = vec![];
                     for value in values {
-                        match selector.eval(&value)? {
-                            JsonpathResult::SingleEntry(new_value) => {
-                                elements.push(new_value);
-                            }
-                            JsonpathResult::Collection(mut new_values) => {
-                                elements.append(&mut new_values);
+                        if let Some(value) = selector.eval(&value) {
+                            match value {
+                                JsonpathResult::SingleEntry(new_value) => {
+                                    elements.push(new_value);
+                                }
+                                JsonpathResult::Collection(mut new_values) => {
+                                    elements.append(&mut new_values);
+                                }
                             }
                         }
                         result = JsonpathResult::Collection(elements.clone());
