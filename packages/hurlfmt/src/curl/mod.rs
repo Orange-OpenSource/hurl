@@ -67,6 +67,7 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::data())
         .arg(commands::headers())
         .arg(commands::insecure())
+        .arg(commands::verbose())
         .arg(commands::location())
         .arg(commands::max_redirects())
         .arg(commands::method())
@@ -329,5 +330,20 @@ max-redirs: 10
             parse_line(r#"curl https://localhost:8001/hello --max-redirs 10"#).unwrap(),
             hurl_str
         );
+    }
+
+    #[test]
+    fn test_verbose_flag() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+[Options]
+verbose: true
+"#;
+        let flags = vec!["-v", "--verbose"];
+        for flag in flags {
+            assert_eq!(
+                parse_line(format!("curl {} http://localhost:8000/hello", flag).as_str()).unwrap(),
+                hurl_str
+            );
+        }
     }
 }

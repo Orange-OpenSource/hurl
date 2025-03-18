@@ -88,6 +88,9 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     if let Some(value) = get::<i32>(arg_matches, "retry") {
         options.push(HurlOption::new("retry", value.to_string().as_str()));
     }
+    if has_flag(arg_matches, "verbose") {
+        options.push(HurlOption::new("verbose", "true"));
+    }
     options
 }
 
