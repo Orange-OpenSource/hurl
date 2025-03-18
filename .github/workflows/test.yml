@@ -105,6 +105,16 @@ jobs:
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
+    - name: Integration Tests (Hurl files using CRLF)
+      run: |
+        sudo apt update
+        sudo apt install -y dos2unix
+        current_dir="${PWD}"
+        tmp_dir=/tmp/hurl-tmp
+        bin/test/convert_hurl_to_crlf.sh --dest-dir "${tmp_dir}"
+        cd "${tmp_dir}"
+        bin/test/test_integ.sh || true
+        cd "${current_dir}"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v4.6.1
       if: ${{ always() }}
