@@ -1,14 +1,16 @@
-[6.1.1 (2025-03-17)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
+[6.1.1 (2025-03-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
 ========================================================================================================================
 
 Thanks to
 [@lu-zero](https://github.com/lu-zero),
 [@andrejohansson](https://github.com/andrejohansson),
+[@demostanis](https://github.com/demostanis),
 
 Bugs Fixed:
 
 * Fix hurlfmt spacing [#3839](https://github.com/Orange-OpenSource/hurl/issues/3839)
 * Fix filename parsing [#3848](https://github.com/Orange-OpenSource/hurl/issues/3848)
+* Fix jsonpath array wildcard with missing attribute [#3859](https://github.com/Orange-OpenSource/hurl/issues/3859)
 
 
 [6.1.0 (2025-03-12)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.0)
