@@ -1067,6 +1067,10 @@ impl Tokenizable for Filter {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut fmt.tokenize());
             }
+            FilterValue::UrlQueryParam { space0, param } => {
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut param.tokenize());
+            }
             FilterValue::XPath { space0, expr } => {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
