@@ -119,6 +119,154 @@ Set-Cookie: theme=light
 If you want to test specifically the number of headers returned for a given header name, or if you want to test header 
 value with [predicates] (like `startsWith`, `contains`, `exists`)you can use the explicit [header assert].
 
+### Body
+
+Optional assertion on the received HTTP response body. Body section can be seen as syntactic sugar over [body asserts]
+(with `==` predicate). If the body of the response is a [JSON] string or a [XML] string, the body assertion can be 
+directly inserted without any modification. For a text based body that is neither JSON nor XML, one can use multiline
+string that starts with <code>&#96;&#96;&#96;</code> and ends with <code>&#96;&#96;&#96;</code>. For a precise byte
+control of the response body, a [Base64] encoded string or an input file can be used to describe exactly the body byte
+content to check.
+
+Like explicit [`body` assert], the body section is automatically decompressed based on the value of `Content-Encoding`
+response header. So, whatever is the response compression (`gzip`, `brotli`, etc...) body section doesn't depend on
+the content encoding. For textual body sections (JSON, XML, multiline, etc...), content is also decoded to string, based
+on the value of `Content-Type` response header.
+
+#### JSON body
+
+```hurl
+# Get a doggy thing:
+GET https://example.org/api/dogs/{{dog-id}}
+HTTP 200
+{
+    "id": 0,
+    "name": "Frieda",
+    "picture": "images/scottish-terrier.jpeg",
+    "age": 3,
+    "breed": "Scottish Terrier",
+    "location": "Lisco, Alabama"
+}
+```
+
+JSON response body can be seen as syntactic sugar of [multiline string body] with `json` identifier:
+
+~~~hurl
+# Get a doggy thing:
+GET https://example.org/api/dogs/{{dog-id}}
+HTTP 200
+```json
+{
+    "id": 0,
+    "name": "Frieda",
+    "picture": "images/scottish-terrier.jpeg",
+    "age": 3,
+    "breed": "Scottish Terrier",
+    "location": "Lisco, Alabama"
+}
+```
+~~~
+
+#### XML body
+
+~~~hurl
+GET https://example.org/api/catalog
+HTTP 200
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+   <book id="bk101">
+      <author>Gambardella, Matthew</author>
+      <title>XML Developer's Guide</title>
+      <genre>Computer</genre>
+      <price>44.95</price>
+      <publish_date>2000-10-01</publish_date>
+      <description>An in-depth look at creating applications with XML.</description>
+   </book>
+</catalog>
+~~~
+
+XML response body can be seen as syntactic sugar of [multiline string body] with `xml` identifier:
+
+~~~hurl
+GET https://example.org/api/catalog
+HTTP 200
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+   <book id="bk101">
+      <author>Gambardella, Matthew</author>
+      <title>XML Developer's Guide</title>
+      <genre>Computer</genre>
+      <price>44.95</price>
+      <publish_date>2000-10-01</publish_date>
+      <description>An in-depth look at creating applications with XML.</description>
+   </book>
+</catalog>
+```
+~~~
+
+#### Multiline string body
+
+~~~hurl
+GET https://example.org/models
+HTTP 200
+```
+Year,Make,Model,Description,Price
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL! air, moon roof, loaded",4799.00
+```
+~~~
+
+The standard usage of a multiline string is :
+
+~~~
+```
+line1
+line2
+line3
+```
+~~~
+
+##### Oneline string body
+
+For text based response body that do not contain newlines, one can use oneline string, started and ending with <code>&#96;</code>.
+
+~~~hurl
+POST https://example.org/helloworld
+HTTP 200
+`Hello world!`
+~~~
+
+#### Base64 body
+
+Base64 response body assert starts with `base64,` and end with `;`. MIME's Base64 encoding is supported (newlines and
+white spaces may be present anywhere but are to be ignored on decoding), and `=` padding characters might be added.
+
+```hurl
+GET https://example.org
+HTTP 200
+base64,TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIG
+FkaXBpc2NpbmcgZWxpdC4gSW4gbWFsZXN1YWRhLCBuaXNsIHZlbCBkaWN0dW0g
+aGVuZHJlcml0LCBlc3QganVzdG8gYmliZW5kdW0gbWV0dXMsIG5lYyBydXRydW
+0gdG9ydG9yIG1hc3NhIGlkIG1ldHVzLiA=;
+```
+
+#### File body
+
+To use the binary content of a local file as the body response assert, file body
+can be used. File body starts with `file,` and ends with `;``
+
+```hurl
+GET https://example.org
+HTTP 200
+file,data.bin;
+```
+
+File are relative to the input Hurl file, and cannot contain implicit parent directory (`..`). You can use [`--file-root` option] 
+to specify the root directory of all file nodes.
+
 ## Explicit asserts
 
 Optional list of assertions on the HTTP response within an `[Asserts]` section. Assertions can describe checks
@@ -732,154 +880,6 @@ certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches "[0-9af]+"
 ```
-
-## Body
-
-Optional assertion on the received HTTP response body. Body section can be seen as syntactic sugar over [body asserts] 
-(with `==` predicate). If the body of the response is a [JSON] string or a [XML] string, the body assertion can be 
-directly inserted without any modification. For a text based body that is neither JSON nor XML, one can use multiline 
-string that starts with <code>&#96;&#96;&#96;</code> and ends with <code>&#96;&#96;&#96;</code>. For a precise byte 
-control of the response body, a [Base64] encoded string or an input file can be used to describe exactly the body byte
-content to check.
-
-Like explicit [`body` assert], the body section is automatically decompressed based on the value of `Content-Encoding` 
-response header. So, whatever is the response compression (`gzip`, `brotli`, etc...) body section doesn't depend on
-the content encoding. For textual body sections (JSON, XML, multiline, etc...), content is also decoded to string, based
-on the value of `Content-Type` response header.
-
-### JSON body
-
-```hurl
-# Get a doggy thing:
-GET https://example.org/api/dogs/{{dog-id}}
-HTTP 200
-{
-    "id": 0,
-    "name": "Frieda",
-    "picture": "images/scottish-terrier.jpeg",
-    "age": 3,
-    "breed": "Scottish Terrier",
-    "location": "Lisco, Alabama"
-}
-```
-
-JSON response body can be seen as syntactic sugar of [multiline string body] with `json` identifier:
-
-~~~hurl
-# Get a doggy thing:
-GET https://example.org/api/dogs/{{dog-id}}
-HTTP 200
-```json
-{
-    "id": 0,
-    "name": "Frieda",
-    "picture": "images/scottish-terrier.jpeg",
-    "age": 3,
-    "breed": "Scottish Terrier",
-    "location": "Lisco, Alabama"
-}
-```
-~~~
-
-### XML body
-
-~~~hurl
-GET https://example.org/api/catalog
-HTTP 200
-<?xml version="1.0" encoding="UTF-8"?>
-<catalog>
-   <book id="bk101">
-      <author>Gambardella, Matthew</author>
-      <title>XML Developer's Guide</title>
-      <genre>Computer</genre>
-      <price>44.95</price>
-      <publish_date>2000-10-01</publish_date>
-      <description>An in-depth look at creating applications with XML.</description>
-   </book>
-</catalog>
-~~~
-
-XML response body can be seen as syntactic sugar of [multiline string body] with `xml` identifier:
-
-~~~hurl
-GET https://example.org/api/catalog
-HTTP 200
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<catalog>
-   <book id="bk101">
-      <author>Gambardella, Matthew</author>
-      <title>XML Developer's Guide</title>
-      <genre>Computer</genre>
-      <price>44.95</price>
-      <publish_date>2000-10-01</publish_date>
-      <description>An in-depth look at creating applications with XML.</description>
-   </book>
-</catalog>
-```
-~~~
-
-### Multiline string body
-
-~~~hurl
-GET https://example.org/models
-HTTP 200
-```
-Year,Make,Model,Description,Price
-1997,Ford,E350,"ac, abs, moon",3000.00
-1999,Chevy,"Venture ""Extended Edition""","",4900.00
-1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
-1996,Jeep,Grand Cherokee,"MUST SELL! air, moon roof, loaded",4799.00
-```
-~~~
-
-The standard usage of a multiline string is :
-
-~~~
-```
-line1
-line2
-line3
-```
-~~~
-
-#### Oneline string body
-
-For text based response body that do not contain newlines, one can use oneline string, started and ending with <code>&#96;</code>.
-
-~~~hurl
-POST https://example.org/helloworld
-HTTP 200
-`Hello world!`
-~~~
-
-### Base64 body
-
-Base64 response body assert starts with `base64,` and end with `;`. MIME's Base64 encoding is supported (newlines and
-white spaces may be present anywhere but are to be ignored on decoding), and `=` padding characters might be added.
-
-```hurl
-GET https://example.org
-HTTP 200
-base64,TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIG
-FkaXBpc2NpbmcgZWxpdC4gSW4gbWFsZXN1YWRhLCBuaXNsIHZlbCBkaWN0dW0g
-aGVuZHJlcml0LCBlc3QganVzdG8gYmliZW5kdW0gbWV0dXMsIG5lYyBydXRydW
-0gdG9ydG9yIG1hc3NhIGlkIG1ldHVzLiA=;
-```
-
-### File body
-
-To use the binary content of a local file as the body response assert, file body
-can be used. File body starts with `file,` and ends with `;``
-
-```hurl
-GET https://example.org
-HTTP 200
-file,data.bin;
-```
-
-File are relative to the input Hurl file, and cannot contain implicit parent directory (`..`). You can use [`--file-root` option] 
-to specify the root directory of all file nodes.
 
 [predicates]: #predicates
 [header assert]: #header-assert
