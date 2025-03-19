@@ -947,7 +947,7 @@ Testing the IP address of the response, as a string. This string may be IPv6 add
 GET https://foo.com
 HTTP 200
 [Asserts]
-ip == " 2001:0db8:85a3:0000:0000:8a2e:0370:733"
+ip == "2001:0db8:85a3:0000:0000:8a2e:0370:733"
 ip startsWith "2001"
 ip isIpv6
 ```
@@ -1529,7 +1529,7 @@ $ winget install hurl
 If you're a Rust programmer, Hurl can be installed with cargo.
 
 ```shell
-$ cargo install hurl
+$ cargo install --locked hurl
 ```
 
 ### conda-forge
