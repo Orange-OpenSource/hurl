@@ -179,7 +179,7 @@ fn expected_no_value(
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
-            let expected = eval_predicate_value_template(expected, variables)?;
+            let expected = eval_predicate_value(expected, variables, context_dir)?;
             Ok(format!("contains string <{expected}>"))
         }
         PredicateFuncValue::Include { value, .. } => {
