@@ -26,6 +26,8 @@ use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
+use clap::builder::styling::{AnsiColor, Effects};
+use clap::builder::Styles;
 use clap::ArgMatches;
 pub use error::CliOptionsError;
 use hurl::http;
@@ -168,10 +170,21 @@ fn get_version() -> String {
     )
 }
 
-pub fn parse() -> Result<CliOptions, CliOptionsError> {
+/// Parse the Hurl CLI options and returns a [`CliOptions`] result.
+///
+/// When a [`CliOptionsError::DisplayHelp`] variant is returned, `allow_color` is used
+/// to print an ANSI color help or not.
+pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
+    let styles = Styles::styled()
+        .header(AnsiColor::Green.on_default() | Effects::BOLD)
+        .usage(AnsiColor::Green.on_default() | Effects::BOLD)
+        .literal(AnsiColor::Cyan.on_default() | Effects::BOLD)
+        .placeholder(AnsiColor::Cyan.on_default());
+
     let mut command = clap::Command::new("hurl")
         .version(get_version())
         .disable_colored_help(true)
+        .styles(styles)
         .about("Hurl, run and test HTTP requests with plain text")
         // HTTP options
         .arg(commands::aws_sigv4())
@@ -245,16 +258,24 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional());
 
-    let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
+    let arg_matches = command.try_get_matches_from_mut(env::args_os());
+    let arg_matches = match arg_matches {
+        Ok(args) => args,
+        Err(error) => return Err(CliOptionsError::from_clap(error, allow_color)),
+    };
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
     if !matches::has_input_files(&arg_matches) {
-        let help = command.render_help().to_string();
+        let help = if allow_color {
+            command.render_help().ansi().to_string()
+        } else {
+            command.render_help().to_string()
+        };
         return Err(CliOptionsError::NoInput(help));
     }
 
-    let opts = parse_matches(&arg_matches)?;
+    let opts = parse_matches(&arg_matches, allow_color)?;
     if opts.input_files.is_empty() {
         return Err(CliOptionsError::Error(
             "No input files provided".to_string(),
@@ -264,12 +285,15 @@ pub fn parse() -> Result<CliOptions, CliOptionsError> {
     Ok(opts)
 }
 
-fn parse_matches(arg_matches: &ArgMatches) -> Result<CliOptions, CliOptionsError> {
+fn parse_matches(
+    arg_matches: &ArgMatches,
+    allow_color: bool,
+) -> Result<CliOptions, CliOptionsError> {
     let aws_sigv4 = matches::aws_sigv4(arg_matches);
     let cacert_file = matches::cacert_file(arg_matches)?;
     let client_cert_file = matches::client_cert_file(arg_matches)?;
     let client_key_file = matches::client_key_file(arg_matches)?;
-    let color = matches::color(arg_matches);
+    let color = matches::color(arg_matches, allow_color);
     let compressed = matches::compressed(arg_matches);
     let connect_timeout = matches::connect_timeout(arg_matches)?;
     let connects_to = matches::connects_to(arg_matches);
