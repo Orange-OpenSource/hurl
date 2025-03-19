@@ -176,11 +176,9 @@ fn expected_no_value(
             let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("ends with string <{expected}>"))
         }
-        PredicateFuncValue::Contain {
-            value: expected, ..
-        } => {
-            let expected = eval_predicate_value(expected, variables, context_dir)?;
-            Ok(format!("contains string <{expected}>"))
+        PredicateFuncValue::Contain { value, .. } => {
+            let value = eval_predicate_value(value, variables, context_dir)?;
+            Ok(format!("contains {}", value.format()))
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;

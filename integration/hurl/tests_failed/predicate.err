@@ -360,7 +360,7 @@ error: Assert failure
    | ...
 39 | jsonpath "$.not-exist" contains 1
    |   actual:   none
-   |   expected: contains string <1>
+   |   expected: contains integer <1>
    |
 
 error: Assert failure
