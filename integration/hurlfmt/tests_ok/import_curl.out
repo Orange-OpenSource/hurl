@@ -43,6 +43,14 @@ GET https://localhost:8001/hello
 [Options]
 insecure: true
 
+GET https://localhost:8001/hello
+[Options]
+verbose: true
+
+GET https://localhost:8001/hello
+[Options]
+verbose: true
+
 GET http://localhost:8000/hello
 Empty-Header:
 

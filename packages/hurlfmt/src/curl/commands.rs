@@ -90,3 +90,10 @@ pub fn url_param() -> clap::Arg {
         .required(false)
         .num_args(1)
 }
+
+pub fn verbose() -> clap::Arg {
+    clap::Arg::new("verbose")
+        .long("verbose")
+        .short('v')
+        .num_args(0)
+}
