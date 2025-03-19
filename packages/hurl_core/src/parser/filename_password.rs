@@ -109,7 +109,7 @@ fn filename_password_text(reader: &mut Reader) -> String {
         match reader.read() {
             None => break,
             Some(c) => {
-                if ['#', ';', '{', '}', ' ', '\n', '\\'].contains(&c) {
+                if ['#', ';', '{', '}', ' ', '\n', '\r', '\\'].contains(&c) {
                     reader.seek(save);
                     break;
                 } else {

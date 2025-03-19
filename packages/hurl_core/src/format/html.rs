@@ -360,8 +360,8 @@ impl HtmlFormatter {
             self.fmt_space(space);
             self.fmt_filter(filter);
         }
+        self.fmt_space(&capture.space3);
         if capture.redact {
-            self.fmt_space(&capture.space3);
             self.fmt_string("redact");
         }
         self.fmt_span_close();
@@ -782,6 +782,10 @@ impl HtmlFormatter {
             FilterValue::ToDate { space0, fmt } => {
                 self.fmt_space(space0);
                 self.fmt_template(fmt);
+            }
+            FilterValue::UrlQueryParam { space0, param } => {
+                self.fmt_space(space0);
+                self.fmt_template(param);
             }
             FilterValue::XPath { space0, expr } => {
                 self.fmt_space(space0);

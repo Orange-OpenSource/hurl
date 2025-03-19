@@ -114,6 +114,7 @@ pub fn eval_filter(
         FilterValue::ToString => eval_to_string(value, filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
         FilterValue::UrlEncode => eval_url_encode(value, filter.source_info, in_assert),
+        FilterValue::UrlQueryParam { .. } => todo!(),
         FilterValue::XPath { expr, .. } => {
             eval_xpath(value, expr, variables, filter.source_info, in_assert)
         }

@@ -73,6 +73,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             to_string_filter,
             url_decode_filter,
             url_encode_filter,
+            url_query_param_filter,
             xpath_filter,
         ],
         reader,
@@ -216,6 +217,13 @@ fn url_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn url_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("urlDecode", reader)?;
     Ok(FilterValue::UrlDecode)
+}
+
+fn url_query_param_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("urlQueryParam", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let param = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
+    Ok(FilterValue::UrlQueryParam { space0, param })
 }
 
 fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
