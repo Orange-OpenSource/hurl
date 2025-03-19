@@ -34,8 +34,9 @@ jsonpath "$.not-exist" < 1
 jsonpath "$.not-exist" <= 1
 jsonpath "$.not-exist" count == 1
 jsonpath "$.not-exist" startsWith "foo"
+jsonpath "$.not-exist" startsWith hex,efbbbf;
 jsonpath "$.not-exist" endsWith "foo"
-jsonpath "$.not-exist" contains "foo"
+jsonpath "$.not-exist" endsWith hex,00;
 jsonpath "$.not-exist" contains 1
 jsonpath "$.not-exist" matches /foo/
 jsonpath "$.not-exist" isInteger

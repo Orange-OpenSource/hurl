@@ -104,7 +104,15 @@ impl Value {
     fn format(&self) -> String {
         match self {
             Value::Bool(value) => format!("boolean <{value}>"),
-            Value::Bytes(values) => format!("list of size {}", values.len()),
+            Value::Bytes(values) => format!(
+                "{} byte{}",
+                values.len(),
+                if values.len() > 1 {
+                    "s"
+                } else {
+                    ""
+                }
+            ),
             Value::Date(value) => format!("date <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),
             Value::Nodeset(size) => format!("list of size {size}"),
@@ -164,23 +172,17 @@ fn expected_no_value(
             let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("less than or equals to <{}>", value.format()))
         }
-        PredicateFuncValue::StartWith {
-            value: expected, ..
-        } => {
-            let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("starts with string <{expected}>"))
+        PredicateFuncValue::StartWith { value, .. } => {
+            let value = eval_predicate_value(value, variables, context_dir)?;
+            Ok(format!("starts with {}", value.format()))
         }
-        PredicateFuncValue::EndWith {
-            value: expected, ..
-        } => {
-            let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("ends with string <{expected}>"))
+        PredicateFuncValue::EndWith { value, .. } => {
+            let value = eval_predicate_value(value, variables, context_dir)?;
+            Ok(format!("ends with {}", value.format()))
         }
-        PredicateFuncValue::Contain {
-            value: expected, ..
-        } => {
-            let expected = eval_predicate_value(expected, variables, context_dir)?;
-            Ok(format!("contains string <{expected}>"))
+        PredicateFuncValue::Contain { value, .. } => {
+            let value = eval_predicate_value(value, variables, context_dir)?;
+            Ok(format!("contains {}", value.format()))
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
