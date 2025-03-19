@@ -594,7 +594,7 @@ replace-filter: "replace" sp (quoted-string | regex) sp quoted-string
 
 split-filter: "split" sp quoted-string
 
-to-date-filter: "toDate"
+to-date-filter: "toDate" sp quoted-string
 
 to-float-filter: "toFloat"
 
