@@ -82,19 +82,17 @@ pub fn client_key_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOp
 }
 
 /// Returns true if Hurl output uses ANSI code and false otherwise.
-pub fn color(arg_matches: &ArgMatches) -> bool {
+///
+/// `allow_color_from_env` is false when the environment disallow usage of ANSI color (NO_COLOR en variable,
+/// or not tty context).
+pub fn color(arg_matches: &ArgMatches, allow_color_from_env: bool) -> bool {
     if has_flag(arg_matches, "color") {
         return true;
     }
     if has_flag(arg_matches, "no_color") {
         return false;
     }
-    if let Ok(v) = env::var("NO_COLOR") {
-        if !v.is_empty() {
-            return false;
-        }
-    }
-    io::stdout().is_terminal()
+    allow_color_from_env
 }
 
 pub fn compressed(arg_matches: &ArgMatches) -> bool {
@@ -594,7 +592,7 @@ fn get_duration(s: &str, default_unit: DurationUnit) -> Result<Duration, CliOpti
     Ok(Duration::from_millis(millis))
 }
 
-/// Whether or not this running in a Continuous Integration environment.
+/// Whether this running in a Continuous Integration environment.
 /// Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
 fn is_ci() -> bool {
     env::var("CI").is_ok() || env::var("TF_BUILD").is_ok()

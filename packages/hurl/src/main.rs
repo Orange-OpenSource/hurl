@@ -20,9 +20,10 @@ mod run;
 
 use std::collections::HashSet;
 use std::io::prelude::*;
+use std::io::IsTerminal;
 use std::path::Path;
 use std::time::Instant;
-use std::{env, process, thread};
+use std::{env, io, process, thread};
 
 use hurl::report::{curl, html, json, junit, tap};
 use hurl::runner;
@@ -55,10 +56,12 @@ struct HurlRun {
 fn main() {
     text::init_crate_colored();
 
-    let opts = match cli::options::parse() {
+    let allow_color = allow_color_from_env();
+
+    let opts = match cli::options::parse(allow_color) {
         Ok(v) => v,
         Err(e) => match e {
-            CliOptionsError::Info(_) => {
+            CliOptionsError::DisplayHelp(e) | CliOptionsError::DisplayVersion(e) => {
                 print!("{e}");
                 process::exit(EXIT_OK);
             }
@@ -144,6 +147,18 @@ fn has_report(opts: &CliOptions) -> bool {
         || opts.html_dir.is_some()
         || opts.json_report_dir.is_some()
         || opts.cookie_output_file.is_some()
+}
+
+/// Returns `true` if we can use ANSI color, solely base on the environment.
+///
+/// This function doesn't take CLI options into account.
+fn allow_color_from_env() -> bool {
+    if let Ok(v) = env::var("NO_COLOR") {
+        if !v.is_empty() {
+            return false;
+        }
+    }
+    io::stdout().is_terminal()
 }
 
 /// Writes `runs` results on file, in HTML, TAP, JUnit or Cookie file format.

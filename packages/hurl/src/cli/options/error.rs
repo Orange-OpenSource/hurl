@@ -20,17 +20,28 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CliOptionsError {
-    Info(String),
+    DisplayHelp(String),
+    DisplayVersion(String),
     NoInput(String),
     Error(String),
     InvalidInputFile(PathBuf),
 }
 
-impl From<clap::Error> for CliOptionsError {
-    fn from(error: clap::Error) -> Self {
+impl CliOptionsError {
+    /// Converts a clap error to an instance of [`CliOptionsError`].
+    pub fn from_clap(error: clap::Error, allow_color: bool) -> Self {
         match error.kind() {
-            clap::error::ErrorKind::DisplayVersion => CliOptionsError::Info(error.to_string()),
-            clap::error::ErrorKind::DisplayHelp => CliOptionsError::Info(error.to_string()),
+            clap::error::ErrorKind::DisplayVersion => {
+                CliOptionsError::DisplayVersion(error.to_string())
+            }
+            clap::error::ErrorKind::DisplayHelp => {
+                let help = if allow_color {
+                    error.render().ansi().to_string()
+                } else {
+                    error.to_string()
+                };
+                CliOptionsError::DisplayHelp(help)
+            }
             _ => {
                 // Other clap errors are prefixed with "error ", we strip this prefix as we want to
                 // have our own error prefix.
@@ -45,7 +56,8 @@ impl From<clap::Error> for CliOptionsError {
 impl fmt::Display for CliOptionsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            CliOptionsError::Info(message) => write!(f, "{message}"),
+            CliOptionsError::DisplayHelp(message) => write!(f, "{message}"),
+            CliOptionsError::DisplayVersion(message) => write!(f, "{message}"),
             CliOptionsError::NoInput(message) => write!(f, "{message}"),
             CliOptionsError::Error(message) => write!(f, "error: {message}"),
             CliOptionsError::InvalidInputFile(path) => write!(
