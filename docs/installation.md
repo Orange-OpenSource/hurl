@@ -108,7 +108,7 @@ $ winget install hurl
 If you're a Rust programmer, Hurl can be installed with cargo.
 
 ```shell
-$ cargo install hurl
+$ cargo install --locked hurl
 ```
 
 ### conda-forge
