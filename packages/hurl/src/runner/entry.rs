@@ -128,8 +128,8 @@ pub fn run(
     };
 
     // Now, we can compute capture and asserts on the last HTTP request/response chains.
-    let call = calls.last().unwrap();
-    let http_response = &call.response;
+    let responses = calls.iter().map(|c| &c.response).collect::<Vec<_>>();
+    let http_response = responses.last().unwrap();
 
     // `transfer_duration` represent the network time of calls, not including assert processing.
     let transfer_duration = calls.iter().map(|call| call.timings.total).sum();
@@ -167,7 +167,7 @@ pub fn run(
     let captures = match &entry.response {
         None => vec![],
         Some(response_spec) => {
-            match response::eval_captures(response_spec, http_response, &mut cache, variables) {
+            match response::eval_captures(response_spec, &responses, &mut cache, variables) {
                 Ok(captures) => captures,
                 Err(e) => {
                     return EntryResult {
@@ -200,7 +200,7 @@ pub fn run(
             let mut other_asserts = response::eval_asserts(
                 response_spec,
                 variables,
-                http_response,
+                &responses,
                 &mut cache,
                 context_dir,
             );
