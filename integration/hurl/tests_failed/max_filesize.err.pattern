@@ -12,10 +12,3 @@ error: HTTP connection
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (63) Maximum file size exceeded
    |
 
-error: HTTP connection
-  --> tests_failed/max_filesize.hurl:20:5
-   |
-20 | GET https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ <<<.*>>><<<(Exceeded|exceeded)>>> the maximum allowed file size<<<.*>>>
-   |
-

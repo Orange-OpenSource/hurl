@@ -17,6 +17,8 @@ HTTP 302
 # See <https://github.com/Orange-OpenSource/hurl/issues/3245>
 # On curl < 8.4.0, curl does and completes the transfer when it cannot
 # detect upfront the size of resource.
-GET https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js
-HTTP 200
+
+# TODO: Reproduce locally
+# GET https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js
+# HTTP 200
 
