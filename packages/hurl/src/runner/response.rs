@@ -50,7 +50,7 @@ pub fn eval_version_status_asserts(
     asserts
 }
 
-/// Returns a list of assert results, given a set of `variables`, an actual `http_response` and a spec `response`.
+/// Returns a list of assert results, given a set of `variables`, a list of actual `http_responses` and a spec `response`.
 ///
 /// Asserts on status and version and not run in this function, there are run with `eval_version_status_asserts`
 /// as they're semantically stronger.
@@ -60,11 +60,12 @@ pub fn eval_version_status_asserts(
 pub fn eval_asserts(
     response: &Response,
     variables: &VariableSet,
-    http_response: &http::Response,
+    http_responses: &[&http::Response],
     cache: &mut BodyCache,
     context_dir: &ContextDir,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
+    let last_response = http_responses.last().unwrap();
 
     // First, evaluates implicit asserts on response headers.
     for header in &response.headers {
@@ -80,7 +81,7 @@ pub fn eval_asserts(
             Ok(expected) => {
                 match template::eval_template(&header.key, variables) {
                     Ok(header_name) => {
-                        let actuals = http_response.headers.values(&header_name);
+                        let actuals = last_response.headers.values(&header_name);
                         if actuals.is_empty() {
                             let result = AssertResult::Header {
                                 actual: Err(RunnerError::new(
@@ -141,14 +142,14 @@ pub fn eval_asserts(
 
     // Second, evaluates implicit asserts on response body.
     if let Some(body) = &response.body {
-        let assert = eval_implicit_body_asserts(body, variables, http_response, context_dir);
+        let assert = eval_implicit_body_asserts(body, variables, last_response, context_dir);
         asserts.push(assert);
     }
 
     // Then, checks all the explicit asserts.
     for assert in response.asserts() {
         let assert_result =
-            assert::eval_explicit_assert(assert, variables, http_response, cache, context_dir);
+            assert::eval_explicit_assert(assert, variables, http_responses, cache, context_dir);
         asserts.push(assert_result);
     }
     asserts
@@ -347,16 +348,16 @@ fn eval_implicit_body_asserts(
     }
 }
 
-/// Evaluates captures from this HTTP `http_response`, given a set of `variables`.
+/// Evaluates captures from a list of HTTP `http_responses`, given a set of `variables`.
 pub fn eval_captures(
     response: &Response,
-    http_response: &http::Response,
+    http_responses: &[&http::Response],
     cache: &mut BodyCache,
     variables: &mut VariableSet,
 ) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
     for capture in response.captures() {
-        let capture_result = capture::eval_capture(capture, variables, http_response, cache)?;
+        let capture_result = capture::eval_capture(capture, variables, http_responses, cache)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.
         let name = capture_result.name.clone();
@@ -457,7 +458,7 @@ mod tests {
             eval_asserts(
                 &user_response(),
                 &variables,
-                &http::xml_two_users_http_response(),
+                &[&http::xml_two_users_http_response()],
                 &mut cache,
                 &context_dir,
             ),
@@ -504,7 +505,7 @@ mod tests {
         assert_eq!(
             eval_captures(
                 &user_response(),
-                &http::xml_two_users_http_response(),
+                &[&http::xml_two_users_http_response()],
                 &mut cache,
                 &mut variables,
             )

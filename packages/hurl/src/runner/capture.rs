@@ -26,7 +26,7 @@ use crate::runner::result::CaptureResult;
 use crate::runner::template::eval_template;
 use crate::runner::VariableSet;
 
-/// Evaluates a `capture` with `variables` map and `http_response`, returns a
+/// Evaluates a `capture` with `variables` map and a list of `http_responses`, returns a
 /// [`CaptureResult`] on success or an [`RunnerError`].
 ///
 /// The `cache` is used to store XML / JSON structured response data and avoid redundant parsing
@@ -34,11 +34,11 @@ use crate::runner::VariableSet;
 pub fn eval_capture(
     capture: &Capture,
     variables: &VariableSet,
-    http_response: &http::Response,
+    http_responses: &[&http::Response],
     cache: &mut BodyCache,
 ) -> Result<CaptureResult, RunnerError> {
     let name = eval_template(&capture.name, variables)?;
-    let value = eval_query(&capture.query, variables, http_response, cache)?;
+    let value = eval_query(&capture.query, variables, http_responses, cache)?;
     let value = match value {
         None => {
             return Err(RunnerError::new(
@@ -186,7 +186,7 @@ pub mod tests {
         let error = eval_capture(
             &capture,
             &variables,
-            &http::xml_three_users_http_response(),
+            &[&http::xml_three_users_http_response()],
             &mut cache,
         )
         .err()
@@ -251,7 +251,7 @@ pub mod tests {
             eval_capture(
                 &user_count_capture(),
                 &variables,
-                &http::xml_three_users_http_response(),
+                &[&http::xml_three_users_http_response()],
                 &mut cache,
             )
             .unwrap(),
@@ -265,7 +265,7 @@ pub mod tests {
             eval_capture(
                 &duration_capture(),
                 &variables,
-                &http::json_http_response(),
+                &[&http::json_http_response()],
                 &mut cache
             )
             .unwrap(),

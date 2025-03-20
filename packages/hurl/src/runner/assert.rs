@@ -141,7 +141,7 @@ fn use_diff(expected: &Value, actual: &Value) -> bool {
     }
 }
 
-/// Evaluates an explicit `assert`, given a set of `variables`, a HTTP response and a context
+/// Evaluates an explicit `assert`, given a set of `variables`, a list of HTTP `responses` and a context
 /// directory `context_dir`.
 ///
 /// The `cache` is used to store XML / JSON structured response data and avoid redundant parsing
@@ -149,11 +149,11 @@ fn use_diff(expected: &Value, actual: &Value) -> bool {
 pub fn eval_explicit_assert(
     assert: &Assert,
     variables: &VariableSet,
-    http_response: &http::Response,
+    http_responses: &[&http::Response],
     cache: &mut BodyCache,
     context_dir: &ContextDir,
 ) -> AssertResult {
-    let query_result = eval_query(&assert.query, variables, http_response, cache);
+    let query_result = eval_query(&assert.query, variables, http_responses, cache);
 
     let actual = if assert.filters.is_empty() {
         query_result
@@ -274,7 +274,7 @@ pub mod tests {
             eval_explicit_assert(
                 &assert_count_user(),
                 &variables,
-                &xml_three_users_http_response(),
+                &[&xml_three_users_http_response()],
                 &mut cache,
                 &context_dir
             ),

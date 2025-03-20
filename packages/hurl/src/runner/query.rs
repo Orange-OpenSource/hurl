@@ -31,42 +31,43 @@ use crate::runner::{filter, Number, Value, VariableSet};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
-/// Evaluates this `query` and returns a [`QueryResult`], using the HTTP `response` and `variables`.
+/// Evaluates this `query` and returns a [`QueryResult`], using a list of HTTP `responses` and `variables`.
 pub fn eval_query(
     query: &Query,
     variables: &VariableSet,
-    response: &http::Response,
+    responses: &[&http::Response],
     cache: &mut BodyCache,
 ) -> QueryResult {
+    let last_response = responses.last().unwrap();
     match &query.value {
-        QueryValue::Status => eval_query_status(response),
-        QueryValue::Version => eval_query_version(response),
-        QueryValue::Url => eval_query_url(response),
-        QueryValue::Header { name, .. } => eval_query_header(response, name, variables),
+        QueryValue::Status => eval_query_status(last_response),
+        QueryValue::Version => eval_query_version(last_response),
+        QueryValue::Url => eval_query_url(last_response),
+        QueryValue::Header { name, .. } => eval_query_header(last_response, name, variables),
         QueryValue::Cookie {
             expr: CookiePath { name, attribute },
             ..
-        } => eval_query_cookie(response, name, attribute, variables),
-        QueryValue::Body => eval_query_body(response, query.source_info),
+        } => eval_query_cookie(last_response, name, attribute, variables),
+        QueryValue::Body => eval_query_body(last_response, query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            eval_query_xpath(response, cache, expr, variables, query.source_info)
+            eval_query_xpath(last_response, cache, expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(response, cache, expr, variables, query.source_info)
+            eval_query_jsonpath(last_response, cache, expr, variables, query.source_info)
         }
         QueryValue::Regex { value, .. } => {
-            eval_query_regex(response, value, variables, query.source_info)
+            eval_query_regex(last_response, value, variables, query.source_info)
         }
         QueryValue::Variable { name, .. } => eval_query_variable(name, variables),
-        QueryValue::Duration => eval_query_duration(response),
-        QueryValue::Bytes => eval_query_bytes(response, query.source_info),
-        QueryValue::Sha256 => eval_query_sha256(response, query.source_info),
-        QueryValue::Md5 => eval_query_md5(response, query.source_info),
+        QueryValue::Duration => eval_query_duration(last_response),
+        QueryValue::Bytes => eval_query_bytes(last_response, query.source_info),
+        QueryValue::Sha256 => eval_query_sha256(last_response, query.source_info),
+        QueryValue::Md5 => eval_query_md5(last_response, query.source_info),
         QueryValue::Certificate {
             attribute_name: field,
             ..
-        } => eval_query_certificate(response, *field),
-        QueryValue::Ip => eval_ip(response),
+        } => eval_query_certificate(last_response, *field),
+        QueryValue::Ip => eval_ip(last_response),
     }
 }
 
@@ -700,7 +701,7 @@ pub mod tests {
                     value: QueryValue::Status,
                 },
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -739,7 +740,7 @@ pub mod tests {
             eval_query(
                 &query_header,
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache
             )
             .unwrap(),
@@ -774,7 +775,7 @@ pub mod tests {
             eval_query(
                 &query_header,
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache
             )
             .unwrap()
@@ -800,6 +801,8 @@ pub mod tests {
             ..default_response()
         };
 
+        let responses = vec![&response];
+
         // cookie "LSID"
         let query = Query {
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -819,7 +822,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response, &mut cache)
+            eval_query(&query, &variables, &responses, &mut cache)
                 .unwrap()
                 .unwrap(),
             Value::String("DQAAAKEaem_vYg".to_string())
@@ -848,7 +851,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response, &mut cache)
+            eval_query(&query, &variables, &responses, &mut cache)
                 .unwrap()
                 .unwrap(),
             Value::String("/accounts".to_string())
@@ -877,7 +880,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response, &mut cache)
+            eval_query(&query, &variables, &responses, &mut cache)
                 .unwrap()
                 .unwrap(),
             Value::Unit
@@ -906,7 +909,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response, &mut cache).unwrap(),
+            eval_query(&query, &variables, &responses, &mut cache).unwrap(),
             None
         );
     }
@@ -1005,7 +1008,7 @@ pub mod tests {
                     value: QueryValue::Body,
                 },
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -1018,7 +1021,7 @@ pub mod tests {
                 value: QueryValue::Body,
             },
             &variables,
-            &http::bytes_http_response(),
+            &[&http::bytes_http_response()],
             &mut cache,
         )
         .err()
@@ -1044,7 +1047,7 @@ pub mod tests {
             body: vec![200],
             ..default_response()
         };
-        let error = eval_query(&xpath_users(), &variables, &http_response, &mut cache)
+        let error = eval_query(&xpath_users(), &variables, &[&http_response], &mut cache)
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
@@ -1082,7 +1085,7 @@ pub mod tests {
         let error = eval_query(
             &query,
             &variables,
-            &http::xml_two_users_http_response(),
+            &[&http::xml_two_users_http_response()],
             &mut cache,
         )
         .unwrap_err();
@@ -1099,7 +1102,7 @@ pub mod tests {
             eval_query(
                 &xpath_users(),
                 &variables,
-                &http::xml_two_users_http_response(),
+                &[&http::xml_two_users_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -1110,7 +1113,7 @@ pub mod tests {
             eval_query(
                 &xpath_count_user_query(),
                 &variables,
-                &http::xml_two_users_http_response(),
+                &[&http::xml_two_users_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -1151,7 +1154,7 @@ pub mod tests {
             eval_query(
                 &xpath_html_charset(),
                 &variables,
-                &http::html_http_response(),
+                &[&http::html_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -1187,7 +1190,7 @@ pub mod tests {
         let error = eval_query(
             &jsonpath_query,
             &variables,
-            &http::json_http_response(),
+            &[&http::json_http_response()],
             &mut cache,
         )
         .unwrap_err();
@@ -1214,9 +1217,14 @@ pub mod tests {
             body: String::into_bytes(String::from("xxx")),
             ..default_response()
         };
-        let error = eval_query(&jsonpath_success(), &variables, &http_response, &mut cache)
-            .err()
-            .unwrap();
+        let error = eval_query(
+            &jsonpath_success(),
+            &variables,
+            &[&http_response],
+            &mut cache,
+        )
+        .err()
+        .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
         assert_eq!(error.kind, RunnerErrorKind::QueryInvalidJson);
     }
@@ -1231,7 +1239,13 @@ pub mod tests {
             ..default_response()
         };
         assert_eq!(
-            eval_query(&jsonpath_success(), &variables, &http_response, &mut cache).unwrap(),
+            eval_query(
+                &jsonpath_success(),
+                &variables,
+                &[&http_response],
+                &mut cache
+            )
+            .unwrap(),
             None
         );
     }
@@ -1245,7 +1259,7 @@ pub mod tests {
             eval_query(
                 &jsonpath_success(),
                 &variables,
-                &http::json_http_response(),
+                &[&http::json_http_response()],
                 &mut cache
             )
             .unwrap()
@@ -1256,7 +1270,7 @@ pub mod tests {
             eval_query(
                 &jsonpath_errors(),
                 &variables,
-                &http::json_http_response(),
+                &[&http::json_http_response()],
                 &mut cache
             )
             .unwrap()
@@ -1283,7 +1297,7 @@ pub mod tests {
             eval_query(
                 &regex_name(),
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache
             )
             .unwrap()
@@ -1294,7 +1308,7 @@ pub mod tests {
         let error = eval_query(
             &regex_invalid(),
             &variables,
-            &http::hello_http_response(),
+            &[&http::hello_http_response()],
             &mut cache,
         )
         .err()
@@ -1318,7 +1332,7 @@ pub mod tests {
                     value: QueryValue::Bytes,
                 },
                 &variables,
-                &http::hello_http_response(),
+                &[&http::hello_http_response()],
                 &mut cache,
             )
             .unwrap()
@@ -1346,10 +1360,10 @@ pub mod tests {
                     value: QueryValue::Sha256 {},
                 },
                 &variables,
-                &http::Response {
+                &[&http::Response {
                     body: vec![0xff],
                     ..default_response()
-                },
+                }],
                 &mut cache,
             )
             .unwrap()
