@@ -48,10 +48,10 @@ echo ">>>>> hurl infos"
 (Get-Command hurl).Path
 (Get-Command hurlfmt).Path
 
-echo ">>>>> erreur"
-((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
-Get-Content $package_dir\version.txt
-
+#echo ">>>>> erreur"
+#((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
+#Get-Content $package_dir\version.txt
+echo "6.1.1 debug" > $package_dir\version.txt
 
 
 # hurl infos
