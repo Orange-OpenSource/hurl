@@ -12,7 +12,11 @@ if ($LASTEXITCODE) { Throw }
 
 # create final package
 $lib_dir=((Get-Command vcpkg).Source | Split-path) + "\installed\x64-windows\bin"
+echo ">>>>>>>> lib_dir"
+Get-ChildItem -Path $lib_dir -Force
 $release_dir="$project_root_path\target\release"
+echo ">>>>>>>> release_dir"
+Get-ChildItem -Path $release_dir -Force
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
 Copy-Item -Path $lib_dir\libcurl.dll -Destination $package_dir
@@ -22,6 +26,8 @@ Copy-Item -Path $lib_dir\libxml2.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir
 Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
 Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
+echo ">>>>>>>> package_dir"
+Get-ChildItem -Path $package_dir -Force
 $package_dir\hurl --version
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
