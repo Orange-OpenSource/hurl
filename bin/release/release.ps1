@@ -17,12 +17,16 @@ Get-ChildItem -Path $lib_dir -Force
 $release_dir="$project_root_path\target\release"
 echo ">>>>>>>> release_dir"
 cd $release_dir
+Get-ChildItem -Path . -Force
 echo ">>>>>>>> hurl --version"
 .\hurl.exe --version
+echo ">>>>>>>> hurll --version"
+.\hurll.exe --version || true
+echo ">>>>>>>> hurl.exe hurl.exe"
+.\hurl.exe hurl.exe
 echo ">>>>>>>> hurl --help"
 .\hurl.exe --help
 cd $project_root_path
-Get-ChildItem -Path $release_dir -Force
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
 Copy-Item -Path $lib_dir\libcurl.dll -Destination $package_dir
@@ -35,6 +39,8 @@ Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
 echo ">>>>>>>> package_dir"
 Get-ChildItem -Path $package_dir -Force
 cd $package_dir
+echo ">>>>>>>> hurll --version"
+.\hurll.exe --version || true
 echo ">>>>>>>> hurl --version"
 .\hurl.exe --version
 echo ">>>>>>>> hurl --help"
