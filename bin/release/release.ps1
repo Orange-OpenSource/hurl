@@ -28,9 +28,13 @@ Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
 Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
 echo ">>>>>>>> package_dir"
 Get-ChildItem -Path $package_dir -Force
-echo ">>>>>>>> hurl --version"
 cd $package_dir
+echo ">>>>>>>> hurl --version"
 .\hurl.exe --version
+echo ">>>>>>>> hurl --help"
+.\hurl.exe --help
+echo ">>>>>>>> hurl toto"
+.\hurl.exe toto
 cd ..
 echo ">>>>>>>> erreur"
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
