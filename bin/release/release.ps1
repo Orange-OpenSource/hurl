@@ -38,21 +38,14 @@ Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir
 Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
 Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
 
+echo ">>>>>>>>>>>> hurl version depuis absolute dir"
+D:\a\hurl\hurl\target\win-package\hurl.exe --version
+
 # add hurl to PATH
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
 sleep 10
-
-echo ">>>>> hurl infos"
-(Get-Command hurl).Path
-(Get-Command hurlfmt).Path
-
-#echo ">>>>> erreur"
-#((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
-#Get-Content $package_dir\version.txt
-echo "6.1.1 debug" > $package_dir\version.txt
-
 
 # hurl infos
 (Get-Command hurl).Path
@@ -61,6 +54,11 @@ hurl --version
 if ($LASTEXITCODE) { Throw }
 hurlfmt --version
 if ($LASTEXITCODE) { Throw }
+
+#echo ">>>>> erreur"
+#((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
+#Get-Content $package_dir\version.txt
+echo "6.1.1 debug" > $package_dir\version.txt
 
 cd $actual_dir
 
