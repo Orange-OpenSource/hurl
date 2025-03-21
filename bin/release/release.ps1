@@ -43,6 +43,10 @@ echo ">>>>>>>> hurl --version"
 echo ">>>>>>>> hurl --help"
 .\hurl.exe --help
 cd $project_root_path
+echo ">>>>>> curl version"
+curl --version
+echo ">>>> chocolatey version"
+choco --version
 echo ">>>>>>>> erreur"
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
