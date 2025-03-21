@@ -25,7 +25,7 @@ jobs:
         echo ">>>>>>> curl version"
         curl --version
         echo ">>>>>>> install hurl"
-        chocolatey install -y hurl
+        choco install -y hurl
         echo ">>>>>>> hurl version"
         hurl --version
   debug2:
@@ -36,7 +36,7 @@ jobs:
         echo ">>>>>>> curl version"
         curl --version
         echo ">>>>>>> install hurl"
-        chocolatey install -y hurl
+        choco install -y hurl
         echo ">>>>>>> hurl version"
         hurl --version
   debug3:
@@ -47,7 +47,7 @@ jobs:
         echo ">>>>>>> curl version"
         curl --version
         echo ">>>>>>> install hurl"
-        chocolatey install -y hurl
+        choco install -y hurl
         echo ">>>>>>> hurl version"
         hurl --version
 
