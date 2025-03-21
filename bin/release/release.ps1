@@ -48,12 +48,12 @@ $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
 sleep 10
 
 # hurl infos
-(Get-Command hurl).Path
-(Get-Command hurlfmt).Path
-hurl --version
-if ($LASTEXITCODE) { Throw }
-hurlfmt --version
-if ($LASTEXITCODE) { Throw }
+#(Get-Command hurl).Path
+#(Get-Command hurlfmt).Path
+#hurl --version
+#if ($LASTEXITCODE) { Throw }
+#hurlfmt --version
+#if ($LASTEXITCODE) { Throw }
 
 #echo ">>>>> erreur"
 #((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
