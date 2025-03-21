@@ -42,21 +42,25 @@ echo ">>>>>>>> hurl --help"
 cd $project_root_path
 echo ">>>>>> curl version"
 curl --version
-echo ">>>> chocolatey version"
-choco --version
-echo ">>>> choco install hurl"
-choco install -y hurl
-echo ">>>> hurl version"
-hurl --version
-echo ">>>>>>>> erreur"
-((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
-Get-Content $package_dir\version.txt
 
 # add hurl to PATH
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
 sleep 10
+echo ">>>>>>>> hurl version avec maj PATH"
+hurl --version
+echo ">>>> choco install hurl"
+choco install -y hurl
+echo ">>>> hurl version"
+hurl --version
+echo ">>>>>>>> hurl version en direct avec le package_dir"
+.\$package_dir\hurl --version
+echo ">>>>>>>>> erreur"
+((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
+Get-Content $package_dir\version.txt
+
+
 
 # hurl infos
 (Get-Command hurl).Path
