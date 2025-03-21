@@ -22,14 +22,16 @@ Copy-Item -Path $lib_dir\libxml2.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir
 Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
 Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
-((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
-Get-Content $package_dir\version.txt
 
 # add hurl to PATH
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
 sleep 10
+
+# create version.txt
+((hurl --version) -Split " ")[1] > $package_dir\version.txt
+Get-Content $package_dir\version.txt
 
 # hurl infos
 (Get-Command hurl).Path
@@ -40,4 +42,3 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
-
