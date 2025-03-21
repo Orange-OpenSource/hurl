@@ -16,15 +16,12 @@ echo ">>>>>>>> lib_dir"
 Get-ChildItem -Path $lib_dir -Force
 $release_dir="$project_root_path\target\release"
 echo ">>>>>>>> release_dir"
-
 cd $release_dir
 echo ">>>>>>>> hurl --version"
 .\hurl.exe --version
 echo ">>>>>>>> hurl --help"
 .\hurl.exe --help
 cd $project_root_path
-
-
 Get-ChildItem -Path $release_dir -Force
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
@@ -47,6 +44,10 @@ echo ">>>>>> curl version"
 curl --version
 echo ">>>> chocolatey version"
 choco --version
+echo ">>>> choco install hurl"
+choco install -y hurl
+echo ">>>> hurl version"
+hurl --version
 echo ">>>>>>>> erreur"
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
