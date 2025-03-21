@@ -17,6 +17,40 @@ env:
 permissions: {}
 
 jobs:
+  debug1:
+    runs-on: windows-latest
+    steps:
+    - name: debug
+      run: |
+        echo ">>>>>>> curl version"
+        curl --version
+        echo ">>>>>>> install hurl"
+        chocolatey install -y hurl
+        echo ">>>>>>> hurl version"
+        hurl --version
+  debug2:
+    runs-on: windows-2022
+    steps:
+    - name: debug
+      run: |
+        echo ">>>>>>> curl version"
+        curl --version
+        echo ">>>>>>> install hurl"
+        chocolatey install -y hurl
+        echo ">>>>>>> hurl version"
+        hurl --version
+  debug3:
+    runs-on: windows-2019
+    steps:
+    - name: debug
+      run: |
+        echo ">>>>>>> curl version"
+        curl --version
+        echo ">>>>>>> install hurl"
+        chocolatey install -y hurl
+        echo ">>>>>>> hurl version"
+        hurl --version
+
   package-windows-x64:
     runs-on: windows-latest
     env:
