@@ -20,12 +20,13 @@ cd $release_dir
 Get-ChildItem -Path . -Force
 echo ">>>>>>>> hurl --version"
 .\hurl.exe --version
-echo ">>>>>>>> hurll --version"
-.\hurll.exe --version || true
-echo ">>>>>>>> hurl.exe hurl.exe"
-.\hurl.exe hurl.exe
+echo ">>>>>>>> hurlfmt --version"
+.\hurlfmt.exe --version
 echo ">>>>>>>> hurl --help"
 .\hurl.exe --help
+echo ">>>>>>>> hurl.exe hurl.exe"
+.\hurl.exe hurl.exe
+echo ">>>>> continue"
 cd $project_root_path
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
@@ -36,33 +37,18 @@ Copy-Item -Path $lib_dir\libxml2.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir
 Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
 Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
-echo ">>>>>>>> package_dir"
-Get-ChildItem -Path $package_dir -Force
-cd $package_dir
-echo ">>>>>>>> hurll --version"
-.\hurll.exe --version || true
-echo ">>>>>>>> hurl --version"
-.\hurl.exe --version
-echo ">>>>>>>> hurl --help"
-.\hurl.exe --help
-cd $project_root_path
-echo ">>>>>> curl version"
-curl --version
 
 # add hurl to PATH
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
 sleep 10
-echo ">>>>>>>> hurl version avec maj PATH"
-hurl --version
-echo ">>>> choco install hurl"
-choco install -y hurl
-echo ">>>> hurl version"
-hurl --version
-echo ">>>>>>>> hurl version en direct avec le package_dir"
-.\$package_dir\hurl --version
-echo ">>>>>>>>> erreur"
+
+echo ">>>>> hurl infos"
+(Get-Command hurl).Path
+(Get-Command hurlfmt).Path
+
+echo ">>>>> erreur"
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
 
