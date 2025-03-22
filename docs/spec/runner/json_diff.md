@@ -141,34 +141,35 @@ The context is the first element of the root array, then the `age` field.
 
 ### Deeper diff example
 
-    {
-      "first_name": "John",
-      "last_name": "Smith",
-      "is_alive": true,
-      "age": 27,
-      "address": {
-        "street_address": "21 2nd Street",
-        "city": "New York",
-        "state": "NY",
-        "postal_code": "10021-3100"
-      },
-      "phone_numbers": [
-        {
-          "type": "home",
-          "number": "212 555-1234"   # <--- change a digit in this phone number
-        },
-        {
-          "type": "office",
-          "number": "646 555-4567"
-        }
-      ],
-      "children": [
-        "Catherine",
-        "Thomas",
-        "Trevor"
-      ],
-      "spouse": null
-    }
+20    {
+21      "first_name": "John",
+22      "last_name": "Smith",
+23      "is_alive": true,
+24      "age": 27,
+25      "address": {
+26        "street_address": "21 2nd Street",
+27        "city": "New York",
+28        "state": "NY",
+29        "postal_code": "10021-3100"
+30      },
+31      "phone_numbers": [
+32        {
+33          "type": "home",
+34          "number": "212 555-1234"   
+35        },
+36        {
+37          "type": "office",
+38          "number": "646 555-4567"
+39        }
+40      ],
+41      "children": [
+42        "Catherine",
+43        "Thomas",
+44        "Trevor"
+45      ],
+46      "spouse": null
+47    }
+
 
 The diff produces the following output:
 
@@ -324,3 +325,99 @@ In this case, the standard diff representation is less ambigous.
       |   + "guitar" 
       |
 
+
+# Using exactly the jsonpath assert semantic
+
+The JSON body will be treated as it was defined with jsonpath asserts.
+for example, for the list of phone numbers:
+
+    [Asserts]
+    jsonpath "$.phone_numbers[0].type" == "home"
+    jsonpath "$.phone_numbers[0].number" == "212 555-1234"
+    jsonpath "$.phone_numbers[1].type" == "office"
+    jsonpath "$.phone_numbers[1].number" == "646 555-4567"
+    jsonpath "$.phone_numbers[2].type" not exists
+    jsonpath "$.phone_numbers[2].number" not exists
+
+
+
+## First phone number modified
+
+    error: Assert JSON Body
+      --> test_jsondiff.hurl:14:21
+      |
+      | GET http://localhost:8000/modify_json
+      | ...
+   34 | jsonpath "$.phone_numbers[0].number" == "212 555-1234"
+      |   actual:   string <210 555-1234>
+      |   expected: string <212 555-1234>
+      |
+
+
+
+
+## First phone number deleted
+
+    error: Assert JSON Body
+      --> test_jsondiff.hurl:25:0
+      |
+      | GET http://localhost:8000/delete_json
+      | ...
+   33 | jsonpath "$.phone_numbers[0].type" == "home"
+      |   actual:   string <office>
+      |   expected: string <home>
+      | ...
+   34 | jsonpath "$.phone_numbers[0].number" == "212 555-1234"
+      |   actual:   string <646 555-4567>
+      |   expected: string <212 555-1234>
+      |
+   37 | jsonpath "$.phone_numbers[1].type" == "office"
+      |   actual:   none
+      |   expected: string <office>
+      |
+   38 | jsonpath "$.phone_numbers[1].number" == "646 555-4567"
+      |   actual:   none
+      |   expected: string <646 555-4567>
+      |
+
+
+
+
+## Phone number added as the second element
+
+
+    error: Assert JSON Body
+      --> test_jsondiff.hurl:37:0
+      |
+      | GET http://localhost:8000/add_json
+      | ...
+   37 | jsonpath "$.phone_numbers[1].type" == "office"
+      |   actual:   string <mobile>
+      |   expected: string <office>
+      | ...
+   38 | jsonpath "$.phone_numbers[1].number" == "646 555-4567"
+      |   actual:   string <111 222-3333>
+      |   expected: string <646 555-4567>
+      |
+   39 | jsonpath "$.phone_numbers[2].type" not exists
+      |   actual:   string <office>
+      |   expected: not something
+      |
+   39 | jsonpath "$.phone_numbers[2].number" not exists
+      |   actual:   string <646 555-4567>
+      |   expected: not something
+      |
+
+## Using assert on array length when it is different
+
+Only check array elements if they have the same length.
+
+    error: Assert failure
+      --> test_jsondiff.hurl:41:0
+      |
+      | GET http://localhost:8000/add_json
+      | ...
+   31 | jsonpath "$.phone_numbers" count == 2
+      |   actual:   integer <3>
+      |   expected: integer <2>
+  
