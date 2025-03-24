@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates an explicit `assert`, given a set of `variables`, a HTTP response and a context</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates an explicit `assert`, given a set of `variables`, a list of HTTP `responses` and a context</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    http_response: &amp;http::Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    http_responses: &amp;[&amp;http::Response],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2533,7 +2533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let query_result = eval_query(&amp;assert.query, variables, http_response, cache);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let query_result = eval_query(&amp;assert.query, variables, http_responses, cache);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4469,7 +4469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;xml_three_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;[&amp;xml_three_users_http_response()],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4859,7 +4859,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-03-24 14:31</p>
+                <p class="heading">Date: 2025-03-24 15:20</p>
             </div>
         </footer>
     </body>

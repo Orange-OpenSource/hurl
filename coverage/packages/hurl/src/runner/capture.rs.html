@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates a `capture` with `variables` map and `http_response`, returns a</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates a `capture` with `variables` map and a list of `http_responses`, returns a</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    http_response: &amp;http::Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    http_responses: &amp;[&amp;http::Response],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = eval_query(&amp;capture.query, variables, http_response, cache)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = eval_query(&amp;capture.query, variables, http_responses, cache)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3061,7 +3061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;http::xml_three_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;[&amp;http::xml_three_users_http_response()],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4101,7 +4101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;http::xml_three_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;[&amp;http::xml_three_users_http_response()],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4325,7 +4325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;http::json_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;[&amp;http::json_http_response()],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4491,7 +4491,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-03-24 14:31</p>
+                <p class="heading">Date: 2025-03-24 15:20</p>
             </div>
         </footer>
     </body>
