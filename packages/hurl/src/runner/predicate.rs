@@ -107,11 +107,7 @@ impl Value {
             Value::Bytes(values) => format!(
                 "{} byte{}",
                 values.len(),
-                if values.len() > 1 {
-                    "s"
-                } else {
-                    ""
-                }
+                if values.len() > 1 { "s" } else { "" }
             ),
             Value::Date(value) => format!("date <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),
