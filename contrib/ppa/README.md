@@ -70,8 +70,8 @@ apt update && \
 
 ```
 export GPG_TTY=$(tty)
-gpg --import /tmp/mypublickey.asc
-gpg --import /tmp/myprivatekey.asc
+gpg --batch --passphrase <passphrase> --pinentry-mode loopback --import /tmp/mypublickey.asc
+gpg --batch --passphrase <passphrase> --pinentry-mode loopback --import /tmp/myprivatekey.asc
 
 ```
 
