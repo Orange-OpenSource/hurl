@@ -28,7 +28,7 @@ jobs:
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -56,7 +56,7 @@ jobs:
         bin/release/man.sh
         bin/release/create_tarball.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -71,7 +71,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.1.9
+      uses: actions/download-artifact@v4.2.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -108,7 +108,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-ubuntu-x64-artifacts
@@ -125,7 +125,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.1.9
+      uses: actions/download-artifact@v4.2.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -160,7 +160,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
@@ -177,7 +177,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.1.9
+      uses: actions/download-artifact@v4.2.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -212,7 +212,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
@@ -229,7 +229,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.1.9
+      uses: actions/download-artifact@v4.2.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -267,7 +267,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
@@ -339,7 +339,7 @@ jobs:
        pwd
        find . -name "*.log"
    - name: Archive production artifacts
-     uses: actions/upload-artifact@v4.6.1
+     uses: actions/upload-artifact@v4.6.2
      if: ${{ always() }}
      with:
        name: test-docker-amd64-package-artifacts
@@ -357,7 +357,7 @@ jobs:
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -393,7 +393,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-generic-linux-aarch64-artifacts
         path: target/upload/*
@@ -409,7 +409,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -445,7 +445,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -461,7 +461,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -497,7 +497,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-deb-aarch64-artifacts
         path: target/upload/*
@@ -547,7 +547,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -597,7 +597,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-macos-aarch64-artifacts
         path: target/upload/*
@@ -620,14 +620,14 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v4.2.2
+      uses: actions/cache@v4.2.3
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-release-windows-x64
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -653,7 +653,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: release-windows-x64-artifacts
         path: |
@@ -677,7 +677,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@v4.1.9
+      - uses: actions/download-artifact@v4.2.1
         with:
           path: artifacts
       - name: Prerequisites

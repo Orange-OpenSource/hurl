@@ -25,7 +25,7 @@ jobs:
       run: bin/install_prerequisites_ubuntu.sh
 
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
 
@@ -68,7 +68,7 @@ jobs:
         destination_dir: coverage
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: coverage

@@ -28,7 +28,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -44,7 +44,7 @@ jobs:
         bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Archive artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-bench-artifacts
@@ -62,7 +62,7 @@ jobs:
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -84,7 +84,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -116,7 +116,7 @@ jobs:
         bin/test/test_integ.sh || true
         cd "${current_dir}"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-ubuntu-latest-${{ matrix.rust }}-artifacts
@@ -139,7 +139,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -161,7 +161,7 @@ jobs:
     - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-ubuntu-22.04-${{ matrix.rust }}-artifacts
@@ -205,7 +205,7 @@ jobs:
             bin/test/test.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-archlinux-x64-artifacts
@@ -254,7 +254,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-fedora-x64-artifacts
@@ -302,7 +302,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-alpine-x64-artifacts
@@ -351,7 +351,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-macos-x64-${{ matrix.rust }}-artifacts
@@ -400,7 +400,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-macos-aarch64-${{ matrix.rust }}-artifacts
@@ -425,14 +425,14 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v4.2.2
+      uses: actions/cache@v4.2.3
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-test-windows-x64
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.4.0
+      uses: actions/setup-python@v5.5.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -444,7 +444,7 @@ jobs:
         .\bin\activate_python3_venv.ps1
         .\bin\test\test.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
@@ -514,7 +514,7 @@ jobs:
           bin/test/test_integ.sh
         echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4.6.1
+      uses: actions/upload-artifact@v4.6.2
       if: ${{ always() }}
       with:
         name: tests-win64-wsl2-artifacts
