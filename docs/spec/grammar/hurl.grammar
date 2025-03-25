@@ -564,6 +564,7 @@ filter:
   | to-string-filter
   | url-decode-filter
   | url-encode-filter
+  | url-query-param-filter
   | xpath-filter
 
 base64-decode-filter: "base64Decode"
@@ -605,6 +606,8 @@ to-string-filter: "toString"
 url-decode-filter: "urlDecode"
 
 url-encode-filter: "urlEncode"
+
+url-query-param-filter: "urlQueryParam" sp quoted-string
 
 xpath-filter: "xpath" sp quoted-string
 

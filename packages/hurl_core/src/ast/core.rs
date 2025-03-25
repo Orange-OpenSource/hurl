@@ -325,6 +325,10 @@ pub enum FilterValue {
     ToString,
     UrlDecode,
     UrlEncode,
+    UrlQueryParam {
+        space0: Whitespace,
+        param: Template,
+    },
     XPath {
         space0: Whitespace,
         expr: Template,
@@ -355,6 +359,7 @@ impl FilterValue {
             FilterValue::ToString => "toString",
             FilterValue::UrlDecode => "urlDecode",
             FilterValue::UrlEncode => "urlEncode",
+            FilterValue::UrlQueryParam { .. } => "urlQueryParam",
             FilterValue::XPath { .. } => "xpath",
         }
     }

@@ -676,6 +676,9 @@ impl ToJson for FilterValue {
             FilterValue::ToDate { fmt, .. } => {
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
+            FilterValue::UrlQueryParam { param, .. } => {
+                attributes.push(("param".to_string(), JValue::String(param.to_string())));
+            }
             FilterValue::XPath { expr, .. } => {
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
             }

@@ -24,4 +24,5 @@ jsonpath "$.id" toInt == 123                                                    
 jsonpath "$.id" toString == "123"                                                           # toString
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"                        # urlDecode
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B" # urlEncode
+jsonpath "$.url" urlQueryParam "token" == "XYZ"                                             # urlQueryParam
 bytes decode "iso-8859-1" xpath "string(//p)" == "Hello"                                    # xpath
