@@ -191,7 +191,7 @@ cat debian/changelog
 ## Create deb package source
 
 ```
-yes | debuild -S -sa -k"${gpg_keyid}"
+yes | debuild -S -sa -k"${gpg_keyid}" -p"gpg --batch --passphrase <passphrase> --pinentry-mode loopback"
 
 ```
 
