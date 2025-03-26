@@ -15,7 +15,7 @@ hurl --very-verbose `
     --report-json build/secret/report-json `
     tests_ok/secret.hurl
 
-$secrets = @("secret1", "secret2", "secret3", "12345678")
+$secrets = @("secret1", "secret2", "secret3", "12345678", "secret-dynamic-0", "secret-dynamic-1", "secret-dynamic-2")
 
 $files = @(Get-ChildItem -Filter *.html -Recurse build/secret/report-html)
 $files += @(Get-ChildItem -Filter *.json build/secret/report-json)

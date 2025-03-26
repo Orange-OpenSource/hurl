@@ -33,3 +33,14 @@ GET http://localhost:8000/another-secret
 x-token: {{token}}
 HTTP 200
 
+
+# Secret are bound to variables (to be used directly in the Hurl file)
+# If a new secret is created using the same variable name, we keep a list of all previous secrets.
+GET http://localhost:8000/get-dynamic-secret
+[Options]
+repeat: 5
+verbose: false
+HTTP 200
+[Captures]
+dynamic_token: header "x-dynamic-token" redact
+

@@ -22,3 +22,15 @@ def another_secret():
     assert request.headers["x-token"] == "secret3"
     resp = make_response("Hi\n")
     return resp
+
+
+counter = 0
+
+
+@app.route("/get-dynamic-secret")
+def dynamic_secret():
+    global counter
+    resp = make_response()
+    resp.headers["x-dynamic-token"] = f"secret-dynamic-{counter % 3}"
+    counter += 1
+    return resp

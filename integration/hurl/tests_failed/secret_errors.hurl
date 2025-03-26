@@ -1,5 +1,5 @@
 # A public variable can override a secret variable, previous secrets are kept
-# fot the lifetime of the Hurl file.
+# for the lifetime of the Hurl file.
 GET http://localhost:8000/hello
 [Options]
 variable: name=a_public_value
