@@ -26,6 +26,67 @@ affected by this content compression. All body asserts (`body`, `bytes`, `sha256
 Finally, body text asserts (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header] 
 so these asserts can be written with usual strings. 
 
+### Structure
+
+The asserts order in a Hurl file is:
+
+- [implicit assert on version and status](#version-status)
+- [implicit assert on headers](#headers)
+- [explicit asserts](#explicit-asserts)
+- [implicit assert on body](#body)
+
+<div class="hurl-structure-schema">
+  <div class="hurl-structure">
+    <div class="hurl-structure-col-0">
+        <div class="hurl-part-0">
+            HTTP 200
+        </div>
+        <div class=" hurl-part-1">
+            content-length: 206<br>accept-ranges: bytes<br>user-agent: Test
+        </div>
+        <div class="hurl-part-2">
+            [Captures]<br>...
+        </div>
+        <div class="hurl-part-2">
+            [Asserts]<br>...
+        </div>
+        <div class="hurl-part-3">
+            {<br>
+            &nbsp;&nbsp;"type": "FOO",<br>
+            &nbsp;&nbsp;"value": 356789,<br>
+            &nbsp;&nbsp;"ordered": true,<br>
+            &nbsp;&nbsp;"index": 10<br>
+            }
+        </div>
+    </div>
+    <div class="hurl-structure-col-1">
+        <div class="hurl-request-explanation-part-0">
+            <a href="/docs/asserting-response.html#version-status">Version and status (mandatory if response present)</a>
+        </div>
+        <div class="hurl-request-explanation-part-1">
+            <br><a href="/docs/asserting-response.html#headers">HTTP response headers</a> (optional)
+        </div>
+        <div class="hurl-request-explanation-part-2">
+            <br>
+            <br>
+        </div>
+        <div class="hurl-request-explanation-part-2">
+            <a href="/docs/capturing-response.html">Captures</a> and <a href="/docs/asserting-response.html#explicit-asserts">explicit asserts</a> (optional sections, unordered)
+        </div>
+        <div class="hurl-request-explanation-part-2">
+          <br>
+          <br>
+          <br>
+          <br>
+        </div>
+        <div class="hurl-request-explanation-part-3">
+            <a href="/docs/asserting-response.html#body">HTTP response body</a> (optional)
+        </div>
+    </div>
+</div>
+</div>
+
+
 ## Implicit asserts
 
 ### Version - Status
@@ -322,29 +383,33 @@ sizes.
 
 Predicates consist of a predicate function and a predicate value. Predicate functions are:
 
-| Predicate          | Description                                                                         | Example                                                                               | 
-|--------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| __`==`__           | Query and predicate value are equal                                                 | `jsonpath "$.book" == "Dune"`                                                         |
-| __`!=`__           | Query and predicate value are different                                             | `jsonpath "$.color" != "red"`                                                         |
-| __`>`__            | Query number is greater than predicate value                                        | `jsonpath "$.year" > 1978`                                                            |
-| __`>=`__           | Query number is greater than or equal to the predicate value                        | `jsonpath "$.year" >= 1978`                                                           |
-| __`<`__            | Query number is less than that predicate value                                      | `jsonpath "$.year" < 1978`                                                            |
-| __`<=`__           | Query number is less than or equal to the predicate value                           | `jsonpath "$.year" <= 1978`                                                           |
-| __`startsWith`__   | Query starts with the predicate value<br>Value is string or a binary content        | `jsonpath "$.movie" startsWith "The"`<br><br>`bytes startsWith hex,efbbbf;`           |
-| __`endsWith`__     | Query ends with the predicate value<br>Value is string or a binary content          | `jsonpath "$.movie" endsWith "Back"`<br><br>`bytes endsWith hex,ab23456;`             |
-| __`contains`__     | Query contains the predicate value<br>Value is string or a binary content           | `jsonpath "$.movie" contains "Empire"`<br><br>`bytes contains hex,beef;`              |
-| __`matches`__      | Part of the query string matches the regex pattern described by the predicate value | `jsonpath "$.release" matches "\\d{4}"`<br><br>`jsonpath "$.release" matches /\d{4}/` |
-| __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
-| __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                    |
-| __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
-| __`isEmpty`__      | Query returns an empty collection                                                   | `jsonpath "$.movies" isEmpty`                                                         |
-| __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
-| __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
-| __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                 | `jsonpath "$.publication_date" isIsoDate`                                             |
-| __`isNumber`__     | Query returns an integer or a float                                                 | `jsonpath "$.count" isNumber`                                                         |
-| __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
-| __`isIpv4`__       | Query returns an IPv4 address                                                       | `ip isIpv4`                                                                           |
-| __`isIpv6`__       | Query returns an IPv6 address                                                       | `ip isIpv6`                                                                           |
+| Predicate          | Description                                                                                                                                                                                                                 | Example                                                                                                            | 
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| __`==`__           | Query and predicate value are equal                                                                                                                                                                                         | `jsonpath "$.book" == "Dune"`                                                                                      |
+| __`!=`__           | Query and predicate value are different                                                                                                                                                                                     | `jsonpath "$.color" != "red"`                                                                                      |
+| __`>`__            | Query number is greater than predicate value                                                                                                                                                                                | `jsonpath "$.year" > 1978`                                                                                         |
+| __`>=`__           | Query number is greater than or equal to the predicate value                                                                                                                                                                | `jsonpath "$.year" >= 1978`                                                                                        |
+| __`<`__            | Query number is less than that predicate value                                                                                                                                                                              | `jsonpath "$.year" < 1978`                                                                                         |
+| __`<=`__           | Query number is less than or equal to the predicate value                                                                                                                                                                   | `jsonpath "$.year" <= 1978`                                                                                        |
+| __`startsWith`__   | Query starts with the predicate value<br>Value is string or a binary content                                                                                                                                                | `jsonpath "$.movie" startsWith "The"`<br><br>`bytes startsWith hex,efbbbf;`                                        |
+| __`endsWith`__     | Query ends with the predicate value<br>Value is string or a binary content                                                                                                                                                  | `jsonpath "$.movie" endsWith "Back"`<br><br>`bytes endsWith hex,ab23456;`                                          |
+| __`contains`__     | If query returns a collection of string or numbers, query collection includes the predicate value (string or number)<br>If query returns a string or a binary content, query contains the predicate value (string or bytes) | `jsonpath "$.movie" contains "Empire"`<br><br>`bytes contains hex,beef;`<br><br>`jsonpath "$.numbers" contains 42` |
+| __`matches`__      | Part of the query string matches the regex pattern described by the predicate value                                                                                                                                         | `jsonpath "$.release" matches "\\d{4}"`<br><br>`jsonpath "$.release" matches /\d{4}/`                              |
+| __`exists`__       | Query returns a value                                                                                                                                                                                                       | `jsonpath "$.book" exists`                                                                                         |
+| __`isBoolean`__    | Query returns a boolean                                                                                                                                                                                                     | `jsonpath "$.succeeded" isBoolean`                                                                                 |
+| __`isCollection`__ | Query returns a collection                                                                                                                                                                                                  | `jsonpath "$.books" isCollection`                                                                                  |
+| __`isEmpty`__      | Query returns an empty collection                                                                                                                                                                                           | `jsonpath "$.movies" isEmpty`                                                                                      |
+| __`isFloat`__      | Query returns a float                                                                                                                                                                                                       | `jsonpath "$.height" isFloat`                                                                                      |
+| __`isInteger`__    | Query returns an integer                                                                                                                                                                                                    | `jsonpath "$.count" isInteger`                                                                                     |
+| __`isIsoDate`__    | Query string returns a [RFC 3339] date (`YYYY-MM-DDTHH:mm:ss.sssZ`)                                                                                                                                                         | `jsonpath "$.publication_date" isIsoDate`                                                                          |
+| __`isNumber`__     | Query returns an integer or a float                                                                                                                                                                                         | `jsonpath "$.count" isNumber`                                                                                      |
+| __`isString`__     | Query returns a string                                                                                                                                                                                                      | `jsonpath "$.name" isString`                                                                                       |
+| __`isIpv4`__       | Query returns an IPv4 address                                                                                                                                                                                               | `ip isIpv4`                                                                                                        |
+| __`isIpv6`__       | Query returns an IPv6 address                                                                                                                                                                                               | `ip isIpv6`                                                                                                        |
+
+Query contains the predicate value if query returns a collection of string or numbers<br>
+Query 
+
 
 
 Each predicate can be negated by prefixing it with `not` (for instance, `not contains` or `not exists`)
