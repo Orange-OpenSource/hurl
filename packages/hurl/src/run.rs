@@ -58,12 +58,8 @@ pub fn run_seq(
             }
         };
         let mut variables = VariableSet::from(&options.variables);
-        // By runtime, construction, there is no two secrets having the same name so we can safely
-        // insert all the secrets in the variable set.
         options.secrets.iter().for_each(|(name, value)| {
-            variables
-                .insert_secret(name.clone(), value.clone())
-                .unwrap();
+            variables.insert_secret(name.clone(), value.clone());
         });
         let runner_options = options.to_runner_options(&filename, current_dir);
         let logger_options = options.to_logger_options();
@@ -183,12 +179,8 @@ pub fn run_par(
         None => min(files.len(), workers_count),
     };
     let mut variables = VariableSet::from(&options.variables);
-    // By runtime, construction, there is no two secrets having the same name so we can safely
-    // insert all the secrets in the variable set.
     options.secrets.iter().for_each(|(name, value)| {
-        variables
-            .insert_secret(name.clone(), value.clone())
-            .unwrap();
+        variables.insert_secret(name.clone(), value.clone());
     });
     let output_type = options
         .output_type

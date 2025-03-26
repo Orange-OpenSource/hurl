@@ -63,9 +63,7 @@ mod tests {
     #[test]
     fn test_render_expression() {
         let mut variables = VariableSet::new();
-        variables
-            .insert("status".to_string(), Value::Bool(true))
-            .unwrap();
+        variables.insert("status".to_string(), Value::Bool(true));
         let expr = Expr {
             kind: ExprKind::Variable(Variable {
                 name: "status".to_string(),
@@ -79,9 +77,7 @@ mod tests {
         let data_chrono = chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
             .unwrap()
             .into();
-        variables
-            .insert("now".to_string(), Value::Date(data_chrono))
-            .unwrap();
+        variables.insert("now".to_string(), Value::Date(data_chrono));
         let expr = Expr {
             kind: ExprKind::Variable(Variable {
                 name: "now".to_string(),

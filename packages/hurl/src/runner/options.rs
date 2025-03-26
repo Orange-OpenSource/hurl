@@ -254,16 +254,9 @@ pub fn get_entry_options(
                         let value = eval_template(value, variables)?;
                         entry_options.user = Some(value);
                     }
-                    OptionKind::Variable(VariableDefinition {
-                        source_info,
-                        name,
-                        value,
-                        ..
-                    }) => {
+                    OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
-                        if let Err(err) = variables.insert(name.clone(), value) {
-                            return Err(err.to_runner_error(*source_info));
-                        }
+                        variables.insert(name.clone(), value);
                     }
                     // verbose and very-verbose option have been previously processed as they
                     // can impact the logging. We compute here their values to check the potential
@@ -534,9 +527,7 @@ mod tests {
         let mut variables = VariableSet::default();
         assert!(eval_boolean_option(&BooleanOption::Literal(true), &variables).unwrap());
 
-        variables
-            .insert("verbose".to_string(), Value::Bool(true))
-            .unwrap();
+        variables.insert("verbose".to_string(), Value::Bool(true));
         assert!(eval_boolean_option(&verbose_option_template(), &variables).unwrap());
     }
 
@@ -554,9 +545,7 @@ mod tests {
             }
         );
 
-        variables
-            .insert("verbose".to_string(), Value::Number(Number::Integer(10)))
-            .unwrap();
+        variables.insert("verbose".to_string(), Value::Number(Number::Integer(10)));
         let error = eval_boolean_option(&verbose_option_template(), &variables)
             .err()
             .unwrap();
@@ -585,9 +574,7 @@ mod tests {
             std::time::Duration::from_millis(1000)
         );
 
-        variables
-            .insert("retry".to_string(), Value::Number(Number::Integer(10)))
-            .unwrap();
+        variables.insert("retry".to_string(), Value::Number(Number::Integer(10)));
         assert_eq!(
             eval_duration_option(
                 &retry_option_template(),

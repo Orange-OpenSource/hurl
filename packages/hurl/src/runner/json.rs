@@ -252,9 +252,7 @@ mod tests {
     #[test]
     fn test_scalar_value() {
         let mut variables = VariableSet::new();
-        variables
-            .insert("name".to_string(), Value::String("Bob".to_string()))
-            .unwrap();
+        variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
             eval_json_value(&JsonValue::Null, &variables, true).unwrap(),
             "null".to_string()
@@ -294,9 +292,7 @@ mod tests {
     #[test]
     fn test_list_value() {
         let mut variables = VariableSet::new();
-        variables
-            .insert("name".to_string(), Value::String("Bob".to_string()))
-            .unwrap();
+        variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
             eval_json_value(
                 &JsonValue::List {
@@ -437,9 +433,7 @@ mod tests {
         );
 
         let mut variables = VariableSet::new();
-        variables
-            .insert("quote".to_string(), Value::String("\"".to_string()))
-            .unwrap();
+        variables.insert("quote".to_string(), Value::String("\"".to_string()));
         assert_eq!(
             eval_json_template(
                 &Template::new(

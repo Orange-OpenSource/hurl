@@ -363,16 +363,11 @@ pub fn eval_captures(
         let name = capture_result.name.clone();
         let value = capture_result.value.clone();
 
-        // If the capture is redacted, we try to insert it in the variable set. Only secrets strings
+        // If the capture is redacted, we insert it in the variable set. Only secrets strings
         // are supported so all other `Value` variants will trigger an error.
         if capture.redact {
             match value {
-                Value::String(secret) => {
-                    if let Err(error) = variables.insert_secret(name, secret) {
-                        let source_info = capture.name.source_info;
-                        return Err(error.to_runner_error(source_info));
-                    }
-                }
+                Value::String(secret) => variables.insert_secret(name, secret),
                 _ => {
                     let source_info = capture.name.source_info;
                     let kind = RunnerErrorKind::UnsupportedSecretType(value.kind().to_string());
@@ -380,11 +375,8 @@ pub fn eval_captures(
                 }
             }
         } else {
-            // Try to insert a public capture.
-            if let Err(error) = variables.insert(name, value) {
-                let source_info = capture.name.source_info;
-                return Err(error.to_runner_error(source_info));
-            }
+            // We insert a public capture.
+            variables.insert(name, value);
         }
         captures.push(capture_result);
     }

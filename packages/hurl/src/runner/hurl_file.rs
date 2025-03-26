@@ -68,7 +68,7 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 ///
 /// // Set variables
 /// let mut variables = VariableSet::new();
-/// variables.insert("name".to_string(), Value::String("toto".to_string())).unwrap();
+/// variables.insert("name".to_string(), Value::String("toto".to_string()));
 ///
 /// // Run the Hurl sample
 /// let result = runner::run(

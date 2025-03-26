@@ -22,6 +22,7 @@ use crate::parallel::worker::WorkerId;
 use crate::util::term::{Stderr, Stdout};
 
 /// Represents a message sent from the worker to the runner (running on the main thread).
+#[allow(clippy::large_enum_variant)]
 pub enum WorkerMessage {
     /// Error raised when the file can't be read.
     IOError(IOErrorMsg),

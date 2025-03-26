@@ -168,12 +168,10 @@ mod tests {
     #[test]
     pub fn test_file_value_content_type() {
         let mut variables = VariableSet::default();
-        variables
-            .insert(
-                "ct".to_string(),
-                Value::String("application/json".to_string()),
-            )
-            .unwrap();
+        variables.insert(
+            "ct".to_string(),
+            Value::String("application/json".to_string()),
+        );
 
         assert_eq!(
             file_value_content_type(
