@@ -18341,7 +18341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        variables</pre>
+                <pre class="has-background-white py-0 px-2">        variables.insert(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18357,7 +18357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .insert(</pre>
+                <pre class="has-background-white py-0 px-2">            String::from(&quot;base_url&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18373,7 +18373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                String::from(&quot;base_url&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;http:&#x2F;&#x2F;localhost:8000&quot;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18389,7 +18389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Value::String(String::from(&quot;http:&#x2F;&#x2F;localhost:8000&quot;)),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18405,7 +18405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_equal(&amp;expected, &amp;variables, &amp;value, &amp;context_dir).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18421,7 +18421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18437,7 +18437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_equal(&amp;expected, &amp;variables, &amp;value, &amp;context_dir).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18453,7 +18453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;http:&#x2F;&#x2F;localhost:8000&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18469,7 +18469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;string &lt;http:&#x2F;&#x2F;localhost:8000&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18485,7 +18485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;http:&#x2F;&#x2F;localhost:8000&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18501,7 +18501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;string &lt;http:&#x2F;&#x2F;localhost:8000&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18517,7 +18517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18533,7 +18533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_assert_value_greater() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18549,7 +18549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18565,7 +18565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_assert_value_greater() {</pre>
+                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18581,7 +18581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(2)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18597,7 +18597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18613,7 +18613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(2)),</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18629,7 +18629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
+                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18645,7 +18645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">                success: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18661,7 +18661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18677,7 +18677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                success: true,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;2&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18693,7 +18693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18709,7 +18709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;2&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18725,7 +18725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18741,7 +18741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18757,7 +18757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18773,7 +18773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18789,7 +18789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18805,7 +18805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1)),</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18821,7 +18821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
+                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18837,7 +18837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">                success: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18853,7 +18853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18869,7 +18869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                success: false,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18885,7 +18885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18901,7 +18901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18917,7 +18917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18933,7 +18933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18949,7 +18949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18965,7 +18965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Float(1.1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18981,7 +18981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18997,7 +18997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Float(1.1)),</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19013,7 +19013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(1))</pre>
+                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19029,7 +19029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">                success: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19045,7 +19045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19061,7 +19061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                success: true,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;float &lt;1.1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19077,7 +19077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19093,7 +19093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;float &lt;1.1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19109,7 +19109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19125,7 +19125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19141,7 +19141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19157,7 +19157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Float(1.1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19173,7 +19173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert_values_greater(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(2))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19189,7 +19189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Float(1.1)),</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19205,7 +19205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::Number(Number::Integer(2))</pre>
+                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19221,7 +19221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">                success: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19237,7 +19237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            AssertResult {</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19253,7 +19253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                success: false,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;float &lt;1.1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19269,7 +19269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;2&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19285,7 +19285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;float &lt;1.1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19301,7 +19301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than integer &lt;2&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19317,7 +19317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19333,7 +19333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19349,7 +19349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19365,7 +19365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_empty_are_false() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19381,7 +19381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19397,7 +19397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_empty_are_false() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: [1]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19413,7 +19413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::List(vec![Value::Number(Number::Integer(1))]);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19429,7 +19429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: [1]</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19445,7 +19445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::List(vec![Value::Number(Number::Integer(1))]);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19461,7 +19461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19477,7 +19477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19493,7 +19493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19509,7 +19509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19525,7 +19525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19541,7 +19541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: Nodeset(12)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19557,7 +19557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Nodeset(12);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19573,7 +19573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: Nodeset(12)</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19589,7 +19589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Nodeset(12);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19605,7 +19605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19621,7 +19621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 12&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19637,7 +19637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19653,7 +19653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 12&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19669,7 +19669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19685,7 +19685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19701,7 +19701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_empty_are_true() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19717,7 +19717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19733,7 +19733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_empty_are_true() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: [1]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19749,7 +19749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::List(vec![]);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19765,7 +19765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: [1]</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19781,7 +19781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::List(vec![]);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19797,7 +19797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19813,7 +19813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19829,7 +19829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19845,7 +19845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19861,7 +19861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19877,7 +19877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: Nodeset(0)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19893,7 +19893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isEmpty`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Nodeset(0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19909,7 +19909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: Nodeset(0)</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19925,7 +19925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Nodeset(0);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19941,7 +19941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_empty(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19957,7 +19957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19973,7 +19973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -19989,7 +19989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20005,7 +20005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;count equals to 0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20021,7 +20021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20037,7 +20037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_type() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20053,7 +20053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isInteger`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20069,7 +20069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_type() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20085,7 +20085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isInteger`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Integer(1));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20101,7 +20101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_integer(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20117,7 +20117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Integer(1));</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20133,7 +20133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_integer(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20149,7 +20149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;integer &lt;1&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20165,7 +20165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;integer&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20181,7 +20181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;integer &lt;1&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20197,7 +20197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;integer&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isInteger`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20213,7 +20213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20229,7 +20229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isInteger`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Float(1.0));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20245,7 +20245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_integer(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20261,7 +20261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Float(1.0));</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20277,7 +20277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_integer(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20293,7 +20293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;float &lt;1.0&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20309,7 +20309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;integer&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20325,7 +20325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;float &lt;1.0&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20341,7 +20341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;integer&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20357,7 +20357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20373,7 +20373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_not_with_different_types() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20389,7 +20389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20405,7 +20405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_not_with_different_types() {</pre>
+                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20421,7 +20421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20437,7 +20437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20453,7 +20453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; equals predicate does not generate a type error with an integer value</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20469,7 +20469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not == null`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20485,7 +20485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; equals predicate does not generate a type error with an integer value</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20501,7 +20501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not == null`</pre>
+                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20517,7 +20517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
+                <pre class="has-background-white py-0 px-2">            not: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20533,7 +20533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20549,7 +20549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            not: true,</pre>
+                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20565,7 +20565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20581,7 +20581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
+                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20597,7 +20597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20613,7 +20613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20629,7 +20629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20645,7 +20645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20661,7 +20661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20677,7 +20677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20693,7 +20693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20709,7 +20709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert!(eval_predicate(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20725,7 +20725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;predicate,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20741,7 +20741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(eval_predicate(</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20757,7 +20757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;predicate,</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;Some(Value::Number(Number::Integer(1))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20773,7 +20773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;context_dir</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20789,7 +20789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;Some(Value::Number(Number::Integer(1))),</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20805,7 +20805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;context_dir</pre>
+                <pre class="has-background-white py-0 px-2">        .is_ok());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20821,7 +20821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20837,7 +20837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        .is_ok());</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; startswith predicate generates a type error with an integer value</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20853,7 +20853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not startWith &quot;toto&quot;`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20869,7 +20869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; startswith predicate generates a type error with an integer value</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20885,7 +20885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not startWith &quot;toto&quot;`</pre>
+                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20901,7 +20901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 1</pre>
+                <pre class="has-background-white py-0 px-2">            not: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20917,7 +20917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20933,7 +20933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            not: true,</pre>
+                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20949,7 +20949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20965,7 +20965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
+                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::StartWith {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20981,7 +20981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20997,7 +20997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::StartWith {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::String(Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21013,7 +21013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                        None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21029,7 +21029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::String(Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21045,7 +21045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        None,</pre>
+                <pre class="has-background-white py-0 px-2">                            value: &quot;toto&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21061,7 +21061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                            source: &quot;toto&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21077,7 +21077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            value: &quot;toto&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21093,7 +21093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            source: &quot;toto&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21109,7 +21109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        }],</pre>
+                <pre class="has-background-white py-0 px-2">                    )),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21125,7 +21125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21141,7 +21141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    )),</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21157,7 +21157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21173,7 +21173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_predicate(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21189,7 +21189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;predicate,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21205,7 +21205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_predicate(</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21221,7 +21221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;predicate,</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;Some(Value::Number(Number::Integer(1))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21237,7 +21237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;context_dir,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21253,7 +21253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;Some(Value::Number(Number::Integer(1))),</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21269,7 +21269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &amp;context_dir,</pre>
+                <pre class="has-background-white py-0 px-2">        .unwrap_err();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21285,7 +21285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21301,7 +21301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        .unwrap_err();</pre>
+                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21317,7 +21317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::AssertFailure {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21333,7 +21333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;1&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21349,7 +21349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::AssertFailure {</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;not starts with string &lt;toto&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21365,7 +21365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;integer &lt;1&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21381,7 +21381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;not starts with string &lt;toto&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21397,7 +21397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: true,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21413,7 +21413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21429,7 +21429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21445,7 +21445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21461,7 +21461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_date_predicate() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21477,7 +21477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isDate`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21493,7 +21493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_date_predicate() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 2002-06-16T10:10:10</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21509,7 +21509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isDate`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Date(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21525,7 +21525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: 2002-06-16T10:10:10</pre>
+                <pre class="has-background-white py-0 px-2">            chrono::TimeZone::with_ymd_and_hms(&amp;chrono::Utc, 2002, 6, 16, 10, 10, 10).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21541,7 +21541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Date(</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21557,7 +21557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            chrono::TimeZone::with_ymd_and_hms(&amp;chrono::Utc, 2002, 6, 16, 10, 10, 10).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_date(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21573,7 +21573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21589,7 +21589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_date(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21605,7 +21605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;date &lt;2002-06-16 10:10:10 UTC&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21621,7 +21621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;date&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21637,7 +21637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;date &lt;2002-06-16 10:10:10 UTC&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21653,7 +21653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;date&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isDate`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21669,7 +21669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: &quot;toto&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21685,7 +21685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `isDate`</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;toto&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21701,7 +21701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: &quot;toto&quot;</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_date(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21717,7 +21717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;toto&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21733,7 +21733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result = eval_is_date(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21749,7 +21749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;toto&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21765,7 +21765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;date&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21781,7 +21781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;toto&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21797,7 +21797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;date&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21813,7 +21813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21829,7 +21829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_no_type_mismatch_with_none_value() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21845,7 +21845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21861,7 +21861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_no_type_mismatch_with_none_value() {</pre>
+                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21877,7 +21877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
+                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21893,7 +21893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21909,7 +21909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21925,7 +21925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `== null`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21941,7 +21941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21957,7 +21957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `== null`</pre>
+                <pre class="has-background-white py-0 px-2">            not: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21973,7 +21973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -21989,7 +21989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            not: false,</pre>
+                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22005,7 +22005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22021,7 +22021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
+                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22037,7 +22037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22053,7 +22053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22069,7 +22069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22085,7 +22085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22101,7 +22101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22117,7 +22117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22133,7 +22133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_predicate(&amp;predicate, &amp;variables, &amp;None, &amp;context_dir)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22149,7 +22149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22165,7 +22165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_predicate(&amp;predicate, &amp;variables, &amp;None, &amp;context_dir)</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22181,7 +22181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22197,7 +22197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22213,7 +22213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::AssertFailure {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22229,7 +22229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.kind,</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;none&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22245,7 +22245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RunnerErrorKind::AssertFailure {</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;null&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22261,7 +22261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;none&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22277,7 +22277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;null&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22293,7 +22293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22309,7 +22309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22325,7 +22325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not == null`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22341,7 +22341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22357,7 +22357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `not == null`</pre>
+                <pre class="has-background-white py-0 px-2">            not: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22373,7 +22373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let predicate = Predicate {</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22389,7 +22389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            not: true,</pre>
+                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22405,7 +22405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22421,7 +22421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            predicate_func: PredicateFunc {</pre>
+                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22437,7 +22437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22453,7 +22453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: PredicateFuncValue::Equal {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22469,7 +22469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace(),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22485,7 +22485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: PredicateValue::Null,</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22501,7 +22501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22517,7 +22517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22533,7 +22533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22549,7 +22549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert!(eval_predicate(&amp;predicate, &amp;variables, &amp;None, &amp;context_dir).is_ok());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22565,7 +22565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22581,7 +22581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(eval_predicate(&amp;predicate, &amp;variables, &amp;None, &amp;context_dir).is_ok());</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22597,7 +22597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22613,7 +22613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_match() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22629,7 +22629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22645,7 +22645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_match() {</pre>
+                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22661,7 +22661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
+                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22677,7 +22677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let current_dir = std::env::current_dir().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22693,7 +22693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let file_root = Path::new(&quot;file_root&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22709,7 +22709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::new(current_dir.as_path(), file_root);</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `matches &#x2F;a{3}&#x2F;`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22725,7 +22725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: aa</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22741,7 +22741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; predicate: `matches &#x2F;a{3}&#x2F;`</pre>
+                <pre class="has-background-white py-0 px-2">        let expected = PredicateValue::Regex(Regex {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22757,7 +22757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; value: aa</pre>
+                <pre class="has-background-white py-0 px-2">            inner: regex::Regex::new(r#&quot;a{3}&quot;#).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22773,7 +22773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expected = PredicateValue::Regex(Regex {</pre>
+                <pre class="has-background-white py-0 px-2">        });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22789,7 +22789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            inner: regex::Regex::new(r#&quot;a{3}&quot;#).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;aa&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22805,7 +22805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        });</pre>
+                <pre class="has-background-white py-0 px-2">        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22821,7 +22821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;aa&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        let assert_result =</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22837,7 +22837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));</pre>
+                <pre class="has-background-white py-0 px-2">            eval_match(&amp;expected, source_info, &amp;variables, &amp;value, &amp;context_dir).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22853,7 +22853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let assert_result =</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22869,7 +22869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_match(&amp;expected, source_info, &amp;variables, &amp;value, &amp;context_dir).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22885,7 +22885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;aa&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22901,7 +22901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!assert_result.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;matches regex &lt;&#x2F;a{3}&#x2F;&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22917,7 +22917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.actual, &quot;string &lt;aa&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22933,7 +22933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(assert_result.expected, &quot;matches regex &lt;&#x2F;a{3}&#x2F;&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22949,7 +22949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22965,7 +22965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_iso_date() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22981,7 +22981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;2020-03-09T22:18:26.625Z&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -22997,7 +22997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_iso_date() {</pre>
+                <pre class="has-background-white py-0 px-2">        let res = eval_is_iso_date(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23013,7 +23013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::String(&quot;2020-03-09T22:18:26.625Z&quot;.to_string());</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23029,7 +23029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let res = eval_is_iso_date(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23045,7 +23045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;2020-03-09T22:18:26.625Z&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23061,7 +23061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;string with format YYYY-MM-DDTHH:mm:ss.sssZ&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23077,7 +23077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;2020-03-09T22:18:26.625Z&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23093,7 +23093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;string with format YYYY-MM-DDTHH:mm:ss.sssZ&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23109,7 +23109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23125,7 +23125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_number() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23141,7 +23141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Integer(1));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23157,7 +23157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_predicate_is_number() {</pre>
+                <pre class="has-background-white py-0 px-2">        let res = eval_is_number(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23173,7 +23173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Integer(1));</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23189,7 +23189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let res = eval_is_number(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23205,7 +23205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;integer &lt;1&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23221,7 +23221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;number&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23237,7 +23237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;integer &lt;1&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23253,7 +23253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;number&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Float(1.0));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23269,7 +23269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let res = eval_is_number(&amp;value).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23285,7 +23285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = Value::Number(Number::Float(1.0));</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23301,7 +23301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let res = eval_is_number(&amp;value).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23317,7 +23317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(res.success);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;float &lt;1.0&gt;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23333,7 +23333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!res.type_mismatch);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;number&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23349,7 +23349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.actual, &quot;float &lt;1.0&gt;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -23365,45 +23365,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(res.expected, &quot;number&quot;);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1459"
-                role="cell">
-                <a href="#1459">1459</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1460"
-                role="cell">
-                <a href="#1460">1460</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-03-26 08:43</p>
+                <p class="heading">Date: 2025-03-26 15:09</p>
             </div>
         </footer>
     </body>
