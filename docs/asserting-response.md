@@ -30,8 +30,8 @@ so these asserts can be written with usual strings.
 
 The asserts order in a Hurl file is:
 
-- [implicit assert on version and status](#version-status)
-- [implicit assert on headers](#headers)
+- [implicit asserts on version and status](#version-status)
+- [implicit asserts on headers](#headers)
 - [explicit asserts](#explicit-asserts)
 - [implicit assert on body](#body)
 
