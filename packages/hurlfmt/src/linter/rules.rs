@@ -252,6 +252,7 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
             space0: one_whitespace(),
         },
         QueryValue::Ip => QueryValue::Ip,
+        QueryValue::Redirects => QueryValue::Redirects,
     }
 }
 

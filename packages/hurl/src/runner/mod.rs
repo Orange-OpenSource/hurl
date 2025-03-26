@@ -21,6 +21,7 @@
 pub use self::error::{RunnerError, RunnerErrorKind};
 #[doc(hidden)]
 pub use self::event::EventListener;
+pub use self::http_response::HttpResponse;
 pub use self::hurl_file::run;
 #[doc(hidden)]
 pub use self::hurl_file::run_entries;
@@ -42,6 +43,7 @@ mod event;
 mod expr;
 mod filter;
 mod function;
+mod http_response;
 mod hurl_file;
 mod json;
 mod multiline;

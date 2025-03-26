@@ -110,6 +110,7 @@ impl Value {
                 if values.len() > 1 { "s" } else { "" }
             ),
             Value::Date(value) => format!("date <{value}>"),
+            Value::HttpResponse(value) => format!("HTTP response <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),
             Value::Nodeset(size) => format!("list of size {size}"),
             Value::Null => "null".to_string(),

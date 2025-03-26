@@ -174,6 +174,7 @@ pub enum QueryValue {
         attribute_name: CertificateAttributeName,
     },
     Ip,
+    Redirects,
 }
 
 impl QueryValue {
@@ -196,6 +197,7 @@ impl QueryValue {
             QueryValue::Md5 => "md5",
             QueryValue::Certificate { .. } => "certificate",
             QueryValue::Ip => "ip",
+            QueryValue::Redirects => "redirects",
         }
     }
 }

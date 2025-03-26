@@ -176,6 +176,7 @@ impl DisplaySourceError for ParseError {
                     "output",
                     "path-as-is",
                     "proxy",
+                    "redirects",
                     "resolve",
                     "retry",
                     "retry-interval",

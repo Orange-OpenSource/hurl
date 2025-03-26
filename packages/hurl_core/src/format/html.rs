@@ -415,7 +415,8 @@ impl HtmlFormatter {
             | QueryValue::Bytes
             | QueryValue::Sha256
             | QueryValue::Md5
-            | QueryValue::Ip => {}
+            | QueryValue::Ip
+            | QueryValue::Redirects => {}
         }
     }
 

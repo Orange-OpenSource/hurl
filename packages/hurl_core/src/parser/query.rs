@@ -52,6 +52,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
             md5_query,
             certificate_query,
             ip_query,
+            redirects_query,
         ],
         reader,
     )
@@ -199,6 +200,11 @@ fn certificate_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn ip_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("ip", reader)?;
     Ok(QueryValue::Ip)
+}
+
+fn redirects_query(reader: &mut Reader) -> ParseResult<QueryValue> {
+    try_literal("redirects", reader)?;
+    Ok(QueryValue::Redirects)
 }
 
 fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeName> {

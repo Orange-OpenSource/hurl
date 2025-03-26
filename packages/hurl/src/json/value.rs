@@ -81,6 +81,15 @@ impl Value {
                 );
                 serde_json::Value::Object(map)
             }
+            Value::HttpResponse(v) => {
+                let mut map = serde_json::Map::new();
+                map.insert("url".to_string(), serde_json::Value::String(v.url().raw()));
+                map.insert(
+                    "status".to_string(),
+                    serde_json::Value::Number(serde_json::Number::from(v.status())),
+                );
+                serde_json::Value::Object(map)
+            }
         }
     }
 }

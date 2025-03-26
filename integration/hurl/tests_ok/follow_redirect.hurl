@@ -12,6 +12,7 @@ GET http://localhost:8000/follow-redirect
 Accept: text/plain
 HTTP 200
 [Asserts]
+redirects count == 2
 url == "http://localhost:8000/followed-redirect"
 `Followed redirect!`
 
@@ -22,6 +23,7 @@ POST http://localhost:8000/follow-redirect
 Accept: text/plain
 HTTP 200
 [Asserts]
+redirects count == 2
 url == "http://localhost:8000/followed-redirect"
 `Followed redirect!`
 
@@ -30,6 +32,7 @@ GET http://localhost:8000/follow-redirect/relative/foo
 Accept: text/plain
 HTTP 200
 [Asserts]
+redirects count == 1
 url == "http://localhost:8000/follow-redirect/bar"
 `Followed relative redirect!`
 
@@ -39,6 +42,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -49,6 +53,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -59,6 +64,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 user: bob@email.com:secret
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -68,6 +74,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 user: bob@email.com:secret
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -78,6 +85,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 bob@email.com: secret
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -87,6 +95,7 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 bob@email.com: secret
 HTTP 200
 [Asserts]
+redirects count == 1
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -95,5 +104,6 @@ POST http://localhost:8000/follow-redirect-308
 Accept: text/plain
 HTTP 200
 [Asserts]
+redirects count == 1
 url == "http://localhost:8000/followed-redirect-post"
 `Followed redirect POST!`

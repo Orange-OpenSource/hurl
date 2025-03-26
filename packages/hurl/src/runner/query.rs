@@ -27,7 +27,7 @@ use crate::runner::cache::BodyCache;
 use crate::runner::error::{RunnerError, RunnerErrorKind};
 use crate::runner::template::eval_template;
 use crate::runner::xpath::{Document, Format};
-use crate::runner::{filter, Number, Value, VariableSet};
+use crate::runner::{filter, HttpResponse, Number, Value, VariableSet};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
@@ -68,6 +68,7 @@ pub fn eval_query(
             ..
         } => eval_query_certificate(last_response, *field),
         QueryValue::Ip => eval_ip(last_response),
+        QueryValue::Redirects => eval_redirects(responses),
     }
 }
 
@@ -397,6 +398,18 @@ fn eval_query_certificate(
 /// Evaluates the ip address of the HTTP `response`.
 fn eval_ip(response: &http::Response) -> QueryResult {
     Ok(Some(Value::String(response.ip_addr.to_string())))
+}
+
+/// Evaluates the redirects within a list of HTTP `responses`
+fn eval_redirects(responses: &[&http::Response]) -> QueryResult {
+    let mut values: Vec<Value> = responses
+        .iter()
+        .map(|r| Value::HttpResponse(HttpResponse::new(r.url.clone(), r.status)))
+        .collect();
+    // `responses` is the chain list of response triggers by following redirection. We want to only keep
+    // "redirected" HTTP response so we drop the last, not-redirected, response.
+    values.pop();
+    Ok(Some(Value::List(values)))
 }
 
 fn eval_cookie_attribute_name(

@@ -18,6 +18,7 @@
 use std::cmp::Ordering;
 use std::fmt;
 
+use crate::runner::HttpResponse;
 use crate::runner::Number;
 
 /// System types used in Hurl.
@@ -31,6 +32,8 @@ pub enum Value {
     Bytes(Vec<u8>),
     /// A date.
     Date(chrono::DateTime<chrono::Utc>),
+    /// A structure to represent an HTTP response.
+    HttpResponse(HttpResponse),
     /// A list of [`Value`].
     List(Vec<Value>),
     /// A structure to represents node of object (returned from XPath queries).
@@ -55,6 +58,7 @@ pub enum ValueKind {
     Bytes,
     Date,
     Float,
+    HttpResponse,
     Integer,
     List,
     Nodeset,
@@ -102,6 +106,7 @@ impl fmt::Display for Value {
             Value::Bool(x) => x.to_string(),
             Value::Bytes(v) => hex::encode(v).to_string(),
             Value::Date(v) => v.to_string(),
+            Value::HttpResponse(v) => v.to_string(),
             Value::Number(v) => v.to_string(),
             Value::List(values) => {
                 let values: Vec<String> = values.iter().map(|e| e.to_string()).collect();
@@ -129,6 +134,7 @@ impl Value {
             Value::Bool(_) => ValueKind::Bool,
             Value::Bytes(_) => ValueKind::Bytes,
             Value::Date(_) => ValueKind::Date,
+            Value::HttpResponse(_) => ValueKind::HttpResponse,
             Value::Number(Number::Float(_)) => ValueKind::Float,
             Value::Number(Number::Integer(_)) | Value::Number(Number::BigInteger(_)) => {
                 ValueKind::Integer
@@ -174,6 +180,7 @@ impl fmt::Display for ValueKind {
             ValueKind::Bytes => write!(f, "bytes"),
             ValueKind::Date => write!(f, "date"),
             ValueKind::Float => write!(f, "float"),
+            ValueKind::HttpResponse => write!(f, "http_response"),
             ValueKind::Integer => write!(f, "integer"),
             ValueKind::List => write!(f, "list"),
             ValueKind::Nodeset => write!(f, "nodeset"),
