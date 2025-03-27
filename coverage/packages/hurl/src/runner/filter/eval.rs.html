@@ -14,8 +14,8 @@
         <div class="level-item has-text-centered">
         <div>
             <p class="heading">Lines</p>
-            <p class="title has-text-success">
-                <abbr title="56 / 62">90.32 %</abbr></p>
+            <p class="title has-text-warning">
+                <abbr title="56 / 63">88.89 %</abbr></p>
         </div>
     </div>
 
@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::filter::xpath::eval_xpath;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::filter::url_query_param::eval_url_query_param;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::filter::xpath::eval_xpath;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Apply successive `filter` to an input `value`.</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Specify whether they are executed  `in_assert` or not.</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Apply successive `filter` to an input `value`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -751,13 +751,13 @@
                 <a href="#45">45</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2640">
-                2640
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn eval_filters(</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Specify whether they are executed  `in_assert` or not.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    filters: &amp;[Filter],</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn eval_filters(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
+                <pre class="has-background-success-light py-0 px-2">    filters: &amp;[Filter],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    variables: &amp;VariableSet,</pre>
+                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -821,7 +821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    in_assert: bool,</pre>
+                <pre class="has-background-success-light py-0 px-2">    variables: &amp;VariableSet,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Value&gt;, RunnerError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    in_assert: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -853,7 +853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut value = Some(value.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Value&gt;, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -864,12 +864,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4566">
-                4566
+                role="cell" aria-label="2640">
+                2640
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    for filter in filters {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut value = Some(value.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -880,12 +880,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2202">
-                2202
+                role="cell" aria-label="4566">
+                4566
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        value = if let Some(value) = value {</pre>
+                <pre class="has-background-success-light py-0 px-2">    for filter in filters {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -901,7 +901,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_filter(filter, &amp;value, variables, in_assert)?</pre>
+                <pre class="has-background-success-light py-0 px-2">        value = if let Some(value) = value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -911,13 +911,13 @@
                 <a href="#55">55</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="2202">
+                2202
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        } else {</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_filter(filter, &amp;value, variables, in_assert)?</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -927,13 +927,13 @@
                 <a href="#56">56</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            return Err(RunnerError::new(</pre>
+                <pre class="has-background-white py-0 px-2">        } else {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -949,7 +949,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                filter.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(RunnerError::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -965,7 +965,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                RunnerErrorKind::FilterMissingInput,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                filter.source_info,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -981,7 +981,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                in_assert,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                RunnerErrorKind::FilterMissingInput,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -997,7 +997,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            ));</pre>
+                <pre class="has-background-danger-light py-0 px-2">                in_assert,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1007,13 +1007,13 @@
                 <a href="#61">61</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            ));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1029,7 +1029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1039,13 +1039,13 @@
                 <a href="#63">63</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2364">
-                2364
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(value)</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1055,13 +1055,13 @@
                 <a href="#64">64</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="2364">
+                2364
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    Ok(value)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1077,7 +1077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1093,7 +1093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates a `filter` with an input `value`, given a set of `variables`.</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1103,13 +1103,13 @@
                 <a href="#67">67</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2202">
-                2202
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn eval_filter(</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Evaluates a `filter` with an input `value`, given a set of `variables`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1125,7 +1125,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    filter: &amp;Filter,</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn eval_filter(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1141,7 +1141,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
+                <pre class="has-background-success-light py-0 px-2">    filter: &amp;Filter,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1157,7 +1157,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    variables: &amp;VariableSet,</pre>
+                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1173,7 +1173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    in_assert: bool,</pre>
+                <pre class="has-background-success-light py-0 px-2">    variables: &amp;VariableSet,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1189,7 +1189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Value&gt;, RunnerError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    in_assert: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1205,7 +1205,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    match &amp;filter.value {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;Option&lt;Value&gt;, RunnerError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1213,6 +1213,22 @@
                 id="74"
                 role="cell">
                 <a href="#74">74</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="2202">
+                2202
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    match &amp;filter.value {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="75"
+                role="cell">
+                <a href="#75">75</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1226,9 +1242,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="75"
+                id="76"
                 role="cell">
-                <a href="#75">75</a>
+                <a href="#76">76</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1242,9 +1258,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="76"
+                id="77"
                 role="cell">
-                <a href="#76">76</a>
+                <a href="#77">77</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1258,9 +1274,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="77"
+                id="78"
                 role="cell">
-                <a href="#77">77</a>
+                <a href="#78">78</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1274,9 +1290,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="78"
+                id="79"
                 role="cell">
-                <a href="#78">78</a>
+                <a href="#79">79</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1286,22 +1302,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        FilterValue::DaysBeforeNow =&gt; eval_days_before_now(value, filter.source_info, in_assert),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="79"
-                role="cell">
-                <a href="#79">79</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="75">
-                75
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::Decode { encoding, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1317,7 +1317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_decode(value, encoding, variables, filter.source_info, in_assert)</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::Decode { encoding, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1327,13 +1327,13 @@
                 <a href="#81">81</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="75">
+                75
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_decode(value, encoding, variables, filter.source_info, in_assert)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1343,13 +1343,13 @@
                 <a href="#82">82</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="57">
-                57
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::Format { fmt, .. } =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1365,7 +1365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_format(value, fmt, variables, filter.source_info, in_assert)</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::Format { fmt, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1373,6 +1373,22 @@
                 id="84"
                 role="cell">
                 <a href="#84">84</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="57">
+                57
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            eval_format(value, fmt, variables, filter.source_info, in_assert)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="85"
+                role="cell">
+                <a href="#85">85</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1386,9 +1402,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="85"
+                id="86"
                 role="cell">
-                <a href="#85">85</a>
+                <a href="#86">86</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1402,9 +1418,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="86"
+                id="87"
                 role="cell">
-                <a href="#86">86</a>
+                <a href="#87">87</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1414,22 +1430,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        FilterValue::HtmlUnescape =&gt; eval_html_unescape(value, filter.source_info, in_assert),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="87"
-                role="cell">
-                <a href="#87">87</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::JsonPath { expr, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1445,7 +1445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_jsonpath(value, expr, variables, filter.source_info, in_assert)</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::JsonPath { expr, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1455,13 +1455,13 @@
                 <a href="#89">89</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_jsonpath(value, expr, variables, filter.source_info, in_assert)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1477,7 +1477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        FilterValue::Regex {</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1487,13 +1487,13 @@
                 <a href="#91">91</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="75">
-                75
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            value: regex_value, ..</pre>
+                <pre class="has-background-white py-0 px-2">        FilterValue::Regex {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1509,7 +1509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_regex(value, regex_value, variables, filter.source_info, in_assert),</pre>
+                <pre class="has-background-success-light py-0 px-2">            value: regex_value, ..</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1517,6 +1517,22 @@
                 id="93"
                 role="cell">
                 <a href="#93">93</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="75">
+                75
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_regex(value, regex_value, variables, filter.source_info, in_assert),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="94"
+                role="cell">
+                <a href="#94">94</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1530,9 +1546,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="94"
+                id="95"
                 role="cell">
-                <a href="#94">94</a>
+                <a href="#95">95</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1542,22 +1558,6 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">        FilterValue::Replace {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="95"
-                role="cell">
-                <a href="#95">95</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="66">
-                66
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1573,7 +1573,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            new_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">            old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1589,7 +1589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            ..</pre>
+                <pre class="has-background-success-light py-0 px-2">            new_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1605,7 +1605,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_replace(</pre>
+                <pre class="has-background-success-light py-0 px-2">            ..</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            value,</pre>
+                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_replace(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1637,7 +1637,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            variables,</pre>
+                <pre class="has-background-success-light py-0 px-2">            value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1653,7 +1653,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            filter.source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">            variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1669,7 +1669,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            in_assert,</pre>
+                <pre class="has-background-success-light py-0 px-2">            filter.source_info,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1685,7 +1685,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            old_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">            in_assert,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            new_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">            old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1717,7 +1717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        ),</pre>
+                <pre class="has-background-success-light py-0 px-2">            new_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1728,12 +1728,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
+                role="cell" aria-label="66">
+                66
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::Split { sep, .. } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1749,7 +1749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_split(value, variables, filter.source_info, in_assert, sep)</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::Split { sep, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1759,13 +1759,13 @@
                 <a href="#108">108</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="30">
+                30
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_split(value, variables, filter.source_info, in_assert, sep)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1775,13 +1775,13 @@
                 <a href="#109">109</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="51">
-                51
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::ToDate { fmt, .. } =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1797,7 +1797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_to_date(value, fmt, variables, filter.source_info, in_assert)</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::ToDate { fmt, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1805,6 +1805,22 @@
                 id="111"
                 role="cell">
                 <a href="#111">111</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="51">
+                51
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            eval_to_date(value, fmt, variables, filter.source_info, in_assert)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="112"
+                role="cell">
+                <a href="#112">112</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1818,9 +1834,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="112"
+                id="113"
                 role="cell">
-                <a href="#112">112</a>
+                <a href="#113">113</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1834,9 +1850,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="113"
+                id="114"
                 role="cell">
-                <a href="#113">113</a>
+                <a href="#114">114</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1850,9 +1866,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="114"
+                id="115"
                 role="cell">
-                <a href="#114">114</a>
+                <a href="#115">115</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1862,22 +1878,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        FilterValue::ToString =&gt; eval_to_string(value, filter.source_info, in_assert),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="115"
-                role="cell">
-                <a href="#115">115</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::UrlDecode =&gt; eval_url_decode(value, filter.source_info, in_assert),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1893,7 +1893,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::UrlEncode =&gt; eval_url_encode(value, filter.source_info, in_assert),</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::UrlDecode =&gt; eval_url_decode(value, filter.source_info, in_assert),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1903,13 +1903,13 @@
                 <a href="#117">117</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        FilterValue::UrlQueryParam { .. } =&gt; todo!(),</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::UrlEncode =&gt; eval_url_encode(value, filter.source_info, in_assert),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1919,13 +1919,13 @@
                 <a href="#118">118</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        FilterValue::XPath { expr, .. } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">        FilterValue::UrlQueryParam { param, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1935,13 +1935,13 @@
                 <a href="#119">119</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            eval_xpath(value, expr, variables, filter.source_info, in_assert)</pre>
+                <pre class="has-background-danger-light py-0 px-2">            eval_url_query_param(value, param, variables, filter.source_info, in_assert)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1967,13 +1967,13 @@
                 <a href="#121">121</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">        FilterValue::XPath { expr, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1983,13 +1983,13 @@
                 <a href="#122">122</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">            eval_xpath(value, expr, variables, filter.source_info, in_assert)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2005,7 +2005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2037,7 +2037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod tests {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::{Filter, FilterValue, SourceInfo};</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::reader::Pos;</pre>
+                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2085,7 +2085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">mod tests {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2101,7 +2101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::runner::filter::eval::eval_filters;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::{Filter, FilterValue, SourceInfo};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2117,7 +2117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::runner::{Number, Value, VariableSet};</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::reader::Pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2149,7 +2149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::runner::filter::eval::eval_filters;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2165,7 +2165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_filters() {</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::runner::{Number, Value, VariableSet};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2213,7 +2213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_filters() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2229,7 +2229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_filters(</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = VariableSet::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2245,7 +2245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;[Filter {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: FilterValue::Count,</pre>
+                <pre class="has-background-white py-0 px-2">            eval_filters(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }],</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;[Filter {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;Value::List(vec![</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2325,7 +2325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(1)),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: FilterValue::Count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(2)),</pre>
+                <pre class="has-background-white py-0 px-2">                }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2357,7 +2357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(2)),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::List(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ]),</pre>
+                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(1)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(2)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                false,</pre>
+                <pre class="has-background-white py-0 px-2">                    Value::Number(Number::Integer(2)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                ]),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Number(Number::Integer(3))</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2501,7 +2501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,13 +2517,61 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">            Value::Number(Number::Integer(3))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="156"
+                role="cell">
+                <a href="#156">156</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="157"
+                role="cell">
+                <a href="#157">157</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="158"
+                role="cell">
+                <a href="#158">158</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-03-26 15:09</p>
+                <p class="heading">Date: 2025-03-27 12:33</p>
             </div>
         </footer>
     </body>
