@@ -210,16 +210,25 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-27 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
+27 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
+   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:28:21
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+28 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
    |                     ^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:28:19
+  --> tests_failed/filter.hurl:29:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-28 | jsonpath "$.list" toString == "[]"
+29 | jsonpath "$.list" toString == "[]"
    |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
    |
 

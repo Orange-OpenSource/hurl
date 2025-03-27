@@ -24,5 +24,6 @@ jsonpath "$.number" split ", " count == 3
 jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
 jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
 jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+jsonpath "$.number" urlQueryParam "x" == "шеллы"
 jsonpath "$.number" xpath "string(//body)" == "你好世界"
 jsonpath "$.list" toString == "[]"

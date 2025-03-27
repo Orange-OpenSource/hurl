@@ -1,0 +1,7 @@
+error: Parsing literal
+  --> tests_error_parser/invalid_url_query_param.hurl:4:32
+   |
+ 4 | jsonpath "$.url" urlQueryParam ?? == 1 
+   |                                ^ expecting '"'
+   |
+

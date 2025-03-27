@@ -30,6 +30,8 @@ jsonpath "$.pi" toFloat == 3.141592653589793
 jsonpath "$.pi" toFloat > 3
 jsonpath "$.pi" toFloat < 4
 jsonpath "$.ten" toInt == 10
+jsonpath "$.url" urlQueryParam "x" == "шеллы"
+jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
 {
   "file": "5L2g5aW95LiW55WM",
   "list": [1,2,3],
