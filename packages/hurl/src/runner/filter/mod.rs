@@ -41,4 +41,5 @@ mod to_int;
 mod to_string;
 mod url_decode;
 mod url_encode;
+mod url_query_param;
 mod xpath;

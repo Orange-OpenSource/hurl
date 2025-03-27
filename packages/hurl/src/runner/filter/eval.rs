@@ -37,6 +37,7 @@ use crate::runner::filter::to_int::eval_to_int;
 use crate::runner::filter::to_string::eval_to_string;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
+use crate::runner::filter::url_query_param::eval_url_query_param;
 use crate::runner::filter::xpath::eval_xpath;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -114,7 +115,9 @@ pub fn eval_filter(
         FilterValue::ToString => eval_to_string(value, filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
         FilterValue::UrlEncode => eval_url_encode(value, filter.source_info, in_assert),
-        FilterValue::UrlQueryParam { .. } => todo!(),
+        FilterValue::UrlQueryParam { param, .. } => {
+            eval_url_query_param(value, param, variables, filter.source_info, in_assert)
+        }
         FilterValue::XPath { expr, .. } => {
             eval_xpath(value, expr, variables, filter.source_info, in_assert)
         }
