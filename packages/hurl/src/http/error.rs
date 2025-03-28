@@ -15,7 +15,6 @@
 * limitations under the License.
 *
 */
-
 use crate::http::RequestedHttpVersion;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

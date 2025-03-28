@@ -37,7 +37,7 @@ pub use self::response::{HttpVersion, Response};
 #[cfg(test)]
 pub use self::tests::*;
 pub use self::timings::Timings;
-pub use self::url::Url;
+pub use self::url::{Url, UrlError};
 pub use self::version::libcurl_version_info;
 
 mod call;

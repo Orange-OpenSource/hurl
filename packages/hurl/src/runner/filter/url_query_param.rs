@@ -19,7 +19,7 @@ use std::str::FromStr;
 
 use hurl_core::ast::{SourceInfo, Template};
 
-use crate::http::{HttpError, Url};
+use crate::http::{Url, UrlError};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -43,15 +43,10 @@ pub fn eval_url_query_param(
                     None => Ok(None),
                 }
             }
-            Err(err) => {
-                let message = if let HttpError::InvalidUrl(_, message) = err {
-                    message
-                } else {
-                    String::new()
-                };
+            Err(UrlError { url, reason }) => {
                 let kind = RunnerErrorKind::InvalidUrl {
                     url: url.to_string(),
-                    message,
+                    message: reason,
                 };
                 Err(RunnerError::new(source_info, kind, assert))
             }

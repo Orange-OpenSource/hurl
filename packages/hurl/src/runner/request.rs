@@ -24,7 +24,7 @@ use hurl_core::ast::{
 };
 
 use crate::http;
-use crate::http::{HeaderVec, HttpError, Url, AUTHORIZATION};
+use crate::http::{HeaderVec, Url, UrlError, AUTHORIZATION};
 use crate::runner::error::RunnerError;
 use crate::runner::{body, multipart, template, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
@@ -146,16 +146,18 @@ pub fn eval_request(
 
 fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, RunnerError> {
     let url = template::eval_template(url_template, variables)?;
-    Url::from_str(&url).map_err(|e| {
-        let source_info = url_template.source_info;
-        let message = if let HttpError::InvalidUrl(_, message) = e {
-            message
-        } else {
-            String::new()
-        };
-        let runner_error_kind = RunnerErrorKind::InvalidUrl { url, message };
-        RunnerError::new(source_info, runner_error_kind, false)
-    })
+    let url = Url::from_str(&url);
+    match url {
+        Ok(u) => Ok(u),
+        Err(UrlError { url, reason }) => {
+            let source_info = url_template.source_info;
+            let runner_error_kind = RunnerErrorKind::InvalidUrl {
+                url,
+                message: reason,
+            };
+            Err(RunnerError::new(source_info, runner_error_kind, false))
+        }
+    }
 }
 
 /// Experimental feature

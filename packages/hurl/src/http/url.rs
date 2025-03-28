@@ -22,6 +22,23 @@ use regex::Regex;
 
 use crate::http::{HttpError, Param};
 
+/// Represents errors for the URL module.
+#[derive(Clone, Eq, PartialEq, Debug)]
+pub struct UrlError {
+    pub url: String,
+    pub reason: String,
+}
+
+impl UrlError {
+    /// Creates a new error.
+    fn new(url: &str, reason: &str) -> Self {
+        UrlError {
+            url: url.to_string(),
+            reason: reason.to_string(),
+        }
+    }
+}
+
 /// A parsed URL.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct Url {
@@ -67,15 +84,16 @@ impl Url {
     }
 
     /// Parse a string `input` as an URL, with this URL as the base URL.
-    pub fn join(&self, input: &str) -> Result<Url, HttpError> {
+    pub fn join(&self, input: &str) -> Result<Url, UrlError> {
         let new_inner = self.inner.join(input);
         let new_inner = match new_inner {
             Ok(u) => u,
             Err(_) => {
-                return Err(HttpError::InvalidUrl(
-                    self.inner.to_string(),
-                    format!("Can not use relative path '{input}'"),
-                ))
+                let error = UrlError::new(
+                    self.inner.as_str(),
+                    &format!("Can not use relative path '{input}'"),
+                );
+                return Err(error);
             }
         };
         new_inner.as_str().parse()
@@ -98,30 +116,29 @@ fn scheme(url: &str) -> Option<String> {
 }
 
 impl FromStr for Url {
-    type Err = HttpError;
+    type Err = UrlError;
 
     /// Parses an absolute URL from a string.
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match scheme(value) {
             None => {
-                return Err(HttpError::InvalidUrl(
-                    value.to_string(),
-                    "Missing scheme <http://> or <https://>".to_string(),
+                return Err(UrlError::new(
+                    value,
+                    "Missing scheme <http://> or <https://>",
                 ));
             }
             Some(scheme) => {
                 if scheme != "http://" && scheme != "https://" {
-                    return Err(HttpError::InvalidUrl(
-                        value.to_string(),
-                        "Only <http://> and <https://> schemes are supported".to_string(),
+                    return Err(UrlError::new(
+                        value,
+                        "Only <http://> and <https://> schemes are supported",
                     ));
                 }
             }
         }
 
         let raw = value.to_string();
-        let inner = url::Url::parse(value)
-            .map_err(|e| HttpError::InvalidUrl(raw.to_string(), e.to_string()))?;
+        let inner = url::Url::parse(value).map_err(|e| UrlError::new(value, &e.to_string()))?;
         Ok(Url { raw, inner })
     }
 }
@@ -132,13 +149,19 @@ impl fmt::Display for Url {
     }
 }
 
+impl From<UrlError> for HttpError {
+    fn from(error: UrlError) -> Self {
+        HttpError::InvalidUrl(error.url, error.reason)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::str::FromStr;
 
-    use super::Url;
+    use super::{Url, UrlError};
     use crate::http::url::scheme;
-    use crate::http::{HttpError, Param};
+    use crate::http::Param;
 
     #[test]
     fn parse_url_ok() {
@@ -204,16 +227,13 @@ mod tests {
     fn test_parsing_error() {
         assert_eq!(
             Url::from_str("localhost:8000").err().unwrap(),
-            HttpError::InvalidUrl(
-                "localhost:8000".to_string(),
-                "Missing scheme <http://> or <https://>".to_string()
-            )
+            UrlError::new("localhost:8000", "Missing scheme <http://> or <https://>")
         );
         assert_eq!(
             Url::from_str("file://localhost:8000").err().unwrap(),
-            HttpError::InvalidUrl(
-                "file://localhost:8000".to_string(),
-                "Only <http://> and <https://> schemes are supported".to_string()
+            UrlError::new(
+                "file://localhost:8000",
+                "Only <http://> and <https://> schemes are supported"
             )
         );
     }
