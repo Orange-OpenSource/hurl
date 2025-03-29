@@ -302,6 +302,17 @@ HTTP 200
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
 ```
 
+### urlQueryParam
+
+Returns the value of a query parameter in a URL.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+jsonpath "$.url" urlQueryParam "x" == "шеллы"
+```
+
 ### xpath
 
 Evaluates a [XPath] expression.
