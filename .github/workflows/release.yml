@@ -241,7 +241,7 @@ jobs:
           python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 
       - name: Init git bot context
-        uses: crazy-max/ghaction-import-gpg@v6.2.0
+        uses: crazy-max/ghaction-import-gpg@v6.3.0
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
@@ -307,7 +307,7 @@ jobs:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
       - name: Init git bot context
-        uses: crazy-max/ghaction-import-gpg@v6.2.0
+        uses: crazy-max/ghaction-import-gpg@v6.3.0
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
