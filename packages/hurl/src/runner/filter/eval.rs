@@ -74,6 +74,8 @@ pub fn eval_filter(
     match &filter.value {
         FilterValue::Base64Decode => eval_base64_decode(value, filter.source_info, in_assert),
         FilterValue::Base64Encode => eval_base64_encode(value, filter.source_info, in_assert),
+        FilterValue::Base64UrlSafeDecode => todo!(),
+        FilterValue::Base64UrlSafeEncode => todo!(),
         FilterValue::Count => eval_count(value, filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
         FilterValue::DaysBeforeNow => eval_days_before_now(value, filter.source_info, in_assert),

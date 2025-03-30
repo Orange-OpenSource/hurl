@@ -546,6 +546,8 @@ uuid-function: "newUuid"
 filter:
     base64-decode-filter
   | base64-encode-filter
+  | base64-url-safe-decode-filter
+  | base64-url-safe-encode-filter
   | count-filter
   | days-after-now-filter
   | days-before-now-filter
@@ -570,6 +572,10 @@ filter:
 base64-decode-filter: "base64Decode"
 
 base64-encode-filter: "base64Encode"
+
+base64-url-safe-decode-filter: "base64UrlSafeDecode"
+
+base64-url-safe-encode-filter: "base64UrlSafeEncode"
 
 count-filter: "count"
 

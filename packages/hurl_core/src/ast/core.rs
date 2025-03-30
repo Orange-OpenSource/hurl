@@ -281,6 +281,8 @@ pub struct Filter {
 pub enum FilterValue {
     Base64Decode,
     Base64Encode,
+    Base64UrlSafeDecode,
+    Base64UrlSafeEncode,
     Count,
     DaysAfterNow,
     DaysBeforeNow,
@@ -341,6 +343,8 @@ impl FilterValue {
         match self {
             FilterValue::Base64Decode => "base64Decode",
             FilterValue::Base64Encode => "base64Encode",
+            FilterValue::Base64UrlSafeDecode => "base64UrlSafeDecode",
+            FilterValue::Base64UrlSafeEncode => "base64UrlSafeEncode",
             FilterValue::Count => "count",
             FilterValue::DaysAfterNow => "daysAfterNow",
             FilterValue::DaysBeforeNow => "daysBeforeNow",

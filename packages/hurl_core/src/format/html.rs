@@ -793,6 +793,8 @@ impl HtmlFormatter {
             }
             FilterValue::Base64Decode
             | FilterValue::Base64Encode
+            | FilterValue::Base64UrlSafeDecode
+            | FilterValue::Base64UrlSafeEncode
             | FilterValue::Count
             | FilterValue::DaysAfterNow
             | FilterValue::DaysBeforeNow

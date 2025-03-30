@@ -55,6 +55,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
         &[
             base64_decode_filter,
             base64_encode_filter,
+            base64_url_safe_decode_filter,
+            base64_url_safe_encode_filter,
             count_filter,
             days_after_now_filter,
             days_before_now_filter,
@@ -104,6 +106,16 @@ fn base64_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn base64_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("base64Encode", reader)?;
     Ok(FilterValue::Base64Encode)
+}
+
+fn base64_url_safe_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("base64UrlSafeDecode", reader)?;
+    Ok(FilterValue::Base64UrlSafeDecode)
+}
+
+fn base64_url_safe_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("base64UrlSafeEncode", reader)?;
+    Ok(FilterValue::Base64UrlSafeEncode)
 }
 
 fn count_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
