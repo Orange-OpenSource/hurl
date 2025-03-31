@@ -19,6 +19,8 @@ use hurl_core::ast::{Filter, FilterValue};
 
 use crate::runner::filter::base64_decode::eval_base64_decode;
 use crate::runner::filter::base64_encode::eval_base64_encode;
+use crate::runner::filter::base64_url_safe_decode::eval_base64_url_safe_decode;
+use crate::runner::filter::base64_url_safe_encode::eval_base64_url_safe_encode;
 use crate::runner::filter::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
@@ -74,8 +76,12 @@ pub fn eval_filter(
     match &filter.value {
         FilterValue::Base64Decode => eval_base64_decode(value, filter.source_info, in_assert),
         FilterValue::Base64Encode => eval_base64_encode(value, filter.source_info, in_assert),
-        FilterValue::Base64UrlSafeDecode => todo!(),
-        FilterValue::Base64UrlSafeEncode => todo!(),
+        FilterValue::Base64UrlSafeDecode => {
+            eval_base64_url_safe_decode(value, filter.source_info, in_assert)
+        }
+        FilterValue::Base64UrlSafeEncode => {
+            eval_base64_url_safe_encode(value, filter.source_info, in_assert)
+        }
         FilterValue::Count => eval_count(value, filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
         FilterValue::DaysBeforeNow => eval_days_before_now(value, filter.source_info, in_assert),

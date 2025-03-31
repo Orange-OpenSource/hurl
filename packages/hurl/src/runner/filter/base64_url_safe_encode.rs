@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-use base64::prelude::BASE64_STANDARD;
+use base64::prelude::BASE64_URL_SAFE_NO_PAD;
 use base64::Engine;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
-/// Encode bytes 'value' into base 64 encoded string.
-pub fn eval_base64_encode(
+/// Encode bytes 'value' into base 64 URL safe encoded string.
+pub fn eval_base64_url_safe_encode(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
-        Value::Bytes(value) => Ok(Some(Value::String(BASE64_STANDARD.encode(value)))),
+        Value::Bytes(value) => Ok(Some(Value::String(BASE64_URL_SAFE_NO_PAD.encode(value)))),
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))
@@ -46,27 +46,27 @@ mod tests {
     use crate::runner::VariableSet;
 
     #[test]
-    fn eval_filter_base64_encode_ok() {
+    fn eval_filter_base64_url_safe_encode_ok() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Base64Encode,
+            value: FilterValue::Base64UrlSafeEncode,
         };
         let bytes = vec![0xd1, 0x88, 0xd0, 0xb5, 0xd0, 0xbb, 0xd0, 0xbb, 0xd1, 0x8b];
 
         let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
         assert_eq!(
             ret.unwrap().unwrap(),
-            Value::String("0YjQtdC70LvRiw==".to_string())
+            Value::String("0YjQtdC70LvRiw".to_string())
         );
     }
 
     #[test]
-    fn eval_filter_base64_encode_ko_invalid_input() {
+    fn eval_filter_base64_url_safe_encode_ko_invalid_input() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Base64Encode,
+            value: FilterValue::Base64UrlSafeEncode,
         };
 
         let ret = eval_filter(

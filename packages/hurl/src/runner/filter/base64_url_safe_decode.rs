@@ -15,25 +15,35 @@
  * limitations under the License.
  *
  */
-use base64::prelude::BASE64_STANDARD;
+use base64::prelude::BASE64_URL_SAFE_NO_PAD;
+use base64::DecodeError::InvalidPadding;
 use base64::Engine;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
-/// Decode base 64 encoded string 'value' into bytes.
-pub fn eval_base64_decode(
+/// Decode base 64 URL safe encoded string 'value' into bytes.
+pub fn eval_base64_url_safe_decode(
     value: &Value,
     source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
-        Value::String(value) => match BASE64_STANDARD.decode(value) {
+        Value::String(value) => match BASE64_URL_SAFE_NO_PAD.decode(value) {
             Ok(decoded) => Ok(Some(Value::Bytes(decoded))),
-            Err(_) => {
-                let kind = RunnerErrorKind::FilterInvalidInput("Invalid base64 string".to_string());
-                Err(RunnerError::new(source_info, kind, assert))
-            }
+            Err(err) => match err {
+                InvalidPadding => {
+                    let kind = RunnerErrorKind::FilterInvalidInput(
+                        "Base64 string contains padding (use base64Decode instead)".to_string(),
+                    );
+                    Err(RunnerError::new(source_info, kind, assert))
+                }
+                _ => {
+                    let kind =
+                        RunnerErrorKind::FilterInvalidInput("Invalid base64 string".to_string());
+                    Err(RunnerError::new(source_info, kind, assert))
+                }
+            },
         },
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
@@ -52,28 +62,28 @@ mod tests {
     use crate::runner::VariableSet;
 
     #[test]
-    fn eval_filter_base64_decode_ok() {
+    fn eval_filter_base64_url_safe_decode_ok() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Base64Decode,
+            value: FilterValue::Base64UrlSafeDecode,
         };
         let bytes = vec![0xd1, 0x88, 0xd0, 0xb5, 0xd0, 0xbb, 0xd0, 0xbb, 0xd1, 0x8b];
 
         let ret = eval_filter(
             &filter,
-            &Value::String("0YjQtdC70LvRiw==".to_string()),
+            &Value::String("0YjQtdC70LvRiw".to_string()),
             &variables,
             false,
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Bytes(bytes));
     }
     #[test]
-    fn eval_filter_base64_decode_ko_invalid_characters() {
+    fn eval_filter_base64_url_safe_decode_ko_invalid_characters() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Base64Decode,
+            value: FilterValue::Base64UrlSafeDecode,
         };
 
         let ret = eval_filter(
@@ -89,11 +99,33 @@ mod tests {
     }
 
     #[test]
-    fn eval_filter_base64_decode_ko_invalid_input() {
+    fn eval_filter_base64_url_safe_decode_ko_contains_padding() {
         let variables = VariableSet::new();
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Base64Decode,
+            value: FilterValue::Base64UrlSafeDecode,
+        };
+
+        let ret = eval_filter(
+            &filter,
+            &Value::String("0YjQtdC70LvRiw==".to_string()),
+            &variables,
+            false,
+        );
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::FilterInvalidInput(
+                "Base64 string contains padding (use base64Decode instead)".to_string()
+            )
+        );
+    }
+
+    #[test]
+    fn eval_filter_base64_url_safe_decode_ko_invalid_input() {
+        let variables = VariableSet::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            value: FilterValue::Base64UrlSafeDecode,
         };
 
         let ret = eval_filter(
