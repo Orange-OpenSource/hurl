@@ -4,6 +4,10 @@ HTTP 200
 jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7;
 jsonpath "$.number" base64Decode == 123
 jsonpath "$.number" base64Encode == "MTIz"
+jsonpath "$.file" base64UrlSafeDecode == hex,e4bda0e5a5bde4b896e7;
+jsonpath "$.text_encoded" base64UrlSafeDecode == hex,e4bda0e5a5bde4b896e7;
+jsonpath "$.number" base64UrlSafeDecode == 123
+jsonpath "$.number" base64UrlSafeEncode == "MTIz"
 jsonpath "$.id" toInt == 123
 jsonpath "$.status" toInt == 0
 jsonpath "$.unknown" toInt == 1

@@ -4,8 +4,13 @@ HTTP 200
 url: jsonpath "$.url"
 text: jsonpath "$.text"
 [Asserts]
-jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7958c;
-jsonpath "$.file" base64Decode base64Encode == "5L2g5aW95LiW55WM"
+jsonpath "$.file" base64Decode == hex,d188d0b5d0bbd0bbd18b;
+jsonpath "$.file" base64Decode base64Encode == "0YjQtdC70LvRiw=="
+jsonpath "$.file" base64Decode base64UrlSafeEncode == "0YjQtdC70LvRiw"
+jsonpath "$.text_encoded" == "PDw_Pz8-Pg"
+jsonpath "$.text_encoded" base64UrlSafeDecode == hex,3c3c3f3f3f3e3e;
+jsonpath "$.text_encoded" base64UrlSafeDecode base64Encode == "PDw/Pz8+Pg=="
+jsonpath "$.text_encoded" base64UrlSafeDecode base64UrlSafeEncode == "PDw_Pz8-Pg"
 jsonpath "$.list" count == 3
 jsonpath "$.list" nth 1 == 2
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
@@ -33,7 +38,8 @@ jsonpath "$.ten" toInt == 10
 jsonpath "$.url" urlQueryParam "x" == "шеллы"
 jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
 {
-  "file": "5L2g5aW95LiW55WM",
+  "file": "0YjQtdC70LvRiw==",
+  "text_encoded": "PDw_Pz8-Pg",
   "list": [1,2,3],
   "message": "Hello Bob!",
   "url": "https://mozilla.org/?x=шеллы",
