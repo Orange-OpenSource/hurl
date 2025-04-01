@@ -46,7 +46,7 @@ similar = "2.7.0"
 terminal_size = "0.4.2"
 
 [target.'cfg(unix)'.dependencies]
-termion = "4.0.4"
+termion = "4.0.5"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
