@@ -58,11 +58,11 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Base64Decode,
         };
-        let bytes = vec![0xd1, 0x88, 0xd0, 0xb5, 0xd0, 0xbb, 0xd0, 0xbb, 0xd1, 0x8b];
+        let bytes = vec![0x3c, 0x3c, 0x3f, 0x3f, 0x3f, 0x3e, 0x3e];
 
         let ret = eval_filter(
             &filter,
-            &Value::String("0YjQtdC70LvRiw==".to_string()),
+            &Value::String("PDw/Pz8+Pg==".to_string()),
             &variables,
             false,
         );
