@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="580 / 580">100 %</abbr></p>
+                <abbr title="578 / 578">100 %</abbr></p>
         </div>
     </div>
 
@@ -11637,7 +11637,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let s = str::replace(regex.inner.as_str(), &quot;&#x2F;&quot;, &quot;\\&#x2F;&quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;regex&quot;, regex.to_source().as_str());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11645,38 +11645,6 @@
                 id="726"
                 role="cell">
                 <a href="#726">726</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="100">
-                100
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let regex = format!(&quot;&#x2F;{s}&#x2F;&quot;);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="727"
-                role="cell">
-                <a href="#727">727</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="100">
-                100
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;regex&quot;, &amp;regex);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="728"
-                role="cell">
-                <a href="#728">728</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11690,9 +11658,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="729"
+                id="727"
                 role="cell">
-                <a href="#729">729</a>
+                <a href="#727">727</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11702,6 +11670,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="728"
+                role="cell">
+                <a href="#728">728</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6390">
+                6390
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    fn fmt_template(&amp;mut self, template: &amp;Template) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="729"
+                role="cell">
+                <a href="#729">729</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6390">
+                6390
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        let s = template.to_source();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11717,7 +11717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn fmt_template(&amp;mut self, template: &amp;Template) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.fmt_string(&amp;escape_xml(s.as_str()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11725,38 +11725,6 @@
                 id="731"
                 role="cell">
                 <a href="#731">731</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6390">
-                6390
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let s = template.to_source();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="732"
-                role="cell">
-                <a href="#732">732</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6390">
-                6390
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.fmt_string(&amp;escape_xml(s.as_str()));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="733"
-                role="cell">
-                <a href="#733">733</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11770,9 +11738,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="734"
+                id="732"
                 role="cell">
-                <a href="#734">734</a>
+                <a href="#732">732</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11782,6 +11750,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="733"
+                role="cell">
+                <a href="#733">733</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="225">
+                225
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    fn fmt_placeholder(&amp;mut self, placeholder: &amp;Placeholder) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="734"
+                role="cell">
+                <a href="#734">734</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="225">
+                225
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        let placeholder = placeholder.to_source();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11797,7 +11797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn fmt_placeholder(&amp;mut self, placeholder: &amp;Placeholder) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;expr&quot;, placeholder.as_str());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11805,38 +11805,6 @@
                 id="736"
                 role="cell">
                 <a href="#736">736</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="225">
-                225
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let placeholder = placeholder.to_source();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="737"
-                role="cell">
-                <a href="#737">737</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="225">
-                225
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;expr&quot;, placeholder.as_str());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="738"
-                role="cell">
-                <a href="#738">738</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11850,9 +11818,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="739"
+                id="737"
                 role="cell">
-                <a href="#739">739</a>
+                <a href="#737">737</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11866,9 +11834,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="740"
+                id="738"
                 role="cell">
-                <a href="#740">740</a>
+                <a href="#738">738</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -11882,9 +11850,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="741"
+                id="739"
                 role="cell">
-                <a href="#741">741</a>
+                <a href="#739">739</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -11898,9 +11866,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="742"
+                id="740"
                 role="cell">
-                <a href="#742">742</a>
+                <a href="#740">740</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11914,9 +11882,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="743"
+                id="741"
                 role="cell">
-                <a href="#743">743</a>
+                <a href="#741">741</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -11926,6 +11894,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="742"
+                role="cell">
+                <a href="#742">742</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="905">
+                905
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    fn fmt_filter_value(&amp;mut self, filter_value: &amp;FilterValue) {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="743"
+                role="cell">
+                <a href="#743">743</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="905">
+                905
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;filter-type&quot;, filter_value.identifier());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11941,7 +11941,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn fmt_filter_value(&amp;mut self, filter_value: &amp;FilterValue) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        match filter_value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11952,12 +11952,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="905">
-                905
+                role="cell" aria-label="45">
+                45
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.fmt_span(&quot;filter-type&quot;, filter_value.identifier());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11968,12 +11968,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="905">
-                905
+                role="cell" aria-label="45">
+                45
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match filter_value {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11989,7 +11989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(encoding);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11999,13 +11999,13 @@
                 <a href="#748">748</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="45">
-                45
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12016,12 +12016,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="45">
-                45
+                role="cell" aria-label="35">
+                35
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(encoding);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12031,13 +12031,13 @@
                 <a href="#750">750</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="35">
+                35
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12053,7 +12053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(fmt);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12063,13 +12063,13 @@
                 <a href="#752">752</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="35">
-                35
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12080,12 +12080,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="35">
-                35
+                role="cell" aria-label="20">
+                20
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(fmt);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12095,13 +12095,13 @@
                 <a href="#754">754</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="20">
+                20
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12117,7 +12117,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(expr);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12127,13 +12127,13 @@
                 <a href="#756">756</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="20">
-                20
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12144,12 +12144,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="20">
-                20
+                role="cell" aria-label="115">
+                115
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(expr);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Nth { space0, n: value } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12159,13 +12159,13 @@
                 <a href="#758">758</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="115">
+                115
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12181,7 +12181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Nth { space0, n: value } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_number(value.to_source());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12191,13 +12191,13 @@
                 <a href="#760">760</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="115">
-                115
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12208,12 +12208,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="115">
-                115
+                role="cell" aria-label="40">
+                40
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_number(value.to_source());</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12223,13 +12223,13 @@
                 <a href="#762">762</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="40">
+                40
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12245,7 +12245,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_regex_value(value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12253,38 +12253,6 @@
                 id="764"
                 role="cell">
                 <a href="#764">764</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="40">
-                40
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="765"
-                role="cell">
-                <a href="#765">765</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="40">
-                40
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_regex_value(value);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="766"
-                role="cell">
-                <a href="#766">766</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -12298,9 +12266,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="767"
+                id="765"
                 role="cell">
-                <a href="#767">767</a>
+                <a href="#765">765</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -12310,6 +12278,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">            FilterValue::Replace {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="766"
+                role="cell">
+                <a href="#766">766</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="35">
+                35
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                space0,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="767"
+                role="cell">
+                <a href="#767">767</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="35">
+                35
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12325,7 +12325,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                space0,</pre>
+                <pre class="has-background-success-light py-0 px-2">                space1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12341,7 +12341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                old_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">                new_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12357,7 +12357,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                space1,</pre>
+                <pre class="has-background-success-light py-0 px-2">            } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12373,7 +12373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                new_value,</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12389,7 +12389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_regex_value(old_value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12405,7 +12405,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space1);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12421,7 +12421,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_regex_value(old_value);</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(new_value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12431,13 +12431,13 @@
                 <a href="#775">775</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="35">
-                35
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space1);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12448,12 +12448,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="35">
-                35
+                role="cell" aria-label="15">
+                15
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(new_value);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12463,13 +12463,13 @@
                 <a href="#777">777</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12485,7 +12485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(sep);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12495,13 +12495,13 @@
                 <a href="#779">779</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12512,12 +12512,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(sep);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12527,13 +12527,13 @@
                 <a href="#781">781</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="30">
+                30
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12549,7 +12549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(fmt);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12559,13 +12559,13 @@
                 <a href="#783">783</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12576,12 +12576,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
+                role="cell" aria-label="20">
+                20
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(fmt);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlQueryParam { space0, param } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12591,13 +12591,13 @@
                 <a href="#785">785</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="20">
+                20
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12613,7 +12613,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::UrlQueryParam { space0, param } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(param);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12623,13 +12623,13 @@
                 <a href="#787">787</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="20">
-                20
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12645,7 +12645,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(param);</pre>
+                <pre class="has-background-success-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12655,13 +12655,13 @@
                 <a href="#789">789</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="20">
+                20
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12677,7 +12677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(expr);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12687,13 +12687,13 @@
                 <a href="#791">791</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="20">
-                20
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_space(space0);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12703,13 +12703,13 @@
                 <a href="#792">792</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="20">
-                20
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                self.fmt_template(expr);</pre>
+                <pre class="has-background-white py-0 px-2">            FilterValue::Base64Decode</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12725,7 +12725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64Encode</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12741,7 +12741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            FilterValue::Base64Decode</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64UrlSafeDecode</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12757,7 +12757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64Encode</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64UrlSafeEncode</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12773,7 +12773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64UrlSafeDecode</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::Count</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12789,7 +12789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::Base64UrlSafeEncode</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::DaysAfterNow</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12805,7 +12805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::Count</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::DaysBeforeNow</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12821,7 +12821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::DaysAfterNow</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::HtmlEscape</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12837,7 +12837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::DaysBeforeNow</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::HtmlUnescape</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12853,7 +12853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::HtmlEscape</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::ToFloat</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12869,7 +12869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::HtmlUnescape</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::ToInt</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12885,7 +12885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::ToFloat</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::ToString</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12901,7 +12901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::ToInt</pre>
+                <pre class="has-background-white py-0 px-2">            | FilterValue::UrlDecode</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12911,13 +12911,13 @@
                 <a href="#805">805</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="530">
+                530
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::ToString</pre>
+                <pre class="has-background-success-light py-0 px-2">            | FilterValue::UrlEncode =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12933,7 +12933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            | FilterValue::UrlDecode</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12943,13 +12943,13 @@
                 <a href="#807">807</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="530">
-                530
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            | FilterValue::UrlEncode =&gt; {}</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12965,7 +12965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12973,38 +12973,6 @@
                 id="809"
                 role="cell">
                 <a href="#809">809</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="810"
-                role="cell">
-                <a href="#810">810</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="811"
-                role="cell">
-                <a href="#811">811</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13018,9 +12986,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="812"
+                id="810"
                 role="cell">
-                <a href="#812">812</a>
+                <a href="#810">810</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13034,9 +13002,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="813"
+                id="811"
                 role="cell">
-                <a href="#813">813</a>
+                <a href="#811">811</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13050,9 +13018,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="814"
+                id="812"
                 role="cell">
-                <a href="#814">814</a>
+                <a href="#812">812</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13066,9 +13034,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="815"
+                id="813"
                 role="cell">
-                <a href="#815">815</a>
+                <a href="#813">813</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13082,9 +13050,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="816"
+                id="814"
                 role="cell">
-                <a href="#816">816</a>
+                <a href="#814">814</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -13098,9 +13066,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="817"
+                id="815"
                 role="cell">
-                <a href="#817">817</a>
+                <a href="#815">815</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13114,9 +13082,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="818"
+                id="816"
                 role="cell">
-                <a href="#818">818</a>
+                <a href="#816">816</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13126,6 +13094,38 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">            self.fmt_lt(line_terminator);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="817"
+                role="cell">
+                <a href="#817">817</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="818"
+                role="cell">
+                <a href="#818">818</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13141,7 +13141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13157,7 +13157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13167,13 +13167,13 @@
                 <a href="#821">821</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="14895">
+                14895
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">fn escape_xml(s: &amp;str) -&gt; String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13183,13 +13183,13 @@
                 <a href="#822">822</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="14895">
+                14895
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    s.replace(&#x27;&amp;&#x27;, &quot;&amp;amp;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13205,7 +13205,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn escape_xml(s: &amp;str) -&gt; String {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .replace(&#x27;&lt;&#x27;, &quot;&amp;lt;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13221,7 +13221,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    s.replace(&#x27;&amp;&#x27;, &quot;&amp;amp;&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .replace(&#x27;&gt;&#x27;, &quot;&amp;gt;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13229,38 +13229,6 @@
                 id="825"
                 role="cell">
                 <a href="#825">825</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="14895">
-                14895
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .replace(&#x27;&lt;&#x27;, &quot;&amp;lt;&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="826"
-                role="cell">
-                <a href="#826">826</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="14895">
-                14895
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .replace(&#x27;&gt;&#x27;, &quot;&amp;gt;&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="827"
-                role="cell">
-                <a href="#827">827</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -13274,9 +13242,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="828"
+                id="826"
                 role="cell">
-                <a href="#828">828</a>
+                <a href="#826">826</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -13290,9 +13258,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="829"
+                id="827"
                 role="cell">
-                <a href="#829">829</a>
+                <a href="#827">827</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13306,9 +13274,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="830"
+                id="828"
                 role="cell">
-                <a href="#830">830</a>
+                <a href="#828">828</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13322,9 +13290,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="831"
+                id="829"
                 role="cell">
-                <a href="#831">831</a>
+                <a href="#829">829</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -13338,9 +13306,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="832"
+                id="830"
                 role="cell">
-                <a href="#832">832</a>
+                <a href="#830">830</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -13350,6 +13318,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="831"
+                role="cell">
+                <a href="#831">831</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="285">
+                285
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">fn format_lines(s: &amp;str, use_multiline_class: bool) -&gt; String {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="832"
+                role="cell">
+                <a href="#832">832</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="285">
+                285
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    regex::Regex::new(r&quot;\n|\r\n&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13365,7 +13365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn format_lines(s: &amp;str, use_multiline_class: bool) -&gt; String {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13381,7 +13381,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    regex::Regex::new(r&quot;\n|\r\n&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .split(s)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13389,38 +13389,6 @@
                 id="835"
                 role="cell">
                 <a href="#835">835</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="285">
-                285
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .unwrap()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="836"
-                role="cell">
-                <a href="#836">836</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="285">
-                285
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .split(s)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="837"
-                role="cell">
-                <a href="#837">837</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13434,9 +13402,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="838"
+                id="836"
                 role="cell">
-                <a href="#838">838</a>
+                <a href="#836">836</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13450,9 +13418,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="839"
+                id="837"
                 role="cell">
-                <a href="#839">839</a>
+                <a href="#837">837</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13466,9 +13434,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="840"
+                id="838"
                 role="cell">
-                <a href="#840">840</a>
+                <a href="#838">838</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13478,6 +13446,38 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">                format!(&quot;&lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;{text}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="839"
+                role="cell">
+                <a href="#839">839</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            } else {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="840"
+                role="cell">
+                <a href="#840">840</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3645">
+                3645
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                format!(&quot;&lt;span class=\&quot;line\&quot;&gt;{text}&lt;&#x2F;span&gt;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13493,7 +13493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            } else {</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13501,38 +13501,6 @@
                 id="842"
                 role="cell">
                 <a href="#842">842</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3645">
-                3645
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                format!(&quot;&lt;span class=\&quot;line\&quot;&gt;{text}&lt;&#x2F;span&gt;&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="843"
-                role="cell">
-                <a href="#843">843</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="844"
-                role="cell">
-                <a href="#844">844</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13546,9 +13514,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="845"
+                id="843"
                 role="cell">
-                <a href="#845">845</a>
+                <a href="#843">843</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13562,9 +13530,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="846"
+                id="844"
                 role="cell">
-                <a href="#846">846</a>
+                <a href="#844">844</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -13574,6 +13542,38 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        .join(&quot;\n&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="845"
+                role="cell">
+                <a href="#845">845</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="846"
+                role="cell">
+                <a href="#846">846</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13589,7 +13589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13605,7 +13605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">mod tests {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13621,7 +13621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13637,7 +13637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod tests {</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::ast::{JsonObjectElement, MultilineStringKind, SourceInfo, TemplateElement};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13653,7 +13653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::reader::Pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13669,7 +13669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::ast::{JsonObjectElement, MultilineStringKind, SourceInfo, TemplateElement};</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::typing::ToSource;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13685,7 +13685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::reader::Pos;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13701,7 +13701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::typing::ToSource;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13717,7 +13717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13733,7 +13733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; ```</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13749,7 +13749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_multiline_string() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; line1</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13765,7 +13765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; ```</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; line2</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13781,7 +13781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; line1</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; ```</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13797,7 +13797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; line2</pre>
+                <pre class="has-background-white py-0 px-2">        let kind = MultilineStringKind::Text(Template {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13813,7 +13813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; ```</pre>
+                <pre class="has-background-white py-0 px-2">            delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13829,7 +13829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let kind = MultilineStringKind::Text(Template {</pre>
+                <pre class="has-background-white py-0 px-2">            elements: vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13845,7 +13845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            delimiter: None,</pre>
+                <pre class="has-background-white py-0 px-2">                value: &quot;line1\nline2\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13861,7 +13861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            elements: vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                source: &quot;line1\nline2\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13877,7 +13877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;line1\nline2\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13893,7 +13893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source: &quot;line1\nline2\n&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13909,7 +13909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">        });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13925,7 +13925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">        let attributes = vec![];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13941,7 +13941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        });</pre>
+                <pre class="has-background-white py-0 px-2">        let multiline_string = MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13957,7 +13957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let attributes = vec![];</pre>
+                <pre class="has-background-white py-0 px-2">            attributes,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13973,7 +13973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let multiline_string = MultilineString {</pre>
+                <pre class="has-background-white py-0 px-2">            space: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13989,7 +13989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            attributes,</pre>
+                <pre class="has-background-white py-0 px-2">                value: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14005,7 +14005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14021,7 +14021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                    start: Pos { line: 1, column: 4 },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14037,7 +14037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo {</pre>
+                <pre class="has-background-white py-0 px-2">                    end: Pos { line: 1, column: 4 },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14053,7 +14053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    start: Pos { line: 1, column: 4 },</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14069,7 +14069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    end: Pos { line: 1, column: 4 },</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14085,7 +14085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">            newline: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14101,7 +14101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">                value: &quot;\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14117,7 +14117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            newline: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14133,7 +14133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    start: Pos { line: 1, column: 4 },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14149,7 +14149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo {</pre>
+                <pre class="has-background-white py-0 px-2">                    end: Pos { line: 2, column: 1 },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14165,7 +14165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    start: Pos { line: 1, column: 4 },</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14181,7 +14181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    end: Pos { line: 2, column: 1 },</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14197,7 +14197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">            kind,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14213,7 +14213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14229,7 +14229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            kind,</pre>
+                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14245,7 +14245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        fmt.fmt_multiline_string(&amp;multiline_string, true);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14261,7 +14261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14277,7 +14277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt.fmt_multiline_string(&amp;multiline_string, true);</pre>
+                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14293,7 +14293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14309,7 +14309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14325,7 +14325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14341,7 +14341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14357,7 +14357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;line1&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14373,7 +14373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14389,7 +14389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;line1&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14405,7 +14405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;line2&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14421,7 +14421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14437,7 +14437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;line2&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14453,7 +14453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14469,7 +14469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14485,7 +14485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14501,7 +14501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14517,7 +14517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14533,7 +14533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        fmt.fmt_multiline_string(&amp;multiline_string, false);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14549,7 +14549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14565,7 +14565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt.fmt_multiline_string(&amp;multiline_string, false);</pre>
+                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14581,7 +14581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14597,7 +14597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14613,7 +14613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14629,7 +14629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;line1&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14645,7 +14645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14661,7 +14661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;line1&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14677,7 +14677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;line2&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14693,7 +14693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14709,7 +14709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;line2&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14725,7 +14725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14741,7 +14741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;span class=\&quot;line\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14757,7 +14757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;multiline\&quot;&gt;```&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14773,7 +14773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14789,7 +14789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14805,7 +14805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multilines() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14821,7 +14821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14837,7 +14837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_multilines() {</pre>
+                <pre class="has-background-white py-0 px-2">            format_lines(&quot;{\n   \&quot;id\&quot;: 1\n}&quot;, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14853,7 +14853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;{&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14869,7 +14869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            format_lines(&quot;{\n   \&quot;id\&quot;: 1\n}&quot;, false),</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14885,7 +14885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;{&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;}&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14901,7 +14901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14917,7 +14917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;}&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14933,7 +14933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            format_lines(&quot;{\n   \&quot;id\&quot;: 1\n}&quot;, true),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14949,7 +14949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;{&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14965,7 +14965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            format_lines(&quot;{\n   \&quot;id\&quot;: 1\n}&quot;, true),</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14981,7 +14981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;{&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14997,7 +14997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15013,7 +15013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;span class=\&quot;multiline\&quot;&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15029,7 +15029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15045,7 +15045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            format_lines(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15061,7 +15061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15077,7 +15077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            format_lines(</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;drink&gt;café&lt;&#x2F;drink&gt;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15093,7 +15093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">                false</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15109,7 +15109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;drink&gt;café&lt;&#x2F;drink&gt;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15125,7 +15125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                false</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15141,7 +15141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&amp;lt;drink&amp;gt;café&amp;lt;&#x2F;drink&amp;gt;&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15157,7 +15157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15173,7 +15173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&amp;lt;drink&amp;gt;café&amp;lt;&#x2F;drink&amp;gt;&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15189,7 +15189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15205,7 +15205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            format_lines(&quot;Hello\n&quot;, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15221,7 +15221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;Hello&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15237,7 +15237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            format_lines(&quot;Hello\n&quot;, false),</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15253,7 +15253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;line\&quot;&gt;Hello&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15269,7 +15269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;span class=\&quot;line\&quot;&gt;&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15285,7 +15285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15301,7 +15301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15317,7 +15317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_json() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15333,7 +15333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15349,7 +15349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_json() {</pre>
+                <pre class="has-background-white py-0 px-2">        let value = JsonValue::Object {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15365,7 +15365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
+                <pre class="has-background-white py-0 px-2">            space0: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15381,7 +15381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = JsonValue::Object {</pre>
+                <pre class="has-background-white py-0 px-2">            elements: vec![JsonObjectElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15397,7 +15397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                space0: &quot;\n   &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15413,7 +15413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            elements: vec![JsonObjectElement {</pre>
+                <pre class="has-background-white py-0 px-2">                name: Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15429,7 +15429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: &quot;\n   &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    Some(&#x27;&quot;&#x27;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15445,7 +15445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">                    vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15461,7 +15461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Some(&#x27;&quot;&#x27;),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;id&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15477,7 +15477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;id&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15493,7 +15493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: &quot;id&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15509,7 +15509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;id&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15525,7 +15525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }],</pre>
+                <pre class="has-background-white py-0 px-2">                ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15541,7 +15541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">                space1: String::new(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15557,7 +15557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ),</pre>
+                <pre class="has-background-white py-0 px-2">                space2: &quot; &quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15573,7 +15573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space1: String::new(),</pre>
+                <pre class="has-background-white py-0 px-2">                value: JsonValue::Number(&quot;1&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15589,7 +15589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space2: &quot; &quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                space3: &quot;\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15605,7 +15605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: JsonValue::Number(&quot;1&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">            }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15621,7 +15621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space3: &quot;\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15637,7 +15637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">        fmt.fmt_json_value(&amp;value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15653,7 +15653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15669,7 +15669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt.fmt_json_value(&amp;value);</pre>
+                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15685,7 +15685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;json\&quot;&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15701,7 +15701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;{&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15717,7 +15717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;json\&quot;&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15733,7 +15733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;{&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;}&lt;&#x2F;span&gt;\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15749,7 +15749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;   \&quot;id\&quot;: 1&lt;&#x2F;span&gt;\n\</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15765,7 +15765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &lt;span class=\&quot;line\&quot;&gt;}&lt;&#x2F;span&gt;\</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15781,7 +15781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15797,7 +15797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15813,7 +15813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15829,7 +15829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_json_encoded_newline() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15845,7 +15845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15861,7 +15861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_json_encoded_newline() {</pre>
+                <pre class="has-background-white py-0 px-2">        let value = JsonValue::String(Template::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15877,7 +15877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
+                <pre class="has-background-white py-0 px-2">            Some(&#x27;&quot;&#x27;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15893,7 +15893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = JsonValue::String(Template::new(</pre>
+                <pre class="has-background-white py-0 px-2">            vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15909,7 +15909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Some(&#x27;&quot;&#x27;),</pre>
+                <pre class="has-background-white py-0 px-2">                value: &quot;\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15925,7 +15925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                source: &quot;\\n&quot;.to_source(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15941,7 +15941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15957,7 +15957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source: &quot;\\n&quot;.to_source(),</pre>
+                <pre class="has-background-white py-0 px-2">            SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15973,7 +15973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">        ));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15989,7 +15989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),</pre>
+                <pre class="has-background-white py-0 px-2">        fmt.fmt_json_value(&amp;value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16005,7 +16005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        ));</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16021,7 +16021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt.fmt_json_value(&amp;value);</pre>
+                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16037,7 +16037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;json\&quot;&gt;&lt;span class=\&quot;line\&quot;&gt;\&quot;\\n\&quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16053,7 +16053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16069,7 +16069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;json\&quot;&gt;&lt;span class=\&quot;line\&quot;&gt;\&quot;\\n\&quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16085,7 +16085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16101,7 +16101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16117,7 +16117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_xml() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16133,7 +16133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16149,7 +16149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_xml() {</pre>
+                <pre class="has-background-white py-0 px-2">        let value = &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n&lt;drink&gt;café&lt;&#x2F;drink&gt;&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16165,7 +16165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut fmt = HtmlFormatter::new();</pre>
+                <pre class="has-background-white py-0 px-2">        fmt.fmt_xml(value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16181,7 +16181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let value = &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n&lt;drink&gt;café&lt;&#x2F;drink&gt;&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16197,7 +16197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        fmt.fmt_xml(value);</pre>
+                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16213,7 +16213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;xml\&quot;&gt;&lt;span class=\&quot;line\&quot;&gt;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&lt;&#x2F;span&gt;\n&lt;span class=\&quot;line\&quot;&gt;&amp;lt;drink&amp;gt;café&amp;lt;&#x2F;drink&amp;gt;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16229,7 +16229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            fmt.buffer,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16245,7 +16245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&lt;span class=\&quot;xml\&quot;&gt;&lt;span class=\&quot;line\&quot;&gt;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&lt;&#x2F;span&gt;\n&lt;span class=\&quot;line\&quot;&gt;&amp;lt;drink&amp;gt;café&amp;lt;&#x2F;drink&amp;gt;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16261,7 +16261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16277,7 +16277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16293,7 +16293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_xml_escape() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16309,7 +16309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(escape_xml(&quot;hello&quot;), &quot;hello&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16325,7 +16325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_xml_escape() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16341,7 +16341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(escape_xml(&quot;hello&quot;), &quot;hello&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">            escape_xml(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16357,7 +16357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16373,7 +16373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            escape_xml(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16389,7 +16389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;&amp;lt;?xml version=\&quot;1.0\&quot;?&amp;gt;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16405,45 +16405,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1024"
-                role="cell">
-                <a href="#1024">1024</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1025"
-                role="cell">
-                <a href="#1025">1025</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2025-04-02 12:22</p>
+                <p class="heading">Date: 2025-04-02 13:31</p>
             </div>
         </footer>
     </body>
