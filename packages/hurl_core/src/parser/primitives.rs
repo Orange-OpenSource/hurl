@@ -22,7 +22,7 @@ use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
 use crate::parser::{base64, filename, key_string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-use crate::typing::ToSource;
+use crate::typing::{SourceString, ToSource};
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.cursor();
@@ -256,7 +256,9 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
 pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     try_literal("/", reader)?;
     let start = reader.cursor();
-    let mut s = String::new();
+    let mut unescaped = String::new();
+    let mut source = SourceString::new();
+    source.push('/');
 
     // Hurl escaping /
     // in order to avoid terminating the regex
@@ -265,27 +267,29 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     // Other escaped sequences such as \* are part of the regex expression
     // They are not part of the syntax of Hurl itself.
     loop {
-        match reader.read() {
-            None => {
-                let kind = ParseErrorKind::RegexExpr {
-                    message: "unexpected end of file".to_string(),
-                };
-                return Err(ParseError::new(reader.cursor().pos, false, kind));
-            }
-            Some('/') => break,
-            Some('\\') => {
+        let c = reader.read();
+        let Some(c) = c else {
+            let kind = ParseErrorKind::RegexExpr {
+                message: "unexpected end of file".to_string(),
+            };
+            return Err(ParseError::new(reader.cursor().pos, false, kind));
+        };
+        source.push(c);
+        match c {
+            '/' => break,
+            '\\' => {
                 if let Some('/') = reader.peek() {
                     reader.read();
-                    s.push('/');
+                    unescaped.push('/');
                 } else {
-                    s.push('\\');
+                    unescaped.push('\\');
                 }
             }
-            Some(c) => s.push(c),
+            c => unescaped.push(c),
         }
     }
-    match regex::Regex::new(s.as_str()) {
-        Ok(inner) => Ok(Regex { inner }),
+    match regex::Regex::new(unescaped.as_str()) {
+        Ok(inner) => Ok(Regex { inner, source }),
         Err(e) => {
             let message = match e {
                 regex::Error::Syntax(s) => {
@@ -823,7 +827,8 @@ mod tests {
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r#"a{3}"#).unwrap()
+                inner: regex::Regex::new(r#"a{3}"#).unwrap(),
+                source: r#"/a{3}/"#.to_source(),
             }
         );
 
@@ -831,7 +836,8 @@ mod tests {
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r#"a/b"#).unwrap()
+                inner: regex::Regex::new(r#"a/b"#).unwrap(),
+                source: r"/a\/b/".to_source(),
             }
         );
 
@@ -839,7 +845,8 @@ mod tests {
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r"a\.b").unwrap()
+                inner: regex::Regex::new(r"a\.b").unwrap(),
+                source: r"/a\.b/".to_source(),
             }
         );
 
@@ -847,7 +854,8 @@ mod tests {
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r"\d{4}-\d{2}-\d{2}").unwrap()
+                inner: regex::Regex::new(r"\d{4}-\d{2}-\d{2}").unwrap(),
+                source: r"/\d{4}-\d{2}-\d{2}/".to_source(),
             }
         );
     }

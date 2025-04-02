@@ -722,9 +722,7 @@ impl HtmlFormatter {
     }
 
     fn fmt_regex(&mut self, regex: &Regex) {
-        let s = str::replace(regex.inner.as_str(), "/", "\\/");
-        let regex = format!("/{s}/");
-        self.fmt_span("regex", &regex);
+        self.fmt_span("regex", regex.to_source().as_str());
     }
 
     fn fmt_template(&mut self, template: &Template) {

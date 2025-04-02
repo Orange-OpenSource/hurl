@@ -1416,9 +1416,11 @@ mod tests {
 
         // predicate: `matches /a{3}/`
         // value: aa
-        let expected = PredicateValue::Regex(Regex {
+        let regex = Regex {
             inner: regex::Regex::new(r#"a{3}"#).unwrap(),
-        });
+            source: r#"/a{3}/"#.to_source(),
+        };
+        let expected = PredicateValue::Regex(regex);
         let value = Value::String("aa".to_string());
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
         let assert_result =

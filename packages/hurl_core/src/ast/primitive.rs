@@ -451,6 +451,13 @@ impl fmt::Display for Hex {
 #[derive(Clone, Debug)]
 pub struct Regex {
     pub inner: regex::Regex,
+    pub source: SourceString,
+}
+
+impl ToSource for Regex {
+    fn to_source(&self) -> SourceString {
+        self.source.clone()
+    }
 }
 
 impl fmt::Display for Regex {
