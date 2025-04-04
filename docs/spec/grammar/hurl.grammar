@@ -325,31 +325,31 @@ predicate-func:
   | is-ipv4-predicate
   | is-ipv6-predicate
 
-equal-predicate: "==" sp predicate-value
+equal-predicate: "==" sp* predicate-value
 
-not-equal-predicate: "!=" sp predicate-value
+not-equal-predicate: "!=" sp* predicate-value
 
-greater-predicate: ">" sp (number | quoted-string)
+greater-predicate: ">" sp* (number | quoted-string)
 
-greater-or-equal-predicate: ">=" sp sp* (number | quoted-string)
+greater-or-equal-predicate: ">=" sp* (number | quoted-string)
 
-less-predicate: "<" sp (number | quoted-string)
+less-predicate: "<" sp* (number | quoted-string)
 
-less-or-equal-predicate: "<=" sp (number | quoted-string)
+less-or-equal-predicate: "<=" sp* (number | quoted-string)
 
-start-with-predicate: "startsWith" sp (quoted-string | oneline-hex | oneline-base64)
+start-with-predicate: "startsWith" sp sp* (quoted-string | oneline-hex | oneline-base64)
 
-end-with-predicate: "endsWith" sp (quoted-string | oneline-hex | oneline-base64)
+end-with-predicate: "endsWith" sp sp* (quoted-string | oneline-hex | oneline-base64)
 
-contain-predicate: "contains" sp quoted-string
+contain-predicate: "contains" sp sp* quoted-string
 
-match-predicate: "matches" sp (quoted-string | regex)
+match-predicate: "matches" sp sp* (quoted-string | regex)
 
 exist-predicate: "exists"
 
 is-empty-predicate: "isEmpty"
 
-include-predicate: "includes" sp predicate-value
+include-predicate: "includes" sp sp* predicate-value
 
 integer-predicate: "isInteger"
 
