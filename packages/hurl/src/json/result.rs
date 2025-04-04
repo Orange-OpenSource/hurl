@@ -469,7 +469,7 @@ impl AssertJson {
         entry_src_info: SourceInfo,
         secrets: &[&str],
     ) -> Self {
-        let message = a.error().map(|err| {
+        let message = a.to_runner_error().map(|err| {
             err.to_string(
                 &filename.to_string(),
                 content,
@@ -479,7 +479,7 @@ impl AssertJson {
         });
         let message = message.map(|m| m.redact(secrets));
         AssertJson {
-            success: a.error().is_none(),
+            success: a.to_runner_error().is_none(),
             message,
             line: a.line(),
         }

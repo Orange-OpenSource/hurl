@@ -31,9 +31,9 @@ use crate::util::path::ContextDir;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
-    pub fn error(&self) -> Option<RunnerError> {
+    pub fn to_runner_error(&self) -> Option<RunnerError> {
         match self {
-            AssertResult::Version {
+            AssertResult::ImplicitVersion {
                 actual,
                 expected,
                 source_info,
@@ -47,7 +47,7 @@ impl AssertResult {
                     Some(RunnerError::new(*source_info, kind, false))
                 }
             }
-            AssertResult::Status {
+            AssertResult::ImplicitStatus {
                 actual,
                 expected,
                 source_info,
@@ -61,7 +61,7 @@ impl AssertResult {
                     Some(RunnerError::new(*source_info, kind, false))
                 }
             }
-            AssertResult::Header {
+            AssertResult::ImplicitHeader {
                 actual,
                 expected,
                 source_info,
@@ -76,7 +76,7 @@ impl AssertResult {
                     }
                 }
             },
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info,
@@ -124,10 +124,10 @@ impl AssertResult {
     }
     pub fn line(&self) -> usize {
         match self {
-            AssertResult::Version { source_info, .. } => source_info.start.line,
-            AssertResult::Status { source_info, .. } => source_info.start.line,
-            AssertResult::Header { source_info, .. } => source_info.start.line,
-            AssertResult::Body { source_info, .. } => source_info.start.line,
+            AssertResult::ImplicitVersion { source_info, .. } => source_info.start.line,
+            AssertResult::ImplicitStatus { source_info, .. } => source_info.start.line,
+            AssertResult::ImplicitHeader { source_info, .. } => source_info.start.line,
+            AssertResult::ImplicitBody { source_info, .. } => source_info.start.line,
             AssertResult::Explicit { source_info, .. } => source_info.start.line,
         }
     }

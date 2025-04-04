@@ -33,7 +33,7 @@ pub fn eval_version_status_asserts(
     let mut asserts = vec![];
 
     let version = &response.version;
-    asserts.push(AssertResult::Version {
+    asserts.push(AssertResult::ImplicitVersion {
         actual: http_response.version.to_string(),
         expected: version.value.to_string(),
         source_info: version.source_info,
@@ -41,7 +41,7 @@ pub fn eval_version_status_asserts(
 
     let status = &response.status;
     if let StatusValue::Specific(v) = status.value {
-        asserts.push(AssertResult::Status {
+        asserts.push(AssertResult::ImplicitStatus {
             actual: http_response.status as u64,
             expected: v,
             source_info: status.source_info,
@@ -71,7 +71,7 @@ pub fn eval_asserts(
     for header in &response.headers {
         match template::eval_template(&header.value, variables) {
             Err(e) => {
-                let result = AssertResult::Header {
+                let result = AssertResult::ImplicitHeader {
                     actual: Err(e),
                     expected: String::new(),
                     source_info: header.key.source_info,
@@ -83,7 +83,7 @@ pub fn eval_asserts(
                     Ok(header_name) => {
                         let actuals = last_response.headers.values(&header_name);
                         if actuals.is_empty() {
-                            let result = AssertResult::Header {
+                            let result = AssertResult::ImplicitHeader {
                                 actual: Err(RunnerError::new(
                                     header.key.source_info,
                                     RunnerErrorKind::QueryHeaderNotFound,
@@ -95,7 +95,7 @@ pub fn eval_asserts(
                             asserts.push(result);
                         } else if actuals.len() == 1 {
                             let actual = actuals.first().unwrap().to_string();
-                            let result = AssertResult::Header {
+                            let result = AssertResult::ImplicitHeader {
                                 actual: Ok(actual),
                                 expected,
                                 source_info: header.value.source_info,
@@ -119,7 +119,7 @@ pub fn eval_asserts(
                                     break;
                                 }
                             }
-                            let result = AssertResult::Header {
+                            let result = AssertResult::ImplicitHeader {
                                 actual: Ok(actual),
                                 expected,
                                 source_info: header.value.source_info,
@@ -128,7 +128,7 @@ pub fn eval_asserts(
                         }
                     }
                     Err(e) => {
-                        let result = AssertResult::Header {
+                        let result = AssertResult::ImplicitHeader {
                             actual: Err(e),
                             expected,
                             source_info: header.value.source_info,
@@ -182,7 +182,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
@@ -204,7 +204,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
@@ -229,7 +229,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: value.source_info,
@@ -254,7 +254,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: multi.value().source_info,
@@ -281,7 +281,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: SourceInfo {
@@ -311,7 +311,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: SourceInfo {
@@ -339,7 +339,7 @@ fn eval_implicit_body_asserts(
                     ))
                 }
             };
-            AssertResult::Body {
+            AssertResult::ImplicitBody {
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
@@ -475,12 +475,12 @@ mod tests {
         assert_eq!(
             eval_version_status_asserts(&user_response(), &http::xml_two_users_http_response(),),
             vec![
-                AssertResult::Version {
+                AssertResult::ImplicitVersion {
                     actual: String::from("HTTP/1.0"),
                     expected: String::from("HTTP/1.0"),
                     source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 9)),
                 },
-                AssertResult::Status {
+                AssertResult::ImplicitStatus {
                     actual: 200,
                     expected: 200,
                     source_info: SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),

@@ -138,25 +138,25 @@ impl Default for EntryResult {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum AssertResult {
     /// Implicit HTTP version assert (like HTTP/3, HTTP/2 etc...).
-    Version {
+    ImplicitVersion {
         actual: String,
         expected: String,
         source_info: SourceInfo,
     },
     /// Implicit HTTP status code assert.
-    Status {
+    ImplicitStatus {
         actual: u64,
         expected: u64,
         source_info: SourceInfo,
     },
     /// Implicit HTTP response header assert.
-    Header {
+    ImplicitHeader {
         actual: Result<String, RunnerError>,
         expected: String,
         source_info: SourceInfo,
     },
     /// Implicit HTTP response body assert.
-    Body {
+    ImplicitBody {
         actual: Result<Value, RunnerError>,
         expected: Result<Value, RunnerError>,
         source_info: SourceInfo,
@@ -165,7 +165,7 @@ pub enum AssertResult {
     Explicit {
         actual: Result<Option<Value>, RunnerError>,
         source_info: SourceInfo,
-        predicate_result: Option<PredicateResult>,
+        predicate_result: Option<Result<(), RunnerError>>,
     },
 }
 
@@ -180,8 +180,6 @@ pub struct CaptureResult {
     /// Value of the capture.
     pub value: Value,
 }
-
-pub type PredicateResult = Result<(), RunnerError>;
 
 impl EntryResult {
     /// Writes the last HTTP response of this entry result to this `output`.

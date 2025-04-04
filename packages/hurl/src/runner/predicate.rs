@@ -22,7 +22,6 @@ use hurl_core::reader::Pos;
 
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
-use crate::runner::result::PredicateResult;
 use crate::runner::value::{EvalError, Value};
 use crate::runner::{Number, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
@@ -50,8 +49,8 @@ pub fn eval_predicate(
     variables: &VariableSet,
     value: &Option<Value>,
     context_dir: &ContextDir,
-) -> PredicateResult {
-    let assert_result = eval_predicate_func(
+) -> Result<(), RunnerError> {
+    let result = eval_predicate_func(
         &predicate.predicate_func,
         variables,
         value.as_ref(),
@@ -64,26 +63,26 @@ pub fn eval_predicate(
         Pos::new(predicate.space0.source_info.start.line, 0),
     );
 
-    if assert_result.type_mismatch {
+    if result.type_mismatch {
         let not = if predicate.not { "not " } else { "" };
-        let expected = format!("{}{}", not, assert_result.expected);
+        let expected = format!("{}{}", not, result.expected);
         let kind = RunnerErrorKind::AssertFailure {
-            actual: assert_result.actual,
+            actual: result.actual,
             expected,
             type_mismatch: true,
         };
         Err(RunnerError::new(source_info, kind, true))
-    } else if predicate.not && assert_result.success {
+    } else if predicate.not && result.success {
         let kind = RunnerErrorKind::AssertFailure {
-            actual: assert_result.actual,
-            expected: format!("not {}", assert_result.expected),
+            actual: result.actual,
+            expected: format!("not {}", result.expected),
             type_mismatch: false,
         };
         Err(RunnerError::new(source_info, kind, true))
-    } else if !predicate.not && !assert_result.success {
+    } else if !predicate.not && !result.success {
         let kind = RunnerErrorKind::AssertFailure {
-            actual: assert_result.actual,
-            expected: assert_result.expected,
+            actual: result.actual,
+            expected: result.expected,
             type_mismatch: false,
         };
         Err(RunnerError::new(source_info, kind, true))
@@ -93,7 +92,7 @@ pub fn eval_predicate(
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-struct AssertResult {
+struct PredicateResult {
     pub success: bool,
     pub type_mismatch: bool,
     pub actual: String,
@@ -214,12 +213,12 @@ fn eval_predicate_func(
     variables: &VariableSet,
     value: Option<&Value>,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let value = match value {
         Some(value) => value,
         None => {
             let expected = expected_no_value(&predicate_func.value, variables, context_dir)?;
-            return Ok(AssertResult {
+            return Ok(PredicateResult {
                 success: false,
                 actual: "none".to_string(),
                 expected,
@@ -289,7 +288,7 @@ fn eval_equal(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_equal(actual, &expected))
 }
@@ -300,7 +299,7 @@ fn eval_not_equal(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_not_equal(actual, &expected))
 }
@@ -311,7 +310,7 @@ fn eval_greater_than(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater(actual, &expected))
 }
@@ -322,7 +321,7 @@ fn eval_greater_than_or_equal(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater_or_equal(actual, &expected))
 }
@@ -333,7 +332,7 @@ fn eval_less_than(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less(actual, &expected))
 }
@@ -344,7 +343,7 @@ fn eval_less_than_or_equal(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less_or_equal(actual, &expected))
 }
@@ -356,18 +355,18 @@ fn eval_start_with(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("starts with {}", expected.repr());
     let actual_display = actual.repr();
     match actual.starts_with(&expected) {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         }),
-        Err(_) => Ok(AssertResult {
+        Err(_) => Ok(PredicateResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
@@ -383,18 +382,18 @@ fn eval_end_with(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("ends with {}", expected.repr());
     let actual_display = actual.repr();
     match actual.ends_with(&expected) {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         }),
-        Err(_) => Ok(AssertResult {
+        Err(_) => Ok(PredicateResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
@@ -410,18 +409,18 @@ fn eval_contain(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("contains {}", expected.repr());
     let actual_display = actual.repr();
     match actual.contains(&expected) {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
@@ -437,7 +436,7 @@ fn eval_include(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_include(actual, &expected))
 }
@@ -449,18 +448,18 @@ fn eval_match(
     variables: &VariableSet,
     actual: &Value,
     context_dir: &ContextDir,
-) -> Result<AssertResult, RunnerError> {
+) -> Result<PredicateResult, RunnerError> {
     let expected = eval_predicate_value(expected, variables, context_dir)?;
     let actual_display = actual.repr();
     let expected_display = format!("matches regex <{expected}>");
     match actual.is_match(&expected) {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         }),
-        Err(EvalError::Type) => Ok(AssertResult {
+        Err(EvalError::Type) => Ok(PredicateResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
@@ -475,8 +474,8 @@ fn eval_match(
 }
 
 /// Evaluates if an `actual` value is an integer.
-fn eval_is_integer(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_integer(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_integer(),
         actual: actual.repr(),
         expected: "integer".to_string(),
@@ -485,8 +484,8 @@ fn eval_is_integer(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a float.
-fn eval_is_float(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_float(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_float(),
         actual: actual.repr(),
         expected: "float".to_string(),
@@ -495,8 +494,8 @@ fn eval_is_float(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a boolean.
-fn eval_is_boolean(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_boolean(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_boolean(),
         actual: actual.repr(),
         expected: "boolean".to_string(),
@@ -505,8 +504,8 @@ fn eval_is_boolean(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a string.
-fn eval_is_string(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_string(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_string(),
         actual: actual.repr(),
         expected: "string".to_string(),
@@ -515,8 +514,8 @@ fn eval_is_string(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a collection.
-fn eval_is_collection(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_collection(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_collection(),
         actual: actual.repr(),
         expected: "collection".to_string(),
@@ -525,8 +524,8 @@ fn eval_is_collection(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a date.
-fn eval_is_date(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_date(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_date(),
         actual: actual.repr(),
         expected: "date".to_string(),
@@ -538,15 +537,15 @@ fn eval_is_date(actual: &Value) -> Result<AssertResult, RunnerError> {
 ///
 /// [`eval_is_date`] performs type check (is the input of [`Value::Date`]), whereas [`eval_is_iso_date`]
 /// checks if a string conforms to a certain date-time format.
-fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_iso_date(actual: &Value) -> Result<PredicateResult, RunnerError> {
     match actual.is_iso_date() {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual.to_string(),
             expected: "string with format YYYY-MM-DDTHH:mm:ss.sssZ".to_string(),
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: false,
             actual: actual.repr(),
             expected: "string".to_string(),
@@ -556,17 +555,17 @@ fn eval_is_iso_date(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value exists.
-fn eval_exist(actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_exist(actual: &Value) -> Result<PredicateResult, RunnerError> {
     let actual_display = actual.repr();
     let expected_display = "something".to_string();
     match actual {
-        Value::Nodeset(0) => Ok(AssertResult {
+        Value::Nodeset(0) => Ok(PredicateResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: true,
             actual: actual_display,
             expected: expected_display,
@@ -576,19 +575,19 @@ fn eval_exist(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` is empty.
-fn eval_is_empty(actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_empty(actual: &Value) -> Result<PredicateResult, RunnerError> {
     let expected_display = "count equals to 0".to_string();
     match actual.count() {
         Ok(count) => {
             let actual_display = format!("count equals to {count}");
-            Ok(AssertResult {
+            Ok(PredicateResult {
                 success: count == 0,
                 actual: actual_display,
                 expected: expected_display,
                 type_mismatch: false,
             })
         }
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: false,
             actual: actual.repr(),
             expected: expected_display,
@@ -598,8 +597,8 @@ fn eval_is_empty(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is a number.
-fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
-    Ok(AssertResult {
+fn eval_is_number(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
         success: actual.is_number(),
         actual: actual.repr(),
         expected: "number".to_string(),
@@ -608,15 +607,15 @@ fn eval_is_number(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is an IPv4 address.
-fn eval_is_ipv4(actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_ipv4(actual: &Value) -> Result<PredicateResult, RunnerError> {
     match actual.is_ipv4() {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual.to_string(),
             expected: "string in IPv4 format".to_string(),
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: false,
             actual: actual.repr(),
             expected: "string".to_string(),
@@ -626,15 +625,15 @@ fn eval_is_ipv4(actual: &Value) -> Result<AssertResult, RunnerError> {
 }
 
 /// Evaluates if an `actual` value is an IPv6 address.
-fn eval_is_ipv6(actual: &Value) -> Result<AssertResult, RunnerError> {
+fn eval_is_ipv6(actual: &Value) -> Result<PredicateResult, RunnerError> {
     match actual.is_ipv6() {
-        Ok(success) => Ok(AssertResult {
+        Ok(success) => Ok(PredicateResult {
             success,
             actual: actual.to_string(),
             expected: "string in IPv6 format".to_string(),
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        _ => Ok(PredicateResult {
             success: false,
             actual: actual.repr(),
             expected: "string".to_string(),
@@ -643,12 +642,12 @@ fn eval_is_ipv6(actual: &Value) -> Result<AssertResult, RunnerError> {
     }
 }
 
-fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
+fn assert_values_equal(actual: &Value, expected: &Value) -> PredicateResult {
     let success = actual == expected;
     let actual = actual.repr();
     let expected = expected.repr();
     let type_mismatch = false;
-    AssertResult {
+    PredicateResult {
         success,
         actual,
         expected,
@@ -656,12 +655,12 @@ fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
     }
 }
 
-fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
+fn assert_values_not_equal(actual: &Value, expected: &Value) -> PredicateResult {
     let success = actual != expected;
     let actual = actual.repr();
     let expected = expected.repr();
     let type_mismatch = false;
-    AssertResult {
+    PredicateResult {
         success,
         actual,
         expected,
@@ -669,18 +668,18 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
     }
 }
 
-fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> AssertResult {
+fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> PredicateResult {
     let actual = actual_value.repr();
     let expected = format!("greater than {}", expected_value.repr());
 
     match actual_value.compare(expected_value) {
-        Ok(ordering) => AssertResult {
+        Ok(ordering) => PredicateResult {
             success: ordering == Ordering::Greater,
             actual,
             expected,
             type_mismatch: false,
         },
-        _ => AssertResult {
+        _ => PredicateResult {
             success: false,
             actual,
             expected,
@@ -689,17 +688,17 @@ fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> Assert
     }
 }
 
-fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
+fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) -> PredicateResult {
     let actual = actual_value.repr();
     let expected = format!("greater or equal than {}", expected_value.repr());
     match actual_value.compare(expected_value) {
-        Ok(ordering) => AssertResult {
+        Ok(ordering) => PredicateResult {
             success: ordering == Ordering::Greater || ordering == Ordering::Equal,
             actual,
             expected,
             type_mismatch: false,
         },
-        _ => AssertResult {
+        _ => PredicateResult {
             success: false,
             actual,
             expected,
@@ -708,17 +707,17 @@ fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) 
     }
 }
 
-fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertResult {
+fn assert_values_less(actual_value: &Value, expected_value: &Value) -> PredicateResult {
     let actual = actual_value.repr();
     let expected = format!("less than {}", expected_value.repr());
     match actual_value.compare(expected_value) {
-        Ok(ordering) => AssertResult {
+        Ok(ordering) => PredicateResult {
             success: ordering == Ordering::Less,
             actual,
             expected,
             type_mismatch: false,
         },
-        _ => AssertResult {
+        _ => PredicateResult {
             success: false,
             actual,
             expected,
@@ -727,17 +726,17 @@ fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertRes
     }
 }
 
-fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
+fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> PredicateResult {
     let actual = actual_value.repr();
     let expected = format!("less or equal than {}", expected_value.repr());
     match actual_value.compare(expected_value) {
-        Ok(ordering) => AssertResult {
+        Ok(ordering) => PredicateResult {
             success: ordering == Ordering::Less || ordering == Ordering::Equal,
             actual,
             expected,
             type_mismatch: false,
         },
-        _ => AssertResult {
+        _ => PredicateResult {
             success: false,
             actual,
             expected,
@@ -746,17 +745,17 @@ fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> 
     }
 }
 
-fn assert_include(value: &Value, element: &Value) -> AssertResult {
+fn assert_include(value: &Value, element: &Value) -> PredicateResult {
     let actual = value.repr();
     let expected = format!("includes {}", element.repr());
     match value.includes(element) {
-        Ok(success) => AssertResult {
+        Ok(success) => PredicateResult {
             success,
             actual,
             expected,
             type_mismatch: false,
         },
-        Err(_) => AssertResult {
+        Err(_) => PredicateResult {
             success: false,
             actual,
             expected,
@@ -775,7 +774,7 @@ mod tests {
     };
     use hurl_core::typing::ToSource;
 
-    use super::{AssertResult, *};
+    use super::{PredicateResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -865,13 +864,13 @@ mod tests {
             "10".to_source(),
         )));
         let value = Value::Bool(true);
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
         // FIXME: should be type_mismatch = true here
         // assert!(assert_result.type_mismatch);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "boolean <true>");
-        assert_eq!(assert_result.expected, "integer <10>");
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "boolean <true>");
+        assert_eq!(result.expected, "integer <10>");
     }
 
     #[test]
@@ -888,11 +887,11 @@ mod tests {
             "10".to_source(),
         )));
         let value = Value::Unit;
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "unit");
-        assert_eq!(assert_result.expected, "integer <10>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "unit");
+        assert_eq!(result.expected, "integer <10>");
     }
 
     #[test]
@@ -909,21 +908,21 @@ mod tests {
             "10".to_source(),
         )));
         let value = Value::Number(Number::Integer(1));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "integer <1>");
-        assert_eq!(assert_result.expected, "integer <10>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "integer <1>");
+        assert_eq!(result.expected, "integer <10>");
 
         // predicate: `== true`
         // value: false
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "boolean <false>");
-        assert_eq!(assert_result.expected, "boolean <true>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "boolean <false>");
+        assert_eq!(result.expected, "boolean <true>");
 
         // predicate: `== 1.2`
         // value: 1.1
@@ -932,11 +931,11 @@ mod tests {
             "1.2".to_source(),
         )));
         let value = Value::Number(Number::Float(1.1));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "float <1.1>");
-        assert_eq!(assert_result.expected, "float <1.2>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "float <1.1>");
+        assert_eq!(result.expected, "float <1.2>");
     }
 
     #[test]
@@ -954,19 +953,17 @@ mod tests {
         };
 
         let value = Some(&Value::Unit);
-        let assert_result =
-            eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert_eq!(assert_result.actual.as_str(), "unit");
-        assert_eq!(assert_result.expected.as_str(), "something");
+        let result = eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
+        assert!(result.success);
+        assert_eq!(result.actual.as_str(), "unit");
+        assert_eq!(result.expected.as_str(), "something");
 
         let value = None;
-        let assert_result =
-            eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "none");
-        assert_eq!(assert_result.expected, "something");
+        let result = eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "none");
+        assert_eq!(result.expected, "something");
     }
 
     #[test]
@@ -983,11 +980,11 @@ mod tests {
             "1".to_source(),
         )));
         let value = Value::Number(Number::Integer(1));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "integer <1>");
-        assert_eq!(assert_result.expected, "integer <1>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "integer <1>");
+        assert_eq!(result.expected, "integer <1>");
     }
 
     #[test]
@@ -1001,31 +998,31 @@ mod tests {
         // value: false
         let expected = PredicateValue::Bool(false);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "boolean <false>");
-        assert_eq!(assert_result.expected, "boolean <false>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "boolean <false>");
+        assert_eq!(result.expected, "boolean <false>");
 
         // predicate: `== true`
         // value: false
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "boolean <false>");
-        assert_eq!(assert_result.expected, "boolean <true>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "boolean <false>");
+        assert_eq!(result.expected, "boolean <true>");
 
         // predicate: `== true`
         // value: true
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(true);
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "boolean <true>");
-        assert_eq!(assert_result.expected, "boolean <true>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "boolean <true>");
+        assert_eq!(result.expected, "boolean <true>");
     }
 
     #[test]
@@ -1042,11 +1039,11 @@ mod tests {
             "1.1".to_source(),
         )));
         let value = Value::Number(Number::Float(1.1));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "float <1.1>");
-        assert_eq!(assert_result.expected, "float <1.1>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "float <1.1>");
+        assert_eq!(result.expected, "float <1.1>");
     }
 
     #[test]
@@ -1063,11 +1060,11 @@ mod tests {
             "1".to_source(),
         )));
         let value = Value::Number(Number::Float(1.0));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "float <1.0>");
-        assert_eq!(assert_result.expected, "integer <1>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "float <1.0>");
+        assert_eq!(result.expected, "integer <1>");
     }
 
     #[test]
@@ -1084,11 +1081,11 @@ mod tests {
             "1".to_source(),
         )));
         let value = Value::Number(Number::Integer(2));
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "integer <2>");
-        assert_eq!(assert_result.expected, "integer <1>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "integer <2>");
+        assert_eq!(result.expected, "integer <1>");
     }
 
     #[test]
@@ -1146,11 +1143,11 @@ mod tests {
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "string <http://localhost:8000>");
-        assert_eq!(assert_result.expected, "string <http://localhost:8000>");
+        let result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "string <http://localhost:8000>");
+        assert_eq!(result.expected, "string <http://localhost:8000>");
     }
 
     #[test]
@@ -1160,7 +1157,7 @@ mod tests {
                 &Value::Number(Number::Integer(2)),
                 &Value::Number(Number::Integer(1))
             ),
-            AssertResult {
+            PredicateResult {
                 success: true,
                 type_mismatch: false,
                 actual: "integer <2>".to_string(),
@@ -1172,7 +1169,7 @@ mod tests {
                 &Value::Number(Number::Integer(1)),
                 &Value::Number(Number::Integer(1))
             ),
-            AssertResult {
+            PredicateResult {
                 success: false,
                 type_mismatch: false,
                 actual: "integer <1>".to_string(),
@@ -1184,7 +1181,7 @@ mod tests {
                 &Value::Number(Number::Float(1.1)),
                 &Value::Number(Number::Integer(1))
             ),
-            AssertResult {
+            PredicateResult {
                 success: true,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
@@ -1196,7 +1193,7 @@ mod tests {
                 &Value::Number(Number::Float(1.1)),
                 &Value::Number(Number::Integer(2))
             ),
-            AssertResult {
+            PredicateResult {
                 success: false,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
@@ -1210,20 +1207,20 @@ mod tests {
         // predicate: `isEmpty`
         // value: [1]
         let value = Value::List(vec![Value::Number(Number::Integer(1))]);
-        let assert_result = eval_is_empty(&value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "count equals to 1");
-        assert_eq!(assert_result.expected, "count equals to 0");
+        let result = eval_is_empty(&value).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "count equals to 1");
+        assert_eq!(result.expected, "count equals to 0");
 
         // predicate: `isEmpty`
         // value: Nodeset(12)
         let value = Value::Nodeset(12);
-        let assert_result = eval_is_empty(&value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "count equals to 12");
-        assert_eq!(assert_result.expected, "count equals to 0");
+        let result = eval_is_empty(&value).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "count equals to 12");
+        assert_eq!(result.expected, "count equals to 0");
     }
 
     #[test]
@@ -1231,20 +1228,20 @@ mod tests {
         // predicate: `isEmpty`
         // value: [1]
         let value = Value::List(vec![]);
-        let assert_result = eval_is_empty(&value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "count equals to 0");
-        assert_eq!(assert_result.expected, "count equals to 0");
+        let result = eval_is_empty(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "count equals to 0");
+        assert_eq!(result.expected, "count equals to 0");
 
         // predicate: `isEmpty`
         // value: Nodeset(0)
         let value = Value::Nodeset(0);
-        let assert_result = eval_is_empty(&value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "count equals to 0");
-        assert_eq!(assert_result.expected, "count equals to 0");
+        let result = eval_is_empty(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "count equals to 0");
+        assert_eq!(result.expected, "count equals to 0");
     }
 
     #[test]
@@ -1252,20 +1249,20 @@ mod tests {
         // predicate: `isInteger`
         // value: 1
         let value = Value::Number(Number::Integer(1));
-        let assert_result = eval_is_integer(&value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "integer <1>");
-        assert_eq!(assert_result.expected, "integer");
+        let result = eval_is_integer(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "integer <1>");
+        assert_eq!(result.expected, "integer");
 
         // predicate: `isInteger`
         // value: 1
         let value = Value::Number(Number::Float(1.0));
-        let assert_result = eval_is_integer(&value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "float <1.0>");
-        assert_eq!(assert_result.expected, "integer");
+        let result = eval_is_integer(&value).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "float <1.0>");
+        assert_eq!(result.expected, "integer");
     }
 
     #[test]
@@ -1343,20 +1340,20 @@ mod tests {
         let value = Value::Date(
             chrono::TimeZone::with_ymd_and_hms(&chrono::Utc, 2002, 6, 16, 10, 10, 10).unwrap(),
         );
-        let assert_result = eval_is_date(&value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "date <2002-06-16 10:10:10 UTC>");
-        assert_eq!(assert_result.expected, "date");
+        let result = eval_is_date(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "date <2002-06-16 10:10:10 UTC>");
+        assert_eq!(result.expected, "date");
 
         // predicate: `isDate`
         // value: "toto"
         let value = Value::String("toto".to_string());
-        let assert_result = eval_is_date(&value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "string <toto>");
-        assert_eq!(assert_result.expected, "date");
+        let result = eval_is_date(&value).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "string <toto>");
+        assert_eq!(result.expected, "date");
     }
 
     #[test]
@@ -1424,38 +1421,40 @@ mod tests {
         let expected = PredicateValue::Regex(regex);
         let value = Value::String("aa".to_string());
         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
-        let assert_result =
-            eval_match(&expected, source_info, &variables, &value, &context_dir).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual, "string <aa>");
-        assert_eq!(assert_result.expected, "matches regex </a{3}/>");
+        let result = eval_match(&expected, source_info, &variables, &value, &context_dir).unwrap();
+        assert!(!result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "string <aa>");
+        assert_eq!(result.expected, "matches regex </a{3}/>");
     }
 
     #[test]
     fn test_predicate_is_iso_date() {
         let value = Value::String("2020-03-09T22:18:26.625Z".to_string());
-        let res = eval_is_iso_date(&value).unwrap();
-        assert!(res.success);
-        assert!(!res.type_mismatch);
-        assert_eq!(res.actual, "2020-03-09T22:18:26.625Z");
-        assert_eq!(res.expected, "string with format YYYY-MM-DDTHH:mm:ss.sssZ");
+        let result = eval_is_iso_date(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "2020-03-09T22:18:26.625Z");
+        assert_eq!(
+            result.expected,
+            "string with format YYYY-MM-DDTHH:mm:ss.sssZ"
+        );
     }
 
     #[test]
     fn test_predicate_is_number() {
         let value = Value::Number(Number::Integer(1));
-        let res = eval_is_number(&value).unwrap();
-        assert!(res.success);
-        assert!(!res.type_mismatch);
-        assert_eq!(res.actual, "integer <1>");
-        assert_eq!(res.expected, "number");
+        let result = eval_is_number(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "integer <1>");
+        assert_eq!(result.expected, "number");
 
         let value = Value::Number(Number::Float(1.0));
-        let res = eval_is_number(&value).unwrap();
-        assert!(res.success);
-        assert!(!res.type_mismatch);
-        assert_eq!(res.actual, "float <1.0>");
-        assert_eq!(res.expected, "number");
+        let result = eval_is_number(&value).unwrap();
+        assert!(result.success);
+        assert!(!result.type_mismatch);
+        assert_eq!(result.actual, "float <1.0>");
+        assert_eq!(result.expected, "number");
     }
 }

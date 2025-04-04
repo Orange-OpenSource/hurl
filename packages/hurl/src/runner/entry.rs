@@ -227,7 +227,7 @@ pub fn run(
 fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<RunnerError> {
     asserts
         .iter()
-        .filter_map(|assert| assert.error())
+        .filter_map(|assert| assert.to_runner_error())
         .map(
             |RunnerError {
                  source_info,
