@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -16,7 +18,6 @@
  *
  */
 use hurl_core::ast::{HurlFile, SourceInfo};
-use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 
 use crate::report::html::nav::Tab;
@@ -60,9 +61,7 @@ fn get_numbered_lines(content: &str) -> String {
     lines
 }
 
-lazy_static! {
-    static ref LINES_RE: Regex = Regex::new("<span class=\"line\">").unwrap();
-}
+static LINES_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new("<span class=\"line\">").unwrap());
 
 /// Adds error class to `content` lines that triggers `errors`.
 fn underline_errors(content: &str, errors: &[(RunnerError, SourceInfo)]) -> String {

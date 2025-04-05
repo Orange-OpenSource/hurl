@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 
-use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 
 use crate::html::entities::HTML5_ENTITIES_REF;
@@ -61,10 +60,8 @@ static INVALID_CHAR: [(u32, &str); 34] = [
     (0x9f, "\u{0178}"), // LATIN CAPITAL LETTER Y WITH DIAERESIS
 ];
 
-lazy_static! {
-    static ref INVALID_CHAR_REF: HashMap<u32, &'static str> =
-        INVALID_CHAR.iter().copied().collect();
-}
+static INVALID_CHAR_REF: LazyLock<HashMap<u32, &'static str>> =
+    LazyLock::new(|| INVALID_CHAR.iter().copied().collect());
 
 static INVALID_CODEPOINTS: [u32; 126] = [
     // 0x0001 to 0x0008
@@ -83,14 +80,14 @@ static INVALID_CODEPOINTS: [u32; 126] = [
     0xffffe, 0xfffff, 0x10fffe, 0x10ffff,
 ];
 
-lazy_static! {
-    static ref CHAR_REF: Regex = Regex::new(concat!(
+static CHAR_REF: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(concat!(
         r"&(#\d+;?",
         r"|#[xX][\da-fA-F]+;?",
         r"|[^\t\n\f <&#;]{1,32};?)",
     ))
-    .unwrap();
-}
+    .unwrap()
+});
 
 /// Convert all named and numeric character references (e.g. &gt;, &#62;,
 /// &x3e;) in the string `text` to the corresponding unicode characters.

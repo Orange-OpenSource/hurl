@@ -39,7 +39,6 @@ serde_json = { version = "1.0.140", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.4"
 xml-rs = { version = "0.8.25" }
-lazy_static = "1.5.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.16.0", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"

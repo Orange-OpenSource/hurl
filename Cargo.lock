@@ -519,7 +519,6 @@ dependencies = [
  "glob",
  "hex",
  "hurl_core",
- "lazy_static",
  "libflate",
  "libxml",
  "md5",

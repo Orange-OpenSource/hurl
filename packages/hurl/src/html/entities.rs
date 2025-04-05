@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
-use lazy_static::lazy_static;
+use std::{collections::HashMap, sync::LazyLock};
 
 // HTML5 named character references
 //
@@ -2258,7 +2256,5 @@ static HTML5_ENTITIES: [(&str, &str); 2231] = [
     ("zwnj;", "\u{200C}"),
 ];
 
-lazy_static! {
-    pub static ref HTML5_ENTITIES_REF: HashMap<&'static str, &'static str> =
-        HTML5_ENTITIES.iter().copied().collect();
-}
+pub static HTML5_ENTITIES_REF: LazyLock<HashMap<&'static str, &'static str>> =
+    LazyLock::new(|| HTML5_ENTITIES.iter().copied().collect());
