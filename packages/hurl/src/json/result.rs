@@ -361,7 +361,7 @@ impl ResponseJson {
                 // we want the `body` field to reference the relative path of a response compared
                 // to `report.json`.
                 let file = write_response(response, response_dir)?;
-                let parent = response_dir.components().last().unwrap();
+                let parent = response_dir.components().next_back().unwrap();
                 let parent: &Path = parent.as_ref();
                 Some(format!("{}/{}", parent.display(), file.display()))
             }
