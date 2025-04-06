@@ -91,7 +91,7 @@ impl ParallelRunner {
     ///
     /// - `runner -> worker`: is used to send [`Job`] processing request to a worker,
     /// - `worker -> runner`: is used to send [`WorkerMessage`] to update job progression, from a
-    ///    worker to the runner.
+    ///   worker to the runner.
     ///
     /// When a job is completed, depending on `output_type`, it can be outputted to standard output:
     /// whether as a raw response body bytes, or in a structured JSON output.
