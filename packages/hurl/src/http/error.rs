@@ -19,6 +19,7 @@ use crate::http::RequestedHttpVersion;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HttpError {
+    CouldNotParseCookieExpires(String),
     CouldNotParseResponse,
     CouldNotUncompressResponse {
         description: String,
@@ -63,6 +64,7 @@ impl HttpError {
     pub fn description(&self) -> String {
         match self {
             HttpError::AllowedResponseSizeExceeded(_) => "HTTP connection".to_string(),
+            HttpError::CouldNotParseCookieExpires(_) => "HTTP connection".to_string(),
             HttpError::CouldNotParseResponse => "HTTP connection".to_string(),
             HttpError::CouldNotUncompressResponse { .. } => "Decompression error".to_string(),
             HttpError::InvalidCharset { .. } => "Invalid charset".to_string(),
@@ -81,6 +83,9 @@ impl HttpError {
         match self {
             HttpError::AllowedResponseSizeExceeded(max_size) => {
                 format!("exceeded the maximum allowed file size ({max_size} bytes)")
+            }
+            HttpError::CouldNotParseCookieExpires(value) => {
+                format!("could not parse Cookie Expires attribute value <{value}>")
             }
             HttpError::CouldNotParseResponse => "could not parse Response".to_string(),
             HttpError::CouldNotUncompressResponse { description } => {
