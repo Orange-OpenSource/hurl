@@ -30,6 +30,7 @@ impl Value {
         match (self, other) {
             (Value::String(s1), Value::String(s2)) => Ok(s1.cmp(s2)),
             (Value::Number(n1), Value::Number(n2)) => Ok(n1.cmp_value(n2)),
+            (Value::Date(d1), Value::Date(d2)) => Ok(d1.cmp(d2)),
             _ => Err(EvalError::Type),
         }
     }

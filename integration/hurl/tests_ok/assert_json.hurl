@@ -10,6 +10,8 @@ insecure: false
 HTTP 200
 [Captures]
 count: jsonpath "$.count"
+date0: jsonpath "$.dates[0]" toDate "%+"
+date1: jsonpath "$.dates[1]" toDate "%+"
 [Asserts]
 jsonpath "$.count" == 5
 jsonpath "$.count" == 5.0
@@ -71,6 +73,12 @@ jsonpath "$.dates[0]" isIsoDate
 jsonpath "$.dates[1]" isIsoDate
 jsonpath "$.tags[0]" not isIsoDate
 jsonpath "$.tags[0]" not isNumber
+jsonpath "$.dates[0]" toDate "%+" == {{ date0 }}
+jsonpath "$.dates[0]" toDate "%+" <= {{ date1 }}
+jsonpath "$.dates[0]" toDate "%+" < {{ date1 }}
+jsonpath "$.dates[1]" toDate "%+" != {{ date0 }}
+jsonpath "$.dates[1]" toDate "%+" >= {{ date0 }}
+jsonpath "$.dates[1]" toDate "%+" > {{ date0 }}
 
 
 # FIXME do we accept count filter on object?
