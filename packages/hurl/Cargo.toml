@@ -22,7 +22,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "7.0.0"
 chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
-clap = { version = "4.5.35", features = ["string", "wrap_help"] }
+clap = { version = "4.5.36", features = ["string", "wrap_help"] }
 curl = "0.4.47"
 curl-sys = "0.4.80"
 encoding = "0.2.33"
@@ -51,7 +51,7 @@ termion = "4.0.5"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.18"
+cc = "1.2.19"
 
 [lints]
 workspace = true
