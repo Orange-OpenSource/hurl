@@ -96,3 +96,12 @@ cookie "UPPERCASE[Path]" == "/accounts"
 cookie "UPPERCASE[Secure]" exists
 cookie "UPPERCASE[HttpOnly]" exists
 cookie "UPPERCASE[SameSite]" == "Strict"
+
+# Check that expires attribute value is parsed successfully
+GET http://localhost:8000/cookies/expires
+HTTP 200
+Set-Cookie: expires_standard=value; Expires=Wed, 13 Jan 2021 22:23:01 GMT;
+Set-Cookie: expires_with_dash=value; Expires=Wed, 13-Jan-2021 22:23:01 GMT;
+[Asserts]
+cookie "expires_standard[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+cookie "expires_with_dash[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"

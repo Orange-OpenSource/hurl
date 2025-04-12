@@ -1,3 +1,4 @@
+use chrono::Utc;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -422,13 +423,22 @@ fn eval_cookie_attribute_name(
         CookieAttributeName::Value(_) => Ok(Some(Value::String(cookie.value))),
         CookieAttributeName::Expires(_) => {
             if let Some(s) = cookie.expires() {
-                match chrono::DateTime::parse_from_rfc2822(s.as_str()) {
-                    Ok(v) => Ok(Some(Value::Date(v.with_timezone(&chrono::Utc)))),
-                    Err(_) => Err(RunnerError::new(
+                if let Ok(v) = chrono::DateTime::parse_from_rfc2822(s.as_str()) {
+                    Ok(Some(Value::Date(v.with_timezone(&chrono::Utc))))
+
+                // support format with dash such as Wed, 13-Jan-2021 22:23:01 GMT
+                // TODO: search for for other possible date format used in the wild
+                } else if let Ok(v) = chrono::NaiveDateTime::parse_from_str(
+                    s.as_str(),
+                    "%a, %d-%b-%Y %H:%M:%S%.3f GMT",
+                ) {
+                    Ok(Some(Value::Date(v.and_local_timezone(Utc).unwrap())))
+                } else {
+                    Err(RunnerError::new(
                         query_source_info,
                         RunnerErrorKind::Http(http::HttpError::CouldNotParseCookieExpires(s)),
                         true,
-                    )),
+                    ))
                 }
             } else {
                 Ok(None)
