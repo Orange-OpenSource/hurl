@@ -87,28 +87,29 @@ Output options:
       --very-verbose           Turn on verbose output, including HTTP response and libcurl logs
 
 Run options:
-  --continue-on-error              Continue executing requests even if an error occurs
-  --delay <MILLISECONDS>           Sets delay before each request (aka sleep) [default: 0]
-  --from-entry <ENTRY_NUMBER>      Execute Hurl file from ENTRY_NUMBER (starting at 1)
-  --ignore-asserts                 Ignore asserts defined in the Hurl file
-  --interactive                    Turn on interactive mode
-  --jobs <NUM>                     Maximum number of parallel jobs
-  --parallel                       Run files in parallel (default in test mode)
-  --repeat <NUM>                   Repeat the input files sequence NUM times, -1 for infinite loop
-  --retry <NUM>                    Maximum number of retries, 0 for no retries, -1 for unlimited
-                                   retries
-  --retry-interval <MILLISECONDS>  Interval in milliseconds before a retry [default: 1000]
-  --secret <NAME=VALUE>            Define a variable which value is secret
-  --test                           Activate test mode (use parallel execution)
-  --to-entry <ENTRY_NUMBER>        Execute Hurl file to ENTRY_NUMBER (starting at 1)
-  --variable <NAME=VALUE>          Define a variable
-  --variables-file <FILE>          Define a properties file in which you define your variables
+      --continue-on-error              Continue executing requests even if an error occurs
+      --delay <MILLISECONDS>           Sets delay before each request (aka sleep) [default: 0]
+      --from-entry <ENTRY_NUMBER>      Execute Hurl file from ENTRY_NUMBER (starting at 1)
+      --ignore-asserts                 Ignore asserts defined in the Hurl file
+      --interactive                    Turn on interactive mode
+      --jobs <NUM>                     Maximum number of parallel jobs
+      --parallel                       Run files in parallel (default in test mode)
+      --repeat <NUM>                   Repeat the input files sequence NUM times, -1 for infinite
+                                       loop
+      --retry <NUM>                    Maximum number of retries, 0 for no retries, -1 for unlimited
+                                       retries
+      --retry-interval <MILLISECONDS>  Interval in milliseconds before a retry [default: 1000]
+      --secret <NAME=VALUE>            Define a variable which value is secret
+      --test                           Activate test mode (use parallel execution)
+      --to-entry <ENTRY_NUMBER>        Execute Hurl file to ENTRY_NUMBER (starting at 1)
+      --variable <NAME=VALUE>          Define a variable
+      --variables-file <FILE>          Define a properties file in which you define your variables
 
 Report options:
-  --report-html <DIR>    Generate HTML report to DIR
-  --report-json <DIR>    Generate JSON report to DIR
-  --report-junit <FILE>  Write a JUnit XML report to FILE
-  --report-tap <FILE>    Write a TAP report to FILE
+      --report-html <DIR>    Generate HTML report to DIR
+      --report-json <DIR>    Generate JSON report to DIR
+      --report-junit <FILE>  Write a JUnit XML report to FILE
+      --report-tap <FILE>    Write a TAP report to FILE
 
 Other options:
   -b, --cookie <FILE>      Read cookies from FILE
