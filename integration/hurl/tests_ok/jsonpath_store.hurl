@@ -26,6 +26,7 @@ jsonpath "$..book[:2].title" nth 1 == "Sword of Honour"
 jsonpath "$..book[?(@.isbn)]" count == 2                                   # filter all books with isbn number
 jsonpath "$..book[?(@.isbn)].title" nth 0 == "Moby Dick"
 jsonpath "$..book[?(@.isbn)].title" nth 1 == "The Lord of the Rings"
+jsonpath "$..book[?(@.isbn)].not_exist" count == 0                         # querying field that does not exist return an empty list
 jsonpath "$..book[?(@.price<10)]" count == 2                               # filter all books cheaper than 10
 jsonpath "$..book[?(@.price<10)].title" nth 0 == "Sayings of the Century"
 jsonpath "$..book[?(@.price<10)].title" nth 1 == "Moby Dick"
@@ -36,6 +37,7 @@ jsonpath "$..book[?(@.price != 10.00)]" count == 4                         # fil
 jsonpath "$..book[?(@.price != 8.95)]" count == 3                          # filter all books for price different from 8.95
 jsonpath "$..*" count == 31             	                           # all members of JSON structure.
 jsonpath "$..book[*].isbn" count == 2                                      # get list of isbn numbers
+jsonpath "$..book[*].not_exist" count == 0                                 # querying field that does not exist return an empty list
 
 {
   "store": {
