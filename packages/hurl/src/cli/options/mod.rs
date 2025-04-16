@@ -284,10 +284,10 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
     let config_options = if let Some(hurlrc_file) = get_config_file() {
         parse_config_file(&hurlrc_file)?
     } else {
-        eprintln!(">>> config file does not exist");
+        //eprintln!(">>> config file does not exist");
         CliOptions::default()
     };
-    eprintln!(">>> config option repeat={:?}", config_options.repeat);
+    //eprintln!(">>> config option repeat={:?}", config_options.repeat);
 
     let opts = parse_matches(&arg_matches, allow_color, config_options)?;
     if opts.input_files.is_empty() {
@@ -308,7 +308,7 @@ fn get_config_file() -> Option<PathBuf> {
         },
     };
     let config_file = Path::new(&config_home).join("hurlrc").to_owned();
-    eprintln!(">>> config_file={}", config_file.display());
+    //eprintln!(">>> config_file={}", config_file.display());
     if config_file.exists() {
         Some(config_file)
     } else {
