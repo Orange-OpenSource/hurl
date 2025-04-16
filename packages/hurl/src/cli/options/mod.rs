@@ -106,17 +106,6 @@ pub struct CliOptions {
     pub very_verbose: bool,
 }
 
-
-// impl Default for CliOptions  {
-//     // Required method
-//     fn default() -> CliOptions {
-//         CliOptions { aws_sigv4: (), 
-//             cacert_file: (), client_cert_file: (), client_key_file: (), color: (), 
-//             compressed: false, connect_timeout: (), connects_to: (), continue_on_error: (), cookie_input_file: None, cookie_output_file: (), curl_file: (), delay: (), error_format: (), file_root: (), follow_location: (), follow_location_trusted: (), from_entry: (), headers: (), html_dir: (), http_version: (), ignore_asserts: (), include: (), input_files: (), insecure: (), interactive: (), ip_resolve: (), jobs: (), json_report_dir: (), junit_file: (), limit_rate: (), max_filesize: (), max_redirect: (), netrc: (), netrc_file: (), netrc_optional: (), no_proxy: (), output: (), output_type: (), parallel: (), path_as_is: (), progress_bar: (), proxy: (), repeat: (), resolves: (), retry: (), retry_interval: (), secrets: (), ssl_no_revoke: (),
-//             tap_file: (), test: (), timeout: (), to_entry: (), unix_socket: (), user: (), user_agent: (), variables: (), verbose: (), very_verbose: () }
-//     }
-// }
-
 /// Error format: long or rich.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
@@ -292,12 +281,13 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         return Err(CliOptionsError::NoInput(help));
     }
 
-    // parse options from hurlrc file
     let config_options = if let Some(hurlrc_file) = get_config_file() {
         parse_config_file(&hurlrc_file)?
     } else {
+        eprintln!(">>> config file does not exist");
         CliOptions::default()
     };
+    eprintln!(">>> config option repeat={:?}", config_options.repeat);
 
     let opts = parse_matches(&arg_matches, allow_color, config_options)?;
     if opts.input_files.is_empty() {
@@ -311,20 +301,19 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
 
 fn get_config_file() -> Option<PathBuf> {
     let config_home = match env::var("XDG_CONFIG_HOME") {
-        Ok(val) =>  val,
+        Ok(val) => val,
         Err(_) => match env::var("HOME") {
-            Ok(val) =>  format!("{val}/.config"),
-            Err(_) => return None
-        }
-};
-    let config_file = Path::new(&format!("{config_home}/hurlrc")).to_owned();
+            Ok(val) => format!("{val}/.config"),
+            Err(_) => return None,
+        },
+    };
+    let config_file = Path::new(&config_home).join("hurlrc").to_owned();
+    eprintln!(">>> config_file={}", config_file.display());
     if config_file.exists() {
         Some(config_file)
     } else {
         None
     }
-
-
 }
 
 impl CliOptions {
@@ -342,7 +331,7 @@ fn parse_config_file(_config_file: &Path) -> Result<CliOptions, CliOptionsError>
 fn parse_matches(
     arg_matches: &ArgMatches,
     allow_color: bool,
-    config_options: CliOptions
+    config_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
     let aws_sigv4 = matches::aws_sigv4(arg_matches);
     let cacert_file = matches::cacert_file(arg_matches)?;
