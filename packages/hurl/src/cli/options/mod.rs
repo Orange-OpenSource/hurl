@@ -43,7 +43,7 @@ use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 /// Represents the list of all options that can be used in Hurl command line.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct CliOptions {
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<String>,
@@ -106,11 +106,28 @@ pub struct CliOptions {
     pub very_verbose: bool,
 }
 
+
+// impl Default for CliOptions  {
+//     // Required method
+//     fn default() -> CliOptions {
+//         CliOptions { aws_sigv4: (), 
+//             cacert_file: (), client_cert_file: (), client_key_file: (), color: (), 
+//             compressed: false, connect_timeout: (), connects_to: (), continue_on_error: (), cookie_input_file: None, cookie_output_file: (), curl_file: (), delay: (), error_format: (), file_root: (), follow_location: (), follow_location_trusted: (), from_entry: (), headers: (), html_dir: (), http_version: (), ignore_asserts: (), include: (), input_files: (), insecure: (), interactive: (), ip_resolve: (), jobs: (), json_report_dir: (), junit_file: (), limit_rate: (), max_filesize: (), max_redirect: (), netrc: (), netrc_file: (), netrc_optional: (), no_proxy: (), output: (), output_type: (), parallel: (), path_as_is: (), progress_bar: (), proxy: (), repeat: (), resolves: (), retry: (), retry_interval: (), secrets: (), ssl_no_revoke: (),
+//             tap_file: (), test: (), timeout: (), to_entry: (), unix_socket: (), user: (), user_agent: (), variables: (), verbose: (), very_verbose: () }
+//     }
+// }
+
 /// Error format: long or rich.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
     Short,
     Long,
+}
+
+impl Default for ErrorFormat {
+    fn default() -> Self {
+        ErrorFormat::Short
+    }
 }
 
 impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
@@ -275,7 +292,14 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         return Err(CliOptionsError::NoInput(help));
     }
 
-    let opts = parse_matches(&arg_matches, allow_color)?;
+    // parse options from hurlrc file
+    let config_options = if let Some(hurlrc_file) = get_config_file() {
+        parse_config_file(&hurlrc_file)?
+    } else {
+        CliOptions::default()
+    };
+
+    let opts = parse_matches(&arg_matches, allow_color, config_options)?;
     if opts.input_files.is_empty() {
         return Err(CliOptionsError::Error(
             "No input files provided".to_string(),
@@ -285,9 +309,40 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
     Ok(opts)
 }
 
+fn get_config_file() -> Option<PathBuf> {
+    let config_home = match env::var("XDG_CONFIG_HOME") {
+        Ok(val) =>  val,
+        Err(_) => match env::var("HOME") {
+            Ok(val) =>  format!("{val}/.config"),
+            Err(_) => return None
+        }
+};
+    let config_file = Path::new(&format!("{config_home}/hurlrc")).to_owned();
+    if config_file.exists() {
+        Some(config_file)
+    } else {
+        None
+    }
+
+
+}
+
+impl CliOptions {
+    pub fn repeat(&mut self, value: Option<Count>) {
+        self.repeat = value;
+    }
+}
+
+fn parse_config_file(_config_file: &Path) -> Result<CliOptions, CliOptionsError> {
+    let mut options = CliOptions::default();
+    options.repeat(Some(Count::Finite(2)));
+    Ok(options)
+}
+
 fn parse_matches(
     arg_matches: &ArgMatches,
     allow_color: bool,
+    config_options: CliOptions
 ) -> Result<CliOptions, CliOptionsError> {
     let aws_sigv4 = matches::aws_sigv4(arg_matches);
     let cacert_file = matches::cacert_file(arg_matches)?;
@@ -331,7 +386,7 @@ fn parse_matches(
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
-    let repeat = matches::repeat(arg_matches);
+    let repeat = matches::repeat(arg_matches, config_options.repeat);
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches)?;
@@ -418,6 +473,11 @@ pub enum OutputType {
     Json,
     /// Nothing is outputted on standard output when a Hurl file run is completed.
     NoOutput,
+}
+impl Default for OutputType {
+    fn default() -> Self {
+        OutputType::ResponseBody
+    }
 }
 
 impl CliOptions {

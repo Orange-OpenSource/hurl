@@ -381,11 +381,11 @@ pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "proxy")
 }
 
-pub fn repeat(arg_matches: &ArgMatches) -> Option<Count> {
+pub fn repeat(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
     match get::<i32>(arg_matches, "repeat") {
         Some(-1) => Some(Count::Infinite),
         Some(n) => Some(Count::Finite(n as usize)),
-        None => None,
+        None => default_value,
     }
 }
 

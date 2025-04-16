@@ -29,6 +29,11 @@ pub enum Count {
     Infinite,
 }
 
+impl Default for Count {
+    fn default() -> Self {
+        Count::Finite(0)
+    }
+}
 /// Represent a duration
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Duration {
