@@ -168,7 +168,7 @@ fn libxml_eval_xpath(
 
     // libxml2 prints to stdout warning and errors, so we mut it.
     unsafe {
-        libxml::bindings::initGenericErrorDefaultFunc(&mut Some(silentErrorFunc));
+        libxml::bindings::xmlSetGenericErrorFunc(ptr::null_mut(), Some(silentErrorFunc));
     }
 
     if support_ns {
