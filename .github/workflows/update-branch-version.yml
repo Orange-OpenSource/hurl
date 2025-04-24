@@ -77,6 +77,9 @@ jobs:
             done
           done
 
+      - name: Cargo lock update
+        run: cargo update hurl hurlfmt hurl_core
+
       - name: Update man
         run: |
           for package in hurl hurlfmt ; do
