@@ -72,14 +72,8 @@ function consume_args(){
     fi
 }
 
-# main
-init_terminal_colors
-consume_args "$@"
-zizmor --version
-error_count=0
-# disable excessive-permissions on git jobs for now because all yml permissions have to be rewrited from scratch"
-conf="/tmp/conf"
-cat <<- "EOF" > "${conf}"
+function set_zizmor_conf(){
+    cat <<- "EOF" > "$1"
   rules:
     excessive-permissions:
       ignore:
@@ -91,7 +85,21 @@ cat <<- "EOF" > "${conf}"
         - update-actions.yml
         - update-branch-version.yml
         - update-crates.yml
+    unpinned-uses:
+      config:
+        policies:
+          "*": ref-pin
 EOF
+}
+
+# main
+init_terminal_colors
+consume_args "$@"
+zizmor --version
+conf="/tmp/conf"
+set_zizmor_conf "${conf}"
+error_count=0
+
 for file in "${files[@]}" ; do
     # disable release.yml for now because output vars have to be rewrited from scratch"
     if [[ "${file}" =~ release.yml ]] ; then
