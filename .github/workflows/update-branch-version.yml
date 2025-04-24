@@ -77,10 +77,6 @@ jobs:
             done
           done
 
-      - name: Cargo update
-        run: |
-          ./bin/update_crates.sh
-
       - name: Update man
         run: |
           for package in hurl hurlfmt ; do
