@@ -1,6 +1,6 @@
 [package]
 name = "hurl_core"
-version = "6.2.0-SNAPSHOT"
+version = "7.0.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -11,7 +11,7 @@ repository = "https://github.com/Orange-OpenSource/hurl"
 
 [dependencies]
 colored = "3.0.0"
-libxml = "0.3.3"
+libxml = "0.3.4"
 regex = "1.11.1"
 
 [lints]
