@@ -27,6 +27,7 @@ def is_authorized(name: str) -> bool:
         "BSD-2-Clause",
         "BSD-3-Clause",
         "Unicode-3.0",
+        "ISC",
     ]:
         if licence in name:
             return True
