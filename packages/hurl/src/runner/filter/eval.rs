@@ -29,6 +29,7 @@ use crate::runner::filter::format::eval_format;
 use crate::runner::filter::html_escape::eval_html_escape;
 use crate::runner::filter::html_unescape::eval_html_unescape;
 use crate::runner::filter::jsonpath::eval_jsonpath;
+use crate::runner::filter::location::eval_location;
 use crate::runner::filter::nth::eval_nth;
 use crate::runner::filter::regex::eval_regex;
 use crate::runner::filter::replace::eval_replace;
@@ -97,6 +98,7 @@ pub fn eval_filter(
         FilterValue::JsonPath { expr, .. } => {
             eval_jsonpath(value, expr, variables, filter.source_info, in_assert)
         }
+        FilterValue::Location => eval_location(value, filter.source_info, in_assert),
         FilterValue::Regex {
             value: regex_value, ..
         } => eval_regex(value, regex_value, variables, filter.source_info, in_assert),

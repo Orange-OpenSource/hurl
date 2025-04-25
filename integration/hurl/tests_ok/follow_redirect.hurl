@@ -13,6 +13,8 @@ Accept: text/plain
 HTTP 200
 [Asserts]
 redirects count == 2
+redirects nth 0 location == "http://localhost:8000/following-redirect"
+redirects nth 1 location == "http://localhost:8000/followed-redirect"
 url == "http://localhost:8000/followed-redirect"
 `Followed redirect!`
 
@@ -24,8 +26,11 @@ Accept: text/plain
 HTTP 200
 [Asserts]
 redirects count == 2
+redirects nth 0 location == "http://localhost:8000/following-redirect"
+redirects nth 1 location == "http://localhost:8000/followed-redirect"
 url == "http://localhost:8000/followed-redirect"
 `Followed redirect!`
+
 
 # Check relative redirection
 GET http://localhost:8000/follow-redirect/relative/foo
@@ -33,6 +38,7 @@ Accept: text/plain
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://localhost:8000/follow-redirect/bar"
 url == "http://localhost:8000/follow-redirect/bar"
 `Followed relative redirect!`
 
@@ -43,6 +49,8 @@ Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -54,6 +62,8 @@ Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -65,6 +75,8 @@ user: bob@email.com:secret
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -75,6 +87,8 @@ user: bob@email.com:secret
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -86,6 +100,8 @@ bob@email.com: secret
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -96,6 +112,8 @@ bob@email.com: secret
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -105,5 +123,6 @@ Accept: text/plain
 HTTP 200
 [Asserts]
 redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-post"
 url == "http://localhost:8000/followed-redirect-post"
 `Followed redirect POST!`

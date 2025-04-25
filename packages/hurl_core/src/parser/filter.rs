@@ -65,6 +65,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             html_decode_filter,
             html_encode_filter,
             jsonpath_filter,
+            location_filter,
             nth_filter,
             regex_filter,
             replace_filter,
@@ -163,6 +164,11 @@ fn jsonpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     let space0 = one_or_more_spaces(reader)?;
     let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::JsonPath { space0, expr })
+}
+
+fn location_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("location", reader)?;
+    Ok(FilterValue::Location)
 }
 
 fn nth_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

@@ -404,13 +404,19 @@ fn eval_ip(response: &http::Response) -> QueryResult {
 
 /// Evaluates the redirects within a list of HTTP `responses`
 fn eval_redirects(responses: &[&http::Response]) -> QueryResult {
-    let mut values: Vec<Value> = responses
-        .iter()
-        .map(|r| Value::HttpResponse(HttpResponse::new(r.url.clone(), r.status)))
-        .collect();
-    // `responses` is the chain list of response triggers by following redirection. We want to only keep
-    // "redirected" HTTP response so we drop the last, not-redirected, response.
-    values.pop();
+    let mut it = responses.iter().peekable();
+    let mut values: Vec<Value> = vec![];
+    while let Some(r) = it.next() {
+        // We peek the next response in the response chain to use the next URL response
+        // as the current response location. The URLs' response chain has already been resolved
+        // we don't need to reconstruct the location from response headers.
+        let location = it.peek().map(|r| r.url.clone());
+        // We're only interested to redirection:
+        if location.is_some() {
+            let response = Value::HttpResponse(HttpResponse::new(location, r.status));
+            values.push(response);
+        }
+    }
     Ok(Some(Value::List(values)))
 }
 

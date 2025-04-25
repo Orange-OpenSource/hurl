@@ -300,6 +300,7 @@ pub enum FilterValue {
         space0: Whitespace,
         expr: Template,
     },
+    Location,
     Nth {
         space0: Whitespace,
         n: U64,
@@ -354,6 +355,7 @@ impl FilterValue {
             FilterValue::HtmlEscape => "htmlEscape",
             FilterValue::HtmlUnescape => "htmlUnescape",
             FilterValue::JsonPath { .. } => "jsonpath",
+            FilterValue::Location => "location",
             FilterValue::Nth { .. } => "nth",
             FilterValue::Regex { .. } => "regex",
             FilterValue::Replace { .. } => "replace",

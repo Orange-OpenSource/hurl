@@ -21,21 +21,21 @@ use std::fmt::Display;
 /// Represents an HTTP request for `Value::HttpResponse`
 #[derive(Clone, Debug)]
 pub struct HttpResponse {
-    /// URL of the request that triggers this response
-    url: Url,
+    /// Absolute URL of redirection
+    location: Option<Url>,
     /// Status code of the HTTP response
     status: u32,
 }
 
 impl HttpResponse {
-    /// Returns a new HTTP response, given an `url` and a `status` code.
-    pub fn new(url: Url, status: u32) -> Self {
-        HttpResponse { url, status }
+    /// Returns a new HTTP response, given an optional `location` of redirection and a `status` code.
+    pub fn new(location: Option<Url>, status: u32) -> Self {
+        HttpResponse { location, status }
     }
 
-    /// Returns the URL of the HTTP request associated to this response.
-    pub fn url(&self) -> &Url {
-        &self.url
+    /// Returns the (optional) redirection URL suggested by this HTTP response.
+    pub fn location(&self) -> Option<&Url> {
+        self.location.as_ref()
     }
 
     /// Returns the HTTP status code of this response.
@@ -46,6 +46,9 @@ impl HttpResponse {
 
 impl Display for HttpResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "url={} status={}", self.url, self.status)
+        match &self.location {
+            Some(url) => write!(f, "location={} status={}", url, self.status),
+            None => write!(f, "location=None status={}", self.status),
+        }
     }
 }

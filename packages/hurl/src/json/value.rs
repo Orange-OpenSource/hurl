@@ -83,7 +83,11 @@ impl Value {
             }
             Value::HttpResponse(v) => {
                 let mut map = serde_json::Map::new();
-                map.insert("url".to_string(), serde_json::Value::String(v.url().raw()));
+                let location = match v.location() {
+                    Some(loc) => loc.raw(),
+                    None => "None".to_string(),
+                };
+                map.insert("location".to_string(), serde_json::Value::String(location));
                 map.insert(
                     "status".to_string(),
                     serde_json::Value::Number(serde_json::Number::from(v.status())),

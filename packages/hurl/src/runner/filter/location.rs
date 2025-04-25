@@ -15,36 +15,20 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::SourceInfo;
 
-pub use eval::eval_filters;
-pub use jsonpath::eval_jsonpath_json;
-pub use xpath::eval_xpath_doc;
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
-mod base64_decode;
-mod base64_encode;
-mod base64_url_safe_decode;
-mod base64_url_safe_encode;
-mod count;
-mod days_after_now;
-mod days_before_now;
-mod decode;
-mod eval;
-mod format;
-mod html_escape;
-mod html_unescape;
-mod jsonpath;
-
-mod location;
-mod nth;
-mod regex;
-mod replace;
-mod split;
-mod to_date;
-mod to_float;
-mod to_hex;
-mod to_int;
-mod to_string;
-mod url_decode;
-mod url_encode;
-mod url_query_param;
-mod xpath;
+/// Evaluates the URL of an HTTP response, if `value` is of type `HttpResponse`
+pub fn eval_location(
+    value: &Value,
+    source_info: SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, RunnerError> {
+    if let Value::HttpResponse(resp) = value {
+        Ok(resp.location().map(|loc| Value::String(loc.raw())))
+    } else {
+        let kind = RunnerErrorKind::FilterInvalidInput(value.kind().to_string());
+        Err(RunnerError::new(source_info, kind, assert))
+    }
+}
