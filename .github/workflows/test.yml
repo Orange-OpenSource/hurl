@@ -28,7 +28,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -62,7 +62,7 @@ jobs:
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -84,7 +84,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -139,7 +139,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -432,7 +432,7 @@ jobs:
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Environment
