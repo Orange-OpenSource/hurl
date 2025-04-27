@@ -116,9 +116,9 @@ mod tests {
             comment: None,
             newline: whitespace(),
         };
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("tests");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
         let variables = VariableSet::default();
         let param = eval_file_param(
             &FileParam {

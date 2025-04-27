@@ -789,9 +789,9 @@ mod tests {
         // `not == 10` with value `10`    ValueError
         // `not == 10` with value `true`  => this is now valid
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -853,9 +853,9 @@ mod tests {
     #[test]
     fn test_predicate_type_mismatch() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 10`
         // value: true
@@ -876,9 +876,9 @@ mod tests {
     #[test]
     fn test_predicate_type_mismatch_with_unit() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 10`
         // value: Unit
@@ -897,9 +897,9 @@ mod tests {
     #[test]
     fn test_predicate_value_error() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 10`
         // value: 1
@@ -941,9 +941,9 @@ mod tests {
     #[test]
     fn test_predicate_exist() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `exist`
         // value: Some(Unit) | None
@@ -969,9 +969,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_integers() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 1`
         // value: 1
@@ -990,9 +990,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_booleans() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== false`
         // value: false
@@ -1028,9 +1028,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_floats() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 1.1`
         // value: 1.1
@@ -1049,9 +1049,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_float_integer() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 1`
         // value: 1.0
@@ -1070,9 +1070,9 @@ mod tests {
     #[test]
     fn test_predicate_value_not_equals() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== 1`
         // value: 2
@@ -1091,9 +1091,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_string() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // {{base_url}}
         let template = Template::new(
@@ -1267,9 +1267,9 @@ mod tests {
 
     #[test]
     fn test_predicate_not_with_different_types() {
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // equals predicate does not generate a type error with an integer value
         // predicate: `not == null`
@@ -1359,9 +1359,9 @@ mod tests {
     #[test]
     fn test_no_type_mismatch_with_none_value() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `== null`
         let predicate = Predicate {
@@ -1408,9 +1408,9 @@ mod tests {
     #[test]
     fn test_predicate_match() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
 
         // predicate: `matches /a{3}/`
         // value: aa

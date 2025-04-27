@@ -119,9 +119,9 @@ mod tests {
         });
 
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
         assert_eq!(
             eval_bytes(&bytes, &variables, &context_dir).unwrap(),
             http::Body::File(b"Hello World!".to_vec(), "tests/data.bin".to_string())
@@ -151,9 +151,9 @@ mod tests {
 
         let variables = VariableSet::new();
 
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
         let error = eval_bytes(&bytes, &variables, &context_dir).err().unwrap();
         assert_eq!(
             error.kind,

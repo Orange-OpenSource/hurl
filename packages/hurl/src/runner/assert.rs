@@ -266,9 +266,9 @@ pub mod tests {
     #[test]
     fn test_eval() {
         let variables = VariableSet::new();
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = Path::new("/home");
         let file_root = Path::new("file_root");
-        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let context_dir = ContextDir::new(current_dir, file_root);
         let mut cache = BodyCache::new();
         assert_eq!(
             eval_explicit_assert(
