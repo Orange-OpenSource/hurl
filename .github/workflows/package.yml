@@ -28,7 +28,7 @@ jobs:
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -71,7 +71,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.2.1
+      uses: actions/download-artifact@v4.3.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -125,7 +125,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.2.1
+      uses: actions/download-artifact@v4.3.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -177,7 +177,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.2.1
+      uses: actions/download-artifact@v4.3.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -229,7 +229,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.2.1
+      uses: actions/download-artifact@v4.3.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -357,7 +357,7 @@ jobs:
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -409,7 +409,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -461,7 +461,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -627,7 +627,7 @@ jobs:
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v5.5.0
+      uses: actions/setup-python@v5.6.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -677,7 +677,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@v4.2.1
+      - uses: actions/download-artifact@v4.3.0
         with:
           path: artifacts
       - name: Prerequisites
