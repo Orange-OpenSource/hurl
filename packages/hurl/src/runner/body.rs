@@ -98,7 +98,7 @@ mod tests {
     use super::*;
 
     #[test]
-    pub fn test_body_file() {
+    fn test_body_file() {
         // file, data.bin;
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    pub fn test_body_file_error() {
+    fn test_body_file_error() {
         // file, data.bin;
         let whitespace = Whitespace {
             value: String::from(" "),

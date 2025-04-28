@@ -18,7 +18,7 @@
 //! Access controlled path.
 use std::path::{Component, Path, PathBuf};
 
-/// Represents the directories used to run a Hurl file.
+/// Represents the contextual directories used to run a Hurl file.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ContextDir {
     /// The current working directory.
