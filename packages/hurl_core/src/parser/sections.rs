@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::{
-    Assert, Capture, Cookie, FileParam, FileValue, MultipartParam, Section, SectionValue,
+    Assert, Capture, Cookie, FilenameParam, FilenameValue, MultipartParam, Section, SectionValue,
     SourceInfo, Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
@@ -185,7 +185,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {
 fn multipart_param(reader: &mut Reader) -> ParseResult<MultipartParam> {
     let save = reader.cursor();
     match file_param(reader) {
-        Ok(f) => Ok(MultipartParam::FileParam(f)),
+        Ok(f) => Ok(MultipartParam::FilenameParam(f)),
         Err(e) => {
             if e.recoverable {
                 reader.seek(save);
@@ -198,7 +198,7 @@ fn multipart_param(reader: &mut Reader) -> ParseResult<MultipartParam> {
     }
 }
 
-fn file_param(reader: &mut Reader) -> ParseResult<FileParam> {
+fn file_param(reader: &mut Reader) -> ParseResult<FilenameParam> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let key = recover(key_string::parse, reader)?;
@@ -207,7 +207,7 @@ fn file_param(reader: &mut Reader) -> ParseResult<FileParam> {
     let space2 = zero_or_more_spaces(reader)?;
     let value = file_value(reader)?;
     let line_terminator0 = line_terminator(reader)?;
-    Ok(FileParam {
+    Ok(FilenameParam {
         line_terminators,
         space0,
         key,
@@ -218,7 +218,7 @@ fn file_param(reader: &mut Reader) -> ParseResult<FileParam> {
     })
 }
 
-fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
+fn file_value(reader: &mut Reader) -> ParseResult<FilenameValue> {
     try_literal("file,", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let f = filename::parse(reader)?;
@@ -252,7 +252,7 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
         }
     };
 
-    Ok(FileValue {
+    Ok(FilenameValue {
         space0,
         filename: f,
         space1,
@@ -485,7 +485,7 @@ mod tests {
         let mut reader = Reader::new("file,hello.txt;");
         assert_eq!(
             file_value(&mut reader).unwrap(),
-            FileValue {
+            FilenameValue {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
@@ -512,7 +512,7 @@ mod tests {
         let mut reader = Reader::new("file,hello.txt; text/html");
         assert_eq!(
             file_value(&mut reader).unwrap(),
-            FileValue {
+            FilenameValue {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),

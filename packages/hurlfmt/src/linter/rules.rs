@@ -17,8 +17,8 @@
  */
 use hurl_core::ast::{
     Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
-    CookiePath, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, GraphQl,
-    Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
+    CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue,
+    GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
     MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
     PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
     SourceInfo, Template, VariableDefinition, Whitespace,
@@ -521,13 +521,13 @@ fn lint_key_value(key_value: &KeyValue) -> KeyValue {
 fn lint_multipart_param(multipart_param: &MultipartParam) -> MultipartParam {
     match multipart_param {
         MultipartParam::Param(param) => MultipartParam::Param(lint_key_value(param)),
-        MultipartParam::FileParam(file_param) => {
-            MultipartParam::FileParam(lint_file_param(file_param))
+        MultipartParam::FilenameParam(file_param) => {
+            MultipartParam::FilenameParam(lint_file_param(file_param))
         }
     }
 }
 
-fn lint_file_param(file_param: &FileParam) -> FileParam {
+fn lint_file_param(file_param: &FilenameParam) -> FilenameParam {
     let line_terminators = file_param.line_terminators.clone();
     let space0 = file_param.space0.clone();
     let key = file_param.key.clone();
@@ -535,7 +535,7 @@ fn lint_file_param(file_param: &FileParam) -> FileParam {
     let space2 = file_param.space2.clone();
     let value = file_param.value.clone();
     let line_terminator0 = file_param.line_terminator0.clone();
-    FileParam {
+    FilenameParam {
         line_terminators,
         space0,
         key,

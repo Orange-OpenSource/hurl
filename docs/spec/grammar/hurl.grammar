@@ -96,15 +96,15 @@ options-section:
 
 key-value: key-string ":" value-string
 
-multipart-form-data-param: file-param | key-value
+multipart-form-data-param: filename-param | key-value
 
-file-param :
+filename-param:
   lt*
-  key-string ":" file-value lt
+  key-string ":" filename-value lt
 
-file-value: "file," filename ";" (file-contenttype)?
+filename-value: "file," filename ";" (filename-content-type)?
 
-file-contenttype: value-string
+filename-content-type: value-string
 
 capture:
   lt*

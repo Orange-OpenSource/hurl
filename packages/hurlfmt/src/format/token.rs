@@ -18,8 +18,8 @@
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, Expr, ExprKind,
-    File, FileParam, FileValue, Filter, FilterValue, Function, GraphQl, GraphQlVariables, Hex,
-    HurlFile, JsonListElement, JsonObjectElement, JsonValue, KeyValue, LineTerminator, Method,
+    File, FilenameParam, FilenameValue, Filter, FilterValue, Function, GraphQl, GraphQlVariables,
+    Hex, HurlFile, JsonListElement, JsonObjectElement, JsonValue, KeyValue, LineTerminator, Method,
     MultilineString, MultilineStringAttribute, MultilineStringKind, MultipartParam, NaturalOption,
     OptionKind, Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query,
     QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, Status, StatusValue,
@@ -300,12 +300,12 @@ impl Tokenizable for MultipartParam {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             MultipartParam::Param(key_value) => key_value.tokenize(),
-            MultipartParam::FileParam(file_param) => file_param.tokenize(),
+            MultipartParam::FilenameParam(file_param) => file_param.tokenize(),
         }
     }
 }
 
-impl Tokenizable for FileParam {
+impl Tokenizable for FilenameParam {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         tokens.append(&mut self.space0.tokenize());
@@ -319,7 +319,7 @@ impl Tokenizable for FileParam {
     }
 }
 
-impl Tokenizable for FileValue {
+impl Tokenizable for FilenameValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword("file,".to_string())];
         tokens.append(&mut self.space0.tokenize());

@@ -18,7 +18,7 @@
 use std::ffi::OsStr;
 use std::path::Path;
 
-use hurl_core::ast::{FileParam, FileValue, KeyValue, MultipartParam};
+use hurl_core::ast::{FilenameParam, FilenameValue, KeyValue, MultipartParam};
 
 use crate::http;
 use crate::runner::body::eval_file;
@@ -38,7 +38,7 @@ pub fn eval_multipart_param(
             let value = eval_template(value, variables)?;
             Ok(http::MultipartParam::Param(http::Param { name, value }))
         }
-        MultipartParam::FileParam(param) => {
+        MultipartParam::FilenameParam(param) => {
             let file_param = eval_file_param(param, context_dir, variables)?;
             Ok(http::MultipartParam::FileParam(file_param))
         }
@@ -46,7 +46,7 @@ pub fn eval_multipart_param(
 }
 
 pub fn eval_file_param(
-    file_param: &FileParam,
+    file_param: &FilenameParam,
     context_dir: &ContextDir,
     variables: &VariableSet,
 ) -> Result<http::FileParam, RunnerError> {
@@ -63,7 +63,7 @@ pub fn eval_file_param(
 }
 
 pub fn file_value_content_type(
-    file_value: &FileValue,
+    file_value: &FilenameValue,
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
     let value = match &file_value.content_type {
@@ -121,7 +121,7 @@ mod tests {
         let context_dir = ContextDir::new(current_dir, file_root);
         let variables = VariableSet::default();
         let param = eval_file_param(
-            &FileParam {
+            &FilenameParam {
                 line_terminators: vec![],
                 space0: whitespace(),
                 key: Template::new(
@@ -134,7 +134,7 @@ mod tests {
                 ),
                 space1: whitespace(),
                 space2: whitespace(),
-                value: FileValue {
+                value: FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,
@@ -175,7 +175,7 @@ mod tests {
 
         assert_eq!(
             file_value_content_type(
-                &FileValue {
+                &FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,
@@ -197,7 +197,7 @@ mod tests {
 
         assert_eq!(
             file_value_content_type(
-                &FileValue {
+                &FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,
@@ -219,7 +219,7 @@ mod tests {
 
         assert_eq!(
             file_value_content_type(
-                &FileValue {
+                &FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,
@@ -248,7 +248,7 @@ mod tests {
 
         assert_eq!(
             file_value_content_type(
-                &FileValue {
+                &FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,
@@ -270,7 +270,7 @@ mod tests {
 
         assert_eq!(
             file_value_content_type(
-                &FileValue {
+                &FilenameValue {
                     space0: whitespace(),
                     filename: Template::new(
                         None,

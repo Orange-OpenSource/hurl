@@ -19,12 +19,12 @@ use std::fmt::Display;
 
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
-    CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FileParam,
-    FileValue, Filter, FilterValue, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method,
-    MultilineString, MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate,
-    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue,
-    Request, Response, Section, SectionValue, Status, Template, VariableDefinition, VariableValue,
-    Version, Whitespace,
+    CookieAttribute, CookiePath, CountOption, DurationOption, Entry, EntryOption, File,
+    FilenameParam, FilenameValue, Filter, FilterValue, Hex, HurlFile, JsonValue, KeyValue,
+    LineTerminator, Method, MultilineString, MultipartParam, NaturalOption, OptionKind,
+    Placeholder, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryValue,
+    Regex, RegexValue, Request, Response, Section, SectionValue, Status, Template,
+    VariableDefinition, VariableValue, Version, Whitespace,
 };
 use crate::typing::{Count, ToSource};
 
@@ -298,11 +298,11 @@ impl HtmlFormatter {
     fn fmt_multipart_param(&mut self, param: &MultipartParam) {
         match param {
             MultipartParam::Param(param) => self.fmt_kv(param),
-            MultipartParam::FileParam(param) => self.fmt_file_param(param),
+            MultipartParam::FilenameParam(param) => self.fmt_file_param(param),
         };
     }
 
-    fn fmt_file_param(&mut self, param: &FileParam) {
+    fn fmt_file_param(&mut self, param: &FilenameParam) {
         self.fmt_lts(&param.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&param.space0);
@@ -315,7 +315,7 @@ impl HtmlFormatter {
         self.fmt_lt(&param.line_terminator0);
     }
 
-    fn fmt_file_value(&mut self, file_value: &FileValue) {
+    fn fmt_file_value(&mut self, file_value: &FilenameValue) {
         self.buffer.push_str("file,");
         self.fmt_space(&file_value.space0);
         self.fmt_filename(&file_value.filename);

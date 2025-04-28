@@ -80,22 +80,22 @@ pub struct Cookie {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultipartParam {
     Param(KeyValue),
-    FileParam(FileParam),
+    FilenameParam(FilenameParam),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FileParam {
+pub struct FilenameParam {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub key: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
-    pub value: FileValue,
+    pub value: FilenameValue,
     pub line_terminator0: LineTerminator,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FileValue {
+pub struct FilenameValue {
     pub space0: Whitespace,
     pub filename: Template,
     pub space1: Whitespace,

@@ -19,7 +19,7 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
-    CountOption, DurationOption, Entry, EntryOption, File, FileParam, Filter, FilterValue, Hex,
+    CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue, Hex,
     HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString, MultilineStringKind,
     MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate, PredicateFuncValue,
     PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, StatusValue,
@@ -270,12 +270,12 @@ impl ToJson for MultipartParam {
     fn to_json(&self) -> JValue {
         match self {
             MultipartParam::Param(param) => param.to_json(),
-            MultipartParam::FileParam(param) => param.to_json(),
+            MultipartParam::FilenameParam(param) => param.to_json(),
         }
     }
 }
 
-impl ToJson for FileParam {
+impl ToJson for FilenameParam {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![
             ("name".to_string(), JValue::String(self.key.to_string())),
