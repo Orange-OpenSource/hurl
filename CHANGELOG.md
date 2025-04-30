@@ -1,4 +1,4 @@
-[6.2.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.2.0)
+[7.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
 ========================================================================================================================
 
 Thanks to
@@ -11,6 +11,7 @@ Thanks to
 [@verigak](https://github.com/verigak),
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@nfj25](https://github.com/nfj25),
+[@nwellnhof](https://github.com/nwellnhof),
 
 Enhancements:
 
@@ -25,6 +26,7 @@ Bugs Fixed:
 * Parse verbose flag in curl command [#3760](https://github.com/Orange-OpenSource/hurl/issues/3760)
 * Keep secret value forever, even if a secret variable override an existing one [#3898](https://github.com/Orange-OpenSource/hurl/issues/3898)
 * Parse cookie Expires date attribute with '-' [#3956](https://github.com/Orange-OpenSource/hurl/issues/3956)
+* Replace deprecated libxml2 initGenericErrorDefaultFunc with xmlSetGenericErrorFunc [#3975](https://github.com/Orange-OpenSource/hurl/issues/3975)
 
 
 [6.1.1 (2025-03-19)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
