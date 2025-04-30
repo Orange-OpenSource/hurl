@@ -809,13 +809,16 @@ impl HtmlFormatter {
     }
 
     fn fmt_lts(&mut self, line_terminators: &[LineTerminator]) {
-        for line_terminator in line_terminators {
+        for lt in line_terminators {
             self.fmt_span_open("line");
-            if line_terminator.newline.value.is_empty() {
-                self.buffer.push_str("<br />");
+            self.fmt_space(&lt.space0);
+            if let Some(v) = &lt.comment {
+                self.fmt_comment(v);
             }
             self.fmt_span_close();
-            self.fmt_lt(line_terminator);
+            if !lt.newline.value.is_empty() {
+                self.buffer.push_str(lt.newline.as_str());
+            }
         }
     }
 }
