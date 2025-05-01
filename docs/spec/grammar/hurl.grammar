@@ -562,6 +562,7 @@ filter:
   | split-filter
   | to-date-filter
   | to-float-filter
+  | to-hex-filter
   | to-int-filter
   | to-string-filter
   | url-decode-filter
@@ -604,6 +605,8 @@ split-filter: "split" sp quoted-string
 to-date-filter: "toDate" sp quoted-string
 
 to-float-filter: "toFloat"
+
+to-hex-filter: "toHex"
 
 to-int-filter: "toInt"
 

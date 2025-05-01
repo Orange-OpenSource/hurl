@@ -800,6 +800,7 @@ impl HtmlFormatter {
             | FilterValue::HtmlEscape
             | FilterValue::HtmlUnescape
             | FilterValue::ToFloat
+            | FilterValue::ToHex
             | FilterValue::ToInt
             | FilterValue::ToString
             | FilterValue::UrlDecode

@@ -22,6 +22,7 @@ jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"          
 jsonpath "$.ips" split ", " count == 3                                                      # split
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000                    # toDate
 jsonpath "$.pi" toFloat == 3.14                                                             # toFloat
+sha256 toHex == "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81"          # toHex
 jsonpath "$.id" toInt == 123                                                                # toInt
 jsonpath "$.id" toString == "123"                                                           # toString
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"                        # urlDecode

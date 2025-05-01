@@ -304,6 +304,7 @@ Short description:
 <span class="grammar-symbol">|</span><a href="#split-filter">split-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#to-date-filter">to-date-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#to-float-filter">to-float-filter</a><br>
+<span class="grammar-symbol">|</span><a href="#to-hex-filter">to-hex-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#to-int-filter">to-int-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#to-string-filter">to-string-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#url-decode-filter">url-decode-filter</a><br>
@@ -328,6 +329,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="split-filter">split-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">split</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="to-date-filter">to-date-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">toDate</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="to-float-filter">to-float-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">toFloat</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="to-hex-filter">to-hex-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">toFloat</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="to-int-filter">to-int-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">toInt</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="to-string-filter">to-string-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">toString</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="url-decode-filter">url-decode-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">urlDecode</span></div></div>

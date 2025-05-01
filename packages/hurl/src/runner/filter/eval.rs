@@ -119,6 +119,7 @@ pub fn eval_filter(
             eval_to_date(value, fmt, variables, filter.source_info, in_assert)
         }
         FilterValue::ToFloat => eval_to_float(value, filter.source_info, in_assert),
+        FilterValue::ToHex => todo!(),
         FilterValue::ToInt => eval_to_int(value, filter.source_info, in_assert),
         FilterValue::ToString => eval_to_string(value, filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
