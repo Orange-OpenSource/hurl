@@ -25,7 +25,7 @@ def test(html_file):
 
 def extract_hurl_content(hurl_file):
     s = open(hurl_file).read()
-    return BeautifulSoup(s, "lxml").text
+    return BeautifulSoup(s, "html.parser").text
 
 
 def main():

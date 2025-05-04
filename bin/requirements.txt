@@ -1,6 +1,5 @@
 beautifulsoup4==4.12.3
 Flask==3.0.3
-lxml==5.2.2
 mypy==1.10.0
 requests==2.32.3
 ruff==0.7.3
