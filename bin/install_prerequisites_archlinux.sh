@@ -21,4 +21,3 @@ sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
 
 # Temporary install to patch a python3/pip crash
 pacman -Syu --noconfirm expat
-
