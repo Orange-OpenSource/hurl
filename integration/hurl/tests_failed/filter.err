@@ -67,44 +67,44 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-11 | jsonpath "$.id" toInt == 123
+11 | jsonpath "$.id" toHex == "d188d0b5d0bbd0bbd18b"
+   |                 ^^^^^ invalid filter input: string
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:12:17
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+12 | jsonpath "$.id" toInt == 123
    |                 ^^^^^ invalid filter input: string <123x>
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:12:21
+  --> tests_failed/filter.hurl:13:21
    |
    | GET http://localhost:8000/error-filter
    | ...
-12 | jsonpath "$.status" toInt == 0
+13 | jsonpath "$.status" toInt == 0
    |                     ^^^^^ invalid filter input: boolean <true>
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:13:22
+  --> tests_failed/filter.hurl:14:22
    |
    | GET http://localhost:8000/error-filter
    | ...
-13 | jsonpath "$.unknown" toInt == 1
+14 | jsonpath "$.unknown" toInt == 1
    |                      ^^^^^ missing value to apply filter
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:14:19
+  --> tests_failed/filter.hurl:15:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-14 | jsonpath "$.list" nth 5 == 3
+15 | jsonpath "$.list" nth 5 == 3
    |                   ^^^^^ invalid filter input: Out of bound - size is 3
-   |
-
-error: Filter error
-  --> tests_failed/filter.hurl:15:17
-   |
-   | GET http://localhost:8000/error-filter
-   | ...
-15 | jsonpath "$.id" toDate "%a, %d %b %Y %H:%M:%S GMT" == "unused"
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string <123x>
    |
 
 error: Filter error
@@ -112,8 +112,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-16 | jsonpath "$.id" daysAfterNow == 1
-   |                 ^^^^^^^^^^^^ invalid filter input: string
+16 | jsonpath "$.id" toDate "%a, %d %b %Y %H:%M:%S GMT" == "unused"
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string <123x>
    |
 
 error: Filter error
@@ -121,8 +121,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-17 | jsonpath "$.id" daysBeforeNow == 1
-   |                 ^^^^^^^^^^^^^ invalid filter input: string
+17 | jsonpath "$.id" daysAfterNow == 1
+   |                 ^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error
@@ -130,8 +130,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-18 | jsonpath "$.id" decode "utf-8" == "help"
-   |                 ^^^^^^^^^^^^^^ invalid filter input: string
+18 | jsonpath "$.id" daysBeforeNow == 1
+   |                 ^^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error
@@ -139,17 +139,17 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-19 | jsonpath "$.id" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string
+19 | jsonpath "$.id" decode "utf-8" == "help"
+   |                 ^^^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:20:21
+  --> tests_failed/filter.hurl:20:17
    |
    | GET http://localhost:8000/error-filter
    | ...
-20 | jsonpath "$.number" htmlEscape == "a &gt; b"
-   |                     ^^^^^^^^^^ invalid filter input: integer
+20 | jsonpath "$.id" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error
@@ -157,8 +157,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-21 | jsonpath "$.number" htmlUnescape == "a > b"
-   |                     ^^^^^^^^^^^^ invalid filter input: integer
+21 | jsonpath "$.number" htmlEscape == "a &gt; b"
+   |                     ^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -166,35 +166,35 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-22 | jsonpath "$.number" jsonpath "$.name" == "help"
+22 | jsonpath "$.number" htmlUnescape == "a > b"
+   |                     ^^^^^^^^^^^^ invalid filter input: integer
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:23:21
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+23 | jsonpath "$.number" jsonpath "$.name" == "help"
    |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Invalid JSON
-  --> tests_failed/filter.hurl:23:17
-   |
-   | GET http://localhost:8000/error-filter
-   | ...
-23 | jsonpath "$.id" jsonpath "$.name" == "help"
-   |                 ^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
-   |
-
-error: Filter error
   --> tests_failed/filter.hurl:24:17
    |
    | GET http://localhost:8000/error-filter
    | ...
-24 | jsonpath "$.id" nth 0 == 123
-   |                 ^^^^^ invalid filter input: string <123x>
+24 | jsonpath "$.id" jsonpath "$.name" == "help"
+   |                 ^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:25:21
+  --> tests_failed/filter.hurl:25:17
    |
    | GET http://localhost:8000/error-filter
    | ...
-25 | jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
-   |                     ^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
+25 | jsonpath "$.id" nth 0 == 123
+   |                 ^^^^^ invalid filter input: string <123x>
    |
 
 error: Filter error
@@ -202,8 +202,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-26 | jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
-   |                     ^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
+26 | jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
+   |                     ^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -211,8 +211,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-27 | jsonpath "$.number" split ", " count == 3
-   |                     ^^^^^^^^^^ invalid filter input: integer <42>
+27 | jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
+   |                     ^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -220,8 +220,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-28 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
-   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
+28 | jsonpath "$.number" split ", " count == 3
+   |                     ^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -229,8 +229,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-29 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
-   |                     ^^^^^^^^^ invalid filter input: integer
+29 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -238,7 +238,7 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-30 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+30 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
    |                     ^^^^^^^^^ invalid filter input: integer
    |
 
@@ -247,8 +247,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-31 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
-   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+31 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+   |                     ^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -256,16 +256,25 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-32 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
+32 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
+   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:33:21
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+33 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
    |                     ^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:33:19
+  --> tests_failed/filter.hurl:34:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-33 | jsonpath "$.list" toString == "[]"
+34 | jsonpath "$.list" toString == "[]"
    |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
    |
 

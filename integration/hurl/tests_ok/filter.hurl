@@ -28,6 +28,7 @@ jsonpath "$.id" toInt == 123
 jsonpath "$.id" toFloat == 123
 jsonpath "$.score" toInt == 1
 jsonpath "$.score" toFloat == 1.6
+jsonpath "$.file" base64Decode toHex == "d188d0b5d0bbd0bbd18b"
 jsonpath "$.ips" split ", " count == 3
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 jsonpath "$.json" jsonpath "$.message" == "Hello"

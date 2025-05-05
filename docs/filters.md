@@ -280,6 +280,17 @@ HTTP 200
 jsonpath "$.pi" toFloat == 3.14
 ```
 
+### toHex
+
+Converts bytes to hexadecimal string.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+bytes toHex == "d188d0b5d0bbd0bbd18b"
+```
+
 ### toInt
 
 Converts value to integer number.
