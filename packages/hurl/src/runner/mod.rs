@@ -43,6 +43,7 @@ mod event;
 mod expr;
 mod filter;
 mod function;
+pub mod hex;
 mod http_response;
 mod hurl_file;
 mod json;

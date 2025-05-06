@@ -18,6 +18,7 @@
 use std::cmp::Ordering;
 use std::fmt;
 
+use crate::runner::hex;
 use crate::runner::HttpResponse;
 use crate::runner::Number;
 

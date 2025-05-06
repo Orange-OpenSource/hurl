@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-use hex;
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{hex, RunnerError, RunnerErrorKind, Value};
 
 /// Converts bytes `value` to hexadecimal string.
 pub fn eval_to_hex(

@@ -18,6 +18,7 @@
 use encoding::DecoderTrap;
 
 use crate::http::{mimetype, HeaderVec};
+use crate::runner::hex;
 use crate::util::logger::Logger;
 
 /// Logs a buffer of bytes representing an HTTP request or response `body`.
