@@ -464,7 +464,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Setup wsl Ubuntu
-      uses: Vampire/setup-wsl@v5.0.0
+      uses: Vampire/setup-wsl@v5.0.1
       with:
         distribution: Ubuntu-22.04
         wsl-version: 2
