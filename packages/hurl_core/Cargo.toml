@@ -11,7 +11,7 @@ repository = "https://github.com/Orange-OpenSource/hurl"
 
 [dependencies]
 colored = "3.0.0"
-libxml = "0.3.3"
+libxml = "0.3.5"
 regex = "1.11.1"
 
 [lints]

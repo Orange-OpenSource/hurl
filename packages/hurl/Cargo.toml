@@ -20,22 +20,22 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
 base64 = "0.22.1"
-brotli = "7.0.0"
-chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
-clap = { version = "4.5.36", features = ["string", "wrap_help"] }
+brotli = "8.0.1"
+chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
+clap = { version = "4.5.37", features = ["string", "wrap_help"] }
 curl = "0.4.47"
 curl-sys = "0.4.80"
 encoding = "0.2.33"
 glob = "0.3.2"
 hurl_core = { version = "7.0.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.1.0"
-libxml = "0.3.3"
+libxml = "0.3.5"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.11.1"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = { version = "1.0.140", features = ["arbitrary_precision"] }
-sha2 = "0.10.8"
+sha2 = "0.10.9"
 url = "2.5.4"
 xml-rs = { version = "0.8.26" }
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
@@ -50,7 +50,7 @@ termion = "4.0.5"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.18"
+cc = "1.2.21"
 
 [lints]
 workspace = true
