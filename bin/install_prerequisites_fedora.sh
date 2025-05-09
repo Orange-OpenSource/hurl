@@ -20,3 +20,5 @@ ln -sf /usr/bin/python3.11 /usr/bin/python3
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
 
+# libxml crate >= 0.3.4 uses bindgen
+yum install -y clang-devel

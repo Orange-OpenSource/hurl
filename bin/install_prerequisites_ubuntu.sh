@@ -30,3 +30,6 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
 sudo service squid stop || true
 sudo squid -k shutdown || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+# libxml crate >= 0.3.4 uses bindgen
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install libclang-dev
