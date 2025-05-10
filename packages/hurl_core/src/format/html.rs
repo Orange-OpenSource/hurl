@@ -129,7 +129,6 @@ impl HtmlFormatter {
         self.fmt_space(&request.space1);
         let url = escape_xml(request.url.to_source().as_str());
         self.fmt_span("url", &url);
-        self.fmt_span_close();
         self.fmt_lt(&request.line_terminator0);
         request.headers.iter().for_each(|h| self.fmt_kv(h));
         request.sections.iter().for_each(|s| self.fmt_section(s));
@@ -147,7 +146,6 @@ impl HtmlFormatter {
         self.fmt_version(&response.version);
         self.fmt_space(&response.space1);
         self.fmt_status(&response.status);
-        self.fmt_span_close();
         self.fmt_lt(&response.line_terminator0);
         response.headers.iter().for_each(|h| self.fmt_kv(h));
         response.sections.iter().for_each(|s| self.fmt_section(s));
@@ -175,7 +173,6 @@ impl HtmlFormatter {
         self.fmt_span_open("line");
         let name = format!("[{}]", section.identifier());
         self.fmt_span("section-header", &name);
-        self.fmt_span_close();
         self.fmt_lt(&section.line_terminator0);
         self.fmt_section_value(&section.value);
     }
@@ -210,7 +207,6 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&kv.space2);
         self.fmt_template(&kv.value);
-        self.fmt_span_close();
         self.fmt_lt(&kv.line_terminator0);
     }
 
@@ -260,7 +256,6 @@ impl HtmlFormatter {
             OptionKind::Verbose(value) => self.fmt_bool_option(value),
             OptionKind::VeryVerbose(value) => self.fmt_bool_option(value),
         };
-        self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }
 
@@ -311,7 +306,6 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&param.space2);
         self.fmt_file_value(&param.value);
-        self.fmt_span_close();
         self.fmt_lt(&param.line_terminator0);
     }
 
@@ -343,7 +337,6 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&cookie.space2);
         self.fmt_template(&cookie.value);
-        self.fmt_span_close();
         self.fmt_lt(&cookie.line_terminator0);
     }
 
@@ -364,7 +357,6 @@ impl HtmlFormatter {
         if capture.redact {
             self.fmt_string("redact");
         }
-        self.fmt_span_close();
         self.fmt_lt(&capture.line_terminator0);
     }
 
@@ -465,7 +457,6 @@ impl HtmlFormatter {
         }
         self.fmt_space(&assert.space1);
         self.fmt_predicate(&assert.predicate);
-        self.fmt_span_close();
         self.fmt_lt(&assert.line_terminator0);
     }
 
@@ -597,7 +588,12 @@ impl HtmlFormatter {
         self.fmt_lts(&body.line_terminators);
         self.fmt_space(&body.space0);
         self.fmt_bytes(&body.value);
-        self.fmt_lt(&body.line_terminator0);
+        let lt = &body.line_terminator0;
+        self.fmt_space(&lt.space0);
+        if let Some(v) = &lt.comment {
+            self.fmt_comment(v);
+        }
+        self.buffer.push_str(lt.newline.as_str());
     }
 
     fn fmt_bytes(&mut self, bytes: &Bytes) {
@@ -690,6 +686,7 @@ impl HtmlFormatter {
         if let Some(v) = &lt.comment {
             self.fmt_comment(v);
         }
+        self.fmt_span_close();
         self.buffer.push_str(lt.newline.as_str());
     }
 
