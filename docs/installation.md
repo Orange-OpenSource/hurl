@@ -142,31 +142,31 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 #### Debian based distributions
 
 ```shell
-$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
 ```
 
 #### Fedora based distributions
 
 ```shell
-$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel
+$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Red Hat based distributions
 
 ```shell
-$ yum install -y pkg-config gcc openssl-devel libxml2-devel
+$ yum install -y pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Arch based distributions
 
 ```shell
-$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2
+$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2 clang
 ```
 
 #### Alpine based distributions
 
 ```shell
-$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev
+$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev clang-dev
 ```
 
 ### Build on macOS
