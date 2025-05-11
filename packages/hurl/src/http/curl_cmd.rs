@@ -62,7 +62,7 @@ impl CurlCmd {
     ) -> Self {
         let mut args = vec!["curl".to_string()];
 
-        let mut params = method_params(request_spec);
+        let mut params = method_params(request_spec, options.follow_location);
         args.append(&mut params);
 
         let options_headers = options
@@ -95,11 +95,11 @@ impl CurlCmd {
 }
 
 /// Returns the curl args corresponding to the HTTP method, from a request spec.
-fn method_params(request_spec: &RequestSpec) -> Vec<String> {
+fn method_params(request_spec: &RequestSpec, follow_location: bool) -> Vec<String> {
     let has_body = !request_spec.multipart.is_empty()
         || !request_spec.form.is_empty()
         || !request_spec.body.bytes().is_empty();
-    request_spec.method.curl_args(has_body)
+    request_spec.method.curl_args(has_body, follow_location)
 }
 
 /// Returns the curl args corresponding to the HTTP headers, from a list of headers,
@@ -280,7 +280,7 @@ fn encode_bytes(bytes: &[u8]) -> String {
 
 impl Method {
     /// Returns the curl args for HTTP method, given the request has a body or not.
-    fn curl_args(&self, has_body: bool) -> Vec<String> {
+    fn curl_args(&self, has_body: bool, follow_location: bool) -> Vec<String> {
         match self.0.as_str() {
             "GET" => {
                 if has_body {
@@ -291,8 +291,20 @@ impl Method {
             }
             "HEAD" => vec!["--head".to_string()],
             "POST" => {
+                // In <https://curl.se/docs/manpage.html#-X>, `--location` and `--request/-X` does not well play together:
+                //
+                // > The method string you set with -X, --request is used for all requests, which if you for example use -L,
+                // > --location may cause unintended side-effects when curl does not change request method according to the
+                // > HTTP 30x response codes - and similar.
+                //
+                // When we use `--request POST` with curl, we're telling curl to make POST requests for every request. This
+                // can interfere with `--location` option that can make GET requests following the initial POST. So, in the
+                // case of a POST request with `--location` option, we don't force the method to let curl decides the right
+                // method of the redirection steps.
                 if has_body {
                     vec![]
+                } else if follow_location {
+                    vec!["--data".to_string(), "''".to_string()]
                 } else {
                     vec!["--request".to_string(), "POST".to_string()]
                 }

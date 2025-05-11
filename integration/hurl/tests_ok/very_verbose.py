@@ -21,7 +21,7 @@ The document has moved
     return response
 
 
-@app.route("/very-verbose/redirect")
+@app.route("/very-verbose/redirect", methods=["GET", "POST"])
 def very_verbose_redirect():
     return redirect(location="/very-verbose/redirected")
 

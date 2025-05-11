@@ -1,6 +1,8 @@
 GET http://localhost:8000/very-verbose/redirect
 HTTP 200
 
+POST http://localhost:8000/very-verbose/redirect
+HTTP 200
 
 GET http://localhost:8000/very-verbose/encoding/latin1
 HTTP 200

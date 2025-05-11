@@ -15,7 +15,7 @@
 ** IPv6: ::1
 ** IPv4: 127.0.0.1
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 63996 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49368 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/redirect HTTP/1.1
@@ -65,7 +65,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 63998 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49370 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/redirected HTTP/1.1
@@ -106,6 +106,104 @@
 * Cookie store:
 *
 * Request:
+* POST http://localhost:8000/very-verbose/redirect
+*
+* Request can be run with the following curl command:
+* curl --data '' --location 'http://localhost:8000/very-verbose/redirect'
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 49372 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> POST /very-verbose/redirect HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Closing connection
+* Response: (received 205 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 301 MOVED PERMANENTLY
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 205
+< Location: /very-verbose/redirected
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+* <html>
+* <head>
+*     <meta content="text/html;charset=utf-8">
+*     <title>301 Moved</title>
+* </head>
+* <body>
+* <h1>301 Moved</h1>
+* The document has moved
+* <a href="/very-verbose/redirected">here</a>.
+* </body>
+* </html>
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* => Redirect to http://localhost:8000/very-verbose/redirected
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 49374 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> GET /very-verbose/redirected HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Closing connection
+* Response: (received 11 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 11
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+* Redirected.
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
 * GET http://localhost:8000/very-verbose/encoding/latin1
 *
 * Request can be run with the following curl command:
@@ -113,7 +211,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64000 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49376 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/encoding/latin1 HTTP/1.1
@@ -149,7 +247,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 3
+* Executing entry 4
 *
 * Cookie store:
 *
@@ -162,7 +260,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64002 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49378 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > POST /very-verbose/compressed/brotli HTTP/1.1
@@ -205,7 +303,7 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 4
+* Executing entry 5
 *
 * Cookie store:
 *
@@ -217,7 +315,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64004 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49380 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/cat HTTP/1.1
@@ -253,58 +351,6 @@
 * total: <<<\d+>>> µs
 *
 * ------------------------------------------------------------------------------
-* Executing entry 5
-*
-* Cookie store:
-*
-* Request:
-* POST http://localhost:8000/very-verbose/update-cat
-* [MultipartFormData]
-* cat: file,cat.jpg; image/jpeg
-*
-* Request can be run with the following curl command:
-* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
-*
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64006 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
-> POST /very-verbose/update-cat HTTP/1.1
-> Host: localhost:8000
-> Accept: */*
-> User-Agent: hurl/<<<.*?>>>
-> Content-Length: <<<\d+>>>
-> Content-Type: multipart/form-data; boundary=<<<[a-zA-Z0-9-]+>>>
->
-* Request body:
-* Bytes <<<<.*?>>><<<.*?>>>...>
-** upload completely sent off: 26584 bytes
-** Closing connection
-* Response: (received 0 bytes in <<<\d+>>> ms)
-*
-< HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 0
-< Server: Flask Server
-< Connection: close
-<
-* Response body:
-*
-*
-* Timings:
-* begin: <<<.*?>>>
-* end: <<<.*?>>>
-* namelookup: <<<\d+>>> µs
-* connect: <<<\d+>>> µs
-* app_connect: <<<\d+>>> µs
-* pre_transfer: <<<\d+>>> µs
-* start_transfer: <<<\d+>>> µs
-* total: <<<\d+>>> µs
-*
-* ------------------------------------------------------------------------------
 * Executing entry 6
 *
 * Cookie store:
@@ -319,7 +365,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64008 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49382 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > POST /very-verbose/update-cat HTTP/1.1
@@ -362,6 +408,58 @@
 * Cookie store:
 *
 * Request:
+* POST http://localhost:8000/very-verbose/update-cat
+* [MultipartFormData]
+* cat: file,cat.jpg; image/jpeg
+*
+* Request can be run with the following curl command:
+* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
+*
+** Hostname localhost was found in DNS cache
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 49384 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> POST /very-verbose/update-cat HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: <<<\d+>>>
+> Content-Type: multipart/form-data; boundary=<<<[a-zA-Z0-9-]+>>>
+>
+* Request body:
+* Bytes <<<<.*?>>><<<.*?>>>...>
+** upload completely sent off: 26584 bytes
+** Closing connection
+* Response: (received 0 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
+< Date: <<<.*?>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 0
+< Server: Flask Server
+< Connection: close
+<
+* Response body:
+*
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* ------------------------------------------------------------------------------
+* Executing entry 8
+*
+* Cookie store:
+*
+* Request:
 * GET http://localhost:8000/very-verbose/done
 * x-foo: bar
 *
@@ -370,7 +468,7 @@
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 64010 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 49386 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/done HTTP/1.1
