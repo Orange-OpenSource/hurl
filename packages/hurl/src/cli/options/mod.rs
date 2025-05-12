@@ -226,6 +226,7 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::no_color())
         .arg(commands::no_output())
         .arg(commands::output())
+        .arg(commands::progress_bar())
         .arg(commands::verbose())
         .arg(commands::very_verbose())
         // Run options

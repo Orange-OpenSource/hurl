@@ -447,6 +447,14 @@ pub fn path_as_is() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn progress_bar() -> clap::Arg {
+    clap::Arg::new("progress_bar")
+        .long("progress-bar")
+        .help("Display a progress bar in test mode")
+        .help_heading("Output options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn proxy() -> clap::Arg {
     clap::Arg::new("proxy")
         .long("proxy")

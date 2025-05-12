@@ -83,6 +83,7 @@ Output options:
       --no-output              Suppress output. By default, Hurl outputs the body of the last
                                response
   -o, --output <FILE>          Write to FILE instead of stdout
+      --progress-bar           Display a progress bar in test mode
   -v, --verbose                Turn on verbose
       --very-verbose           Turn on verbose output, including HTTP response and libcurl logs
 

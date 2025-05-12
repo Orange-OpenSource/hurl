@@ -374,7 +374,15 @@ pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
 }
 
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
-    test(arg_matches) && !interactive(arg_matches) && !is_ci() && io::stderr().is_terminal()
+    // The test progress bar is displayed only for in test mode, for interactive TTYs.
+    // It can be forced by `--progress-bar` option.
+    if !test(arg_matches) {
+        return false;
+    }
+    if has_flag(arg_matches, "progress_bar") {
+        return true;
+    }
+    io::stderr().is_terminal() && !is_ci()
 }
 
 pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {

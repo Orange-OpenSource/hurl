@@ -421,6 +421,12 @@ This is a cli-only option.
 
 Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.
 
+### --progress-bar {#progress-bar}
+
+Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
+
+This is a cli-only option.
+
 ### -x, --proxy <[PROTOCOL://]HOST[:PORT]> {#proxy}
 
 Use the specified proxy.

@@ -1,0 +1,7 @@
+name: progress_bar
+long: progress-bar
+help: Display a progress bar in test mode
+help_heading: Output options
+cli_only: true
+---
+Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.

@@ -65,6 +65,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--output', 'output', [CompletionResultType]::ParameterName, 'Write to FILE instead of stdout')
             [CompletionResult]::new('--parallel', 'parallel', [CompletionResultType]::ParameterName, 'Run files in parallel (default in test mode)')
             [CompletionResult]::new('--path-as-is', 'path-as-is', [CompletionResultType]::ParameterName, 'Tell Hurl to not handle sequences of /../ or /./ in the given URL path')
+            [CompletionResult]::new('--progress-bar', 'progress-bar', [CompletionResultType]::ParameterName, 'Display a progress bar in test mode')
             [CompletionResult]::new('--proxy', 'proxy', [CompletionResultType]::ParameterName, 'Use proxy on given PROTOCOL/HOST/PORT')
             [CompletionResult]::new('--repeat', 'repeat', [CompletionResultType]::ParameterName, 'Repeat the input files sequence NUM times, -1 for infinite loop')
             [CompletionResult]::new('--report-html', 'report-html', [CompletionResultType]::ParameterName, 'Generate HTML report to DIR')
