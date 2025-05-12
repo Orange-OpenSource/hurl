@@ -9,13 +9,13 @@ hurl --ipv4 --test \
 
 hurl --ipv4 --test \
   --report-html build/a/b/c/ \
-  tests_ok/assert_body.hurl \
-  tests_ok/assert_header.hurl \
-  tests_ok/assert_json.hurl \
-  tests_ok/assert_match.hurl \
-  tests_ok/assert_regex.hurl \
-  tests_ok/assert_status_code.hurl \
-  tests_ok/assert_xpath.hurl \
+  tests_ok/assert/assert_body.hurl \
+  tests_ok/assert/assert_header.hurl \
+  tests_ok/assert/assert_json.hurl \
+  tests_ok/assert/assert_match.hurl \
+  tests_ok/assert/assert_regex.hurl \
+  tests_ok/assert/assert_status_code.hurl \
+  tests_ok/assert/assert_xpath.hurl \
   tests_ok/bytes.hurl \
   tests_ok/bytes_empty.hurl \
   tests_ok/captures.hurl \

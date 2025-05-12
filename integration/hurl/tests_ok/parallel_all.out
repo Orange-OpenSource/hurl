@@ -1,12 +1,12 @@
 TAP version 13
 1..90
-ok 1 - tests_ok/assert_body.hurl
-ok 2 - tests_ok/assert_header.hurl
-ok 3 - tests_ok/assert_json.hurl
-ok 4 - tests_ok/assert_match.hurl
-ok 5 - tests_ok/assert_regex.hurl
-ok 6 - tests_ok/assert_status_code.hurl
-ok 7 - tests_ok/assert_xpath.hurl
+ok 1 - tests_ok/assert/assert_body.hurl
+ok 2 - tests_ok/assert/assert_header.hurl
+ok 3 - tests_ok/assert/assert_json.hurl
+ok 4 - tests_ok/assert/assert_match.hurl
+ok 5 - tests_ok/assert/assert_regex.hurl
+ok 6 - tests_ok/assert/assert_status_code.hurl
+ok 7 - tests_ok/assert/assert_xpath.hurl
 ok 8 - tests_ok/bytes.hurl
 ok 9 - tests_ok/bytes_empty.hurl
 ok 10 - tests_ok/captures.hurl

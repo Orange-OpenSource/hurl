@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --verbose tests_ok/assert_body.hurl
+hurl tests_ok/assert/assert_redirects.hurl

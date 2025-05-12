@@ -1,27 +1,21 @@
 #!/usr/bin/env python3
 import glob
 import platform
-import re
 import sys
 
 sys.path.append("..")
 import test_script
 
 
-def get_files(glob_expr):
-    return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr)])
-
-
-def accept(f: str) -> bool:
-    """Returns True if file `f` should be run, False otherwise."""
-    return not re.match(r".*\.\d+\.hurl$", f)
+def get_files(glob_expr: str) -> list[str]:
+    return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr, recursive=True)])
 
 
 def main():
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (
-        get_files("tests_ok/*." + extension)
+        get_files("tests_ok/**/*." + extension)
         + get_files("tests_ok_not_linted/*." + extension)
         + get_files("tests_failed/*." + extension)
         + get_files("tests_failed_not_linted/*." + extension)

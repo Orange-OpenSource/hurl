@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 def load_tests():
-    for python_file in glob.glob("tests_*/*.py"):
+    for python_file in glob.glob("tests_*/**/*.py", recursive=True):
         module_name = python_file.split(".")[0].replace(os.path.sep, ".")
         print("loading %s" % module_name)
         try:
