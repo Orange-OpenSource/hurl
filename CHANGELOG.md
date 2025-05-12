@@ -6,6 +6,7 @@ Thanks to
 [@theoforger](https://github.com/theoforger),
 [@Muntaner](https://github.com/Muntaner),
 [@ashishajr](https://github.com/ashishajr),
+[@patkujawa-wf](https://github.com/patkujawa-wf),
 [@benkio](https://github.com/benkio),
 [@dhth](https://github.com/dhth),
 [@verigak](https://github.com/verigak),
@@ -17,16 +18,22 @@ Enhancements:
 
 * Add query for HTTP redirects [#922](https://github.com/Orange-OpenSource/hurl/issues/922)
 * Add urlQueryParam filter [#2199](https://github.com/Orange-OpenSource/hurl/issues/2199)
+* Add date comparison predicates [#3480](https://github.com/Orange-OpenSource/hurl/issues/3480)
 * Add base64 url safe encode and decode filters [#3840](https://github.com/Orange-OpenSource/hurl/issues/3840)
 * Show hurl --help with color [#3882](https://github.com/Orange-OpenSource/hurl/issues/3882)
+* Add toHex filter [#3963](https://github.com/Orange-OpenSource/hurl/issues/3963)
+* Remove hex crate dependency [#4011](https://github.com/Orange-OpenSource/hurl/issues/4011)
 
 
 Bugs Fixed:
 
+* Fix incorrect curl command for POST redirect [#2797](https://github.com/Orange-OpenSource/hurl/issues/2797)
 * Parse verbose flag in curl command [#3760](https://github.com/Orange-OpenSource/hurl/issues/3760)
 * Keep secret value forever, even if a secret variable override an existing one [#3898](https://github.com/Orange-OpenSource/hurl/issues/3898)
 * Parse cookie Expires date attribute with '-' [#3956](https://github.com/Orange-OpenSource/hurl/issues/3956)
 * Replace deprecated libxml2 initGenericErrorDefaultFunc with xmlSetGenericErrorFunc [#3975](https://github.com/Orange-OpenSource/hurl/issues/3975)
+* HTML report: fix span for lines in comment. [#4002](https://github.com/Orange-OpenSource/hurl/issues/4002)
+* Fix HTML closing tag for line with trailing comment. [#4017](https://github.com/Orange-OpenSource/hurl/issues/4017)
 
 
 [6.1.1 (2025-03-19)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
