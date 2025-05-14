@@ -10,4 +10,4 @@ if curl --aws-sigv4 2>&1 | grep -q 'option --aws-sigv4: is unknown'; then
 fi
 set -Eeuo pipefail
 
-hurl tests_ok/aws_sigv4_option.hurl
+hurl tests_ok/aws_sigv4/aws_sigv4_option.hurl
