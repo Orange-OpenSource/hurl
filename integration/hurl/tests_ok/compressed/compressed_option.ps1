@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/compressed_option.hurl --verbose
+
+hurl --verbose tests_ok/compressed/compressed_option.hurl
