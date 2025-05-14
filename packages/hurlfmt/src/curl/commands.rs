@@ -34,6 +34,17 @@ pub fn headers() -> clap::Arg {
         .long("header")
         .short('H')
         .value_name("NAME:VALUE")
+        .value_parser(|value: &str| {
+            // We add a basic format check on headers, accepting either "NAME: VALUE" or "NAME;" for an empty header.
+            // See curl manual <https://curl.se/docs/manpage.html#-H>
+            // > If you send the custom header with no-value then its header must be terminated with a semicolon,
+            // > such as -H "X-Custom-Header;" to send "X-Custom-Header:".
+            if value.contains(":") || value.ends_with(";") {
+                Ok(String::from(value))
+            } else {
+                Err("headers must be formatted as '<NAME:VALUE>' or '<NAME>;'")
+            }
+        })
         .action(ArgAction::Append)
         .num_args(1)
 }

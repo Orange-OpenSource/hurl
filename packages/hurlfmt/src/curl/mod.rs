@@ -226,6 +226,15 @@ Empty-Header:
     }
 
     #[test]
+    fn test_illegal_header() {
+        assert!(
+            parse_line("curl http://localhost:8000/illegal-header -H 'Illegal-Header'")
+                .unwrap_err()
+                .contains("headers must be formatted as '<NAME:VALUE>' or '<NAME>;'")
+        );
+    }
+
+    #[test]
     fn test_post_hello() {
         let hurl_str = r#"POST http://localhost:8000/hello
 Content-Type: text/plain
