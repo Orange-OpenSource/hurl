@@ -8,10 +8,10 @@ rm -f build/parallel.tap
 start=$(date +%s)
 
 hurl --parallel --jobs 4 --verbose --variable name=Bob \
-  tests_ok/parallel.hurl \
-  tests_ok/parallel.hurl \
-  tests_ok/parallel.hurl \
-  tests_ok/parallel.hurl
+  tests_ok/parallel/parallel.hurl \
+  tests_ok/parallel/parallel.hurl \
+  tests_ok/parallel/parallel.hurl \
+  tests_ok/parallel/parallel.hurl
 
 end=timestamp=$(date +%s)
 

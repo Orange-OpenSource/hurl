@@ -1,0 +1,14 @@
+tests_ok/parallel/parallel_a.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_b.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_c.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_d.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_e.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_f.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/parallel/parallel_g.hurl: Success (1 request(s) in <<<\d+>>> ms)
+--------------------------------------------------------------------------------
+Executed files:    7
+Executed requests: 7 (<<<.*?>>>/s)
+Succeeded files:   7 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          <<<\d+>>> ms
+
