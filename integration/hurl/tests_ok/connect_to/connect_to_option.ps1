@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/connect_to_option.hurl --verbose
+
+hurl --verbose tests_ok/connect_to/connect_to_option.hurl
