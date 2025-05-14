@@ -16,11 +16,11 @@ hurl --ipv4 --parallel --test `
   tests_ok/assert/assert_regex.hurl `
   tests_ok/assert/assert_status_code.hurl `
   tests_ok/assert/assert_xpath.hurl `
-  tests_ok/bytes.hurl `
-  tests_ok/bytes_empty.hurl `
-  tests_ok/captures.hurl `
+  tests_ok/bytes/bytes.hurl `
+  tests_ok/bytes/bytes_empty.hurl `
+  tests_ok/captures/captures.hurl `
   tests_ok/charset.hurl `
-  tests_ok/compressed_option.hurl `
+  tests_ok/compressed/compressed_option.hurl `
   tests_ok/cookie_storage.hurl `
   tests_ok/empty.hurl `
   tests_ok/encoding.hurl `
