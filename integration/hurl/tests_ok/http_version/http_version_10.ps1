@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl tests_ok/http_version_2_option.hurl
+hurl --http1.0 tests_ok/http_version/http_version_10.hurl

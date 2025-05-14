@@ -8,4 +8,4 @@ if [ $? -eq 1 ]; then
 fi
 set -Eeuo pipefail
 
-hurl tests_ok/http_version_2_option.hurl
+hurl tests_ok/http_version/http_version_2_option.hurl

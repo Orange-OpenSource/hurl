@@ -8,4 +8,4 @@ if ($LASTEXITCODE -eq 1) {
 }
 $ErrorActionPreference = 'Stop'
 
-hurl tests_ok/http_version_3_option.hurl
+hurl tests_ok/http_version/http_version_3_option.hurl

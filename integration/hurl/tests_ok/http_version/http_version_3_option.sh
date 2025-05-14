@@ -25,5 +25,5 @@ if [ -f /etc/os-release ]; then
 fi
 set -Eeuo pipefail
 
-hurl tests_ok/http_version_3_option.hurl
+hurl tests_ok/http_version/http_version_3_option.hurl
 
