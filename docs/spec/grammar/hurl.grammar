@@ -136,6 +136,7 @@ option:
   | ipv6-option
   | limit-rate-option
   | max-redirs-option
+  | max-time-option
   | netrc-option
   | netrc-file-option
   | netrc-optional-option
@@ -193,6 +194,8 @@ ipv6-option: "ipv6" ":" boolean-option lt
 limit-rate-option: "limit-rate" ":" integer-option lt
 
 max-redirs-option: "max-redirs" ":" integer-option lt
+
+max-time-option: "max-time" ":" integer-option lt
 
 netrc-option: "netrc" ":" boolean-option lt
 

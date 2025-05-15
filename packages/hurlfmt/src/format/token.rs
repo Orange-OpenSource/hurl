@@ -915,6 +915,7 @@ impl Tokenizable for OptionKind {
             OptionKind::IpV6(value) => value.tokenize(),
             OptionKind::LimitRate(value) => value.tokenize(),
             OptionKind::MaxRedirect(value) => value.tokenize(),
+            OptionKind::MaxTime(value) => value.tokenize(),
             OptionKind::NetRc(value) => value.tokenize(),
             OptionKind::NetRcFile(filename) => filename.tokenize(),
             OptionKind::NetRcOptional(value) => value.tokenize(),

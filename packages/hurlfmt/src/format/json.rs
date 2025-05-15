@@ -327,6 +327,7 @@ impl ToJson for EntryOption {
             OptionKind::IpV6(value) => value.to_json(),
             OptionKind::LimitRate(value) => value.to_json(),
             OptionKind::MaxRedirect(value) => value.to_json(),
+            OptionKind::MaxTime(value) => value.to_json(),
             OptionKind::NetRc(value) => value.to_json(),
             OptionKind::NetRcFile(filename) => JValue::String(filename.to_string()),
             OptionKind::NetRcOptional(value) => value.to_json(),

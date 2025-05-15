@@ -173,6 +173,7 @@ impl DisplaySourceError for ParseError {
                     "key",
                     "location",
                     "max-redirs",
+                    "max-time",
                     "output",
                     "path-as-is",
                     "proxy",

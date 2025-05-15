@@ -215,6 +215,7 @@ ipv6: true                 # use IPv6 addresses
 limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
 location: true             # follow redirection for this request
 max-redirs: 10             # maximum number of redirections
+max-time: 30s              # maximum time for a request/response
 output: out.html           # dump the response to this file
 path-as-is: true           # do not handle sequences of /../ or /./ in URL path
 retry: 10                  # number of retry if HTTP/asserts errors
