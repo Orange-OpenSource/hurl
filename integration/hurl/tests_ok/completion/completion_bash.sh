@@ -14,4 +14,4 @@ test () {
 
 test --ver
 test --verb
-test --verbose tests_ok/completion_b
+test --verbose tests_ok/completion/completion_b
