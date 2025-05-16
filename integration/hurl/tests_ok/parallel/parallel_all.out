@@ -10,7 +10,7 @@ ok 7 - tests_ok/assert/assert_xpath.hurl
 ok 8 - tests_ok/bytes/bytes.hurl
 ok 9 - tests_ok/bytes/bytes_empty.hurl
 ok 10 - tests_ok/captures/captures.hurl
-ok 11 - tests_ok/charset.hurl
+ok 11 - tests_ok/charset/charset.hurl
 ok 12 - tests_ok/compressed/compressed_option.hurl
 ok 13 - tests_ok/cookie/cookie_storage.hurl
 ok 14 - tests_ok/empty.hurl

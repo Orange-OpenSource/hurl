@@ -17,7 +17,7 @@ hurl --ipv4 --parallel --test \
   tests_ok/bytes/bytes.hurl \
   tests_ok/bytes/bytes_empty.hurl \
   tests_ok/captures/captures.hurl \
-  tests_ok/charset.hurl \
+  tests_ok/charset/charset.hurl \
   tests_ok/compressed/compressed_option.hurl \
   tests_ok/cookie/cookie_storage.hurl \
   tests_ok/empty.hurl \
