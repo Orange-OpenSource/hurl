@@ -22,7 +22,7 @@ hurl --ipv4 --test \
   tests_ok/charset/charset.hurl \
   tests_ok/compressed/compressed_option.hurl \
   tests_ok/cookie/cookie_storage.hurl \
-  tests_ok/empty.hurl \
+  tests_ok/empty/empty.hurl \
   tests_ok/encoding.hurl \
   tests_ok/expect.hurl \
   tests_ok/filter.hurl \
