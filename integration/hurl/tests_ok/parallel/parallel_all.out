@@ -15,8 +15,8 @@ ok 12 - tests_ok/compressed/compressed_option.hurl
 ok 13 - tests_ok/cookie/cookie_storage.hurl
 ok 14 - tests_ok/empty/empty.hurl
 ok 15 - tests_ok/encoding/encoding.hurl
-ok 16 - tests_ok/expect.hurl
-ok 17 - tests_ok/filter.hurl
+ok 16 - tests_ok/expect/expect.hurl
+ok 17 - tests_ok/filter/filter.hurl
 ok 18 - tests_ok/float.hurl
 ok 19 - tests_ok/follow_redirect_option.hurl
 ok 20 - tests_ok/form_params.hurl
