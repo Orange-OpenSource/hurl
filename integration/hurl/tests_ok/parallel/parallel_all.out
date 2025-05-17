@@ -72,7 +72,7 @@ not ok 69 - tests_failed/assert_value_error.hurl
 not ok 70 - tests_failed/assert_variable.hurl
 not ok 71 - tests_failed/assert_xpath.hurl
 not ok 72 - tests_failed/file_read_access.hurl
-not ok 73 - tests_failed/filter.hurl
+not ok 73 - tests_failed/filter/filter.hurl
 not ok 74 - tests_failed/filter_decode.hurl
 not ok 75 - tests_failed/filter_in_capture.hurl
 not ok 76 - tests_failed/hello_gb2312_failed.hurl
