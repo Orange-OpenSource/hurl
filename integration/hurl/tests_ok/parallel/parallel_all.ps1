@@ -81,7 +81,7 @@ hurl --ipv4 --parallel --test `
   tests_failed/assert_variable.hurl `
   tests_failed/assert_xpath.hurl `
   tests_failed/file_read_access.hurl `
-  tests_failed/filter.hurl `
+  tests_failed/filter/filter.hurl `
   tests_failed/filter_decode.hurl `
   tests_failed/filter_in_capture.hurl `
   tests_failed/hello_gb2312_failed.hurl `
