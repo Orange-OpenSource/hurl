@@ -448,6 +448,10 @@ impl ClientOptions {
             arguments.push("--max-redirs".to_string());
             arguments.push(max_redirect.to_string());
         }
+        if self.timeout != ClientOptions::default().timeout {
+            arguments.push("--max-time".to_string());
+            arguments.push(self.timeout.as_secs().to_string());
+        }
         if let Some(filename) = &self.netrc_file {
             arguments.push("--netrc-file".to_string());
             arguments.push(format!("'{filename}'"));
@@ -471,10 +475,6 @@ impl ClientOptions {
         }
         if self.ssl_no_revoke {
             arguments.push("--ssl-no-revoke".to_string());
-        }
-        if self.timeout != ClientOptions::default().timeout {
-            arguments.push("--timeout".to_string());
-            arguments.push(self.timeout.as_secs().to_string());
         }
         if let Some(ref unix_socket) = self.unix_socket {
             arguments.push("--unix-socket".to_string());
@@ -690,13 +690,13 @@ mod tests {
         --location \
         --limit-rate 8000 \
         --max-redirs 10 \
+        --max-time 10 \
         --netrc-file '/var/run/netrc' \
         --netrc-optional \
         --path-as-is \
         --proxy 'localhost:3128' \
         --resolve foo.com:80:192.168.0.1 \
         --resolve bar.com:443:127.0.0.1 \
-        --timeout 10 \
         --unix-socket '/var/run/example.sock' \
         --user 'user:password' \
         --user-agent 'my-useragent' \
