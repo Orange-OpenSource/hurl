@@ -7253,7 +7253,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(filename) = &amp;self.netrc_file {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if self.timeout != ClientOptions::default().timeout {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7264,12 +7264,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="12">
+                12
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--netrc-file&quot;.to_string());</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--max-time&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7280,12 +7280,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="12">
+                12
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(format!(&quot;&#x27;{filename}&#x27;&quot;));</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(self.timeout.as_secs().to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7317,7 +7317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if self.netrc_optional {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(filename) = &amp;self.netrc_file {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7325,6 +7325,70 @@
                 id="456"
                 role="cell">
                 <a href="#456">456</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--netrc-file&quot;.to_string());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="457"
+                role="cell">
+                <a href="#457">457</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(format!(&quot;&#x27;{filename}&#x27;&quot;));</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="458"
+                role="cell">
+                <a href="#458">458</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="459"
+                role="cell">
+                <a href="#459">459</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="7053">
+                7053
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        if self.netrc_optional {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="460"
+                role="cell">
+                <a href="#460">460</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7338,9 +7402,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="457"
+                id="461"
                 role="cell">
-                <a href="#457">457</a>
+                <a href="#461">461</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7354,9 +7418,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="458"
+                id="462"
                 role="cell">
-                <a href="#458">458</a>
+                <a href="#462">462</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7370,9 +7434,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="459"
+                id="463"
                 role="cell">
-                <a href="#459">459</a>
+                <a href="#463">463</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -7386,9 +7450,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="460"
+                id="464"
                 role="cell">
-                <a href="#460">460</a>
+                <a href="#464">464</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7402,9 +7466,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="461"
+                id="465"
                 role="cell">
-                <a href="#461">461</a>
+                <a href="#465">465</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7418,9 +7482,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="462"
+                id="466"
                 role="cell">
-                <a href="#462">462</a>
+                <a href="#466">466</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7430,70 +7494,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--path-as-is&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="463"
-                role="cell">
-                <a href="#463">463</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="464"
-                role="cell">
-                <a href="#464">464</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="7053">
-                7053
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(ref proxy) = self.proxy {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="465"
-                role="cell">
-                <a href="#465">465</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--proxy&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="466"
-                role="cell">
-                <a href="#466">466</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="30">
-                30
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(format!(&quot;&#x27;{proxy}&#x27;&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7525,7 +7525,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        for resolve in self.resolves.iter() {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(ref proxy) = self.proxy {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7536,12 +7536,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="39">
-                39
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--resolve&quot;.to_string());</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--proxy&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7552,12 +7552,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="39">
-                39
+                role="cell" aria-label="30">
+                30
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(resolve.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(format!(&quot;&#x27;{proxy}&#x27;&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7589,7 +7589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if self.ssl_no_revoke {</pre>
+                <pre class="has-background-success-light py-0 px-2">        for resolve in self.resolves.iter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7599,13 +7599,13 @@
                 <a href="#473">473</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="39">
+                39
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            arguments.push(&quot;--ssl-no-revoke&quot;.to_string());</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--resolve&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7613,6 +7613,22 @@
                 id="474"
                 role="cell">
                 <a href="#474">474</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="39">
+                39
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(resolve.clone());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="475"
+                role="cell">
+                <a href="#475">475</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -7626,9 +7642,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="475"
+                id="476"
                 role="cell">
-                <a href="#475">475</a>
+                <a href="#476">476</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -7637,23 +7653,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if self.timeout != ClientOptions::default().timeout {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="476"
-                role="cell">
-                <a href="#476">476</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--timeout&quot;.to_string());</pre>
+                <pre class="has-background-success-light py-0 px-2">        if self.ssl_no_revoke {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7663,13 +7663,13 @@
                 <a href="#477">477</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(self.timeout.as_secs().to_string());</pre>
+                <pre class="has-background-danger-light py-0 px-2">            arguments.push(&quot;--ssl-no-revoke&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11125,7 +11125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --netrc-file &#x27;&#x2F;var&#x2F;run&#x2F;netrc&#x27; \</pre>
+                <pre class="has-background-white py-0 px-2">        --max-time 10 \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11141,7 +11141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --netrc-optional \</pre>
+                <pre class="has-background-white py-0 px-2">        --netrc-file &#x27;&#x2F;var&#x2F;run&#x2F;netrc&#x27; \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11157,7 +11157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --path-as-is \</pre>
+                <pre class="has-background-white py-0 px-2">        --netrc-optional \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11173,7 +11173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --proxy &#x27;localhost:3128&#x27; \</pre>
+                <pre class="has-background-white py-0 px-2">        --path-as-is \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11189,7 +11189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --resolve foo.com:80:192.168.0.1 \</pre>
+                <pre class="has-background-white py-0 px-2">        --proxy &#x27;localhost:3128&#x27; \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11205,7 +11205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --resolve bar.com:443:127.0.0.1 \</pre>
+                <pre class="has-background-white py-0 px-2">        --resolve foo.com:80:192.168.0.1 \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11221,7 +11221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        --timeout 10 \</pre>
+                <pre class="has-background-white py-0 px-2">        --resolve bar.com:443:127.0.0.1 \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16076,7 +16076,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-05-17 14:44</p>
+                    <p class="heading">Date: 2025-05-17 16:44</p>
                 </div>
             
         </footer>
