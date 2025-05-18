@@ -27,7 +27,7 @@ hurl --ipv4 --test \
   tests_ok/expect/expect.hurl \
   tests_ok/filter/filter.hurl \
   tests_ok/float/float.hurl \
-  tests_ok/follow_redirect_option.hurl \
+  tests_ok/follow_redirect/follow_redirect_option.hurl \
   tests_ok/form_params.hurl \
   tests_ok/gb2312.hurl \
   tests_ok/get_large.hurl \

@@ -27,7 +27,7 @@ hurl --ipv4 --parallel --test `
   tests_ok/expect/expect.hurl `
   tests_ok/filter/filter.hurl `
   tests_ok/float/float.hurl `
-  tests_ok/follow_redirect_option.hurl `
+  tests_ok/follow_redirect/follow_redirect_option.hurl `
   tests_ok/form_params.hurl `
   tests_ok/gb2312.hurl `
   tests_ok/get_large.hurl `
@@ -81,7 +81,7 @@ hurl --ipv4 --parallel --test `
   tests_failed/assert_variable.hurl `
   tests_failed/assert_xpath.hurl `
   tests_failed/file_read_access.hurl `
-  tests_failed/filter/filter.hurl `
+  tests_failed/filter.hurl `
   tests_failed/filter_decode.hurl `
   tests_failed/filter_in_capture.hurl `
   tests_failed/hello_gb2312_failed.hurl `

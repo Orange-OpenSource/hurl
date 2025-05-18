@@ -18,7 +18,7 @@ ok 15 - tests_ok/encoding/encoding.hurl
 ok 16 - tests_ok/expect/expect.hurl
 ok 17 - tests_ok/filter/filter.hurl
 ok 18 - tests_ok/float/float.hurl
-ok 19 - tests_ok/follow_redirect_option.hurl
+ok 19 - tests_ok/follow_redirect/follow_redirect_option.hurl
 ok 20 - tests_ok/form_params.hurl
 ok 21 - tests_ok/gb2312.hurl
 ok 22 - tests_ok/get_large.hurl
@@ -72,7 +72,7 @@ not ok 69 - tests_failed/assert_value_error.hurl
 not ok 70 - tests_failed/assert_variable.hurl
 not ok 71 - tests_failed/assert_xpath.hurl
 not ok 72 - tests_failed/file_read_access.hurl
-not ok 73 - tests_failed/filter/filter.hurl
+not ok 73 - tests_failed/filter.hurl
 not ok 74 - tests_failed/filter_decode.hurl
 not ok 75 - tests_failed/filter_in_capture.hurl
 not ok 76 - tests_failed/hello_gb2312_failed.hurl
