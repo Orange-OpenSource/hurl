@@ -23,7 +23,7 @@ use hurl_core::parser;
 
 use crate::parallel::job::{Job, JobResult};
 use crate::parallel::message::{
-    CompletedMsg, IOErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,
+    CompletedMsg, InputReadErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,
 };
 use crate::runner;
 use crate::runner::EventListener;
@@ -95,8 +95,8 @@ impl Worker {
             let content = match content {
                 Ok(c) => c,
                 Err(e) => {
-                    let msg = IOErrorMsg::new(worker_id, &job, e);
-                    _ = tx.send(WorkerMessage::IOError(msg));
+                    let msg = InputReadErrorMsg::new(worker_id, &job, e);
+                    _ = tx.send(WorkerMessage::InputReadError(msg));
                     return;
                 }
             };

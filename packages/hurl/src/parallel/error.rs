@@ -18,7 +18,9 @@
 
 /// Error triggered when running a [`crate::parallel::job::Job`].
 pub enum JobError {
-    IO(String),
+    /// An error has occurred while reading input.
+    InputRead(String),
     Parsing,
-    Runtime(String),
+    /// An error has occurred while writing to output.
+    OutputWrite(String),
 }

@@ -44,7 +44,7 @@ pub fn run_seq(
     let repeat = options.repeat.unwrap_or(Count::Finite(1));
     let queue = InputQueue::new(files, repeat);
 
-    // When dumped HTTP responses, we truncate existing output file on first save, then append
+    // When we're dumping HTTP responses, we truncate existing output file on first save, then append
     // it on subsequent write.
     let mut append = false;
 
@@ -53,7 +53,7 @@ pub fn run_seq(
         let content = match content {
             Ok(c) => c,
             Err(error) => {
-                let error = CliError::IO(format!("Issue reading from {filename}: {error}"));
+                let error = CliError::InputRead(format!("Issue reading from {filename}: {error}"));
                 return Err(error);
             }
         };
@@ -132,7 +132,7 @@ fn print_output(
             append,
         );
         if let Err(e) = result {
-            return Err(CliError::Runtime(e.to_string(
+            return Err(CliError::OutputWrite(e.to_string(
                 &filename.to_string(),
                 content,
                 None,
@@ -156,7 +156,7 @@ fn print_output(
                 "stdout".to_string()
             };
             let message = format!("{filename} can not be written ({})", e);
-            return Err(CliError::Runtime(message));
+            return Err(CliError::OutputWrite(message));
         }
     }
     Ok(())

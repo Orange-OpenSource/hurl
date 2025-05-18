@@ -20,26 +20,35 @@ use std::{fmt, io};
 use hurl::parallel::error::JobError;
 use hurl::report;
 
-#[allow(unused)]
+/// All possibles errors from the command line.
+///
+/// Note that assert "errors" are not represented here: assert error occurred when the program
+/// has successfully run and returned results with false assertions. We don't consider these false
+/// asserts as program errors.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CliError {
-    IO(String),
+    /// An error has occurred during reading of an input.
+    InputRead(String),
+    /// The input is not a valid Hurl file.
     Parsing,
-    Runtime(String),
+    /// An error has occurred during writing of an output.
+    OutputWrite(String),
+    /// A generic i/O error has happened.
+    GenericIO(String),
 }
 
 impl From<report::ReportError> for CliError {
     fn from(error: report::ReportError) -> Self {
-        CliError::IO(error.to_string())
+        CliError::GenericIO(error.to_string())
     }
 }
 
 impl From<JobError> for CliError {
     fn from(error: JobError) -> Self {
         match error {
-            JobError::IO(message) => CliError::IO(message),
+            JobError::InputRead(message) => CliError::GenericIO(message),
             JobError::Parsing => CliError::Parsing,
-            JobError::Runtime(message) => CliError::Runtime(message),
+            JobError::OutputWrite(message) => CliError::OutputWrite(message),
         }
     }
 }
@@ -47,15 +56,16 @@ impl From<JobError> for CliError {
 impl fmt::Display for CliError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            CliError::IO(message) => write!(f, "{}", message),
+            CliError::InputRead(message) => write!(f, "{}", message),
             CliError::Parsing => Ok(()),
-            CliError::Runtime(message) => write!(f, "{}", message),
+            CliError::OutputWrite(message) => write!(f, "{}", message),
+            CliError::GenericIO(message) => write!(f, "{}", message),
         }
     }
 }
 
 impl From<io::Error> for CliError {
     fn from(error: io::Error) -> Self {
-        CliError::IO(error.to_string())
+        CliError::GenericIO(error.to_string())
     }
 }

@@ -95,12 +95,18 @@ fn main() {
         run::run_seq(&opts.input_files, current_dir, &opts)
     };
     let runs = match runs {
+        // Even in the presence of false assertions, `run::run_par` or `run::run_seq` return an `Ok`
+        // result. The false assertions "errors" are displayed in these functions and are not considered
+        // as program errors.
         Ok(r) => r,
-        Err(CliError::IO(msg)) => exit_with_error(&msg, EXIT_ERROR_PARSING, &base_logger),
+        // So, we're dealing here with I/O errors: input reading, parsing etc...
+        // We consider input read as "parsing" and don't have a specific exit code for the moment.
+        Err(CliError::InputRead(msg)) => exit_with_error(&msg, EXIT_ERROR_PARSING, &base_logger),
         // In case of parsing error, there is no error because the display of parsing error has been
         // done in the execution of the Hurl files, inside the crates (and not in the main).
         Err(CliError::Parsing) => exit_with_error("", EXIT_ERROR_PARSING, &base_logger),
-        Err(CliError::Runtime(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
+        Err(CliError::OutputWrite(msg)) => exit_with_error(&msg, EXIT_ERROR_RUNTIME, &base_logger),
+        Err(CliError::GenericIO(msg)) => exit_with_error(&msg, EXIT_ERROR_PARSING, &base_logger),
     };
 
     // Compute duration of the test here to not take reports writings into account.
@@ -299,7 +305,7 @@ fn create_cookies_file(
     secrets: &[&str],
 ) -> Result<(), CliError> {
     if let Err(err) = hurl::util::path::create_dir_all(filename) {
-        return Err(CliError::IO(format!(
+        return Err(CliError::GenericIO(format!(
             "Issue creating parent directories for {}: {err:?}",
             filename.display()
         )));
@@ -307,7 +313,7 @@ fn create_cookies_file(
 
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
-            return Err(CliError::IO(format!(
+            return Err(CliError::GenericIO(format!(
                 "Issue writing to {}: {why:?}",
                 filename.display()
             )));
@@ -321,7 +327,7 @@ fn create_cookies_file(
     .to_string();
 
     if runs.is_empty() {
-        return Err(CliError::IO("Issue fetching results".to_string()));
+        return Err(CliError::GenericIO("Issue fetching results".to_string()));
     }
     for run in runs.iter() {
         s.push_str(&format!("# Cookies for file <{}>", run.filename));
@@ -333,7 +339,7 @@ fn create_cookies_file(
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CliError::IO(format!(
+        return Err(CliError::GenericIO(format!(
             "Issue writing to {}: {why:?}",
             filename.display()
         )));

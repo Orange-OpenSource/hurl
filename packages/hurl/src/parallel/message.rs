@@ -25,7 +25,7 @@ use crate::util::term::{Stderr, Stdout};
 #[allow(clippy::large_enum_variant)]
 pub enum WorkerMessage {
     /// Error raised when the file can't be read.
-    IOError(IOErrorMsg),
+    InputReadError(InputReadErrorMsg),
     /// Error raised when the file isn't a valid Hurl content.
     ParsingError(ParsingErrorMsg),
     /// Sent when the Hurl file is in progress (file has been parsed and HTTP exchanges have started).
@@ -35,7 +35,7 @@ pub enum WorkerMessage {
 }
 
 /// A message sent from worker to runner when the input file can't be read.
-pub struct IOErrorMsg {
+pub struct InputReadErrorMsg {
     /// Identifier of the worker sending this message.
     #[allow(dead_code)]
     pub worker_id: WorkerId,
@@ -45,10 +45,10 @@ pub struct IOErrorMsg {
     pub error: io::Error,
 }
 
-impl IOErrorMsg {
+impl InputReadErrorMsg {
     /// Creates a new I/O error message.
     pub fn new(worker_id: WorkerId, job: &Job, error: io::Error) -> Self {
-        IOErrorMsg {
+        InputReadErrorMsg {
             worker_id,
             job: job.clone(),
             error,

@@ -178,13 +178,13 @@ impl ParallelRunner {
                 // If we have any error (either a [`WorkerMessage::IOError`] or a [`WorkerMessage::ParsingError`]
                 // we don't take any more jobs and exit from the methods in error. This is the same
                 // behaviour as when we run sequentially a list of Hurl files.
-                WorkerMessage::IOError(msg) => {
+                WorkerMessage::InputReadError(msg) => {
                     self.progress.clear_progress_bar(&mut stderr);
 
                     let filename = msg.job.filename;
                     let error = msg.error;
                     let message = format!("Issue reading from {filename}: {error}");
-                    return Err(JobError::IO(message));
+                    return Err(JobError::InputRead(message));
                 }
                 WorkerMessage::ParsingError(msg) => {
                     // Like [`hurl::runner::run`] method, the display of parsing error is done here
@@ -231,7 +231,9 @@ impl ParallelRunner {
                     if !msg.stdout.buffer().is_empty() {
                         let ret = stdout.write_all(msg.stdout.buffer());
                         if ret.is_err() {
-                            return Err(JobError::IO("Issue writing to stdout".to_string()));
+                            return Err(JobError::OutputWrite(
+                                "Issue writing to stdout".to_string(),
+                            ));
                         }
                     }
 
@@ -321,12 +323,13 @@ impl ParallelRunner {
                         append,
                     );
                     if let Err(e) = result {
-                        return Err(JobError::Runtime(e.to_string(
+                        let message = e.to_string(
                             &filename_in.to_string(),
                             content,
                             None,
                             OutputFormat::Terminal(color),
-                        )));
+                        );
+                        return Err(JobError::OutputWrite(message));
                     }
                 }
             }
@@ -339,8 +342,8 @@ impl ParallelRunner {
                     stdout,
                     append,
                 );
-                if let Err(e) = result {
-                    return Err(JobError::Runtime(e.to_string()));
+                if let Err(eroor) = result {
+                    return Err(JobError::OutputWrite(eroor.to_string()));
                 }
             }
             OutputType::NoOutput => {}
