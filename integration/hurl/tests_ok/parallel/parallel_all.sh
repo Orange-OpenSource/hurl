@@ -24,7 +24,7 @@ hurl --ipv4 --parallel --test \
   tests_ok/encoding/encoding.hurl \
   tests_ok/expect/expect.hurl \
   tests_ok/filter/filter.hurl \
-  tests_ok/float.hurl \
+  tests_ok/float/float.hurl \
   tests_ok/follow_redirect_option.hurl \
   tests_ok/form_params.hurl \
   tests_ok/gb2312.hurl \
