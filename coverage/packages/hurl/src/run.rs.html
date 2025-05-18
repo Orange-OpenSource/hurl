@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    &#x2F;&#x2F; When dumped HTTP responses, we truncate existing output file on first save, then append</pre>
+                <pre class="has-background-success-light py-0 px-2">    &#x2F;&#x2F; When we&#x27;re dumping HTTP responses, we truncate existing output file on first save, then append</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -933,7 +933,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let error = CliError::IO(format!(&quot;Issue reading from {filename}: {error}&quot;));</pre>
+                <pre class="has-background-success-light py-0 px-2">                let error = CliError::InputRead(format!(&quot;Issue reading from {filename}: {error}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            return Err(CliError::Runtime(e.to_string(</pre>
+                <pre class="has-background-success-light py-0 px-2">            return Err(CliError::OutputWrite(e.to_string(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2581,7 +2581,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            return Err(CliError::Runtime(message));</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(CliError::OutputWrite(message));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5420,7 +5420,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-05-18 15:31</p>
+                    <p class="heading">Date: 2025-05-18 17:47</p>
                 </div>
             
         </footer>

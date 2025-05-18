@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    CompletedMsg, IOErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,</pre>
+                <pre class="has-background-white py-0 px-2">    CompletedMsg, InputReadErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1605,7 +1605,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let msg = IOErrorMsg::new(worker_id, &amp;job, e);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let msg = InputReadErrorMsg::new(worker_id, &amp;job, e);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    _ = tx.send(WorkerMessage::IOError(msg));</pre>
+                <pre class="has-background-success-light py-0 px-2">                    _ = tx.send(WorkerMessage::InputReadError(msg));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2796,7 +2796,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-05-18 15:31</p>
+                    <p class="heading">Date: 2025-05-18 17:47</p>
                 </div>
             
         </footer>
