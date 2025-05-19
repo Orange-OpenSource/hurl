@@ -462,7 +462,7 @@ impl Client {
             .iter()
             .map(|h| h.as_str())
             .collect::<Vec<&str>>();
-        let headers = &request_spec.headers.aggregate_raw_headers(&options_headers);
+        let headers = &request_spec.headers.with_raw_headers(&options_headers);
         self.set_headers(
             headers,
             request_spec.implicit_content_type.as_deref(),

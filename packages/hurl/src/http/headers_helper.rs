@@ -61,15 +61,13 @@ impl HeaderVec {
         Ok(vec![])
     }
 
-    /// Aggregates the headers from `self` and `raw_headers`
-    ///
-    /// Returns the aggregated `HeaderVec`
-    pub fn aggregate_raw_headers(&self, raw_headers: &[&str]) -> HeaderVec {
+    /// Returns a new list of headers with the headers from `self` and the raw headers `raw_headers`.
+    pub fn with_raw_headers(&self, raw_headers: &[&str]) -> HeaderVec {
         let mut headers = self.clone();
         // TODO: use another function that [`Header::parse`] because [`Header::parse`] is for
         // parsing headers line coming from a server (and not from options header)
-        let to_aggregate = raw_headers.iter().filter_map(|h| Header::parse(h));
-        for header in to_aggregate {
+        let raw_headers = raw_headers.iter().filter_map(|h| Header::parse(h));
+        for header in raw_headers {
             headers.push(header);
         }
         headers
@@ -121,7 +119,7 @@ mod tests {
     }
 
     #[test]
-    fn aggregate_raw_headers() {
+    fn test_with_raw_headers() {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Host", "localhost:8000"));
         headers.push(Header::new("Repeated-Header", "original"));
@@ -132,19 +130,19 @@ mod tests {
             "Repeated-Header: aggregated-1",
             "Repeated-Header: aggregated-2",
         ];
-        let aggregated = headers.aggregate_raw_headers(raw_headers);
+        let headers = headers.with_raw_headers(raw_headers);
 
         assert_eq!(
-            aggregated.get("Host"),
+            headers.get("Host"),
             Some(&Header::new("Host", "localhost:8000"))
         );
         assert_eq!(
-            aggregated.get("User-Agent"),
+            headers.get("User-Agent"),
             Some(&Header::new("User-Agent", "hurl/6.1.0"))
         );
-        assert_eq!(aggregated.get("Invalid-Header"), None);
+        assert_eq!(headers.get("Invalid-Header"), None);
         assert_eq!(
-            aggregated.get_all("Repeated-Header"),
+            headers.get_all("Repeated-Header"),
             vec![
                 &Header::new("Repeated-Header", "original"),
                 &Header::new("Repeated-Header", "aggregated-1"),
