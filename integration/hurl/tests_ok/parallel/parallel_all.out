@@ -24,7 +24,7 @@ ok 21 - tests_ok/gb2312/gb2312.hurl
 ok 22 - tests_ok/get_large/get_large.hurl
 ok 23 - tests_ok/graphql/graphql.hurl
 ok 24 - tests_ok/head/head.hurl
-ok 25 - tests_ok/headers.hurl
+ok 25 - tests_ok/header/headers.hurl
 ok 26 - tests_ok/hello.hurl
 ok 27 - tests_ok/hello_gb2312.hurl
 ok 28 - tests_ok/insecure_option.hurl
