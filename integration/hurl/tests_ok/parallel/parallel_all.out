@@ -19,7 +19,7 @@ ok 16 - tests_ok/expect/expect.hurl
 ok 17 - tests_ok/filter/filter.hurl
 ok 18 - tests_ok/float/float.hurl
 ok 19 - tests_ok/follow_redirect/follow_redirect_option.hurl
-ok 20 - tests_ok/form_params.hurl
+ok 20 - tests_ok/form_params/form_params.hurl
 ok 21 - tests_ok/gb2312.hurl
 ok 22 - tests_ok/get_large.hurl
 ok 23 - tests_ok/graphql.hurl
