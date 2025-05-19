@@ -1,2 +1,2 @@
-tests_ok/hello.hurl: Success (6 request(s) in <<<\d+>>> ms)
+tests_ok/hello/hello.hurl: Success (6 request(s) in <<<\d+>>> ms)
 error: Invalid TAP Header <I'm not a TAP file!>

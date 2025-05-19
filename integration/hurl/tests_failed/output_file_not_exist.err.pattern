@@ -1,5 +1,5 @@
 error: IO Error
-  --> tests_ok/hello.hurl:28:1
+  --> tests_ok/hello/hello.hurl:28:1
    |
 28 | GET http://localhost:8000/hello
    | ^ <<<.*?>>>foo<<<.*?>>>bar<<<.*?>>>baz can not be written (<<<.*?>>>)

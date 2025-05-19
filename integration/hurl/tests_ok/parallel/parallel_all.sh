@@ -32,8 +32,8 @@ hurl --ipv4 --parallel --test \
   tests_ok/graphql/graphql.hurl \
   tests_ok/head/head.hurl \
   tests_ok/header/headers.hurl \
-  tests_ok/hello.hurl \
-  tests_ok/hello_gb2312.hurl \
+  tests_ok/hello/hello.hurl \
+  tests_ok/hello/hello_gb2312.hurl \
   tests_ok/insecure_option.hurl \
   tests_ok/json_output.hurl \
   tests_ok/method.hurl \
