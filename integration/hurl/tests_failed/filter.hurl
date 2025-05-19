@@ -23,6 +23,7 @@ jsonpath "$.number" htmlUnescape == "a > b"
 jsonpath "$.number" jsonpath "$.name" == "help"
 jsonpath "$.id" jsonpath "$.name" == "help"
 jsonpath "$.id" nth 0 == 123
+jsonpath "$.list" nth -4 == 123
 jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
 jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 jsonpath "$.number" split ", " count == 3

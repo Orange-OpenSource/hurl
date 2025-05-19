@@ -17,7 +17,7 @@
  */
 use crate::ast::{Filter, FilterValue, SourceInfo, Whitespace};
 use crate::combinator::{choice, ParseError as ParseErrorTrait};
-use crate::parser::number::natural;
+use crate::parser::number::integer;
 use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
 use crate::parser::string::quoted_template;
@@ -174,7 +174,7 @@ fn location_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn nth_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("nth", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let n = natural(reader)?;
+    let n = integer(reader)?;
     Ok(FilterValue::Nth { space0, n })
 }
 

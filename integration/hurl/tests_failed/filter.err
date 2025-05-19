@@ -198,12 +198,12 @@ error: Filter error
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:26:21
+  --> tests_failed/filter.hurl:26:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-26 | jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
-   |                     ^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
+26 | jsonpath "$.list" nth -4 == 123
+   |                   ^^^^^^ invalid filter input: Out of bound - size is 3
    |
 
 error: Filter error
@@ -211,8 +211,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-27 | jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
-   |                     ^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
+27 | jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
+   |                     ^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -220,8 +220,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-28 | jsonpath "$.number" split ", " count == 3
-   |                     ^^^^^^^^^^ invalid filter input: integer <42>
+28 | jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
+   |                     ^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -229,8 +229,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-29 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
-   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
+29 | jsonpath "$.number" split ", " count == 3
+   |                     ^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -238,8 +238,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-30 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
-   |                     ^^^^^^^^^ invalid filter input: integer
+30 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -247,7 +247,7 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-31 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+31 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
    |                     ^^^^^^^^^ invalid filter input: integer
    |
 
@@ -256,8 +256,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-32 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
-   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+32 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+   |                     ^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -265,16 +265,25 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-33 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
+33 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
+   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:34:21
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+34 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
    |                     ^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:34:19
+  --> tests_failed/filter.hurl:35:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-34 | jsonpath "$.list" toString == "[]"
+35 | jsonpath "$.list" toString == "[]"
    |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
    |
 

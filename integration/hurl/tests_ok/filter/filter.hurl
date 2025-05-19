@@ -13,6 +13,7 @@ jsonpath "$.text_encoded" base64UrlSafeDecode base64Encode == "PDw/Pz8+Pg=="
 jsonpath "$.text_encoded" base64UrlSafeDecode base64UrlSafeEncode == "PDw_Pz8-Pg"
 jsonpath "$.list" count == 3
 jsonpath "$.list" nth 1 == 2
+jsonpath "$.list" nth -1 == 3
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
 jsonpath "$.url" == "https://mozilla.org/?x=шеллы"
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"

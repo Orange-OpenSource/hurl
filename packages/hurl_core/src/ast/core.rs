@@ -19,7 +19,7 @@ use std::fmt;
 
 use crate::ast::option::EntryOption;
 use crate::ast::primitive::{
-    Bytes, KeyValue, LineTerminator, SourceInfo, Template, Whitespace, U64,
+    Bytes, KeyValue, LineTerminator, SourceInfo, Template, Whitespace, I64,
 };
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
@@ -303,7 +303,7 @@ pub enum FilterValue {
     Location,
     Nth {
         space0: Whitespace,
-        n: U64,
+        n: I64,
     },
     Regex {
         space0: Whitespace,
