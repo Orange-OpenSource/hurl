@@ -30,7 +30,7 @@ hurl --ipv4 --parallel --test \
   tests_ok/gb2312/gb2312.hurl \
   tests_ok/get_large/get_large.hurl \
   tests_ok/graphql/graphql.hurl \
-  tests_ok/head.hurl \
+  tests_ok/head/head.hurl \
   tests_ok/headers.hurl \
   tests_ok/hello.hurl \
   tests_ok/hello_gb2312.hurl \
