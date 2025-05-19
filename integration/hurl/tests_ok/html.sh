@@ -31,7 +31,7 @@ hurl --ipv4 --test \
   tests_ok/form_params/form_params.hurl \
   tests_ok/gb2312/gb2312.hurl \
   tests_ok/get_large/get_large.hurl \
-  tests_ok/graphql.hurl \
+  tests_ok/graphql/graphql.hurl \
   tests_ok/head.hurl \
   tests_ok/headers.hurl \
   tests_ok/hello.hurl \

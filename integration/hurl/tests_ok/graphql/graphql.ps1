@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/graphql.hurl --verbose
+
+hurl tests_ok/graphql/graphql.hurl
