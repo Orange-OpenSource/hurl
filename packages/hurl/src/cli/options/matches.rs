@@ -373,6 +373,10 @@ pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "path_as_is")
 }
 
+pub fn pinned_pub_key(arg_matches: &ArgMatches) -> Option<String> {
+    get::<String>(arg_matches, "pinned_pub_key")
+}
+
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
     // The test progress bar is displayed only for in test mode, for interactive TTYs.
     // It can be forced by `--progress-bar` option.

@@ -465,6 +465,10 @@ impl ClientOptions {
         if self.path_as_is {
             arguments.push("--path-as-is".to_string());
         }
+        if let Some(ref pinned_pub_key) = self.pinned_pub_key {
+            arguments.push("--pinnedpubkey".to_string());
+            arguments.push(pinned_pub_key.clone());
+        }
         if let Some(ref proxy) = self.proxy {
             arguments.push("--proxy".to_string());
             arguments.push(format!("'{proxy}'"));
@@ -659,6 +663,7 @@ mod tests {
             netrc_file: Some("/var/run/netrc".to_string()),
             netrc_optional: true,
             path_as_is: true,
+            pinned_pub_key: None,
             proxy: Some("localhost:3128".to_string()),
             no_proxy: None,
             resolves: vec![

@@ -59,6 +59,8 @@ HTTP options:
           List of hosts which do not use proxy
       --path-as-is
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
+      --pinnedpubkey <HASHES>
+          Public key to verify peer against
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>
           Use proxy on given PROTOCOL/HOST/PORT
       --resolve <HOST:PORT:ADDR>

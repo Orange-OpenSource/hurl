@@ -447,6 +447,15 @@ pub fn path_as_is() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn pinned_pub_key() -> clap::Arg {
+    clap::Arg::new("pinned_pub_key")
+        .long("pinnedpubkey")
+        .value_name("HASHES")
+        .help("Public key to verify peer against")
+        .help_heading("HTTP options")
+        .num_args(1)
+}
+
 pub fn progress_bar() -> clap::Arg {
     clap::Arg::new("progress_bar")
         .long("progress-bar")

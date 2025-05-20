@@ -56,6 +56,7 @@ pub struct RunnerOptionsBuilder {
     no_proxy: Option<String>,
     output: Option<Output>,
     path_as_is: bool,
+    pinned_pub_key: Option<String>,
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(&Entry) -> bool>,
     proxy: Option<String>,
@@ -105,6 +106,7 @@ impl Default for RunnerOptionsBuilder {
             no_proxy: None,
             output: None,
             path_as_is: false,
+            pinned_pub_key: None,
             post_entry: None,
             pre_entry: None,
             proxy: None,
@@ -343,6 +345,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the pinned public key.
+    pub fn pinned_pub_key(&mut self, pinned_pub_key: Option<String>) -> &mut Self {
+        self.pinned_pub_key = pinned_pub_key;
+        self
+    }
+
     /// Sets function to be executed after each entry execution.
     ///
     /// If the function returns true, the run is stopped.
@@ -470,6 +478,7 @@ impl RunnerOptionsBuilder {
             no_proxy: self.no_proxy.clone(),
             output: self.output.clone(),
             path_as_is: self.path_as_is,
+            pinned_pub_key: self.pinned_pub_key.clone(),
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
@@ -554,6 +563,8 @@ pub struct RunnerOptions {
     /// Specifies the file to output the HTTP response.
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
+    /// Sets the pinned public key.
+    pub(crate) pinned_pub_key: Option<String>,
     /// Sets function to be executed before each entry execution.
     pub(crate) post_entry: Option<fn() -> bool>,
     /// Sets function to be executed after each entry execution.

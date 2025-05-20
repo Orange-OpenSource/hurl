@@ -86,6 +86,7 @@ pub struct CliOptions {
     pub output_type: OutputType,
     pub parallel: bool,
     pub path_as_is: bool,
+    pub pinned_pub_key: Option<String>,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub repeat: Option<Count>,
@@ -211,6 +212,7 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::max_time())
         .arg(commands::noproxy())
         .arg(commands::path_as_is())
+        .arg(commands::pinned_pub_key())
         .arg(commands::proxy())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
@@ -328,6 +330,7 @@ fn parse_matches(
     let no_proxy = matches::no_proxy(arg_matches);
     let parallel = matches::parallel(arg_matches);
     let path_as_is = matches::path_as_is(arg_matches);
+    let pinned_pub_key = matches::pinned_pub_key(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
@@ -386,6 +389,7 @@ fn parse_matches(
         netrc_optional,
         no_proxy,
         path_as_is,
+        pinned_pub_key,
         parallel,
         progress_bar,
         proxy,
@@ -468,6 +472,7 @@ impl CliOptions {
         let no_proxy = self.no_proxy.clone();
         let output = self.output.clone();
         let path_as_is = self.path_as_is;
+        let pinned_pub_key = self.pinned_pub_key.clone();
         let post_entry = if self.interactive {
             Some(cli::interactive::post_entry as fn() -> bool)
         } else {
@@ -519,6 +524,7 @@ impl CliOptions {
             .no_proxy(no_proxy)
             .output(output)
             .path_as_is(path_as_is)
+            .pinned_pub_key(pinned_pub_key)
             .post_entry(post_entry)
             .pre_entry(pre_entry)
             .proxy(proxy)

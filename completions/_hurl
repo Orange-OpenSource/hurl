@@ -60,6 +60,7 @@ _hurl() {
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \
     '--parallel[Run files in parallel (default in test mode)]' \
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \
+    '--pinnedpubkey[Public key to verify peer against]: :' \
     '--progress-bar[Display a progress bar in test mode]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
     '--repeat[Repeat the input files sequence NUM times, -1 for infinite loop]: :' \

@@ -441,6 +441,9 @@ impl Client {
         if let Some(max_send_speed) = options.max_send_speed {
             self.handle.max_send_speed(max_send_speed.0)?;
         }
+        if let Some(pinned_pub_key) = &options.pinned_pub_key {
+            self.handle.pinned_public_key(pinned_pub_key)?;
+        }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 
