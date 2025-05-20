@@ -28,7 +28,7 @@ ok 25 - tests_ok/header/headers.hurl
 ok 26 - tests_ok/hello/hello.hurl
 ok 27 - tests_ok/hello/hello_gb2312.hurl
 ok 28 - tests_ok/insecure/insecure_option.hurl
-ok 29 - tests_ok/json_output.hurl
+ok 29 - tests_ok/json_output/json_output.hurl
 ok 30 - tests_ok/method.hurl
 ok 31 - tests_ok/multilines.hurl
 ok 32 - tests_ok/multipart_form_data.hurl
