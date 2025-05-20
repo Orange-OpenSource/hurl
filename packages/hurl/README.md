@@ -1362,6 +1362,7 @@ will follow a redirection only for the second entry.
 | <a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a>                                          | Write output to FILE instead of stdout.<br>                                                                                                                                                                                                                                                                                                                                                                                          |
 | <a href="#parallel" id="parallel"><code>--parallel</code></a>                                                     | Run files in parallel.<br><br>Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#test) mode.<br><br>See also [`--jobs`](#jobs).<br><br>This is a cli-only option.<br>                                                                                                                         |
 | <a href="#path-as-is" id="path-as-is"><code>--path-as-is</code></a>                                               | Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.<br>                                                                                                                                                                                                                                      |
+| <a href="#progress-bar" id="progress-bar"><code>--progress-bar</code></a>                                         | Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                 |
 | <a href="#proxy" id="proxy"><code>-x, --proxy &lt;[PROTOCOL://]HOST[:PORT]&gt;</code></a>                         | Use the specified proxy.<br>                                                                                                                                                                                                                                                                                                                                                                                                         |
 | <a href="#repeat" id="repeat"><code>--repeat &lt;NUM&gt;</code></a>                                               | Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two<br>times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                           |
 | <a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a>                                | Generate HTML report in DIR.<br><br>If the HTML report already exists, it will be updated with the new test results.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                           |
@@ -1563,31 +1564,31 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 #### Debian based distributions
 
 ```shell
-$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
 ```
 
 #### Fedora based distributions
 
 ```shell
-$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel
+$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Red Hat based distributions
 
 ```shell
-$ yum install -y pkg-config gcc openssl-devel libxml2-devel
+$ yum install -y pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Arch based distributions
 
 ```shell
-$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2
+$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2 clang
 ```
 
 #### Alpine based distributions
 
 ```shell
-$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev
+$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev clang-dev
 ```
 
 ### Build on macOS
