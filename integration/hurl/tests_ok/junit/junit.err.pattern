@@ -1,6 +1,6 @@
-tests_ok/test.1.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/junit/test.1.hurl: Success (1 request(s) in <<<\d+>>> ms)
 error: Assert body value
-  --> tests_ok/test.2.hurl:8:1
+  --> tests_ok/junit/test.2.hurl:8:1
    |
    | GET http://localhost:8000/hello
    | ...
@@ -8,7 +8,7 @@ error: Assert body value
    | ^^^^^^^^^^^^^^^^ actual value is <Hello World!>
    |
 
-tests_ok/test.2.hurl: Failure (2 request(s) in <<<\d+>>> ms)
+tests_ok/junit/test.2.hurl: Failure (2 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    2
 Executed requests: 3 (<<<.*?>>>/s)
@@ -16,7 +16,7 @@ Succeeded files:   1 (50.0%)
 Failed files:      1 (50.0%)
 Duration:          <<<\d+>>> ms
 
-tests_ok/test.3.hurl: Success (1 request(s) in <<<\d+>>> ms)
+tests_ok/junit/test.3.hurl: Success (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    1
 Executed requests: 1 (<<<.*?>>>/s)
@@ -25,7 +25,7 @@ Failed files:      0 (0.0%)
 Duration:          <<<\d+>>> ms
 
 error: Assert body value
-  --> tests_ok/test.4.hurl:3:1
+  --> tests_ok/junit/test.4.hurl:3:1
    |
    | GET http://localhost:8000/hello
    | ...
@@ -33,7 +33,7 @@ error: Assert body value
    | ^^^^^^^^^^^^^^^ actual value is <Hello World!>
    |
 
-tests_ok/test.4.hurl: Failure (1 request(s) in <<<\d+>>> ms)
+tests_ok/junit/test.4.hurl: Failure (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    1
 Executed requests: 1 (<<<.*?>>>/s)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite tests="2" errors="0" failures="1"><testcase id="tests_ok/junit/test.1.hurl" name="tests_ok/junit/test.1.hurl" time="<<<.*?>>>" /><testcase id="tests_ok/junit/test.2.hurl" name="tests_ok/junit/test.2.hurl" time="<<<.*?>>>"><failure>Assert body value
+  --&gt; tests_ok/junit/test.2.hurl:8:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 8 | `Goodbye World!`
+   | ^^^^^^^^^^^^^^^^ actual value is &lt;Hello World!&gt;
+   |</failure></testcase></testsuite><testsuite tests="1" errors="0" failures="0"><testcase id="tests_ok/junit/test.3.hurl" name="tests_ok/junit/test.3.hurl" time="<<<.*?>>>" /></testsuite><testsuite tests="1" errors="0" failures="1"><testcase id="tests_ok/junit/test.4.hurl" name="tests_ok/junit/test.4.hurl" time="<<<.*?>>>"><failure>Assert body value
+  --&gt; tests_ok/junit/test.4.hurl:3:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | `Hello\tWorld!`
+   | ^^^^^^^^^^^^^^^ actual value is &lt;Hello World!&gt;
+   |</failure></testcase></testsuite></testsuites>
