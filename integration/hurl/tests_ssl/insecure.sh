@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ssl/insecure.hurl --insecure --verbose
+
+hurl --insecure --verbose tests_ssl/insecure.hurl
