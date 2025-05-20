@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 /usr/bin/expect <<EOD
-spawn hurl --no-color --verbose --interactive tests_ok/interactive.hurl
+spawn hurl --no-color --verbose --interactive tests_ok/interactive/interactive.hurl
 expect -exact "\r
 Interactive mode\r
 \r
