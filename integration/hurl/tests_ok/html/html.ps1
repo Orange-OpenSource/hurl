@@ -37,7 +37,7 @@ hurl --ipv4 --test `
   tests_ok/hello/hello.hurl `
   tests_ok/hello/hello_gb2312.hurl `
   tests_ok/http_version/http_version_option.hurl `
-  tests_ok/insecure_option.hurl `
+  tests_ok/insecure/insecure_option.hurl `
   tests_ok/json_output.hurl `
   tests_ok/method.hurl `
   tests_ok/multilines.hurl `
