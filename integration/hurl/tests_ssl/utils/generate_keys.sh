@@ -17,6 +17,7 @@ openssl rsa -aes256 -in certs/client/key.pem -passout pass:foobar -out certs/cli
 
 # Server
 openssl genrsa -out certs/server/key.pem 2048
+openssl rsa -in certs/server/key.pem -pubout -out certs/server/key.pub.pem
 openssl req -x509 -new -nodes -key certs/server/key.pem -sha256 -days 1024 -out certs/server/cert.selfsigned.pem -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost"
 openssl req -new -key certs/server/key.pem -sha256 -out certs/server/csr.pem -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost"
 openssl x509 -req -in certs/server/csr.pem -CA certs/ca/cert.pem -CAkey certs/ca/key.pem -CAcreateserial -out certs/server/cert.pem -days 825 -sha256

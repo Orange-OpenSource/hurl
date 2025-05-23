@@ -1,0 +1,1 @@
+curl --cacert tests_ssl/certs/server/cert.selfsigned.pem --pinnedpubkey tests_ssl/certs/server/key.pub.pem 'https://localhost:8001/hello'

@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_ssl/pinned_pub_key.hurl:1:5
+   |
+ 1 | GET https://localhost:8001/hello
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (90) SSL: public key does not match pinned public key<<<!?>>>
+   |
+
