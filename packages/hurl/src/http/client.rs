@@ -131,7 +131,7 @@ impl Client {
                 method: redirect_method,
                 url: redirect_url,
                 headers,
-                ..Default::default()
+                ..request_spec
             };
         }
         Ok(calls)
