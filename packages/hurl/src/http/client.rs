@@ -117,7 +117,7 @@ impl Client {
                 }
             };
 
-            let redirect_method = redirect_method(status, request_spec.method);
+            let redirect_method = redirect_method(status, &request_spec.method);
             let mut headers = request_spec.headers;
 
             // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
@@ -127,12 +127,24 @@ impl Client {
                 headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 options.user = None;
             }
-            request_spec = RequestSpec {
-                method: redirect_method,
-                url: redirect_url,
-                headers,
-                ..Default::default()
-            };
+
+            // If the request method has changed due to redirection, the body is dropped
+            // from the request, otherwise we keep it. See #4073 for more details.
+            if redirect_method != request_spec.method {
+                request_spec = RequestSpec {
+                    method: redirect_method,
+                    url: redirect_url,
+                    headers,
+                    ..Default::default()
+                };
+            } else {
+                request_spec = RequestSpec {
+                    method: redirect_method,
+                    url: redirect_url,
+                    headers,
+                    ..request_spec
+                };
+            }
         }
         Ok(calls)
     }
@@ -796,13 +808,13 @@ impl Client {
 }
 
 /// Returns the method used for redirecting a request/response with `response_status`.
-fn redirect_method(response_status: u32, original_method: Method) -> Method {
+fn redirect_method(response_status: u32, original_method: &Method) -> Method {
     // This replicates curl's behavior
     match response_status {
         301..=303 => Method("GET".to_string()),
         // Could be only 307 and 308, but curl does this for all 3xx
         // codes not converted to GET above.
-        _ => original_method,
+        _ => original_method.clone(),
     }
 }
 
@@ -1077,7 +1089,7 @@ mod tests {
         ];
         for (status, original, redirected) in data {
             assert_eq!(
-                redirect_method(status, Method(original.to_string())),
+                redirect_method(status, &Method(original.to_string())),
                 Method(redirected.to_string())
             );
         }
