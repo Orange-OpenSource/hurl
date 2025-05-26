@@ -68,6 +68,19 @@ header "Location" not exists
 `Followed redirect without Authorization header!`
 
 
+# Same test as previous, but the header name case (`Authorization`) should not matter, this header should be filtered
+# no matter what's the case is.
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
+# Authorization header in lowercase.
+authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+[Options]
+location: true
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect without Authorization header!`
+
+
 # Same has previous but the host doesn't change during redirection.
 # Back checks will insure that `Authorization` is forwarded.
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
