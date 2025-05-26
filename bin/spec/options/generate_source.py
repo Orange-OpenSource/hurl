@@ -57,13 +57,14 @@ def generate_source_option(option: Option) -> str:
         s += f"\n        .short('{option.short}')"
     if option.value is not None:
         s += f'\n        .value_name("{option.value}")'
-    if option.value_default is not None:
-        s += f'\n        .default_value("{option.value_default}")'
     if option.value_parser is not None:
         s += f"\n        .value_parser({option.value_parser})"
         if "-1" in option.value_parser:
             s += "\n        .allow_hyphen_values(true)"
-    s += f'\n        .help("{option.help}")'
+    help = option.help
+    if option.value_default is not None:
+        help += " [default: " + option.value_default + "]"
+    s += f'\n        .help("{help}")'
     if option.help_heading is not None:
         s += f'\n        .help_heading("{option.help_heading}")'
     if option.conflict is not None:

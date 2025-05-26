@@ -56,8 +56,7 @@ pub fn input_format() -> clap::Arg {
     clap::Arg::new("input_format")
         .long("in")
         .value_name("FORMAT")
-        .default_value("hurl")
-        .help("Specify input format: hurl or curl")
+        .help("Specify input format: hurl or curl [default: hurl]")
         .num_args(1)
 }
 
@@ -82,8 +81,7 @@ pub fn output_format() -> clap::Arg {
     clap::Arg::new("output_format")
         .long("out")
         .value_name("FORMAT")
-        .default_value("hurl")
-        .help("Specify output format: hurl, json or html")
+        .help("Specify output format: hurl, json or html [default: hurl]")
         .conflicts_with("check")
         .num_args(1)
 }

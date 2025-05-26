@@ -84,8 +84,7 @@ pub fn connect_timeout() -> clap::Arg {
     clap::Arg::new("connect_timeout")
         .long("connect-timeout")
         .value_name("SECONDS")
-        .default_value("300")
-        .help("Maximum time allowed for connection")
+        .help("Maximum time allowed for connection [default: 300]")
         .help_heading("HTTP options")
         .num_args(1)
 }
@@ -141,8 +140,7 @@ pub fn delay() -> clap::Arg {
     clap::Arg::new("delay")
         .long("delay")
         .value_name("MILLISECONDS")
-        .default_value("0")
-        .help("Sets delay before each request (aka sleep)")
+        .help("Sets delay before each request (aka sleep) [default: 0]")
         .help_heading("Run options")
         .num_args(1)
 }
@@ -151,9 +149,8 @@ pub fn error_format() -> clap::Arg {
     clap::Arg::new("error_format")
         .long("error-format")
         .value_name("FORMAT")
-        .default_value("short")
         .value_parser(["short", "long"])
-        .help("Control the format of error messages")
+        .help("Control the format of error messages [default: short]")
         .help_heading("Output options")
         .num_args(1)
 }
@@ -345,10 +342,9 @@ pub fn max_redirects() -> clap::Arg {
     clap::Arg::new("max_redirects")
         .long("max-redirs")
         .value_name("NUM")
-        .default_value("50")
         .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
-        .help("Maximum number of redirects allowed, -1 for unlimited redirects")
+        .help("Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]")
         .help_heading("HTTP options")
         .num_args(1)
 }
@@ -358,8 +354,7 @@ pub fn max_time() -> clap::Arg {
         .long("max-time")
         .short('m')
         .value_name("SECONDS")
-        .default_value("300")
-        .help("Maximum time allowed for the transfer")
+        .help("Maximum time allowed for the transfer [default: 300]")
         .help_heading("HTTP options")
         .num_args(1)
 }
@@ -546,8 +541,7 @@ pub fn retry_interval() -> clap::Arg {
     clap::Arg::new("retry_interval")
         .long("retry-interval")
         .value_name("MILLISECONDS")
-        .default_value("1000")
-        .help("Interval in milliseconds before a retry")
+        .help("Interval in milliseconds before a retry [default: 1000]")
         .help_heading("Run options")
         .num_args(1)
 }

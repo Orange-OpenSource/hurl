@@ -40,7 +40,10 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
 }
 
 pub fn input_format(arg_matches: &ArgMatches) -> Result<InputFormat, OptionsError> {
-    match get_string(arg_matches, "input_format").unwrap().as_str() {
+    match get_string(arg_matches, "input_format")
+        .unwrap_or("hurl".to_string())
+        .as_str()
+    {
         "hurl" => Ok(InputFormat::Hurl),
         "curl" => Ok(InputFormat::Curl),
         v => Err(OptionsError::Error(format!("Invalid input format {v}"))),
@@ -48,7 +51,10 @@ pub fn input_format(arg_matches: &ArgMatches) -> Result<InputFormat, OptionsErro
 }
 
 pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsError> {
-    match get_string(arg_matches, "output_format").unwrap().as_str() {
+    match get_string(arg_matches, "output_format")
+        .unwrap_or("hurl".to_string())
+        .as_str()
+    {
         "hurl" => Ok(OutputFormat::Hurl),
         "json" => Ok(OutputFormat::Json),
         "html" => Ok(OutputFormat::Html),
@@ -58,7 +64,7 @@ pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsEr
 
 pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
     if has_flag(arg_matches, "in_place") {
-        if get_string(arg_matches, "input_format") != Some("hurl".to_string()) {
+        if input_format(arg_matches)? != InputFormat::Hurl {
             Err(OptionsError::Error(
                 "You can use --in-place only hurl format!".to_string(),
             ))
