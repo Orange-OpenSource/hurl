@@ -38,7 +38,7 @@ hurl --ipv4 --parallel --test \
   tests_ok/json_output/json_output.hurl \
   tests_ok/method/method.hurl \
   tests_ok/multilines/multilines.hurl \
-  tests_ok/multipart_form_data.hurl \
+  tests_ok/multipart/multipart_form_data.hurl \
   tests_ok/no_entry.hurl \
   tests_ok/non_utf8.hurl \
   tests_ok/output.hurl \
