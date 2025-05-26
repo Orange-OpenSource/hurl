@@ -68,7 +68,6 @@ fn main() {
         .max_redirect(Count::Infinite)
         .no_proxy(None)
         .path_as_is(true)
-        .pinned_pub_key(None)
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
