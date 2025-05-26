@@ -142,6 +142,7 @@ option:
   | netrc-optional-option
   | output-option
   | path-as-is-option
+  | pinned-public-key-option
   | proxy-option
   | repeat-option
   | resolve-option
@@ -206,6 +207,8 @@ netrc-optional-option: "netrc-optional" ":" boolean-option lt
 output-option: "output" ":" value-string lt
 
 path-as-is-option: "path-as-is" ":" boolean-option lt
+
+pinned-public-key-option: "pinnedpubkey" ":" value-string lt
 
 proxy-option: "proxy" ":" value-string lt
 

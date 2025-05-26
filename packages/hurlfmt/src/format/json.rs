@@ -333,6 +333,7 @@ impl ToJson for EntryOption {
             OptionKind::NetRcOptional(value) => value.to_json(),
             OptionKind::Output(filename) => JValue::String(filename.to_string()),
             OptionKind::PathAsIs(value) => value.to_json(),
+            OptionKind::PinnedPublicKey(value) => JValue::String(value.to_string()),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
             OptionKind::Repeat(value) => value.to_json(),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),

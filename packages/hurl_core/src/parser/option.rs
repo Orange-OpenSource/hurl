@@ -72,6 +72,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "netrc-optional" => option_netrc_optional(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
+        "pinnedpubkey" => option_pinned_pub_key(reader)?,
         "proxy" => option_proxy(reader)?,
         "repeat" => option_repeat(reader)?,
         "resolve" => option_resolve(reader)?,
@@ -231,6 +232,11 @@ fn option_output(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_path_as_is(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::PathAsIs(value))
+}
+
+fn option_pinned_pub_key(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::PinnedPublicKey(value))
 }
 
 fn option_proxy(reader: &mut Reader) -> ParseResult<OptionKind> {

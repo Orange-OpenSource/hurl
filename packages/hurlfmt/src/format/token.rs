@@ -921,6 +921,7 @@ impl Tokenizable for OptionKind {
             OptionKind::NetRcOptional(value) => value.tokenize(),
             OptionKind::Output(filename) => filename.tokenize(),
             OptionKind::PathAsIs(value) => value.tokenize(),
+            OptionKind::PinnedPublicKey(value) => value.tokenize(),
             OptionKind::Proxy(value) => value.tokenize(),
             OptionKind::Repeat(value) => value.tokenize(),
             OptionKind::Resolve(value) => value.tokenize(),

@@ -29,6 +29,7 @@ netrc-file: netrcfile
 netrc-optional: false
 output: output.txt
 path-as-is: false
+pinnedpubkey: pinnedpubkeyfile
 proxy: http://proxy.example
 repeat: -1
 repeat: 5
@@ -79,6 +80,7 @@ netrc-file: {{netrc-file}}
 netrc-optional: {{netrc-optional}}
 output: {{output}}
 path-as-is: {{path-as-is}}
+pinnedpubkey: {{pinnedpubkey}}
 proxy: {{proxy}}
 repeat: {{repeat}}
 resolve: {{resolve}}

@@ -226,6 +226,10 @@ pub fn get_entry_options(
                         let value = eval_boolean_option(value, variables)?;
                         entry_options.path_as_is = value;
                     }
+                    OptionKind::PinnedPublicKey(value) => {
+                        let value = eval_template(value, variables)?;
+                        entry_options.pinned_pub_key = Some(value);
+                    }
                     OptionKind::Proxy(value) => {
                         let value = eval_template(value, variables)?;
                         entry_options.proxy = Some(value);

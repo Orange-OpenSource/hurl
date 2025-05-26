@@ -176,6 +176,7 @@ impl DisplaySourceError for ParseError {
                     "max-time",
                     "output",
                     "path-as-is",
+                    "pinnedpubkey",
                     "proxy",
                     "redirects",
                     "resolve",

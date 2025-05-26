@@ -245,6 +245,7 @@ impl HtmlFormatter {
             OptionKind::NetRcOptional(value) => self.fmt_bool_option(value),
             OptionKind::Output(filename) => self.fmt_filename(filename),
             OptionKind::PathAsIs(value) => self.fmt_bool_option(value),
+            OptionKind::PinnedPublicKey(value) => self.fmt_template(value),
             OptionKind::Proxy(value) => self.fmt_template(value),
             OptionKind::Repeat(value) => self.fmt_count_option(value),
             OptionKind::Resolve(value) => self.fmt_template(value),
