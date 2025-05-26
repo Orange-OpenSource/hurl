@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::io::{self, Write};
+use std::io::{self, IsTerminal, Write};
 use std::path::PathBuf;
 use std::process;
 
@@ -50,8 +50,12 @@ fn main() {
             }
         },
     };
-
-    let logger = Logger::new(opts.color);
+    let color = if let Some(value) = opts.color {
+        value
+    } else {
+        io::stdout().is_terminal()
+    };
+    let logger = Logger::new(color);
 
     if opts.check {
         process_check_command(&opts.input_files, opts.output_file, &logger);
@@ -65,7 +69,7 @@ fn main() {
             &opts.input_format,
             &opts.output_format,
             opts.standalone,
-            opts.color,
+            color,
         );
     }
 }

@@ -29,13 +29,13 @@ pub fn check(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "check")
 }
 
-pub fn color(arg_matches: &ArgMatches) -> bool {
+pub fn color(arg_matches: &ArgMatches) -> Option<bool> {
     if has_flag(arg_matches, "color") {
-        true
+        Some(true)
     } else if has_flag(arg_matches, "no_color") || has_flag(arg_matches, "in_place") {
-        false
+        Some(false)
     } else {
-        io::stdout().is_terminal()
+        None
     }
 }
 

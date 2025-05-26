@@ -27,7 +27,7 @@ use hurl_core::input::Input;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
     pub check: bool,
-    pub color: bool,
+    pub color: Option<bool>,
     pub in_place: bool,
     pub input_files: Vec<Input>,
     pub input_format: InputFormat,
