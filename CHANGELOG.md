@@ -7,6 +7,8 @@ Thanks to
 [@Muntaner](https://github.com/Muntaner),
 [@ashishajr](https://github.com/ashishajr),
 [@patkujawa-wf](https://github.com/patkujawa-wf),
+[@niklasweimann](https://github.com/niklasweimann),
+[@alanbondarun](https://github.com/alanbondarun),
 [@benkio](https://github.com/benkio),
 [@dhth](https://github.com/dhth),
 [@verigak](https://github.com/verigak),
@@ -19,15 +21,18 @@ Enhancements:
 * Add query for HTTP redirects [#922](https://github.com/Orange-OpenSource/hurl/issues/922)
 * Add urlQueryParam filter [#2199](https://github.com/Orange-OpenSource/hurl/issues/2199)
 * Add date comparison predicates [#3480](https://github.com/Orange-OpenSource/hurl/issues/3480)
+* Add pinnedpubkey cli option [#3563](https://github.com/Orange-OpenSource/hurl/issues/3563)
 * Add base64 url safe encode and decode filters [#3840](https://github.com/Orange-OpenSource/hurl/issues/3840)
 * Show hurl --help with color [#3882](https://github.com/Orange-OpenSource/hurl/issues/3882)
 * Add toHex filter [#3963](https://github.com/Orange-OpenSource/hurl/issues/3963)
 * Remove hex crate dependency [#4011](https://github.com/Orange-OpenSource/hurl/issues/4011)
+* Add support for negative values for nth filter [#4050](https://github.com/Orange-OpenSource/hurl/issues/4050)
 
 
 Bugs Fixed:
 
 * Fix incorrect curl command for POST redirect [#2797](https://github.com/Orange-OpenSource/hurl/issues/2797)
+* Fix hurlfmt to disallow invalid header argument in curl command [#3668](https://github.com/Orange-OpenSource/hurl/issues/3668)
 * Parse verbose flag in curl command [#3760](https://github.com/Orange-OpenSource/hurl/issues/3760)
 * Keep secret value forever, even if a secret variable override an existing one [#3898](https://github.com/Orange-OpenSource/hurl/issues/3898)
 * Parse cookie Expires date attribute with '-' [#3956](https://github.com/Orange-OpenSource/hurl/issues/3956)
