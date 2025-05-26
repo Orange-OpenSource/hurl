@@ -40,7 +40,7 @@ hurl --ipv4 --test \
   tests_ok/insecure/insecure_option.hurl \
   tests_ok/json_output/json_output.hurl \
   tests_ok/method/method.hurl \
-  tests_ok/multilines.hurl \
+  tests_ok/multilines/multilines.hurl \
   tests_ok/multipart_form_data.hurl \
   tests_ok/no_entry.hurl \
   tests_ok/non_utf8.hurl \
