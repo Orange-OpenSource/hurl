@@ -90,6 +90,7 @@ pub fn eval_filter(
         FilterValue::Decode { encoding, .. } => {
             eval_decode(value, encoding, variables, filter.source_info, in_assert)
         }
+        FilterValue::First => todo!(),
         FilterValue::Format { fmt, .. } => {
             eval_format(value, fmt, variables, filter.source_info, in_assert)
         }
@@ -98,6 +99,7 @@ pub fn eval_filter(
         FilterValue::JsonPath { expr, .. } => {
             eval_jsonpath(value, expr, variables, filter.source_info, in_assert)
         }
+        FilterValue::Last => todo!(),
         FilterValue::Location => eval_location(value, filter.source_info, in_assert),
         FilterValue::Regex {
             value: regex_value, ..

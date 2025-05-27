@@ -290,6 +290,7 @@ pub enum FilterValue {
         space0: Whitespace,
         encoding: Template,
     },
+    First,
     Format {
         space0: Whitespace,
         fmt: Template,
@@ -300,6 +301,7 @@ pub enum FilterValue {
         space0: Whitespace,
         expr: Template,
     },
+    Last,
     Location,
     Nth {
         space0: Whitespace,
@@ -351,10 +353,12 @@ impl FilterValue {
             FilterValue::DaysAfterNow => "daysAfterNow",
             FilterValue::DaysBeforeNow => "daysBeforeNow",
             FilterValue::Decode { .. } => "decode",
+            FilterValue::First => "first",
             FilterValue::Format { .. } => "format",
             FilterValue::HtmlEscape => "htmlEscape",
             FilterValue::HtmlUnescape => "htmlUnescape",
             FilterValue::JsonPath { .. } => "jsonpath",
+            FilterValue::Last => "last",
             FilterValue::Location => "location",
             FilterValue::Nth { .. } => "nth",
             FilterValue::Regex { .. } => "regex",

@@ -61,10 +61,12 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             days_after_now_filter,
             days_before_now_filter,
             decode_filter,
+            first_filter,
             format_filter,
             html_decode_filter,
             html_encode_filter,
             jsonpath_filter,
+            last_filter,
             location_filter,
             nth_filter,
             regex_filter,
@@ -142,6 +144,11 @@ fn decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     Ok(FilterValue::Decode { space0, encoding })
 }
 
+fn first_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("first", reader)?;
+    Ok(FilterValue::First)
+}
+
 fn format_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("format", reader)?;
     let space0 = one_or_more_spaces(reader)?;
@@ -164,6 +171,11 @@ fn jsonpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     let space0 = one_or_more_spaces(reader)?;
     let expr = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::JsonPath { space0, expr })
+}
+
+fn last_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("last", reader)?;
+    Ok(FilterValue::Last)
 }
 
 fn location_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

@@ -12,10 +12,12 @@ jsonpath "$.books" count == 12                                                  
 certificate "Expire-Date" daysAfterNow > 15                                                 # daysAfterNow
 certificate "Start-Date" daysBeforeNow < 100                                                # daysBeforeNow
 bytes decode "iso-8859-1" == "café"                                                         # decode
+jsonpath "$.books" first jsonpath "$.name" == "Les Misérables"                              # first
 cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"        # format
 jsonpath "$.text" htmlEscape == "a &gt; b"                                                  # htmlEscape
 jsonpath "$.escaped_html[1]" htmlUnescape == "<p>Hello</p>"                                 # htmlUnescape
 variable "books" jsonpath "$[0].name" == "Dune"                                             # jsonpath
+jsonpath "$.books" last jsonpath "$.name" == "Dune"                                         # last
 jsonpath "$.books" nth 2 == "Children of Dune"                                              # nth
 body regex /Hello ([0-9]+)!/ == "Bob"                                                       # regex
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"                      # replace

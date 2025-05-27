@@ -558,10 +558,13 @@ filter:
   | days-after-now-filter
   | days-before-now-filter
   | decode-filter
+  | first-filter
   | format-filter
   | html-escape-filter
   | html-unescape-filter
   | jsonpath-filter
+  | last-filter
+  | location-filter
   | nth-filter
   | regex-filter
   | replace-filter
@@ -592,13 +595,19 @@ days-before-now-filter: "daysBeforeNow"
 
 decode-filter: "decode"
 
-format-filter: "format"
+first-filter: "first" 
+
+format-filter: "format" sp quoted-string
 
 html-escape-filter: "htmlEscape"
 
 html-unescape-filter: "htmlUnescape"
 
 jsonpath-filter: "jsonpath" sp quoted-string
+
+last-filter: "last"
+
+location-filter: "location"
 
 nth-filter: "nth" sp integer
 

@@ -796,8 +796,10 @@ impl HtmlFormatter {
             | FilterValue::Count
             | FilterValue::DaysAfterNow
             | FilterValue::DaysBeforeNow
+            | FilterValue::First
             | FilterValue::HtmlEscape
             | FilterValue::HtmlUnescape
+            | FilterValue::Last
             | FilterValue::Location
             | FilterValue::ToFloat
             | FilterValue::ToHex
