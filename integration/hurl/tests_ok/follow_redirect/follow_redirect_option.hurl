@@ -27,10 +27,11 @@ header "Location" not exists
 
 # On 301, 302, 303, redirected request switch to GET.
 # Otherwise, method are untouched.
-POST http://localhost:8000/follow-redirect
+POST http://localhost:8000/follow-redirect-from-post
 Accept: text/plain
 [Options]
 location: true
+`Hello world!`
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -41,6 +42,7 @@ POST http://localhost:8000/follow-redirect-308
 Accept: text/plain
 [Options]
 location: true
+`Hello world!`
 HTTP 200
 [Asserts]
 header "Location" not exists

@@ -2,10 +2,25 @@ from app import app
 from flask import Response, redirect, request
 
 
-@app.route("/follow-redirect", methods=["GET", "POST"])
+@app.route("/follow-redirect")
 def follow_redirect():
     assert request.headers["Accept"] == "text/plain"
     return redirect("http://localhost:8000/following-redirect")
+
+
+@app.route("/follow-redirect-from-post", methods=["POST"])
+def follow_redirect_from_post():
+    assert request.headers["Accept"] == "text/plain"
+    assert request.data.decode(encoding="utf-8") == "Hello world!"
+    return redirect("http://localhost:8000/followed-redirect-from-post", code=301)
+
+
+@app.route("/followed-redirect-from-post")
+def followed_redirect_from_post():
+    # A redirection with a method change POST -> GET should not carry the request body.
+    assert request.data == b""
+    assert request.headers["Accept"] == "text/plain"
+    return "Followed redirect!"
 
 
 @app.route("/following-redirect")
@@ -32,6 +47,7 @@ def followed_redirect():
 @app.route("/followed-redirect-post", methods=["POST"])
 def followed_redirect_post():
     assert request.headers["Accept"] == "text/plain"
+    assert request.data.decode(encoding="utf-8") == "Hello world!"
     return "Followed redirect POST!"
 
 
