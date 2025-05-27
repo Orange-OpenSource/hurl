@@ -19,3 +19,10 @@ GET https://localhost:8001/hello
 cacert: tests_ssl/certs/server/cert.selfsigned.pem       # with a custom certificate
 HTTP 200
 `Hello World!`
+
+GET https://localhost:8001/hello
+[Options]
+cacert: tests_ssl/certs/server/cert.selfsigned.pem       
+pinnedpubkey: tests_ssl/certs/server/key.pub.pem         # with pinned public key
+HTTP 200
+`Hello World!`
