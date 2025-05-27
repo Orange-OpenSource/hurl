@@ -20,6 +20,7 @@ Enhancements:
 
 * Add query for HTTP redirects [#922](https://github.com/Orange-OpenSource/hurl/issues/922)
 * Add urlQueryParam filter [#2199](https://github.com/Orange-OpenSource/hurl/issues/2199)
+* Add option to configure max-time per request [#3162](https://github.com/Orange-OpenSource/hurl/issues/3162)
 * Add date comparison predicates [#3480](https://github.com/Orange-OpenSource/hurl/issues/3480)
 * Add pinnedpubkey cli option [#3563](https://github.com/Orange-OpenSource/hurl/issues/3563)
 * Add base64 url safe encode and decode filters [#3840](https://github.com/Orange-OpenSource/hurl/issues/3840)
@@ -27,6 +28,7 @@ Enhancements:
 * Add toHex filter [#3963](https://github.com/Orange-OpenSource/hurl/issues/3963)
 * Remove hex crate dependency [#4011](https://github.com/Orange-OpenSource/hurl/issues/4011)
 * Add support for negative values for nth filter [#4050](https://github.com/Orange-OpenSource/hurl/issues/4050)
+* Add option to configure pinnedpubkey per request [#4084](https://github.com/Orange-OpenSource/hurl/issues/4084)
 
 
 Bugs Fixed:
