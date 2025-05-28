@@ -49,7 +49,7 @@ ok 46 - tests_ok/redirect/redirect.hurl
 ok 47 - tests_ok/request_content_length/request_content_length.hurl
 ok 48 - tests_ok/retry/retry_option.hurl
 ok 49 - tests_ok/retry_until_200.hurl
-ok 50 - tests_ok/url.hurl
+ok 50 - tests_ok/url/url.hurl
 ok 51 - tests_ok/utf8.hurl
 ok 52 - tests_ok/verbose_option.hurl
 ok 53 - tests_ok_not_linted/bom.hurl

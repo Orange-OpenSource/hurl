@@ -8,4 +8,3 @@ def request_content_length_1():
     assert len(request.data) == 1
     assert request.data[0] == ord("H")
     return ""
-
