@@ -41,7 +41,7 @@ ok 38 - tests_ok/post/post_bytes.hurl
 not ok 39 - tests_ok/post/post_file.hurl
 ok 40 - tests_ok/post/post_multilines.hurl
 ok 41 - tests_ok/post/post_xml.hurl
-ok 42 - tests_ok/predicates_string.hurl
+ok 42 - tests_ok/predicates/predicates_string.hurl
 ok 43 - tests_ok/proxy_option.hurl
 ok 44 - tests_ok/put.hurl
 ok 45 - tests_ok/querystring_params.hurl

@@ -50,7 +50,7 @@ hurl --ipv4 --parallel --test `
   tests_ok/post/post_file.hurl `
   tests_ok/post/post_multilines.hurl `
   tests_ok/post/post_xml.hurl `
-  tests_ok/predicates_string.hurl `
+  tests_ok/predicates/predicates_string.hurl `
   tests_ok/proxy_option.hurl `
   tests_ok/put.hurl `
   tests_ok/querystring_params.hurl `
