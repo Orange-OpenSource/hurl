@@ -10,6 +10,10 @@ jsonpath "$.number" base64UrlSafeDecode == 123
 jsonpath "$.number" base64UrlSafeEncode == "MTIz"
 jsonpath "$.id" toHex == "d188d0b5d0bbd0bbd18b"
 jsonpath "$.id" toInt == 123
+jsonpath "$.id" first == 1
+jsonpath "$.id" last == 3
+jsonpath "$.empty_list" first == "1"
+jsonpath "$.empty_list" last == "x"
 jsonpath "$.status" toInt == 0
 jsonpath "$.unknown" toInt == 1
 jsonpath "$.list" nth 5 == 3

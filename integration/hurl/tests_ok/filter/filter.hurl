@@ -12,6 +12,8 @@ jsonpath "$.text_encoded" base64UrlSafeDecode == hex,3c3c3f3f3f3e3e;
 jsonpath "$.text_encoded" base64UrlSafeDecode base64Encode == "PDw/Pz8+Pg=="
 jsonpath "$.text_encoded" base64UrlSafeDecode base64UrlSafeEncode == "PDw_Pz8-Pg"
 jsonpath "$.list" count == 3
+jsonpath "$.list" first == 1
+jsonpath "$.list" last == 3
 jsonpath "$.list" nth 1 == 2
 jsonpath "$.list" nth -1 == 3
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
@@ -31,6 +33,8 @@ jsonpath "$.score" toInt == 1
 jsonpath "$.score" toFloat == 1.6
 jsonpath "$.file" base64Decode toHex == "d188d0b5d0bbd0bbd18b"
 jsonpath "$.ips" split ", " count == 3
+jsonpath "$.ips" split ", " first == "192.168.2.1"
+jsonpath "$.ips" split ", " last == "10.0.0.10"
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 jsonpath "$.json" jsonpath "$.message" == "Hello"
 jsonpath "$.pi" toFloat == 3.141592653589793
