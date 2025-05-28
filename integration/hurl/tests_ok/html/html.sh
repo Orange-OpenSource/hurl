@@ -54,7 +54,7 @@ hurl --ipv4 --test \
   tests_ok/predicates/predicates_string.hurl \
   tests_ok/proxy/proxy_option.hurl \
   tests_ok/put/put.hurl \
-  tests_ok/querystring_params.hurl \
+  tests_ok/querystring/querystring_params.hurl \
   tests_ok/redirect.hurl \
   tests_ok/request_content_length.hurl \
   tests_ok/retry_option.hurl \
