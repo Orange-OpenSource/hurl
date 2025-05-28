@@ -5,5 +5,5 @@ $ErrorActionPreference = 'Stop'
 
 echo "Not a response" > build/output_existing.bin
 
-hurl --output build/output_existing.bin tests_ok/output_existing.hurl tests_ok/output_existing.hurl
+hurl --output build/output_existing.bin tests_ok/output/output_existing.hurl tests_ok/output/output_existing.hurl
 Write-Host (Get-Content build/output_existing.bin -Raw) -NoNewLine

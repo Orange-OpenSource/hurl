@@ -5,5 +5,5 @@ set -Eeuo pipefail
 
 echo "Not a response" > build/output_existing.bin
 
-hurl --output build/output_existing.bin tests_ok/output_existing.hurl tests_ok/output_existing.hurl
+hurl --output build/output_existing.bin tests_ok/output/output_existing.hurl tests_ok/output/output_existing.hurl
 cat build/output_existing.bin
