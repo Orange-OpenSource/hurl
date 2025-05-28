@@ -20,7 +20,7 @@ files=$(find build/secret/report-html/*.html \
   build/secret/report-json/*.json \
   build/secret/curl.txt \
   build/secret-cookies.txt \
-  tests_ok/secret.err.pattern
+  tests_ok/secret/secret.err.pattern
 )
 
 for secret in "${secrets[@]}"; do

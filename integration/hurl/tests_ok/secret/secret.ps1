@@ -21,7 +21,7 @@ $files = @(Get-ChildItem -Filter *.html -Recurse build/secret/report-html)
 $files += @(Get-ChildItem -Filter *.json build/secret/report-json)
 $files += @(Get-ChildItem build/secret/curl.txt)
 $files += @(Get-ChildItem build/secret-cookies.txt)
-$files += @(Get-ChildItem tests_ok/secret.err.pattern)
+$files += @(Get-ChildItem tests_ok/secret/secret.err.pattern)
 
 foreach ($secret in $secrets) {
     foreach ($file in $files) {
