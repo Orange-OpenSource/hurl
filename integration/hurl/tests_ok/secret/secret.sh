@@ -11,7 +11,7 @@ hurl --very-verbose \
     --cookie-jar build/secret-cookies.txt \
     --report-html build/secret/report-html \
     --report-json build/secret/report-json \
-    tests_ok/secret.hurl
+    tests_ok/secret/secret.hurl
 
 secrets=("secret1" "secret2" "secret3" "12345678" "secret-dynamic-0" "secret-dynamic-1" "secret-dynamic-2")
 

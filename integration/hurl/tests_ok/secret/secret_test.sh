@@ -6,7 +6,7 @@ hurl --test \
     --secret a=secret1 \
     --secret b=secret2 \
     --secret c=12345678 \
-    tests_ok/secret_test.hurl 2>build/secret_test.err
+    tests_ok/secret/secret_test.hurl 2>build/secret_test.err
 
 secrets=("secret1" "secret2" "secret3" "12345678")
 
