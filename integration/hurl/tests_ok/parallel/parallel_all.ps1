@@ -44,7 +44,7 @@ hurl --ipv4 --parallel --test `
   tests_ok/no_entry/no_entry.hurl `
   tests_ok/non_utf8/non_utf8.hurl `
   tests_ok/output/output.hurl `
-  tests_ok/patch.hurl `
+  tests_ok/patch/patch.hurl `
   tests_ok/post_base64.hurl `
   tests_ok/post_bytes.hurl `
   tests_ok/post_file.hurl `

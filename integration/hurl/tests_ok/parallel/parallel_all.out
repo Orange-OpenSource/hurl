@@ -35,7 +35,7 @@ ok 32 - tests_ok/multipart/multipart_form_data.hurl
 ok 33 - tests_ok/no_entry/no_entry.hurl
 ok 34 - tests_ok/non_utf8/non_utf8.hurl
 ok 35 - tests_ok/output/output.hurl
-ok 36 - tests_ok/patch.hurl
+ok 36 - tests_ok/patch/patch.hurl
 ok 37 - tests_ok/post_base64.hurl
 ok 38 - tests_ok/post_bytes.hurl
 not ok 39 - tests_ok/post_file.hurl
