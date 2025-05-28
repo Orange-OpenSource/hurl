@@ -1,5 +1,3 @@
-* Options:
-*     retry: 10
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -32,6 +30,10 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
+* Entry options:
+* retry: 10
+* retry-interval: 100ms
+*
 * Cookie store:
 *
 * Request:
@@ -57,11 +59,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:14:0
+*   --> tests_ok/retry/retry_option.hurl:17:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 14 | jsonpath "$.state" == "COMPLETED"
+* 17 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -95,11 +97,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:14:0
+*   --> tests_ok/retry/retry_option.hurl:17:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 14 | jsonpath "$.state" == "COMPLETED"
+* 17 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -133,11 +135,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:14:0
+*   --> tests_ok/retry/retry_option.hurl:17:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 14 | jsonpath "$.state" == "COMPLETED"
+* 17 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -171,11 +173,11 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:14:0
+*   --> tests_ok/retry/retry_option.hurl:17:0
 *    |
 *    | GET http://localhost:8000/jobs/{{job_id}}
 *    | ...
-* 14 | jsonpath "$.state" == "COMPLETED"
+* 17 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
