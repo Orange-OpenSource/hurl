@@ -128,8 +128,12 @@ impl Client {
                 options.user = None;
             }
 
-            // If the request method has changed due to redirection, the body is dropped
-            // from the request, otherwise we keep it. See #4073 for more details.
+            // If the request method has changed due to redirection, the body is dropped from the
+            // request, otherwise we keep it. We follow libcurl implementation <https://curl.se/libcurl/c/CURLOPT_FOLLOWLOCATION.html>:
+            //
+            // > When libcurl switches method to GET, it then uses that method without sending any
+            // > request body. If it does not change the method, it sends the subsequent request the
+            // > same way as the previous one; including the request body if one was provided.
             if redirect_method != request_spec.method {
                 request_spec = RequestSpec {
                     method: redirect_method,
