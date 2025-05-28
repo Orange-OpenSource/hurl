@@ -7,5 +7,5 @@ set -Eeuo pipefail
 
 echo "Not a response" > build/output_parallel.bin
 
-hurl --parallel --output build/output_parallel.bin tests_ok/output.hurl tests_ok/output.hurl
+hurl --parallel --output build/output_parallel.bin tests_ok/output/output.hurl tests_ok/output/output.hurl
 cat build/output_parallel.bin
