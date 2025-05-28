@@ -1,0 +1,41 @@
+Executed files: 0/2 (0%)
+[>                       ] 1/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[==>                     ] 2/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[====>                   ] 3/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[=======>                ] 4/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[=========>              ] 5/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[============>           ] 6/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[==============>         ] 7/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[================>       ] 8/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[===================>    ] 9/10  tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[KExecuted files: 0/2 (0%)
+[=====================>  ] 10/10 tests_ok/progress_bar/progress_bar_a.hurl: Running
+[1A[K[1A[Ktests_ok/progress_bar/progress_bar_a.hurl: Success (10 request(s) in <<<\d+>>> ms)
+Executed files: 1/2 (50%)
+[>                       ] 1/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[KExecuted files: 1/2 (50%)
+[====>                   ] 2/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[KExecuted files: 1/2 (50%)
+[========>               ] 3/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[KExecuted files: 1/2 (50%)
+[============>           ] 4/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[KExecuted files: 1/2 (50%)
+[================>       ] 5/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[KExecuted files: 1/2 (50%)
+[====================>   ] 6/6 tests_ok/progress_bar/progress_bar_b.hurl: Running
+[1A[K[1A[Ktests_ok/progress_bar/progress_bar_b.hurl: Success (6 request(s) in <<<\d+>>> ms)
+--------------------------------------------------------------------------------
+Executed files:    2
+Executed requests: 16 (<<<.*>>>/s)
+Succeeded files:   2 (100.0%)
+Failed files:      0 (0.0%)
+Duration:          <<<\d+>>> ms
+
