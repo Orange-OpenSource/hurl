@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/post_xml.hurl
+
+hurl tests_ok/post/post_multilines.hurl

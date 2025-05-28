@@ -46,11 +46,11 @@ hurl --ipv4 --test \
   tests_ok/non_utf8/non_utf8.hurl \
   tests_ok/output/output.hurl \
   tests_ok/patch/patch.hurl \
-  tests_ok/post_base64.hurl \
-  tests_ok/post_bytes.hurl \
-  tests_ok/post_file.hurl \
-  tests_ok/post_multilines.hurl \
-  tests_ok/post_xml.hurl \
+  tests_ok/post/post_base64.hurl \
+  tests_ok/post/post_bytes.hurl \
+  tests_ok/post/post_file.hurl \
+  tests_ok/post/post_multilines.hurl \
+  tests_ok/post/post_xml.hurl \
   tests_ok/predicates_string.hurl \
   tests_ok/proxy_option.hurl \
   tests_ok/put.hurl \
