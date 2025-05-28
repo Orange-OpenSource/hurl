@@ -25,10 +25,12 @@ use crate::runner::filter::count::eval_count;
 use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
 use crate::runner::filter::decode::eval_decode;
+use crate::runner::filter::first::eval_first;
 use crate::runner::filter::format::eval_format;
 use crate::runner::filter::html_escape::eval_html_escape;
 use crate::runner::filter::html_unescape::eval_html_unescape;
 use crate::runner::filter::jsonpath::eval_jsonpath;
+use crate::runner::filter::last::eval_last;
 use crate::runner::filter::location::eval_location;
 use crate::runner::filter::nth::eval_nth;
 use crate::runner::filter::regex::eval_regex;
@@ -90,7 +92,7 @@ pub fn eval_filter(
         FilterValue::Decode { encoding, .. } => {
             eval_decode(value, encoding, variables, filter.source_info, in_assert)
         }
-        FilterValue::First => todo!(),
+        FilterValue::First => eval_first(value, filter.source_info, in_assert),
         FilterValue::Format { fmt, .. } => {
             eval_format(value, fmt, variables, filter.source_info, in_assert)
         }
@@ -99,7 +101,7 @@ pub fn eval_filter(
         FilterValue::JsonPath { expr, .. } => {
             eval_jsonpath(value, expr, variables, filter.source_info, in_assert)
         }
-        FilterValue::Last => todo!(),
+        FilterValue::Last => eval_last(value, filter.source_info, in_assert),
         FilterValue::Location => eval_location(value, filter.source_info, in_assert),
         FilterValue::Regex {
             value: regex_value, ..

@@ -29,11 +29,12 @@ mod days_after_now;
 mod days_before_now;
 mod decode;
 mod eval;
+mod first;
 mod format;
 mod html_escape;
 mod html_unescape;
 mod jsonpath;
-
+mod last;
 mod location;
 mod nth;
 mod regex;
