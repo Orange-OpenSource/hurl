@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --verbose tests_ok/proxy_option.hurl
+hurl tests_ok/proxy/proxy_option.hurl

@@ -52,7 +52,7 @@ hurl --ipv4 --test `
   tests_ok/post/post_multilines.hurl `
   tests_ok/post/post_xml.hurl `
   tests_ok/predicates/predicates_string.hurl `
-  tests_ok/proxy_option.hurl `
+  tests_ok/proxy/proxy_option.hurl `
   tests_ok/put.hurl `
   tests_ok/querystring_params.hurl `
   tests_ok/redirect.hurl `
