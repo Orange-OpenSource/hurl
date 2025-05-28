@@ -43,7 +43,7 @@ ok 40 - tests_ok/post/post_multilines.hurl
 ok 41 - tests_ok/post/post_xml.hurl
 ok 42 - tests_ok/predicates/predicates_string.hurl
 ok 43 - tests_ok/proxy/proxy_option.hurl
-ok 44 - tests_ok/put.hurl
+ok 44 - tests_ok/put/put.hurl
 ok 45 - tests_ok/querystring_params.hurl
 ok 46 - tests_ok/redirect.hurl
 ok 47 - tests_ok/request_content_length.hurl
