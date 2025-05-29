@@ -10,7 +10,7 @@ import test_script
 
 
 def get_files(glob_expr):
-    return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr)])
+    return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr, recursive=True)])
 
 
 def accept(f: str) -> bool:
@@ -25,7 +25,7 @@ def main():
     [test_format.test("html", f) for f in hurl_files]
 
     extension = "ps1" if platform.system() == "Windows" else "sh"
-    script_files = get_files("tests_ok/*." + extension) + get_files(
+    script_files = get_files("tests_ok/**/*." + extension) + get_files(
         "tests_failed/*." + extension
     )
     for f in sorted(script_files):

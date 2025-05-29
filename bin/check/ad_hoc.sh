@@ -119,7 +119,7 @@ while read -r script_sh ; do
         echo
         errors_count=$((errors_count+1))
     fi
-done < <(find ./integration/hurl*/*/ -maxdepth 1 -type f -name "*sh" | sort)
+done < <(find ./integration/hurl*/*/ -maxdepth 2 -type f -name "*sh" | sort)
 unset -f filter_hurl_and_hurlfmt clean_indent uncomment clean_sh_var_redirect clean_ps1_var_redirect clean_c_drive conv_ps1_antislash_to_sh conv_ps1_null_to_sh
 
 # Control errors count

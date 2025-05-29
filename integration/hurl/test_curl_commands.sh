@@ -6,7 +6,7 @@ color_yellow=$(echo -ne "\033[1;33m")
 color_green=$(echo -ne "\033[1;32m")
 color_reset=$(echo -e "\033[0m")
 
-cmd_find_test_files="find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*'"
+cmd_find_test_files="find ./tests_ok ./tests_failed -maxdepth 2 -type f -name '*.curl' ! -name '*windows*'"
 exclude_lines="^#"
 echo -e "\n# curl infos"
 which curl
