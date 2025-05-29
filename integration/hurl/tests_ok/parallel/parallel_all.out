@@ -51,7 +51,7 @@ ok 48 - tests_ok/retry/retry_option.hurl
 ok 49 - tests_ok/retry/retry_until_200.hurl
 ok 50 - tests_ok/url/url.hurl
 ok 51 - tests_ok/utf8/utf8.hurl
-ok 52 - tests_ok/verbose_option.hurl
+ok 52 - tests_ok/verbose/verbose_option.hurl
 ok 53 - tests_ok_not_linted/bom.hurl
 not ok 54 - tests_failed/assert_base64.hurl
 not ok 55 - tests_failed/assert_bytearray.hurl
