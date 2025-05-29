@@ -46,7 +46,7 @@ def compressed_brotli():
 @app.route("/compressed/brotli_large")
 def compressed_brotli_large():
     assert "br" in request.headers["Accept-Encoding"]
-    with open("tests_ok/cat.jpg.br", "rb") as f:
+    with open("tests_ok/compressed/cat.jpg.br", "rb") as f:
         data = f.read()
     resp = make_response(data)
     resp.headers["Content-Encoding"] = "br"

@@ -56,7 +56,7 @@ def very_verbose_compressed_brotli():
 
 @app.route("/very-verbose/cat")
 def very_verbose_cat():
-    with open("tests_ok/cat.jpg.br", "rb") as f:
+    with open("tests_ok/very_verbose/cat.jpg.br", "rb") as f:
         data = f.read()
     resp = make_response(data)
     resp.headers["Content-Type"] = "image/jpeg"

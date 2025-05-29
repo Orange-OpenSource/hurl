@@ -361,7 +361,7 @@
 * cat: file,cat.jpg; image/jpeg
 *
 * Request can be run with the following curl command:
-* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
+* curl --form 'cat=@tests_ok<<<(\\|\/)>>>very_verbose<<<(\\|\/)>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
@@ -413,7 +413,7 @@
 * cat: file,cat.jpg; image/jpeg
 *
 * Request can be run with the following curl command:
-* curl --form 'cat=@tests_ok<<<.*?>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
+* curl --form 'cat=@tests_ok<<<(\\|\/)>>>very_verbose<<<(\\|\/)>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying [::1]:8000...
