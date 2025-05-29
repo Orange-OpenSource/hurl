@@ -1,33 +1,33 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/dummy</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="not">not</span> <span class="predicate-type">==</span> <span class="string">"Dune"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="predicate-type">==</span> <span class="string">"Dune"</span>                  <span class="comment"># ==</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.color"</span> <span class="predicate-type">!=</span> <span class="string">"red"</span>                  <span class="comment"># !=</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&gt;</span> <span class="number">1978</span>                     <span class="comment"># &gt;</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&gt;=</span> <span class="number">1978</span>                    <span class="comment"># &gt;=</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&lt;</span> <span class="number">1978</span>                     <span class="comment"># &lt;</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&lt;=</span> <span class="number">1978</span>                    <span class="comment"># &lt;=</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">contains</span> <span class="string">"Empire"</span>         <span class="comment"># contains</span></span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">contains</span> hex,<span class="hex">beef</span>;                     <span class="comment"># contains</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">endsWith</span> <span class="string">"Back"</span>           <span class="comment"># endsWith</span></span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">endsWith</span> hex,<span class="hex">ab123456</span>;                 <span class="comment"># endsWith</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="predicate-type">exists</span>                     <span class="comment"># exists</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.nooks"</span> <span class="predicate-type">includes</span> <span class="string">"Dune"</span>           <span class="comment"># includes</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.nooks"</span> <span class="predicate-type">contains</span> <span class="string">"Dune"</span>           <span class="comment"># contains</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.succeeded"</span> <span class="predicate-type">isBoolean</span>             <span class="comment"># isBoolean</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.books"</span> <span class="predicate-type">isCollection</span>              <span class="comment"># isCollection</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="predicate-type">isDate</span>             <span class="comment"># isDate</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.publication_date"</span> <span class="predicate-type">isIsoDate</span>      <span class="comment"># isIsoDate</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.movies"</span> <span class="predicate-type">isEmpty</span>                  <span class="comment"># isEmpty</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.height"</span> <span class="predicate-type">isFloat</span>                  <span class="comment"># isFloat</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isInteger</span>                 <span class="comment"># isInteger</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.name"</span> <span class="predicate-type">isString</span>                   <span class="comment"># isString</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.release"</span> <span class="predicate-type">matches</span> <span class="string">"\\d{4}"</span>        <span class="comment"># matches</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.release"</span> <span class="predicate-type">matches</span> <span class="regex">/\d{4}/</span>         <span class="comment"># matches</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">startsWith</span> <span class="string">"The"</span>          <span class="comment"># startsWith</span></span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">efbbbf</span>;                 <span class="comment"># startsWith</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isNumber</span>                  <span class="comment"># isNumber</span></span>
-<span class="line"><span class="query-type">ip</span> <span class="predicate-type">isIpv6</span>                                    <span class="comment"># isIpv6</span></span>
-<span class="line"><span class="query-type">ip</span> <span class="predicate-type">isIpv4</span>                                    <span class="comment"># isIpv4</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/dummy</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="not">not</span> <span class="predicate-type">==</span> <span class="string">"Dune"</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="predicate-type">==</span> <span class="string">"Dune"</span>                  <span class="comment"># ==</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.color"</span> <span class="predicate-type">!=</span> <span class="string">"red"</span>                  <span class="comment"># !=</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&gt;</span> <span class="number">1978</span>                     <span class="comment"># &gt;</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&gt;=</span> <span class="number">1978</span>                    <span class="comment"># &gt;=</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&lt;</span> <span class="number">1978</span>                     <span class="comment"># &lt;</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.year"</span> <span class="predicate-type">&lt;=</span> <span class="number">1978</span>                    <span class="comment"># &lt;=</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">contains</span> <span class="string">"Empire"</span>         <span class="comment"># contains</span>
+<span class="query-type">bytes</span> <span class="predicate-type">contains</span> hex,<span class="hex">beef</span>;                     <span class="comment"># contains</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">endsWith</span> <span class="string">"Back"</span>           <span class="comment"># endsWith</span>
+<span class="query-type">bytes</span> <span class="predicate-type">endsWith</span> hex,<span class="hex">ab123456</span>;                 <span class="comment"># endsWith</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.book"</span> <span class="predicate-type">exists</span>                     <span class="comment"># exists</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.nooks"</span> <span class="predicate-type">includes</span> <span class="string">"Dune"</span>           <span class="comment"># includes</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.nooks"</span> <span class="predicate-type">contains</span> <span class="string">"Dune"</span>           <span class="comment"># contains</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.succeeded"</span> <span class="predicate-type">isBoolean</span>             <span class="comment"># isBoolean</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.books"</span> <span class="predicate-type">isCollection</span>              <span class="comment"># isCollection</span>
+<span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="predicate-type">isDate</span>             <span class="comment"># isDate</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.publication_date"</span> <span class="predicate-type">isIsoDate</span>      <span class="comment"># isIsoDate</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.movies"</span> <span class="predicate-type">isEmpty</span>                  <span class="comment"># isEmpty</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.height"</span> <span class="predicate-type">isFloat</span>                  <span class="comment"># isFloat</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isInteger</span>                 <span class="comment"># isInteger</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.name"</span> <span class="predicate-type">isString</span>                   <span class="comment"># isString</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.release"</span> <span class="predicate-type">matches</span> <span class="string">"\\d{4}"</span>        <span class="comment"># matches</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.release"</span> <span class="predicate-type">matches</span> <span class="regex">/\d{4}/</span>         <span class="comment"># matches</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.movie"</span> <span class="predicate-type">startsWith</span> <span class="string">"The"</span>          <span class="comment"># startsWith</span>
+<span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">efbbbf</span>;                 <span class="comment"># startsWith</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isNumber</span>                  <span class="comment"># isNumber</span>
+<span class="query-type">ip</span> <span class="predicate-type">isIpv6</span>                                    <span class="comment"># isIpv6</span>
+<span class="query-type">ip</span> <span class="predicate-type">isIpv4</span>                                    <span class="comment"># isIpv4</span>
 </span></span></code></pre>

@@ -1,163 +1,163 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="comment"># In each request, we sent a multiline body and get</span></span>
-<span class="line"><span class="comment"># the same body as response. Request body is tested server side</span></span>
-<span class="line"><span class="comment"># and we assert the response here.</span></span>
-<span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="multiline">line1</span></span>
-<span class="line"><span class="multiline">line2</span></span>
-<span class="line"><span class="multiline">line3</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="comment"># Different ways of testing body response:</span></span>
-<span class="line"><span class="comment"># with explicit asserts:</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"line1\nline2\nline3\nA beautiful \u{2708}\n"</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```</span></span>
-<span class="line"><span class="multiline">line1</span></span>
-<span class="line"><span class="multiline">line2</span></span>
-<span class="line"><span class="multiline">line3</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="comment"># Or we can just test the body (implicit assert):</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="multiline">line1</span></span>
-<span class="line"><span class="multiline">line2</span></span>
-<span class="line"><span class="multiline">line3</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="comment"># escape attributes are going to be deprecated</span></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```escape</span></span>
-<span class="line"><span class="multiline">line1</span></span>
-<span class="line"><span class="multiline">line2</span></span>
-<span class="line"><span class="multiline">line3</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/json</span></span>
-<span class="line"><span class="multiline">```json</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  "foo": "bar"</span></span>
-<span class="line"><span class="multiline">  "baz": 123456</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="comment"># Different ways of testing body response:</span></span>
-<span class="line"><span class="comment"># with explicit asserts:</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\n  \"foo\": \"bar\"\n  \"baz\": 123456\n}\n"</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```json</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  "foo": "bar"</span></span>
-<span class="line"><span class="multiline">  "baz": 123456</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="comment"># Or we can just test the body (implicit assert):</span></span>
-<span class="line"><span class="multiline">```json</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  "foo": "bar"</span></span>
-<span class="line"><span class="multiline">  "baz": 123456</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"></span>
-<span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/xml</span></span>
-<span class="line"><span class="multiline">```xml</span></span>
-<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
-<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
-<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
-<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="comment"># Different ways of testing body response:</span></span>
-<span class="line"><span class="comment"># with explicit asserts:</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"&lt;?xml version=\"1.0\"?&gt;\n&lt;catalog&gt;\n    &lt;book id=\"bk101\"&gt;\n        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;\n        &lt;title&gt;XML Developer's Guide&lt;/title&gt;\n        &lt;genre&gt;Computer&lt;/genre&gt;\n        &lt;price&gt;44.95&lt;/price&gt;\n        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;\n        &lt;description&gt;An in-depth look at creating applications\n        with XML.&lt;/description&gt;\n    &lt;/book&gt;\n&lt;/catalog&gt;\n"</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```xml</span></span>
-<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
-<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
-<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
-<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="comment"># Or we can just test the body (implicit assert):</span></span>
-<span class="line"><span class="multiline">```xml</span></span>
-<span class="line"><span class="multiline">&lt;?xml version="1.0"?&gt;</span></span>
-<span class="line"><span class="multiline">&lt;catalog&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;book id="bk101"&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;title&gt;XML Developer's Guide&lt;/title&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;genre&gt;Computer&lt;/genre&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;price&gt;44.95&lt;/price&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;</span></span>
-<span class="line"><span class="multiline">        &lt;description&gt;An in-depth look at creating applications</span></span>
-<span class="line"><span class="multiline">        with XML.&lt;/description&gt;</span></span>
-<span class="line"><span class="multiline">    &lt;/book&gt;</span></span>
-<span class="line"><span class="multiline">&lt;/catalog&gt;</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"></span>
-<span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multilines/graphql</span></span>
-<span class="line"><span class="multiline">```graphql</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  hero {</span></span>
-<span class="line"><span class="multiline">    name</span></span>
-<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
-<span class="line"><span class="multiline">    friends {</span></span>
-<span class="line"><span class="multiline">      name</span></span>
-<span class="line"><span class="multiline">    }</span></span>
-<span class="line"><span class="multiline">  }</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="comment"># Different ways of testing body response:</span></span>
-<span class="line"><span class="comment"># with explicit asserts:</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\"query\":\"{\\n  hero {\\n    name\\n    # Queries can have comments!\\n    friends {\\n      name\\n    }\\n  }\\n}\"}"</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```graphql</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  hero {</span></span>
-<span class="line"><span class="multiline">    name</span></span>
-<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
-<span class="line"><span class="multiline">    friends {</span></span>
-<span class="line"><span class="multiline">      name</span></span>
-<span class="line"><span class="multiline">    }</span></span>
-<span class="line"><span class="multiline">  }</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="comment"># Or we can just test the body (implicit assert):</span></span>
-<span class="line"><span class="multiline">```graphql</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  hero {</span></span>
-<span class="line"><span class="multiline">    name</span></span>
-<span class="line"><span class="multiline">    # Queries can have comments!</span></span>
-<span class="line"><span class="multiline">    friends {</span></span>
-<span class="line"><span class="multiline">      name</span></span>
-<span class="line"><span class="multiline">    }</span></span>
-<span class="line"><span class="multiline">  }</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># In each request, we sent a multiline body and get</span>
+<span class="comment"># the same body as response. Request body is tested server side</span>
+<span class="comment"># and we assert the response here.</span>
+
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span>
+<span class="multiline">```
+line1
+line2
+line3
+A beautiful \u{2708}
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="comment"># Different ways of testing body response:</span>
+<span class="comment"># with explicit asserts:</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"line1\nline2\nline3\nA beautiful \u{2708}\n"</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```
+line1
+line2
+line3
+A beautiful \u{2708}
+```</span>
+<span class="comment"># Or we can just test the body (implicit assert):</span>
+<span class="multiline">```
+line1
+line2
+line3
+A beautiful \u{2708}
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="comment"># escape attributes are going to be deprecated</span>
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```escape
+line1
+line2
+line3
+A beautiful \u{2708}
+```</span>
+</span></span><span class="entry"><span class="request">
+
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/json</span>
+<span class="multiline">```json
+{
+  "foo": "bar"
+  "baz": 123456
+}
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="comment"># Different ways of testing body response:</span>
+<span class="comment"># with explicit asserts:</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\n  \"foo\": \"bar\"\n  \"baz\": 123456\n}\n"</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```json
+{
+  "foo": "bar"
+  "baz": 123456
+}
+```</span>
+<span class="comment"># Or we can just test the body (implicit assert):</span>
+<span class="multiline">```json
+{
+  "foo": "bar"
+  "baz": 123456
+}
+```</span>
+</span></span><span class="entry"><span class="request">
+
+
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/xml</span>
+<span class="multiline">```xml
+&lt;?xml version="1.0"?&gt;
+&lt;catalog&gt;
+    &lt;book id="bk101"&gt;
+        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
+        &lt;title&gt;XML Developer's Guide&lt;/title&gt;
+        &lt;genre&gt;Computer&lt;/genre&gt;
+        &lt;price&gt;44.95&lt;/price&gt;
+        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
+        &lt;description&gt;An in-depth look at creating applications
+        with XML.&lt;/description&gt;
+    &lt;/book&gt;
+&lt;/catalog&gt;
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="comment"># Different ways of testing body response:</span>
+<span class="comment"># with explicit asserts:</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"&lt;?xml version=\"1.0\"?&gt;\n&lt;catalog&gt;\n    &lt;book id=\"bk101\"&gt;\n        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;\n        &lt;title&gt;XML Developer's Guide&lt;/title&gt;\n        &lt;genre&gt;Computer&lt;/genre&gt;\n        &lt;price&gt;44.95&lt;/price&gt;\n        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;\n        &lt;description&gt;An in-depth look at creating applications\n        with XML.&lt;/description&gt;\n    &lt;/book&gt;\n&lt;/catalog&gt;\n"</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```xml
+&lt;?xml version="1.0"?&gt;
+&lt;catalog&gt;
+    &lt;book id="bk101"&gt;
+        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
+        &lt;title&gt;XML Developer's Guide&lt;/title&gt;
+        &lt;genre&gt;Computer&lt;/genre&gt;
+        &lt;price&gt;44.95&lt;/price&gt;
+        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
+        &lt;description&gt;An in-depth look at creating applications
+        with XML.&lt;/description&gt;
+    &lt;/book&gt;
+&lt;/catalog&gt;
+```</span>
+<span class="comment"># Or we can just test the body (implicit assert):</span>
+<span class="multiline">```xml
+&lt;?xml version="1.0"?&gt;
+&lt;catalog&gt;
+    &lt;book id="bk101"&gt;
+        &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
+        &lt;title&gt;XML Developer's Guide&lt;/title&gt;
+        &lt;genre&gt;Computer&lt;/genre&gt;
+        &lt;price&gt;44.95&lt;/price&gt;
+        &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
+        &lt;description&gt;An in-depth look at creating applications
+        with XML.&lt;/description&gt;
+    &lt;/book&gt;
+&lt;/catalog&gt;
+```</span>
+</span></span><span class="entry"><span class="request">
+
+
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/graphql</span>
+<span class="multiline">```graphql
+{
+  hero {
+    name
+    # Queries can have comments!
+    friends {
+      name
+    }
+  }
+}
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="comment"># Different ways of testing body response:</span>
+<span class="comment"># with explicit asserts:</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"{\"query\":\"{\\n  hero {\\n    name\\n    # Queries can have comments!\\n    friends {\\n      name\\n    }\\n  }\\n}\"}"</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```graphql
+{
+  hero {
+    name
+    # Queries can have comments!
+    friends {
+      name
+    }
+  }
+}
+```</span>
+<span class="comment"># Or we can just test the body (implicit assert):</span>
+<span class="multiline">```graphql
+{
+  hero {
+    name
+    # Queries can have comments!
+    friends {
+      name
+    }
+  }
+}
+```</span>
 </span></span></code></pre>

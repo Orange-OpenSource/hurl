@@ -166,11 +166,11 @@ Hello
 `include.html`: 
 
 ```html
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/include</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="string">`Hello`</span></span>
-</span></span><span class="line"></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/include</span>
+</span><span class="response">
+<span class="version">HTTP</span> <span class="number">200</span>
+<span class="string">`Hello`</span>
+</span></span>
 </code></pre>
 ```
 

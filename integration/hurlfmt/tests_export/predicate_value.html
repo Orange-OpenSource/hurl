@@ -1,19 +1,19 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicate-value</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.null"</span> <span class="predicate-type">==</span> <span class="null">null</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.boolean"</span> <span class="predicate-type">==</span> <span class="boolean">true</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">==</span> <span class="number">2.5</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.string"</span> <span class="predicate-type">==</span> <span class="string">"Hello"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.template"</span> <span class="predicate-type">==</span> <span class="string">"Hello {{name}}!"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.multiline_string"</span> <span class="predicate-type">==</span> <span class="multiline">```</span></span>
-<span class="line"><span class="multiline">Hello</span></span>
-<span class="line"><span class="multiline">Bob!</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.hex"</span> <span class="predicate-type">==</span> hex,<span class="hex">010203</span>;</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.base64"</span> <span class="predicate-type">==</span> base64,<span class="base64">bGluZTEKbGluZTINCmxpbmUzCg==</span>;</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.file"</span> <span class="predicate-type">==</span> file,<span class="filename">data.bin</span>;</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.expression"</span> <span class="predicate-type">==</span> <span class="expr">{{expression}}</span></span>
-</span></span><span class="line"></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/predicate-value</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.null"</span> <span class="predicate-type">==</span> <span class="null">null</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.boolean"</span> <span class="predicate-type">==</span> <span class="boolean">true</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">==</span> <span class="number">2</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">==</span> <span class="number">2.5</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.string"</span> <span class="predicate-type">==</span> <span class="string">"Hello"</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.template"</span> <span class="predicate-type">==</span> <span class="string">"Hello {{name}}!"</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.multiline_string"</span> <span class="predicate-type">==</span> <span class="multiline">```
+Hello
+Bob!
+```</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.hex"</span> <span class="predicate-type">==</span> hex,<span class="hex">010203</span>;
+<span class="query-type">jsonpath</span> <span class="string">"$.base64"</span> <span class="predicate-type">==</span> base64,<span class="base64">bGluZTEKbGluZTINCmxpbmUzCg==</span>;
+<span class="query-type">jsonpath</span> <span class="string">"$.file"</span> <span class="predicate-type">==</span> file,<span class="filename">data.bin</span>;
+<span class="query-type">jsonpath</span> <span class="string">"$.expression"</span> <span class="predicate-type">==</span> <span class="expr">{{expression}}</span>
+</span></span>
 </code></pre>

@@ -1,43 +1,43 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-<span class="line"><span class="section-header">[QueryStringParams]</span></span>
-<span class="line"><span class="string">order</span>: <span class="string">newest</span></span>
-<span class="line"><span class="string">search</span>: <span class="string">{{custom-search}}</span></span>
-<span class="line"><span class="string">count</span>: <span class="string">100</span></span>
-<span class="line"><span class="section-header">[BasicAuth]</span></span>
-<span class="line"><span class="string">bob</span>: <span class="string">secret</span></span>
-<span class="line"><span class="section-header">[FormParams]</span></span>
-<span class="line"><span class="string">default</span>: <span class="string">false</span></span>
-<span class="line"><span class="string">token</span>: <span class="string">{{token}}</span></span>
-<span class="line"><span class="string">email</span>: <span class="string">john.doe@rookie.org</span></span>
-<span class="line"><span class="string">number</span>: <span class="string">33611223344</span></span>
-<span class="line"><span class="section-header">[MultipartFormData]</span></span>
-<span class="line"><span class="string">field1</span>: <span class="string">value1</span></span>
-<span class="line"><span class="string">field2</span>: file,<span class="filename">example.txt</span>;</span>
-<span class="line"><span class="string">field3</span>: file,<span class="filename">example.zip</span>; <span class="string">application/zip</span></span>
-<span class="line"><span class="section-header">[Cookies]</span></span>
-<span class="line"><span class="string">theme</span>: <span class="string">light</span></span>
-<span class="line"><span class="string">sessionToken</span>: <span class="string">abc123</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">verbose</span>: <span class="boolean">true</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="string">count</span>: <span class="query-type">jsonpath</span> <span class="string">"$.count"</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"count"</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
-<span class="line"></span>
-<span class="line"><span class="string">`Hello World!`</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="comment"># Empty sections</span></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-<span class="line"><span class="section-header">[QueryStringParams]</span></span>
-<span class="line"><span class="comment"># FIXME: [BasicAuth] section can't be empty</span></span>
-<span class="line"><span class="comment">#[BasicAuth]</span></span>
-<span class="line"><span class="section-header">[FormParams]</span></span>
-<span class="line"><span class="section-header">[MultipartFormData]</span></span>
-<span class="line"><span class="section-header">[Cookies]</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="string">`Hello World!`</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+<span class="section-header">[QueryStringParams]</span>
+<span class="string">order</span>: <span class="string">newest</span>
+<span class="string">search</span>: <span class="string">{{custom-search}}</span>
+<span class="string">count</span>: <span class="string">100</span>
+<span class="section-header">[BasicAuth]</span>
+<span class="string">bob</span>: <span class="string">secret</span>
+<span class="section-header">[FormParams]</span>
+<span class="string">default</span>: <span class="string">false</span>
+<span class="string">token</span>: <span class="string">{{token}}</span>
+<span class="string">email</span>: <span class="string">john.doe@rookie.org</span>
+<span class="string">number</span>: <span class="string">33611223344</span>
+<span class="section-header">[MultipartFormData]</span>
+<span class="string">field1</span>: <span class="string">value1</span>
+<span class="string">field2</span>: file,<span class="filename">example.txt</span>;
+<span class="string">field3</span>: file,<span class="filename">example.zip</span>; <span class="string">application/zip</span>
+<span class="section-header">[Cookies]</span>
+<span class="string">theme</span>: <span class="string">light</span>
+<span class="string">sessionToken</span>: <span class="string">abc123</span>
+<span class="section-header">[Options]</span>
+<span class="string">verbose</span>: <span class="boolean">true</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Captures]</span>
+<span class="string">count</span>: <span class="query-type">jsonpath</span> <span class="string">"$.count"</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">variable</span> <span class="string">"count"</span> <span class="predicate-type">==</span> <span class="number">1</span>
+
+<span class="string">`Hello World!`</span>
+</span></span><span class="entry"><span class="request">
+<span class="comment"># Empty sections</span>
+<span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+<span class="section-header">[QueryStringParams]</span>
+<span class="comment"># FIXME: [BasicAuth] section can't be empty</span>
+<span class="comment">#[BasicAuth]</span>
+<span class="section-header">[FormParams]</span>
+<span class="section-header">[MultipartFormData]</span>
+<span class="section-header">[Cookies]</span>
+<span class="section-header">[Options]</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Captures]</span>
+<span class="section-header">[Asserts]</span>
+<span class="string">`Hello World!`</span>
 </span></span></code></pre>

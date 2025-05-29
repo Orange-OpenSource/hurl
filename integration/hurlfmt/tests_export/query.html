@@ -1,25 +1,25 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Asserts]</span></span>
-<span class="line"><span class="query-type">status</span> <span class="predicate-type">==</span> <span class="number">200</span></span>
-<span class="line"><span class="query-type">version</span> <span class="predicate-type">==</span> <span class="string">"2"</span></span>
-<span class="line"><span class="query-type">url</span> <span class="predicate-type">==</span> <span class="string">"http://localhost8080/hello"</span></span>
-<span class="line"><span class="query-type">header</span> <span class="string">"content-type"</span> <span class="predicate-type">==</span> <span class="string">"application/json"</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="filter-type">replace</span> <span class="string">" = "</span> <span class="string">"="</span> <span class="filter-type">replace</span> <span class="string">";"</span> <span class="string">", "</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="filter-type">replace</span> <span class="string">" = "</span> <span class="string">"="</span> <span class="filter-type">replace</span> <span class="string">";"</span> <span class="string">", "</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Start-Date"</span> <span class="predicate-type">isDate</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Start-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2023-01-10 08:29:52 UTC"</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="predicate-type">isDate</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2025-10-30 08:29:52 UTC"</span></span>
-<span class="line"><span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">==</span> <span class="string">"1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"</span></span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"JSESSIONID"</span> <span class="predicate-type">exists</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"Hello"</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"/users"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.users"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
-<span class="line"><span class="query-type">regex</span> <span class="string">"name=.*"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
-<span class="line"><span class="query-type">duration</span> <span class="predicate-type">&lt;</span> <span class="number">1000</span></span>
-<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
-<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">status</span> <span class="predicate-type">==</span> <span class="number">200</span>
+<span class="query-type">version</span> <span class="predicate-type">==</span> <span class="string">"2"</span>
+<span class="query-type">url</span> <span class="predicate-type">==</span> <span class="string">"http://localhost8080/hello"</span>
+<span class="query-type">header</span> <span class="string">"content-type"</span> <span class="predicate-type">==</span> <span class="string">"application/json"</span>
+<span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="filter-type">replace</span> <span class="string">" = "</span> <span class="string">"="</span> <span class="filter-type">replace</span> <span class="string">";"</span> <span class="string">", "</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span>
+<span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="filter-type">replace</span> <span class="string">" = "</span> <span class="string">"="</span> <span class="filter-type">replace</span> <span class="string">";"</span> <span class="string">", "</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span>
+<span class="query-type">certificate</span> <span class="string">"Start-Date"</span> <span class="predicate-type">isDate</span>
+<span class="query-type">certificate</span> <span class="string">"Start-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2023-01-10 08:29:52 UTC"</span>
+<span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="predicate-type">isDate</span>
+<span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2025-10-30 08:29:52 UTC"</span>
+<span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">==</span> <span class="string">"1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"</span>
+<span class="query-type">cookie</span> <span class="string">"JSESSIONID"</span> <span class="predicate-type">exists</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"Hello"</span>
+<span class="query-type">xpath</span> <span class="string">"/users"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.users"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span>
+<span class="query-type">regex</span> <span class="string">"name=.*"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span>
+<span class="query-type">variable</span> <span class="string">"name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span>
+<span class="query-type">duration</span> <span class="predicate-type">&lt;</span> <span class="number">1000</span>
+<span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;
+<span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;
+<span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;
 </span></span></code></pre>

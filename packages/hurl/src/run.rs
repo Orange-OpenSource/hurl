@@ -186,7 +186,6 @@ pub fn run_par(
         .output_type
         .to_output_type(options.include, options.color);
     let max_width = terminal_size::terminal_size().map(|(w, _)| w.0 as usize);
-
     let jobs = files
         .iter()
         .enumerate()

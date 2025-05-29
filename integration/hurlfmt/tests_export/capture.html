@@ -1,9 +1,9 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/dummy</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="string">name</span>: <span class="query-type">jsonpath</span> <span class="string">"$.name"</span></span>
-<span class="line"><span class="string">name2</span>: <span class="query-type">jsonpath</span> <span class="string">"$.name"</span>          <span class="comment"># name</span></span>
-<span class="line"><span class="string">token</span>: <span class="query-type">jsonpath</span> <span class="string">"$.token"</span>  <span class="string">redact</span></span>
-<span class="line"><span class="string">token2</span>: <span class="query-type">jsonpath</span> <span class="string">"$.token"</span> <span class="string">redact</span> <span class="comment"># token</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/dummy</span>
+</span><span class="response">
+<span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Captures]</span>
+<span class="string">name</span>: <span class="query-type">jsonpath</span> <span class="string">"$.name"</span>
+<span class="string">name2</span>: <span class="query-type">jsonpath</span> <span class="string">"$.name"</span>          <span class="comment"># name</span>
+<span class="string">token</span>: <span class="query-type">jsonpath</span> <span class="string">"$.token"</span>  <span class="string">redact</span>
+<span class="string">token2</span>: <span class="query-type">jsonpath</span> <span class="string">"$.token"</span> <span class="string">redact</span> <span class="comment"># token</span>
 </span></span></code></pre>

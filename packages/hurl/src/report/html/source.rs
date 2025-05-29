@@ -98,22 +98,14 @@ mod tests {
         let content = r#"
         <pre>
             <code class="language-hurl">
-                <span class="hurl-entry">
+                <span class="entry">
                     <span class="request">
-                        <span class="line">
-                            <span class="method">GET</span> <span class="url">http://foo.com</span>
-                        </span>
-                        <span class="line">
-                            <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
-                        </span>
+                        <span class="method">GET</span> <span class="url">http://foo.com</span>
+                        <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
                     </span>
                     <span class="response">
-                        <span class="line">
-                            <span class="version">HTTP</span> <span class="number">200</span>
-                        </span>
+                        <span class="version">HTTP</span> <span class="number">200</span>
                     </span>
-                </span>
-                <span class="line">
                 </span>
             </code>
         </pre>"#;
@@ -121,22 +113,14 @@ mod tests {
         let underlined_content = r#"
         <pre>
             <code class="language-hurl">
-                <span class="hurl-entry">
+                <span class="entry">
                     <span class="request">
-                        <span class="line">
-                            <span class="method">GET</span> <span class="url">http://foo.com</span>
-                        </span>
-                        <span class="line line-error">
-                            <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
-                        </span>
+                        <span class="method">GET</span> <span class="url">http://foo.com</span>
+                        <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
                     </span>
                     <span class="response">
-                        <span class="line">
-                            <span class="version">HTTP</span> <span class="number">200</span>
-                        </span>
+                        <span class="version">HTTP</span> <span class="number">200</span>
                     </span>
-                </span>
-                <span class="line">
                 </span>
             </code>
         </pre>"#;

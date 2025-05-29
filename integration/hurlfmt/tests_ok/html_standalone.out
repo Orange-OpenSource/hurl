@@ -94,8 +94,8 @@ code {
         </style>
     </head>
     <body>
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 </span></span></code></pre>
     </body>
 </html>

@@ -1,95 +1,95 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">aws-sigv4</span>: <span class="string">aws:amz:eu-central-1:sts</span></span>
-<span class="line"><span class="string">cacert</span>: <span class="filename">cacertfile</span></span>
-<span class="line"><span class="string">cert</span>: <span class="filename">certfile</span></span>
-<span class="line"><span class="string">cert</span>: <span class="filename">certfile:qU114@q,["NO</span></span>
-<span class="line"><span class="string">key</span>: <span class="filename">keyfile</span></span>
-<span class="line"><span class="string">compressed</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">connect-to</span>: <span class="string">example.com:443:example.net:8443</span></span>
-<span class="line"><span class="string">connect-timeout</span>: <span class="number">60</span><span class="unit">s</span></span>
-<span class="line"><span class="string">delay</span>: <span class="number">1000</span></span>
-<span class="line"><span class="string">delay</span>: <span class="number">1000</span><span class="unit">ms</span></span>
-<span class="line"><span class="string">delay</span>: <span class="number">1</span><span class="unit">s</span></span>
-<span class="line"><span class="string">location</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">location-trusted</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">header</span>: <span class="string">key: value</span></span>
-<span class="line"><span class="string">http1.0</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">http1.1</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">http2</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">http3</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">insecure</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">ipv4</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">ipv6</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">limit-rate</span>: <span class="number">1000</span></span>
-<span class="line"><span class="string">max-redirs</span>: <span class="number">10</span></span>
-<span class="line"><span class="string">max-time</span>: <span class="number">100</span><span class="unit">s</span></span>
-<span class="line"><span class="string">netrc</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">netrc-file</span>: <span class="filename">netrcfile</span></span>
-<span class="line"><span class="string">netrc-optional</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">output</span>: <span class="filename">output.txt</span></span>
-<span class="line"><span class="string">path-as-is</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">pinnedpubkey</span>: <span class="string">pinnedpubkeyfile</span></span>
-<span class="line"><span class="string">proxy</span>: <span class="string">http://proxy.example</span></span>
-<span class="line"><span class="string">repeat</span>: <span class="number">-1</span></span>
-<span class="line"><span class="string">repeat</span>: <span class="number">5</span></span>
-<span class="line"><span class="string">resolve</span>: <span class="string">example.com:443:127.0.0.1</span></span>
-<span class="line"><span class="string">retry</span>: <span class="number">0</span></span>
-<span class="line"><span class="string">retry</span>: <span class="number">-1</span></span>
-<span class="line"><span class="string">retry</span>: <span class="number">4</span></span>
-<span class="line"><span class="string">retry-interval</span>: <span class="number">1000</span></span>
-<span class="line"><span class="string">retry-interval</span>: <span class="number">1000</span><span class="unit">ms</span></span>
-<span class="line"><span class="string">retry-interval</span>: <span class="number">1</span><span class="unit">s</span></span>
-<span class="line"><span class="string">skip</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">unix-socket</span>: <span class="string">build/unix_socket.sock</span></span>
-<span class="line"><span class="string">user</span>: <span class="string">bob:secret</span></span>
-<span class="line"><span class="string">variable</span>: user=<span class="null">null</span></span>
-<span class="line"><span class="string">variable</span>: status=<span class="boolean">true</span></span>
-<span class="line"><span class="string">variable</span>: count=<span class="number">2</span></span>
-<span class="line"><span class="string">variable</span>: score=<span class="number">7.7</span></span>
-<span class="line"><span class="string">variable</span>: name=<span class="string">Bob</span></span>
-<span class="line"><span class="string">variable</span>:name = <span class="string">Bob</span></span>
-<span class="line"><span class="string">verbose</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">very-verbose</span>: <span class="boolean">false</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">aws-sigv4</span>: <span class="string">{{aws-sigv4}}</span></span>
-<span class="line"><span class="string">cacert</span>: <span class="filename">{{cacert}}</span></span>
-<span class="line"><span class="string">cert</span>: <span class="filename">{{cert}}</span></span>
-<span class="line"><span class="string">key</span>: <span class="filename">{{key}}</span></span>
-<span class="line"><span class="string">compressed</span>: <span class="expr">{{compressed}}</span></span>
-<span class="line"><span class="string">connect-to</span>: <span class="string">{{connect-to}}</span></span>
-<span class="line"><span class="string">connect-timeout</span>: <span class="expr">{{connect-timeout}}</span></span>
-<span class="line"><span class="string">delay</span>: <span class="expr">{{delay}}</span></span>
-<span class="line"><span class="string">location</span>: <span class="expr">{{location}}</span></span>
-<span class="line"><span class="string">location-trusted</span>: <span class="expr">{{location-trusted}}</span></span>
-<span class="line"><span class="string">header</span>: <span class="string">{{header}}</span></span>
-<span class="line"><span class="string">http1.0</span>: <span class="expr">{{http10}}</span></span>
-<span class="line"><span class="string">http1.1</span>: <span class="expr">{{http11}}</span></span>
-<span class="line"><span class="string">http2</span>: <span class="expr">{{http2}}</span></span>
-<span class="line"><span class="string">http3</span>: <span class="expr">{{http3}}</span></span>
-<span class="line"><span class="string">insecure</span>: <span class="expr">{{insecure}}</span></span>
-<span class="line"><span class="string">ipv4</span>: <span class="expr">{{ipv4}}</span></span>
-<span class="line"><span class="string">ipv6</span>: <span class="expr">{{ipv6}}</span></span>
-<span class="line"><span class="string">limit-rate</span>: <span class="expr">{{limit-rate}}</span></span>
-<span class="line"><span class="string">max-redirs</span>: <span class="expr">{{max-redirs}}</span></span>
-<span class="line"><span class="string">max-time</span>: <span class="expr">{{max-time}}</span></span>
-<span class="line"><span class="string">netrc</span>: <span class="expr">{{netrc}}</span></span>
-<span class="line"><span class="string">netrc-file</span>: <span class="filename">{{netrc-file}}</span></span>
-<span class="line"><span class="string">netrc-optional</span>: <span class="expr">{{netrc-optional}}</span></span>
-<span class="line"><span class="string">output</span>: <span class="filename">{{output}}</span></span>
-<span class="line"><span class="string">path-as-is</span>: <span class="expr">{{path-as-is}}</span></span>
-<span class="line"><span class="string">pinnedpubkey</span>: <span class="string">{{pinnedpubkey}}</span></span>
-<span class="line"><span class="string">proxy</span>: <span class="string">{{proxy}}</span></span>
-<span class="line"><span class="string">repeat</span>: <span class="expr">{{repeat}}</span></span>
-<span class="line"><span class="string">resolve</span>: <span class="string">{{resolve}}</span></span>
-<span class="line"><span class="string">retry</span>: <span class="expr">{{retry}}</span></span>
-<span class="line"><span class="string">retry-interval</span>: <span class="expr">{{retry-interval}}</span></span>
-<span class="line"><span class="string">skip</span>: <span class="expr">{{skip}}</span></span>
-<span class="line"><span class="string">unix-socket</span>: <span class="string">{{socket-file}}</span></span>
-<span class="line"><span class="string">user</span>: <span class="string">{{user}}</span></span>
-<span class="line"><span class="comment">#variable: {{variable}}     NOT SUPPORTED YET</span></span>
-<span class="line"><span class="string">verbose</span>: <span class="expr">{{verbose}}</span></span>
-<span class="line"><span class="string">very-verbose</span>: <span class="expr">{{very-verbose}}</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+<span class="section-header">[Options]</span>
+<span class="string">aws-sigv4</span>: <span class="string">aws:amz:eu-central-1:sts</span>
+<span class="string">cacert</span>: <span class="filename">cacertfile</span>
+<span class="string">cert</span>: <span class="filename">certfile</span>
+<span class="string">cert</span>: <span class="filename">certfile:qU114@q,["NO</span>
+<span class="string">key</span>: <span class="filename">keyfile</span>
+<span class="string">compressed</span>: <span class="boolean">false</span>
+<span class="string">connect-to</span>: <span class="string">example.com:443:example.net:8443</span>
+<span class="string">connect-timeout</span>: <span class="number">60</span><span class="unit">s</span>
+<span class="string">delay</span>: <span class="number">1000</span>
+<span class="string">delay</span>: <span class="number">1000</span><span class="unit">ms</span>
+<span class="string">delay</span>: <span class="number">1</span><span class="unit">s</span>
+<span class="string">location</span>: <span class="boolean">false</span>
+<span class="string">location-trusted</span>: <span class="boolean">false</span>
+<span class="string">header</span>: <span class="string">key: value</span>
+<span class="string">http1.0</span>: <span class="boolean">false</span>
+<span class="string">http1.1</span>: <span class="boolean">false</span>
+<span class="string">http2</span>: <span class="boolean">false</span>
+<span class="string">http3</span>: <span class="boolean">false</span>
+<span class="string">insecure</span>: <span class="boolean">false</span>
+<span class="string">ipv4</span>: <span class="boolean">false</span>
+<span class="string">ipv6</span>: <span class="boolean">false</span>
+<span class="string">limit-rate</span>: <span class="number">1000</span>
+<span class="string">max-redirs</span>: <span class="number">10</span>
+<span class="string">max-time</span>: <span class="number">100</span><span class="unit">s</span>
+<span class="string">netrc</span>: <span class="boolean">false</span>
+<span class="string">netrc-file</span>: <span class="filename">netrcfile</span>
+<span class="string">netrc-optional</span>: <span class="boolean">false</span>
+<span class="string">output</span>: <span class="filename">output.txt</span>
+<span class="string">path-as-is</span>: <span class="boolean">false</span>
+<span class="string">pinnedpubkey</span>: <span class="string">pinnedpubkeyfile</span>
+<span class="string">proxy</span>: <span class="string">http://proxy.example</span>
+<span class="string">repeat</span>: <span class="number">-1</span>
+<span class="string">repeat</span>: <span class="number">5</span>
+<span class="string">resolve</span>: <span class="string">example.com:443:127.0.0.1</span>
+<span class="string">retry</span>: <span class="number">0</span>
+<span class="string">retry</span>: <span class="number">-1</span>
+<span class="string">retry</span>: <span class="number">4</span>
+<span class="string">retry-interval</span>: <span class="number">1000</span>
+<span class="string">retry-interval</span>: <span class="number">1000</span><span class="unit">ms</span>
+<span class="string">retry-interval</span>: <span class="number">1</span><span class="unit">s</span>
+<span class="string">skip</span>: <span class="boolean">false</span>
+<span class="string">unix-socket</span>: <span class="string">build/unix_socket.sock</span>
+<span class="string">user</span>: <span class="string">bob:secret</span>
+<span class="string">variable</span>: user=<span class="null">null</span>
+<span class="string">variable</span>: status=<span class="boolean">true</span>
+<span class="string">variable</span>: count=<span class="number">2</span>
+<span class="string">variable</span>: score=<span class="number">7.7</span>
+<span class="string">variable</span>: name=<span class="string">Bob</span>
+<span class="string">variable</span>:name = <span class="string">Bob</span>
+<span class="string">verbose</span>: <span class="boolean">false</span>
+<span class="string">very-verbose</span>: <span class="boolean">false</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
+<span class="section-header">[Options]</span>
+<span class="string">aws-sigv4</span>: <span class="string">{{aws-sigv4}}</span>
+<span class="string">cacert</span>: <span class="filename">{{cacert}}</span>
+<span class="string">cert</span>: <span class="filename">{{cert}}</span>
+<span class="string">key</span>: <span class="filename">{{key}}</span>
+<span class="string">compressed</span>: <span class="expr">{{compressed}}</span>
+<span class="string">connect-to</span>: <span class="string">{{connect-to}}</span>
+<span class="string">connect-timeout</span>: <span class="expr">{{connect-timeout}}</span>
+<span class="string">delay</span>: <span class="expr">{{delay}}</span>
+<span class="string">location</span>: <span class="expr">{{location}}</span>
+<span class="string">location-trusted</span>: <span class="expr">{{location-trusted}}</span>
+<span class="string">header</span>: <span class="string">{{header}}</span>
+<span class="string">http1.0</span>: <span class="expr">{{http10}}</span>
+<span class="string">http1.1</span>: <span class="expr">{{http11}}</span>
+<span class="string">http2</span>: <span class="expr">{{http2}}</span>
+<span class="string">http3</span>: <span class="expr">{{http3}}</span>
+<span class="string">insecure</span>: <span class="expr">{{insecure}}</span>
+<span class="string">ipv4</span>: <span class="expr">{{ipv4}}</span>
+<span class="string">ipv6</span>: <span class="expr">{{ipv6}}</span>
+<span class="string">limit-rate</span>: <span class="expr">{{limit-rate}}</span>
+<span class="string">max-redirs</span>: <span class="expr">{{max-redirs}}</span>
+<span class="string">max-time</span>: <span class="expr">{{max-time}}</span>
+<span class="string">netrc</span>: <span class="expr">{{netrc}}</span>
+<span class="string">netrc-file</span>: <span class="filename">{{netrc-file}}</span>
+<span class="string">netrc-optional</span>: <span class="expr">{{netrc-optional}}</span>
+<span class="string">output</span>: <span class="filename">{{output}}</span>
+<span class="string">path-as-is</span>: <span class="expr">{{path-as-is}}</span>
+<span class="string">pinnedpubkey</span>: <span class="string">{{pinnedpubkey}}</span>
+<span class="string">proxy</span>: <span class="string">{{proxy}}</span>
+<span class="string">repeat</span>: <span class="expr">{{repeat}}</span>
+<span class="string">resolve</span>: <span class="string">{{resolve}}</span>
+<span class="string">retry</span>: <span class="expr">{{retry}}</span>
+<span class="string">retry-interval</span>: <span class="expr">{{retry-interval}}</span>
+<span class="string">skip</span>: <span class="expr">{{skip}}</span>
+<span class="string">unix-socket</span>: <span class="string">{{socket-file}}</span>
+<span class="string">user</span>: <span class="string">{{user}}</span>
+<span class="comment">#variable: {{variable}}     NOT SUPPORTED YET</span>
+<span class="string">verbose</span>: <span class="expr">{{verbose}}</span>
+<span class="string">very-verbose</span>: <span class="expr">{{very-verbose}}</span>
 </span></span></code></pre>

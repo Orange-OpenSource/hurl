@@ -1,78 +1,78 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span></span>
-<span class="json"><span class="line">{</span>
-<span class="line">  "message": "Hello",</span>
-<span class="line">  "count": 5,</span>
-<span class="line">  "success": false,</span>
-<span class="line">  "errors": [{"id":"error1"},{"id":"error2"}],</span>
-<span class="line">  "failures": [{"id":"failure1"}],</span>
-<span class="line">  "warnings": [],</span>
-<span class="line">  "duration": 1.5,</span>
-<span class="line">  "tags": ["test"],</span>
-<span class="line">  "nullable": null,</span>
-<span class="line">  "profile-id": "123abc",</span>
-<span class="line">  "empty": {},</span>
-<span class="line">  "name": {{name}}</span>
-<span class="line">}</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span></span>
-<span class="line"><span class="multiline">```json</span></span>
-<span class="line"><span class="multiline">{</span></span>
-<span class="line"><span class="multiline">  "message": "Hello",</span></span>
-<span class="line"><span class="multiline">  "count": 5,</span></span>
-<span class="line"><span class="multiline">  "success": false,</span></span>
-<span class="line"><span class="multiline">  "errors": [{"id":"error1"},{"id":"error2"}],</span></span>
-<span class="line"><span class="multiline">  "failures": [{"id":"failure1"}],</span></span>
-<span class="line"><span class="multiline">  "warnings": [],</span></span>
-<span class="line"><span class="multiline">  "duration": 1.5,</span></span>
-<span class="line"><span class="multiline">  "tags": ["test"],</span></span>
-<span class="line"><span class="multiline">  "nullable": null,</span></span>
-<span class="line"><span class="multiline">  "profile-id": "123abc",</span></span>
-<span class="line"><span class="multiline">  "empty": {},</span></span>
-<span class="line"><span class="multiline">  "name": {{name}}</span></span>
-<span class="line"><span class="multiline">}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/xml</span></span>
-<span class="xml"><span class="line">&lt;message&gt;Hello&lt;/message&gt;</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
-<span class="line"><span class="multiline">```</span></span>
-<span class="line"><span class="multiline">Hello\tWord</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">A template {{ var }}</span></span>
-<span class="line"><span class="multiline">A template {{     var   }}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="comment"># escape novariable are attributes of multi-linestring</span></span>
-<span class="line"><span class="comment"># going to be deprecated</span></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
-<span class="line"><span class="multiline">```escape</span></span>
-<span class="line"><span class="multiline">Hello\tWord</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">A template {{ var }}</span></span>
-<span class="line"><span class="multiline">A template {{     var   }}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
-<span class="line"><span class="multiline">```escape,novariable</span></span>
-<span class="line"><span class="multiline">Hello\tWord</span></span>
-<span class="line"><span class="multiline">A beautiful \u{2708}</span></span>
-<span class="line"><span class="multiline">A template {{ var }}</span></span>
-<span class="line"><span class="multiline">A template {{     var   }}</span></span>
-<span class="line"><span class="multiline">```</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-string</span></span>
-<span class="line"><span class="string">`Hello`</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-base64</span></span>
-<span class="line">base64,<span class="base64">bGluZTEKbGluZTINCmxpbmUzCg==</span>;</span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-base64</span></span>
-<span class="line">base64,<span class="base64">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/==</span>;</span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-file</span></span>
-<span class="line">file,<span class="filename">data.bin</span>;</span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-hex</span></span>
-<span class="line">hex,<span class="hex">010203</span>;</span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span>
+<span class="json">{
+  "message": "Hello",
+  "count": 5,
+  "success": false,
+  "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
+  "warnings": [],
+  "duration": 1.5,
+  "tags": ["test"],
+  "nullable": null,
+  "profile-id": "123abc",
+  "empty": {},
+  "name": {{name}}
+}</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/json</span>
+<span class="multiline">```json
+{
+  "message": "Hello",
+  "count": 5,
+  "success": false,
+  "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
+  "warnings": [],
+  "duration": 1.5,
+  "tags": ["test"],
+  "nullable": null,
+  "profile-id": "123abc",
+  "empty": {},
+  "name": {{name}}
+}
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/xml</span>
+<span class="xml">&lt;message&gt;Hello&lt;/message&gt;</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
+<span class="multiline">```
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="comment"># escape novariable are attributes of multi-linestring</span>
+<span class="comment"># going to be deprecated</span>
+<span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
+<span class="multiline">```escape
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
+<span class="multiline">```escape,novariable
+Hello\tWord
+A beautiful \u{2708}
+A template {{ var }}
+A template {{     var   }}
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/oneline-string</span>
+<span class="string">`Hello`</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/oneline-base64</span>
+base64,<span class="base64">bGluZTEKbGluZTINCmxpbmUzCg==</span>;
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/oneline-base64</span>
+base64,<span class="base64">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/==</span>;
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/oneline-file</span>
+file,<span class="filename">data.bin</span>;
+</span></span><span class="entry"><span class="request">
+<span class="method">POST</span> <span class="url">http://localhost:8000/oneline-hex</span>
+hex,<span class="hex">010203</span>;
 </span></span></code></pre>

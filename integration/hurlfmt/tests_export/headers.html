@@ -1,50 +1,50 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span>
-<span class="line"><span class="string">User-Agent</span>: <span class="string">hurl/1.0</span></span>
-<span class="line"><span class="string">Host</span>: <span class="string">localhost:8000</span>  <span class="comment"># Comment</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span>
-<span class="line"><span class="string">User-Agent</span>: <span class="string">hurl/1.0</span></span>
-<span class="line"><span class="string">Host</span>: <span class="string">localhost:8000</span>  <span class="comment"># Comment</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers</span></span>
-<span class="line"><span class="string">Fruit</span>: <span class="string">Raspberry</span></span>
-<span class="line"><span class="string">Fruit</span>: <span class="string">Apple</span></span>
-<span class="line"><span class="string">Fruit</span>: <span class="string">Banana</span></span>
-<span class="line"><span class="string">Fruit</span>: <span class="string">Grape</span></span>
-<span class="line"><span class="string">Color</span>: <span class="string">Green</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers</span></span>
-<span class="line"><span class="comment"># Headers name/value can use templates</span></span>
-<span class="line"><span class="string">{{key}}</span>: <span class="string">Raspberry</span></span>
-<span class="line"><span class="string">{{key}}</span>: <span class="string">Apple</span></span>
-<span class="line"><span class="string">{{key}}</span>: <span class="string">Banana</span></span>
-<span class="line"><span class="string">{{key}}</span>: <span class="string">{{foo}}</span></span>
-<span class="line"><span class="string">Color</span>: <span class="string">{{color}}</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">variable</span>: key=<span class="string">Fruit</span></span>
-<span class="line"><span class="string">variable</span>: color=<span class="string">Green</span></span>
-<span class="line"><span class="string">variable</span>: foo=<span class="string">Grape</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-utf8</span></span>
-<span class="line"><span class="string">Beverage</span>: <span class="string">café</span>  <span class="comment"># Send the utf8 string - expected to be decoded as ascii in the server side</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-value</span></span>
-<span class="line"><span class="string">Id</span>: <span class="string">\#123</span>       <span class="comment"># Send a hash in the value</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-quote</span></span>
-<span class="line"><span class="string">Header1</span>: <span class="string">'</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/response-headers</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="string">Beverage</span>: <span class="string">cafe</span>  <span class="comment"># TBC send utf8</span></span>
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span>
+<span class="string">User-Agent</span>: <span class="string">hurl/1.0</span>
+<span class="string">Host</span>: <span class="string">localhost:8000</span>  <span class="comment"># Comment</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span>
+<span class="string">User-Agent</span>: <span class="string">hurl/1.0</span>
+<span class="string">Host</span>: <span class="string">localhost:8000</span>  <span class="comment"># Comment</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers</span>
+<span class="string">Fruit</span>: <span class="string">Raspberry</span>
+<span class="string">Fruit</span>: <span class="string">Apple</span>
+<span class="string">Fruit</span>: <span class="string">Banana</span>
+<span class="string">Fruit</span>: <span class="string">Grape</span>
+<span class="string">Color</span>: <span class="string">Green</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers</span>
+<span class="comment"># Headers name/value can use templates</span>
+<span class="string">{{key}}</span>: <span class="string">Raspberry</span>
+<span class="string">{{key}}</span>: <span class="string">Apple</span>
+<span class="string">{{key}}</span>: <span class="string">Banana</span>
+<span class="string">{{key}}</span>: <span class="string">{{foo}}</span>
+<span class="string">Color</span>: <span class="string">{{color}}</span>
+<span class="section-header">[Options]</span>
+<span class="string">variable</span>: key=<span class="string">Fruit</span>
+<span class="string">variable</span>: color=<span class="string">Green</span>
+<span class="string">variable</span>: foo=<span class="string">Grape</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-utf8</span>
+<span class="string">Beverage</span>: <span class="string">café</span>  <span class="comment"># Send the utf8 string - expected to be decoded as ascii in the server side</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-value</span>
+<span class="string">Id</span>: <span class="string">\#123</span>       <span class="comment"># Send a hash in the value</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-quote</span>
+<span class="string">Header1</span>: <span class="string">'</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+</span></span><span class="entry"><span class="request">
+<span class="method">GET</span> <span class="url">http://localhost:8000/response-headers</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="string">Beverage</span>: <span class="string">cafe</span>  <span class="comment"># TBC send utf8</span>
 </span></span></code></pre>
