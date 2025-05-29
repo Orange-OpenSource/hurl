@@ -151,6 +151,17 @@ header "Content-Type" == "text/html"
 bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 ```
 
+### first
+
+Returns the first element from a collection.
+
+```hurl
+GET https://example.org
+HTTP 200
+[Asserts]
+jsonpath "$.books" first == "Dune"
+```
+
 ### format
 
 Formats a date to a string given [a specification format].
@@ -196,6 +207,17 @@ books: xpath "string(//body/@data-books)"
 [Asserts]
 variable "books" jsonpath "$[0].name" == "Dune"
 variable "books" jsonpath "$[0].author" == "Franck Herbert"
+```
+
+### last
+
+Returns the last element from a collection.
+
+```hurl
+GET https://example.org
+HTTP 200
+[Asserts]
+jsonpath "$.books" last == "Les Misérables"
 ```
 
 
