@@ -59,7 +59,7 @@ hurl --ipv4 --parallel --test `
   tests_ok/retry/retry_option.hurl `
   tests_ok/retry/retry_until_200.hurl `
   tests_ok/url/url.hurl `
-  tests_ok/utf8.hurl `
+  tests_ok/utf8/utf8.hurl `
   tests_ok/verbose_option.hurl `
   tests_ok_not_linted/bom.hurl `
   tests_failed/assert_base64.hurl `
