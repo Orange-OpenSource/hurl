@@ -13,7 +13,7 @@ syntax match version "HTTP/1\.1" nextgroup=status skipwhite
 syntax match version "HTTP/2" nextgroup=status skipwhite
 syntax match version "HTTP/\*" nextgroup=status skipwhite
 syntax match status "[0-9]\+" contained
-syntax match comment "#.*$"
+syntax match comment "#.*$" contains=@Spell
 syntax match section "\[QueryStringParams\]"
 syntax match section "\[FormParams\]"
 syntax match section "\[MultipartFormData\]"
