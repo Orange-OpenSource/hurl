@@ -8,8 +8,12 @@ body {
     border-bottom: red 2px dashed;
 }
 
-.line-error::after {
-    content: " ⛔️"
+.line-error::before {
+    content: "⛔ "
+}
+
+.line-numbers a.line-error {
+    color: red;
 }
 
 .container {

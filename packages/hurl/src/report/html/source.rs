@@ -1,5 +1,3 @@
-use std::sync::LazyLock;
-
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -18,7 +16,6 @@ use std::sync::LazyLock;
  *
  */
 use hurl_core::ast::{HurlFile, SourceInfo};
-use regex::{Captures, Regex};
 
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
@@ -30,8 +27,7 @@ impl Testcase {
         let nav = self.get_nav_html(content, Tab::Source, secrets);
         let nav_css = include_str!("resources/nav.css");
         let source_div = hurl_core::format::format_html(hurl_file, false);
-        let source_div = underline_errors(&source_div, &self.errors);
-        let lines_div = get_numbered_lines(content);
+        let lines_div = get_numbered_lines(content, &self.errors);
         let source_css = include_str!("resources/source.css");
         let hurl_css = hurl_core::format::hurl_css();
         format!(
@@ -48,90 +44,24 @@ impl Testcase {
 }
 
 /// Returns a list of lines number in HTML.
-fn get_numbered_lines(content: &str) -> String {
+fn get_numbered_lines(content: &str, errors: &[(RunnerError, SourceInfo)]) -> String {
+    let errors = errors
+        .iter()
+        .map(|(error, _)| error.source_info.start.line)
+        .collect::<Vec<_>>();
     let mut lines =
         content
             .lines()
             .enumerate()
             .fold("<pre><code>".to_string(), |acc, (count, _)| -> String {
                 let line = count + 1;
-                acc + format!("<a id=\"l{line}\" href=\"#l{line}\">{line}</a>\n").as_str()
+                let tag = if errors.contains(&line) {
+                    format!("<a id=\"l{line}\" href=\"#l{line}\" class=\"line-error\">{line}</a>\n")
+                } else {
+                    format!("<a id=\"l{line}\" href=\"#l{line}\">{line}</a>\n")
+                };
+                acc + &tag
             });
     lines.push_str("</pre></code>");
     lines
-}
-
-static LINES_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new("<span class=\"line\">").unwrap());
-
-/// Adds error class to `content` lines that triggers `errors`.
-fn underline_errors(content: &str, errors: &[(RunnerError, SourceInfo)]) -> String {
-    // In nutshell, we're replacing line `<span class="line">...</span>`
-    // with `<span class="line line-error">...</span>`.
-    let mut line = 0;
-    let error_lines = errors
-        .iter()
-        .map(|(error, _)| error.source_info.start.line - 1)
-        .collect::<Vec<_>>();
-    LINES_RE
-        .replace_all(content, |_: &Captures| {
-            let str = if error_lines.contains(&line) {
-                "<span class=\"line line-error\">"
-            } else {
-                "<span class=\"line\">"
-            };
-            line += 1;
-            str
-        })
-        .to_string()
-}
-
-#[cfg(test)]
-mod tests {
-    use hurl_core::ast::SourceInfo;
-    use hurl_core::reader::Pos;
-
-    use super::*;
-    use crate::runner::RunnerErrorKind::QueryHeaderNotFound;
-
-    #[test]
-    fn add_underlined_errors() {
-        let content = r#"
-        <pre>
-            <code class="language-hurl">
-                <span class="entry">
-                    <span class="request">
-                        <span class="method">GET</span> <span class="url">http://foo.com</span>
-                        <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
-                    </span>
-                    <span class="response">
-                        <span class="version">HTTP</span> <span class="number">200</span>
-                    </span>
-                </span>
-            </code>
-        </pre>"#;
-
-        let underlined_content = r#"
-        <pre>
-            <code class="language-hurl">
-                <span class="entry">
-                    <span class="request">
-                        <span class="method">GET</span> <span class="url">http://foo.com</span>
-                        <span class="string">x-bar</span><span>:</span> <span class="string">baz</span>
-                    </span>
-                    <span class="response">
-                        <span class="version">HTTP</span> <span class="number">200</span>
-                    </span>
-                </span>
-            </code>
-        </pre>"#;
-
-        let error = RunnerError {
-            source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 4)),
-            kind: QueryHeaderNotFound,
-            assert: true,
-        };
-        let entry_src_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18));
-        let errors = [(error, entry_src_info)];
-        assert_eq!(underlined_content, underline_errors(content, &errors));
-    }
 }
