@@ -21,6 +21,7 @@ jsonpath "$.books" last jsonpath "$.name" == "Dune"                             
 jsonpath "$.books" nth 2 == "Children of Dune"                                              # nth
 body regex /Hello ([0-9]+)!/ == "Bob"                                                       # regex
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"                      # replace
+jsonpath "$.ips" replaceRegex /\d/ "x" == "x.x.x.x"                                         # replaceRegex
 jsonpath "$.ips" split ", " count == 3                                                      # split
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000                    # toDate
 jsonpath "$.pi" toFloat == 3.14                                                             # toFloat

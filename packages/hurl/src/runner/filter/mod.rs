@@ -39,6 +39,7 @@ mod location;
 mod nth;
 mod regex;
 mod replace;
+mod replace_regex;
 mod split;
 mod to_date;
 mod to_float;

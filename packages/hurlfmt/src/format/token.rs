@@ -1061,6 +1061,17 @@ impl Tokenizable for Filter {
                 tokens.append(&mut space1.tokenize());
                 tokens.append(&mut new_value.tokenize());
             }
+            FilterValue::ReplaceRegex {
+                space0,
+                pattern,
+                space1,
+                new_value,
+            } => {
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut pattern.tokenize());
+                tokens.append(&mut space1.tokenize());
+                tokens.append(&mut new_value.tokenize());
+            }
             FilterValue::Split { space0, sep } => {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut sep.tokenize());
@@ -1077,7 +1088,24 @@ impl Tokenizable for Filter {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut expr.tokenize());
             }
-            _ => {}
+            FilterValue::Base64Decode
+            | FilterValue::Base64Encode
+            | FilterValue::Base64UrlSafeDecode
+            | FilterValue::Base64UrlSafeEncode
+            | FilterValue::Count
+            | FilterValue::DaysAfterNow
+            | FilterValue::DaysBeforeNow
+            | FilterValue::First
+            | FilterValue::HtmlEscape
+            | FilterValue::HtmlUnescape
+            | FilterValue::Last
+            | FilterValue::Location
+            | FilterValue::ToFloat
+            | FilterValue::ToHex
+            | FilterValue::ToInt
+            | FilterValue::ToString
+            | FilterValue::UrlDecode
+            | FilterValue::UrlEncode => {}
         }
         tokens
     }

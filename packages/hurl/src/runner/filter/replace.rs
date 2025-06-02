@@ -15,26 +15,25 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{RegexValue, SourceInfo, Template};
+use hurl_core::ast::{SourceInfo, Template};
 
-use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
-/// Replaces all occurrences of `old_value` with `new_value` in `value`.
+/// Replaces all occurrences of the string `old_value` with `new_value` in `value`.
 pub fn eval_replace(
     value: &Value,
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
-    old_value: &RegexValue,
+    old_value: &Template,
     new_value: &Template,
 ) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(v) => {
-            let re = eval_regex_value(old_value, variables)?;
+            let old_value = eval_template(old_value, variables)?;
             let new_value = eval_template(new_value, variables)?;
-            let s = re.replace_all(v, new_value).to_string();
+            let s = v.replace(&old_value, &new_value);
             Ok(Some(Value::String(s)))
         }
         v => {
@@ -46,9 +45,7 @@ pub fn eval_replace(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{
-        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
-    };
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
 
@@ -61,19 +58,19 @@ mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Replace {
-                old_value: RegexValue::Template(Template::new(
-                    None,
+                old_value: Template::new(
+                    Some('"'),
                     vec![TemplateElement::String {
-                        value: "\\s+".to_string(),
-                        source: ",".to_source(),
+                        value: "bar".to_string(),
+                        source: "bar".to_source(),
                     }],
-                    SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
-                )),
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
                 new_value: Template::new(
                     Some('"'),
                     vec![TemplateElement::String {
-                        value: ",".to_string(),
-                        source: ",".to_source(),
+                        value: "foo".to_string(),
+                        source: "foo".to_source(),
                     }],
                     SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 ),
@@ -91,13 +88,59 @@ mod tests {
         assert_eq!(
             eval_filter(
                 &filter,
-                &Value::String("1 2\t3  4".to_string()),
+                &Value::String("foo bar baz".to_string()),
                 &variables,
                 false
             )
             .unwrap()
             .unwrap(),
-            Value::String("1,2,3,4".to_string())
+            Value::String("foo foo baz".to_string())
+        );
+    }
+
+    #[test]
+    fn test_first_arg_is_not_a_regex() {
+        let variables = VariableSet::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
+            value: FilterValue::Replace {
+                old_value: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
+                        value: "[0-9]".to_string(),
+                        source: "[0-9]".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
+                new_value: Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
+                        value: "x".to_string(),
+                        source: "x".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                ),
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                },
+            },
+        };
+
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("1234 [0-9]".to_string()),
+                &variables,
+                false
+            )
+            .unwrap()
+            .unwrap(),
+            Value::String("1234 x".to_string())
         );
     }
 }

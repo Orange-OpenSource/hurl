@@ -220,7 +220,6 @@ HTTP 200
 jsonpath "$.books" last == "Les Misérables"
 ```
 
-
 ### nth
 
 Returns the element from a collection at a zero-based index.
@@ -256,6 +255,19 @@ HTTP 200
 url: jsonpath "$.url" replace "http://" "https://"
 [Asserts]
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
+```
+
+### replaceRegex
+
+Replaces all occurrences of a pattern with new string.
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Captures]
+url: jsonpath "$.id" replaceRegex /\d\ "x"
+[Asserts]
+jsonpath "$.message" replaceRegex "B[aoi]b" "Dude" == "Welcome Dude!"
 ```
 
 ### split

@@ -568,6 +568,7 @@ filter:
   | nth-filter
   | regex-filter
   | replace-filter
+  | replace-regex-filter
   | split-filter
   | to-date-filter
   | to-float-filter
@@ -613,7 +614,9 @@ nth-filter: "nth" sp integer
 
 regex-filter: "regex" sp (quoted-string | regex)
 
-replace-filter: "replace" sp (quoted-string | regex) sp quoted-string
+replace-filter: "replace" sp quoted-string sp quoted-string
+
+replace-regex-filter: "replaceRegex" sp (quoted-string | regex) sp quoted-string
 
 split-filter: "split" sp quoted-string
 

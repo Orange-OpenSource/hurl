@@ -35,6 +35,7 @@ use crate::runner::filter::location::eval_location;
 use crate::runner::filter::nth::eval_nth;
 use crate::runner::filter::regex::eval_regex;
 use crate::runner::filter::replace::eval_replace;
+use crate::runner::filter::replace_regex::eval_replace_regex;
 use crate::runner::filter::split::eval_split;
 use crate::runner::filter::to_date::eval_to_date;
 use crate::runner::filter::to_float::eval_to_float;
@@ -117,6 +118,16 @@ pub fn eval_filter(
             filter.source_info,
             in_assert,
             old_value,
+            new_value,
+        ),
+        FilterValue::ReplaceRegex {
+            pattern, new_value, ..
+        } => eval_replace_regex(
+            value,
+            variables,
+            filter.source_info,
+            in_assert,
+            pattern,
             new_value,
         ),
         FilterValue::Split { sep, .. } => {

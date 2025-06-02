@@ -313,7 +313,13 @@ pub enum FilterValue {
     },
     Replace {
         space0: Whitespace,
-        old_value: RegexValue,
+        old_value: Template,
+        space1: Whitespace,
+        new_value: Template,
+    },
+    ReplaceRegex {
+        space0: Whitespace,
+        pattern: RegexValue,
         space1: Whitespace,
         new_value: Template,
     },
@@ -363,6 +369,7 @@ impl FilterValue {
             FilterValue::Nth { .. } => "nth",
             FilterValue::Regex { .. } => "regex",
             FilterValue::Replace { .. } => "replace",
+            FilterValue::ReplaceRegex { .. } => "replaceRegex",
             FilterValue::Split { .. } => "split",
             FilterValue::ToDate { .. } => "toDate",
             FilterValue::ToFloat => "toFloat",

@@ -666,7 +666,19 @@ impl ToJson for FilterValue {
                 new_value,
                 ..
             } => {
-                attributes.push(("old_value".to_string(), old_value.to_json()));
+                attributes.push((
+                    "old_value".to_string(),
+                    JValue::String(old_value.to_string()),
+                ));
+                attributes.push((
+                    "new_value".to_string(),
+                    JValue::String(new_value.to_string()),
+                ));
+            }
+            FilterValue::ReplaceRegex {
+                pattern, new_value, ..
+            } => {
+                attributes.push(("pattern".to_string(), pattern.to_json()));
                 attributes.push((
                     "new_value".to_string(),
                     JValue::String(new_value.to_string()),

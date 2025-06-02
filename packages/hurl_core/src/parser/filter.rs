@@ -70,6 +70,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             location_filter,
             nth_filter,
             regex_filter,
+            replace_regex_filter,
             replace_filter,
             split_filter,
             to_date_filter,
@@ -200,12 +201,26 @@ fn regex_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn replace_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("replace", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let old_value = regex_value(reader)?;
+    let old_value = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     let space1 = one_or_more_spaces(reader)?;
     let new_value = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
     Ok(FilterValue::Replace {
         space0,
         old_value,
+        space1,
+        new_value,
+    })
+}
+
+fn replace_regex_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("replaceRegex", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let pattern = regex_value(reader)?;
+    let space1 = one_or_more_spaces(reader)?;
+    let new_value = quoted_template(reader).map_err(|e| e.to_non_recoverable())?;
+    Ok(FilterValue::ReplaceRegex {
+        space0,
+        pattern,
         space1,
         new_value,
     })

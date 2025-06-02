@@ -726,7 +726,18 @@ impl HtmlFormatter {
                 new_value,
             } => {
                 self.fmt_space(space0);
-                self.fmt_regex_value(old_value);
+                self.fmt_template(old_value);
+                self.fmt_space(space1);
+                self.fmt_template(new_value);
+            }
+            FilterValue::ReplaceRegex {
+                space0,
+                pattern,
+                space1,
+                new_value,
+            } => {
+                self.fmt_space(space0);
+                self.fmt_regex_value(pattern);
                 self.fmt_space(space1);
                 self.fmt_template(new_value);
             }
