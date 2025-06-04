@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"https://foo.com","comments":[" This file checks that regex literal are well escaped and forbid JavaScript injections."]},"response":{"status":200,"asserts":[{"query":{"type":"jsonpath","expr":"$.body"},"predicate":{"type":"matches","value":"<img src=\"\" onerror=\"alert('Hi!')\">","encoding":"regex"}}]}}]}

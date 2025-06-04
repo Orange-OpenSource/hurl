@@ -1,6 +1,6 @@
 /*
  * Hurl (https://hurl.dev)
- * Copyright (C) 2024 Orange
+ * Copyright (C) 2025 Orange
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 //! Walker traverses an AST in depth-first order. Each overridden visit method has full control over
 //! what happens with its node, it can do its own traversal of the node's children, call `visit::walk_*`
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
+//!
+//! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
     DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue,

@@ -1,0 +1,6 @@
+<pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># This file checks that regex literal are well escaped and forbid JavaScript injections.</span>
+<span class="method">GET</span> <span class="url">https://foo.com</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.body"</span> <span class="predicate-type">matches</span> <span class="regex">/&lt;img src="" onerror="alert('Hi!')"&gt;/</span>
+</span></span></code></pre>
