@@ -141,6 +141,20 @@ impl Logger {
         self.eprintln(message);
     }
 
+    /// Prints curl cmd to this logger [`Stderr`] instance, no matter what is the verbosity.
+    ///
+    /// Displayed debug messages start with `*`.
+    pub fn info_curl_cmd(&mut self, cmd: &str) {
+        let fmt = self.format();
+        let mut s = StyledString::new();
+        s.push_with("*", Style::new().blue().bold());
+        s.push(" ");
+        s.push("Request can be run with the following curl command:\n");
+        s.push_with("*", Style::new().blue().bold());
+        s.push(" ");
+        s.push(cmd);
+        self.eprintln(&s.to_string(fmt));
+    }
     /// Prints a given debug message to this logger [`Stderr`] instance, in verbose and very verbose mode.
     ///
     /// Displayed debug messages start with `*`.

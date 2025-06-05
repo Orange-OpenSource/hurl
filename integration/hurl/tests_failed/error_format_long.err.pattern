@@ -1,3 +1,6 @@
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/html'
+
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
 Date: <<<.*?>>>
@@ -37,6 +40,9 @@ error: Assert failure
    |   expected: integer <2>
    |
 
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/json'
+
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
 Date: <<<.*?>>>
@@ -56,6 +62,9 @@ error: Assert failure
    |   actual:   integer <2>
    |   expected: integer <12>
    |
+
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/rfc-7807'
 
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -77,6 +86,9 @@ error: Assert failure
    |   expected: string <You have enough credit.>
    |
 
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/fhir'
+
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
 Date: <<<.*?>>>
@@ -96,6 +108,9 @@ error: Assert failure
    |   actual:   string <example>
    |   expected: string <foo>
    |
+
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/csv'
 
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
@@ -145,6 +160,9 @@ error: Assert failure
    |   actual:   string <"Taxi Driver">
    |   expected: string <"Taxi">
    |
+
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/error-format-long/bytes'
 
 HTTP/1.1 200
 Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
