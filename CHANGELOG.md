@@ -15,6 +15,12 @@ Thanks to
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@nfj25](https://github.com/nfj25),
 [@nwellnhof](https://github.com/nwellnhof),
+[@YannickAlex07](https://github.com/YannickAlex07),
+
+Breaking Changes:
+
+* Add replaceRegex filter and fix replace filter to not take regex [#4018](https://github.com/Orange-OpenSource/hurl/issues/4018)
+
 
 Enhancements:
 
@@ -26,6 +32,7 @@ Enhancements:
 * Add base64 url safe encode and decode filters [#3840](https://github.com/Orange-OpenSource/hurl/issues/3840)
 * Show hurl --help with color [#3882](https://github.com/Orange-OpenSource/hurl/issues/3882)
 * Add toHex filter [#3963](https://github.com/Orange-OpenSource/hurl/issues/3963)
+* Add first and last filters [#3998](https://github.com/Orange-OpenSource/hurl/issues/3998)
 * Remove hex crate dependency [#4011](https://github.com/Orange-OpenSource/hurl/issues/4011)
 * Add support for negative values for nth filter [#4050](https://github.com/Orange-OpenSource/hurl/issues/4050)
 * Add option to configure pinnedpubkey per request [#4084](https://github.com/Orange-OpenSource/hurl/issues/4084)
@@ -41,6 +48,9 @@ Bugs Fixed:
 * Replace deprecated libxml2 initGenericErrorDefaultFunc with xmlSetGenericErrorFunc [#3975](https://github.com/Orange-OpenSource/hurl/issues/3975)
 * HTML report: fix span for lines in comment. [#4002](https://github.com/Orange-OpenSource/hurl/issues/4002)
 * Fix HTML closing tag for line with trailing comment. [#4017](https://github.com/Orange-OpenSource/hurl/issues/4017)
+* Add replaceRegex filter and fix replace filter to not take regex [#4018](https://github.com/Orange-OpenSource/hurl/issues/4018)
+* Fix request body during redirections [#4073](https://github.com/Orange-OpenSource/hurl/issues/4073)
+* Fix "variables" token in GraphQL HTML export [#4117](https://github.com/Orange-OpenSource/hurl/issues/4117)
 
 
 [6.1.1 (2025-03-19)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
