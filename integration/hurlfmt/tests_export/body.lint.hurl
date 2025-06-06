@@ -75,3 +75,21 @@ file,data.bin;
 
 POST http://localhost:8000/oneline-hex
 hex,010203;
+
+# A GraphQL body with variables
+POST https://api.starwars.com/graphql
+```graphql
+query HeroNameAndFriends($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    friends {
+      name
+    }
+  }
+}
+
+variables {
+  "episode": "JEDI"
+}
+```
+HTTP 200

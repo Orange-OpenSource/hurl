@@ -75,4 +75,22 @@ file,<span class="filename">data.bin</span>;
 </span></span><span class="entry"><span class="request">
 <span class="method">POST</span> <span class="url">http://localhost:8000/oneline-hex</span>
 hex,<span class="hex">010203</span>;
+</span></span><span class="entry"><span class="request">
+<span class="comment"># A GraphQL body with variables</span>
+<span class="method">POST</span> <span class="url">https://api.starwars.com/graphql</span>
+<span class="multiline">```graphql
+query HeroNameAndFriends($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    friends {
+      name
+    }
+  }
+}
+
+variables {
+  "episode": "JEDI"
+}
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 </span></span></code></pre>

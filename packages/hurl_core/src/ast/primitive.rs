@@ -171,7 +171,7 @@ pub struct GraphQlVariables {
 
 impl ToSource for GraphQlVariables {
     fn to_source(&self) -> SourceString {
-        let mut source = "variable".to_source();
+        let mut source = "variables".to_source();
         source.push_str(self.space.as_str());
         source.push_str(self.value.to_source().as_str());
         source.push_str(self.whitespace.as_str());
