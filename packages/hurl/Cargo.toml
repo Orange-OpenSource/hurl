@@ -23,8 +23,8 @@ base64 = "0.22.1"
 brotli = "8.0.1"
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
 clap = { version = "4.5.39", features = ["string", "wrap_help"] }
-curl = "0.4.47"
-curl-sys = "0.4.80"
+curl = "0.4.48"
+curl-sys = "0.4.82"
 encoding = "0.2.33"
 glob = "0.3.2"
 hurl_core = { version = "7.0.0-SNAPSHOT", path = "../hurl_core" }
@@ -50,7 +50,7 @@ termion = "4.0.5"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.25"
+cc = "1.2.26"
 
 [lints]
 workspace = true
