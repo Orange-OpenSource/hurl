@@ -39,8 +39,13 @@ impl Section {
     pub fn identifier(&self) -> &'static str {
         match self.value {
             SectionValue::Asserts(_) => "Asserts",
-            SectionValue::QueryParams(_, true) => "Query",
-            SectionValue::QueryParams(_, false) => "QueryStringParams",
+            SectionValue::QueryParams(QueryParams {
+                short_syntax: true, ..
+            }) => "Query",
+            SectionValue::QueryParams(QueryParams {
+                short_syntax: false,
+                ..
+            }) => "QueryStringParams",
             SectionValue::BasicAuth(_) => "BasicAuth",
             SectionValue::FormParams(_, true) => "Form",
             SectionValue::FormParams(_, false) => "FormParams",
@@ -56,14 +61,20 @@ impl Section {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum SectionValue {
-    QueryParams(Vec<KeyValue>, bool), // boolean param indicates if we use the short syntax
-    BasicAuth(Option<KeyValue>),      // boolean param indicates if we use the short syntax
+    QueryParams(QueryParams),
+    BasicAuth(Option<KeyValue>), // boolean param indicates if we use the short syntax
     FormParams(Vec<KeyValue>, bool),
     MultipartFormData(Vec<MultipartParam>, bool), // boolean param indicates if we use the short syntax
     Cookies(Vec<Cookie>),
     Captures(Vec<Capture>),
     Asserts(Vec<Assert>),
     Options(Vec<EntryOption>),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct QueryParams {
+    pub params: Vec<KeyValue>,
+    pub short_syntax: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

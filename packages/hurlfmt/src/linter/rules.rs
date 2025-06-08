@@ -20,8 +20,8 @@ use hurl_core::ast::{
     CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue,
     GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
     MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
-    PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
-    SourceInfo, Template, VariableDefinition, Whitespace,
+    PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request, Response, Section,
+    SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -109,8 +109,15 @@ fn lint_section(section: &Section) -> Section {
 
 fn lint_section_value(section_value: &SectionValue) -> SectionValue {
     match section_value {
-        SectionValue::QueryParams(params, short) => {
-            SectionValue::QueryParams(params.iter().map(lint_key_value).collect(), *short)
+        SectionValue::QueryParams(QueryParams {
+            params,
+            short_syntax,
+        }) => {
+            let params = params.iter().map(lint_key_value).collect::<Vec<_>>();
+            SectionValue::QueryParams(QueryParams {
+                params,
+                short_syntax: *short_syntax,
+            })
         }
         SectionValue::BasicAuth(param) => {
             SectionValue::BasicAuth(param.as_ref().map(lint_key_value))
@@ -141,7 +148,7 @@ fn section_value_index(section_value: SectionValue) -> u32 {
     match section_value {
         // Request sections
         SectionValue::Options(_) => 0,
-        SectionValue::QueryParams(_, _) => 1,
+        SectionValue::QueryParams(QueryParams { .. }) => 1,
         SectionValue::BasicAuth(_) => 2,
         SectionValue::FormParams(_, _) => 3,
         SectionValue::MultipartFormData(_, _) => 4,

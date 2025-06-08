@@ -25,8 +25,8 @@ use crate::ast::{
     DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue,
     Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartParam,
     NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue,
-    Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue,
-    Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
+    Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
+    StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
@@ -758,7 +758,9 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
         SectionValue::Options(options) => {
             options.iter().for_each(|o| visitor.visit_entry_option(o));
         }
-        SectionValue::QueryParams(params, _) => params.iter().for_each(|p| visitor.visit_kv(p)),
+        SectionValue::QueryParams(QueryParams { params, .. }) => {
+            params.iter().for_each(|p| visitor.visit_kv(p));
+        }
     }
 }
 

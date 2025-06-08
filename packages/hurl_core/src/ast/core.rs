@@ -24,6 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
+use crate::ast::QueryParams;
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -91,7 +92,7 @@ impl Request {
     /// See <https://developer.mozilla.org/en-US/docs/Web/API/URL/searchParams>.
     pub fn querystring_params(&self) -> &[KeyValue] {
         for section in &self.sections {
-            if let SectionValue::QueryParams(params, _) = &section.value {
+            if let SectionValue::QueryParams(QueryParams { params, .. }) = &section.value {
                 return params;
             }
         }

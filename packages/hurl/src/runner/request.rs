@@ -195,8 +195,8 @@ fn eval_method(method: &Method) -> http::Method {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, Section, SectionValue,
-        SourceInfo, TemplateElement, Variable, Whitespace,
+        Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, QueryParams, Section,
+        SectionValue, SourceInfo, TemplateElement, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
@@ -294,8 +294,8 @@ mod tests {
                 line_terminators: vec![],
                 space0: whitespace(),
                 line_terminator0: line_terminator,
-                value: SectionValue::QueryParams(
-                    vec![
+                value: SectionValue::QueryParams(QueryParams {
+                    params: vec![
                         simple_key_value(
                             Template::new(
                                 None,
@@ -346,8 +346,8 @@ mod tests {
                             ),
                         ),
                     ],
-                    false,
-                ),
+                    short_syntax: false,
+                }),
                 source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             }],
             body: None,
