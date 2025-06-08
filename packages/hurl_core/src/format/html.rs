@@ -30,9 +30,9 @@ use crate::typing::{DurationUnit, SourceString, ToSource};
 ///
 /// If `standalone` is true, a complete HTML body with inline styling is returned.
 /// Otherwise, a `<pre>` HTML tag is returned, without styling.
-pub fn format(hurl_file: &HurlFile, standalone: bool) -> String {
+pub fn format(file: &HurlFile, standalone: bool) -> String {
     let mut fmt = HtmlFormatter::new();
-    let body = fmt.format(hurl_file);
+    let body = fmt.format(file);
     if standalone {
         let css = include_str!("hurl.css");
         format!(
@@ -93,6 +93,7 @@ const HURL_VERSION_CLASS: &str = "version";
 const HURL_XML_CLASS: &str = "xml";
 
 impl HtmlFormatter {
+    /// Creates a new HTML formatter.
     fn new() -> Self {
         HtmlFormatter {
             buffer: String::new(),

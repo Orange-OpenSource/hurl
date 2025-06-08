@@ -280,6 +280,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
             '\\' => {
                 if let Some('/') = reader.peek() {
                     reader.read();
+                    source.push('/');
                     unescaped.push('/');
                 } else {
                     unescaped.push('\\');

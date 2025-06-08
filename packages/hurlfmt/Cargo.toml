@@ -16,8 +16,6 @@ clap = { version = "4.5.40", features = ["cargo", "wrap_help"] }
 hurl_core = { version = "7.0.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.11.1"
 
-[dev-dependencies]
-proptest = "1.7.0"
 
 [lints]
 workspace = true

@@ -470,6 +470,7 @@ mod tests {
 
     #[test]
     fn test_assert_error_status() {
+        // For the crate colored to output ANSI escape code in test environment.
         hurl_core::text::init_crate_colored();
 
         let content = r#"GET http://unknown

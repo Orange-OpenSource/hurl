@@ -166,6 +166,11 @@ impl StyledString {
         }
         string
     }
+
+    /// Truncates this `StyledString`, removing all contents.
+    pub fn clear(&mut self) {
+        self.tokens.clear();
+    }
 }
 
 /// Represents part of a styled string.
@@ -260,6 +265,7 @@ mod tests {
 
     #[test]
     fn test_hello() {
+        // For the crate colored to output ANSI escape code in test environment.
         crate::text::init_crate_colored();
 
         let mut message = StyledString::new();

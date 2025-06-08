@@ -331,6 +331,7 @@ mod tests {
 
     #[test]
     fn test_diff_error() {
+        // For the crate colored to output ANSI escape code in test environment.
         crate::text::init_crate_colored();
 
         let content = r#"GET http://localhost:8000/failed/multiline/json
