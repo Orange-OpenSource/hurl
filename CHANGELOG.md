@@ -47,10 +47,15 @@ Bugs Fixed:
 * Parse cookie Expires date attribute with '-' [#3956](https://github.com/Orange-OpenSource/hurl/issues/3956)
 * Replace deprecated libxml2 initGenericErrorDefaultFunc with xmlSetGenericErrorFunc [#3975](https://github.com/Orange-OpenSource/hurl/issues/3975)
 * HTML report: fix span for lines in comment. [#4002](https://github.com/Orange-OpenSource/hurl/issues/4002)
-* Fix HTML closing tag for line with trailing comment. [#4017](https://github.com/Orange-OpenSource/hurl/issues/4017)
+* Fix HTML closing tag for line with trailing comment [#4017](https://github.com/Orange-OpenSource/hurl/issues/4017)
 * Add replaceRegex filter and fix replace filter to not take regex [#4018](https://github.com/Orange-OpenSource/hurl/issues/4018)
 * Fix request body during redirections [#4073](https://github.com/Orange-OpenSource/hurl/issues/4073)
 * Fix "variables" token in GraphQL HTML export [#4117](https://github.com/Orange-OpenSource/hurl/issues/4117)
+
+
+Security Issues Fixed:
+
+* Fix JavaScript injection in HTML report through regex literal [#4125](https://github.com/Orange-OpenSource/hurl/issues/4125)
 
 
 [6.1.1 (2025-03-19)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#6.1.1)
