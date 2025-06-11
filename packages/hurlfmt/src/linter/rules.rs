@@ -16,9 +16,9 @@
  *
  */
 use hurl_core::ast::{
-    Assert, Base64, BasicAuth, Body, Bytes, Capture, Captures, Comment, Cookie, CookieAttribute,
-    CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption, File,
-    FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue,
+    Assert, Asserts, Base64, BasicAuth, Body, Bytes, Capture, Captures, Comment, Cookie,
+    CookieAttribute, CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption,
+    File, FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue,
     LineTerminator, MultilineString, MultilineStringAttribute, MultilineStringKind,
     MultipartFormData, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
     PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request, Response, Section,
@@ -128,8 +128,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
             let captures = captures.iter().map(lint_capture).collect();
             SectionValue::Captures(Captures(captures))
         }
-        SectionValue::Asserts(asserts) => {
-            SectionValue::Asserts(asserts.iter().map(lint_assert).collect())
+        SectionValue::Asserts(Asserts(asserts)) => {
+            let asserts = asserts.iter().map(lint_assert).collect();
+            SectionValue::Asserts(Asserts(asserts))
         }
         SectionValue::FormParams(FormParams {
             params,

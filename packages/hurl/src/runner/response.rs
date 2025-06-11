@@ -386,7 +386,8 @@ pub fn eval_captures(
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        Captures, LineTerminator, Section, SectionValue, Status, Version, VersionValue, Whitespace,
+        Asserts, Captures, LineTerminator, Section, SectionValue, Status, Version, VersionValue,
+        Whitespace,
     };
     use hurl_core::reader::Pos;
 
@@ -424,7 +425,7 @@ mod tests {
                     line_terminators: vec![],
                     space0: whitespace.clone(),
                     line_terminator0: line_terminator.clone(),
-                    value: SectionValue::Asserts(vec![assert::tests::assert_count_user()]),
+                    value: SectionValue::Asserts(Asserts(vec![assert::tests::assert_count_user()])),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 Section {

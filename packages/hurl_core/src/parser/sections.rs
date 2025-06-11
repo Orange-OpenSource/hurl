@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::{
-    Assert, BasicAuth, Capture, Captures, Cookie, Cookies, FilenameParam, FilenameValue,
+    Assert, Asserts, BasicAuth, Capture, Captures, Cookie, Cookies, FilenameParam, FilenameValue,
     FormParams, MultipartFormData, MultipartParam, QueryParams, Section, SectionValue, SourceInfo,
     Whitespace,
 };
@@ -166,7 +166,7 @@ fn section_value_captures(reader: &mut Reader) -> ParseResult<SectionValue> {
 
 fn section_value_asserts(reader: &mut Reader) -> ParseResult<SectionValue> {
     let asserts = zero_or_more(assert, reader)?;
-    Ok(SectionValue::Asserts(asserts))
+    Ok(SectionValue::Asserts(Asserts(asserts)))
 }
 
 fn section_value_options(reader: &mut Reader) -> ParseResult<SectionValue> {
@@ -361,7 +361,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(2, 1)),
                     },
                 },
-                value: SectionValue::Asserts(vec![Assert {
+                value: SectionValue::Asserts(Asserts(vec![Assert {
                     line_terminators: vec![],
                     space0: Whitespace {
                         value: String::new(),
@@ -424,7 +424,7 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(2, 41), Pos::new(3, 1)),
                         },
                     },
-                }]),
+                }])),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             }
         );

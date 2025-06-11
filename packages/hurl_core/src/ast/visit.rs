@@ -21,12 +21,12 @@
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
 use crate::ast::{
-    Assert, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment, Cookie,
-    CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam,
-    FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue,
-    LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam, NaturalOption,
-    Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query,
-    QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
+    Assert, Asserts, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment,
+    Cookie, CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File,
+    FilenameParam, FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue,
+    KeyValue, LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam,
+    NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue,
+    Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
     StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
@@ -746,7 +746,9 @@ pub fn walk_section<V: Visitor>(visitor: &mut V, section: &Section) {
 
 pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionValue) {
     match section_value {
-        SectionValue::Asserts(asserts) => asserts.iter().for_each(|a| visitor.visit_assert(a)),
+        SectionValue::Asserts(Asserts(asserts)) => {
+            asserts.iter().for_each(|a| visitor.visit_assert(a))
+        }
         SectionValue::BasicAuth(BasicAuth(Some(auth))) => visitor.visit_kv(auth),
         SectionValue::BasicAuth(_) => {}
         SectionValue::Captures(Captures(captures)) => {

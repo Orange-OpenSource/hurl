@@ -24,7 +24,9 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{BasicAuth, Captures, Cookies, FormParams, MultipartFormData, QueryParams};
+use crate::ast::{
+    Asserts, BasicAuth, Captures, Cookies, FormParams, MultipartFormData, QueryParams,
+};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -188,7 +190,7 @@ impl Response {
     /// Returns the asserts list of this spec response.
     pub fn asserts(&self) -> &[Assert] {
         for section in self.sections.iter() {
-            if let SectionValue::Asserts(asserts) = &section.value {
+            if let SectionValue::Asserts(Asserts(asserts)) = &section.value {
                 return asserts;
             }
         }
