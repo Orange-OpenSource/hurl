@@ -16,12 +16,12 @@
  *
  */
 use hurl_core::ast::{
-    Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
-    CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue,
-    GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
-    MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
-    PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request, Response, Section,
-    SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
+    Assert, Base64, BasicAuth, Body, Bytes, Capture, Comment, Cookie, CookieAttribute,
+    CookieAttributeName, CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam,
+    Filter, FilterValue, GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString,
+    MultilineStringAttribute, MultilineStringKind, MultipartParam, OptionKind, Predicate,
+    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, RegexValue,
+    Request, Response, Section, SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -119,8 +119,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
                 short_syntax: *short_syntax,
             })
         }
-        SectionValue::BasicAuth(param) => {
-            SectionValue::BasicAuth(param.as_ref().map(lint_key_value))
+        SectionValue::BasicAuth(BasicAuth(kv)) => {
+            let kv = kv.as_ref().map(lint_key_value);
+            SectionValue::BasicAuth(BasicAuth(kv))
         }
         SectionValue::Captures(captures) => {
             SectionValue::Captures(captures.iter().map(lint_capture).collect())

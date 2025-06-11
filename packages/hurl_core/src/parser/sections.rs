@@ -16,8 +16,8 @@
  *
  */
 use crate::ast::{
-    Assert, Capture, Cookie, FilenameParam, FilenameValue, MultipartParam, QueryParams, Section,
-    SectionValue, SourceInfo, Whitespace,
+    Assert, BasicAuth, Capture, Cookie, FilenameParam, FilenameValue, MultipartParam, QueryParams,
+    Section, SectionValue, SourceInfo, Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
@@ -131,7 +131,7 @@ fn section_value_query_params(
 
 fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<SectionValue> {
     let v = optional(key_value, reader)?;
-    Ok(SectionValue::BasicAuth(v))
+    Ok(SectionValue::BasicAuth(BasicAuth(v)))
 }
 
 fn section_value_form_params(reader: &mut Reader, short: bool) -> ParseResult<SectionValue> {
@@ -788,7 +788,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(2, 1)),
                     },
                 },
-                value: SectionValue::BasicAuth(Some(KeyValue {
+                value: SectionValue::BasicAuth(BasicAuth(Some(KeyValue {
                     line_terminators: vec![],
                     space0: Whitespace {
                         value: String::new(),
@@ -829,7 +829,7 @@ mod tests {
                             source_info: SourceInfo::new(Pos::new(2, 14), Pos::new(3, 1))
                         },
                     },
-                })),
+                }))),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
             }
         );
@@ -855,7 +855,7 @@ mod tests {
                         source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(2, 1)),
                     },
                 },
-                value: SectionValue::BasicAuth(None),
+                value: SectionValue::BasicAuth(BasicAuth(None)),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
             }
         );

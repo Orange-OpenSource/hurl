@@ -24,7 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::QueryParams;
+use crate::ast::{BasicAuth, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -140,7 +140,7 @@ impl Request {
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication>.
     pub fn basic_auth(&self) -> Option<&KeyValue> {
         for section in &self.sections {
-            if let SectionValue::BasicAuth(kv) = &section.value {
+            if let SectionValue::BasicAuth(BasicAuth(kv)) = &section.value {
                 return kv.as_ref();
             }
         }

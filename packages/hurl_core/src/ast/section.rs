@@ -62,7 +62,7 @@ impl Section {
 #[allow(clippy::large_enum_variant)]
 pub enum SectionValue {
     QueryParams(QueryParams),
-    BasicAuth(Option<KeyValue>), // boolean param indicates if we use the short syntax
+    BasicAuth(BasicAuth),
     FormParams(Vec<KeyValue>, bool),
     MultipartFormData(Vec<MultipartParam>, bool), // boolean param indicates if we use the short syntax
     Cookies(Vec<Cookie>),
@@ -76,6 +76,9 @@ pub struct QueryParams {
     pub params: Vec<KeyValue>,
     pub short_syntax: bool,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BasicAuth(pub Option<KeyValue>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {
