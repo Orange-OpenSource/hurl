@@ -24,7 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{BasicAuth, QueryParams};
+use crate::ast::{BasicAuth, FormParams, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -104,7 +104,7 @@ impl Request {
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#url-encoded_form_submission>.
     pub fn form_params(&self) -> &[KeyValue] {
         for section in &self.sections {
-            if let SectionValue::FormParams(params, _) = &section.value {
+            if let SectionValue::FormParams(FormParams { params, .. }) = &section.value {
                 return params;
             }
         }

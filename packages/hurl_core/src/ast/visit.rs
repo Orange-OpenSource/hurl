@@ -23,11 +23,11 @@
 use crate::ast::{
     Assert, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath,
     CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter,
-    FilterValue, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method, MultilineString,
-    MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue,
-    PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section,
-    SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VersionValue,
-    Whitespace, U64,
+    FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method,
+    MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
+    PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request,
+    Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
+    VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
@@ -751,7 +751,9 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
         SectionValue::BasicAuth(_) => {}
         SectionValue::Captures(captures) => captures.iter().for_each(|c| visitor.visit_capture(c)),
         SectionValue::Cookies(cookies) => cookies.iter().for_each(|c| visitor.visit_cookie(c)),
-        SectionValue::FormParams(params, _) => params.iter().for_each(|p| visitor.visit_kv(p)),
+        SectionValue::FormParams(FormParams { params, .. }) => {
+            params.iter().for_each(|p| visitor.visit_kv(p));
+        }
         SectionValue::MultipartFormData(params, _) => params.iter().for_each(|p| match p {
             MultipartParam::Param(param) => visitor.visit_kv(param),
             MultipartParam::FilenameParam(param) => visitor.visit_filename_param(param),

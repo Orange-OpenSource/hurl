@@ -18,10 +18,11 @@
 use hurl_core::ast::{
     Assert, Base64, BasicAuth, Body, Bytes, Capture, Comment, Cookie, CookieAttribute,
     CookieAttributeName, CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam,
-    Filter, FilterValue, GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString,
-    MultilineStringAttribute, MultilineStringKind, MultipartParam, OptionKind, Predicate,
-    PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, RegexValue,
-    Request, Response, Section, SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
+    Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue, LineTerminator,
+    MultilineString, MultilineStringAttribute, MultilineStringKind, MultipartParam, OptionKind,
+    Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue,
+    RegexValue, Request, Response, Section, SectionValue, SourceInfo, Template, VariableDefinition,
+    Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -113,7 +114,7 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
             params,
             short_syntax,
         }) => {
-            let params = params.iter().map(lint_key_value).collect::<Vec<_>>();
+            let params = params.iter().map(lint_key_value).collect();
             SectionValue::QueryParams(QueryParams {
                 params,
                 short_syntax: *short_syntax,
@@ -129,8 +130,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
         SectionValue::Asserts(asserts) => {
             SectionValue::Asserts(asserts.iter().map(lint_assert).collect())
         }
-        SectionValue::FormParams(params, short) => {
-            SectionValue::FormParams(params.iter().map(lint_key_value).collect(), *short)
+        SectionValue::FormParams(FormParams{params, short_syntax}) => {
+            let params = params.iter().map(lint_key_value).collect();
+            SectionValue::FormParams(FormParams {params, short_syntax: *short_syntax})
         }
         SectionValue::MultipartFormData(params, short) => SectionValue::MultipartFormData(
             params.iter().map(lint_multipart_param).collect(),
@@ -151,7 +153,7 @@ fn section_value_index(section_value: SectionValue) -> u32 {
         SectionValue::Options(_) => 0,
         SectionValue::QueryParams(QueryParams { .. }) => 1,
         SectionValue::BasicAuth(_) => 2,
-        SectionValue::FormParams(_, _) => 3,
+        SectionValue::FormParams(FormParams { .. }) => 3,
         SectionValue::MultipartFormData(_, _) => 4,
         SectionValue::Cookies(_) => 5,
         // Response sections
