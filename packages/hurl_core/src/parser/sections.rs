@@ -15,11 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::ast::{
-    Assert, Asserts, BasicAuth, Capture, Captures, Cookie, Cookies, FilenameParam, FilenameValue,
-    FormParams, MultipartFormData, MultipartParam, QueryParams, Section, SectionValue, SourceInfo,
-    Whitespace,
-};
+use crate::ast::{Assert, Asserts, BasicAuth, Capture, Captures, Cookie, Cookies, FilenameParam, FilenameValue, FormParams, MultipartFormData, MultipartParam, Options, QueryParams, Section, SectionValue, SourceInfo, Whitespace};
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
 use crate::parser::predicate::predicate;
@@ -171,7 +167,7 @@ fn section_value_asserts(reader: &mut Reader) -> ParseResult<SectionValue> {
 
 fn section_value_options(reader: &mut Reader) -> ParseResult<SectionValue> {
     let options = zero_or_more(option::parse, reader)?;
-    Ok(SectionValue::Options(options))
+    Ok(SectionValue::Options(Options(options)))
 }
 
 fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {

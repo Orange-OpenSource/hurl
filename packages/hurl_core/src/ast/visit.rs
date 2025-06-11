@@ -20,15 +20,7 @@
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
-use crate::ast::{
-    Assert, Asserts, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment,
-    Cookie, CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File,
-    FilenameParam, FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue,
-    KeyValue, LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam,
-    NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue,
-    Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
-    StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
-};
+use crate::ast::{Assert, Asserts, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment, Cookie, CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam, NaturalOption, Number, OptionKind, Options, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64};
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default
@@ -747,7 +739,7 @@ pub fn walk_section<V: Visitor>(visitor: &mut V, section: &Section) {
 pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionValue) {
     match section_value {
         SectionValue::Asserts(Asserts(asserts)) => {
-            asserts.iter().for_each(|a| visitor.visit_assert(a))
+            asserts.iter().for_each(|a| visitor.visit_assert(a));
         }
         SectionValue::BasicAuth(BasicAuth(Some(auth))) => visitor.visit_kv(auth),
         SectionValue::BasicAuth(_) => {}
@@ -766,7 +758,7 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
                 MultipartParam::FilenameParam(param) => visitor.visit_filename_param(param),
             });
         }
-        SectionValue::Options(options) => {
+        SectionValue::Options(Options(options)) => {
             options.iter().for_each(|o| visitor.visit_entry_option(o));
         }
         SectionValue::QueryParams(QueryParams { params, .. }) => {

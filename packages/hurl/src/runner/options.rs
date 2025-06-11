@@ -15,10 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{
-    BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
-    OptionKind, Placeholder, SectionValue, VariableDefinition, VariableValue,
-};
+use hurl_core::ast::{BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber, OptionKind, Options, Placeholder, SectionValue, VariableDefinition, VariableValue};
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
@@ -53,7 +50,7 @@ pub fn get_entry_options(
     logger.debug_important("Entry options:");
 
     for section in &entry.request.sections {
-        if let SectionValue::Options(options) = &section.value {
+        if let SectionValue::Options(Options(options)) = &section.value {
             for option in options.iter() {
                 match &option.kind {
                     OptionKind::AwsSigV4(value) => {
@@ -302,7 +299,7 @@ pub fn get_entry_verbosity(
     let mut verbosity = default_verbosity;
 
     for section in &entry.request.sections {
-        if let SectionValue::Options(options) = &section.value {
+        if let SectionValue::Options(Options(options)) = &section.value {
             for option in options {
                 match &option.kind {
                     OptionKind::Verbose(value) => {

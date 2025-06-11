@@ -74,11 +74,11 @@ pub enum SectionValue {
     QueryParams(QueryParams),
     BasicAuth(BasicAuth),
     FormParams(FormParams),
-    MultipartFormData(MultipartFormData), // boolean param indicates if we use the short syntax
+    MultipartFormData(MultipartFormData),
     Cookies(Cookies),
     Captures(Captures),
     Asserts(Asserts),
-    Options(Vec<EntryOption>),
+    Options(Options),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -110,6 +110,10 @@ pub struct Captures(pub Vec<Capture>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Asserts(pub Vec<Assert>);
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Options(pub Vec<EntryOption>);
+
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {

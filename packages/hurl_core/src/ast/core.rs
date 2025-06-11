@@ -24,9 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{
-    Asserts, BasicAuth, Captures, Cookies, FormParams, MultipartFormData, QueryParams,
-};
+use crate::ast::{Asserts, BasicAuth, Captures, Cookies, FormParams, MultipartFormData, Options, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -154,7 +152,7 @@ impl Request {
     /// Returns the options specific for this request.
     pub fn options(&self) -> &[EntryOption] {
         for section in &self.sections {
-            if let SectionValue::Options(options) = &section.value {
+            if let SectionValue::Options(Options(options)) = &section.value {
                 return options;
             }
         }
