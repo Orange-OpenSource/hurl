@@ -16,8 +16,9 @@
  *
  */
 use crate::ast::{
-    Assert, BasicAuth, Capture, Cookie, Cookies, FilenameParam, FilenameValue, FormParams,
-    MultipartFormData, MultipartParam, QueryParams, Section, SectionValue, SourceInfo, Whitespace,
+    Assert, BasicAuth, Capture, Captures, Cookie, Cookies, FilenameParam, FilenameValue,
+    FormParams, MultipartFormData, MultipartParam, QueryParams, Section, SectionValue, SourceInfo,
+    Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
@@ -159,8 +160,8 @@ fn section_value_cookies(reader: &mut Reader) -> ParseResult<SectionValue> {
 }
 
 fn section_value_captures(reader: &mut Reader) -> ParseResult<SectionValue> {
-    let items = zero_or_more(capture, reader)?;
-    Ok(SectionValue::Captures(items))
+    let captures = zero_or_more(capture, reader)?;
+    Ok(SectionValue::Captures(Captures(captures)))
 }
 
 fn section_value_asserts(reader: &mut Reader) -> ParseResult<SectionValue> {

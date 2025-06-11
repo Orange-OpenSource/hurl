@@ -76,7 +76,7 @@ pub enum SectionValue {
     FormParams(FormParams),
     MultipartFormData(MultipartFormData), // boolean param indicates if we use the short syntax
     Cookies(Cookies),
-    Captures(Vec<Capture>),
+    Captures(Captures),
     Asserts(Vec<Assert>),
     Options(Vec<EntryOption>),
 }
@@ -104,6 +104,9 @@ pub struct MultipartFormData {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookies(pub Vec<Cookie>);
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Captures(pub Vec<Capture>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {

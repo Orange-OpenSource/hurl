@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::ast::{
-    Assert, Base64, BasicAuth, Body, Bytes, Capture, Comment, Cookie, CookieAttribute,
+    Assert, Base64, BasicAuth, Body, Bytes, Capture, Captures, Comment, Cookie, CookieAttribute,
     CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption, File,
     FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue,
     LineTerminator, MultilineString, MultilineStringAttribute, MultilineStringKind,
@@ -124,8 +124,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
             let kv = kv.as_ref().map(lint_key_value);
             SectionValue::BasicAuth(BasicAuth(kv))
         }
-        SectionValue::Captures(captures) => {
-            SectionValue::Captures(captures.iter().map(lint_capture).collect())
+        SectionValue::Captures(Captures(captures)) => {
+            let captures = captures.iter().map(lint_capture).collect();
+            SectionValue::Captures(Captures(captures))
         }
         SectionValue::Asserts(asserts) => {
             SectionValue::Asserts(asserts.iter().map(lint_assert).collect())

@@ -21,13 +21,13 @@
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
 use crate::ast::{
-    Assert, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath,
-    Cookies, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue,
-    Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method,
-    MultilineString, MultipartFormData, MultipartParam, NaturalOption, Number, OptionKind,
-    Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue,
-    Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template,
-    VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
+    Assert, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment, Cookie,
+    CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam,
+    FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue,
+    LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam, NaturalOption,
+    Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query,
+    QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
+    StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
@@ -749,7 +749,9 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
         SectionValue::Asserts(asserts) => asserts.iter().for_each(|a| visitor.visit_assert(a)),
         SectionValue::BasicAuth(BasicAuth(Some(auth))) => visitor.visit_kv(auth),
         SectionValue::BasicAuth(_) => {}
-        SectionValue::Captures(captures) => captures.iter().for_each(|c| visitor.visit_capture(c)),
+        SectionValue::Captures(Captures(captures)) => {
+            captures.iter().for_each(|c| visitor.visit_capture(c));
+        }
         SectionValue::Cookies(Cookies(cookies)) => {
             cookies.iter().for_each(|c| visitor.visit_cookie(c));
         }

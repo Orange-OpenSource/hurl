@@ -24,7 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{BasicAuth, Cookies, FormParams, MultipartFormData, QueryParams};
+use crate::ast::{BasicAuth, Captures, Cookies, FormParams, MultipartFormData, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -178,7 +178,7 @@ impl Response {
     /// Returns the captures list of this spec response.
     pub fn captures(&self) -> &[Capture] {
         for section in self.sections.iter() {
-            if let SectionValue::Captures(captures) = &section.value {
+            if let SectionValue::Captures(Captures(captures)) = &section.value {
                 return captures;
             }
         }
