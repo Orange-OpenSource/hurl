@@ -24,7 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{BasicAuth, FormParams, MultipartFormData, QueryParams};
+use crate::ast::{BasicAuth, Cookies, FormParams, MultipartFormData, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -130,7 +130,7 @@ impl Request {
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>.
     pub fn cookies(&self) -> &[Cookie] {
         for section in &self.sections {
-            if let SectionValue::Cookies(cookies) = &section.value {
+            if let SectionValue::Cookies(Cookies(cookies)) = &section.value {
                 return cookies;
             }
         }

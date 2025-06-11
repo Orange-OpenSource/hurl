@@ -17,12 +17,12 @@
  */
 use hurl_core::ast::{
     Assert, Base64, BasicAuth, Body, Bytes, Capture, Comment, Cookie, CookieAttribute,
-    CookieAttributeName, CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam,
-    Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue, LineTerminator,
-    MultilineString, MultilineStringAttribute, MultilineStringKind, MultipartFormData,
-    MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue,
-    Query, QueryParams, QueryValue, RegexValue, Request, Response, Section, SectionValue,
-    SourceInfo, Template, VariableDefinition, Whitespace,
+    CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption, File,
+    FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue,
+    LineTerminator, MultilineString, MultilineStringAttribute, MultilineStringKind,
+    MultipartFormData, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
+    PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request, Response, Section,
+    SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
 };
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
@@ -150,8 +150,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
                 short_syntax: *short_syntax,
             })
         }
-        SectionValue::Cookies(cookies) => {
-            SectionValue::Cookies(cookies.iter().map(lint_cookie).collect())
+        SectionValue::Cookies(Cookies(cookies)) => {
+            let cookies = cookies.iter().map(lint_cookie).collect();
+            SectionValue::Cookies(Cookies(cookies))
         }
         SectionValue::Options(options) => {
             SectionValue::Options(options.iter().map(lint_entry_option).collect())

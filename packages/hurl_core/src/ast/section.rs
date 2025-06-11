@@ -75,7 +75,7 @@ pub enum SectionValue {
     BasicAuth(BasicAuth),
     FormParams(FormParams),
     MultipartFormData(MultipartFormData), // boolean param indicates if we use the short syntax
-    Cookies(Vec<Cookie>),
+    Cookies(Cookies),
     Captures(Vec<Capture>),
     Asserts(Vec<Assert>),
     Options(Vec<EntryOption>),
@@ -101,6 +101,9 @@ pub struct MultipartFormData {
     pub params: Vec<MultipartParam>,
     pub short_syntax: bool,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Cookies(pub Vec<Cookie>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {
