@@ -15,7 +15,10 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber, OptionKind, Options, Placeholder, SectionValue, VariableDefinition, VariableValue};
+use hurl_core::ast::{
+    BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
+    OptionKind, Options, Placeholder, VariableDefinition, VariableValue,
+};
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
@@ -42,252 +45,237 @@ pub fn get_entry_options(
         output: None,
         ..runner_options
     };
-    if !has_options(entry) {
+    if entry.request.options().is_none() {
         return Ok(entry_options);
     }
 
     logger.debug("");
     logger.debug_important("Entry options:");
 
-    for section in &entry.request.sections {
-        if let SectionValue::Options(Options(options)) = &section.value {
-            for option in options.iter() {
-                match &option.kind {
-                    OptionKind::AwsSigV4(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.aws_sigv4 = Some(value);
+    if let Some(Options(options)) = &entry.request.options() {
+        for option in options {
+            match &option.kind {
+                OptionKind::AwsSigV4(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.aws_sigv4 = Some(value);
+                }
+                OptionKind::CaCertificate(filename) => {
+                    let value = eval_template(filename, variables)?;
+                    entry_options.cacert_file = Some(value);
+                }
+                OptionKind::ClientCert(filename) => {
+                    let value = eval_template(filename, variables)?;
+                    entry_options.client_cert_file = Some(value);
+                }
+                OptionKind::ClientKey(filename) => {
+                    let value = eval_template(filename, variables)?;
+                    entry_options.client_key_file = Some(value);
+                }
+                OptionKind::Compressed(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.compressed = value;
+                }
+                OptionKind::ConnectTo(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.connects_to.push(value);
+                }
+                OptionKind::ConnectTimeout(value) => {
+                    let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                    entry_options.connect_timeout = value;
+                }
+                OptionKind::Delay(value) => {
+                    let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                    entry_options.delay = value;
+                }
+                OptionKind::Header(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.headers.push(value);
+                }
+                // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
+                // through a flag. In an `[Options]` section, the signification of such a flag is:
+                //
+                // - when set to `true`, it's equivalent as using this option on command line
+                //
+                // ```hurl
+                // # Shell equivalent command:
+                // # $ hurl --http1.1 foo.hurl
+                // GET https://foo.com
+                // [Options]
+                // http1.1: true
+                // ```
+                //
+                // - when set to `false`, it's as if the user do not want to use such a version.
+                // So, if such a flag is explicitly set to `false`, we downgrade to the lower
+                // HTTP version:
+                //
+                // ```hurl
+                // # Shell equivalent command:
+                // # $ hurl --http1.1 foo.hurl
+                // GET https://foo.com
+                // [Options]
+                // http2: false
+                // ```
+                //
+                // As libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
+                // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
+                // > existing connections so it might then reuse a connection using a HTTP version you
+                // > have not asked for.
+                // we don't allow our HTTP client to reuse connection if the user asks for a specific
+                // HTTP version per request.
+                //
+                OptionKind::Http10(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    if value {
+                        entry_options.http_version = RequestedHttpVersion::Http10;
                     }
-                    OptionKind::CaCertificate(filename) => {
-                        let value = eval_template(filename, variables)?;
-                        entry_options.cacert_file = Some(value);
+                    entry_options.allow_reuse = false;
+                }
+                OptionKind::Http11(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    if value {
+                        entry_options.http_version = RequestedHttpVersion::Http11;
+                    } else {
+                        entry_options.http_version = RequestedHttpVersion::Http10;
                     }
-                    OptionKind::ClientCert(filename) => {
-                        let value = eval_template(filename, variables)?;
-                        entry_options.client_cert_file = Some(value);
+                    entry_options.allow_reuse = false;
+                }
+                OptionKind::Http2(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    if value {
+                        entry_options.http_version = RequestedHttpVersion::Http2;
+                    } else {
+                        entry_options.http_version = RequestedHttpVersion::Http11;
                     }
-                    OptionKind::ClientKey(filename) => {
-                        let value = eval_template(filename, variables)?;
-                        entry_options.client_key_file = Some(value);
+                    entry_options.allow_reuse = false;
+                }
+                OptionKind::Http3(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    if value {
+                        entry_options.http_version = RequestedHttpVersion::Http3;
+                    } else {
+                        entry_options.http_version = RequestedHttpVersion::Http2;
                     }
-                    OptionKind::Compressed(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.compressed = value;
+                    entry_options.allow_reuse = false;
+                }
+                OptionKind::FollowLocation(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.follow_location = value;
+                }
+                OptionKind::FollowLocationTrusted(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    if value {
+                        entry_options.follow_location = true;
                     }
-                    OptionKind::ConnectTo(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.connects_to.push(value);
-                    }
-                    OptionKind::ConnectTimeout(value) => {
-                        let value =
-                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
-                        entry_options.connect_timeout = value;
-                    }
-                    OptionKind::Delay(value) => {
-                        let value =
-                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
-                        entry_options.delay = value;
-                    }
-                    OptionKind::Header(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.headers.push(value);
-                    }
-                    // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
-                    // through a flag. In an `[Options]` section, the signification of such a flag is:
-                    //
-                    // - when set to `true`, it's equivalent as using this option on command line
-                    //
-                    // ```hurl
-                    // # Shell equivalent command:
-                    // # $ hurl --http1.1 foo.hurl
-                    // GET https://foo.com
-                    // [Options]
-                    // http1.1: true
-                    // ```
-                    //
-                    // - when set to `false`, it's as if the user do not want to use such a version.
-                    // So, if such a flag is explicitly set to `false`, we downgrade to the lower
-                    // HTTP version:
-                    //
-                    // ```hurl
-                    // # Shell equivalent command:
-                    // # $ hurl --http1.1 foo.hurl
-                    // GET https://foo.com
-                    // [Options]
-                    // http2: false
-                    // ```
-                    //
-                    // As libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
-                    // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
-                    // > existing connections so it might then reuse a connection using a HTTP version you
-                    // > have not asked for.
-                    // we don't allow our HTTP client to reuse connection if the user asks for a specific
-                    // HTTP version per request.
-                    //
-                    OptionKind::Http10(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        if value {
-                            entry_options.http_version = RequestedHttpVersion::Http10;
-                        }
-                        entry_options.allow_reuse = false;
-                    }
-                    OptionKind::Http11(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        if value {
-                            entry_options.http_version = RequestedHttpVersion::Http11;
-                        } else {
-                            entry_options.http_version = RequestedHttpVersion::Http10;
-                        }
-                        entry_options.allow_reuse = false;
-                    }
-                    OptionKind::Http2(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        if value {
-                            entry_options.http_version = RequestedHttpVersion::Http2;
-                        } else {
-                            entry_options.http_version = RequestedHttpVersion::Http11;
-                        }
-                        entry_options.allow_reuse = false;
-                    }
-                    OptionKind::Http3(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        if value {
-                            entry_options.http_version = RequestedHttpVersion::Http3;
-                        } else {
-                            entry_options.http_version = RequestedHttpVersion::Http2;
-                        }
-                        entry_options.allow_reuse = false;
-                    }
-                    OptionKind::FollowLocation(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.follow_location = value;
-                    }
-                    OptionKind::FollowLocationTrusted(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        if value {
-                            entry_options.follow_location = true;
-                        }
-                        entry_options.follow_location_trusted = value;
-                    }
-                    OptionKind::Insecure(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.insecure = value;
-                    }
-                    OptionKind::IpV4(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.ip_resolve = if value {
-                            IpResolve::IpV4
-                        } else {
-                            IpResolve::IpV6
-                        }
-                    }
-                    OptionKind::IpV6(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.ip_resolve = if value {
-                            IpResolve::IpV6
-                        } else {
-                            IpResolve::IpV4
-                        }
-                    }
-                    OptionKind::LimitRate(value) => {
-                        let value = eval_natural_option(value, variables)?;
-                        entry_options.max_send_speed = Some(BytesPerSec(value));
-                        entry_options.max_recv_speed = Some(BytesPerSec(value));
-                    }
-                    OptionKind::MaxRedirect(value) => {
-                        let value = eval_count_option(value, variables)?;
-                        entry_options.max_redirect = value;
-                    }
-                    OptionKind::MaxTime(value) => {
-                        let value =
-                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
-                        entry_options.timeout = value;
-                    }
-                    OptionKind::NetRc(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.netrc = value;
-                    }
-                    OptionKind::NetRcFile(value) => {
-                        let filename = eval_template(value, variables)?;
-                        entry_options.netrc_file = Some(filename);
-                    }
-                    OptionKind::NetRcOptional(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.netrc_optional = value;
-                    }
-                    OptionKind::Output(output) => {
-                        let filename = eval_template(output, variables)?;
-                        let output = Output::new(&filename);
-                        entry_options.output = Some(output);
-                    }
-                    OptionKind::PathAsIs(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.path_as_is = value;
-                    }
-                    OptionKind::PinnedPublicKey(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.pinned_pub_key = Some(value);
-                    }
-                    OptionKind::Proxy(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.proxy = Some(value);
-                    }
-                    OptionKind::Repeat(value) => {
-                        let value = eval_count_option(value, variables)?;
-                        entry_options.repeat = Some(value);
-                    }
-                    OptionKind::Resolve(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.resolves.push(value);
-                    }
-                    OptionKind::Retry(value) => {
-                        let value = eval_count_option(value, variables)?;
-                        entry_options.retry = Some(value);
-                    }
-                    OptionKind::RetryInterval(value) => {
-                        let value =
-                            eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
-                        entry_options.retry_interval = value;
-                    }
-                    OptionKind::Skip(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        entry_options.skip = value;
-                    }
-                    OptionKind::UnixSocket(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.unix_socket = Some(value);
-                    }
-                    OptionKind::User(value) => {
-                        let value = eval_template(value, variables)?;
-                        entry_options.user = Some(value);
-                    }
-                    OptionKind::Variable(VariableDefinition { name, value, .. }) => {
-                        let value = eval_variable_value(value, variables)?;
-                        variables.insert(name.clone(), value);
-                    }
-                    // verbose and very-verbose option have been previously processed as they
-                    // can impact the logging. We compute here their values to check the potential
-                    // templatized error.
-                    OptionKind::Verbose(value) => {
-                        eval_boolean_option(value, variables)?;
-                    }
-                    OptionKind::VeryVerbose(value) => {
-                        eval_boolean_option(value, variables)?;
+                    entry_options.follow_location_trusted = value;
+                }
+                OptionKind::Insecure(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.insecure = value;
+                }
+                OptionKind::IpV4(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.ip_resolve = if value {
+                        IpResolve::IpV4
+                    } else {
+                        IpResolve::IpV6
                     }
                 }
-                logger.debug(&option.kind.to_string());
+                OptionKind::IpV6(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.ip_resolve = if value {
+                        IpResolve::IpV6
+                    } else {
+                        IpResolve::IpV4
+                    }
+                }
+                OptionKind::LimitRate(value) => {
+                    let value = eval_natural_option(value, variables)?;
+                    entry_options.max_send_speed = Some(BytesPerSec(value));
+                    entry_options.max_recv_speed = Some(BytesPerSec(value));
+                }
+                OptionKind::MaxRedirect(value) => {
+                    let value = eval_count_option(value, variables)?;
+                    entry_options.max_redirect = value;
+                }
+                OptionKind::MaxTime(value) => {
+                    let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                    entry_options.timeout = value;
+                }
+                OptionKind::NetRc(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.netrc = value;
+                }
+                OptionKind::NetRcFile(value) => {
+                    let filename = eval_template(value, variables)?;
+                    entry_options.netrc_file = Some(filename);
+                }
+                OptionKind::NetRcOptional(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.netrc_optional = value;
+                }
+                OptionKind::Output(output) => {
+                    let filename = eval_template(output, variables)?;
+                    let output = Output::new(&filename);
+                    entry_options.output = Some(output);
+                }
+                OptionKind::PathAsIs(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.path_as_is = value;
+                }
+                OptionKind::PinnedPublicKey(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.pinned_pub_key = Some(value);
+                }
+                OptionKind::Proxy(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.proxy = Some(value);
+                }
+                OptionKind::Repeat(value) => {
+                    let value = eval_count_option(value, variables)?;
+                    entry_options.repeat = Some(value);
+                }
+                OptionKind::Resolve(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.resolves.push(value);
+                }
+                OptionKind::Retry(value) => {
+                    let value = eval_count_option(value, variables)?;
+                    entry_options.retry = Some(value);
+                }
+                OptionKind::RetryInterval(value) => {
+                    let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
+                    entry_options.retry_interval = value;
+                }
+                OptionKind::Skip(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    entry_options.skip = value;
+                }
+                OptionKind::UnixSocket(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.unix_socket = Some(value);
+                }
+                OptionKind::User(value) => {
+                    let value = eval_template(value, variables)?;
+                    entry_options.user = Some(value);
+                }
+                OptionKind::Variable(VariableDefinition { name, value, .. }) => {
+                    let value = eval_variable_value(value, variables)?;
+                    variables.insert(name.clone(), value);
+                }
+                // verbose and very-verbose option have been previously processed as they
+                // can impact the logging. We compute here their values to check the potential
+                // templatized error.
+                OptionKind::Verbose(value) => {
+                    eval_boolean_option(value, variables)?;
+                }
+                OptionKind::VeryVerbose(value) => {
+                    eval_boolean_option(value, variables)?;
+                }
             }
+            logger.debug(&option.kind.to_string());
         }
     }
     Ok(entry_options)
-}
-
-/// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.
-fn has_options(entry: &Entry) -> bool {
-    entry
-        .request
-        .sections
-        .iter()
-        .any(|s| matches!(s.value, SectionValue::Options(_)))
 }
 
 /// Returns the overridden `entry` verbosity, or the default `verbosity` file.
@@ -298,28 +286,26 @@ pub fn get_entry_verbosity(
 ) -> Result<Option<Verbosity>, RunnerError> {
     let mut verbosity = default_verbosity;
 
-    for section in &entry.request.sections {
-        if let SectionValue::Options(Options(options)) = &section.value {
-            for option in options {
-                match &option.kind {
-                    OptionKind::Verbose(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        verbosity = if value {
-                            Some(Verbosity::Verbose)
-                        } else {
-                            None
-                        }
+    if let Some(Options(options)) = &entry.request.options() {
+        for option in options {
+            match &option.kind {
+                OptionKind::Verbose(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    verbosity = if value {
+                        Some(Verbosity::Verbose)
+                    } else {
+                        None
                     }
-                    OptionKind::VeryVerbose(value) => {
-                        let value = eval_boolean_option(value, variables)?;
-                        verbosity = if value {
-                            Some(Verbosity::VeryVerbose)
-                        } else {
-                            None
-                        }
-                    }
-                    _ => {}
                 }
+                OptionKind::VeryVerbose(value) => {
+                    let value = eval_boolean_option(value, variables)?;
+                    verbosity = if value {
+                        Some(Verbosity::VeryVerbose)
+                    } else {
+                        None
+                    }
+                }
+                _ => {}
             }
         }
     }

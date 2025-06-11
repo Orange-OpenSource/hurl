@@ -114,7 +114,6 @@ pub struct Asserts(pub Vec<Assert>);
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options(pub Vec<EntryOption>);
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {
     pub line_terminators: Vec<LineTerminator>,

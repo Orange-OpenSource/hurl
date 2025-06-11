@@ -20,7 +20,7 @@ use std::str::FromStr;
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::{
-    Body, Bytes, Method, MultilineString, MultilineStringKind, Request, Template,
+    BasicAuth, Body, Bytes, Method, MultilineString, MultilineStringKind, Request, Template,
 };
 
 use crate::http;
@@ -48,7 +48,7 @@ pub fn eval_request(
     }
 
     // Basic auth
-    if let Some(kv) = &request.basic_auth() {
+    if let Some(BasicAuth(Some(kv))) = &request.basic_auth() {
         let name = template::eval_template(&kv.key, variables)?;
         let value = template::eval_template(&kv.value, variables)?;
         let user_password = format!("{}:{}", name, value);
@@ -61,29 +61,35 @@ pub fn eval_request(
 
     // Query string params
     let mut querystring = vec![];
-    for param in request.querystring_params() {
-        let name = template::eval_template(&param.key, variables)?;
-        let value = template::eval_template(&param.value, variables)?;
-        let param = http::Param { name, value };
-        querystring.push(param);
+    if let Some(query_param) = request.query_params() {
+        for param in &query_param.params {
+            let name = template::eval_template(&param.key, variables)?;
+            let value = template::eval_template(&param.value, variables)?;
+            let param = http::Param { name, value };
+            querystring.push(param);
+        }
     }
 
     // Form params
     let mut form = vec![];
-    for param in request.form_params() {
-        let name = template::eval_template(&param.key, variables)?;
-        let value = template::eval_template(&param.value, variables)?;
-        let param = http::Param { name, value };
-        form.push(param);
+    if let Some(form_params) = request.form_params() {
+        for param in &form_params.params {
+            let name = template::eval_template(&param.key, variables)?;
+            let value = template::eval_template(&param.value, variables)?;
+            let param = http::Param { name, value };
+            form.push(param);
+        }
     }
 
     // Cookies
-    let mut cookies = vec![];
-    for cookie in request.cookies() {
-        let name = template::eval_template(&cookie.name, variables)?;
-        let value = template::eval_template(&cookie.value, variables)?;
-        let cookie = http::RequestCookie { name, value };
-        cookies.push(cookie);
+    let mut all_cookies = vec![];
+    if let Some(cookies) = request.cookies() {
+        for cookie in &cookies.0 {
+            let name = template::eval_template(&cookie.name, variables)?;
+            let value = template::eval_template(&cookie.value, variables)?;
+            let cookie = http::RequestCookie { name, value };
+            all_cookies.push(cookie);
+        }
     }
 
     let body = match &request.body {
@@ -92,9 +98,11 @@ pub fn eval_request(
     };
 
     let mut multipart = vec![];
-    for multipart_param in request.multipart_form_data() {
-        let param = multipart::eval_multipart_param(multipart_param, variables, context_dir)?;
-        multipart.push(param);
+    if let Some(multipart_form_data) = request.multipart_form_data() {
+        for multipart_param in &multipart_form_data.params {
+            let param = multipart::eval_multipart_param(multipart_param, variables, context_dir)?;
+            multipart.push(param);
+        }
     }
 
     let implicit_content_type = if !form.is_empty() {
@@ -138,7 +146,7 @@ pub fn eval_request(
         querystring,
         form,
         multipart,
-        cookies,
+        cookies: all_cookies,
         body,
         implicit_content_type,
     })

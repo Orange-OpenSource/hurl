@@ -15,7 +15,15 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Assert, Asserts, Base64, BasicAuth, Body, Bytes, Capture, Captures, Comment, Cookie, CookieAttribute, CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute, MultilineStringKind, MultipartFormData, MultipartParam, OptionKind, Options, Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request, Response, Section, SectionValue, SourceInfo, Template, VariableDefinition, Whitespace};
+use hurl_core::ast::{
+    Assert, Asserts, Base64, BasicAuth, Body, Bytes, Capture, Captures, Comment, Cookie,
+    CookieAttribute, CookieAttributeName, CookiePath, Cookies, DurationOption, Entry, EntryOption,
+    File, FilenameParam, Filter, FilterValue, FormParams, GraphQl, Hex, HurlFile, KeyValue,
+    LineTerminator, MultilineString, MultilineStringAttribute, MultilineStringKind,
+    MultipartFormData, MultipartParam, OptionKind, Options, Predicate, PredicateFunc,
+    PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, RegexValue, Request,
+    Response, Section, SectionValue, SourceInfo, Template, VariableDefinition, Whitespace,
+};
 use hurl_core::reader::Pos;
 use hurl_core::typing::{Duration, DurationUnit};
 

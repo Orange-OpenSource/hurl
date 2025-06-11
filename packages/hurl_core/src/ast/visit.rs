@@ -20,7 +20,16 @@
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
-use crate::ast::{Assert, Asserts, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment, Cookie, CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam, NaturalOption, Number, OptionKind, Options, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64};
+use crate::ast::{
+    Assert, Asserts, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Captures, Comment,
+    Cookie, CookiePath, Cookies, CountOption, DurationOption, Entry, EntryOption, File,
+    FilenameParam, FilenameValue, Filter, FilterValue, FormParams, Hex, HurlFile, JsonValue,
+    KeyValue, LineTerminator, Method, MultilineString, MultipartFormData, MultipartParam,
+    NaturalOption, Number, OptionKind, Options, Placeholder, Predicate, PredicateFuncValue,
+    PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request, Response, Section,
+    SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VersionValue,
+    Whitespace, U64,
+};
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default

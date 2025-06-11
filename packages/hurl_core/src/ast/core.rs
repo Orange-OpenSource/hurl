@@ -17,14 +17,13 @@
  */
 use std::fmt;
 
-use crate::ast::option::EntryOption;
 use crate::ast::primitive::{
     Bytes, KeyValue, LineTerminator, SourceInfo, Template, Whitespace, I64,
 };
-use crate::ast::section::{
-    Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
+use crate::ast::section::{Assert, Capture, RegexValue, Section, SectionValue};
+use crate::ast::{
+    Asserts, BasicAuth, Captures, Cookies, FormParams, MultipartFormData, Options, QueryParams,
 };
-use crate::ast::{Asserts, BasicAuth, Captures, Cookies, FormParams, MultipartFormData, Options, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -90,73 +89,71 @@ impl Request {
     /// Returns the query strings params for this request.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/API/URL/searchParams>.
-    pub fn querystring_params(&self) -> &[KeyValue] {
+    pub fn query_params(&self) -> Option<&QueryParams> {
         for section in &self.sections {
-            if let SectionValue::QueryParams(QueryParams { params, .. }) = &section.value {
-                return params;
+            if let SectionValue::QueryParams(params) = &section.value {
+                return Some(params);
             }
         }
-        &[]
+        None
     }
 
     /// Returns the form params for this request.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#url-encoded_form_submission>.
-    pub fn form_params(&self) -> &[KeyValue] {
+    pub fn form_params(&self) -> Option<&FormParams> {
         for section in &self.sections {
-            if let SectionValue::FormParams(FormParams { params, .. }) = &section.value {
-                return params;
+            if let SectionValue::FormParams(params) = &section.value {
+                return Some(params);
             }
         }
-        &[]
+        None
     }
 
     /// Returns the multipart form data for this request.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#multipart_form_submission>.
-    pub fn multipart_form_data(&self) -> &[MultipartParam] {
+    pub fn multipart_form_data(&self) -> Option<&MultipartFormData> {
         for section in &self.sections {
-            if let SectionValue::MultipartFormData(MultipartFormData { params, .. }) =
-                &section.value
-            {
-                return params;
+            if let SectionValue::MultipartFormData(params) = &section.value {
+                return Some(params);
             }
         }
-        &[]
+        None
     }
 
     /// Returns the list of cookies on this request.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>.
-    pub fn cookies(&self) -> &[Cookie] {
+    pub fn cookies(&self) -> Option<&Cookies> {
         for section in &self.sections {
-            if let SectionValue::Cookies(Cookies(cookies)) = &section.value {
-                return cookies;
+            if let SectionValue::Cookies(cookies) = &section.value {
+                return Some(cookies);
             }
         }
-        &[]
+        None
     }
 
     /// Returns the basic authentication on this request.
     ///
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication>.
-    pub fn basic_auth(&self) -> Option<&KeyValue> {
+    pub fn basic_auth(&self) -> Option<&BasicAuth> {
         for section in &self.sections {
-            if let SectionValue::BasicAuth(BasicAuth(kv)) = &section.value {
-                return kv.as_ref();
+            if let SectionValue::BasicAuth(auth) = &section.value {
+                return Some(auth);
             }
         }
         None
     }
 
     /// Returns the options specific for this request.
-    pub fn options(&self) -> &[EntryOption] {
+    pub fn options(&self) -> Option<&Options> {
         for section in &self.sections {
-            if let SectionValue::Options(Options(options)) = &section.value {
-                return options;
+            if let SectionValue::Options(options) = &section.value {
+                return Some(options);
             }
         }
-        &[]
+        None
     }
 }
 

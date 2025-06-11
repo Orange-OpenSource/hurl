@@ -19,7 +19,7 @@ use std::thread;
 use std::time::Instant;
 
 use chrono::Utc;
-use hurl_core::ast::{Entry, OptionKind, SourceInfo};
+use hurl_core::ast::{Entry, OptionKind, Options, SourceInfo};
 use hurl_core::error::DisplaySourceError;
 use hurl_core::input::Input;
 use hurl_core::parser;
@@ -410,9 +410,11 @@ fn run_request(
 /// Use source_info from output option if this option has been defined
 fn get_output_source_info(entry: &Entry) -> SourceInfo {
     let mut source_info = entry.source_info();
-    for option_entry in entry.request.options() {
-        if let OptionKind::Output(value) = &option_entry.kind {
-            source_info = value.source_info;
+    if let Some(Options(options)) = entry.request.options() {
+        for option_entry in options {
+            if let OptionKind::Output(value) = &option_entry.kind {
+                source_info = value.source_info;
+            }
         }
     }
     source_info

@@ -67,34 +67,35 @@ impl ToJson for Request {
         ];
         add_headers(&mut attributes, &self.headers);
 
-        if !self.querystring_params().is_empty() {
-            let params = self
-                .querystring_params()
-                .iter()
-                .map(|p| p.to_json())
-                .collect();
+        if let Some(query_params) = self.query_params() {
+            let params = query_params.params.iter().map(|p| p.to_json()).collect();
             attributes.push(("query_string_params".to_string(), JValue::List(params)));
         }
-        if !self.form_params().is_empty() {
-            let params = self.form_params().iter().map(|p| p.to_json()).collect();
+
+        if let Some(form_params) = self.form_params() {
+            let params = form_params.params.iter().map(|p| p.to_json()).collect();
             attributes.push(("form_params".to_string(), JValue::List(params)));
         }
-        if !self.multipart_form_data().is_empty() {
-            let params = self
-                .multipart_form_data()
+
+        if let Some(multipart_form_data) = self.multipart_form_data() {
+            let params = multipart_form_data
+                .params
                 .iter()
                 .map(|p| p.to_json())
                 .collect();
             attributes.push(("multipart_form_data".to_string(), JValue::List(params)));
         }
-        if !self.cookies().is_empty() {
-            let cookies = self.cookies().iter().map(|c| c.to_json()).collect();
+
+        if let Some(cookies) = self.cookies() {
+            let cookies = cookies.0.iter().map(|c| c.to_json()).collect();
             attributes.push(("cookies".to_string(), JValue::List(cookies)));
         }
-        if !self.options().is_empty() {
-            let options = self.options().iter().map(|c| c.to_json()).collect();
+
+        if let Some(options) = self.options() {
+            let options = options.0.iter().map(|c| c.to_json()).collect();
             attributes.push(("options".to_string(), JValue::List(options)));
         }
+
         if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
