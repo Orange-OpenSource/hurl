@@ -664,6 +664,10 @@ pub fn walk_predicate<V: Visitor>(visitor: &mut V, pred: &Predicate) {
             visitor.visit_whitespace(space0);
             visitor.visit_predicate_value(value);
         }
+        PredicateFuncValue::Each { space0, predicate } => {
+            visitor.visit_whitespace(space0);
+            visitor.visit_predicate(predicate);
+        }
         PredicateFuncValue::IsInteger
         | PredicateFuncValue::IsFloat
         | PredicateFuncValue::IsBoolean

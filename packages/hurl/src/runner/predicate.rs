@@ -190,6 +190,10 @@ fn expected_no_value(
             let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("matches regex <{expected}>"))
         }
+        PredicateFuncValue::Each { predicate, .. } => {
+            let inner_expected = format_expected_predicate(predicate, variables, context_dir)?;
+            Ok(format!("each element {}", inner_expected))
+        }
         PredicateFuncValue::IsInteger => Ok("integer".to_string()),
         PredicateFuncValue::IsFloat => Ok("float".to_string()),
         PredicateFuncValue::IsBoolean => Ok("boolean".to_string()),
@@ -267,6 +271,9 @@ fn eval_predicate_func(
             value,
             context_dir,
         ),
+        PredicateFuncValue::Each { predicate, .. } => {
+            eval_each(predicate, variables, value, context_dir)
+        }
         PredicateFuncValue::IsInteger => eval_is_integer(value),
         PredicateFuncValue::IsFloat => eval_is_float(value),
         PredicateFuncValue::IsBoolean => eval_is_boolean(value),
@@ -640,6 +647,58 @@ fn eval_is_ipv6(actual: &Value) -> Result<PredicateResult, RunnerError> {
             type_mismatch: true,
         }),
     }
+}
+
+/// Evaluates if a predicate is true for every element in a collection.
+fn eval_each(
+    predicate: &Predicate,
+    variables: &VariableSet,
+    actual: &Value,
+    context_dir: &ContextDir,
+) -> Result<PredicateResult, RunnerError> {
+    let inner_expected = format_expected_predicate(predicate, variables, context_dir)?;
+    let expected_display = format!("each element {}", inner_expected);
+    let actual_display = actual.repr();
+
+    match actual {
+        Value::List(values) => {
+            for (index, value) in values.iter().enumerate() {
+                match eval_predicate(predicate, variables, &Some(value.clone()), context_dir) {
+                    Ok(()) => continue,
+                    Err(_) => {
+                        return Ok(PredicateResult {
+                            success: false,
+                            actual: format!("{}, element at index {} fails", actual_display, index),
+                            expected: expected_display,
+                            type_mismatch: false,
+                        })
+                    }
+                }
+            }
+            Ok(PredicateResult {
+                success: true,
+                actual: actual_display,
+                expected: expected_display,
+                type_mismatch: false,
+            })
+        }
+        _ => Ok(PredicateResult {
+            success: false,
+            actual: actual_display,
+            expected: "collection".to_string(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+fn format_expected_predicate(
+    predicate: &Predicate,
+    variables: &VariableSet,
+    context_dir: &ContextDir,
+) -> Result<String, RunnerError> {
+    let not_prefix = if predicate.not { "not " } else { "" };
+    let expected = expected_no_value(&predicate.predicate_func.value, variables, context_dir)?;
+    Ok(format!("{}{}", not_prefix, expected))
 }
 
 fn assert_values_equal(actual: &Value, expected: &Value) -> PredicateResult {

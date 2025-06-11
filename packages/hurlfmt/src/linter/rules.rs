@@ -356,6 +356,10 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
             space0: one_whitespace(),
             value: lint_predicate_value(value),
         },
+        PredicateFuncValue::Each { predicate, .. } => PredicateFuncValue::Each {
+            space0: one_whitespace(),
+            predicate: Box::new(lint_predicate(predicate)),
+        },
         PredicateFuncValue::IsInteger => PredicateFuncValue::IsInteger,
         PredicateFuncValue::IsFloat => PredicateFuncValue::IsFloat,
         PredicateFuncValue::IsBoolean => PredicateFuncValue::IsBoolean,

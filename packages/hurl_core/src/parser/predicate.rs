@@ -94,6 +94,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             is_number_predicate,
             is_ipv4_predicate,
             is_ipv6_predicate,
+            each_predicate,
         ],
         reader,
     ) {
@@ -316,6 +317,16 @@ fn is_ipv4_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn is_ipv6_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isIpv6", reader)?;
     Ok(PredicateFuncValue::IsIpv6)
+}
+
+fn each_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("each", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let pred = predicate(reader)?;
+    Ok(PredicateFuncValue::Each {
+        space0,
+        predicate: Box::new(pred),
+    })
 }
 
 #[cfg(test)]

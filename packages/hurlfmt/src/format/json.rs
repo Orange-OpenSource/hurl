@@ -557,6 +557,9 @@ impl ToJson for Predicate {
             PredicateFuncValue::Match { value, .. } => {
                 add_predicate_value(&mut attributes, value);
             }
+            PredicateFuncValue::Each { predicate, .. } => {
+                attributes.push(("predicate".to_string(), predicate.to_json()));
+            }
             PredicateFuncValue::IsInteger
             | PredicateFuncValue::IsFloat
             | PredicateFuncValue::IsBoolean

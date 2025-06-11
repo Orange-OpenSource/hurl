@@ -402,6 +402,10 @@ pub enum PredicateFuncValue {
         space0: Whitespace,
         value: PredicateValue,
     },
+    Each {
+        space0: Whitespace,
+        predicate: Box<Predicate>,
+    },
     IsInteger,
     IsFloat,
     IsBoolean,
@@ -443,6 +447,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsNumber => "isNumber",
             PredicateFuncValue::IsIpv4 => "isIpv4",
             PredicateFuncValue::IsIpv6 => "isIpv6",
+            PredicateFuncValue::Each { .. } => "each",
         }
     }
 }
