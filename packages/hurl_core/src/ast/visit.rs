@@ -24,10 +24,10 @@ use crate::ast::{
     Assert, Base64, BasicAuth, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath,
     CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter,
     FilterValue, FormParams, Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method,
-    MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
-    PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue, Regex, RegexValue, Request,
-    Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VersionValue, Whitespace, U64,
+    MultilineString, MultipartFormData, MultipartParam, NaturalOption, Number, OptionKind,
+    Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryParams, QueryValue,
+    Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template,
+    VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
@@ -754,10 +754,12 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
         SectionValue::FormParams(FormParams { params, .. }) => {
             params.iter().for_each(|p| visitor.visit_kv(p));
         }
-        SectionValue::MultipartFormData(params, _) => params.iter().for_each(|p| match p {
-            MultipartParam::Param(param) => visitor.visit_kv(param),
-            MultipartParam::FilenameParam(param) => visitor.visit_filename_param(param),
-        }),
+        SectionValue::MultipartFormData(MultipartFormData { params, .. }) => {
+            params.iter().for_each(|p| match p {
+                MultipartParam::Param(param) => visitor.visit_kv(param),
+                MultipartParam::FilenameParam(param) => visitor.visit_filename_param(param),
+            });
+        }
         SectionValue::Options(options) => {
             options.iter().for_each(|o| visitor.visit_entry_option(o));
         }

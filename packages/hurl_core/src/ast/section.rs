@@ -56,8 +56,13 @@ impl Section {
             }) => "FormParams",
             SectionValue::Cookies(_) => "Cookies",
             SectionValue::Captures(_) => "Captures",
-            SectionValue::MultipartFormData(_, true) => "Multipart",
-            SectionValue::MultipartFormData(_, false) => "MultipartFormData",
+            SectionValue::MultipartFormData(MultipartFormData {
+                short_syntax: true, ..
+            }) => "Multipart",
+            SectionValue::MultipartFormData(MultipartFormData {
+                short_syntax: false,
+                ..
+            }) => "MultipartFormData",
             SectionValue::Options(_) => "Options",
         }
     }
@@ -69,7 +74,7 @@ pub enum SectionValue {
     QueryParams(QueryParams),
     BasicAuth(BasicAuth),
     FormParams(FormParams),
-    MultipartFormData(Vec<MultipartParam>, bool), // boolean param indicates if we use the short syntax
+    MultipartFormData(MultipartFormData), // boolean param indicates if we use the short syntax
     Cookies(Vec<Cookie>),
     Captures(Vec<Capture>),
     Asserts(Vec<Assert>),
@@ -88,6 +93,12 @@ pub struct BasicAuth(pub Option<KeyValue>);
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FormParams {
     pub params: Vec<KeyValue>,
+    pub short_syntax: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MultipartFormData {
+    pub params: Vec<MultipartParam>,
     pub short_syntax: bool,
 }
 

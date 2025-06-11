@@ -24,7 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
-use crate::ast::{BasicAuth, FormParams, QueryParams};
+use crate::ast::{BasicAuth, FormParams, MultipartFormData, QueryParams};
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -116,7 +116,9 @@ impl Request {
     /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST#multipart_form_submission>.
     pub fn multipart_form_data(&self) -> &[MultipartParam] {
         for section in &self.sections {
-            if let SectionValue::MultipartFormData(params, _) = &section.value {
+            if let SectionValue::MultipartFormData(MultipartFormData { params, .. }) =
+                &section.value
+            {
                 return params;
             }
         }

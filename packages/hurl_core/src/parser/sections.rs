@@ -16,8 +16,8 @@
  *
  */
 use crate::ast::{
-    Assert, BasicAuth, Capture, Cookie, FilenameParam, FilenameValue, FormParams, MultipartParam,
-    QueryParams, Section, SectionValue, SourceInfo, Whitespace,
+    Assert, BasicAuth, Capture, Cookie, FilenameParam, FilenameValue, FormParams,
+    MultipartFormData, MultipartParam, QueryParams, Section, SectionValue, SourceInfo, Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
@@ -144,10 +144,13 @@ fn section_value_form_params(reader: &mut Reader, short_syntax: bool) -> ParseRe
 
 fn section_value_multipart_form_data(
     reader: &mut Reader,
-    short: bool,
+    short_syntax: bool,
 ) -> ParseResult<SectionValue> {
-    let items = zero_or_more(multipart_param, reader)?;
-    Ok(SectionValue::MultipartFormData(items, short))
+    let params = zero_or_more(multipart_param, reader)?;
+    Ok(SectionValue::MultipartFormData(MultipartFormData {
+        params,
+        short_syntax,
+    }))
 }
 
 fn section_value_cookies(reader: &mut Reader) -> ParseResult<SectionValue> {
