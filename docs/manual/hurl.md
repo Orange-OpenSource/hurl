@@ -421,7 +421,7 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 ### --pinnedpubkey <HASHES> {#pinnedpubkey}
 
-When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, hurl aborts the connection before sending or receiving any data.
+When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.
 
 ### --progress-bar {#progress-bar}
 
