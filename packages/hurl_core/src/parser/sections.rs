@@ -271,7 +271,7 @@ fn capture(reader: &mut Reader) -> ParseResult<Capture> {
     let q = query(reader)?;
     let filters = filters(reader)?;
     let space3 = zero_or_more_spaces(reader)?;
-    let redact = try_literal("redact", reader).is_ok();
+    let redacted = try_literal("redact", reader).is_ok();
     let line_terminator0 = line_terminator(reader)?;
     Ok(Capture {
         line_terminators,
@@ -282,7 +282,7 @@ fn capture(reader: &mut Reader) -> ParseResult<Capture> {
         query: q,
         filters,
         space3,
-        redact,
+        redacted,
         line_terminator0,
     })
 }
@@ -626,7 +626,7 @@ mod tests {
 
         let mut reader = Reader::new("url: header \"Token\" redact");
         let capture0 = capture(&mut reader).unwrap();
-        assert!(capture0.redact);
+        assert!(capture0.redacted);
     }
 
     #[test]

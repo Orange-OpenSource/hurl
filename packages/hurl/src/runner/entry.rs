@@ -52,7 +52,7 @@ pub fn run(
         let immediate_logs =
             matches!(logger.stderr.mode(), WriteMode::Immediate) && logger.verbosity.is_some();
         if immediate_logs {
-            let redacted = response_spec.captures().iter().find(|c| c.redact);
+            let redacted = response_spec.captures().iter().find(|c| c.redacted);
             if let Some(redacted) = redacted {
                 let source_info = redacted.name.source_info;
                 let error =

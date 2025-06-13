@@ -365,7 +365,7 @@ pub fn eval_captures(
 
         // If the capture is redacted, we insert it in the variable set. Only secrets strings
         // are supported so all other `Value` variants will trigger an error.
-        if capture.redact {
+        if capture.redacted {
             match value {
                 Value::String(secret) => variables.insert_secret(name, secret),
                 _ => {

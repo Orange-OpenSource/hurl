@@ -284,7 +284,7 @@ pub fn walk_capture<V: Visitor>(visitor: &mut V, capture: &Capture) {
         visitor.visit_filter(filter);
     }
     visitor.visit_whitespace(&capture.space3);
-    if capture.redact {
+    if capture.redacted {
         // The next node should have been literal to be more correct
         // we visit a string instead to be comptaible with <= 6.1.1 HTML export
         // visitor.visit_literal("redact");

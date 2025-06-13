@@ -430,7 +430,7 @@ impl ToJson for Capture {
             let filters = JValue::List(self.filters.iter().map(|(_, f)| f.to_json()).collect());
             attributes.push(("filters".to_string(), filters));
         }
-        if self.redact {
+        if self.redacted {
             attributes.push(("redact".to_string(), JValue::Boolean(true)));
         }
         JValue::Object(attributes)
@@ -898,7 +898,7 @@ pub mod tests {
             query: header_query(),
             filters: vec![],
             space3: whitespace(),
-            redact: false,
+            redacted: false,
             line_terminator0: line_terminator(),
         }
     }

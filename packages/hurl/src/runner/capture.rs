@@ -108,7 +108,7 @@ pub mod tests {
             query: query::tests::xpath_count_user_query(),
             filters: vec![],
             space3: whitespace.clone(),
-            redact: false,
+            redacted: false,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -141,7 +141,7 @@ pub mod tests {
             query: query::tests::jsonpath_duration(),
             filters: vec![],
             space3: whitespace.clone(),
-            redact: false,
+            redacted: false,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -175,7 +175,7 @@ pub mod tests {
 
             query: query::tests::xpath_invalid_query(),
             space3: whitespace.clone(),
-            redact: false,
+            redacted: false,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -233,7 +233,7 @@ pub mod tests {
             },
             filters: vec![],
             space3: whitespace.clone(),
-            redact: false,
+            redacted: false,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
