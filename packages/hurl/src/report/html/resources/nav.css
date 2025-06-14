@@ -62,6 +62,10 @@
     .report-nav a {
         color: #34a7ff;
     }
+    
+    .success, .success a {
+        color: green;
+    }
 
     .report-nav a[aria-selected="true"] {
         color: #ff0288;

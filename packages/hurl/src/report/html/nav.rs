@@ -33,7 +33,7 @@ impl Testcase {
     /// Returns the HTML navigation component for a `tab`.
     /// This common component is used to get source information and errors.
     pub fn get_nav_html(&self, content: &str, tab: Tab, secrets: &[&str]) -> String {
-        let status = get_status_html(self.success);
+        let status = get_status_html(self.success, &self.id);
         let errors = self.get_errors_html(content, secrets);
         let errors_count = if !self.errors.is_empty() {
             self.errors.len().to_string()
@@ -76,12 +76,10 @@ impl Testcase {
     }
 }
 
-fn get_status_html(success: bool) -> &'static str {
-    if success {
-        "<span class=\"success\">Success</span>"
-    } else {
-        "<span class=\"failure\">Failure</span>"
-    }
+fn get_status_html(success: bool, id: &str) -> String {
+    let class = if success { "success" } else { "failure" };
+    let label = if success { "success" } else { "failure" };
+    format!("<span class=\"{class}\"><a href=\"{id}-timeline.html\">{label}</a></span>")
 }
 
 /// Returns an HTML `<pre>` tag representing this `error`.
