@@ -178,7 +178,7 @@ fn lint_capture(capture: &Capture) -> Capture {
     let space3 = if capture.redacted {
         one_whitespace()
     } else {
-        capture.space3.clone()
+        empty_whitespace()
     };
     Capture {
         line_terminators: capture.line_terminators.clone(),
