@@ -113,7 +113,7 @@ pub struct Capture {
     pub space2: Whitespace,
     pub query: Query,
     pub filters: Vec<(Whitespace, Filter)>,
-    pub space3: Whitespace,
+    pub space3: Option<Whitespace>,
     pub redacted: bool,
     pub line_terminator0: LineTerminator,
 }

@@ -283,7 +283,9 @@ pub fn walk_capture<V: Visitor>(visitor: &mut V, capture: &Capture) {
         visitor.visit_whitespace(space);
         visitor.visit_filter(filter);
     }
-    visitor.visit_whitespace(&capture.space3);
+    if let Some(ws) = &capture.space3 {
+        visitor.visit_whitespace(ws);
+    }
     if capture.redacted {
         // The next node should have been literal to be more correct
         // we visit a string instead to be comptaible with <= 6.1.1 HTML export

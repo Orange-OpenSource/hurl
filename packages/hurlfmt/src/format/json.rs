@@ -897,7 +897,7 @@ pub mod tests {
             space2: whitespace(),
             query: header_query(),
             filters: vec![],
-            space3: whitespace(),
+            space3: None,
             redacted: false,
             line_terminator0: line_terminator(),
         }

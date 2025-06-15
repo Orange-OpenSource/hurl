@@ -270,8 +270,18 @@ fn capture(reader: &mut Reader) -> ParseResult<Capture> {
     let space2 = zero_or_more_spaces(reader)?;
     let q = query(reader)?;
     let filters = filters(reader)?;
+
+    let save = reader.cursor();
     let space3 = zero_or_more_spaces(reader)?;
     let redacted = try_literal("redact", reader).is_ok();
+    let space3 = if redacted {
+        Some(space3)
+    } else {
+        // When we don't have a `redacted` keyword, we rewind the reader so the whitespaces will
+        // be consumed by line terminator.
+        reader.seek(save);
+        None
+    };
     let line_terminator0 = line_terminator(reader)?;
     Ok(Capture {
         line_terminators,
@@ -593,40 +603,143 @@ mod tests {
         let capture0 = capture(&mut reader).unwrap();
 
         assert_eq!(
-            capture0.name,
-            Template::new(
-                None,
-                vec![TemplateElement::String {
-                    value: "url".to_string(),
-                    source: "url".to_source(),
-                }],
-                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4))
-            ),
-        );
-        assert_eq!(
-            capture0.query,
-            Query {
-                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 23)),
-                value: QueryValue::Header {
-                    space0: Whitespace {
-                        value: String::from(" "),
-                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 13)),
+            capture0,
+            Capture {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 1),
+                        end: Pos::new(1, 1),
                     },
-                    name: Template::new(
-                        Some('"'),
-                        vec![TemplateElement::String {
-                            value: "Location".to_string(),
-                            source: "Location".to_source(),
-                        }],
-                        SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23))
-                    )
-                }
+                },
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
+                        value: "url".to_string(),
+                        source: "url".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4))
+                ),
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 4),
+                        end: Pos::new(1, 4),
+                    }
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 5),
+                        end: Pos::new(1, 6),
+                    }
+                },
+                query: Query {
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 23)),
+                    value: QueryValue::Header {
+                        space0: Whitespace {
+                            value: String::from(" "),
+                            source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 13)),
+                        },
+                        name: Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
+                                value: "Location".to_string(),
+                                source: "Location".to_source(),
+                            }],
+                            SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23))
+                        )
+                    }
+                },
+                filters: vec![],
+                space3: None,
+                redacted: false,
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 23), Pos::new(1, 23)),
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 23), Pos::new(1, 23)),
+                    },
+                },
             }
         );
 
-        let mut reader = Reader::new("url: header \"Token\" redact");
+        let mut reader = Reader::new("url: header \"Token\"    redact");
         let capture0 = capture(&mut reader).unwrap();
-        assert!(capture0.redacted);
+        assert_eq!(
+            capture0,
+            Capture {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 1),
+                        end: Pos::new(1, 1),
+                    },
+                },
+                name: Template::new(
+                    None,
+                    vec![TemplateElement::String {
+                        value: "url".to_string(),
+                        source: "url".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4))
+                ),
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 4),
+                        end: Pos::new(1, 4),
+                    }
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos::new(1, 5),
+                        end: Pos::new(1, 6),
+                    }
+                },
+                query: Query {
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 20)),
+                    value: QueryValue::Header {
+                        space0: Whitespace {
+                            value: String::from(" "),
+                            source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 13)),
+                        },
+                        name: Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
+                                value: "Token".to_string(),
+                                source: "Token".to_source(),
+                            }],
+                            SourceInfo::new(Pos::new(1, 13), Pos::new(1, 20))
+                        )
+                    }
+                },
+                filters: vec![],
+                space3: Some(Whitespace {
+                    value: "    ".to_string(),
+                    source_info: SourceInfo::new(Pos::new(1, 20), Pos::new(1, 24)),
+                }),
+                redacted: true,
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 30), Pos::new(1, 30)),
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(Pos::new(1, 30), Pos::new(1, 30)),
+                    },
+                },
+            }
+        );
     }
 
     #[test]
@@ -699,8 +812,8 @@ mod tests {
         let mut reader = Reader::new("name: jsonpath \"$.name\"          # name");
         let capture0 = capture(&mut reader).unwrap();
         assert!(capture0.filters.is_empty());
-        assert_eq!(capture0.space3.as_str(), "          ");
-        assert_eq!(capture0.line_terminator0.space0.as_str(), "");
+        assert!(capture0.space3.is_none());
+        assert_eq!(capture0.line_terminator0.space0.as_str(), "          ");
     }
 
     #[test]
