@@ -267,7 +267,7 @@ impl ToSource for VariableValue {
             VariableValue::Null => "null".to_source(),
             VariableValue::Bool(value) => value.to_string().to_source(),
             VariableValue::Number(value) => value.to_source(),
-            VariableValue::String(value) => value.to_string().to_source(),
+            VariableValue::String(value) => value.to_source(),
         }
     }
 }

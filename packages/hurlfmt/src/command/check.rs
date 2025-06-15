@@ -19,7 +19,7 @@
 use hurl_core::input::Input;
 use hurl_core::parser::{self, ParseError};
 
-use crate::{format, linter};
+use crate::linter;
 
 /// Represents a check error.
 pub enum CheckError {
@@ -57,8 +57,7 @@ fn run_check(input_file: &Input) -> Result<(), CheckError> {
         input_file: input_file.clone(),
         error,
     })?;
-    let hurl_file = linter::lint_hurl_file(&hurl_file);
-    let formatted = format::format_text(&hurl_file, false);
+    let formatted = linter::lint_hurl_file(&hurl_file);
     if formatted == content {
         Ok(())
     } else {

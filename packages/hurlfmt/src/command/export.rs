@@ -76,7 +76,8 @@ fn run_export(
 
     let output = match output_format {
         OutputFormat::Hurl => {
-            let hurl_file = linter::lint_hurl_file(&hurl_file);
+            let formatted = linter::lint_hurl_file(&hurl_file);
+            let hurl_file = parser::parse_hurl_file(&formatted).unwrap();
             format::format_text(&hurl_file, color)
         }
         OutputFormat::Json => format::format_json(&hurl_file),

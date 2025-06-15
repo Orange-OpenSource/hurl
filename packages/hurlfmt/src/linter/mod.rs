@@ -15,6 +15,6 @@
  * limitations under the License.
  *
  */
-pub use rules::lint_hurl_file;
+pub use rewrite::lint_hurl_file;
 
-mod rules;
+mod rewrite;

@@ -17,15 +17,15 @@ HTTP 404
 
 GET http://localhost:8000/hello
 HTTP 200
-file, data.txt;
+file,data.txt;
 
 
 GET http://localhost:8000/hello
 HTTP 200
-hex, 48656c6c6f20576f726c6421;
+hex,48656c6c6f20576f726c6421;
 
 
 GET http://localhost:8000/hello
 HTTP 200
-base64, SGVsbG8gV29ybGQh;
+base64,SGVsbG8gV29ybGQh;
 
