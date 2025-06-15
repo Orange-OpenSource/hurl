@@ -23,7 +23,7 @@ use std::path::{Path, PathBuf};
 use hurl_core::input::Input;
 use hurl_core::parser::{self, ParseError};
 
-use crate::{format, linter};
+use crate::linter;
 
 /// Represents a check error.
 pub enum FormatError {
@@ -61,8 +61,7 @@ fn run_format(input_file: &Path) -> Result<(), FormatError> {
         input_file: Input::new(input_file.display().to_string().as_str()),
         error,
     })?;
-    let hurl_file = linter::lint_hurl_file(&hurl_file);
-    let formatted = format::format_text(&hurl_file, false);
+    let formatted = linter::lint_hurl_file(&hurl_file);
 
     let mut file = match std::fs::File::create(input_file) {
         Err(e) => {

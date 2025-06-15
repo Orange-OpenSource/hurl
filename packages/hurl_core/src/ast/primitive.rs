@@ -239,6 +239,11 @@ impl Template {
             source_info,
         }
     }
+
+    /// Returns true if this template is empty.
+    pub fn is_empty(&self) -> bool {
+        self.elements.is_empty()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

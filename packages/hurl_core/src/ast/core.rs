@@ -243,6 +243,12 @@ impl fmt::Display for VersionValue {
     }
 }
 
+impl ToSource for VersionValue {
+    fn to_source(&self) -> SourceString {
+        self.to_string().to_source()
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Status {
     pub value: StatusValue,
@@ -261,6 +267,12 @@ impl fmt::Display for StatusValue {
             StatusValue::Any => write!(f, "*"),
             StatusValue::Specific(v) => write!(f, "{v}"),
         }
+    }
+}
+
+impl ToSource for StatusValue {
+    fn to_source(&self) -> SourceString {
+        self.to_string().to_source()
     }
 }
 
