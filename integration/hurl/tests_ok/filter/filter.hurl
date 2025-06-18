@@ -38,6 +38,7 @@ jsonpath "$.ips" split ", " last == "10.0.0.10"
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 jsonpath "$.id" replaceRegex /\d/ "x" == "xxx"
 jsonpath "$.message" replaceRegex "B[a-z]b" "dude" == "Hello dude!"
+jsonpath "$.message" replaceRegex /(?i)b[a-z]b/ "dude" == "Hello dude!"
 # First args of replace filter _is not_ a regex
 jsonpath "$.id" replace "\\d" "x" == "123"
 jsonpath "$.json" jsonpath "$.message" == "Hello"

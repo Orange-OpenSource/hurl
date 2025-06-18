@@ -273,7 +273,10 @@ HTTP 200
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
 param3: header "header2" regex /Hello (.*)!/
+param3: header "header2" regex /(?i)Hello (.*)!/
 ```
+
+The regex syntax is documented at <https://docs.rs/regex/latest/regex/#syntax>.
 
 ### replace
 

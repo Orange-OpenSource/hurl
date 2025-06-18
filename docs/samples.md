@@ -442,7 +442,8 @@ jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
 jsonpath "$.order" matches "^order-\\d{8}$"
-jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex literal
+jsonpath "$.order" matches /^order-\d{8}$/  # Alternative syntax with regex literal
+jsonpath "$.id" matches /(?i)[a-z]*/        # See syntax for flags <https://docs.rs/regex/latest/regex/#grouping-and-flags>
 jsonpath "$.created" isIsoDate
 ```
 

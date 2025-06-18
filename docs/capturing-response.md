@@ -284,7 +284,17 @@ name: regex "Hello ([a-zA-Z]+)"
 
 The regex pattern must have at least one capture group, otherwise the
 capture will fail. When the pattern is a double-quoted string, metacharacters beginning with a backslash in the pattern
-(like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters escaping. 
+(like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters escaping.
+
+The regex syntax is documented at <https://docs.rs/regex/latest/regex/#syntax>. For instance, one can use [flags](https://docs.rs/regex/latest/regex/#grouping-and-flags)
+to enable case-insensitive match:
+
+```hurl
+GET https://example.org/hello
+HTTP 200
+[Captures]
+word: regex /(?i)hello (\w+)!/
+```
 
 ### SHA-256 capture
 
