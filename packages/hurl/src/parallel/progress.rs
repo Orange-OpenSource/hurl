@@ -123,13 +123,13 @@ impl ParProgress {
         let filename = result.job.filename.to_string();
 
         let mut message = StyledString::new();
-        message.push_with(&filename, Style::new().bold());
-        message.push(": ");
         if result.hurl_result.success {
             message.push_with("Success", Style::new().green().bold());
         } else {
             message.push_with("Failure", Style::new().red().bold());
         };
+        message.push(" ");
+        message.push_with(&filename, Style::new().bold());
         message.push(&format!(" ({count} request(s) in {duration} ms)"));
 
         let message = message.to_string(self.format);
@@ -280,9 +280,9 @@ fn build_progress(
             progress.push(&bar);
             progress.push(&padding);
             progress.push(" ");
-            progress.push_with(&job.filename.to_string(), Style::new().bold());
-            progress.push(": ");
             progress.push_with("Running", Style::new().cyan().bold());
+            progress.push(" ");
+            progress.push_with(&job.filename.to_string(), Style::new().bold());
             progress.push("\n");
 
             // We wrap the progress string with new lines if necessary
@@ -421,9 +421,9 @@ mod tests {
             progress.unwrap(),
             "\
 Executed files: 75/100 (75%)\n\
-[>                       ] 1/10  a.hurl: Running\n\
-[>                       ] 1/2   b.hurl: Running\n\
-[>                       ] 1/5   c.hurl: Running\n\
+[>                       ] 1/10  Running a.hurl\n\
+[>                       ] 1/2   Running b.hurl\n\
+[>                       ] 1/5   Running c.hurl\n\
 ...2 more\n\
 "
         );
@@ -446,9 +446,9 @@ Executed files: 75/100 (75%)\n\
             progress.unwrap(),
             "\
 Executed files: 75/100 (75%)\n\
-[============>           ] 6/10  a.hurl: Running\n\
-[============>           ] 2/2   b.hurl: Running\n\
-[=========>              ] 3/5   c.hurl: Running\n\
+[============>           ] 6/10  Running a.hurl\n\
+[============>           ] 2/2   Running b.hurl\n\
+[=========>              ] 3/5   Running c.hurl\n\
 ...2 more\n\
 "
         );
@@ -471,9 +471,9 @@ Executed files: 75/100 (75%)\n\
             progress.unwrap(),
             "\
 Executed files: 75/100 (75%)\n\
-[=====================>  ] 10/10 a.hurl: Running\n\
-[===================>    ] 5/5   c.hurl: Running\n\
-[=================>      ] 6/7   d.hurl: Running\n\
+[=====================>  ] 10/10 Running a.hurl\n\
+[===================>    ] 5/5   Running c.hurl\n\
+[=================>      ] 6/7   Running d.hurl\n\
 ...2 more\n\
 "
         );
@@ -496,8 +496,8 @@ Executed files: 75/100 (75%)\n\
             progress.unwrap(),
             "\
 Executed files: 75/100 (75%)\n\
-[==================>     ] 4/4 e.hurl: Running\n\
-[========>               ] 3/6 f.hurl: Running\n\
+[==================>     ] 4/4 Running e.hurl\n\
+[========>               ] 3/6 Running f.hurl\n\
 "
         );
 
@@ -519,7 +519,7 @@ Executed files: 75/100 (75%)\n\
             progress.unwrap(),
             "\
 Executed files: 75/100 (75%)\n\
-[====================>   ] 6/6 f.hurl: Running\n\
+[====================>   ] 6/6 Running f.hurl\n\
 "
         );
     }

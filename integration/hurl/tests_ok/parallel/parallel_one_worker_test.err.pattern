@@ -1,10 +1,10 @@
-tests_ok/parallel/parallel_a.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_b.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_c.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_d.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_e.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_f.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok/parallel/parallel_g.hurl: Success (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_a.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_b.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_c.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_d.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_e.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_f.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok/parallel/parallel_g.hurl (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    7
 Executed requests: 7 (<<<.*?>>>/s)

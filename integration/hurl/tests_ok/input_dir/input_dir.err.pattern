@@ -1,7 +1,7 @@
-tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
-tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl: Success (1 request(s) in <<<\d+>>> ms)
+Success tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl (1 request(s) in <<<\d+>>> ms)
+Success tests_ok<<<.input_dir.root.(a.a|a.b.b|c.c|d)>>>.hurl (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    4
 Executed requests: 4 (<<<.*?>>>/s)
