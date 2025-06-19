@@ -4533,7 +4533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::reader::Pos;</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::reader::{CharPos, Pos};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10117,7 +10117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, 6);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, CharPos(6));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10181,7 +10181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, 0);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, CharPos(0));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10245,7 +10245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, 0);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, CharPos(0));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11701,7 +11701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, 3);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, CharPos(3));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11925,7 +11925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, 8);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.cursor().index, CharPos(8));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14012,7 +14012,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-06-19 12:55</p>
+                    <p class="heading">Date: 2025-06-19 20:42</p>
                 </div>
             
         </footer>
