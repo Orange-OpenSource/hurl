@@ -72,7 +72,7 @@ mod tests {
     use crate::ast::{
         Expr, ExprKind, Placeholder, SourceInfo, Template, TemplateElement, Variable, Whitespace,
     };
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
     use crate::typing::ToSource;
 
     #[test]
@@ -92,7 +92,7 @@ mod tests {
                 attribute: None,
             }
         );
-        assert_eq!(reader.cursor().index, 7);
+        assert_eq!(reader.cursor().index, CharPos(7));
     }
 
     #[test]
@@ -122,7 +122,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor().index, 15);
+        assert_eq!(reader.cursor().index, CharPos(15));
     }
 
     #[test]
@@ -165,7 +165,7 @@ mod tests {
                 }),
             }
         );
-        assert_eq!(reader.cursor().index, 16);
+        assert_eq!(reader.cursor().index, CharPos(16));
     }
 
     #[test]
@@ -210,14 +210,14 @@ mod tests {
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("Domain".to_string())
         );
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("domain");
         assert_eq!(
             cookiepath_attribute_name(&mut reader).unwrap(),
             CookieAttributeName::Domain("domain".to_string())
         );
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("unknown");
         let error = cookiepath_attribute_name(&mut reader).err().unwrap();

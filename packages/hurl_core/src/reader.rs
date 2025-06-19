@@ -17,6 +17,8 @@
  */
 //! Represents a text reader.
 
+use std::ops::{Add, AddAssign, Sub};
+
 /// The `Reader` implements methods to read a stream of text. A reader manages
 /// an internal `cursor` : it's the current read index position within the reader's internal buffer.
 ///
@@ -34,14 +36,14 @@
 ///
 /// # Example
 /// ```
-///  use hurl_core::reader::Reader;
+///  use hurl_core::reader::{CharPos, Reader};
 ///
 ///  let mut reader = Reader::new("hi");
-///  assert_eq!(reader.cursor().index, 0);
+///  assert_eq!(reader.cursor().index, CharPos(0));
 ///  assert!(!reader.is_eof());
 ///  assert_eq!(reader.peek_n(2), "hi".to_string());
 ///  assert_eq!(reader.read(), Some('h'));
-///  assert_eq!(reader.cursor().index, 1);
+///  assert_eq!(reader.cursor().index, CharPos(1));
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
@@ -65,6 +67,37 @@ impl Pos {
     }
 }
 
+/// A character offset.
+///
+/// Because of multibyte UTF-8 characters, a byte offset is not equivalent to a character offset.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
+pub struct CharPos(pub usize);
+
+impl Sub for CharPos {
+    type Output = CharPos;
+
+    #[inline(always)]
+    fn sub(self, rhs: Self) -> Self::Output {
+        CharPos(self.0 - rhs.0)
+    }
+}
+
+impl Add for CharPos {
+    type Output = CharPos;
+
+    #[inline(always)]
+    fn add(self, rhs: Self) -> Self::Output {
+        CharPos(self.0 + rhs.0)
+    }
+}
+
+impl AddAssign for CharPos {
+    #[inline(always)]
+    fn add_assign(&mut self, rhs: Self) {
+        self.0 += rhs.0;
+    }
+}
+
 /// A position in a text buffer.
 ///
 /// The position has two components: a char `offset` in the internal buffer of the reader, and
@@ -73,7 +106,7 @@ impl Pos {
 /// allows the report of error of a sub-reader, relative to a parent reader.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Cursor {
-    pub index: usize,
+    pub index: CharPos,
     pub pos: Pos,
 }
 
@@ -83,7 +116,7 @@ impl Reader {
         Reader {
             buf: s.chars().collect(),
             cursor: Cursor {
-                index: 0,
+                index: CharPos(0),
                 pos: Pos { line: 1, column: 1 },
             },
         }
@@ -96,7 +129,10 @@ impl Reader {
     pub fn with_pos(s: &str, pos: Pos) -> Self {
         Reader {
             buf: s.chars().collect(),
-            cursor: Cursor { index: 0, pos },
+            cursor: Cursor {
+                index: CharPos(0),
+                pos,
+            },
         }
     }
 
@@ -112,15 +148,15 @@ impl Reader {
 
     /// Returns true if the reader has read all the buffer, false otherwise.
     pub fn is_eof(&self) -> bool {
-        self.cursor.index == self.buf.len()
+        self.cursor.index.0 == self.buf.len()
     }
 
     /// Returns the next char from the buffer advancing the internal state.
     pub fn read(&mut self) -> Option<char> {
-        match self.buf.get(self.cursor.index) {
+        match self.buf.get(self.cursor.index.0) {
             None => None,
             Some(c) => {
-                self.cursor.index += 1;
+                self.cursor.index += CharPos(1);
                 if !is_combining_character(*c) {
                     self.cursor.pos.column += 1;
                 }
@@ -135,9 +171,9 @@ impl Reader {
 
     /// Returns `count` chars from the buffer advancing the internal state.
     /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
-    pub fn read_n(&mut self, count: usize) -> String {
+    pub fn read_n(&mut self, count: CharPos) -> String {
         let mut s = String::new();
-        for _ in 0..count {
+        for _ in 0..count.0 {
             match self.read() {
                 None => {}
                 Some(c) => s.push(c),
@@ -168,25 +204,25 @@ impl Reader {
     ///
     /// This method doesn't modify the read index since we're reading "backwards" to the current
     /// read index.
-    pub fn read_from(&self, start: usize) -> String {
+    pub fn read_from(&self, start: CharPos) -> String {
         let end = self.cursor.index;
-        self.buf[start..end].iter().collect()
+        self.buf[start.0..end.0].iter().collect()
     }
 
     /// Peeks the next char from the buffer without advancing the internal state.
     pub fn peek(&self) -> Option<char> {
-        self.buf.get(self.cursor.index).copied()
+        self.buf.get(self.cursor.index.0).copied()
     }
 
     /// Peeks the next char that meet a `predicate`.
     pub fn peek_if(&self, predicate: fn(char) -> bool) -> Option<char> {
         let mut i = self.cursor.index;
         loop {
-            let &c = self.buf.get(i)?;
+            let &c = self.buf.get(i.0)?;
             if predicate(c) {
                 return Some(c);
             }
-            i += 1;
+            i += CharPos(1);
         }
     }
 
@@ -194,8 +230,8 @@ impl Reader {
     /// This methods can return less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
         let start = self.cursor.index;
-        let end = (start + count).min(self.buf.len());
-        self.buf[start..end].iter().collect()
+        let end = (start + CharPos(count)).min(CharPos(self.buf.len()));
+        self.buf[start.0..end.0].iter().collect()
     }
 }
 
@@ -210,15 +246,15 @@ mod tests {
     #[test]
     fn basic_reader() {
         let mut reader = Reader::new("hi");
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
         assert!(!reader.is_eof());
         assert_eq!(reader.peek_n(2), "hi".to_string());
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         assert_eq!(reader.read().unwrap(), 'h');
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
         assert_eq!(reader.peek().unwrap(), 'i');
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
         assert_eq!(reader.read().unwrap(), 'i');
         assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
@@ -233,24 +269,24 @@ mod tests {
         assert_eq!(reader.read(), Some('d'));
         assert_eq!(reader.read(), Some('e'));
         assert_eq!(reader.peek(), Some('f'));
-        assert_eq!(reader.read_from(3), "de");
+        assert_eq!(reader.read_from(CharPos(3)), "de");
     }
 
     #[test]
     fn read_while() {
         let mut reader = Reader::new("123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor().index, 9);
+        assert_eq!(reader.cursor().index, CharPos(9));
         assert!(reader.is_eof());
 
         let mut reader = Reader::new("123456789abcde");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "123456789");
-        assert_eq!(reader.cursor().index, 9);
+        assert_eq!(reader.cursor().index, CharPos(9));
         assert!(!reader.is_eof());
 
         let mut reader = Reader::new("abcde123456789");
         assert_eq!(reader.read_while(|c| c.is_numeric()), "");
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 
     #[test]
@@ -266,7 +302,7 @@ mod tests {
         assert_eq!(
             sub_reader.cursor,
             Cursor {
-                index: 0,
+                index: CharPos(0),
                 pos: Pos::new(1, 4)
             }
         );
@@ -275,7 +311,7 @@ mod tests {
         assert_eq!(
             sub_reader.cursor,
             Cursor {
-                index: 1,
+                index: CharPos(1),
                 pos: Pos::new(1, 5)
             }
         );

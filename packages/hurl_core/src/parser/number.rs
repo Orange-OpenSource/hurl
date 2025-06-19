@@ -151,20 +151,20 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
 
     #[test]
     fn test_natural() {
         let mut reader = Reader::new("0");
         assert_eq!(natural(&mut reader).unwrap(), U64::new(0, "0".to_source()));
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("10x");
         assert_eq!(
             natural(&mut reader).unwrap(),
             U64::new(10, "10".to_source())
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
     }
 
     #[test]
@@ -207,35 +207,35 @@ mod tests {
     fn test_integer() {
         let mut reader = Reader::new("0");
         assert_eq!(integer(&mut reader).unwrap(), I64::new(0, "0".to_source()));
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("-1");
         assert_eq!(
             integer(&mut reader).unwrap(),
             I64::new(-1, "-1".to_source())
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("0");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Integer(I64::new(0, "0".to_source()))
         );
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("10x");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Integer(I64::new(10, "10".to_source()))
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("-10x");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Integer(I64::new(-10, "-10".to_source()))
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
     }
 
     #[test]
@@ -245,42 +245,42 @@ mod tests {
             number(&mut reader).unwrap(),
             Number::Float(Float::new(1.0, "1.0".to_source())),
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("-1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Float(Float::new(-1.0, "-1.0".to_source())),
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Float(Float::new(1.1, "1.1".to_source())),
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("1.100");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Float(Float::new(1.1, "1.100".to_source())),
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("1.01");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Float(Float::new(1.01, "1.01".to_source())),
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("1.010");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number::Float(Float::new(1.01, "1.010".to_source()))
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
 
         // provide more digits than necessary
         let mut reader = Reader::new("-0.3333333333333333333");
@@ -291,7 +291,7 @@ mod tests {
                 "-0.3333333333333333333".to_source()
             ))
         );
-        assert_eq!(reader.cursor().index, 22);
+        assert_eq!(reader.cursor().index, CharPos(22));
 
         let mut reader = Reader::new("1000000000000000000000.5");
         assert_eq!(
@@ -301,7 +301,7 @@ mod tests {
                 "1000000000000000000000.5".to_source()
             ))
         );
-        assert_eq!(reader.cursor().index, 24);
+        assert_eq!(reader.cursor().index, CharPos(24));
     }
 
     #[test]

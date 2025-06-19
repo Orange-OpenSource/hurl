@@ -278,7 +278,7 @@ fn multiline_string_value(reader: &mut Reader, escape: bool) -> ParseResult<Temp
 mod tests {
     use super::*;
     use crate::ast::{JsonObjectElement, JsonValue, TemplateElement};
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
     use crate::typing::ToSource;
 
     #[test]
@@ -627,15 +627,15 @@ mod tests {
             multiline_string_attributes(&mut reader).unwrap(),
             vec![MultilineStringAttribute::Escape]
         );
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("\n```");
         assert_eq!(multiline_string_attributes(&mut reader).unwrap(), vec![]);
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("\r\n```");
         assert_eq!(multiline_string_attributes(&mut reader).unwrap(), vec![]);
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("toto\n```");
         let error = multiline_string_attributes(&mut reader).unwrap_err();
@@ -726,7 +726,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
             )
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("hello```");
         assert_eq!(
@@ -740,7 +740,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
             )
         );
-        assert_eq!(reader.cursor().index, 8);
+        assert_eq!(reader.cursor().index, CharPos(8));
     }
 
     #[test]

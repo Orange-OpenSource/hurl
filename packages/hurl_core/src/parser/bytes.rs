@@ -77,7 +77,7 @@ mod tests {
     use super::super::error::*;
     use super::*;
     use crate::ast::{JsonListElement, JsonValue, SourceInfo, Template, TemplateElement};
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
     use crate::typing::ToSource;
 
     #[test]
@@ -106,7 +106,7 @@ mod tests {
                 ],
             })
         );
-        assert_eq!(reader.cursor().index, 7);
+        assert_eq!(reader.cursor().index, CharPos(7));
 
         let mut reader = Reader::new("{ } ");
         assert_eq!(
@@ -116,14 +116,14 @@ mod tests {
                 elements: vec![],
             })
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("true");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Boolean(true))
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("\"\" x");
         let template = Template::new(
@@ -135,7 +135,7 @@ mod tests {
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::String(template))
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
     }
 
     #[test]
@@ -207,6 +207,6 @@ mod tests {
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
         );
         assert_eq!(bytes(&mut reader).unwrap(), Bytes::OnelineString(template));
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index.0, 5);
     }
 }

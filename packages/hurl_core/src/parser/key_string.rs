@@ -146,7 +146,7 @@ fn key_string_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
 
     #[test]
     fn test_key_string() {
@@ -162,7 +162,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             )
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("$top:");
         assert_eq!(
@@ -176,7 +176,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             )
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("key\\u{20}\\u{3a} :");
         assert_eq!(
@@ -190,7 +190,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16))
             )
         );
-        assert_eq!(reader.cursor().index, 15);
+        assert_eq!(reader.cursor().index, CharPos(15));
 
         let mut reader = Reader::new("values\\u{5b}0\\u{5d} :");
         assert_eq!(
@@ -204,7 +204,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20))
             )
         );
-        assert_eq!(reader.cursor().index, 19);
+        assert_eq!(reader.cursor().index, CharPos(19));
 
         let mut reader = Reader::new("values[0] :");
         assert_eq!(
@@ -218,7 +218,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             )
         );
-        assert_eq!(reader.cursor().index, 9);
+        assert_eq!(reader.cursor().index, CharPos(9));
 
         let mut reader = Reader::new("\\u{5b}0\\u{5d}");
         assert_eq!(
@@ -232,7 +232,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             )
         );
-        assert_eq!(reader.cursor().index, 13);
+        assert_eq!(reader.cursor().index, CharPos(13));
     }
 
     #[test]
@@ -251,7 +251,7 @@ mod tests {
         let mut reader = Reader::new("[0]:");
         let error = parse(&mut reader).err().unwrap();
         assert!(!error.recoverable);
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("\\l");
         let error = parse(&mut reader).err().unwrap();
@@ -279,18 +279,18 @@ mod tests {
     fn test_key_string_text() {
         let mut reader = Reader::new("aaa\\:");
         assert_eq!(key_string_text(&mut reader), "aaa");
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
     }
 
     #[test]
     fn test_key_string_escaped_char() {
         let mut reader = Reader::new("\\u{0a}");
         assert_eq!(key_string_escaped_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("\\:");
         assert_eq!(key_string_escaped_char(&mut reader).unwrap(), ':');
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("x");
         let error = key_string_escaped_char(&mut reader).err().unwrap();
@@ -302,6 +302,6 @@ mod tests {
             }
         );
         assert!(error.recoverable);
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 }

@@ -217,7 +217,7 @@ mod tests {
         Bytes, Comment, JsonListElement, JsonValue, LineTerminator, MultilineString,
         MultilineStringKind, Template, TemplateElement, Whitespace,
     };
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
     use crate::typing::ToSource;
 
     #[test]
@@ -232,7 +232,7 @@ mod tests {
         let mut reader = Reader::new("GET http://google.fr");
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 20);
+        assert_eq!(reader.cursor().index, CharPos(20));
     }
 
     #[test]
@@ -241,12 +241,12 @@ mod tests {
 
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 21);
+        assert_eq!(reader.cursor().index, CharPos(21));
         assert_eq!(reader.cursor().pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 41);
+        assert_eq!(reader.cursor().index, CharPos(41));
         assert_eq!(reader.cursor().pos.line, 2);
 
         let mut reader =
@@ -254,12 +254,12 @@ mod tests {
 
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 32);
+        assert_eq!(reader.cursor().index, CharPos(32));
         assert_eq!(reader.cursor().pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 63);
+        assert_eq!(reader.cursor().index, CharPos(63));
         assert_eq!(reader.cursor().pos.line, 2);
     }
 
@@ -310,7 +310,7 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
         };
         assert_eq!(request(&mut reader).unwrap(), default_request);
-        assert_eq!(reader.cursor().index, 20);
+        assert_eq!(reader.cursor().index, CharPos(20));
 
         let mut reader = Reader::new("GET  http://google.fr # comment");
         let default_request = Request {
@@ -352,12 +352,12 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 32)),
         };
         assert_eq!(request(&mut reader).unwrap(), default_request);
-        assert_eq!(reader.cursor().index, 31);
+        assert_eq!(reader.cursor().index, CharPos(31));
 
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
         let r = request(&mut reader).unwrap();
         assert_eq!(r.method, Method::new("GET"));
-        assert_eq!(reader.cursor().index, 21);
+        assert_eq!(reader.cursor().index, CharPos(21));
         let r = request(&mut reader).unwrap();
         assert_eq!(r.method, Method::new("GET"));
     }
@@ -487,31 +487,31 @@ mod tests {
         let mut reader = Reader::new("xxx ");
         let error = method(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("");
         let error = method(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("GET ");
         assert_eq!(method(&mut reader).unwrap(), Method::new("GET"));
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("CUSTOM");
         assert_eq!(method(&mut reader).unwrap(), Method::new("CUSTOM"));
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
     }
 
     #[test]
     fn test_version() {
         let mut reader = Reader::new("HTTP 200");
         assert_eq!(version(&mut reader).unwrap().value, VersionAny);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("HTTP\t200");
         assert_eq!(version(&mut reader).unwrap().value, VersionAny);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("HTTP/1.1 200");
         assert_eq!(version(&mut reader).unwrap().value, VersionValue::Version11);
@@ -564,7 +564,7 @@ mod tests {
                 ],
             })
         );
-        assert_eq!(reader.cursor().index, 8);
+        assert_eq!(reader.cursor().index, CharPos(8));
 
         let mut reader = Reader::new("{}");
         let b = body(&mut reader).unwrap();
@@ -576,7 +576,7 @@ mod tests {
                 elements: vec![],
             })
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("# comment\n {} # comment\nxxx");
         let b = body(&mut reader).unwrap();
@@ -588,7 +588,7 @@ mod tests {
                 elements: vec![],
             })
         );
-        assert_eq!(reader.cursor().index, 24);
+        assert_eq!(reader.cursor().index, CharPos(24));
 
         let mut reader = Reader::new("{x");
         let error = body(&mut reader).err().unwrap();

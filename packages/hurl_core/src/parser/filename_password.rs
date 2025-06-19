@@ -149,7 +149,7 @@ fn filename_password_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
 
     #[test]
     fn test_filename_with_password() {
@@ -165,7 +165,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             )
         );
-        assert_eq!(reader.cursor().index, 18);
+        assert_eq!(reader.cursor().index, CharPos(18));
     }
 
     #[test]
@@ -182,6 +182,6 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
             )
         );
-        assert_eq!(reader.cursor().index, 20);
+        assert_eq!(reader.cursor().index, CharPos(20));
     }
 }

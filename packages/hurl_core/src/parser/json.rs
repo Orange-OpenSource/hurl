@@ -409,6 +409,7 @@ fn whitespace(reader: &mut Reader) -> String {
 mod tests {
     use super::*;
     use crate::ast::*;
+    use crate::reader::CharPos;
     use crate::typing::ToSource;
 
     #[test]
@@ -436,7 +437,7 @@ mod tests {
     fn test_null_value() {
         let mut reader = Reader::new("null");
         assert_eq!(null_value(&mut reader).unwrap(), JsonValue::Null);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("true");
         let error = null_value(&mut reader).err().unwrap();
@@ -454,29 +455,29 @@ mod tests {
     fn test_integer() {
         let mut reader = Reader::new("0");
         assert_eq!(integer(&mut reader).unwrap(), "0".to_string());
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("123");
         assert_eq!(integer(&mut reader).unwrap(), "123".to_string());
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("0123");
         assert_eq!(integer(&mut reader).unwrap(), "0".to_string());
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 
     #[test]
     fn test_fraction() {
         let mut reader = Reader::new(".5");
         assert_eq!(fraction(&mut reader).unwrap(), ".5".to_string());
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
     }
 
     #[test]
     fn test_exponent() {
         let mut reader = Reader::new("e2");
         assert_eq!(exponent(&mut reader).unwrap(), "e2".to_string());
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
     }
 
     #[test]
@@ -486,7 +487,7 @@ mod tests {
             boolean_value(&mut reader).unwrap(),
             JsonValue::Boolean(true)
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("1");
         let error = boolean_value(&mut reader).err().unwrap();
@@ -546,11 +547,11 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
             ))
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("\"Hello\\u0020{{name}}!\"");
         assert_eq!(string_value(&mut reader).unwrap(), json_hello_world_value());
-        assert_eq!(reader.cursor().index, 22);
+        assert_eq!(reader.cursor().index, CharPos(22));
 
         let mut reader = Reader::new("\"{}\"");
         assert_eq!(
@@ -564,7 +565,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
             ))
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
     }
 
     #[test]
@@ -610,35 +611,35 @@ mod tests {
             any_char(&mut reader).unwrap(),
             ('a', "a".to_string(), Pos { line: 1, column: 1 })
         );
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new(" ");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             (' ', " ".to_string(), Pos { line: 1, column: 1 })
         );
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("\\u0020 ");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             (' ', "\\u0020".to_string(), Pos { line: 1, column: 1 })
         );
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("\\t");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             ('\t', "\\t".to_string(), Pos { line: 1, column: 1 })
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("#");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             ('#', "#".to_string(), Pos { line: 1, column: 1 })
         );
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 
     #[test]
@@ -658,11 +659,11 @@ mod tests {
     fn test_escape_char() {
         let mut reader = Reader::new("\\n");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("\\u000a");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
 
         let mut reader = Reader::new("x");
         let error = escape_char(&mut reader).err().unwrap();
@@ -674,22 +675,22 @@ mod tests {
             }
         );
         assert!(error.recoverable);
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 
     #[test]
     fn test_unicode() {
         let mut reader = Reader::new("000a");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("c350");
         assert_eq!(unicode(&mut reader).unwrap(), '썐');
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("d83c\\udf78");
         assert_eq!(unicode(&mut reader).unwrap(), '🍸');
-        assert_eq!(reader.cursor().index, 10);
+        assert_eq!(reader.cursor().index, CharPos(10));
 
         let mut reader = Reader::new("d800");
         let error = unicode(&mut reader).unwrap_err();
@@ -731,49 +732,49 @@ mod tests {
             number_value(&mut reader).unwrap(),
             JsonValue::Number("100".to_string())
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("1.333");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1.333".to_string())
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("-1");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("-1".to_string())
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("00");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("0".to_string())
         );
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("1e0");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e0".to_string())
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("1e005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e005".to_string())
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("1e-005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e-005".to_string())
         );
-        assert_eq!(reader.cursor().index, 6);
+        assert_eq!(reader.cursor().index, CharPos(6));
     }
 
     #[test]
@@ -824,7 +825,7 @@ mod tests {
                 }
             })
         );
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
     }
 
     #[test]
@@ -837,7 +838,7 @@ mod tests {
                 elements: vec![]
             }
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("[ ]");
         assert_eq!(
@@ -847,7 +848,7 @@ mod tests {
                 elements: vec![]
             }
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("[true, false]");
         assert_eq!(
@@ -868,7 +869,7 @@ mod tests {
                 ],
             }
         );
-        assert_eq!(reader.cursor().index, 13);
+        assert_eq!(reader.cursor().index, CharPos(13));
     }
 
     #[test]
@@ -905,7 +906,7 @@ mod tests {
                 space1: String::new(),
             }
         );
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
     }
 
     #[test]
@@ -918,7 +919,7 @@ mod tests {
                 elements: vec![]
             }
         );
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("{ }");
         assert_eq!(
@@ -928,7 +929,7 @@ mod tests {
                 elements: vec![]
             }
         );
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("{\n  \"a\": true\n}");
         assert_eq!(
@@ -952,7 +953,7 @@ mod tests {
                 }],
             }
         );
-        assert_eq!(reader.cursor().index, 15);
+        assert_eq!(reader.cursor().index, CharPos(15));
 
         let mut reader = Reader::new("true");
         let error = object_value(&mut reader).err().unwrap();
@@ -999,7 +1000,7 @@ mod tests {
                 space3: String::new(),
             }
         );
-        assert_eq!(reader.cursor().index, 9);
+        assert_eq!(reader.cursor().index, CharPos(9));
     }
 
     #[test]
@@ -1029,14 +1030,14 @@ mod tests {
     fn test_whitespace() {
         let mut reader = Reader::new("");
         assert_eq!(whitespace(&mut reader), String::new());
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new(" x");
         assert_eq!(whitespace(&mut reader), " ".to_string());
-        assert_eq!(reader.cursor().index, 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("\n  x");
         assert_eq!(whitespace(&mut reader), "\n  ".to_string());
-        assert_eq!(reader.cursor().index, 3);
+        assert_eq!(reader.cursor().index, CharPos(3));
     }
 }

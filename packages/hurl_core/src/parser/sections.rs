@@ -329,6 +329,7 @@ mod tests {
         KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
         PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
     };
+    use crate::reader::CharPos;
     use crate::typing::ToSource;
 
     #[test]
@@ -566,7 +567,7 @@ mod tests {
         let file_value = file_value(&mut reader).unwrap();
         let content_type = file_value.content_type.unwrap();
         assert_eq!(content_type.to_string(), "text/html".to_string());
-        assert_eq!(reader.cursor().index, 25);
+        assert_eq!(reader.cursor().index, CharPos(25));
 
         let mut reader = Reader::new("file,------; text/plain; charset=us-ascii");
         let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
@@ -575,13 +576,13 @@ mod tests {
             content_type.to_string(),
             "text/plain; charset=us-ascii".to_string()
         );
-        assert_eq!(reader.cursor().index, 41);
+        assert_eq!(reader.cursor().index, CharPos(41));
 
         let mut reader = Reader::new("file,******; text/html # comment");
         let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
         let content_type = file_value.content_type.unwrap();
         assert_eq!(content_type.to_string(), "text/html".to_string());
-        assert_eq!(reader.cursor().index, 22);
+        assert_eq!(reader.cursor().index, CharPos(22));
 
         let mut reader = Reader::new("file,{{some_file}}; application/vnd.openxmlformats-officedocument.wordprocessingml.document # comment");
         let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
@@ -590,7 +591,7 @@ mod tests {
             content_type.to_string(),
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document".to_string()
         );
-        assert_eq!(reader.cursor().index, 91);
+        assert_eq!(reader.cursor().index, CharPos(91));
 
         let mut reader = Reader::new("file,{{some_file}}; {{some_content_type}} # comment");
         let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
@@ -599,7 +600,7 @@ mod tests {
             content_type.to_string(),
             "{{some_content_type}}".to_string()
         );
-        assert_eq!(reader.cursor().index, 41);
+        assert_eq!(reader.cursor().index, CharPos(41));
     }
 
     #[test]
@@ -775,7 +776,7 @@ mod tests {
                 }
             }
         );
-        assert_eq!(reader.cursor().index, 43);
+        assert_eq!(reader.cursor().index, CharPos(43));
     }
 
     #[test]

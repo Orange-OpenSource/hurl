@@ -236,7 +236,7 @@ mod tests {
         TemplateElement, Whitespace,
     };
     use crate::parser::filter::filters;
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
     use crate::typing::ToSource;
 
     #[test]
@@ -318,7 +318,7 @@ mod tests {
                 },
             }
         );
-        assert_eq!(reader.cursor().index, 20);
+        assert_eq!(reader.cursor().index, CharPos(20));
 
         // todo test with escape sequence
         //let mut reader = Reader::init("cookie \"cookie\u{31}\"");
@@ -424,6 +424,6 @@ mod tests {
                 }
             )]
         );
-        assert_eq!(reader.cursor().index, 14);
+        assert_eq!(reader.cursor().index, CharPos(14));
     }
 }

@@ -177,32 +177,33 @@ fn decode_four_chars(c1: i32, c2: i32, c3: i32, c4: i32) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::reader::CharPos;
 
     #[test]
     fn test_decode_one_block() {
         let mut reader = Reader::new("");
         assert_eq!(parse(&mut reader), vec![] as Vec<u8>);
-        assert_eq!(reader.cursor().index, 0);
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("AA==;");
         assert_eq!(parse(&mut reader), vec![0]);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("AA");
         assert_eq!(parse(&mut reader), vec![0]);
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("AA;");
         assert_eq!(parse(&mut reader), vec![0]);
-        assert_eq!(reader.cursor().index, 2);
+        assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("TWE=;");
         assert_eq!(parse(&mut reader), vec![77, 97]);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("TWFu;");
         assert_eq!(parse(&mut reader), vec![77, 97, 110]);
-        assert_eq!(reader.cursor().index, 4);
+        assert_eq!(reader.cursor().index, CharPos(4));
     }
 
     /*
@@ -245,7 +246,7 @@ mod tests {
     fn test_decode_with_whitespace() {
         let mut reader = Reader::new("TW E=\n;");
         assert_eq!(parse(&mut reader), vec![77, 97]);
-        assert_eq!(reader.cursor().index, 5);
+        assert_eq!(reader.cursor().index, CharPos(5));
     }
 
     #[test]

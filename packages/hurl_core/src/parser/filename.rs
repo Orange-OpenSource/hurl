@@ -143,7 +143,7 @@ fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
 mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, Variable, Whitespace};
-    use crate::reader::Pos;
+    use crate::reader::{CharPos, Pos};
 
     #[test]
     fn test_filename() {
@@ -159,7 +159,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             )
         );
-        assert_eq!(reader.cursor().index, 13);
+        assert_eq!(reader.cursor().index, CharPos(13));
 
         let mut reader = Reader::new("data.bin");
         assert_eq!(
@@ -173,7 +173,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             )
         );
-        assert_eq!(reader.cursor().index, 8);
+        assert_eq!(reader.cursor().index, CharPos(8));
     }
 
     #[test]
@@ -190,7 +190,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             )
         );
-        assert_eq!(reader.cursor().index, 18);
+        assert_eq!(reader.cursor().index, CharPos(18));
     }
 
     #[test]
@@ -207,7 +207,7 @@ mod tests {
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 11))
             )
         );
-        assert_eq!(reader.cursor().index, 10);
+        assert_eq!(reader.cursor().index, CharPos(10));
     }
 
     #[test]
