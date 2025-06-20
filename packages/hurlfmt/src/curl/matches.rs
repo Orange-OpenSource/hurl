@@ -58,6 +58,10 @@ pub fn url(arg_matches: &ArgMatches) -> String {
     }
 }
 
+pub fn cookies(arg_matches: &ArgMatches) -> Vec<String> {
+    get_strings(arg_matches, "cookies").unwrap_or_default()
+}
+
 pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
     let mut headers = get_strings(arg_matches, "headers").unwrap_or_default();
     if !has_content_type(&headers) {

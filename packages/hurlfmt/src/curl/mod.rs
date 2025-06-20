@@ -66,6 +66,7 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::compressed())
         .arg(commands::data())
         .arg(commands::headers())
+        .arg(commands::cookies())
         .arg(commands::insecure())
         .arg(commands::verbose())
         .arg(commands::location())
@@ -84,9 +85,10 @@ fn parse_line(s: &str) -> Result<String, String> {
     let method = matches::method(&arg_matches);
     let url = matches::url(&arg_matches);
     let headers = matches::headers(&arg_matches);
+    let cookies = matches::cookies(&arg_matches);
     let options = matches::options(&arg_matches);
     let body = matches::body(&arg_matches);
-    let s = format(&method, &url, headers, &options, body);
+    let s = format(&method, &url, headers, cookies, &options, body);
     Ok(s)
 }
 
@@ -94,6 +96,7 @@ fn format(
     method: &str,
     url: &str,
     headers: Vec<String>,
+    cookies: Vec<String>,
     options: &[HurlOption],
     body: Option<String>,
 ) -> String {
@@ -105,6 +108,11 @@ fn format(
             s.push_str(format!("\n{header}").as_str());
         }
     }
+
+    if !cookies.is_empty() {
+        s.push_str(format!("\ncookie: {}", cookies.join("; ")).as_str());
+    }
+
     if !options.is_empty() {
         s.push_str("\n[Options]");
         for option in options {
@@ -232,6 +240,48 @@ Empty-Header:
                 .unwrap_err()
                 .contains("headers must be formatted as '<NAME:VALUE>' or '<NAME>;'")
         );
+    }
+
+    #[test]
+    fn test_valid_cookies() {
+        let hurl_str = r#"GET http://localhost:8000/custom-cookies
+cookie: name1=value1; name2=value2; name3=value3
+"#;
+        assert_eq!(
+            parse_line("curl http://localhost:8000/custom-cookies -b 'name1=value1' -b 'name2=value2;name3=value3;;'").unwrap(),
+            hurl_str
+        );
+        assert_eq!(
+            parse_line("curl http://localhost:8000/custom-cookies --cookie 'name1=value1' --cookie 'name2=value2;name3=value3;;'").unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_empty_cookie() {
+        assert!(
+            parse_line("curl http://localhost:8000/empty-cookie -b 'valid=pair' -b ''")
+                .unwrap_err()
+                .contains("empty value provided")
+        );
+    }
+
+    #[test]
+    fn test_single_illegal_cookie_pair() {
+        assert!(
+            parse_line("curl http://localhost:8000/empty-cookie -b 'valid=pair' -b 'invalid'")
+                .unwrap_err()
+                .contains("invalid cookie pair provided")
+        );
+    }
+
+    #[test]
+    fn test_multiple_illegal_cookie_pairs() {
+        assert!(parse_line(
+            "curl http://localhost:8000/empty-cookie -b 'name=value' -b 'valid=pair; invalid-1; invalid-2'"
+        )
+        .unwrap_err()
+        .contains("invalid cookie pairs provided: [invalid-1, invalid-2]"));
     }
 
     #[test]
