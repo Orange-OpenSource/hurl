@@ -93,5 +93,5 @@ echo -e "\n------------------ Starting tests_unix_socket/unix_socket_server.py"
 python3 tests_unix_socket/unix_socket_server.py > build/server-unix-socket.log 2>&1 &
 check_unix_socket "tests_unix_socket/unix_socket_server.py" build/unix_socket.sock "GET /hello HTTP/1.0\r\n"
 
-# Squid must be running via Docker Compose
+# Squid should already be running on port 3128
 check_listen_port "squid" 3128 || cat_and_exit_err build/proxy.log

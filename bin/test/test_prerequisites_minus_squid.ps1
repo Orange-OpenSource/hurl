@@ -34,7 +34,7 @@ if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8003) {write-host -foregroundcolor Green "server-ssl-client-authent up"} else {write-host -foregroundcolor Red "server-ssl-client-authent is down" ; cat build\server-ssl-client-authent.log ; exit 1}
 
-# Squid must be running via Docker Compose
+# Squid should already be running on port 3128
 if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:3128) {write-host -foregroundcolor Green "proxy is up"} else {write-host -foregroundcolor Red "proxy is down" ; cat build\proxy.log ; exit 1}
 
 cd $actual_dir

@@ -28,10 +28,6 @@ $ source .venv/bin/activate
 $ pip install --requirement bin/requirements-frozen.txt
 ```
 
-### Proxy
-
-Some integration tests need a proxy. Given our cross-platform needs, we selected [squid] rather than [mitmproxy].
-
 ### Start local server
 
 You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the
@@ -45,6 +41,19 @@ local test server and proxy. Once launch, there is:
 - a HTTP proxy listening on <http://localhost:8888>
 
 Now, everything is ready to run the integration tests!
+
+### Proxy
+
+Some integration tests need a proxy. Given our cross-platform needs, we selected [squid] (instead of [mitmproxy]).
+
+If you'd rather not install `squid` locally, you can run it using the `docker-compose.yml` file in this directory. When doing this, you will need to use the `_minus_squid` equivalents of the above scripts. For example:
+
+```sh
+docker compose up --detach --file integration/docker-compose.yml
+bin/test/test_prerequisites_minus_squid.sh
+cd integration/hurl
+python3 ../test_script.py tests_ok/hello.sh
+```
 
 ## Integration Tests
 
