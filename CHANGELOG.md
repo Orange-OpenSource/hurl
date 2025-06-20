@@ -1,6 +1,9 @@
 [7.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
 ========================================================================================================================
 
+[7.0.0 (2025-06-20)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
+========================================================================================================================
+
 Thanks to
 [@ecolinet](https://github.com/ecolinet),
 [@theoforger](https://github.com/theoforger),
@@ -34,8 +37,10 @@ Enhancements:
 * Add toHex filter [#3963](https://github.com/Orange-OpenSource/hurl/issues/3963)
 * Add first and last filters [#3998](https://github.com/Orange-OpenSource/hurl/issues/3998)
 * Remove hex crate dependency [#4011](https://github.com/Orange-OpenSource/hurl/issues/4011)
+* Small tweaks to --test progress output [#4028](https://github.com/Orange-OpenSource/hurl/issues/4028)
 * Add support for negative values for nth filter [#4050](https://github.com/Orange-OpenSource/hurl/issues/4050)
 * Add option to configure pinnedpubkey per request [#4084](https://github.com/Orange-OpenSource/hurl/issues/4084)
+* Add timeline link on status label in source and run pages [#4128](https://github.com/Orange-OpenSource/hurl/issues/4128)
 
 
 Bugs Fixed:
