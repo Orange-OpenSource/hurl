@@ -5,21 +5,21 @@
 In the Hurl project, there are three type of tests:
 
 - Rust unit tests: run at the root of the project with `cargo test --lib`
-- Rust integration tests: run at the root of the project with `cargo test`. You will also run unit test with this command. 
+- Rust integration tests: run at the root of the project with `cargo test`. You will also run unit test with this command.
 To run Rust integration tests, you need to launch a local test server (see below).
 
 These tests are "classic" Rust tests and should not surprise a Rust developer.
 
 Along with tests, we have an extensive integration test suite. These tests launch scripts to run `hurl` and
 `hurlfmt` and test various options and Hurl files. To run these tests you have to set up a local server (see below)
-All these tests will be performed automatically in Hurl CI/CD, on various OS, for every pull request. 
+All these tests will be performed automatically in Hurl CI/CD, on various OS, for every pull request.
 
 
 ## Set up Test Local Server
 
-### Python 3.9+
+### Python 3.10+
 
-The local test server is a Flask application, so you will need Python 3.9+ on your machine. You can create a Python
+The local test server is a Flask application, so you will need Python 3.10+ on your machine. You can create a Python
 virtual environment and install required dependencies:
 
 ```shell
@@ -34,7 +34,7 @@ Some integration tests need a proxy. Given our cross-platform needs, we selected
 
 ### Start local server
 
-You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the 
+You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the
 local test server and proxy. Once launch, there is:
 
 - a Flask server instance listening on <http://localhost:8000>
@@ -53,7 +53,7 @@ Now, everything is ready to run the integration tests!
 Integration tests to test `hurl` binary are grouped in `integration/hurl` directory:
 
 - [`hurl/tests_ok`]: every test there must be successful (exit code 0). The Hurl files in this folder are formatted with `hurlfmt`.
-- [`hurl/tests_ok_not_linted`]: every test here must be successful but are not necessary formatted with `hurlfmt`. This way we can 
+- [`hurl/tests_ok_not_linted`]: every test here must be successful but are not necessary formatted with `hurlfmt`. This way we can
 ensure that there is no regression even if a Hurl file doesn't follow a stricter format.
 - [`hurl/tests_failed`]: every test must fail (exit code different from 0). Tests are syntactically correct, so the error
 raised by the test is a runtime error.
@@ -74,14 +74,14 @@ Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` 
 
 An integration test consists of:
 
-- two runnable scripts: one for Linux, macOS (`foo.sh`) and one for Windows (`foo.ps1`). These are the 
+- two runnable scripts: one for Linux, macOS (`foo.sh`) and one for Windows (`foo.ps1`). These are the
 integration tests that we want to execute.
 - a Hurl file (`foo.hurl`)
-- a Flask endpoint (`foo.py`). This is the server side used by the Hurl file. You can add as many assert as you want 
-to test that our Hurl client conforms to what is expected. Generally, each integration test has its own Flask endpoint, 
+- a Flask endpoint (`foo.py`). This is the server side used by the Hurl file. You can add as many assert as you want
+to test that our Hurl client conforms to what is expected. Generally, each integration test has its own Flask endpoint,
 even if there is some duplication between tests.
 - an expected stdout file (`foo.out`). This file is the expected value for stdout. This file is not dependent from the OS, as we
-want a Hurl file to have the same stdout on any OS. If the stdout have some variant data (like timestamp for instance), one 
+want a Hurl file to have the same stdout on any OS. If the stdout have some variant data (like timestamp for instance), one
 can use a patterned expected file, with `~~~` for wildcard matching (`foo.out.pattern`)
 - an expected stderr file (`foo.err`). This file is the expected value for stderr. This file is not dependent from the OS, as we
   want a Hurl file to have the same stderr on any OS. Like stdout, stderr expected file can be patterned (`foo.err.pattern`)
@@ -93,7 +93,7 @@ is a JSON view of the Hurl source file and can serve to convert from/to Hurl for
 To run all integration tests:
 
 ```shell
-$ bin/test/test_integ.sh 
+$ bin/test/test_integ.sh
 ```
 
 To run a particular integration test without any check:
@@ -163,7 +163,7 @@ Connection: close
 Hello
 ```
 
-`include.html`: 
+`include.html`:
 
 ```html
 <pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://localhost:8000/include</span>

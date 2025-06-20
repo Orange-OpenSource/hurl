@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: Werkzeug/2.0.3 Python/3.9.7
+Date: Wed, 01 Jan 2025 12:00:00 GMT
+Content-Type: application/json
+Content-Length: 26
+Server: Flask Server
+Connection: close
+
+{
+  "age": 30,
+  "name": "John"
+}

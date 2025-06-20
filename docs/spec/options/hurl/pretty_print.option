@@ -1,0 +1,7 @@
+name: pretty_print
+long: pretty
+help: Pretty-print JSON response bodies
+help_heading: Output options
+cli_only: true
+---
+Pretty-print JSON response bodies with proper indentation and formatting.

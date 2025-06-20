@@ -1,0 +1,5 @@
+curl http://localhost:8000/json-simple
+curl http://localhost:8000/json-complex
+curl http://localhost:8000/json-array
+curl http://localhost:8000/hello
+curl http://localhost:8000/invalid-json

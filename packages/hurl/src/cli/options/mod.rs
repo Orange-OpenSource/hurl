@@ -87,6 +87,7 @@ pub struct CliOptions {
     pub parallel: bool,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
+    pub pretty_print: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub repeat: Option<Count>,
@@ -228,6 +229,7 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::no_color())
         .arg(commands::no_output())
         .arg(commands::output())
+        .arg(commands::pretty_print())
         .arg(commands::progress_bar())
         .arg(commands::verbose())
         .arg(commands::very_verbose())
@@ -335,6 +337,7 @@ fn parse_matches(
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
+    let pretty_print = matches::pretty_print(arg_matches);
     let repeat = matches::repeat(arg_matches);
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
@@ -395,6 +398,7 @@ fn parse_matches(
         proxy,
         output,
         output_type,
+        pretty_print,
         repeat,
         resolves,
         retry,

@@ -451,6 +451,14 @@ pub fn pinned_pub_key() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn pretty_print() -> clap::Arg {
+    clap::Arg::new("pretty_print")
+        .long("pretty")
+        .help("Pretty-print JSON response bodies")
+        .help_heading("Output options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn progress_bar() -> clap::Arg {
     clap::Arg::new("progress_bar")
         .long("progress-bar")

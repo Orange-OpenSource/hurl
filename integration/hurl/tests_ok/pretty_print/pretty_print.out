@@ -1,0 +1,32 @@
+{
+  "name": "John",
+  "age": 30
+}
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "details": {
+        "email": "alice@example.com",
+        "active": true
+      }
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "details": {
+        "email": "bob@example.com",
+        "active": false
+      }
+    }
+  ],
+  "total": 2
+}
+[
+  "item1",
+  "item2",
+  "item3"
+]
+Hello World!
+{"invalid":json,content}

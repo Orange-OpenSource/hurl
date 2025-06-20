@@ -32,6 +32,7 @@ pub fn write_last_body(
     hurl_result: &HurlResult,
     include_headers: bool,
     color: bool,
+    pretty_print: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
     append: bool,
@@ -62,9 +63,15 @@ pub fn write_last_body(
                 return Err(OutputError::new(source_info, kind));
             }
         };
+        if pretty_print {
+            bytes = pretty_print_json_if_possible(bytes);
+        }
         output.append(&mut bytes);
     } else {
-        let bytes = &response.body;
+        let mut bytes = response.body.clone();
+        if pretty_print {
+            bytes = pretty_print_json_if_possible(bytes);
+        }
         output.extend(bytes);
     }
     // We replicate curl's checks for binary output: a warning is displayed when user hasn't
@@ -113,6 +120,27 @@ fn is_binary(bytes: &[u8]) -> bool {
         }
     }
     false
+}
+
+/// Attempts to pretty-print JSON content. If the content is not valid JSON,
+/// returns the original bytes unchanged.
+fn pretty_print_json_if_possible(bytes: Vec<u8>) -> Vec<u8> {
+    // Try to parse as JSON
+    match std::str::from_utf8(&bytes) {
+        Ok(text) => {
+            match serde_json::from_str::<serde_json::Value>(text) {
+                Ok(json_value) => {
+                    // Pretty-print the JSON with 2-space indentation
+                    match serde_json::to_string_pretty(&json_value) {
+                        Ok(pretty_json) => pretty_json.into_bytes(),
+                        Err(_) => bytes, // If pretty-printing fails, return original
+                    }
+                }
+                Err(_) => bytes, // If not valid JSON, return original
+            }
+        }
+        Err(_) => bytes, // If not valid UTF-8, return original
+    }
 }
 
 #[cfg(test)]
@@ -217,6 +245,7 @@ mod tests {
         let result = hurl_result_json();
         let include_header = true;
         let color = false;
+        let pretty_print = false;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
 
@@ -224,6 +253,7 @@ mod tests {
             &result,
             include_header,
             color,
+            pretty_print,
             output.as_ref(),
             &mut stdout,
             true,
@@ -241,5 +271,25 @@ mod tests {
              \n\
              {\"say\": \"Hello World!\"}"
         );
+    }
+
+    #[test]
+    fn test_pretty_print_json_if_possible() {
+        // Test valid JSON
+        let json_bytes = b"{\"name\":\"John\",\"age\":30}".to_vec();
+        let result = super::pretty_print_json_if_possible(json_bytes);
+        let result_str = String::from_utf8(result).unwrap();
+        assert!(result_str.contains("  \"age\": 30"));
+        assert!(result_str.contains("  \"name\": \"John\""));
+
+        // Test invalid JSON
+        let invalid_bytes = b"not json".to_vec();
+        let result = super::pretty_print_json_if_possible(invalid_bytes.clone());
+        assert_eq!(result, invalid_bytes);
+
+        // Test binary data
+        let binary_bytes = vec![0, 1, 2, 3, 255];
+        let result = super::pretty_print_json_if_possible(binary_bytes.clone());
+        assert_eq!(result, binary_bytes);
     }
 }
