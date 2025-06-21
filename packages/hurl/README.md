@@ -19,7 +19,7 @@ versatile: it can be used for both <b>fetching data</b> and <b>testing HTTP</b> 
 Hurl makes it easy to work with <b>HTML</b> content, <b>REST / SOAP / GraphQL</b> APIs, or any other <b>XML / JSON</b> based APIs. 
 
 ```hurl
-# Get home:
+# Go home and capture token
 GET https://example.org
 HTTP 200
 [Captures]
@@ -27,8 +27,11 @@ csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
 
 # Do login!
-POST https://example.org/login?user=toto&password=1234
+POST https://example.org/login
 X-CSRF-TOKEN: {{csrf_token}}
+[Form]
+user: toto
+password: 1234
 HTTP 302
 ```
 
@@ -707,7 +710,8 @@ jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
 jsonpath "$.order" matches "^order-\\d{8}$"
-jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex literal
+jsonpath "$.order" matches /^order-\d{8}$/  # Alternative syntax with regex literal
+jsonpath "$.id" matches /(?i)[a-z]*/        # See syntax for flags <https://docs.rs/regex/latest/regex/#grouping-and-flags>
 jsonpath "$.created" isIsoDate
 ```
 
