@@ -610,7 +610,7 @@ last-filter: "last"
 
 location-filter: "location"
 
-nth-filter: "nth" sp integer
+nth-filter: "nth" sp (integer | placeholder)
 
 regex-filter: "regex" sp (quoted-string | regex)
 
