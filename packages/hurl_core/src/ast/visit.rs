@@ -23,10 +23,10 @@
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
     DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue,
-    Hex, HurlFile, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartParam,
-    NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue,
-    Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue,
-    Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
+    Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method, MultilineString,
+    MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue,
+    PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
+    StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
 use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
 
@@ -125,6 +125,10 @@ pub trait Visitor: Sized {
 
     fn visit_hurl_file(&mut self, file: &HurlFile) {
         walk_hurl_file(self, file);
+    }
+
+    fn visit_integer_value(&mut self, n: &IntegerValue) {
+        walk_integer_value(self, n);
     }
 
     fn visit_i64(&mut self, n: i64) {}
@@ -430,7 +434,7 @@ pub fn walk_filter<V: Visitor>(visitor: &mut V, filter: &Filter) {
         FilterValue::Location => {}
         FilterValue::Nth { space0, n } => {
             visitor.visit_whitespace(space0);
-            visitor.visit_i64(n.as_i64());
+            visitor.visit_integer_value(n);
         }
         FilterValue::Regex { space0, value } => {
             visitor.visit_whitespace(space0);
@@ -531,6 +535,13 @@ pub fn walk_hurl_file<V: Visitor>(visitor: &mut V, file: &HurlFile) {
     file.line_terminators.iter().for_each(|lt| {
         visitor.visit_lt(lt);
     });
+}
+
+pub fn walk_integer_value<V: Visitor>(visitor: &mut V, n: &IntegerValue) {
+    match n {
+        IntegerValue::Literal(value) => visitor.visit_i64(value.as_i64()),
+        IntegerValue::Placeholder(value) => visitor.visit_placeholder(value),
+    }
 }
 
 pub fn walk_kv<V: Visitor>(visitor: &mut V, kv: &KeyValue) {

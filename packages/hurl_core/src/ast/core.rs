@@ -24,6 +24,7 @@ use crate::ast::primitive::{
 use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
+use crate::ast::Placeholder;
 use crate::typing::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
@@ -324,7 +325,7 @@ pub enum FilterValue {
     Location,
     Nth {
         space0: Whitespace,
-        n: I64,
+        n: IntegerValue,
     },
     Regex {
         space0: Whitespace,
@@ -399,6 +400,21 @@ impl FilterValue {
             FilterValue::UrlEncode => "urlEncode",
             FilterValue::UrlQueryParam { .. } => "urlQueryParam",
             FilterValue::XPath { .. } => "xpath",
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum IntegerValue {
+    Literal(I64),
+    Placeholder(Placeholder),
+}
+
+impl fmt::Display for IntegerValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            IntegerValue::Literal(v) => write!(f, "{}", v),
+            IntegerValue::Placeholder(v) => write!(f, "{}", v),
         }
     }
 }

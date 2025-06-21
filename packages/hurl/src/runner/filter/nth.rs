@@ -15,33 +15,28 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::SourceInfo;
+use hurl_core::ast::{IntegerValue, Placeholder, SourceInfo};
 
-use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use crate::runner::{expr, Number, RunnerError, RunnerErrorKind, Value, VariableSet};
 
 /// Returns the element from a collection `value` at a zero-based index.
 pub fn eval_nth(
     value: &Value,
+    n: &IntegerValue,
+    variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
-    n: i64,
 ) -> Result<Option<Value>, RunnerError> {
+    let n = eval_integer_value(n, variables)?;
+
     match value {
-        Value::List(values) => {
-            let len = values.len() as i64;
-            let value = if n >= 0 && n < len {
-                &values[n as usize]
-            } else if n < 0 && len - n.abs() >= 0 {
-                &values[(len - n.abs()) as usize]
-            } else {
-                let kind = RunnerErrorKind::FilterInvalidInput(format!(
-                    "Out of bound - size is {}",
-                    values.len()
-                ));
-                return Err(RunnerError::new(source_info, kind, assert));
-            };
-            Ok(Some(value.clone()))
-        }
+        Value::List(values) => match try_nth(values, n) {
+            Ok(value) => Ok(Some(value.clone())),
+            Err(err) => {
+                let kind = RunnerErrorKind::FilterInvalidInput(err);
+                Err(RunnerError::new(source_info, kind, assert))
+            }
+        },
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
             Err(RunnerError::new(source_info, kind, assert))
@@ -49,13 +44,46 @@ pub fn eval_nth(
     }
 }
 
+/// Returns the element in the `items` collection at `index`.
+/// Ths function accepts negative indices for indexing from the end of the collection.
+fn try_nth<U>(items: &[U], index: i64) -> Result<&U, String> {
+    let len = items.len() as i64;
+    let value = if index >= 0 && index < len {
+        &items[index as usize]
+    } else if index < 0 && len - index.abs() >= 0 {
+        &items[(len - index.abs()) as usize]
+    } else {
+        let error = format!("Out of bound - size is {len}");
+        return Err(error);
+    };
+    Ok(value)
+}
+
+/// Evaluates an [`IntegerValue`] against a variable set.
+fn eval_integer_value(n: &IntegerValue, variables: &VariableSet) -> Result<i64, RunnerError> {
+    match n {
+        IntegerValue::Literal(value) => Ok(value.as_i64()),
+        IntegerValue::Placeholder(Placeholder { expr, .. }) => match expr::eval(expr, variables)? {
+            Value::Number(Number::Integer(value)) => Ok(value),
+            v => {
+                let kind = RunnerErrorKind::ExpressionInvalidType {
+                    value: v.repr(),
+                    expecting: "integer".to_string(),
+                };
+                Err(RunnerError::new(expr.source_info, kind, false))
+            }
+        },
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace, I64};
+    use hurl_core::ast::{Filter, FilterValue, IntegerValue, SourceInfo, Whitespace, I64};
     use hurl_core::reader::Pos;
     use hurl_core::typing::ToSource;
 
     use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::nth::try_nth;
     use crate::runner::{Number, RunnerError, RunnerErrorKind, Value, VariableSet};
 
     #[test]
@@ -64,7 +92,7 @@ mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Nth {
-                n: I64::new(2, "2".to_source()),
+                n: IntegerValue::Literal(I64::new(2, "2".to_source())),
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -114,7 +142,7 @@ mod tests {
         let filter = Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Nth {
-                n: I64::new(-4, "-4".to_source()),
+                n: IntegerValue::Literal(I64::new(-4, "-4".to_source())),
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -153,5 +181,16 @@ mod tests {
                 false
             )
         );
+    }
+
+    #[test]
+    fn test_try_nth() {
+        let values = [12, 4, 5];
+        assert_eq!(try_nth(&values, 0).unwrap(), &12);
+        assert_eq!(try_nth(&values, 2).unwrap(), &5);
+        assert_eq!(try_nth(&values, 3).unwrap_err(), "Out of bound - size is 3");
+        assert_eq!(try_nth(&values, -1).unwrap(), &5);
+        assert_eq!(try_nth(&values, -3).unwrap(), &12);
+        assert_eq!(try_nth(&values, 4).unwrap_err(), "Out of bound - size is 3");
     }
 }
