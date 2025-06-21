@@ -1,9 +1,6 @@
 [7.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
 ========================================================================================================================
 
-[7.0.0 (2025-06-20)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
-========================================================================================================================
-
 Thanks to
 [@ecolinet](https://github.com/ecolinet),
 [@theoforger](https://github.com/theoforger),
