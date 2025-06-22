@@ -28,8 +28,8 @@ pub struct Query {
 pub enum Selector {
     Wildcard,
     NameChild(String),
-    ArrayIndex(usize),        // one unique index
-    ArrayIndices(Vec<usize>), // two or more indexes (separated by comma)
+    ArrayIndex(i64),        // one unique index - can be negative
+    ArrayIndices(Vec<i64>), // two or more indexes (separated by comma) - can be negative
     ArraySlice(Slice),
     ArrayWildcard,
     Filter(Predicate),

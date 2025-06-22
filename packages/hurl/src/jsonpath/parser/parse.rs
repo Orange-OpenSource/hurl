@@ -21,8 +21,7 @@ use hurl_core::reader::Reader;
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Query, Selector, Slice};
 use crate::jsonpath::parser::error::{ParseError, ParseErrorKind, ParseResult};
 use crate::jsonpath::parser::primitives::{
-    boolean, integer, key_name, key_path, literal, natural, number, string_value, try_literal,
-    whitespace,
+    boolean, integer, key_name, key_path, literal, number, string_value, try_literal, whitespace,
 };
 
 pub fn parse(s: &str) -> Result<Query, ParseError> {
@@ -63,7 +62,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     let initial_state = reader.cursor();
     try_left_bracket(reader)?;
     let mut indexes = vec![];
-    let i = match natural(reader) {
+    let i = match integer(reader) {
         Err(e) => {
             let error = ParseError::new(e.pos, true, e.kind);
             return Err(error);
@@ -74,7 +73,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     loop {
         let start = reader.cursor();
         if try_literal(",", reader).is_ok() {
-            let i = match natural(reader) {
+            let i = match integer(reader) {
                 Err(e) => {
                     return Err(ParseError::new(e.pos, true, e.kind));
                 }
@@ -93,7 +92,8 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
         return Err(ParseError::new(reader.cursor().pos, true, e.kind));
     }
     let selector = if indexes.len() == 1 {
-        Selector::ArrayIndex(*indexes.first().unwrap())
+        let index = *indexes.first().unwrap();
+        Selector::ArrayIndex(index)
     } else {
         Selector::ArrayIndices(indexes)
     };
@@ -457,6 +457,10 @@ mod tests {
             Selector::ArrayIndices(vec![0, 1])
         );
         assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("[-1]");
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(-1));
+        assert_eq!(reader.cursor().index, CharPos(4));
 
         // you don't need to keep the exact string
         // this is not part of the AST

@@ -19,6 +19,22 @@
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Selector, Slice};
 use crate::jsonpath::JsonpathResult;
 
+/**
+ * Normalize positive/negative index to positive index
+ * Return None if the index is out of bound
+ */
+fn normalize_index(elements: &[serde_json::Value], index: i64) -> Option<usize> {
+    if index >= elements.len() as i64 {
+        None
+    } else if index >= 0 {
+        Some(index as usize)
+    } else if index < -(elements.len() as i64) {
+        None
+    } else {
+        Some((elements.len() as i64 + index) as usize)
+    }
+}
+
 impl Selector {
     pub fn eval(&self, root: &serde_json::Value) -> Option<JsonpathResult> {
         match self {
@@ -26,9 +42,16 @@ impl Selector {
             Selector::NameChild(field) => root
                 .get(field)
                 .map(|result| JsonpathResult::SingleEntry(result.clone())),
-            Selector::ArrayIndex(index) => root
-                .get(index)
-                .map(|result| JsonpathResult::SingleEntry(result.clone())),
+            Selector::ArrayIndex(index) => {
+                if let serde_json::Value::Array(elements) = root {
+                    if let Some(index) = normalize_index(elements, *index) {
+                        if let Some(value) = root.get(index) {
+                            return Some(JsonpathResult::SingleEntry(value.clone()));
+                        }
+                    }
+                }
+                Some(JsonpathResult::Collection(vec![]))
+            }
 
             // Selectors returning a collection ("indefinite")
             Selector::Wildcard | Selector::ArrayWildcard => {
@@ -133,9 +156,13 @@ impl Selector {
             }
             Selector::ArrayIndices(indexes) => {
                 let mut values = vec![];
-                for index in indexes {
-                    if let Some(value) = root.get(index) {
-                        values.push(value.clone());
+                if let serde_json::Value::Array(elements) = root {
+                    for index in indexes {
+                        if let Some(index) = normalize_index(elements, *index) {
+                            if let Some(value) = root.get(index) {
+                                values.push(value.clone());
+                            }
+                        }
                     }
                 }
                 Some(JsonpathResult::Collection(values))
@@ -290,6 +317,10 @@ mod tests {
             JsonpathResult::SingleEntry(json_first_book())
         );
         assert_eq!(
+            Selector::ArrayIndex(-1).eval(&json_books()).unwrap(),
+            JsonpathResult::SingleEntry(json_fourth_book())
+        );
+        assert_eq!(
             Selector::ArrayIndices(vec![1, 2])
                 .eval(&json_books())
                 .unwrap(),
@@ -426,5 +457,19 @@ mod tests {
             .unwrap(),
             json!(1)
         );
+    }
+
+    #[test]
+    pub fn test_normalize_index() {
+        assert_eq!(
+            normalize_index(&[json!(1), json!(2), json!(3)], 1).unwrap(),
+            1
+        );
+        assert_eq!(
+            normalize_index(&[json!(1), json!(2), json!(3)], -1).unwrap(),
+            2
+        );
+        assert!(normalize_index(&[json!(1), json!(2), json!(3)], 5).is_none());
+        assert!(normalize_index(&[json!(1), json!(2), json!(3)], -5).is_none());
     }
 }
