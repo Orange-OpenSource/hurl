@@ -105,7 +105,7 @@ pub fn run(
         Ok(h) => h,
         Err(error) => {
             let filename = filename.map_or(String::new(), |f| f.to_string());
-            let message = error.to_string(
+            let message = error.render(
                 &filename,
                 content,
                 None,
@@ -564,7 +564,7 @@ fn log_errors(
     }
     entry_result.errors.iter().for_each(|error| {
         let filename = filename.map_or(String::new(), |f| f.to_string());
-        let message = error.to_string(
+        let message = error.render(
             &filename,
             content,
             Some(entry_result.source_info),

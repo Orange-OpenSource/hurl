@@ -93,7 +93,7 @@ fn error_to_html(
 ) -> String {
     let line = error.source_info.start.line;
     let column = error.source_info.start.column;
-    let message = error.to_string(
+    let message = error.render(
         filename,
         content,
         Some(entry_src_info),

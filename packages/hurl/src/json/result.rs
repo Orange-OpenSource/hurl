@@ -470,7 +470,7 @@ impl AssertJson {
         secrets: &[&str],
     ) -> Self {
         let message = a.to_runner_error().map(|err| {
-            err.to_string(
+            err.render(
                 &filename.to_string(),
                 content,
                 Some(entry_src_info),

@@ -41,7 +41,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for (error, entry_src_info) in hurl_result.errors() {
-            let message = error.to_string(
+            let message = error.render(
                 &name,
                 content,
                 Some(entry_src_info),

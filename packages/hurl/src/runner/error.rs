@@ -453,7 +453,7 @@ mod tests {
             "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
         assert_eq!(
-            error.to_string(
+            error.render(
                 filename,
                 content,
                 Some(entry_source_info),
@@ -495,7 +495,7 @@ HTTP/1.0 200
         );
 
         assert_eq!(
-            error.to_string(
+            error.render(
                 filename,
                 content,
                 Some(entry_source_info),
@@ -532,7 +532,7 @@ xpath "strong(//head/title)" == "Hello"
         "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
     );
         assert_eq!(
-            error.to_string(
+            error.render(
                 filename,
                 content,
                 Some(entry_source_info),
@@ -580,7 +580,7 @@ jsonpath "$.count" >= 5
         );
 
         assert_eq!(
-            error.to_string(
+            error.render(
                 filename,
                 content,
                 Some(entry_source_info),
@@ -621,7 +621,7 @@ HTTP/1.0 200
             "\n 4 | <p>Hello</p>\n   |   +\n   |"
         );
         assert_eq!(
-            error.to_string(
+            error.render(
                 filename,
                 content,
                 Some(entry_source_info),

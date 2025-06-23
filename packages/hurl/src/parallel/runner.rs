@@ -323,7 +323,7 @@ impl ParallelRunner {
                         append,
                     );
                     if let Err(e) = result {
-                        let message = e.to_string(
+                        let message = e.render(
                             &filename_in.to_string(),
                             content,
                             None,

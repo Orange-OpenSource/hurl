@@ -218,7 +218,7 @@ impl Logger {
             return;
         }
         let filename = filename.map_or(String::new(), |f| f.to_string());
-        let message = error.to_string(
+        let message = error.render(
             &filename,
             content,
             Some(entry_src_info),

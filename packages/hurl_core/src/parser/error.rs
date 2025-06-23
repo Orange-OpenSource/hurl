@@ -372,7 +372,7 @@ mod tests {
             kind: ParseErrorKind::UrlInvalidStart,
         };
         assert_eq!(
-            error.to_string(filename, content, None, OutputFormat::Terminal(false)),
+            error.render(filename, content, None, OutputFormat::Terminal(false)),
             r#"Parsing URL
   --> test.hurl:1:5
    |

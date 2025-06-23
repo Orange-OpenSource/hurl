@@ -132,7 +132,7 @@ fn print_output(
             append,
         );
         if let Err(e) = result {
-            return Err(CliError::OutputWrite(e.to_string(
+            return Err(CliError::OutputWrite(e.render(
                 &filename.to_string(),
                 content,
                 None,

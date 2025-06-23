@@ -108,7 +108,7 @@ impl Worker {
                 Ok(h) => h,
                 Err(error) => {
                     let filename = job.filename.to_string();
-                    let message = error.to_string(
+                    let message = error.render(
                         &filename,
                         &content,
                         None,
