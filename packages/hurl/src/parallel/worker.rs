@@ -19,6 +19,7 @@ use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::{fmt, thread};
 
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::parser;
 
 use crate::parallel::job::{Job, JobResult};
@@ -105,8 +106,15 @@ impl Worker {
             let hurl_file = parser::parse_hurl_file(&content);
             let hurl_file = match hurl_file {
                 Ok(h) => h,
-                Err(e) => {
-                    logger.error_parsing_rich(&content, Some(&job.filename), &e);
+                Err(error) => {
+                    let filename = job.filename.to_string();
+                    let message = error.to_string(
+                        &filename,
+                        &content,
+                        None,
+                        OutputFormat::Terminal(logger.color),
+                    );
+                    logger.error_rich(&message);
                     let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
                     _ = tx.send(WorkerMessage::ParsingError(msg));
                     return;

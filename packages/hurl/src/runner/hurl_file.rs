@@ -20,7 +20,7 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::{Entry, OptionKind, SourceInfo};
-use hurl_core::error::DisplaySourceError;
+use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::parser;
 use hurl_core::typing::Count;
@@ -103,9 +103,16 @@ pub fn run(
     let hurl_file = parser::parse_hurl_file(content);
     let hurl_file = match hurl_file {
         Ok(h) => h,
-        Err(e) => {
-            logger.error_parsing_rich(content, filename, &e);
-            return Err(e.description());
+        Err(error) => {
+            let filename = filename.map_or(String::new(), |f| f.to_string());
+            let message = error.to_string(
+                &filename,
+                content,
+                None,
+                OutputFormat::Terminal(logger.color),
+            );
+            logger.error_rich(&message);
+            return Err(error.description());
         }
     };
 
