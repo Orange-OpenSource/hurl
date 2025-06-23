@@ -563,7 +563,14 @@ fn log_errors(
         }
     }
     entry_result.errors.iter().for_each(|error| {
-        logger.error_runtime_rich(content, filename, error, entry_result.source_info);
+        let filename = filename.map_or(String::new(), |f| f.to_string());
+        let message = error.to_string(
+            &filename,
+            content,
+            Some(entry_result.source_info),
+            OutputFormat::Terminal(logger.color),
+        );
+        logger.error_rich(&message);
     });
 }
 

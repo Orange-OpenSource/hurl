@@ -291,24 +291,7 @@ impl Logger {
         self.eprintln(&s.to_string(fmt));
     }
 
-    /// Prints a runtime error to this logger [`Stderr`] instance, no matter what is the verbosity.
-    pub fn error_runtime_rich<E: DisplaySourceError>(
-        &mut self,
-        content: &str,
-        filename: Option<&Input>,
-        error: &E,
-        entry_src_info: SourceInfo,
-    ) {
-        let filename = filename.map_or(String::new(), |f| f.to_string());
-        let message = error.to_string(
-            &filename,
-            content,
-            Some(entry_src_info),
-            OutputFormat::Terminal(self.color),
-        );
-        self.error_rich(&message);
-    }
-
+    /// Prints an error message to this logger [`Stderr`] instance, no matter what is the verbosity.
     pub fn error_rich(&mut self, message: &str) {
         let fmt = self.format();
         let mut s = StyledString::new();
