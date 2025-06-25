@@ -403,7 +403,7 @@ Override value from Environment variable no_proxy.
 
 ### -o, --output <FILE> {#output}
 
-Write output to FILE instead of stdout.
+Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.
 
 ### --parallel {#parallel}
 
