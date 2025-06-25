@@ -203,8 +203,6 @@ In that case, files have to be inlined in the Hurl file.
 
 [Doc](/docs/request.md#multiline-string-body)
 
-
-
 ### Posting a JSON Body
 
 With an inline JSON:
@@ -389,7 +387,6 @@ status < 300
 
 [Doc](/docs/asserting-response.md#status-assert)
 
-
 ### Testing Response Headers
 
 Use implicit response asserts to test header values:
@@ -448,7 +445,6 @@ jsonpath "$.created" isIsoDate
 ```
 
 [Doc](/docs/asserting-response.md#jsonpath-assert)
-
 
 ### Testing HTML Response
 
@@ -598,6 +594,76 @@ file,data.bin;
 
 [Doc](/docs/asserting-response.md#file-body)
 
+## Debug Tips
+
+### Verbose Mode
+
+To get more info on a given request/response, use [`[Options]` section](/docs/request.md#options):
+
+```hurl
+GET https://example.org
+HTTP 200
+
+GET https://example.org/api/cats/123
+[Options]
+very-verbose: true
+HTTP 200
+```
+
+`--verbose` and `--very-verbose` can be also used globally as command line options.
+
+[Doc](/docs/manual.md#very-verbose)
+
+### Error Format
+
+```shell
+$ hurl --test --error-format long *.hurl
+```
+
+[Doc](/docs/manual.md#error-format)
+
+### Output Response Body
+
+Use `--output` on a specific request to get the response body (`-` can be used as standard output):
+
+```hurl
+GET https://foo.com/failure
+[Options]
+# use - to output on standard output, foo.bin to save on disk 
+output: -
+HTTP 200
+
+GET https://foo.com/success
+HTTP 200
+```
+
+[Doc](/docs/manual.md#output)
+
+### Export curl Commands
+
+```shell
+$ hurl ---curl /tmp/curl.txt *.hurl
+```
+
+[Doc](/docs/manual.md#curl)
+
+### Using Proxy
+
+Use `--proxy` on a specific request or globally as command line option:
+
+```hurl
+GET https://foo.com/a
+HTTP 200
+
+GET https://foo.com/b
+[Options]
+proxy: localhost:8888
+HTTP 200
+
+GET https://foo.com/c
+HTTP 200
+```
+
 ## Reports
 
 ### HTML Report
@@ -615,7 +681,6 @@ $ hurl --test --report-json build/report/ *.hurl
 ```
 
 [Doc](/docs/running-tests.md#generating-report)
-
 
 ### JUnit Report
 
@@ -687,7 +752,6 @@ ip == "2001:0db8:85a3:0000:0000:8a2e:0370:733"
 ip startsWith "2001"
 ip isIpv6
 ```
-
 
 ### Polling and Retry
 
