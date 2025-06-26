@@ -204,6 +204,12 @@ HTTP 200
         * [Testing Bytes Content](#testing-bytes-content)
         * [SSL Certificate](#ssl-certificate)
         * [Checking Full Body](#checking-full-body)
+    * [Debug Tips](#debug-tips)
+        * [Verbose Mode](#verbose-mode)
+        * [Error Format](#error-format)
+        * [Output Response Body](#output-response-body)
+        * [Export curl Commands](#export-curl-commands)
+        * [Using Proxy](#using-proxy)
     * [Reports](#reports)
         * [HTML Report](#html-report)
         * [JSON Report](#json-report)
@@ -471,8 +477,6 @@ In that case, files have to be inlined in the Hurl file.
 
 [Doc](https://hurl.dev/docs/request.html#multiline-string-body)
 
-
-
 ### Posting a JSON Body
 
 With an inline JSON:
@@ -657,7 +661,6 @@ status < 300
 
 [Doc](https://hurl.dev/docs/asserting-response.html#status-assert)
 
-
 ### Testing Response Headers
 
 Use implicit response asserts to test header values:
@@ -716,7 +719,6 @@ jsonpath "$.created" isIsoDate
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
-
 
 ### Testing HTML Response
 
@@ -866,6 +868,76 @@ file,data.bin;
 
 [Doc](https://hurl.dev/docs/asserting-response.html#file-body)
 
+## Debug Tips
+
+### Verbose Mode
+
+To get more info on a given request/response, use [`[Options]` section](https://hurl.dev/docs/request.html#options):
+
+```hurl
+GET https://example.org
+HTTP 200
+
+GET https://example.org/api/cats/123
+[Options]
+very-verbose: true
+HTTP 200
+```
+
+`--verbose` and `--very-verbose` can be also used globally as command line options.
+
+[Doc](https://hurl.dev/docs/manual.html#very-verbose)
+
+### Error Format
+
+```shell
+$ hurl --test --error-format long *.hurl
+```
+
+[Doc](https://hurl.dev/docs/manual.html#error-format)
+
+### Output Response Body
+
+Use `--output` on a specific request to get the response body (`-` can be used as standard output):
+
+```hurl
+GET https://foo.com/failure
+[Options]
+# use - to output on standard output, foo.bin to save on disk 
+output: -
+HTTP 200
+
+GET https://foo.com/success
+HTTP 200
+```
+
+[Doc](https://hurl.dev/docs/manual.html#output)
+
+### Export curl Commands
+
+```shell
+$ hurl ---curl /tmp/curl.txt *.hurl
+```
+
+[Doc](https://hurl.dev/docs/manual.html#curl)
+
+### Using Proxy
+
+Use `--proxy` on a specific request or globally as command line option:
+
+```hurl
+GET https://foo.com/a
+HTTP 200
+
+GET https://foo.com/b
+[Options]
+proxy: localhost:8888
+HTTP 200
+
+GET https://foo.com/c
+HTTP 200
+```
+
 ## Reports
 
 ### HTML Report
@@ -883,7 +955,6 @@ $ hurl --test --report-json build/report/ *.hurl
 ```
 
 [Doc](https://hurl.dev/docs/running-tests.html#generating-report)
-
 
 ### JUnit Report
 
@@ -955,7 +1026,6 @@ ip == "2001:0db8:85a3:0000:0000:8a2e:0370:733"
 ip startsWith "2001"
 ip isIpv6
 ```
-
 
 ### Polling and Retry
 
