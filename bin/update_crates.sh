@@ -43,12 +43,10 @@ convert_toml_crates_to_key_value() {
 
 get_crate_latest_version() {
     # init args
-    crate_url="$1"
+    crate="$1"
 
     # get crate latest version
-    crate_object=$(curl -kLs "${crate_url}" || true)
-    crate_max_stable_version=$(echo "${crate_object}" | (jq -r .crate.max_stable_version 2>/dev/null || true))
-    last_version=$(echo "${crate_max_stable_version}" | (grep --extended-regexp --only-matching "^[0-9]*\.[0-9]*\.[0-9]*" || true))
+    last_version=$( (cargo info "${crate}" 2<&1 || true) | (grep "^version: " || true) | cut -d':' -f2 | tr -d ' ' | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
     echo "${last_version}"
 }
 
@@ -112,10 +110,9 @@ main() {
         echo -e "\n--------------------------------------------------------"
         echo -e "### Crates updates for *${toml_file}*\n"
         while read -r crate actual_version; do
-            crate_url="${crates_api_root_url}/${crate}"
-            last_version=$(get_crate_latest_version "${crate_url}")
+            last_version=$(get_crate_latest_version "${crate}")
             if [ -z "${last_version}" ]; then
-                echo "${color_red}runtime error${color_reset}, i could not get last version from ${crate_url}"
+                echo "${color_red}runtime error${color_reset}, i could not get last version for ${crate}"
                 return 1
             fi
             echo -n "- ${crate} ${actual_version} "
@@ -127,6 +124,7 @@ main() {
                     updated_count=$((updated_count + 1))
                 else
                     update_crate_version_in_toml "${crate}" "${actual_version}" "${last_version}" "${toml_file}"
+                    crate_url="${crates_api_root_url}/${crate}"
                     get_crate_github_release_body "${crate_url}" "${last_version}"
                 fi
             fi
@@ -164,4 +162,3 @@ main() {
 
 # run
 main "$@"
-
