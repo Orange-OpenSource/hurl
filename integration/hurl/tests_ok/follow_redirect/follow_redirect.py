@@ -59,6 +59,7 @@ def follow_redirect_308():
 @app.route("/follow-redirect-basic-auth")
 def follow_redirect_basic_auth():
     assert "Authorization" in request.headers
+    assert request.cookies["fruit"] == "lemon"
     change_host = request.args.get("change_host") == "true"
     if change_host:
         return redirect("http://127.0.0.1:8000/followed-redirect-basic-auth")
@@ -68,6 +69,8 @@ def follow_redirect_basic_auth():
 
 @app.route("/followed-redirect-basic-auth")
 def followed_redirect_basic_auth():
+    # Cookies follows redirection (contrary to 'Set-Cookie' header that may be filtered)
+    assert request.cookies["fruit"] == "lemon"
     # When host changes, authorization should be filtered
     if request.headers["Host"] == "localhost:8000":
         assert "Authorization" in request.headers

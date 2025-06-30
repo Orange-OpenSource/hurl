@@ -64,6 +64,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location: true
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -77,6 +79,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location: true
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -89,6 +93,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location: true
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -100,6 +106,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 [Options]
 location: true
 user: bob@email.com:secret
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -110,6 +118,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 [Options]
 location: true
 user: bob@email.com:secret
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -122,6 +132,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 location: true
 [BasicAuth]
 bob@email.com: secret
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -133,6 +145,8 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 location: true
 [BasicAuth]
 bob@email.com: secret
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
@@ -144,6 +158,8 @@ GET http://localhost:8000/follow-redirect-basic-auth-trusted
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location-trusted: true
+[Cookies]
+fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
