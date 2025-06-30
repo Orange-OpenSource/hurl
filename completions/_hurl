@@ -34,7 +34,7 @@ _hurl() {
     '--location-trusted[Follow redirects but allows sending the name + password to all hosts that the site may redirect to]' \
     '--from-entry[Execute Hurl file from ENTRY_NUMBER (starting at 1)]: :' \
     '*--glob[Specify input files that match the given GLOB. Multiple glob flags may be used]: :' \
-    '*(-H --header)'{-H,--header}'[Pass custom header(s) to server]: :' \
+    '(-H --header)*'{-H,--header}'[Pass custom header(s) to server]: :' \
     '(-0 --http1.0)'{-0,--http1.0}'[Tell Hurl to use HTTP version 1.0]' \
     '--http1.1[Tell Hurl to use HTTP version 1.1]' \
     '--http2[Tell Hurl to use HTTP version 2]' \

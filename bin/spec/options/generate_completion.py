@@ -123,17 +123,15 @@ def zsh_option(option: Option):
         action = ": :"
 
     if option.short and option.long:
-        option_specifier = (
-            f"(-{option.short} --{option.long})'{{-{option.short},--{option.long}}}'"
-        )
+        option_specifier = f"(-{option.short} --{option.long}){cardinality}'{{-{option.short},--{option.long}}}'"
     elif option.long:
-        option_specifier = f"--{option.long}"
+        option_specifier = f"{cardinality}--{option.long}"
     elif option.short:
-        option_specifier = f"-{option.short}"
+        option_specifier = f"{cardinality}-{option.short}"
     else:
         raise ValueError("No long or short option specified")
 
-    return f"'{cardinality}{option_specifier}[{help}]{action}' \\"
+    return f"'{option_specifier}[{help}]{action}' \\"
 
 
 def generate_fish_completion(name: str, options: List[Option]):
