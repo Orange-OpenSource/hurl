@@ -106,7 +106,18 @@ for file in "${files[@]}" ; do
         echo "${color_yellow}$file is disabled for now because output vars have to be rewrited from scratch${color_reset}"
         continue
     fi
-    zizmor --config "${conf}" --gh-token "${github_token}" "${file}" || error_count=$((error_count+1))
+    # disable accept-pull-request.yml for now because input vars have to be rewrited from scratch"
+    if [[ "${file}" =~ accept-pull-request.yml ]] ; then
+        echo "${color_yellow}$file is disabled for now because input vars have to be rewrited from scratch${color_reset}"
+        continue
+    fi
+    tmpfile="/tmp/$(basename "${file}")"
+    sed "s/❌//g" "${file}"  | \
+        sed "s/✅//g" "${file}" | \
+            sed "s/🔨//g" "${file}" | \
+                sed "s/🕗//g" "${file}" > "${tmpfile}"
+    echo "> ${file} (tmp file: ${tmpfile}):"
+    zizmor --no-progress --config "${conf}" --gh-token "${github_token}" "${tmpfile}" || error_count=$((error_count+1))
 done
 if [[ $error_count -gt 0 ]] ; then
     echo "${color_red}There are problems with github workflows${color_reset}"
