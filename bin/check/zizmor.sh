@@ -112,10 +112,10 @@ for file in "${files[@]}" ; do
         continue
     fi
     tmpfile="/tmp/$(basename "${file}")"
-    sed "s/❌//g" "${file}"  | \
-        sed "s/✅//g" "${file}" | \
-            sed "s/🔨//g" "${file}" | \
-                sed "s/🕗//g" "${file}" > "${tmpfile}"
+    (sed "s/❌//g" "${file}" 2>/dev/null || true) | \
+        (sed "s/✅//g" "${file}" 2>/dev/null || true) | \
+            (sed "s/🔨//g" "${file}" 2>/dev/null || true) | \
+                (sed "s/🕗//g" "${file}" 2>/dev/null || true) > "${tmpfile}"
     echo "> ${file} (tmp file: ${tmpfile}):"
     zizmor --no-progress --config "${conf}" --gh-token "${github_token}" "${tmpfile}" || error_count=$((error_count+1))
 done
