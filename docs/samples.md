@@ -594,6 +594,54 @@ file,data.bin;
 
 [Doc](/docs/asserting-response.md#file-body)
 
+### Testing Redirections
+
+By default, Hurl doesn't follow redirection so each step of a redirect must be run manually and can be analysed:
+
+```hurl
+GET https://example.org/step1
+HTTP 301
+[Asserts]
+header "Location" == "https://example.org/step2"
+
+
+GET https://example.org/step2
+HTTP 301
+[Asserts]
+header "Location" == "https://example.org/step3"
+
+
+GET https://example.org/step3
+HTTP 200
+```
+
+[Doc](/docs/asserting-response.md)
+
+Using [`--location`] and [`--location-trusted`] (either with command line option or per request), Hurl follows 
+redirection and each step of the redirection can be checked.
+
+```hurl
+GET https://example.org/step1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+redirects count == 2
+redirects nth 0 location == "https://example.org/step2"
+redirects nth 1 location == "https://example.org/step3"
+```
+
+```hurl
+GET https://example.org/step1
+[Options]
+location-trusted: true
+HTTP 200
+[Asserts]
+redirects last location == "https://example.org/step2"
+```
+
+[Doc](/docs/asserting-response.md#redirects-assert)
+
 ## Debug Tips
 
 ### Verbose Mode
@@ -988,3 +1036,5 @@ HTTP 200
 [`--resolve`]: /docs/manual.md#resolve
 [`--connect-to`]: /docs/manual.md#connect-to
 [Functions]: /docs/templates.md#functions
+[`--location`]: /docs/manual.md#location
+[`--location-trusted`]: /docs/manual.md#location-trusted

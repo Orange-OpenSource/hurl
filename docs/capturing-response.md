@@ -62,6 +62,7 @@ A query can extract data from
   - [`md5`](#md5-capture)
 - others:
   - [`url`](#url-capture)
+  - [`redirects`](#redirects-capture)
   - [`ip`](#ip-address-capture)
   - [`variable`](#variable-capture)
   - [`duration`](#duration-capture)
@@ -336,6 +337,25 @@ location: true
 HTTP 200
 [Captures]
 landing_url: url
+```
+
+### Redirects capture
+
+Capture each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+[`--location` option]). Redirects capture consists of a variable name, followed by a `:`, and the keyword `redirects`.
+Redirects query returns a collection so each step of the redirection can be capture.
+
+```hurl
+GET https://example.org/redirecting/1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+redirects count == 3
+[Captures]
+step1: redirects nth 0 location
+step2: redirects nth 1 location
+step3: redirects nth 2 location
 ```
 
 ### IP address capture

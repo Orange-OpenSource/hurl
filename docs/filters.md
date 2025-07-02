@@ -75,6 +75,7 @@ jsonpath "$.books" count == 12
 | [htmlUnescape](#htmlunescape)               | Converts all named and numeric character references (e.g. `&gt;`, `&#62;`, `&#x3e;`) to the corresponding Unicode characters.          | string           | string |
 | [jsonpath](#jsonpath)                       | Evaluates a [JSONPath] expression.                                                                                                     | string           | any    |
 | [last](#last)                               | Returns the last element from a collection.                                                                                            | collection       | any    |
+| [location](#location)                       | Returns the target location URL of a redirection.                                                                                      | response         | string |
 | [nth](#nth)                                 | Returns the element from a collection at a zero-based index, accepts negative indices for indexing from the end of the collection.     | collection       | any    |
 | [regex](#regex)                             | Extracts regex capture group. Pattern must have at least one capture group.                                                            | string           | string |
 | [replace](#replace)                         | Replaces all occurrences of old string with new string.                                                                                | string           | string |
@@ -249,6 +250,21 @@ GET https://example.org
 HTTP 200
 [Asserts]
 jsonpath "$.books" last == "Les Misérables"
+```
+
+### location
+
+Returns the target URL location of a redirection.
+
+```hurl
+GET https://example.org/step1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+redirects count == 2
+redirects nth 0 location == "https://example.org/step2"
+redirects nth 1 location == "https://example.org/step3"
 ```
 
 ### nth

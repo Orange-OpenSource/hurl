@@ -86,7 +86,6 @@ The asserts order in a Hurl file is:
 </div>
 </div>
 
-
 ## Implicit asserts
 
 ### Version - Status
@@ -371,6 +370,7 @@ can extract data from
   - [`md5`](#md5-assert)
 - others:
   - [`url`](#url-assert)
+  - [`redirects`](#redirects-assert)
   - [`ip`](#ip-address-assert)
   - [`variable`](#variable-assert)
   - [`duration`](#duration-assert)
@@ -896,6 +896,24 @@ HTTP 200
 url == "https://example.org/redirected"
 ```
 
+### Redirects assert
+
+Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+[`--location` option]). Redirects assert consists of the keyword `redirects` followed by a predicate function and value. The `redirects`
+query returns a collection of redirections that can be tested with a [`location` filter]:
+
+```hurl
+GET https://example.org/redirecting/1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+redirects count == 3
+redirects nth 0 location == "https://example.org/redirecting/2"
+redirects nth 1 location == "https://example.org/redirecting/3"
+redirects nth 2 location == "https://example.org/redirected"
+```
+
 ### IP address assert
 
 Check the IP address of the last connection. The value of the `ip` query is a string.
@@ -979,3 +997,4 @@ certificate "Serial-Number" matches "[0-9af]+"
 [`Content-Encoding` HTTP header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 [`Content-Type` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
 [`body` assert]: #body-assert
+[`location` filter]: /docs/filters.md#location

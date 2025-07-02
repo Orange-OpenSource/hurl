@@ -80,12 +80,12 @@ of the redirection, allowing insertion of asserts in each response.
 
 ```hurl
 # First entry, test the redirection (status code and 'Location' header)
-GET https://google.fr
+GET https://example.org
 HTTP 301
-Location: https://www.google.fr/
+Location: https://www.example.org
 
 # Second entry, the 200 OK response
-GET https://www.google.fr
+GET https://www.example.org
 HTTP 200
 ```
 
@@ -94,19 +94,64 @@ to be followed. In this case, asserts are executed on the last received response
 redirections can be limited with [`--max-redirs`].
 
 ```hurl
-# Running hurl --location google.hurl
-GET https://google.fr
+# Running hurl --location foo.hurl
+GET https://example.org
 HTTP 200
 ```
 
-Finally, you can force redirection on a particular request with an [`[Options]` section][options] and the[`--location`] 
+Finally, you can force redirection on a particular request with an [`[Options]` section][options] and the [`--location`] 
 / [`--location-trusted`] options:
 
 ```hurl
-GET https://google.fr
+GET https://example.org
 [Options]
 location-trusted: true
 HTTP 200
+```
+
+Redirections can be tested either by:
+
+- running and asserting each step of redirection:
+
+```hurl
+GET https://example.org/step1
+HTTP 301
+[Asserts]
+header "Location" == "https://example.org/step2"
+
+
+GET https://example.org/step2
+HTTP 301
+[Asserts]
+header "Location" == "https://example.org/step3"
+
+
+GET https://example.org/step3
+HTTP 200
+```
+
+- using [`--location`] / [`--location-trusted`], testing each step with [`redirects` query]:
+
+```hurl
+GET https://example.org/step1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+redirects count == 2
+redirects nth 0 location == "https://example.org/step2"
+redirects nth 1 location == "https://example.org/step3"
+```
+
+[`url` query] can also be used to get the final effective URL:
+
+```hurl
+GET https://example.org/step1
+[Options]
+location: true
+HTTP 200
+[Asserts]
+url == "https://example.org/step3"
 ```
 
 ### Retry
@@ -204,4 +249,4 @@ For complete reference, below is a diagram for the executed entries.
 [`--retry-interval`]: /docs/manual.md#retry-interval
 [`delay`]: /docs/manual.md#retry 
 [`repeat`]: /docs/manual.md#repeat
-
+[`redirects` query]: /docs/asserting-response.md#redirects-assert
