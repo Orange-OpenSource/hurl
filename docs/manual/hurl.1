@@ -1,4 +1,4 @@
-.TH hurl 1 "25 Jun 2025" "hurl 7.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "04 Jul 2025" "hurl 7.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -419,8 +419,6 @@ Use the specified proxy.
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
 times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
 
-This is a cli-only option.
-
 .IP "--report-html <DIR> "
 
 Generate HTML report in DIR.
@@ -470,6 +468,8 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 .IP "--secret <NAME=VALUE> "
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
+This is a cli-only option.
 
 .IP "--ssl-no-revoke "
 

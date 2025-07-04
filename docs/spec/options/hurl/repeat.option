@@ -4,7 +4,6 @@ value: NUM
 value_parser: clap::value_parser!(i32).range(-1..)
 help: Repeat the input files sequence NUM times, -1 for infinite loop
 help_heading: Run options
-cli_only: true
 ---
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
 times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.

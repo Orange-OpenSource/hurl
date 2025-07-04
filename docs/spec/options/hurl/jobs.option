@@ -2,7 +2,7 @@ name: jobs
 long: jobs
 value: NUM
 value_parser: clap::value_parser!(u32).range(1..)
-help: Maximum number of parallel jobs
+help: Maximum number of parallel jobs, 0 to disable parallel execution
 help_heading: Run options
 cli_only: true
 ---

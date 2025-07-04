@@ -438,8 +438,6 @@ Use the specified proxy.
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
 times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
 
-This is a cli-only option.
-
 ### --report-html <DIR> {#report-html}
 
 Generate HTML report in DIR.
@@ -489,6 +487,8 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 ### --secret <NAME=VALUE> {#secret}
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
+This is a cli-only option.
 
 ### --ssl-no-revoke {#ssl-no-revoke}
 

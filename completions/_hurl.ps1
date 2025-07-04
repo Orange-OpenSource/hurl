@@ -50,7 +50,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--interactive', 'interactive', [CompletionResultType]::ParameterName, 'Turn on interactive mode')
             [CompletionResult]::new('--ipv4', 'ipv4', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6')
             [CompletionResult]::new('--ipv6', 'ipv6', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4')
-            [CompletionResult]::new('--jobs', 'jobs', [CompletionResultType]::ParameterName, 'Maximum number of parallel jobs')
+            [CompletionResult]::new('--jobs', 'jobs', [CompletionResultType]::ParameterName, 'Maximum number of parallel jobs, 0 to disable parallel execution')
             [CompletionResult]::new('--json', 'json', [CompletionResultType]::ParameterName, 'Output each Hurl file result to JSON')
             [CompletionResult]::new('--limit-rate', 'limit-rate', [CompletionResultType]::ParameterName, 'Specify the maximum transfer rate in bytes/second, for both downloads and uploads')
             [CompletionResult]::new('--max-filesize', 'max-filesize', [CompletionResultType]::ParameterName, 'Specify the maximum size in bytes of a file to download')

@@ -45,7 +45,7 @@ _hurl() {
     '--interactive[Turn on interactive mode]' \
     '(-4 --ipv4)'{-4,--ipv4}'[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]' \
     '(-6 --ipv6)'{-6,--ipv6}'[Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4]' \
-    '--jobs[Maximum number of parallel jobs]: :' \
+    '--jobs[Maximum number of parallel jobs, 0 to disable parallel execution]: :' \
     '--json[Output each Hurl file result to JSON]' \
     '--limit-rate[Specify the maximum transfer rate in bytes/second, for both downloads and uploads]: :' \
     '--max-filesize[Specify the maximum size in bytes of a file to download]: :' \
