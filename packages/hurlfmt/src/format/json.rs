@@ -704,7 +704,7 @@ impl ToJson for FilterValue {
 
 impl ToJson for Placeholder {
     fn to_json(&self) -> JValue {
-        JValue::String(format!("{{{{{}}}}}", self))
+        JValue::String(format!("{{{{{self}}}}}"))
     }
 }
 

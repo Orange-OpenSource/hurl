@@ -65,7 +65,7 @@ fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Report
     let start = 1;
     let end = testcases.len();
 
-    let mut s = format!("{}\n", TAP_REPORT_VERSION_MARKER);
+    let mut s = format!("{TAP_REPORT_VERSION_MARKER}\n");
     s.push_str(format!("{start}..{end}\n").as_str());
 
     for (i, testcase) in testcases.iter().enumerate() {

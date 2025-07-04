@@ -541,14 +541,14 @@ impl Client {
         // implicitly on this request.
         if !headers.contains_key(CONTENT_TYPE) {
             if let Some(s) = implicit_content_type {
-                list.append(&format!("{}: {s}", CONTENT_TYPE))?;
+                list.append(&format!("{CONTENT_TYPE}: {s}"))?;
             } else {
                 // We remove default `Content-Type` headers added by curl because we want to
                 // explicitly manage this header.
                 // For instance, with --data option, curl will send a `Content-type: application/x-www-form-urlencoded`
                 // header. From <https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html>, we can delete
                 // the headers added by libcurl by adding a header with no content.
-                list.append(&format!("{}:", CONTENT_TYPE))?;
+                list.append(&format!("{CONTENT_TYPE}:"))?;
             }
         }
 
@@ -560,7 +560,7 @@ impl Client {
         if !headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want to explicitly manage
             // this header.
-            list.append(&format!("{}:", EXPECT))?;
+            list.append(&format!("{EXPECT}:"))?;
         }
 
         if !headers.contains_key(USER_AGENT) {
@@ -571,7 +571,7 @@ impl Client {
                     format!("hurl/{pkg_version}")
                 }
             };
-            list.append(&format!("{}: {user_agent}", USER_AGENT))?;
+            list.append(&format!("{USER_AGENT}: {user_agent}"))?;
         }
 
         if let Some(user) = &options.user {
@@ -587,12 +587,12 @@ impl Client {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
                 if !headers.contains_key(AUTHORIZATION) {
-                    list.append(&format!("{}: Basic {authorization}", AUTHORIZATION))?;
+                    list.append(&format!("{AUTHORIZATION}: Basic {authorization}"))?;
                 }
             }
         }
         if options.compressed && !headers.contains_key(ACCEPT_ENCODING) {
-            list.append(&format!("{}: gzip, deflate, br", ACCEPT_ENCODING))?;
+            list.append(&format!("{ACCEPT_ENCODING}: gzip, deflate, br"))?;
         }
 
         self.handle.http_headers(list)?;

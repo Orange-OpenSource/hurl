@@ -413,8 +413,8 @@ pub enum IntegerValue {
 impl fmt::Display for IntegerValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            IntegerValue::Literal(v) => write!(f, "{}", v),
-            IntegerValue::Placeholder(v) => write!(f, "{}", v),
+            IntegerValue::Literal(v) => write!(f, "{v}"),
+            IntegerValue::Placeholder(v) => write!(f, "{v}"),
         }
     }
 }

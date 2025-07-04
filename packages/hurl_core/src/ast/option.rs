@@ -175,8 +175,8 @@ pub enum BooleanOption {
 impl fmt::Display for BooleanOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BooleanOption::Literal(v) => write!(f, "{}", v),
-            BooleanOption::Placeholder(v) => write!(f, "{}", v),
+            BooleanOption::Literal(v) => write!(f, "{v}"),
+            BooleanOption::Placeholder(v) => write!(f, "{v}"),
         }
     }
 }
@@ -190,8 +190,8 @@ pub enum NaturalOption {
 impl fmt::Display for NaturalOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            NaturalOption::Literal(v) => write!(f, "{}", v),
-            NaturalOption::Placeholder(v) => write!(f, "{}", v),
+            NaturalOption::Literal(v) => write!(f, "{v}"),
+            NaturalOption::Placeholder(v) => write!(f, "{v}"),
         }
     }
 }
@@ -205,8 +205,8 @@ pub enum CountOption {
 impl fmt::Display for CountOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            CountOption::Literal(v) => write!(f, "{}", v),
-            CountOption::Placeholder(v) => write!(f, "{}", v),
+            CountOption::Literal(v) => write!(f, "{v}"),
+            CountOption::Placeholder(v) => write!(f, "{v}"),
         }
     }
 }
@@ -220,8 +220,8 @@ pub enum DurationOption {
 impl fmt::Display for DurationOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            DurationOption::Literal(v) => write!(f, "{}", v),
-            DurationOption::Placeholder(v) => write!(f, "{}", v),
+            DurationOption::Literal(v) => write!(f, "{v}"),
+            DurationOption::Placeholder(v) => write!(f, "{v}"),
         }
     }
 }
@@ -257,7 +257,7 @@ impl fmt::Display for VariableValue {
             VariableValue::Number(n) => n.to_string(),
             VariableValue::String(s) => s.to_string(),
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 

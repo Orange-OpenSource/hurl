@@ -155,7 +155,7 @@ fn print_output(
             } else {
                 "stdout".to_string()
             };
-            let message = format!("{filename} can not be written ({})", e);
+            let message = format!("{filename} can not be written ({e})");
             return Err(CliError::OutputWrite(message));
         }
     }

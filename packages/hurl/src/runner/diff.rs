@@ -41,7 +41,7 @@ pub fn diff(old: &str, new: &str) -> Vec<DiffHunk> {
                 ChangeTag::Insert => "+",
                 ChangeTag::Equal => " ",
             };
-            let line = format!("{}{}", sign, change);
+            let line = format!("{sign}{change}");
             let style = match change.tag() {
                 ChangeTag::Delete => Style::new().red(),
                 ChangeTag::Insert => Style::new().green(),

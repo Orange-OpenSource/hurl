@@ -100,7 +100,7 @@ fn process_check_command(input_files: &[Input], output_file: Option<PathBuf>, lo
                     invalid_input = true;
                 }
                 CheckError::Unformatted(filename) => {
-                    output_all.push_str(&format!("would reformat: {}\n", filename));
+                    output_all.push_str(&format!("would reformat: {filename}\n"));
                     count += 1;
                 }
             }

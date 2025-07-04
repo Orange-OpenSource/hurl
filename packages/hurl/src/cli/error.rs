@@ -56,10 +56,10 @@ impl From<JobError> for CliError {
 impl fmt::Display for CliError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            CliError::InputRead(message) => write!(f, "{}", message),
+            CliError::InputRead(message) => write!(f, "{message}"),
             CliError::Parsing => Ok(()),
-            CliError::OutputWrite(message) => write!(f, "{}", message),
-            CliError::GenericIO(message) => write!(f, "{}", message),
+            CliError::OutputWrite(message) => write!(f, "{message}"),
+            CliError::GenericIO(message) => write!(f, "{message}"),
         }
     }
 }

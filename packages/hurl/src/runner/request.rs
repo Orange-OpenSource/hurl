@@ -51,7 +51,7 @@ pub fn eval_request(
     if let Some(kv) = &request.basic_auth() {
         let name = template::eval_template(&kv.key, variables)?;
         let value = template::eval_template(&kv.value, variables)?;
-        let user_password = format!("{}:{}", name, value);
+        let user_password = format!("{name}:{value}");
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
         let value = format!("Basic {authorization}");

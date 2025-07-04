@@ -125,21 +125,21 @@ fn headers_params(
             && content_type != "multipart/form-data"
         {
             args.push("--header".to_string());
-            args.push(format!("'{}: {content_type}'", CONTENT_TYPE));
+            args.push(format!("'{CONTENT_TYPE}: {content_type}'"));
         }
     } else if !body.bytes().is_empty() {
         match body {
             Body::Text(_) => {
                 args.push("--header".to_string());
-                args.push(format!("'{}:'", CONTENT_TYPE));
+                args.push(format!("'{CONTENT_TYPE}:'"));
             }
             Body::Binary(_) => {
                 args.push("--header".to_string());
-                args.push(format!("'{}: application/octet-stream'", CONTENT_TYPE));
+                args.push(format!("'{CONTENT_TYPE}: application/octet-stream'"));
             }
             Body::File(_, _) => {
                 args.push("--header".to_string());
-                args.push(format!("'{}:'", CONTENT_TYPE));
+                args.push(format!("'{CONTENT_TYPE}:'"));
             }
         }
     }

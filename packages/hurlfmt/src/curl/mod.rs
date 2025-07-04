@@ -103,7 +103,7 @@ fn format(
     let mut s = format!("{method} {url}");
     for header in headers {
         if let Some(stripped) = header.strip_suffix(";") {
-            s.push_str(format!("\n{}:", stripped).as_str());
+            s.push_str(format!("\n{stripped}:").as_str());
         } else {
             s.push_str(format!("\n{header}").as_str());
         }
@@ -400,7 +400,7 @@ verbose: true
         let flags = vec!["-v", "--verbose"];
         for flag in flags {
             assert_eq!(
-                parse_line(format!("curl {} http://localhost:8000/hello", flag).as_str()).unwrap(),
+                parse_line(format!("curl {flag} http://localhost:8000/hello").as_str()).unwrap(),
                 hurl_str
             );
         }

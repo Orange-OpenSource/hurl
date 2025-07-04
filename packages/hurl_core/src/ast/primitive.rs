@@ -312,9 +312,9 @@ pub enum Number {
 impl fmt::Display for Number {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            Number::Float(value) => write!(f, "{}", value),
-            Number::Integer(value) => write!(f, "{}", value),
-            Number::BigInteger(value) => write!(f, "{}", value),
+            Number::Float(value) => write!(f, "{value}"),
+            Number::Integer(value) => write!(f, "{value}"),
+            Number::BigInteger(value) => write!(f, "{value}"),
         }
     }
 }
@@ -549,8 +549,8 @@ pub enum ExprKind {
 impl fmt::Display for ExprKind {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            ExprKind::Variable(variable) => write!(f, "{}", variable),
-            ExprKind::Function(function) => write!(f, "{}", function),
+            ExprKind::Variable(variable) => write!(f, "{variable}"),
+            ExprKind::Function(function) => write!(f, "{function}"),
         }
     }
 }

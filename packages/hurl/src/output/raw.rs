@@ -91,7 +91,7 @@ pub fn write_last_body(
                 "stdout".to_string()
             };
             let source_info = last_entry.source_info;
-            let kind = OutputErrorKind::Io(format!("{filename} can not be written ({})", e));
+            let kind = OutputErrorKind::Io(format!("{filename} can not be written ({e})"));
             OutputError::new(source_info, kind)
         })?,
     }
