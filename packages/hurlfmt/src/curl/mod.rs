@@ -88,15 +88,15 @@ fn parse_line(s: &str) -> Result<String, String> {
     let cookies = matches::cookies(&arg_matches);
     let options = matches::options(&arg_matches);
     let body = matches::body(&arg_matches);
-    let s = format(&method, &url, headers, cookies, &options, body);
+    let s = format(&method, &url, &headers, &cookies, &options, body);
     Ok(s)
 }
 
 fn format(
     method: &str,
     url: &str,
-    headers: Vec<String>,
-    cookies: Vec<String>,
+    headers: &[String],
+    cookies: &[String],
     options: &[HurlOption],
     body: Option<String>,
 ) -> String {
