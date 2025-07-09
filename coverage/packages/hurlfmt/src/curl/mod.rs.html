@@ -1493,7 +1493,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let s = format(&amp;method, &amp;url, headers, cookies, &amp;options, body);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let s = format(&amp;method, &amp;url, &amp;headers, &amp;cookies, &amp;options, body);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1605,7 +1605,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    headers: Vec&lt;String&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">    headers: &amp;[String],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1621,7 +1621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    cookies: Vec&lt;String&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">    cookies: &amp;[String],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6572,7 +6572,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-07-07 11:48</p>
+                    <p class="heading">Date: 2025-07-09 05:38</p>
                 </div>
             
         </footer>
