@@ -28,14 +28,11 @@ pub fn eval_url_decode(
 ) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
-            match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
-                Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
-                Err(_) => {
-                    let kind =
-                        RunnerErrorKind::FilterInvalidInput("invalid UTF-8 stream".to_string());
-                    Err(RunnerError::new(source_info, kind, assert))
-                }
-            }
+            // We can use `decode_utf8_lossy` here instead of `decode_utf8` because our input
+            // is an UTF-8 string going to another UTF-8 string (and not any bytes as input that
+            // may be decoded as an invalid UTF-8 string.)
+            let decoded = percent_encoding::percent_decode_str(value).decode_utf8_lossy();
+            Ok(Some(Value::String(decoded.to_string())))
         }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
