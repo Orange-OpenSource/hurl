@@ -34,13 +34,13 @@ pub fn eval_base64_url_safe_decode(
             Err(err) => match err {
                 InvalidPadding => {
                     let kind = RunnerErrorKind::FilterInvalidInput(
-                        "Base64 string contains padding (use base64Decode instead)".to_string(),
+                        "base64 string contains padding".to_string(),
                     );
                     Err(RunnerError::new(source_info, kind, assert))
                 }
                 _ => {
                     let kind =
-                        RunnerErrorKind::FilterInvalidInput("Invalid base64 string".to_string());
+                        RunnerErrorKind::FilterInvalidInput("string is not base64".to_string());
                     Err(RunnerError::new(source_info, kind, assert))
                 }
             },
@@ -94,7 +94,7 @@ mod tests {
         );
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("Invalid base64 string".to_string())
+            RunnerErrorKind::FilterInvalidInput("string is not base64".to_string())
         );
     }
 
@@ -114,9 +114,7 @@ mod tests {
         );
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput(
-                "Base64 string contains padding (use base64Decode instead)".to_string()
-            )
+            RunnerErrorKind::FilterInvalidInput("base64 string contains padding".to_string())
         );
     }
 

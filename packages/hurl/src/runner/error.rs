@@ -86,6 +86,7 @@ pub enum RunnerErrorKind {
     },
     FilterDecode(String),
     FilterInvalidEncoding(String),
+    /// Input of the filter is not valid, with a given reason.
     FilterInvalidInput(String),
     FilterInvalidFormatSpecifier(String),
     FilterMissingInput,
@@ -241,8 +242,8 @@ impl DisplaySourceError for RunnerError {
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
-            RunnerErrorKind::FilterInvalidInput(message) => {
-                let message = &format!("invalid filter input: {message}");
+            RunnerErrorKind::FilterInvalidInput(reason) => {
+                let message = &format!("invalid filter input: {reason}");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

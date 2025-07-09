@@ -32,7 +32,7 @@ pub fn eval_url_decode(
                 Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 Err(_) => {
                     let kind =
-                        RunnerErrorKind::FilterInvalidInput("Invalid UTF-8 stream".to_string());
+                        RunnerErrorKind::FilterInvalidInput("invalid UTF-8 stream".to_string());
                     Err(RunnerError::new(source_info, kind, assert))
                 }
             }

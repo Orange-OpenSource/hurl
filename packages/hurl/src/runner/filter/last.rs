@@ -29,7 +29,7 @@ pub fn eval_last(
         Value::List(values) => match values.last().cloned() {
             Some(last_value) => Ok(Some(last_value)),
             None => {
-                let kind = RunnerErrorKind::FilterInvalidInput("List is empty".to_string());
+                let kind = RunnerErrorKind::FilterInvalidInput("list is empty".to_string());
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
@@ -86,7 +86,7 @@ mod tests {
 
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("List is empty".to_string())
+            RunnerErrorKind::FilterInvalidInput("list is empty".to_string())
         );
     }
 

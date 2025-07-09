@@ -53,7 +53,7 @@ fn try_nth<U>(items: &[U], index: i64) -> Result<&U, String> {
     } else if index < 0 && len - index.abs() >= 0 {
         &items[(len - index.abs()) as usize]
     } else {
-        let error = format!("Out of bound - size is {len}");
+        let error = format!("out of bound - size is {len}");
         return Err(error);
     };
     Ok(value)
@@ -130,7 +130,7 @@ mod tests {
             .unwrap(),
             RunnerError::new(
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                RunnerErrorKind::FilterInvalidInput("Out of bound - size is 2".to_string()),
+                RunnerErrorKind::FilterInvalidInput("out of bound - size is 2".to_string()),
                 false
             )
         );
@@ -177,7 +177,7 @@ mod tests {
             .unwrap(),
             RunnerError::new(
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                RunnerErrorKind::FilterInvalidInput("Out of bound - size is 1".to_string()),
+                RunnerErrorKind::FilterInvalidInput("out of bound - size is 1".to_string()),
                 false
             )
         );
@@ -188,9 +188,9 @@ mod tests {
         let values = [12, 4, 5];
         assert_eq!(try_nth(&values, 0).unwrap(), &12);
         assert_eq!(try_nth(&values, 2).unwrap(), &5);
-        assert_eq!(try_nth(&values, 3).unwrap_err(), "Out of bound - size is 3");
+        assert_eq!(try_nth(&values, 3).unwrap_err(), "out of bound - size is 3");
         assert_eq!(try_nth(&values, -1).unwrap(), &5);
         assert_eq!(try_nth(&values, -3).unwrap(), &12);
-        assert_eq!(try_nth(&values, 4).unwrap_err(), "Out of bound - size is 3");
+        assert_eq!(try_nth(&values, 4).unwrap_err(), "out of bound - size is 3");
     }
 }

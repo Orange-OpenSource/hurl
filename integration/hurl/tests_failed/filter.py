@@ -7,7 +7,7 @@ def error_filter():
     return Response(
         """{
           "file":"5L2g5aW95LiW5",
-          "text_encoded":"PDw_Pz8-Pg",
+          "base64_string":"SGVsbG8gV29ybGQ=",
           "id":"123x",
           "status": true,
           "list": [1,2,3],

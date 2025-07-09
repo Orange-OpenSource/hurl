@@ -4,7 +4,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
  4 | jsonpath "$.file" base64Decode == hex,e4bda0e5a5bde4b896e7;
-   |                   ^^^^^^^^^^^^ invalid filter input: Invalid base64 string
+   |                   ^^^^^^^^^^^^ invalid filter input: string is not base64
    |
 
 error: Filter error
@@ -31,17 +31,16 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
  7 | jsonpath "$.file" base64UrlSafeDecode == hex,e4bda0e5a5bde4b896e7;
-   |                   ^^^^^^^^^^^^^^^^^^^ invalid filter input: Invalid base64 string
+   |                   ^^^^^^^^^^^^^^^^^^^ invalid filter input: string is not base64
    |
 
-error: Assert failure
-  --> tests_failed/filter.hurl:8:0
+error: Filter error
+  --> tests_failed/filter.hurl:8:28
    |
    | GET http://localhost:8000/error-filter
    | ...
- 8 | jsonpath "$.text_encoded" base64UrlSafeDecode == hex,e4bda0e5a5bde4b896e7;
-   |   actual:   bytes <3c3c3f3f3f3e3e>
-   |   expected: bytes <e4bda0e5a5bde4b896e7>
+ 8 | jsonpath "$.base64_string" base64UrlSafeDecode == hex,e4bda0e5a5bde4b896e7;
+   |                            ^^^^^^^^^^^^^^^^^^^ invalid filter input: base64 string contains padding
    |
 
 error: Filter error
@@ -104,7 +103,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 15 | jsonpath "$.empty_list" first == "1"
-   |                         ^^^^^ invalid filter input: List is empty
+   |                         ^^^^^ invalid filter input: list is empty
    |
 
 error: Filter error
@@ -113,7 +112,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 16 | jsonpath "$.empty_list" last == "x"
-   |                         ^^^^ invalid filter input: List is empty
+   |                         ^^^^ invalid filter input: list is empty
    |
 
 error: Filter error
@@ -140,7 +139,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 19 | jsonpath "$.list" nth 5 == 3
-   |                   ^^^^^ invalid filter input: Out of bound - size is 3
+   |                   ^^^^^ invalid filter input: out of bound - size is 3
    |
 
 error: Filter error
@@ -239,7 +238,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 30 | jsonpath "$.list" nth -4 == 123
-   |                   ^^^^^^ invalid filter input: Out of bound - size is 3
+   |                   ^^^^^^ invalid filter input: out of bound - size is 3
    |
 
 error: Filter error
