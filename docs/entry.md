@@ -250,3 +250,4 @@ For complete reference, below is a diagram for the executed entries.
 [`delay`]: /docs/manual.md#retry 
 [`repeat`]: /docs/manual.md#repeat
 [`redirects` query]: /docs/asserting-response.md#redirects-assert
+[`url` query]: /docs/asserting-response.md#url-assert
