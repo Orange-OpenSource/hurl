@@ -12,11 +12,12 @@ jsonpath "$..author" nth 0 == "Nigel Rees"
 jsonpath "$..author" nth 1 == "Evelyn Waugh"
 jsonpath "$..author" nth 2 == "Herman Melville"
 jsonpath "$..author" nth 3 == "J. R. R. Tolkien"
-jsonpath "$.store.*" count == 2                             	           # all things in store, which are some books and a red bicycle.
-jsonpath "$.store..price" count == 5                 	                   # the price of everything in the store.
+jsonpath "$.store.*" count == 2                                            # all things in store, which are some books and a red bicycle.
+jsonpath "$.store..price" count == 5                                       # the price of everything in the store.
 jsonpath "$..book[2].title" nth 0 == "Moby Dick"                           # the third book
 jsonpath "$..book[-1].title" nth 0 == "The Lord of the Rings"              # the last book
-#jsonpath "$..book[(@.length-1)]" nth 0 == "fiction"                       # not supported yet
+#jsonpath "$..book[(@.length-1)].title" nth 0 == "The Lord of the Rings"   # not supported yet
+jsonpath "$..book[*]" last jsonpath "$.title" == "The Lord of the Rings"   # alternative
 jsonpath "$..book[-1:].title" nth 0 == "The Lord of the Rings"             # the last book in order.
 jsonpath "$..book[0,1]" count == 2                                         # the first two books
 jsonpath "$..book[0,1].title" nth 0 == "Sayings of the Century"
@@ -38,13 +39,18 @@ jsonpath "$..book[?(@.author != 'Charles Dickens')]" count == 4            # fil
 jsonpath "$..book[?(@.author != 'Nigel Rees')]" count == 3                 # filter all books for author other than Nogen Rees
 jsonpath "$..book[?(@.price != 10.00)]" count == 4                         # filter all books for price different from 10.00
 jsonpath "$..book[?(@.price != 8.95)]" count == 3                          # filter all books for price different from 8.95
-jsonpath "$..*" count == 31             	                           # all members of JSON structure.
+jsonpath "$..*" count == 31                                                # all members of JSON structure.
 jsonpath "$..book[*].isbn" count == 2                                      # get list of isbn numbers
 jsonpath "$..book[*].not_exist" count == 0                                 # querying field that does not exist return an empty list
 jsonpath "$..book[4]" count == 0                                           # out of bound
 jsonpath "$..book[-5]" count == 0                                          # out of bound
 jsonpath "$.store[0]" count == 0                                           # array indexing for an object
 jsonpath "$.store[-1]" count == 0                                          # array indexing for an object
+body jsonpath "$.store.book[0].category" == "reference"                    # `jsonpath` is also a filter
+jsonpath "$.store.book" last jsonpath "$.title" == "The Lord of the Rings" # other uses of `jsonpath` filter
+jsonpath "$.store.book" nth 2 jsonpath "$.isbn" == "0-553-21311-3"         #
+jsonpath "$.store.bicycle.price" == 19.95                                  #
+jsonpath "$.store" jsonpath "$.bicycle" jsonpath "$.price" == 19.95        #
 
 {
   "store": {

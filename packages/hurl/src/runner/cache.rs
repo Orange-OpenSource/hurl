@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-use serde_json::Value;
-
-use crate::runner::xpath::Document;
+use crate::runner::xpath;
 
 /// This is a cache to hold parsed structured data (XML/JSON/text), computed from an HTTP response
 /// body bytes. This cache lives for a given request, and allows reusing parsed response for
@@ -26,9 +24,9 @@ use crate::runner::xpath::Document;
 #[derive(Default)]
 pub struct BodyCache {
     /// The parsed XML document.
-    xml: Option<Document>,
+    xml: Option<xpath::Document>,
     /// The parsed JSON body
-    json: Option<Value>,
+    json: Option<serde_json::Value>,
 }
 
 impl BodyCache {
@@ -38,22 +36,22 @@ impl BodyCache {
     }
 
     /// Returns a reference to a cached XML response.
-    pub fn xml(&self) -> Option<&Document> {
+    pub fn xml(&self) -> Option<&xpath::Document> {
         self.xml.as_ref()
     }
 
     /// Caches a XML document `doc`.
-    pub fn set_xml(&mut self, xml: Document) {
+    pub fn set_xml(&mut self, xml: xpath::Document) {
         self.xml = Some(xml);
     }
 
     /// Returns a reference to a cached JSON response.
-    pub fn json(&self) -> Option<&Value> {
+    pub fn json(&self) -> Option<&serde_json::Value> {
         self.json.as_ref()
     }
 
     /// Caches a parsed JSON.
-    pub fn set_json(&mut self, json: Value) {
+    pub fn set_json(&mut self, json: serde_json::Value) {
         self.json = Some(json);
     }
 }

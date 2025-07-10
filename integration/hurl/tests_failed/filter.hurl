@@ -24,8 +24,8 @@ jsonpath "$.id" decode "utf-8" == "help"
 jsonpath "$.id" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 jsonpath "$.number" htmlEscape == "a &gt; b"
 jsonpath "$.number" htmlUnescape == "a > b"
-jsonpath "$.number" jsonpath "$.name" == "help"
-jsonpath "$.id" jsonpath "$.name" == "help"
+regex /(.*number.*)/ jsonpath "$.name" == "help"
+bytes jsonpath "$.name" == "help"
 jsonpath "$.id" nth 0 == 123
 jsonpath "$.list" nth -4 == 123
 jsonpath "$.number" regex /Hello (.*)!/ == "Bob"

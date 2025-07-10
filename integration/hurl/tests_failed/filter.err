@@ -206,21 +206,21 @@ error: Filter error
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:27:21
+  --> tests_failed/filter.hurl:27:22
    |
    | GET http://localhost:8000/error-filter
    | ...
-27 | jsonpath "$.number" jsonpath "$.name" == "help"
-   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+27 | regex /(.*number.*)/ jsonpath "$.name" == "help"
+   |                      ^^^^^^^^^^^^^^^^^ invalid filter input: value is not a valid JSON
    |
 
-error: Invalid JSON
-  --> tests_failed/filter.hurl:28:17
+error: Filter error
+  --> tests_failed/filter.hurl:28:7
    |
    | GET http://localhost:8000/error-filter
    | ...
-28 | jsonpath "$.id" jsonpath "$.name" == "help"
-   |                 ^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
+28 | bytes jsonpath "$.name" == "help"
+   |       ^^^^^^^^^^^^^^^^^ invalid filter input: bytes
    |
 
 error: Filter error
