@@ -14,6 +14,7 @@ Thanks to
 [@verigak](https://github.com/verigak),
 [@markphilpot](https://github.com/markphilpot),
 [@lambrospetrou](https://github.com/lambrospetrou),
+[@aresler](https://github.com/aresler),
 [@nfj25](https://github.com/nfj25),
 [@nwellnhof](https://github.com/nwellnhof),
 [@YannickAlex07](https://github.com/YannickAlex07),
@@ -51,6 +52,7 @@ Bugs Fixed:
 * Fix hurlfmt to disallow invalid header argument in curl command [#3668](https://github.com/Orange-OpenSource/hurl/issues/3668)
 * Parse verbose flag in curl command [#3760](https://github.com/Orange-OpenSource/hurl/issues/3760)
 * Keep secret value forever, even if a secret variable override an existing one [#3898](https://github.com/Orange-OpenSource/hurl/issues/3898)
+* Fix zsh completion [#3938](https://github.com/Orange-OpenSource/hurl/issues/3938)
 * Parse cookie Expires date attribute with '-' [#3956](https://github.com/Orange-OpenSource/hurl/issues/3956)
 * Replace deprecated libxml2 initGenericErrorDefaultFunc with xmlSetGenericErrorFunc [#3975](https://github.com/Orange-OpenSource/hurl/issues/3975)
 * HTML report: fix span for lines in comment. [#4002](https://github.com/Orange-OpenSource/hurl/issues/4002)
