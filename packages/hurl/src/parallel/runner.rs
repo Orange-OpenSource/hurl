@@ -342,8 +342,8 @@ impl ParallelRunner {
                     stdout,
                     append,
                 );
-                if let Err(eroor) = result {
-                    return Err(JobError::OutputWrite(eroor.to_string()));
+                if let Err(error) = result {
+                    return Err(JobError::OutputWrite(error.to_string()));
                 }
             }
             OutputType::NoOutput => {}
