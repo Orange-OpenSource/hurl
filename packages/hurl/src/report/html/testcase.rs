@@ -18,12 +18,12 @@
 use std::fs;
 use std::path::Path;
 
+use crate::report::ReportError;
+use crate::runner::{EntryResult, HurlResult, RunnerError};
 use hurl_core::ast::SourceInfo;
 use hurl_core::input::Input;
 use hurl_core::parser;
 use uuid::Uuid;
-
-use crate::runner::{EntryResult, HurlResult, RunnerError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -71,7 +71,7 @@ impl Testcase {
         entries: &[EntryResult],
         dir: &Path,
         secrets: &[&str],
-    ) -> Result<(), crate::report::ReportError> {
+    ) -> Result<(), ReportError> {
         // We parse the content as we'll reuse the AST to construct the HTML source file, and
         // the waterfall.
         // TODO: for the moment, we can only have parseable file.
@@ -80,17 +80,23 @@ impl Testcase {
         // We create the timeline view.
         let output_file = dir.join(self.timeline_filename());
         let html = self.get_timeline_html(&hurl_file, content, entries, secrets);
-        fs::write(output_file, html.as_bytes())?;
+        fs::write(&output_file, html.as_bytes()).map_err(|e| {
+            ReportError::from_io_error(&e, &output_file, "Issue writing HTML report")
+        })?;
 
         // Then create the run view.
         let output_file = dir.join(self.run_filename());
         let html = self.get_run_html(&hurl_file, content, entries, secrets);
-        fs::write(output_file, html.as_bytes())?;
+        fs::write(&output_file, html.as_bytes()).map_err(|e| {
+            ReportError::from_io_error(&e, &output_file, "Issue writing HTML report")
+        })?;
 
         // And create the source view.
         let output_file = dir.join(self.source_filename());
         let html = self.get_source_html(&hurl_file, content, secrets);
-        fs::write(output_file, html.as_bytes())?;
+        fs::write(&output_file, html.as_bytes()).map_err(|e| {
+            ReportError::from_io_error(&e, &output_file, "Issue writing HTML report")
+        })?;
 
         Ok(())
     }

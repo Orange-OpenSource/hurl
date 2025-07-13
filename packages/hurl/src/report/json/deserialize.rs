@@ -33,16 +33,9 @@ pub fn parse_json_report(filename: &Path) -> Result<Vec<Value>, ReportError> {
     if !filename.exists() {
         return Ok(vec![]);
     }
-    let s = match fs::read_to_string(filename) {
-        Ok(s) => s,
-        Err(e) => {
-            return Err(ReportError::from_error(
-                e,
-                filename,
-                "Issue reading JSON report",
-            ))
-        }
-    };
+    let s = fs::read_to_string(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue reading JSON report"))?;
+
     // TODO: if the existing JSON report is not valid, we consider that there is no
     // existing report to append, without displaying any error or warning. Maybe a better option
     // would be to raise an error here and ask the user to explicitly deal with this error.

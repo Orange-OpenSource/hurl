@@ -37,23 +37,10 @@ pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Repor
     let s = create_html_index(&now.to_rfc2822(), &results);
 
     let file_path = index_path;
-    let mut file = match std::fs::File::create(&file_path) {
-        Err(err) => {
-            return Err(ReportError::from_error(
-                err,
-                &file_path,
-                "Issue writing HTML report",
-            ))
-        }
-        Ok(file) => file,
-    };
-    if let Err(err) = file.write_all(s.as_bytes()) {
-        return Err(ReportError::from_error(
-            err,
-            &file_path,
-            "Issue writing HTML report",
-        ));
-    }
+    let mut file = std::fs::File::create(&file_path)
+        .map_err(|e| ReportError::from_io_error(&e, &file_path, "Issue writing HTML report"))?;
+    file.write_all(s.as_bytes())
+        .map_err(|e| ReportError::from_io_error(&e, &file_path, "Issue writing HTML report"))?;
     Ok(())
 }
 
@@ -84,21 +71,12 @@ fn create_html_index(now: &str, hurl_results: &[HTMLResult]) -> String {
 }
 
 fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, ReportError> {
-    if path.exists() {
-        let s = match std::fs::read_to_string(path) {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(ReportError::from_error(
-                    e,
-                    path,
-                    "Issue reading HTML report",
-                ))
-            }
-        };
-        Ok(parse_html_report(&s))
-    } else {
-        Ok(vec![])
+    if !path.exists() {
+        return Ok(vec![]);
     }
+    let s = std::fs::read_to_string(path)
+        .map_err(|e| ReportError::from_io_error(&e, path, "Issue reading HTML report"))?;
+    Ok(parse_html_report(&s))
 }
 
 /// Parses the HTML report `html` an returns a list of [`HTMLResult`].

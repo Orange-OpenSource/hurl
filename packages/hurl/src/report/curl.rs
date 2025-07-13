@@ -32,20 +32,17 @@ pub fn write_curl(
     filename: &Path,
     secrets: &[&str],
 ) -> Result<(), ReportError> {
-    if let Err(err) = create_dir_all(filename) {
-        return Err(ReportError::from_error(
-            err,
-            filename,
-            "Issue creating curl export",
-        ));
-    }
+    create_dir_all(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue creating curl export"))?;
 
     let mut file = OpenOptions::new()
         .create(true)
         .truncate(true)
         .write(true)
         .append(false)
-        .open(filename)?;
+        .open(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue creating curl export"))?;
+
     let mut cmds = hurl_results
         .iter()
         .flat_map(|h| &h.entries)
@@ -53,7 +50,9 @@ pub fn write_curl(
         .collect::<Vec<_>>()
         .join("\n");
     cmds.push('\n');
-    file.write_all(cmds.as_bytes())?;
+
+    file.write_all(cmds.as_bytes())
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing curl export"))?;
 
     Ok(())
 }

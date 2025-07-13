@@ -21,7 +21,7 @@ use std::{fmt, io};
 #[derive(Debug)]
 pub enum ReportError {
     IO {
-        inner: io::Error,
+        inner: io::ErrorKind,
         file: PathBuf,
         message: String,
     },
@@ -35,9 +35,9 @@ impl ReportError {
     }
 
     /// Creates a new error instance.
-    pub fn from_error(error: io::Error, file: &Path, message: &str) -> Self {
+    pub fn from_io_error(error: &io::Error, file: &Path, message: &str) -> Self {
         ReportError::IO {
-            inner: error,
+            inner: error.kind(),
             file: file.to_path_buf(),
             message: message.to_string(),
         }
@@ -54,11 +54,5 @@ impl fmt::Display for ReportError {
             } => write!(f, "{message} {} ({inner})", file.display()),
             ReportError::Message(message) => write!(f, "{message}"),
         }
-    }
-}
-
-impl From<io::Error> for ReportError {
-    fn from(e: io::Error) -> Self {
-        ReportError::from_string(&e.to_string())
     }
 }

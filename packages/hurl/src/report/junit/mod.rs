@@ -73,26 +73,13 @@ pub fn write_report(
     testcases: &[Testcase],
     secrets: &[&str],
 ) -> Result<(), ReportError> {
-    if let Err(err) = create_dir_all(filename) {
-        return Err(ReportError::from_error(
-            err,
-            filename,
-            "Issue writing JUnit report",
-        ));
-    }
+    create_dir_all(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing JUnit report"))?;
 
     // If there is an existing JUnit report, we parse it to insert a new testsuite.
     let mut root = if filename.exists() {
-        let file = match File::open(filename) {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(ReportError::from_error(
-                    e,
-                    filename,
-                    "Issue reading JUnit report",
-                ))
-            }
-        };
+        let file = File::open(filename)
+            .map_err(|e| ReportError::from_io_error(&e, filename, "Issue reading JUnit report"))?;
         let doc = XmlDocument::parse(file).unwrap();
         doc.root.unwrap()
     } else {
@@ -103,22 +90,16 @@ pub fn write_report(
     root = root.add_child(testsuite);
 
     let doc = XmlDocument::new(root);
-    let file = match File::create(filename) {
-        Ok(f) => f,
-        Err(e) => {
-            return Err(ReportError::from_error(
-                e,
-                filename,
-                "Issue writing JUnit report",
-            ))
-        }
-    };
-    match doc.write(file) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(ReportError::from_string(&format!(
-            "Failed to produce Junit report: {e:?}"
-        ))),
-    }
+    let file = File::create(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing JUnit report"))?;
+
+    doc.write(file).map_err(|e| {
+        ReportError::from_string(&format!(
+            "Issue writing JUnit report {} {e}",
+            filename.display()
+        ))
+    })?;
+    Ok(())
 }
 
 /// Returns a testsuite as a XML object, from a list of `testcases`.

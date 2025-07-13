@@ -60,21 +60,19 @@ pub fn write_report(
     let json = testcases
         .iter()
         .map(|t| t.to_json(response_dir, secrets))
-        .collect::<Result<Vec<_>, _>>()?;
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue creating JSON report"))?;
     report.extend(json);
 
     let serialized = serde_json::to_string(&report)?;
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
-    let mut file_out = File::create(filename)?;
-    match file_out.write_all(&bytes) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(ReportError::from_error(
-            e,
-            filename,
-            "Issue writing JSON report",
-        )),
-    }
+    let mut file_out = File::create(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue creating JSON report"))?;
+    file_out
+        .write_all(&bytes)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing JSON report"))?;
+    Ok(())
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

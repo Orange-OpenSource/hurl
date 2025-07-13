@@ -45,23 +45,12 @@ pub fn write_report(filename: &Path, testcases: &[Testcase]) -> Result<(), Repor
 
 /// Creates a Tap from a list of `testcases`.
 fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), ReportError> {
-    if let Err(err) = create_dir_all(filename) {
-        return Err(ReportError::from_error(
-            err,
-            filename,
-            "Issue writing TAP report",
-        ));
-    }
-    let mut file = match File::create(filename) {
-        Ok(f) => f,
-        Err(e) => {
-            return Err(ReportError::from_error(
-                e,
-                filename,
-                "Issue writing TAP report",
-            ))
-        }
-    };
+    create_dir_all(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing TAP report"))?;
+
+    let mut file = File::create(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing TAP report"))?;
+
     let start = 1;
     let end = testcases.len();
 
@@ -74,14 +63,9 @@ fn write_tap_file(filename: &Path, testcases: &[&Testcase]) -> Result<(), Report
         let description = &testcase.description;
         s.push_str(format!("{state} {number} - {description}\n").as_str());
     }
-    match file.write_all(s.as_bytes()) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(ReportError::from_error(
-            e,
-            filename,
-            "Issue writing TAP report",
-        )),
-    }
+    file.write_all(s.as_bytes())
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue writing TAP report"))?;
+    Ok(())
 }
 
 /// Parse Tap report file
@@ -89,16 +73,8 @@ fn parse_tap_file(filename: &Path) -> Result<Vec<Testcase>, ReportError> {
     if !filename.exists() {
         return Ok(vec![]);
     }
-    let s = match std::fs::read_to_string(filename) {
-        Ok(s) => s,
-        Err(e) => {
-            return Err(ReportError::from_error(
-                e,
-                filename,
-                "Issue reading TAP report",
-            ))
-        }
-    };
+    let s = std::fs::read_to_string(filename)
+        .map_err(|e| ReportError::from_io_error(&e, filename, "Issue reading TAP report"))?;
     parse_tap_report(&s)
 }
 
