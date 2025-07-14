@@ -49,7 +49,7 @@ __can be chained__, allowing for fine-grained data extraction.
 GET https://example.org/api
 HTTP 200
 [Captures]
-name: jsonpath "$user.id" replaceRegex /\d/ "x"
+name: jsonpath "$.user.id" replaceRegex /\d/ "x"
 [Asserts]
 header "x-servers" split "," count == 2
 header "x-servers" split "," nth 0 == "rec1"
@@ -254,7 +254,8 @@ jsonpath "$.books" last == "Les Misérables"
 
 ### location
 
-Returns the target URL location of a redirection.
+Returns the target URL location of a redirection; the returned URL is always absolute, contrary to the `Location` header from
+which it's originated that can be absolute or relative.
 
 ```hurl
 GET https://example.org/step1
