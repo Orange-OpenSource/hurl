@@ -29,7 +29,7 @@ encoding = "0.2.33"
 glob = "0.3.2"
 hurl_core = { version = "7.0.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.1.0"
-libxml = "0.3.5"
+libxml = "0.3.6"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.11.1"
