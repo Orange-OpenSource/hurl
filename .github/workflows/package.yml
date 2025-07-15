@@ -186,7 +186,7 @@ jobs:
       with:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-# Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build.
+# Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
 # Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
 #
 # > Binary compatibility is restricted to versions 2.14 or newer. On ELF systems, the soname was bumped from
@@ -200,7 +200,7 @@ jobs:
             bin/install_prerequisites_archlinux.sh
           echo "::endgroup::"
           echo "::group::Downgrade libxml2"
-          pacman --upgrade --nodeps --noconfirm https://archive.archlinux.org/packages/l/libxml2/libxml2-2.13.8-1-x86_64.pkg.tar.zst
+          pacman --sync --noconfirm libxml2-legacy
           echo "::endgroup::"
           echo "::group::Activate python3 venv"
             bin/activate_python3_venv.sh
