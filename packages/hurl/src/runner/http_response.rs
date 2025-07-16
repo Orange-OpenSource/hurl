@@ -47,8 +47,8 @@ impl HttpResponse {
 impl Display for HttpResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self.location {
-            Some(url) => write!(f, "location={} status={}", url, self.status),
-            None => write!(f, "location=None status={}", self.status),
+            Some(url) => write!(f, "Response(location={}, status={})", url, self.status),
+            None => write!(f, "Response(location=None, status={})", self.status),
         }
     }
 }

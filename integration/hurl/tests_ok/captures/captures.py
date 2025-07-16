@@ -1,5 +1,5 @@
 from app import app
-from flask import make_response, request
+from flask import make_response, redirect, request
 
 
 @app.route("/captures")
@@ -69,3 +69,8 @@ def captures_json():
         '"a_date_like_string":"2012-04-23T18:25:43.511Z"'
         "}"
     )
+
+
+@app.route("/redirect-to-captures-json")
+def redirect_to_captures_json():
+    return redirect("http://localhost:8000/captures-json")
