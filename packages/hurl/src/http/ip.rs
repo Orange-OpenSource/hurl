@@ -16,8 +16,6 @@
  *
  */
 use std::fmt::{Display, Formatter};
-use std::net::AddrParseError;
-use std::str::FromStr;
 
 /// An IP address, either IPv4 or IPv6.
 ///
@@ -31,12 +29,9 @@ pub struct IpAddr {
 }
 
 impl IpAddr {
+    /// Creates a new IP address from a raw string (from libcurl).
     pub fn new(raw: String) -> IpAddr {
         IpAddr { raw }
-    }
-    #[allow(dead_code)]
-    fn to_ip_addr(&self) -> Result<std::net::IpAddr, AddrParseError> {
-        std::net::IpAddr::from_str(&self.raw)
     }
 }
 
