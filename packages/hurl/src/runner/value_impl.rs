@@ -192,6 +192,21 @@ impl Value {
         }
     }
 
+    /// Returns `true` the value is a UUID.
+    ///
+    /// Returns `false` if it is not.
+    ///
+    /// Returns a [`EvalError::Type`] if the given value is not a String.
+    pub fn is_uuid(&self) -> Result<bool, EvalError> {
+        match self {
+            Value::String(value) => {
+                let is_uuid = uuid::Uuid::try_parse(value).is_ok();
+                Ok(is_uuid)
+            }
+            _ => Err(EvalError::Type),
+        }
+    }
+
     /// Returns `true` the string value represents a RFC339 date (format YYYY-MM-DDTHH:mm:ss.sssZ).
     ///
     /// Returns `false` if it does not.
@@ -343,6 +358,12 @@ mod tests {
         assert!(!value2.is_collection());
         assert!(value2.is_number());
         assert!(value2.is_integer());
+
+        let value3 = Value::String("01cc0f54-8885-4a1d-9121-ae5d316a33c5".to_string());
+        assert!(!value3.is_boolean());
+        assert!(!value3.is_collection());
+        assert!(value3.is_string());
+        assert!(value3.is_uuid().unwrap());
     }
 
     #[test]

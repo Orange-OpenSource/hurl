@@ -14,6 +14,7 @@ jsonpath "$.count" contains "foo"
 jsonpath "$.count" isIsoDate
 jsonpath "$.count" isIpv4
 jsonpath "$.count" isIpv6
+jsonpath "$.count" isUuid
 jsonpath "$.message" startsWith "hi"
 jsonpath "$.message" endsWith "hi"
 jsonpath "$.message" contains "hi"
@@ -24,6 +25,7 @@ jsonpath "$.message" count == 1
 jsonpath "$.message" isIsoDate
 jsonpath "$.message" isIpv4
 jsonpath "$.message" isIpv6
+jsonpath "$.message" isUuid
 jsonpath "$.toto" exists
 jsonpath "$.message" not exists
 jsonpath "$.list" count == 2
@@ -49,6 +51,7 @@ jsonpath "$.not-exist" exists
 jsonpath "$.not-exist" isEmpty
 jsonpath "$.not-exist" isIpv4
 jsonpath "$.not-exist" isIpv6
+jsonpath "$.not-exist" isUuid
 jsonpath "$.not_a_date" isIsoDate
 jsonpath "$.is_a_date" not isIsoDate
 jsonpath "$.not_a_date" isNumber

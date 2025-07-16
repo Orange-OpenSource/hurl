@@ -30,3 +30,4 @@ bytes startsWith hex,efbbbf;                 # startsWith
 jsonpath "$.count" isNumber                  # isNumber
 ip isIpv6                                    # isIpv6
 ip isIpv4                                    # isIpv4
+jsonpath "$.uuid" isUuid                     # isUuid

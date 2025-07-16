@@ -414,6 +414,7 @@ pub enum PredicateFuncValue {
     IsNumber,
     IsIpv4,
     IsIpv6,
+    IsUuid,
 }
 
 impl PredicateFuncValue {
@@ -443,6 +444,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsNumber => "isNumber",
             PredicateFuncValue::IsIpv4 => "isIpv4",
             PredicateFuncValue::IsIpv6 => "isIpv6",
+            PredicateFuncValue::IsUuid => "isUuid",
         }
     }
 }

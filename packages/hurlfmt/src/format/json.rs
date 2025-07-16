@@ -568,7 +568,8 @@ impl ToJson for Predicate {
             | PredicateFuncValue::IsEmpty
             | PredicateFuncValue::IsNumber
             | PredicateFuncValue::IsIpv4
-            | PredicateFuncValue::IsIpv6 => {}
+            | PredicateFuncValue::IsIpv6
+            | PredicateFuncValue::IsUuid => {}
         }
         JValue::Object(attributes)
     }

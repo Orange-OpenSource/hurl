@@ -94,6 +94,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             is_number_predicate,
             is_ipv4_predicate,
             is_ipv6_predicate,
+            is_uuid_predicate,
         ],
         reader,
     ) {
@@ -316,6 +317,11 @@ fn is_ipv4_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn is_ipv6_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isIpv6", reader)?;
     Ok(PredicateFuncValue::IsIpv6)
+}
+
+fn is_uuid_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isUuid", reader)?;
+    Ok(PredicateFuncValue::IsUuid)
 }
 
 #[cfg(test)]

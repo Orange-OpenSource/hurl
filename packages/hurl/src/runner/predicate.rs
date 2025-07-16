@@ -202,6 +202,7 @@ fn expected_no_value(
         PredicateFuncValue::IsNumber => Ok("number".to_string()),
         PredicateFuncValue::IsIpv4 => Ok("ipv4".to_string()),
         PredicateFuncValue::IsIpv6 => Ok("ipv6".to_string()),
+        PredicateFuncValue::IsUuid => Ok("uuid".to_string()),
     }
 }
 
@@ -279,6 +280,7 @@ fn eval_predicate_func(
         PredicateFuncValue::IsNumber => eval_is_number(value),
         PredicateFuncValue::IsIpv4 => eval_is_ipv4(value),
         PredicateFuncValue::IsIpv6 => eval_is_ipv6(value),
+        PredicateFuncValue::IsUuid => eval_is_uuid(value),
     }
 }
 
@@ -631,6 +633,24 @@ fn eval_is_ipv6(actual: &Value) -> Result<PredicateResult, RunnerError> {
             success,
             actual: actual.to_string(),
             expected: "string in IPv6 format".to_string(),
+            type_mismatch: false,
+        }),
+        _ => Ok(PredicateResult {
+            success: false,
+            actual: actual.repr(),
+            expected: "string".to_string(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+/// Evaluates if an `actual` value is a UUID.
+fn eval_is_uuid(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    match actual.is_uuid() {
+        Ok(success) => Ok(PredicateResult {
+            success,
+            actual: actual.to_string(),
+            expected: "string in UUID format".to_string(),
             type_mismatch: false,
         }),
         _ => Ok(PredicateResult {

@@ -623,7 +623,8 @@ impl Lint for PredicateFuncValue {
             | PredicateFuncValue::IsEmpty
             | PredicateFuncValue::IsNumber
             | PredicateFuncValue::IsIpv4
-            | PredicateFuncValue::IsIpv6 => {}
+            | PredicateFuncValue::IsIpv6
+            | PredicateFuncValue::IsUuid => {}
         }
         s
     }

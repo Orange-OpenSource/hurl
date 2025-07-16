@@ -20,6 +20,7 @@ def assert_json():
     "2022-10-31T09:00:00.594Z",
     "2024-03-20T11:23:56.773+02:00"
   ],
+  "uuid": "01cc0f54-8885-4a1d-9121-ae5d316a33c5",
   "empty": {}
 }""",
         mimetype="application/json",

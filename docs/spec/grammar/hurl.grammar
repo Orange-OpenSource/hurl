@@ -330,6 +330,7 @@ predicate-func:
   | iso-date-predicate
   | is-ipv4-predicate
   | is-ipv6-predicate
+  | is-uuid-predicate
 
 equal-predicate: "==" sp predicate-value
 
@@ -374,6 +375,8 @@ iso-date-predicate: "isIsoDate"
 is-ipv4-predicate: "isIpv4"
 
 is-ipv6-predicate: "isIpv6"
+
+is-uuid-predicate: "isUuid"
 
 predicate-value:
     boolean

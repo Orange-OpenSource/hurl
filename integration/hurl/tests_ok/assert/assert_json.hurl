@@ -66,7 +66,7 @@ jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
 jsonpath "$.errors[0]" not isEmpty
 jsonpath "$.empty" isEmpty
-jsonpath "$.*" count == 12
+jsonpath "$.*" count == 13
 jsonpath "$.errors..*" count == 4
 jsonpath "$..id" count == 3
 jsonpath "$.dates[0]" isIsoDate
@@ -79,6 +79,7 @@ jsonpath "$.dates[0]" toDate "%+" < {{ date1 }}
 jsonpath "$.dates[1]" toDate "%+" != {{ date0 }}
 jsonpath "$.dates[1]" toDate "%+" >= {{ date0 }}
 jsonpath "$.dates[1]" toDate "%+" > {{ date0 }}
+jsonpath "$.uuid" isUuid
 
 
 # FIXME do we accept count filter on object?
@@ -98,6 +99,7 @@ jsonpath "$.dates[1]" toDate "%+" > {{ date0 }}
     "2022-10-31T09:00:00.594Z",
     "2024-03-20T11:23:56.773+02:00"
   ],
+  "uuid": "01cc0f54-8885-4a1d-9121-ae5d316a33c5",
   "empty": {}
 }
 

@@ -686,7 +686,8 @@ pub fn walk_predicate<V: Visitor>(visitor: &mut V, pred: &Predicate) {
         | PredicateFuncValue::IsEmpty
         | PredicateFuncValue::IsNumber
         | PredicateFuncValue::IsIpv4
-        | PredicateFuncValue::IsIpv6 => {}
+        | PredicateFuncValue::IsIpv6
+        | PredicateFuncValue::IsUuid => {}
     }
 }
 
