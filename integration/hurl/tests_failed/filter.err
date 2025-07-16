@@ -322,3 +322,12 @@ error: Filter error
    |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
    |
 
+error: Filter error
+  --> tests_failed/filter.hurl:45:24
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+45 | foo: jsonpath "$.list" jsonpath "$.foo"
+   |                        ^^^^^^^^^^^^^^^^ A filter didn't return any result
+   |
+

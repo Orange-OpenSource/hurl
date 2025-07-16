@@ -99,6 +99,9 @@ pub enum RunnerErrorKind {
         url: String,
         message: String,
     },
+    /// One filter in the filter chains doesn't return value.
+    NoFilterResult,
+    /// A query on response doesn't return value.
     NoQueryResult,
     PossibleLoggedSecret,
     QueryHeaderNotFound,
@@ -151,6 +154,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerErrorKind::InvalidUrl { .. } => "Invalid URL".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
+            RunnerErrorKind::NoFilterResult => "Filter error".to_string(),
             RunnerErrorKind::NoQueryResult => "No query result".to_string(),
             RunnerErrorKind::PossibleLoggedSecret => "Invalid redacted secret".to_string(),
             RunnerErrorKind::QueryHeaderNotFound => "Header not found".to_string(),
@@ -274,6 +278,11 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::InvalidRegex => {
                 let message = "regex expression is not valid";
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+            RunnerErrorKind::NoFilterResult => {
+                let message = "A filter didn't return any result";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

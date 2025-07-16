@@ -51,7 +51,7 @@ use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
-    filters: &[Filter],
+    filters: &[&Filter],
     value: &Value,
     variables: &VariableSet,
     in_assert: bool,
@@ -165,7 +165,7 @@ mod tests {
 
         assert_eq!(
             eval_filters(
-                &[Filter {
+                &[&Filter {
                     source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
                     value: FilterValue::Count,
                 }],

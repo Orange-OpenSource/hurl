@@ -170,11 +170,7 @@ pub fn eval_explicit_assert(
                 assert: true,
             }),
             Some(value) => {
-                let filters = assert
-                    .filters
-                    .iter()
-                    .map(|(_, f)| f.clone())
-                    .collect::<Vec<_>>();
+                let filters = assert.filters.iter().map(|(_, f)| f).collect::<Vec<_>>();
                 match eval_filters(&filters, &value, variables, true) {
                     Ok(value) => Ok(value),
                     Err(e) => Err(e),

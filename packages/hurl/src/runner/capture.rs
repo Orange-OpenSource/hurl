@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::Capture;
+use hurl_core::ast::{Capture, SourceInfo};
 
 use crate::http;
 use crate::runner::cache::BodyCache;
@@ -40,29 +40,31 @@ pub fn eval_capture(
     let name = eval_template(&capture.name, variables)?;
     let value = eval_query(&capture.query, variables, http_responses, cache)?;
     let value = match value {
+        Some(value) => {
+            let filters = capture.filters.iter().map(|(_, f)| f).collect::<Vec<_>>();
+            match eval_filters(&filters, &value, variables, false)? {
+                None => {
+                    // If we have an error, we can be sure that there is at least one filter.
+                    // We don't know which filter in the filter chain firstly returns no value
+                    // so we diagnostic the whole filter chain as guilty.
+                    let start = filters.first().unwrap().source_info.start;
+                    let end = filters.last().unwrap().source_info.end;
+                    let pos = SourceInfo::new(start, end);
+                    return Err(RunnerError::new(
+                        pos,
+                        RunnerErrorKind::NoFilterResult,
+                        false,
+                    ));
+                }
+                Some(v) => v,
+            }
+        }
         None => {
             return Err(RunnerError::new(
                 capture.query.source_info,
                 RunnerErrorKind::NoQueryResult,
                 false,
             ));
-        }
-        Some(value) => {
-            let filters = capture
-                .filters
-                .iter()
-                .map(|(_, f)| f.clone())
-                .collect::<Vec<_>>();
-            match eval_filters(&filters, &value, variables, false)? {
-                None => {
-                    return Err(RunnerError::new(
-                        capture.query.source_info,
-                        RunnerErrorKind::NoQueryResult,
-                        false,
-                    ));
-                }
-                Some(v) => v,
-            }
         }
     };
 

@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_failed/filter.hurl
+
+hurl --continue-on-error tests_failed/filter.hurl
