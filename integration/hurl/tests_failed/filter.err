@@ -323,11 +323,29 @@ error: Filter error
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:45:24
+  --> tests_failed/filter.hurl:40:26
    |
    | GET http://localhost:8000/error-filter
    | ...
-45 | foo: jsonpath "$.list" jsonpath "$.foo"
+40 | jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: value is not a valid XML
+   |
+
+error: Invalid URL
+  --> tests_failed/filter.hurl:41:17
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+41 | jsonpath "$.id" urlQueryParam "q" == "something"
+   |                 ^^^^^^^^^^^^^^^^^ invalid URL <123x> (Missing scheme <http://> or <https://>)
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:47:24
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+47 | foo: jsonpath "$.list" jsonpath "$.foo"
    |                        ^^^^^^^^^^^^^^^^ A filter didn't return any result
    |
 

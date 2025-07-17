@@ -1178,7 +1178,7 @@ pub mod tests {
             &mut cache,
         )
         .unwrap_err();
-        assert_eq!(error.kind, RunnerErrorKind::QueryInvalidXpathEval);
+        assert_eq!(error.kind, RunnerErrorKind::InvalidXPathEval);
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
     }
 

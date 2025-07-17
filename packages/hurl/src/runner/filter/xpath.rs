@@ -35,7 +35,7 @@ pub fn eval_xpath(
             let Ok(doc) = Document::parse(xml, Format::Html) else {
                 return Err(RunnerError::new(
                     source_info,
-                    RunnerErrorKind::QueryInvalidXml,
+                    RunnerErrorKind::FilterInvalidInput("value is not a valid XML".to_string()),
                     false,
                 ));
             };
@@ -59,7 +59,7 @@ pub fn eval_xpath_doc(
         Ok(value) => Ok(Some(value)),
         Err(XPathError::Eval) => Err(RunnerError::new(
             expr.source_info,
-            RunnerErrorKind::QueryInvalidXpathEval,
+            RunnerErrorKind::InvalidXPathEval,
             false,
         )),
         Err(XPathError::Unsupported) => {
@@ -119,10 +119,7 @@ mod tests {
         let filter = new_xpath_filter("str(//body/text())");
         let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
 
-        assert_eq!(
-            ret.unwrap_err().kind,
-            RunnerErrorKind::QueryInvalidXpathEval
-        );
+        assert_eq!(ret.unwrap_err().kind, RunnerErrorKind::InvalidXPathEval);
     }
 
     #[test]
@@ -133,7 +130,10 @@ mod tests {
         let filter = new_xpath_filter("string(//body/text())");
         let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
 
-        assert_eq!(ret.unwrap_err().kind, RunnerErrorKind::QueryInvalidXml);
+        assert_eq!(
+            ret.unwrap_err().kind,
+            RunnerErrorKind::FilterInvalidInput("value is not a valid XML".to_string())
+        );
     }
 
     #[test]

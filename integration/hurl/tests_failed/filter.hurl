@@ -37,6 +37,8 @@ jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%B
 jsonpath "$.number" urlQueryParam "x" == "шеллы"
 jsonpath "$.number" xpath "string(//body)" == "你好世界"
 jsonpath "$.list" toString == "[]"
+jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
+jsonpath "$.id" urlQueryParam "q" == "something"
 
 
 GET http://localhost:8000/error-filter

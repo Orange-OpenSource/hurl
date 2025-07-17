@@ -12,7 +12,8 @@ def error_filter():
           "status": true,
           "list": [1,2,3],
           "empty_list": [],
-          "number": 42
+          "number": 42,
+          "invalid_xml": "<?xml version=\\"1.0\\""
 }
 """,
         mimetype="application/json",
