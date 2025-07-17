@@ -111,9 +111,6 @@ pub enum RunnerErrorKind {
     QueryInvalidXpathEval,
     QueryInvalidXml,
     QueryInvalidJson,
-    ReadOnlySecret {
-        name: String,
-    },
     TemplateVariableNotDefined {
         name: String,
     },
@@ -164,7 +161,6 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::QueryInvalidXml => "Invalid XML".to_string(),
             RunnerErrorKind::QueryInvalidXpathEval => "Invalid XPath expression".to_string(),
-            RunnerErrorKind::ReadOnlySecret { .. } => "Readonly secret".to_string(),
             RunnerErrorKind::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
             RunnerErrorKind::UnauthorizedFileAccess { .. } => {
                 "Unauthorized file access".to_string()
@@ -318,11 +314,6 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::QueryInvalidXpathEval => {
                 let message = "the XPath expression is not valid";
-                let message = error::add_carets(message, self.source_info, content);
-                color_red_multiline_string(&message)
-            }
-            RunnerErrorKind::ReadOnlySecret { name } => {
-                let message = &format!("secret '{name}' can't be reassigned");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
