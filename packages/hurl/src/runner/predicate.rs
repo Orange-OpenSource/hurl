@@ -23,7 +23,7 @@ use hurl_core::reader::Pos;
 use crate::runner::error::RunnerError;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
 use crate::runner::value::{EvalError, Value};
-use crate::runner::{Number, RunnerErrorKind, VariableSet};
+use crate::runner::{RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
 
 /// Evaluates a `predicate` against an actual `value`.
@@ -99,47 +99,6 @@ struct PredicateResult {
     pub expected: String,
 }
 
-impl Value {
-    fn format(&self) -> String {
-        match self {
-            Value::Bool(value) => format!("boolean <{value}>"),
-            Value::Bytes(values) => format!(
-                "{} byte{}",
-                values.len(),
-                if values.len() > 1 { "s" } else { "" }
-            ),
-            Value::Date(value) => format!("date <{value}>"),
-            Value::HttpResponse(value) => format!("HTTP response <{value}>"),
-            Value::List(value) => format!("list of size {}", value.len()),
-            Value::Nodeset(size) => format!("list of size {size}"),
-            Value::Null => "null".to_string(),
-            Value::Number(number) => number.expected(),
-            Value::Object(values) => format!("list of size {}", values.len()),
-            Value::Regex(value) => format!("regex <{value}>"),
-            Value::String(value) => format!("string <{value}>"),
-            Value::Unit => "something".to_string(),
-        }
-    }
-}
-
-impl Number {
-    fn expected(&self) -> String {
-        match self {
-            Number::Float(f) => format!("float <{}>", format_float(*f)),
-            Number::Integer(value) => format!("integer <{value}>"),
-            Number::BigInteger(s) => format!("number <{s}>"),
-        }
-    }
-}
-
-fn format_float(value: f64) -> String {
-    if value.fract() < f64::EPSILON {
-        format!("{value}.0")
-    } else {
-        value.to_string()
-    }
-}
-
 /// Returns a message formatting an expected value `predicate_func_value`, given
 /// a set of `variables`, when there is no actual value.
 fn expected_no_value(
@@ -150,39 +109,39 @@ fn expected_no_value(
     match &predicate_func_value {
         PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(value.format())
+            Ok(value.to_string())
         }
         PredicateFuncValue::GreaterThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than <{}>", value.format()))
+            Ok(format!("greater than <{value}>"))
         }
         PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("greater than or equals to <{}>", value.format()))
+            Ok(format!("greater than or equals to <{value}>"))
         }
         PredicateFuncValue::LessThan { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than <{}>", value.format()))
+            Ok(format!("less than <{value}>"))
         }
         PredicateFuncValue::LessThanOrEqual { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("less than or equals to <{}>", value.format()))
+            Ok(format!("less than or equals to <{value}>"))
         }
         PredicateFuncValue::StartWith { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("starts with {}", value.format()))
+            Ok(format!("starts with {value}"))
         }
         PredicateFuncValue::EndWith { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("ends with {}", value.format()))
+            Ok(format!("ends with {value}"))
         }
         PredicateFuncValue::Contain { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("contains {}", value.format()))
+            Ok(format!("contains {value}"))
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables, context_dir)?;
-            Ok(format!("include {}", value.format()))
+            Ok(format!("include {value}"))
         }
         PredicateFuncValue::Match {
             value: expected, ..
@@ -768,13 +727,13 @@ fn assert_include(value: &Value, element: &Value) -> PredicateResult {
 mod tests {
     use std::path::Path;
 
+    use super::{PredicateResult, *};
+    use crate::runner::Number;
     use hurl_core::ast::{
         Expr, ExprKind, Float, Placeholder, Regex, Template, TemplateElement, Variable, Whitespace,
         I64,
     };
     use hurl_core::typing::ToSource;
-
-    use super::{PredicateResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {
