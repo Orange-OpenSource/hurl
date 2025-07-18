@@ -13,7 +13,8 @@ def error_filter():
           "list": [1,2,3],
           "empty_list": [],
           "number": 42,
-          "invalid_xml": "<?xml version=\\"1.0\\""
+          "invalid_xml": "<?xml version=\\"1.0\\"",
+          "date": "2023-01-23T18:25:43.511Z"
 }
 """,
         mimetype="application/json",

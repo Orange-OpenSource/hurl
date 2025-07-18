@@ -167,7 +167,7 @@ error: No query result
     | GET http://localhost:8000/runner_errors
     | ...
 107 | count: header "count"
-    |        ^^^^^^^^^^^^^^ The query didn't return any result
+    |        ^^^^^^^^^^^^^^ query didn't return any result
     |
 
 error: Header not found
@@ -175,8 +175,8 @@ error: Header not found
     |
     | GET http://localhost:8000/runner_errors
     | ...
-112 | count: 10
-    | ^^^^^ this header has not been found in the response
+112 | x-count: 10
+    | ^^^^^^^ this header has not been found in the response
     |
 
 error: Invalid JSON
@@ -185,7 +185,7 @@ error: Invalid JSON
     | GET http://localhost:8000/runner_errors
     | ...
 118 | jsonpath "$.count" == 10
-    | ^^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON
+    | ^^^^^^^^^^^^^^^^^^ HTTP response is not a valid JSON
     |
 
 error: Invalid JSONPath
@@ -194,7 +194,7 @@ error: Invalid JSONPath
     | GET http://localhost:8000/runner_errors/json-list
     | ...
 124 | jsonpath "xxx" == 10
-    |          ^^^^^ the JSONPath expression 'xxx' is not valid
+    |          ^^^^^ JSONPath expression 'xxx' is not valid
     |
 
 error: Invalid XML
@@ -203,7 +203,7 @@ error: Invalid XML
     | GET http://localhost:8000/runner_errors/invalid-xml
     | ...
 130 | xpath "//a" == 10
-    | ^^^^^^^^^^^ the HTTP response is not a valid XML
+    | ^^^^^^^^^^^ HTTP response is not a valid XML
     |
 
 error: Invalid XPath expression
@@ -212,7 +212,7 @@ error: Invalid XPath expression
     | GET http://localhost:8000/runner_errors
     | ...
 136 | xpath "//" == 10
-    |       ^^^^ the XPath expression is not valid
+    |       ^^^^ XPath expression is not valid
     |
 
 error: Invalid expression type

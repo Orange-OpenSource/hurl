@@ -17,6 +17,7 @@ jsonpath "$.list" last == 3
 jsonpath "$.list" nth 1 == 2
 jsonpath "$.list" nth -1 == 3
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
+jsonpath "$.message" regex /Hi (.*)!/ not exists
 jsonpath "$.url" == "https://mozilla.org/?x=шеллы"
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"
@@ -31,6 +32,7 @@ jsonpath "$.id" toInt == 123
 jsonpath "$.id" toFloat == 123
 jsonpath "$.score" toInt == 1
 jsonpath "$.score" toFloat == 1.6
+jsonpath "$.score" toString == "1.6"
 jsonpath "$.file" base64Decode toHex == "d188d0b5d0bbd0bbd18b"
 jsonpath "$.ips" split ", " count == 3
 jsonpath "$.ips" split ", " first == "192.168.2.1"
@@ -47,6 +49,7 @@ jsonpath "$.pi" toFloat > 3
 jsonpath "$.pi" toFloat < 4
 jsonpath "$.ten" toInt == 10
 jsonpath "$.url" urlQueryParam "x" == "шеллы"
+jsonpath "$.url" urlQueryParam "y" not exists
 jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
 {
   "file": "0YjQtdC70LvRiw==",

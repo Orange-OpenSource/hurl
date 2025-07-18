@@ -109,7 +109,7 @@ count: header "count"
 # QueryHeaderNotFound
 GET http://localhost:8000/runner_errors
 HTTP 200
-count: 10
+x-count: 10
 
 # QueryInvalidJson
 GET http://localhost:8000/runner_errors

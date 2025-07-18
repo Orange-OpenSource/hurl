@@ -167,7 +167,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m107 |[0m count: header "count"
-[1;34m    |[0m[1;31m        ^^^^^^^^^^^^^^ The query didn't return any result[0m
+[1;34m    |[0m[1;31m        ^^^^^^^^^^^^^^ query didn't return any result[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mHeader not found[0m
@@ -175,8 +175,8 @@
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m112 |[0m count: 10
-[1;34m    |[0m[1;31m ^^^^^ this header has not been found in the response[0m
+[1;34m112 |[0m x-count: 10
+[1;34m    |[0m[1;31m ^^^^^^^ this header has not been found in the response[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSON[0m
@@ -185,7 +185,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m118 |[0m jsonpath "$.count" == 10
-[1;34m    |[0m[1;31m ^^^^^^^^^^^^^^^^^^ the HTTP response is not a valid JSON[0m
+[1;34m    |[0m[1;31m ^^^^^^^^^^^^^^^^^^ HTTP response is not a valid JSON[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSONPath[0m
@@ -194,7 +194,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/json-list[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m124 |[0m jsonpath "xxx" == 10
-[1;34m    |[0m[1;31m          ^^^^^ the JSONPath expression 'xxx' is not valid[0m
+[1;34m    |[0m[1;31m          ^^^^^ JSONPath expression 'xxx' is not valid[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XML[0m
@@ -203,7 +203,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-xml[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m130 |[0m xpath "//a" == 10
-[1;34m    |[0m[1;31m ^^^^^^^^^^^ the HTTP response is not a valid XML[0m
+[1;34m    |[0m[1;31m ^^^^^^^^^^^ HTTP response is not a valid XML[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XPath expression[0m
@@ -212,7 +212,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m136 |[0m xpath "//" == 10
-[1;34m    |[0m[1;31m       ^^^^ the XPath expression is not valid[0m
+[1;34m    |[0m[1;31m       ^^^^ XPath expression is not valid[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid expression type[0m

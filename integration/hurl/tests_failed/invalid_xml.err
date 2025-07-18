@@ -4,6 +4,6 @@ error: Invalid XML
    | GET http://localhost:8000/error-invalid-xml
    | ...
  4 | xpath "xx" == 1
-   | ^^^^^^^^^^ the HTTP response is not a valid XML
+   | ^^^^^^^^^^ HTTP response is not a valid XML
    |
 

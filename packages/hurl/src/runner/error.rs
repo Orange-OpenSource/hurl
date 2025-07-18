@@ -249,7 +249,7 @@ impl DisplaySourceError for RunnerError {
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::FilterInvalidFormatSpecifier(format) => {
-                let message = &format!("<{format}> format is not supported");
+                let message = &format!("date format <{format}> is not supported");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
@@ -279,17 +279,17 @@ impl DisplaySourceError for RunnerError {
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::InvalidXPathEval => {
-                let message = "the XPath expression is not valid";
+                let message = "XPath expression is not valid";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::NoFilterResult => {
-                let message = "A filter didn't return any result";
+                let message = "a filter didn't return any result";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::NoQueryResult => {
-                let message = "The query didn't return any result";
+                let message = "query didn't return any result";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
@@ -304,17 +304,17 @@ impl DisplaySourceError for RunnerError {
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidJson => {
-                let message = "the HTTP response is not a valid JSON";
+                let message = "HTTP response is not a valid JSON";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidJsonpathExpression { value } => {
-                let message = &format!("the JSONPath expression '{value}' is not valid");
+                let message = &format!("JSONPath expression '{value}' is not valid");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
             RunnerErrorKind::QueryInvalidXml => {
-                let message = "the HTTP response is not a valid XML";
+                let message = "HTTP response is not a valid XML";
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
@@ -527,7 +527,7 @@ xpath "strong(//head/title)" == "Hello"
         let error = RunnerError::new(error_source_info, RunnerErrorKind::InvalidXPathEval, true);
         assert_eq!(
         &error.message(&lines).to_string(Format::Plain),
-        "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid\n   |"
+        "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ XPath expression is not valid\n   |"
     );
         assert_eq!(
             error.render(
@@ -542,7 +542,7 @@ xpath "strong(//head/title)" == "Hello"
    | GET http://example.com
    | ...
  4 | xpath "strong(//head/title)" == "Hello"
-   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
+   |       ^^^^^^^^^^^^^^^^^^^^^^ XPath expression is not valid
    |"#
         );
     }

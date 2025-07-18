@@ -4,6 +4,6 @@ error: Invalid XPath expression
    | GET http://localhost:8000/utf8
    | ...
  4 | xpath "//" == 1
-   |       ^^^^ the XPath expression is not valid
+   |       ^^^^ XPath expression is not valid
    |
 

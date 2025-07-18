@@ -30,6 +30,7 @@ jsonpath "$.id" nth 0 == 123
 jsonpath "$.list" nth -4 == 123
 jsonpath "$.number" regex /Hello (.*)!/ == "Bob"
 jsonpath "$.number" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
+jsonpath "$.number" replaceRegex /\d/ "x" == "xxx.xxx.x.x,xx.x.x.xx|xx.x.x.xx"
 jsonpath "$.number" split ", " count == 3
 jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
 jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
@@ -39,6 +40,7 @@ jsonpath "$.number" xpath "string(//body)" == "你好世界"
 jsonpath "$.list" toString == "[]"
 jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
 jsonpath "$.id" urlQueryParam "q" == "something"
+jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%👻" == "Monday"
 
 
 GET http://localhost:8000/error-filter

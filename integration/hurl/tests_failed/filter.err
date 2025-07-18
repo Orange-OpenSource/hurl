@@ -264,8 +264,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-33 | jsonpath "$.number" split ", " count == 3
-   |                     ^^^^^^^^^^ invalid filter input: integer <42>
+33 | jsonpath "$.number" replaceRegex /\d/ "x" == "xxx.xxx.x.x,xx.x.x.xx|xx.x.x.xx"
+   |                     ^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -273,8 +273,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-34 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
-   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
+34 | jsonpath "$.number" split ", " count == 3
+   |                     ^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -282,8 +282,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-35 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
-   |                     ^^^^^^^^^ invalid filter input: integer
+35 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
 error: Filter error
@@ -291,7 +291,7 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-36 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+36 | jsonpath "$.number" urlDecode == "https://mozilla.org/?x=шеллы"
    |                     ^^^^^^^^^ invalid filter input: integer
    |
 
@@ -300,8 +300,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-37 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
-   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+37 | jsonpath "$.number" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+   |                     ^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
@@ -309,43 +309,61 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-38 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
+38 | jsonpath "$.number" urlQueryParam "x" == "шеллы"
+   |                     ^^^^^^^^^^^^^^^^^ invalid filter input: integer
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:39:21
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+39 | jsonpath "$.number" xpath "string(//body)" == "你好世界"
    |                     ^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:39:19
+  --> tests_failed/filter.hurl:40:19
    |
    | GET http://localhost:8000/error-filter
    | ...
-39 | jsonpath "$.list" toString == "[]"
+40 | jsonpath "$.list" toString == "[]"
    |                   ^^^^^^^^ invalid filter input: list <[1,2,3]> can not be converted to a string
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:40:26
+  --> tests_failed/filter.hurl:41:26
    |
    | GET http://localhost:8000/error-filter
    | ...
-40 | jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
+41 | jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: value is not a valid XML
    |
 
 error: Invalid URL
-  --> tests_failed/filter.hurl:41:17
+  --> tests_failed/filter.hurl:42:17
    |
    | GET http://localhost:8000/error-filter
    | ...
-41 | jsonpath "$.id" urlQueryParam "q" == "something"
+42 | jsonpath "$.id" urlQueryParam "q" == "something"
    |                 ^^^^^^^^^^^^^^^^^ invalid URL <123x> (Missing scheme <http://> or <https://>)
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:47:24
+  --> tests_failed/filter.hurl:43:50
    |
    | GET http://localhost:8000/error-filter
    | ...
-47 | foo: jsonpath "$.list" jsonpath "$.foo"
-   |                        ^^^^^^^^^^^^^^^^ A filter didn't return any result
+43 | jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%👻" == "Monday"
+   |                                                  ^^^^^^^^^^^ date format <%👻> is not supported
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:49:24
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+49 | foo: jsonpath "$.list" jsonpath "$.foo"
+   |                        ^^^^^^^^^^^^^^^^ a filter didn't return any result
    |
 
