@@ -200,7 +200,7 @@ mod tests {
         let suite = create_testsuite(&testcases, &secrets);
         let doc = XmlDocument::new(suite);
         assert_eq!(
-            doc.to_string().unwrap(),
+            doc.dump(),
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
             <testsuite tests=\"3\" errors=\"1\" failures=\"1\">\
                 <testcase id=\"test.hurl\" name=\"test.hurl\" time=\"0.124\" />\

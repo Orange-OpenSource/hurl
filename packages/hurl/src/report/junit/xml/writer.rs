@@ -65,15 +65,6 @@ impl From<FromUtf8Error> for WriterError {
 }
 
 impl XmlDocument {
-    /// Convenient method to serialize an XML document to a string.
-    #[allow(dead_code)]
-    pub fn to_string(&self) -> Result<String, WriterError> {
-        let buffer = vec![];
-        let buffer = self.write(buffer)?;
-        let str = String::from_utf8(buffer)?;
-        Ok(str)
-    }
-
     /// Serializes an XML document to a `buffer`.
     pub fn write<W>(&self, buffer: W) -> Result<W, WriterError>
     where
@@ -146,6 +137,15 @@ impl Element {
 mod tests {
     use crate::report::junit::xml::{Element, XmlDocument};
 
+    impl XmlDocument {
+        /// Convenient method to serialize an XML document to a string.
+        pub fn dump(&self) -> String {
+            let buffer = vec![];
+            let buffer = self.write(buffer).unwrap();
+            String::from_utf8(buffer).unwrap()
+        }
+    }
+
     #[test]
     fn write_xml_0() {
         let root = Element::new("catalog")
@@ -208,7 +208,7 @@ mod tests {
             ;
         let doc = XmlDocument { root: Some(root) };
         assert_eq!(
-            doc.to_string().unwrap(),
+            doc.dump(),
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
             <catalog>\
                 <book id=\"bk101\">\

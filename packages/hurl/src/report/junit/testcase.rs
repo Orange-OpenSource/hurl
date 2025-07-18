@@ -119,7 +119,7 @@ mod test {
         let element = Testcase::from(&hurl_result, content, &filename).to_xml(&secrets);
         let doc = XmlDocument::new(element);
         assert_eq!(
-            doc.to_string().unwrap(),
+            doc.dump(),
             r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
         );
     }
@@ -152,7 +152,7 @@ HTTP/1.0 200
         let element = Testcase::from(&hurl_result, content, &filename).to_xml(&secrets);
         let doc = XmlDocument::new(element);
         assert_eq!(
-            doc.to_string().unwrap(),
+            doc.dump(),
             r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
   --&gt; test.hurl:2:10
    |
@@ -189,7 +189,7 @@ HTTP/1.0 200
         let element = Testcase::from(&hurl_result, content, &filename).to_xml(&secrets);
         let doc = XmlDocument::new(element);
         assert_eq!(
-            doc.to_string().unwrap(),
+            doc.dump(),
             r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
   --&gt; test.hurl:1:5
    |
