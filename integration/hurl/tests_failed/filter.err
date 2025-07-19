@@ -359,11 +359,38 @@ error: Filter error
    |
 
 error: Filter error
-  --> tests_failed/filter.hurl:49:24
+  --> tests_failed/filter.hurl:44:22
    |
    | GET http://localhost:8000/error-filter
    | ...
-49 | foo: jsonpath "$.list" jsonpath "$.foo"
+44 | jsonpath "$.big_int" toFloat == 10000000000000000365.0
+   |                      ^^^^^^^ invalid filter input: integer <10000000000000000365> is too big to be cast as a float
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:45:17
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+45 | jsonpath "$.id" toFloat == 1.23
+   |                 ^^^^^^^ invalid filter input: string <123x>
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:46:31
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+46 | jsonpath "$.date" toDate "%+" toFloat == 3.14
+   |                               ^^^^^^^ invalid filter input: date <2023-01-23 18:25:43.511 UTC>
+   |
+
+error: Filter error
+  --> tests_failed/filter.hurl:52:24
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+52 | foo: jsonpath "$.list" jsonpath "$.foo"
    |                        ^^^^^^^^^^^^^^^^ a filter didn't return any result
    |
 

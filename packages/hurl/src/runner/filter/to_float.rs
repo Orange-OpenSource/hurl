@@ -35,6 +35,13 @@ pub fn eval_to_float(
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
+        Value::Number(Number::BigInteger(_)) => {
+            let kind = RunnerErrorKind::FilterInvalidInput(format!(
+                "{} is too big to be cast as a float",
+                value.repr()
+            ));
+            Err(RunnerError::new(source_info, kind, assert))
+        }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
             Err(RunnerError::new(source_info, kind, assert))

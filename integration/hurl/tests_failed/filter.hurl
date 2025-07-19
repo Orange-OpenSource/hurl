@@ -41,6 +41,9 @@ jsonpath "$.list" toString == "[]"
 jsonpath "$.invalid_xml" xpath "normalize-space(//book)" == "foo"
 jsonpath "$.id" urlQueryParam "q" == "something"
 jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%👻" == "Monday"
+jsonpath "$.big_int" toFloat == 10000000000000000365.0
+jsonpath "$.id" toFloat == 1.23
+jsonpath "$.date" toDate "%+" toFloat == 3.14
 
 
 GET http://localhost:8000/error-filter

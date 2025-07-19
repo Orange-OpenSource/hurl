@@ -28,6 +28,7 @@ pub fn eval_to_string(
     assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
     match value.render() {
+        Some(value) => Ok(Some(Value::String(value))),
         None => {
             let kind = RunnerErrorKind::FilterInvalidInput(format!(
                 "{} can not be converted to a string",
@@ -35,7 +36,6 @@ pub fn eval_to_string(
             ));
             Err(RunnerError::new(source_info, kind, assert))
         }
-        Some(value) => Ok(Some(Value::String(value))),
     }
 }
 
