@@ -172,7 +172,7 @@ impl Client {
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers = HeaderVec::new();
-        let mut status_lines = vec![];
+        let mut status_lines: Option<String> = None;
         let mut response_headers = vec![];
         let has_body_data = !request_spec.body.bytes().is_empty()
             || !request_spec.form.is_empty()
@@ -243,7 +243,7 @@ impl Client {
             transfer.header_function(|h| {
                 if let Some(s) = decode_header(h) {
                     if s.starts_with("HTTP/") {
-                        status_lines.push(s);
+                        status_lines = Some(s);
                     } else {
                         response_headers.push(s);
                     }
@@ -280,8 +280,7 @@ impl Client {
         }
 
         let status = self.handle.response_code()?;
-        // TODO: explain why status_lines is Vec ?
-        let version = match status_lines.last() {
+        let version = match &status_lines {
             Some(status_line) => self.parse_response_version(status_line)?,
             None => return Err(HttpError::CouldNotParseResponse),
         };
