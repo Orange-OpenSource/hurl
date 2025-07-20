@@ -172,7 +172,7 @@ impl Client {
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers = HeaderVec::new();
-        let mut status_lines: Option<String> = None;
+        let mut status_lines = None;
         let mut response_headers = vec![];
         let has_body_data = !request_spec.body.bytes().is_empty()
             || !request_spec.form.is_empty()
@@ -839,7 +839,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
 }
 
 /// Matches cookie for a given URL.
-pub fn match_cookie(cookie: &Cookie, url: &Url) -> bool {
+fn match_cookie(cookie: &Cookie, url: &Url) -> bool {
     if let Some(domain) = url.domain() {
         if cookie.include_subdomain == "FALSE" {
             if cookie.domain != domain {
@@ -901,16 +901,10 @@ fn split_lines(data: &[u8]) -> Vec<String> {
 }
 
 /// Decodes optionally header value as text with UTF-8 or ISO-8859-1 encoding.
-pub fn decode_header(data: &[u8]) -> Option<String> {
+fn decode_header(data: &[u8]) -> Option<String> {
     match str::from_utf8(data) {
         Ok(s) => Some(s.to_string()),
-        Err(_) => match ISO_8859_1.decode(data, DecoderTrap::Strict) {
-            Ok(s) => Some(s),
-            Err(_) => {
-                println!("Error decoding header both UTF-8 and ISO-8859-1 {data:?}");
-                None
-            }
-        },
+        Err(_) => ISO_8859_1.decode(data, DecoderTrap::Strict).ok(),
     }
 }
 
