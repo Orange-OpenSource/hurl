@@ -68,3 +68,26 @@ fn get_numbered_lines(content: &str, errors: &[(RunnerError, SourceInfo)]) -> St
     lines.push_str("</pre></code>");
     lines
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::report::html::Testcase;
+    use crate::runner::HurlResult;
+    use hurl_core::input::Input;
+    use hurl_core::parser;
+
+    #[test]
+    fn secrets_redacted_in_source_html() {
+        let content = r#"
+GET https://localhost
+X-Secret: secret
+HTTP 200
+"#;
+        let hurl_file = parser::parse_hurl_file(content).unwrap();
+        let filename = Input::new("test.hurl");
+        let testcase = Testcase::from(&HurlResult::default(), &filename);
+        let html = testcase.get_source_html(&hurl_file, content, &["secret"]);
+        assert!(html.contains("***"));
+        assert!(!html.contains("secret"));
+    }
+}

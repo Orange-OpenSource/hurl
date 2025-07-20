@@ -25,10 +25,6 @@ files=$(find build/secret/report-html/*.html \
 
 for secret in "${secrets[@]}"; do
   for file in $files; do
-    # Don't search leaks in sources
-    if [[ "$file" == *source.html ]]; then
-      continue
-    fi
     if grep -q "$secret" "$file"; then
         echo "Secret <$secret> have leaked in $file"
         cat "$file"
