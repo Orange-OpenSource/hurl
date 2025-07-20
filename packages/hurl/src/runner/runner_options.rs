@@ -501,7 +501,7 @@ impl RunnerOptionsBuilder {
 ///
 /// Most options are used to configure the HTTP client used for running requests, while other
 /// are used to configure asserts settings, output etc....
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub struct RunnerOptions {
     /// Allow reusing internal connections.
     pub(crate) allow_reuse: bool,
@@ -600,3 +600,108 @@ impl Default for RunnerOptions {
         RunnerOptionsBuilder::default().build()
     }
 }
+
+// FIXME: Remove this manual implementation in favour of a derive
+// when we have removed the `post_entry` and `pre_entry` fields,
+// which for the time being had to be left out of a derived comparison
+// due to the `function pointer comparisons do not produce meaningful results` error.
+// See https://github.com/Orange-OpenSource/hurl/issues/3763 and https://github.com/Orange-OpenSource/hurl/pull/4232.
+impl PartialEq for RunnerOptions {
+    fn eq(&self, other: &Self) -> bool {
+        let Self {
+            allow_reuse,
+            aws_sigv4,
+            cacert_file,
+            client_cert_file,
+            client_key_file,
+            compressed,
+            connect_timeout,
+            connects_to,
+            delay,
+            context_dir,
+            continue_on_error,
+            cookie_input_file,
+            follow_location,
+            follow_location_trusted,
+            from_entry,
+            headers,
+            http_version,
+            ignore_asserts,
+            ip_resolve,
+            insecure,
+            max_filesize,
+            max_recv_speed,
+            max_redirect,
+            max_send_speed,
+            netrc,
+            netrc_file,
+            netrc_optional,
+            no_proxy,
+            output,
+            path_as_is,
+            pinned_pub_key,
+            proxy,
+            repeat,
+            resolves,
+            retry,
+            retry_interval,
+            skip,
+            ssl_no_revoke,
+            timeout,
+            to_entry,
+            unix_socket,
+            user,
+            user_agent,
+            // These fields are excluded from comparison due to the
+            // `function pointer comparisons do not produce meaningful results` error.
+            pre_entry: _,
+            post_entry: _,
+        } = self;
+
+        allow_reuse == &other.allow_reuse
+            && aws_sigv4 == &other.aws_sigv4
+            && cacert_file == &other.cacert_file
+            && client_cert_file == &other.client_cert_file
+            && client_key_file == &other.client_key_file
+            && compressed == &other.compressed
+            && connect_timeout == &other.connect_timeout
+            && connects_to == &other.connects_to
+            && delay == &other.delay
+            && context_dir == &other.context_dir
+            && continue_on_error == &other.continue_on_error
+            && cookie_input_file == &other.cookie_input_file
+            && follow_location == &other.follow_location
+            && follow_location_trusted == &other.follow_location_trusted
+            && from_entry == &other.from_entry
+            && headers == &other.headers
+            && http_version == &other.http_version
+            && ignore_asserts == &other.ignore_asserts
+            && ip_resolve == &other.ip_resolve
+            && insecure == &other.insecure
+            && max_filesize == &other.max_filesize
+            && max_recv_speed == &other.max_recv_speed
+            && max_redirect == &other.max_redirect
+            && max_send_speed == &other.max_send_speed
+            && netrc == &other.netrc
+            && netrc_file == &other.netrc_file
+            && netrc_optional == &other.netrc_optional
+            && no_proxy == &other.no_proxy
+            && output == &other.output
+            && path_as_is == &other.path_as_is
+            && pinned_pub_key == &other.pinned_pub_key
+            && proxy == &other.proxy
+            && repeat == &other.repeat
+            && resolves == &other.resolves
+            && retry == &other.retry
+            && retry_interval == &other.retry_interval
+            && skip == &other.skip
+            && ssl_no_revoke == &other.ssl_no_revoke
+            && timeout == &other.timeout
+            && to_entry == &other.to_entry
+            && unix_socket == &other.unix_socket
+            && user == &other.user
+            && user_agent == &other.user_agent
+    }
+}
+
+impl Eq for RunnerOptions {}
