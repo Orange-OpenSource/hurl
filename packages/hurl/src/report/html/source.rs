@@ -20,9 +20,11 @@ use hurl_core::ast::{HurlFile, SourceInfo};
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
+use crate::util::redacted::Redact;
 
 impl Testcase {
     /// Returns the HTML string of the Hurl source file (syntax colored and errors).
+    /// Secret values are redacted from the output.
     pub fn get_source_html(&self, hurl_file: &HurlFile, content: &str, secrets: &[&str]) -> String {
         let nav = self.get_nav_html(content, Tab::Source, secrets);
         let nav_css = include_str!("resources/nav.css");
@@ -40,6 +42,7 @@ impl Testcase {
             source_div = source_div,
             source_css = source_css,
         )
+        .redact(secrets)
     }
 }
 
