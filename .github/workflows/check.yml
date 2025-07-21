@@ -72,10 +72,12 @@ jobs:
         bin/check/zizmor.sh --github-token ${GITHUB_TOKEN} .github/workflows/*.yml
 
     - name: Check Rust version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: always()
       run: |
         python3 -m pip install requests --quiet
-        bin/check/rust_version.py 7
+        bin/check/rust_version.py --token ${GITHUB_TOKEN} 7
 
     - name: Generated
       if: always()
