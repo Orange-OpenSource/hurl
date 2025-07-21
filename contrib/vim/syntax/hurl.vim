@@ -14,19 +14,23 @@ syntax match version "HTTP/2" nextgroup=status skipwhite
 syntax match version "HTTP/\*" nextgroup=status skipwhite
 syntax match status "[0-9]\+" contained
 syntax match comment "#.*$" contains=@Spell
+syntax match section "\[Query\]"
 syntax match section "\[QueryStringParams\]"
+syntax match section "\[Form\]"
 syntax match section "\[FormParams\]"
+syntax match section "\[Multipart\]"
 syntax match section "\[MultipartFormData\]"
 syntax match section "\[Cookies\]"
 syntax match section "\[Captures\]"
 syntax match section "\[Asserts\]"
 syntax match section "\[Options\]"
+syntax match section "\[BasicAuth\]"
 
 syntax keyword operator == != > >= < <= not
-syntax keyword query status url header cookie body jsonpath xpath regex variable duration sha256 md5 bytes
-syntax keyword predicate startsWith endsWith matches exists includes isInteger isFloat isBoolean isString isCollection
+syntax keyword query body bytes certificate cookie duration header ip jsonpath md5 redirects regex sha256 status url variable version xpath
+syntax keyword predicate startsWith endsWith matches exists isBoolean isCollection isEmpty isFloat isInteger isIsoDate isNumber isString isIpv4 isIpv6
 syntax match predicate "contains"
-syntax keyword filter count regex urlEncode urlDecode htmlEscape htmlUnescape
+syntax keyword filter base64Decode base64Encode base64UrlSafeDecode base64UrlSafeEncode count daysAfterNow daysBeforeNow decode first format htmlEscape htmlUnescape jsonpath last location nth replace replaceRegex regex split toDate toFloat toHex toInt toString urlDecode urlEncode urlQueryParam xpath
 syntax match escapeNumberSign "\\#"
 syntax match escapeQuote "\\\""
 syntax region string start='"' end='"'  contains=escapeQuote
