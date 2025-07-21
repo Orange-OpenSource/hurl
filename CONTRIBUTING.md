@@ -24,7 +24,7 @@ relevant to you and we understand it; that's said, we try to reflect on every as
 
 ## How Can You Help ?
 
-Issues opened to new contributors are labelled ["open-to-contribution"](https://github.com/Orange-OpenSource/hurl/issues?q=is%3Aissue%20state%3Aopen%20label%3Aopen-to-contribution).
+Issues opened to contributors are labelled ["open-to-contribution"](https://github.com/Orange-OpenSource/hurl/issues?q=is%3Aissue%20state%3Aopen%20label%3Aopen-to-contribution).
 Apart for these issues, we're looking forward to contributors for:
 
 - Installing / Packet managers: bundle Hurl for a particular packet manager is welcome. Currently, we built binaries for
