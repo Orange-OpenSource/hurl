@@ -7,8 +7,15 @@ import sys
 import requests
 
 
-def get_latest_release():
-    r = requests.get("https://api.github.com/repos/rust-lang/rust/releases")
+def get_latest_release() -> None | tuple[str, datetime]:
+    """Returns the latest Rust release available."""
+    url = "https://api.github.com/repos/rust-lang/rust/releases"
+    r = requests.get(url)
+    if r.status_code != 200:
+        sys.stderr.write(f"Error GET {url} {r.status_code}\n")
+        sys.stderr.write(f"{r.text}\n")
+        return None
+
     releases = json.loads(r.text)
     latest_release = releases[0]
     version = latest_release["tag_name"]
@@ -17,7 +24,8 @@ def get_latest_release():
     return version, date
 
 
-def get_current_version():
+def get_current_version() -> str:
+    """Returns the current Rust version used by the project."""
     return os.popen("cargo --version").read().split(" ")[1]
 
 
@@ -27,12 +35,15 @@ def main():
         sys.exit(1)
     num_days_before_error = int(sys.argv[1])
 
-    latest_version, date = get_latest_release()
+    ret = get_latest_release()
+    if not ret:
+        sys.exit(2)
+
+    latest_version, date = ret
     current_version = get_current_version()
     if current_version < latest_version:
         sys.stderr.write(
-            "Rust version must be updated from %s to the latest version %s\n"
-            % (current_version, latest_version)
+            f"Rust version must be updated from {current_version} to the latest version {latest_version}\n"
         )
         days_before_now = datetime.datetime.now() - date
         if days_before_now > datetime.timedelta(days=num_days_before_error):
