@@ -296,14 +296,6 @@ This is a cli-only option.
 
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
-### --interactive {#interactive}
-
-Stop between requests.
-
-This is similar to a break point, You can then continue (Press C) or quit (Press Q).
-
-This is a cli-only option.
-
 ### -4, --ipv4 {#ipv4}
 
 This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.

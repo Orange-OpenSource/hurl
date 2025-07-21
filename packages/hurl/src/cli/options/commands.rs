@@ -279,6 +279,7 @@ pub fn interactive() -> clap::Arg {
         .help_heading("Run options")
         .conflicts_with("to_entry")
         .action(clap::ArgAction::SetTrue)
+        .hide(true)
 }
 
 pub fn ipv4() -> clap::Arg {

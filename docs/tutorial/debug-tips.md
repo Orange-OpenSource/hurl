@@ -378,64 +378,6 @@ of all run datas (request headers, response headers, response body, curl debug c
 $ hurl --report-json /tmp/report *.hurl
 ```
 
-
-## Interactive Mode
-
-We can run the whole Hurl file request by request, with the [`--interactive` option]:
-
-```shell
-$ hurl --verbose --interactive basic.hurl
-[1;34m*[0m [1mOptions:[0m
-[1;34m*[0m     fail fast: true
-[1;34m*[0m     insecure: false
-[1;34m*[0m     follow redirect: false
-[1;34m*[0m     max redirect: 50
-
-Interactive mode:
-
-Next request:
-
-GET http://localhost:8080
-
-Press Q (Quit) or C (Continue)
-
-[1;34m*[0m [1m------------------------------------------------------------------------------[0m
-[1;34m*[0m [1mExecuting entry 1[0m
-[1;34m*[0m
-[1;34m*[0m [1mCookie store:[0m
-[1;34m*[0m
-[1;34m*[0m [1mRequest:[0m
-[1;34m*[0m GET http://localhost:3000
-[1;34m*[0m
-[1;34m*[0m Request can be run with the following curl command:
-[1;34m*[0m curl 'http://localhost:3000'
-[1;34m*[0m
-> [1;35mGET / HTTP/1.1[0m
-> [1;36mHost[0m: localhost:3000
-> [1;36mAccept[0m: */*
-> [1;36mUser-Agent[0m: hurl/4.0.0
->
-[1;34m*[0m [1mResponse: (received 9564 bytes in 11 ms)[0m
-[1;34m*[0m
-< [1;32mHTTP/1.1 200 OK[0m
-< [1;36mContent-Type[0m: text/html; charset=utf-8
-< [1;36mContent-Length[0m: 9564
-< [1;36mSet-Cookie[0m: x-session-id=s%3AEE3wsnrgUPSyAkgJZGa3jMWk7xmOtv4E.kXQpkmNBXnFOqmeSssqXnecF4qqv1D7bKu3rpbEJxmQ; Path=/; HttpOnly; SameSite=Strict
-< [1;36mDate[0m: Wed, 26 Jul 2023 13:16:39 GMT
-< [1;36mConnection[0m: keep-alive
-< [1;36mKeep-Alive[0m: timeout=5
-<
-[1;34m*[0m
-
-Interactive mode:
-
-Next request:
-
-GET http://localhost:8080/not-found
-
-Press Q (Quit) or C (Continue)
-```
-
 ## Include Headers Like curl
 
 We can also run our file to only output HTTP headers, with [`-i/--include` option].
@@ -489,7 +431,6 @@ curl --head 'https://example.org'
 curl --head 'https://example.org'
 curl --head 'https://example.org'
 ```
-
 
 ## Using a Proxy
 

@@ -94,7 +94,6 @@ Run options:
       --delay <MILLISECONDS>           Sets delay before each request (aka sleep) [default: 0]
       --from-entry <ENTRY_NUMBER>      Execute Hurl file from ENTRY_NUMBER (starting at 1)
       --ignore-asserts                 Ignore asserts defined in the Hurl file
-      --interactive                    Turn on interactive mode
       --jobs <NUM>                     Maximum number of parallel jobs, 0 to disable parallel
                                        execution
       --parallel                       Run files in parallel (default in test mode)
