@@ -393,6 +393,12 @@ Comma-separated list of hosts which do not use a proxy.
 
 Override value from Environment variable no_proxy.
 
+### --ntlm {#ntlm}
+
+Tell Hurl to use NTLM authentication
+
+This is a cli-only option.
+
 ### -o, --output <FILE> {#output}
 
 Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.

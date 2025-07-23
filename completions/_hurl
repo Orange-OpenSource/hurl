@@ -57,6 +57,7 @@ _hurl() {
     '--no-color[Do not colorize output]' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--noproxy[List of hosts which do not use proxy]: :' \
+    '--ntlm[Tell Hurl to use NTLM authentication]' \
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \
     '--parallel[Run files in parallel (default in test mode)]' \
     '--path-as-is[Tell Hurl to not handle sequences of /../ or /./ in the given URL path]' \

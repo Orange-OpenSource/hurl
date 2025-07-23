@@ -462,6 +462,9 @@ impl ClientOptions {
         if self.netrc {
             arguments.push("--netrc".to_string());
         }
+        if self.ntlm {
+            arguments.push("--ntlm".to_string());
+        }
         if self.path_as_is {
             arguments.push("--path-as-is".to_string());
         }
@@ -662,6 +665,7 @@ mod tests {
             netrc: false,
             netrc_file: Some("/var/run/netrc".to_string()),
             netrc_optional: true,
+            ntlm: true,
             path_as_is: true,
             pinned_pub_key: None,
             proxy: Some("localhost:3128".to_string()),
@@ -698,6 +702,7 @@ mod tests {
         --max-time 10 \
         --netrc-file '/var/run/netrc' \
         --netrc-optional \
+        --ntlm \
         --path-as-is \
         --proxy 'localhost:3128' \
         --resolve foo.com:80:192.168.0.1 \

@@ -459,6 +459,9 @@ impl Client {
         if let Some(pinned_pub_key) = &options.pinned_pub_key {
             self.handle.pinned_public_key(pinned_pub_key)?;
         }
+        if options.ntlm {
+            self.handle.http_auth(easy::Auth::new().ntlm(true))?;
+        }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 
@@ -574,7 +577,7 @@ impl Client {
         }
 
         if let Some(user) = &options.user {
-            if options.aws_sigv4.is_some() {
+            if options.aws_sigv4.is_some() || options.ntlm {
                 // curl's aws_sigv4 support needs to know the username and password for the
                 // request, as it uses those values to calculate the Authorization header for the
                 // AWS V4 signature.

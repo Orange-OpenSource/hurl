@@ -1,0 +1,7 @@
+name: ntlm
+long: ntlm
+help: Tell Hurl to use NTLM authentication
+help_heading: HTTP options
+cli_only: true
+---
+Tell Hurl to use NTLM authentication

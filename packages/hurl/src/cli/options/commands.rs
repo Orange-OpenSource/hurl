@@ -417,6 +417,14 @@ pub fn noproxy() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn ntlm() -> clap::Arg {
+    clap::Arg::new("ntlm")
+        .long("ntlm")
+        .help("Tell Hurl to use NTLM authentication")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn output() -> clap::Arg {
     clap::Arg::new("output")
         .long("output")

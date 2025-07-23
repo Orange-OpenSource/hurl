@@ -54,6 +54,7 @@ pub struct RunnerOptionsBuilder {
     netrc_file: Option<String>,
     netrc_optional: bool,
     no_proxy: Option<String>,
+    ntlm: bool,
     output: Option<Output>,
     path_as_is: bool,
     pinned_pub_key: Option<String>,
@@ -104,6 +105,7 @@ impl Default for RunnerOptionsBuilder {
             netrc_file: None,
             netrc_optional: false,
             no_proxy: None,
+            ntlm: false,
             output: None,
             path_as_is: false,
             pinned_pub_key: None,
@@ -339,6 +341,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Enables HTTP NTLM authentication.
+    pub fn ntlm(&mut self, ntlm: bool) -> &mut Self {
+        self.ntlm = ntlm;
+        self
+    }
+
     /// Specifies the file to output the HTTP response instead of stdout.
     pub fn output(&mut self, output: Option<Output>) -> &mut Self {
         self.output = output;
@@ -476,6 +484,7 @@ impl RunnerOptionsBuilder {
             netrc_file: self.netrc_file.clone(),
             netrc_optional: self.netrc_optional,
             no_proxy: self.no_proxy.clone(),
+            ntlm: self.ntlm,
             output: self.output.clone(),
             path_as_is: self.path_as_is,
             pinned_pub_key: self.pinned_pub_key.clone(),
@@ -560,6 +569,8 @@ pub struct RunnerOptions {
     pub(crate) netrc_optional: bool,
     /// Sets list of hosts which do not use a proxy.
     pub(crate) no_proxy: Option<String>,
+    /// Enables HTTP NTLM authentication.
+    pub(crate) ntlm: bool,
     /// Specifies the file to output the HTTP response.
     pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
@@ -637,6 +648,7 @@ impl PartialEq for RunnerOptions {
             netrc_file,
             netrc_optional,
             no_proxy,
+            ntlm,
             output,
             path_as_is,
             pinned_pub_key,
@@ -686,6 +698,7 @@ impl PartialEq for RunnerOptions {
             && netrc_file == &other.netrc_file
             && netrc_optional == &other.netrc_optional
             && no_proxy == &other.no_proxy
+            && ntlm == &other.ntlm
             && output == &other.output
             && path_as_is == &other.path_as_is
             && pinned_pub_key == &other.pinned_pub_key

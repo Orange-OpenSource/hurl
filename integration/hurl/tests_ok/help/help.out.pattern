@@ -57,6 +57,8 @@ HTTP options:
           Maximum time allowed for the transfer [default: 300]
       --noproxy <HOST(S)>
           List of hosts which do not use proxy
+      --ntlm
+          Tell Hurl to use NTLM authentication
       --path-as-is
           Tell Hurl to not handle sequences of /../ or /./ in the given URL path
       --pinnedpubkey <HASHES>
