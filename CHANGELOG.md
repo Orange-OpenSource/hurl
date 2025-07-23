@@ -19,6 +19,7 @@ Thanks to
 [@nwellnhof](https://github.com/nwellnhof),
 [@YannickAlex07](https://github.com/YannickAlex07),
 [@lu-zero](https://github.com/lu-zero),
+[@RaghavSood](https://github.com/RaghavSood),
 
 Breaking Changes:
 
@@ -44,6 +45,9 @@ Enhancements:
 * Add option to configure pinnedpubkey per request [#4084](https://github.com/Orange-OpenSource/hurl/issues/4084)
 * Add timeline link on status label in source and run pages [#4128](https://github.com/Orange-OpenSource/hurl/issues/4128)
 * Support template in nth filter parameter [#4152](https://github.com/Orange-OpenSource/hurl/issues/4152)
+* Implement predicate `isUuid` [#4179](https://github.com/Orange-OpenSource/hurl/issues/4179)
+* Improve captures error messages when filter chain returned no value [#4214](https://github.com/Orange-OpenSource/hurl/issues/4214)
+* Add ntlm cli option [#4216](https://github.com/Orange-OpenSource/hurl/issues/4216)
 
 
 Bugs Fixed:
