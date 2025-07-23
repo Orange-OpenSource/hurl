@@ -17,7 +17,7 @@ jsonpath "$.store..price" count == 5                                       # the
 jsonpath "$..book[2].title" nth 0 == "Moby Dick"                           # the third book
 jsonpath "$..book[-1].title" nth 0 == "The Lord of the Rings"              # the last book
 #jsonpath "$..book[(@.length-1)].title" nth 0 == "The Lord of the Rings"   # not supported yet
-jsonpath "$..book[*]" last jsonpath "$.title" == "The Lord of the Rings"   # alternative
+#jsonpath "$..book[*]" last jsonpath "$.title" == "The Lord of the Rings"   # alternative
 jsonpath "$..book[-1:].title" nth 0 == "The Lord of the Rings"             # the last book in order.
 jsonpath "$..book[0,1]" count == 2                                         # the first two books
 jsonpath "$..book[0,1].title" nth 0 == "Sayings of the Century"
@@ -47,10 +47,10 @@ jsonpath "$..book[-5]" count == 0                                          # out
 jsonpath "$.store[0]" count == 0                                           # array indexing for an object
 jsonpath "$.store[-1]" count == 0                                          # array indexing for an object
 body jsonpath "$.store.book[0].category" == "reference"                    # `jsonpath` is also a filter
-jsonpath "$.store.book" last jsonpath "$.title" == "The Lord of the Rings" # other uses of `jsonpath` filter
-jsonpath "$.store.book" nth 2 jsonpath "$.isbn" == "0-553-21311-3"         #
+#jsonpath "$.store.book" last jsonpath "$.title" == "The Lord of the Rings" # other uses of `jsonpath` filter
+#jsonpath "$.store.book" nth 2 jsonpath "$.isbn" == "0-553-21311-3"         #
 jsonpath "$.store.bicycle.price" == 19.95                                  #
-jsonpath "$.store" jsonpath "$.bicycle" jsonpath "$.price" == 19.95        #
+#jsonpath "$.store" jsonpath "$.bicycle" jsonpath "$.price" == 19.95        #
 
 {
   "store": {

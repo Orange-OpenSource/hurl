@@ -391,6 +391,6 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 52 | foo: jsonpath "$.list" jsonpath "$.foo"
-   |                        ^^^^^^^^^^^^^^^^ a filter didn't return any result
+   |                        ^^^^^^^^^^^^^^^^ invalid filter input: list
    |
 
