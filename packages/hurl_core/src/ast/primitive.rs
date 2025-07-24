@@ -571,6 +571,7 @@ impl fmt::Display for Variable {
 pub enum Function {
     NewDate,
     NewUuid,
+    NewUuidV7,
 }
 
 impl fmt::Display for Function {
@@ -578,6 +579,7 @@ impl fmt::Display for Function {
         match self {
             Function::NewDate => write!(f, "newDate"),
             Function::NewUuid => write!(f, "newUuid"),
+            Function::NewUuidV7 => write!(f, "newUuidV7"),
         }
     }
 }

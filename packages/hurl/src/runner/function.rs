@@ -33,5 +33,9 @@ pub fn eval(function: &Function) -> Result<Value, RunnerError> {
             let uuid = Uuid::new_v4();
             Ok(Value::String(uuid.to_string()))
         }
+        Function::NewUuidV7 => {
+            let uuid = Uuid::now_v7();
+            Ok(Value::String(uuid.to_string()))
+        }
     }
 }

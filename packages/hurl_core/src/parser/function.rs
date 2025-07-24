@@ -27,6 +27,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Function> {
     match function_name.as_str() {
         "newDate" => Ok(Function::NewDate),
         "newUuid" => Ok(Function::NewUuid),
+        "newUuidV7" => Ok(Function::NewUuidV7),
         _ => Err(ParseError::new(
             start.pos,
             true,
@@ -46,6 +47,12 @@ mod tests {
     fn test_exist() {
         let mut reader = Reader::new("newUuid");
         assert_eq!(parse(&mut reader).unwrap(), Function::NewUuid);
+    }
+
+    #[test]
+    fn test_new_uuid_v7() {
+        let mut reader = Reader::new("newUuidV7");
+        assert_eq!(parse(&mut reader).unwrap(), Function::NewUuidV7);
     }
 
     #[test]
