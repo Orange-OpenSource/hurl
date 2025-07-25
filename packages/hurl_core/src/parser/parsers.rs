@@ -17,8 +17,8 @@
  */
 use crate::ast::VersionValue::VersionAny;
 use crate::ast::{
-    Body, Entry, HurlFile, Method, Request, Response, SourceInfo, Status, StatusValue, Version,
-    VersionValue,
+    Body, Entry, HurlFile, Method, Request, Response, Section, SourceInfo, Status, StatusValue,
+    Version, VersionValue,
 };
 use crate::combinator::{optional, zero_or_more};
 use crate::parser::bytes::bytes;
@@ -63,19 +63,7 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let body = optional(body, reader)?;
     let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
 
-    // Check duplicated section
-    let mut section_names = vec![];
-    for section in &sections {
-        if section_names.contains(&section.identifier()) {
-            return Err(ParseError::new(
-                section.source_info.start,
-                false,
-                ParseErrorKind::DuplicateSection,
-            ));
-        } else {
-            section_names.push(section.identifier());
-        }
-    }
+    check_duplicated_sections(&sections)?;
 
     Ok(Request {
         line_terminators,
@@ -104,6 +92,8 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
     let body = optional(body, reader)?;
     let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
 
+    check_duplicated_sections(&sections)?;
+
     Ok(Response {
         line_terminators,
         space0,
@@ -116,6 +106,22 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
         body,
         source_info,
     })
+}
+
+fn check_duplicated_sections(sections: &[Section]) -> Result<(), ParseError> {
+    let mut section_names = vec![];
+    for section in sections {
+        if section_names.contains(&section.identifier()) {
+            return Err(ParseError::new(
+                section.source_info.start,
+                false,
+                ParseErrorKind::DuplicateSection,
+            ));
+        } else {
+            section_names.push(section.identifier());
+        }
+    }
+    Ok(())
 }
 
 fn method(reader: &mut Reader) -> ParseResult<Method> {
