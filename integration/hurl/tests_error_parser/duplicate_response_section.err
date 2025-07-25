@@ -1,0 +1,7 @@
+error: Parsing section
+  --> tests_error_parser/duplicate_response_section.hurl:5:1
+   |
+ 5 | [Asserts]
+   | ^ the section is already defined
+   |
+
