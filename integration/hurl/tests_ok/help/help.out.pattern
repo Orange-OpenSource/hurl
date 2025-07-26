@@ -55,6 +55,8 @@ HTTP options:
           Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]
   -m, --max-time <SECONDS>
           Maximum time allowed for the transfer [default: 300]
+      --negotiate
+          Tell Hurl to use Negotiate (SPNEGO) authentication
       --noproxy <HOST(S)>
           List of hosts which do not use proxy
       --ntlm

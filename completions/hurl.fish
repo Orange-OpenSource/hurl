@@ -34,6 +34,7 @@ complete -c hurl -l limit-rate -d 'Specify the maximum transfer rate in bytes/se
 complete -c hurl -l max-filesize -d 'Specify the maximum size in bytes of a file to download'
 complete -c hurl -l max-redirs -d 'Maximum number of redirects allowed, -1 for unlimited redirects'
 complete -c hurl -l max-time -d 'Maximum time allowed for the transfer'
+complete -c hurl -l negotiate -d 'Tell Hurl to use Negotiate (SPNEGO) authentication'
 complete -c hurl -l netrc -d 'Must read .netrc for username and password'
 complete -c hurl -l netrc-file -d 'Specify FILE for .netrc'
 complete -c hurl -l netrc-optional -d 'Use either .netrc or the URL'

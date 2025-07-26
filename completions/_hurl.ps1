@@ -56,6 +56,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--max-filesize', 'max-filesize', [CompletionResultType]::ParameterName, 'Specify the maximum size in bytes of a file to download')
             [CompletionResult]::new('--max-redirs', 'max-redirs', [CompletionResultType]::ParameterName, 'Maximum number of redirects allowed, -1 for unlimited redirects')
             [CompletionResult]::new('--max-time', 'max-time', [CompletionResultType]::ParameterName, 'Maximum time allowed for the transfer')
+            [CompletionResult]::new('--negotiate', 'negotiate', [CompletionResultType]::ParameterName, 'Tell Hurl to use Negotiate (SPNEGO) authentication')
             [CompletionResult]::new('--netrc', 'netrc', [CompletionResultType]::ParameterName, 'Must read .netrc for username and password')
             [CompletionResult]::new('--netrc-file', 'netrc-file', [CompletionResultType]::ParameterName, 'Specify FILE for .netrc')
             [CompletionResult]::new('--netrc-optional', 'netrc-optional', [CompletionResultType]::ParameterName, 'Use either .netrc or the URL')

@@ -259,6 +259,7 @@ impl ClientOptions {
             max_recv_speed: runner_options.max_recv_speed,
             max_redirect: runner_options.max_redirect,
             max_send_speed: runner_options.max_send_speed,
+            negotiate: runner_options.negotiate,
             netrc: runner_options.netrc,
             netrc_file: runner_options.netrc_file.clone(),
             netrc_optional: runner_options.netrc_optional,

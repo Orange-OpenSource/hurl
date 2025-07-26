@@ -459,8 +459,15 @@ impl Client {
         if let Some(pinned_pub_key) = &options.pinned_pub_key {
             self.handle.pinned_public_key(pinned_pub_key)?;
         }
-        if options.ntlm {
-            self.handle.http_auth(easy::Auth::new().ntlm(true))?;
+        if options.ntlm || options.negotiate {
+            let mut auth = easy::Auth::new();
+            if options.ntlm {
+                auth.ntlm(true);
+            }
+            if options.negotiate {
+                auth.gssnegotiate(true);
+            }
+            self.handle.http_auth(&auth)?;
         }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
@@ -577,10 +584,19 @@ impl Client {
         }
 
         if let Some(user) = &options.user {
-            if options.aws_sigv4.is_some() || options.ntlm {
+            if options.aws_sigv4.is_some() || options.ntlm || options.negotiate {
                 // curl's aws_sigv4 support needs to know the username and password for the
                 // request, as it uses those values to calculate the Authorization header for the
                 // AWS V4 signature.
+                //
+                // --ntlm requires a username and password to be provided in order to complete the
+                // authentication process. With curl, this would be `-u username:password`
+                //
+                // --negotiate requires a username and password, though they are not used.
+                // From the curl man page:
+                // > When using this option, you must also provide a fake `-u, --user` option to
+                // > activate the authentication code properly. Sending a '-u :' is enough, as the
+                // > username and password from the `-u, --user` option are not actually used.
                 if let Some((username, password)) = user.split_once(':') {
                     self.handle.username(username)?;
                     self.handle.password(password)?;

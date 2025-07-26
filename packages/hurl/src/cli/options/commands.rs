@@ -360,6 +360,14 @@ pub fn max_time() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn negotiate() -> clap::Arg {
+    clap::Arg::new("negotiate")
+        .long("negotiate")
+        .help("Tell Hurl to use Negotiate (SPNEGO) authentication")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn netrc() -> clap::Arg {
     clap::Arg::new("netrc")
         .long("netrc")

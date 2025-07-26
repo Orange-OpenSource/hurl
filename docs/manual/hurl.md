@@ -357,6 +357,12 @@ You can specify time units in the maximum time expression. Set Hurl to use a max
 
 See also [`--connect-timeout`](#connect-timeout).
 
+### --negotiate {#negotiate}
+
+Tell Hurl to use Negotiate (SPNEGO) authentication.
+
+This is a cli-only option.
+
 ### -n, --netrc {#netrc}
 
 Scan the .netrc file in the user's home directory for the username and password.

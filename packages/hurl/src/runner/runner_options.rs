@@ -50,6 +50,7 @@ pub struct RunnerOptionsBuilder {
     max_recv_speed: Option<BytesPerSec>,
     max_redirect: Count,
     max_send_speed: Option<BytesPerSec>,
+    negotiate: bool,
     netrc: bool,
     netrc_file: Option<String>,
     netrc_optional: bool,
@@ -101,6 +102,7 @@ impl Default for RunnerOptionsBuilder {
             max_recv_speed: None,
             max_redirect: Count::Finite(50),
             max_send_speed: None,
+            negotiate: false,
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
@@ -317,6 +319,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the HTTP Negotiate (SPNEGO) authentication flag.
+    pub fn negotiate(&mut self, negotiate: bool) -> &mut Self {
+        self.negotiate = negotiate;
+        self
+    }
+
     /// Sets the netrc flag.
     pub fn netrc(&mut self, netrc: bool) -> &mut Self {
         self.netrc = netrc;
@@ -480,6 +488,7 @@ impl RunnerOptionsBuilder {
             max_recv_speed: self.max_recv_speed,
             max_redirect: self.max_redirect,
             max_send_speed: self.max_send_speed,
+            negotiate: self.negotiate,
             netrc: self.netrc,
             netrc_file: self.netrc_file.clone(),
             netrc_optional: self.netrc_optional,
@@ -561,6 +570,8 @@ pub struct RunnerOptions {
     pub(crate) max_redirect: Count,
     /// Set the maximum upload speed.
     pub(crate) max_send_speed: Option<BytesPerSec>,
+    /// Enables HTTP Negotiate (SPNEGO) authentication.
+    pub(crate) negotiate: bool,
     /// Sets the netrc flag.
     pub(crate) netrc: bool,
     /// Sets the netrc file.
@@ -644,6 +655,7 @@ impl PartialEq for RunnerOptions {
             max_recv_speed,
             max_redirect,
             max_send_speed,
+            negotiate,
             netrc,
             netrc_file,
             netrc_optional,
@@ -694,6 +706,7 @@ impl PartialEq for RunnerOptions {
             && max_recv_speed == &other.max_recv_speed
             && max_redirect == &other.max_redirect
             && max_send_speed == &other.max_send_speed
+            && negotiate == &other.negotiate
             && netrc == &other.netrc
             && netrc_file == &other.netrc_file
             && netrc_optional == &other.netrc_optional

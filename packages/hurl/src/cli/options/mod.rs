@@ -78,6 +78,7 @@ pub struct CliOptions {
     pub limit_rate: Option<BytesPerSec>,
     pub max_filesize: Option<u64>,
     pub max_redirect: Count,
+    pub negotiate: bool,
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
@@ -211,6 +212,7 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::max_filesize())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
+        .arg(commands::negotiate())
         .arg(commands::noproxy())
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
@@ -326,6 +328,7 @@ fn parse_matches(
     let limit_rate = matches::limit_rate(arg_matches);
     let max_filesize = matches::max_filesize(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
+    let negotiate = matches::negotiate(arg_matches);
     let netrc = matches::netrc(arg_matches);
     let netrc_file = matches::netrc_file(arg_matches)?;
     let netrc_optional = matches::netrc_optional(arg_matches);
@@ -387,6 +390,7 @@ fn parse_matches(
         limit_rate,
         max_filesize,
         max_redirect,
+        negotiate,
         netrc,
         netrc_file,
         netrc_optional,
@@ -492,6 +496,7 @@ impl CliOptions {
         let retry = self.retry;
         let retry_interval = self.retry_interval;
         let ssl_no_revoke = self.ssl_no_revoke;
+        let negotiate = self.negotiate;
         let ntlm = self.ntlm;
         let timeout = self.timeout;
         let to_entry = self.to_entry;
@@ -523,6 +528,7 @@ impl CliOptions {
             .max_recv_speed(max_recv_speed)
             .max_redirect(max_redirect)
             .max_send_speed(max_send_speed)
+            .negotiate(negotiate)
             .netrc(netrc)
             .netrc_file(netrc_file)
             .netrc_optional(netrc_optional)

@@ -452,6 +452,9 @@ impl ClientOptions {
             arguments.push("--max-time".to_string());
             arguments.push(self.timeout.as_secs().to_string());
         }
+        if self.negotiate {
+            arguments.push("--negotiate".to_string());
+        }
         if let Some(filename) = &self.netrc_file {
             arguments.push("--netrc-file".to_string());
             arguments.push(format!("'{filename}'"));
@@ -662,6 +665,7 @@ mod tests {
             max_recv_speed: Some(BytesPerSec(8000)),
             max_redirect: Count::Finite(10),
             max_send_speed: Some(BytesPerSec(8000)),
+            negotiate: true,
             netrc: false,
             netrc_file: Some("/var/run/netrc".to_string()),
             netrc_optional: true,
@@ -700,6 +704,7 @@ mod tests {
         --limit-rate 8000 \
         --max-redirs 10 \
         --max-time 10 \
+        --negotiate \
         --netrc-file '/var/run/netrc' \
         --netrc-optional \
         --ntlm \
