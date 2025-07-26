@@ -70,17 +70,17 @@ fn simple_sample() {
     fn check_response(response: &Response) {
         assert_eq!(response.version, HttpVersion::Http11);
         assert_eq!(response.status, 200);
-        assert_eq!(response.headers.len(), 6);
+        assert_eq!(response.headers.len(), 5);
         let header_names = response
             .headers
             .iter()
             .map(|h| h.name.clone())
             .collect::<Vec<_>>();
-        assert!(header_names.contains(&"Connection".to_string()));
         assert!(header_names.contains(&"Content-Length".to_string()));
         assert!(header_names.contains(&"Content-Type".to_string()));
         assert!(header_names.contains(&"Date".to_string()));
-        assert!(header_names.contains(&"Server".to_string())); // There are two 'Server' HTTP headers
+        assert!(header_names.contains(&"Server".to_string()));
+        assert!(header_names.contains(&"Via".to_string()));
         assert_eq!(response.body.len(), 12);
         assert!(response.duration < Duration::from_secs(1));
         assert_eq!(

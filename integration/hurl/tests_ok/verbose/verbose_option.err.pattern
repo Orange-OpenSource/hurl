@@ -20,12 +20,11 @@
 * Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 12
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * ------------------------------------------------------------------------------
@@ -57,12 +56,11 @@
 * Response: (received 12 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 12
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Hello World!

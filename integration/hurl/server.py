@@ -2,6 +2,7 @@
 import argparse
 
 from app import app, load_tests
+from waitress import serve
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
     args = parser.parse_args()
 
     load_tests()
-    app.run(host=args.host, port=args.port)
+    serve(app, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":

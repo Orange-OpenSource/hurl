@@ -17,14 +17,13 @@
 [1;34m*[0m [1mResponse: (received 12 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mContent-Length[0m: 12
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
 < [1;36mHeader1[0m: value1
 < [1;36mHeader2[0m: Hello Bob!
 < [1;36mServer[0m: Flask Server
-< [1;36mConnection[0m: close
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33mparam1[0m: value1
@@ -48,12 +47,11 @@
 [1;34m*[0m [1mResponse: (received 166 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mContent-Length[0m: 166
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
 < [1;36mServer[0m: Flask Server
-< [1;36mConnection[0m: close
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33ma_node_set[0m: Nodeset(size=2)
@@ -77,13 +75,12 @@
 [1;34m*[0m [1mResponse: (received 0 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
-< [1;36mSet-Cookie[0m: foo=value1; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; Max-Age=2592000; HttpOnly; Path=/bar
-< [1;36mServer[0m: Flask Server
 < [1;36mContent-Length[0m: 0
-< [1;36mConnection[0m: close
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
+< [1;36mServer[0m: Flask Server
+< [1;36mSet-Cookie[0m: foo=value1; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; Max-Age=2592000; HttpOnly; Path=/bar
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33ma_cookie_value_attr[0m: value1
@@ -108,12 +105,11 @@
 [1;34m*[0m [1mResponse: (received 205 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mContent-Length[0m: 205
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
 < [1;36mServer[0m: Flask Server
-< [1;36mConnection[0m: close
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33man_object[0m: Object()
@@ -152,13 +148,12 @@
 [1;34m*[0m [1mResponse: (received 257 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 302 FOUND[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mContent-Length[0m: 257
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
 < [1;36mLocation[0m: http://localhost:8000/captures-json
 < [1;36mServer[0m: Flask Server
-< [1;36mConnection[0m: close
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m
 [1;34m*[0m => Redirect to http://localhost:8000/captures-json
@@ -171,12 +166,11 @@
 [1;34m*[0m [1mResponse: (received 205 bytes in <<<\d+>>> ms)[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
-< [1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< [1;36mDate[0m: <<<.*?>>>
-< [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mContent-Length[0m: 205
+< [1;36mContent-Type[0m: text/html; charset=utf-8
+< [1;36mDate[0m: <<<.*?>>>
 < [1;36mServer[0m: Flask Server
-< [1;36mConnection[0m: close
+< [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33man_object[0m: Object()

@@ -1,11 +1,10 @@
 [1;32mHTTP/1.1 200
-[0m[1;36mServer[0m: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-[1;36mDate[0m: <<<.*?>>>
+[0m[1;36mContent-Length[0m: 5
 [1;36mContent-Type[0m: text/html; charset=utf-8
-[1;36mContent-Length[0m: 5
-[1;36mx-foo[0m: bar
-[1;36mX-BAR[0m: baz
+[1;36mDate[0m: <<<.*?>>>
 [1;36mServer[0m: Flask Server
-[1;36mConnection[0m: close
+[1;36mVia[0m: waitress
+[1;36mX-Bar[0m: baz
+[1;36mX-Foo[0m: bar
 
 Hello

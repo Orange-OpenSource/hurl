@@ -17,12 +17,11 @@
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * ------------------------------------------------------------------------------
@@ -49,11 +48,10 @@
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *

@@ -15,7 +15,7 @@
 ** IPv6: ::1
 ** IPv4: 127.0.0.1
 **   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49368 failed: Connection refused
+** connect to ::1 port 8000 from ::1 port 51771 failed: Connection refused
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000
 > GET /very-verbose/redirect HTTP/1.1
@@ -26,17 +26,16 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 205 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 205
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Location: /very-verbose/redirected
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * <html>
@@ -63,11 +62,9 @@
 *
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49370 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -76,16 +73,15 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 11 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 11
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Redirected.
@@ -111,11 +107,9 @@
 * Request can be run with the following curl command:
 * curl --data '' --location 'http://localhost:8000/very-verbose/redirect'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49372 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > POST /very-verbose/redirect HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -124,17 +118,16 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 205 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 205
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Location: /very-verbose/redirected
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * <html>
@@ -161,11 +154,9 @@
 *
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49374 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -174,16 +165,15 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 11 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 11
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Redirected.
@@ -209,11 +199,9 @@
 * Request can be run with the following curl command:
 * curl --location 'http://localhost:8000/very-verbose/encoding/latin1'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49376 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > GET /very-verbose/encoding/latin1 HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -222,16 +210,15 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=ISO-8859-1
 < Content-Length: 4
+< Content-Type: text/html; charset=ISO-8859-1
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * café
@@ -258,11 +245,9 @@
 * Request can be run with the following curl command:
 * curl --header 'Accept-Encoding: brotli' --header 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' --location 'http://localhost:8000/very-verbose/compressed/brotli'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49378 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > POST /very-verbose/compressed/brotli HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -277,17 +262,16 @@
 *     "baz": true
 * }
 ** upload completely sent off: 37 bytes
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 17 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 17
 < Content-Encoding: br
+< Content-Length: 17
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Hello World!
@@ -313,11 +297,9 @@
 * Request can be run with the following curl command:
 * curl --location 'http://localhost:8000/very-verbose/cat'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49380 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > GET /very-verbose/cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -326,16 +308,15 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 25992 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: image/jpeg
 < Content-Length: 25992
+< Content-Type: image/jpeg
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
@@ -363,11 +344,9 @@
 * Request can be run with the following curl command:
 * curl --form 'cat=@tests_ok<<<(\\|\/)>>>very_verbose<<<(\\|\/)>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49382 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -378,16 +357,15 @@
 * Request body:
 * Bytes <<<<.*?>>><<<.*?>>>...>
 ** upload completely sent off: 26584 bytes
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 *
@@ -415,11 +393,9 @@
 * Request can be run with the following curl command:
 * curl --form 'cat=@tests_ok<<<(\\|\/)>>>very_verbose<<<(\\|\/)>>>cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49384 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -430,16 +406,15 @@
 * Request body:
 * Bytes <<<<.*?>>><<<.*?>>>...>
 ** upload completely sent off: 26584 bytes
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 *
@@ -466,11 +441,9 @@
 * Request can be run with the following curl command:
 * curl --header 'x-foo: bar' --location 'http://localhost:8000/very-verbose/done'
 *
-** Hostname localhost was found in DNS cache
-**   Trying [::1]:8000...
-** connect to ::1 port 8000 from ::1 port 49386 failed: Connection refused
-**   Trying 127.0.0.1:8000...
-** Connected to localhost (127.0.0.1) port 8000
+** Found bundle for host: 0x600001254e10 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
 > GET /very-verbose/done HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -480,16 +453,15 @@
 * Request body:
 *
 ** Request completely sent off
-** Closing connection
+** Connection #0 to host localhost left intact
 * Response: (received 4 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 4
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Response body:
 * Done

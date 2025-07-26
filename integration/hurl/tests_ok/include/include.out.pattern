@@ -1,11 +1,10 @@
 HTTP/1.1 200
-Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-Date: <<<.*?>>>
-Content-Type: text/html; charset=utf-8
 Content-Length: 5
-x-foo: bar
-X-BAR: baz
+Content-Type: text/html; charset=utf-8
+Date: <<<.*?>>>
 Server: Flask Server
-Connection: close
+Via: waitress
+X-Bar: baz
+X-Foo: bar
 
 Hello

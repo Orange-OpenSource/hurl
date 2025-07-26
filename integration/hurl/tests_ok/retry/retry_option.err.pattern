@@ -17,12 +17,11 @@
 * Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 201 CREATED
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 60
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 * Captures:
 * job_id: <<<.*?>>>
@@ -50,12 +49,11 @@
 * Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 60
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert failure
@@ -88,12 +86,11 @@
 * Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 60
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert failure
@@ -126,12 +123,11 @@
 * Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 60
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert failure
@@ -164,12 +160,11 @@
 * Response: (received 60 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 60
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert failure
@@ -202,12 +197,11 @@
 * Response: (received 62 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 62
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * ------------------------------------------------------------------------------
@@ -229,12 +223,11 @@
 * Response: (received 0 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
-< Server: Flask Server
 < Content-Length: 0
-< Connection: close
+< Content-Type: application/json
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
 <
 *
 * ------------------------------------------------------------------------------
@@ -256,11 +249,10 @@
 * Response: (received 42 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: application/json
 < Content-Length: 42
+< Content-Type: application/json
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *

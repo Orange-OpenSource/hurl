@@ -1,6 +1,6 @@
 beautifulsoup4==4.13.4
 blinker==1.9.0
-certifi==2025.6.15
+certifi==2025.7.14
 charset-normalizer==3.4.2
 click==8.2.1
 Flask==3.1.1
@@ -14,6 +14,7 @@ pathspec==0.12.1
 requests==2.32.4
 ruff==0.11.13
 soupsieve==2.7
-typing_extensions==4.14.0
+typing_extensions==4.14.1
 urllib3==2.5.0
+waitress==3.0.2
 Werkzeug==3.1.3

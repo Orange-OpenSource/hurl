@@ -19,7 +19,10 @@ def add_header_with_aggregation():
 
 @app.route("/add-header-with-duplicate")
 def add_header_with_duplicate():
-    assert request.headers.get("header-b") == "bar,baz"
+    assert [h.strip() for h in request.headers.get("header-b").split(",")] == [
+        "bar",
+        "baz",
+    ]
     assert request.headers.get("header-c") == "qux"
     assert request.get_json()["message"] == "hi!"
     return ""

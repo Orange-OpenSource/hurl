@@ -16,8 +16,8 @@ def default_headers():
 
 @app.route("/custom-headers")
 def custom_headers():
-    # TODO: what is expected when request header has multiple values ?
-    assert request.headers["Fruit"] == "Raspberry,Apple,Banana,Grape"
+    headers = [h.strip() for h in request.headers["Fruit"].split(",")]
+    assert headers == ["Raspberry", "Apple", "Banana", "Grape"]
     assert request.headers["Color"] == "Green"
     return ""
 

@@ -25,12 +25,11 @@
 * Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 33
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Variables:
@@ -59,12 +58,11 @@
 * Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 33
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Variables:
@@ -93,12 +91,11 @@
 * Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 33
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Variables:
@@ -127,11 +124,10 @@
 * Response: (received 33 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
-< Server: <<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 33
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
