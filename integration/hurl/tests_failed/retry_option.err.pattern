@@ -21,12 +21,11 @@
 * Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 207
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert status code
@@ -58,12 +57,11 @@
 * Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 207
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Assert status code
@@ -95,12 +93,11 @@
 * Response: (received 207 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 404 NOT FOUND
-< Server: Werkzeug/<<<.*?>>> Python/<<<.*?>>>
-< Date: <<<.*?>>>
-< Content-Type: text/html; charset=utf-8
 < Content-Length: 207
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
 < Server: Flask Server
-< Connection: close
+< Via: waitress
 <
 *
 * Retry max count reached, no more retry

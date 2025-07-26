@@ -79,7 +79,7 @@
 < [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mDate[0m: <<<.*?>>>
 < [1;36mServer[0m: Flask Server
-< [1;36mSet-Cookie[0m: foo=value1; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; Max-Age=2592000; HttpOnly; Path=/bar
+< [1;36mSet-Cookie[0m: foo=value1; Domain=localhost; Expires=<<<.*?>>>; Max-Age=2592000; HttpOnly; Path=/bar
 < [1;36mVia[0m: waitress
 <
 [1;34m*[0m [1mCaptures:[0m
