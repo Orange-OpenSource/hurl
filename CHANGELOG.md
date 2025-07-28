@@ -1,4 +1,4 @@
-[7.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
+[7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
 ========================================================================================================================
 
 Thanks to
@@ -20,6 +20,7 @@ Thanks to
 [@YannickAlex07](https://github.com/YannickAlex07),
 [@lu-zero](https://github.com/lu-zero),
 [@RaghavSood](https://github.com/RaghavSood),
+[@tjbrockmeyer](https://github.com/tjbrockmeyer),
 
 Breaking Changes:
 
@@ -47,7 +48,8 @@ Enhancements:
 * Support template in nth filter parameter [#4152](https://github.com/Orange-OpenSource/hurl/issues/4152)
 * Implement predicate `isUuid` [#4179](https://github.com/Orange-OpenSource/hurl/issues/4179)
 * Improve captures error messages when filter chain returned no value [#4214](https://github.com/Orange-OpenSource/hurl/issues/4214)
-* Add ntlm cli option [#4216](https://github.com/Orange-OpenSource/hurl/issues/4216)
+* Add --ntlm cli option [#4216](https://github.com/Orange-OpenSource/hurl/issues/4216)
+* Add --negotiate option [#4246](https://github.com/Orange-OpenSource/hurl/issues/4246)
 
 
 Bugs Fixed:
