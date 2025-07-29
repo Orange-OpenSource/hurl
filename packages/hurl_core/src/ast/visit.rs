@@ -424,6 +424,10 @@ pub fn walk_filter<V: Visitor>(visitor: &mut V, filter: &Filter) {
             visitor.visit_whitespace(space0);
             visitor.visit_template(fmt);
         }
+        FilterValue::DateFormat { space0, fmt } => {
+            visitor.visit_whitespace(space0);
+            visitor.visit_template(fmt);
+        }
         FilterValue::HtmlEscape => {}
         FilterValue::HtmlUnescape => {}
         FilterValue::JsonPath { space0, expr } => {

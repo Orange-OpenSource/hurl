@@ -64,11 +64,11 @@ mod tests {
     use crate::runner::VariableSet;
 
     /// Helper function to return a new filter given a `fmt`
-    fn new_format_filter(fmt: &str) -> Filter {
-        // Example: format "%m/%d/%Y"
+    fn new_date_format_filter(fmt: &str) -> Filter {
+        // Example: dateFormat "%m/%d/%Y"
         Filter {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-            value: FilterValue::Format {
+            value: FilterValue::DateFormat {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(7, 1), Pos::new(8, 1)),
@@ -90,7 +90,7 @@ mod tests {
         let variables = VariableSet::new();
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
-        let filter = new_format_filter("%m/%d/%Y");
+        let filter = new_date_format_filter("%m/%d/%Y");
         let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
         assert_eq!(
             ret.unwrap().unwrap(),
@@ -102,7 +102,7 @@ mod tests {
     fn eval_filter_format_ko_bad_input_type() {
         let variables = VariableSet::new();
 
-        let filter = new_format_filter("%m/%d/%Y");
+        let filter = new_date_format_filter("%m/%d/%Y");
         let ret = eval_filter(
             &filter,
             &Value::String("01/01/2025".to_string()),
@@ -120,7 +120,7 @@ mod tests {
         let variables = VariableSet::new();
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
-        let filter = new_format_filter("%%%");
+        let filter = new_date_format_filter("%%%");
         let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
         assert_eq!(
             ret.unwrap_err().kind,

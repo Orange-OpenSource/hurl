@@ -97,6 +97,9 @@ pub fn eval_filter(
         FilterValue::Format { fmt, .. } => {
             eval_format(value, fmt, variables, filter.source_info, in_assert)
         }
+        FilterValue::DateFormat { fmt, .. } => {
+            eval_format(value, fmt, variables, filter.source_info, in_assert)
+        }
         FilterValue::HtmlEscape => eval_html_escape(value, filter.source_info, in_assert),
         FilterValue::HtmlUnescape => eval_html_unescape(value, filter.source_info, in_assert),
         FilterValue::JsonPath { expr, .. } => {

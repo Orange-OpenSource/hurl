@@ -315,6 +315,10 @@ pub enum FilterValue {
         space0: Whitespace,
         fmt: Template,
     },
+    DateFormat {
+        space0: Whitespace,
+        fmt: Template,
+    },
     HtmlEscape,
     HtmlUnescape,
     JsonPath {
@@ -381,6 +385,7 @@ impl FilterValue {
             FilterValue::Decode { .. } => "decode",
             FilterValue::First => "first",
             FilterValue::Format { .. } => "format",
+            FilterValue::DateFormat { .. } => "dateFormat",
             FilterValue::HtmlEscape => "htmlEscape",
             FilterValue::HtmlUnescape => "htmlUnescape",
             FilterValue::JsonPath { .. } => "jsonpath",
