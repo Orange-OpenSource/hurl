@@ -10,8 +10,8 @@ cookie "LSID" == "DQAAAKEaem_vYg"
 cookie "LSID[Value]" == "DQAAAKEaem_vYg"
 cookie "LSID[Expires]" exists
 cookie "LSID[expires]" exists
-cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
-cookie "LSID[expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+cookie "LSID[expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 cookie "LSID[Max-Age]" not exists
 cookie "LSID[max-age]" not exists
 cookie "LSID[Domain]" not exists

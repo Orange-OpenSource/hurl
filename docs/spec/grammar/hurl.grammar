@@ -562,7 +562,7 @@ filter:
   | days-before-now-filter
   | decode-filter
   | first-filter
-  | format-filter
+  | date-format-filter
   | html-escape-filter
   | html-unescape-filter
   | jsonpath-filter
@@ -601,7 +601,7 @@ decode-filter: "decode"
 
 first-filter: "first" 
 
-format-filter: "format" sp quoted-string
+date-format-filter: "dateFormat" sp quoted-string
 
 html-escape-filter: "htmlEscape"
 

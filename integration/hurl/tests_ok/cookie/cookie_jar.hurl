@@ -12,7 +12,7 @@ header "Set-Cookie" count == 3
 cookie "LSID" == "DQAAAKEaem_vYg"
 cookie "LSID[Value]" == "DQAAAKEaem_vYg"
 cookie "LSID[Expires]" exists
-cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Thu, 13 Jan 2078 22:23:01"
+cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Thu, 13 Jan 2078 22:23:01"
 cookie "LSID[Max-Age]" not exists
 cookie "LSID[Domain]" not exists
 cookie "LSID[Path]" == "/accounts"

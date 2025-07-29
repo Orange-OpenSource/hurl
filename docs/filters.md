@@ -70,7 +70,7 @@ jsonpath "$.books" count == 12
 | [daysBeforeNow](#daysbeforenow)             | Returns the number of days between now and a date in the past.                                                                         | date             | number |
 | [decode](#decode)                           | Decodes bytes to string using encoding.                                                                                                | bytes            | string |
 | [first](#first)                             | Returns the first element from a collection.                                                                                           | collection       | any    |
-| [format](#format)                           | Formats a date to a string given [a specification format].                                                                             | date             | string |
+| [dateFormat](#format)                       | Formats a date to a string given [a specification format].                                                                             | date             | string |
 | [htmlEscape](#htmlescape)                   | Converts the characters `&`, `<` and `>` to HTML-safe sequence.                                                                        | string           | string |
 | [htmlUnescape](#htmlunescape)               | Converts all named and numeric character references (e.g. `&gt;`, `&#62;`, `&#x3e;`) to the corresponding Unicode characters.          | string           | string |
 | [jsonpath](#jsonpath)                       | Evaluates a [JSONPath] expression.                                                                                                     | string           | any    |
@@ -194,7 +194,9 @@ HTTP 200
 jsonpath "$.books" first == "Dune"
 ```
 
-### format
+### dateFormat
+
+*Formerly known as `format`, which is deprecated and will be removed in a future major version.*
 
 Formats a date to a string given [a specification format].
 
@@ -202,7 +204,7 @@ Formats a date to a string given [a specification format].
 GET https://example.org
 HTTP 200
 [Asserts]
-cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 ```
 
 ### htmlEscape
@@ -350,8 +352,8 @@ GET https://example.org/api/books
 HTTP 200
 [Asserts]
 jsonpath "$.published" == "2023-01-23T18:25:43.511Z"
-jsonpath "$.published" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
-jsonpath "$.published" toDate "%+" format "%A" == "Monday" # %+ can be used to parse ISO 8601 / RFC 3339
+jsonpath "$.published" toDate "%Y-%m-%dT%H:%M:%S%.fZ" dateFormat "%A" == "Monday"
+jsonpath "$.published" toDate "%+" dateFormat "%A" == "Monday" # %+ can be used to parse ISO 8601 / RFC 3339
 ```
 
 ### toFloat
