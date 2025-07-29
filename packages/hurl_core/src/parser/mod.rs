@@ -34,6 +34,7 @@ use crate::reader::Reader;
 mod base64;
 mod bytes;
 mod cookiepath;
+mod deprecation;
 mod duration;
 mod error;
 mod expr;
