@@ -406,7 +406,7 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`isString`__     | Query returns a string                                                                                                                                                                                                      | `jsonpath "$.name" isString`                                                                                       |
 | __`isIpv4`__       | Query returns an IPv4 address                                                                                                                                                                                               | `ip isIpv4`                                                                                                        |
 | __`isIpv6`__       | Query returns an IPv6 address                                                                                                                                                                                               | `ip isIpv6`                                                                                                        |
-| __`isUuid`__       | Query returns a UUID                                                                                                                                                                                                        | `ip isUuid`                                                                                                        |
+| __`isUuid`__       | Query returns a [UUID v4]                                                                                                                                                                                                   | `ip isUuid`                                                                                                        |
 
 
 Each predicate can be negated by prefixing it with `not` (for instance, `not contains` or `not exists`)
@@ -999,3 +999,4 @@ certificate "Serial-Number" matches "[0-9af]+"
 [`Content-Type` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
 [`body` assert]: #body-assert
 [`location` filter]: /docs/filters.md#location
+[UUID v4]: https://en.wikipedia.org/wiki/Universally_unique_identifier
