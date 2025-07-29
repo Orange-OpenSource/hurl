@@ -1,3 +1,4 @@
+warning: <format> filter in asserts is now deprecated in favor of <dateFormat> filter
 error: Filter error
   --> tests_failed/filter/filter.hurl:4:19
    |
@@ -183,8 +184,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-24 | jsonpath "$.id" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string
+24 | jsonpath "$.id" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error
@@ -282,7 +283,7 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-35 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
+35 | jsonpath "$.number" toDate "%Y-%m-%dT%H:%M:%S%.fZ" dateFormat "%A" == "Monday"
    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: integer <42>
    |
 
@@ -354,8 +355,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-43 | jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%👻" == "Monday"
-   |                                                  ^^^^^^^^^^^ date format <%👻> is not supported
+43 | jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" dateFormat "%👻" == "Monday"
+   |                                                  ^^^^^^^^^^^^^^^ date format <%👻> is not supported
    |
 
 error: Filter error
@@ -386,11 +387,20 @@ error: Filter error
    |
 
 error: Filter error
-  --> tests_failed/filter/filter.hurl:52:24
+  --> tests_failed/filter/filter.hurl:47:50
    |
    | GET http://localhost:8000/error-filter
    | ...
-52 | foo: jsonpath "$.list" jsonpath "$.foo"
+47 | jsonpath "$.date" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%👻" == "Monday"
+   |                                                  ^^^^^^^^^^^ date format <%👻> is not supported
+   |
+
+error: Filter error
+  --> tests_failed/filter/filter.hurl:53:24
+   |
+   | GET http://localhost:8000/error-filter
+   | ...
+53 | foo: jsonpath "$.list" jsonpath "$.foo"
    |                        ^^^^^^^^^^^^^^^^ invalid filter input: list
    |
 

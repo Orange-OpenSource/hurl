@@ -25,9 +25,9 @@ values nth 0
 # 0 is an integer literal and the parameter of the nth function
 # the return type is the type of the element that the variable values contains
 
-newDate format "%Y%m%d"
+newDate dateFormat "%Y%m%d"
 # newDate is a function that returns the current Datetime (aka generator)
-# format is a function that convert the date to a string
+# dateFormat is a function that convert the date to a string
 # "%Y%m%d" is a string literal and the parameter the format function
 # The return type is a String
 

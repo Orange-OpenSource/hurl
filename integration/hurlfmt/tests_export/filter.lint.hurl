@@ -13,6 +13,7 @@ certificate "Expire-Date" daysAfterNow > 15                                     
 certificate "Start-Date" daysBeforeNow < 100                                                # daysBeforeNow
 bytes decode "iso-8859-1" == "café"                                                         # decode
 jsonpath "$.books" first jsonpath "$.name" == "Les Misérables"                              # first
+cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"    # dateFormat
 cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"        # format
 jsonpath "$.text" htmlEscape == "a &gt; b"                                                  # htmlEscape
 jsonpath "$.escaped_html[1]" htmlUnescape == "<p>Hello</p>"                                 # htmlUnescape

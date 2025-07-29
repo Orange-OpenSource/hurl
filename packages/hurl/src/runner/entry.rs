@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Entry, PredicateFuncValue, Response, SourceInfo};
+use hurl_core::ast::{
+    Assert, Capture, Entry, FilterValue, PredicateFuncValue, Response, SourceInfo,
+};
 
 use crate::http;
 use crate::http::{ClientOptions, CurlCmd};
@@ -354,4 +356,34 @@ fn warn_deprecated(response_spec: &Response, logger: &mut Logger) {
     }) {
         logger.warning("<includes> predicate is now deprecated in favor of <contains> predicate");
     }
+    if response_spec
+        .captures()
+        .iter()
+        .any(captures_has_format_filter)
+    {
+        logger.warning(
+            "<format> filter in captures is now deprecated in favor of <dateFormat> filter",
+        );
+    }
+    if response_spec
+        .asserts()
+        .iter()
+        .any(asserts_has_format_filter)
+    {
+        logger.warning(
+            "<format> filter in asserts is now deprecated in favor of <dateFormat> filter",
+        );
+    }
+}
+
+fn asserts_has_format_filter(a: &Assert) -> bool {
+    a.filters
+        .iter()
+        .any(|(_, f)| matches!(f.value, FilterValue::Format { .. }))
+}
+
+fn captures_has_format_filter(a: &Capture) -> bool {
+    a.filters
+        .iter()
+        .any(|(_, f)| matches!(f.value, FilterValue::Format { .. }))
 }

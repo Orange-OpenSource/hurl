@@ -63,6 +63,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             decode_filter,
             first_filter,
             format_filter,
+            date_format_filter,
             html_decode_filter,
             html_encode_filter,
             jsonpath_filter,
@@ -155,6 +156,13 @@ fn format_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     let space0 = one_or_more_spaces(reader)?;
     let fmt = quoted_template(reader)?;
     Ok(FilterValue::Format { space0, fmt })
+}
+
+fn date_format_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("dateFormat", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let fmt = quoted_template(reader)?;
+    Ok(FilterValue::DateFormat { space0, fmt })
 }
 
 fn html_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

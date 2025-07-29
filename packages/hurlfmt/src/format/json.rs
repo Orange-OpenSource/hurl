@@ -655,6 +655,9 @@ impl ToJson for FilterValue {
             FilterValue::Format { fmt, .. } => {
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
+            FilterValue::DateFormat { fmt, .. } => {
+                attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
+            }
             FilterValue::JsonPath { expr, .. } => {
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
             }

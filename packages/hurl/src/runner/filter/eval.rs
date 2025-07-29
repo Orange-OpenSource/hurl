@@ -26,7 +26,7 @@ use crate::runner::filter::days_after_now::eval_days_after_now;
 use crate::runner::filter::days_before_now::eval_days_before_now;
 use crate::runner::filter::decode::eval_decode;
 use crate::runner::filter::first::eval_first;
-use crate::runner::filter::format::eval_format;
+use crate::runner::filter::format::eval_date_format;
 use crate::runner::filter::html_escape::eval_html_escape;
 use crate::runner::filter::html_unescape::eval_html_unescape;
 use crate::runner::filter::jsonpath::eval_jsonpath;
@@ -95,7 +95,10 @@ pub fn eval_filter(
         }
         FilterValue::First => eval_first(value, filter.source_info, in_assert),
         FilterValue::Format { fmt, .. } => {
-            eval_format(value, fmt, variables, filter.source_info, in_assert)
+            eval_date_format(value, fmt, variables, filter.source_info, in_assert)
+        }
+        FilterValue::DateFormat { fmt, .. } => {
+            eval_date_format(value, fmt, variables, filter.source_info, in_assert)
         }
         FilterValue::HtmlEscape => eval_html_escape(value, filter.source_info, in_assert),
         FilterValue::HtmlUnescape => eval_html_unescape(value, filter.source_info, in_assert),

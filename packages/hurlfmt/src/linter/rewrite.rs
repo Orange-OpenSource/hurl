@@ -257,6 +257,10 @@ impl Lint for FilterValue {
                 s.push(' ');
                 s.push_str(&fmt.lint());
             }
+            FilterValue::DateFormat { fmt, .. } => {
+                s.push(' ');
+                s.push_str(&fmt.lint());
+            }
             FilterValue::JsonPath { expr, .. } => {
                 s.push(' ');
                 s.push_str(&expr.lint());
