@@ -10,6 +10,9 @@
 
 GET http://localhost:8000/follow-redirect
 Accept: text/plain
+[Query]
+# We add a query param to test that query params strings are not forwarded
+foo: bar
 HTTP 200
 [Asserts]
 redirects count == 2

@@ -19,9 +19,16 @@ GET http://localhost:8000/follow-redirect
 Accept: text/plain
 [Options]
 location: true
+[Query]
+# We add a query param to test that query params strings are not forwarded
+foo: bar
 HTTP 200
 [Asserts]
 header "Location" not exists
+redirects count == 2
+redirects nth 0 location == "http://localhost:8000/following-redirect"
+redirects nth 1 location == "http://localhost:8000/followed-redirect"
+url == "http://localhost:8000/followed-redirect"
 `Followed redirect!`
 
 
@@ -35,6 +42,9 @@ location: true
 HTTP 200
 [Asserts]
 header "Location" not exists
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-from-post"
+url == "http://localhost:8000/followed-redirect-from-post"
 `Followed redirect!`
 
 
@@ -46,6 +56,9 @@ location: true
 HTTP 200
 [Asserts]
 header "Location" not exists
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-post"
+url == "http://localhost:8000/followed-redirect-post"
 `Followed redirect POST!`
 
 
@@ -55,6 +68,8 @@ Accept: text/plain
 location: true
 HTTP 200
 [Asserts]
+redirects nth 0 location == "http://localhost:8000/follow-redirect/bar"
+redirects count == 1
 url == "http://localhost:8000/follow-redirect/bar"
 `Followed relative redirect!`
 
@@ -68,6 +83,9 @@ location: true
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -83,6 +101,9 @@ location: true
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -97,6 +118,9 @@ location: true
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -110,6 +134,9 @@ user: bob@email.com:secret
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -123,6 +150,9 @@ fruit: lemon
 HTTP 200
 [Asserts]
 header "Location" not exists
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 `Followed redirect with Authorization header!`
 
 
@@ -136,6 +166,9 @@ bob@email.com: secret
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect without Authorization header!`
 
@@ -149,6 +182,9 @@ bob@email.com: secret
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
 `Followed redirect with Authorization header!`
 
@@ -162,5 +198,8 @@ location-trusted: true
 fruit: lemon
 HTTP 200
 [Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth-trusted"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth-trusted"
 header "Location" not exists
 `Followed redirect Basic Auth!`

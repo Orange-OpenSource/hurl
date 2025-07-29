@@ -33,14 +33,15 @@ use crate::http::certificate::Certificate;
 use crate::http::curl_cmd::CurlCmd;
 use crate::http::debug::log_body;
 use crate::http::header::{
-    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, USER_AGENT,
+    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, SET_COOKIE,
+    USER_AGENT,
 };
 use crate::http::ip::IpAddr;
 use crate::http::options::ClientOptions;
 use crate::http::timings::Timings;
 use crate::http::url::Url;
 use crate::http::{
-    easy_ext, Call, Cookie, FileParam, Header, HttpError, HttpVersion, IpResolve, Method,
+    easy_ext, Body, Call, Cookie, FileParam, Header, HttpError, HttpVersion, IpResolve, Method,
     MultipartParam, Param, Request, RequestCookie, RequestSpec, RequestedHttpVersion, Response,
     Verbosity,
 };
@@ -120,11 +121,17 @@ impl Client {
             let redirect_method = redirect_method(status, &request_spec.method);
             let mut headers = request_spec.headers;
 
-            // When following redirection, we filter `AUTHORIZATION` header unless explicitly told
-            // to trust the redirected host with `--location-trusted`.
+            // When following redirection, we filter `Authorization` and `Set-Cookie` headers if the
+            // hostname changes unless the user explicitly trusts the redirected host with `--location-trusted`.
+            // <https://curl.se/libcurl/c/CURLOPT_FOLLOWLOCATION.html>:
+            //
+            // > By default, libcurl only sends Authentication: or explicitly set Cookie: headers
+            // > to the initial host given in the original URL, to avoid leaking username + password
+            // > to other sites.
             let host_changed = request_url.host() != redirect_url.host();
             if host_changed && !options.follow_location_trusted {
                 headers.retain(|h| !h.name_eq(AUTHORIZATION));
+                headers.retain(|h| !h.name_eq(SET_COOKIE));
                 options.user = None;
             }
 
@@ -134,21 +141,21 @@ impl Client {
             // > When libcurl switches method to GET, it then uses that method without sending any
             // > request body. If it does not change the method, it sends the subsequent request the
             // > same way as the previous one; including the request body if one was provided.
-            if redirect_method != request_spec.method {
-                request_spec = RequestSpec {
-                    method: redirect_method,
-                    url: redirect_url,
-                    headers,
-                    ..Default::default()
-                };
+            let (form, multipart, body) = if redirect_method != request_spec.method {
+                (vec![], vec![], Body::Binary(vec![]))
             } else {
-                request_spec = RequestSpec {
-                    method: redirect_method,
-                    url: redirect_url,
-                    headers,
-                    ..request_spec
-                };
-            }
+                (request_spec.form, request_spec.multipart, request_spec.body)
+            };
+            request_spec = RequestSpec {
+                method: redirect_method,
+                url: redirect_url,
+                headers,
+                form,
+                multipart,
+                body,
+                cookies: request_spec.cookies,
+                ..Default::default()
+            };
         }
         Ok(calls)
     }
