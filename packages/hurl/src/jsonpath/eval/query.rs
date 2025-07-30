@@ -16,7 +16,7 @@
  *
  */
 
-use crate::jsonpath::ast::Query;
+use crate::jsonpath::ast::{Query, Selector};
 use crate::jsonpath::JsonpathResult;
 
 impl Query {
@@ -42,8 +42,14 @@ impl Query {
                                 }
                             }
                         }
-                        result = JsonpathResult::Collection(elements.clone());
                     }
+
+                    // Retuns nothing (not exists) rather than an empty list with the array index selector
+                    // For example with an out of bound index or with an object input
+                    if (matches!(selector, Selector::ArrayIndex(_)) && elements.is_empty()) {
+                        return None;
+                    }
+                    result = JsonpathResult::Collection(elements.clone());
                 }
             }
         }

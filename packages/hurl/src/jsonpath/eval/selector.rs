@@ -50,7 +50,7 @@ impl Selector {
                         }
                     }
                 }
-                Some(JsonpathResult::Collection(vec![]))
+                None
             }
 
             // Selectors returning a collection ("indefinite")
