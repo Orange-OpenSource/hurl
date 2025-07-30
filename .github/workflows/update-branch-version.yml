@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       new_version:
-        description: 'Version (x.y.z-SNASPHOT)'
+        description: 'Version (x.y.z-SNAPSHOT)'
         required: true
         type: string
   workflow_call:
@@ -20,7 +20,7 @@ on:
         required: true
     inputs:
       new_version:
-        description: "Version (x.y.z-SNASPHOT)"
+        description: "Version (x.y.z-SNAPSHOT)"
         required: true
         type: string
       branch:
