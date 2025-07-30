@@ -269,6 +269,7 @@ query:
   | bytes-query
   | sha256-query
   | md5-query
+  | raw-bytes-query
 
 status-query: "status"
 
@@ -301,6 +302,8 @@ sha256-query: "sha256"
 md5-query: "md5"
 
 bytes-query: "bytes"
+
+raw-bytes-query: "rawBytes"
 
 
 # Predicates

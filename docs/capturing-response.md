@@ -62,6 +62,7 @@ A query can extract data from
 - body:
   - [`body`](#body-capture)
   - [`bytes`](#bytes-capture)
+  - [`rawBytes`](#raw-bytes-capture)
   - [`xpath`](#xpath-capture)
   - [`jsonpath`](#jsonpath-capture)
   - [`regex`](#regex-capture)
@@ -188,6 +189,21 @@ my_data: bytes
 
 Like `body` capture, `bytes` capture works _after_ content encoding decompression (so the captured value is not
 affected by `Content-Encoding` response header).
+
+### Raw bytes capture
+
+Capture the entire body (as a raw bytestream) from the received HTTP response
+
+```hurl
+GET https://example.org
+Content-Encoding: gzip
+HTTP 200
+[Captures]
+my_data: rawBytes
+```
+
+Unlike all other captures, the `rawBytes` capture works _before_ content encoding decompression.
+This is the only way to capture a body which would otherwise be automatically decoded.
 
 ### XPath capture
 

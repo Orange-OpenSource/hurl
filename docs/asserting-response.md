@@ -368,6 +368,7 @@ can extract data from
   - [`regex`](#regex-assert)
   - [`sha256`](#sha-256-assert)
   - [`md5`](#md5-assert)
+  - [`rawBytes`](#raw-bytes-assert)
 - others:
   - [`url`](#url-assert)
   - [`redirects`](#redirects-assert)
@@ -665,8 +666,22 @@ bytes count == 12424
 header "Content-Length" == "12424"
 ```
 
-Like `body` assert, `bytes` assert works _after_ content encoding decompression (so the predicates values are not
-affected by `Content-Encoding` response header value).
+### Raw bytes assert
+
+Check the value of the received HTTP response body as a bytestream. Body assert consists of the keyword `rawBytes`
+followed by a predicate function and value.
+
+```hurl
+GET https://example.org
+Accept-Encoding: gzip
+HTTP 200
+[Asserts]
+rawBytes count == 648
+bytes count == 1256
+```
+
+Unlike all other assertions, the `rawBytes` assertion works _before_ content encoding decompression.
+This is the only way to make assertions against a body which would otherwise be automatically decoded.
 
 ### XPath assert
 
@@ -933,6 +948,8 @@ ip == "172.16.45.87"
 
 ### Variable assert
 
+Check a variable, possibly stored from a capture of the current request or a previous one.
+
 ```hurl
 # Test that the XML endpoint return 200 pets 
 GET https://example.org/api/pets
@@ -970,6 +987,7 @@ certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches "[0-9af]+"
 ```
+
 
 [predicates]: #predicates
 [header assert]: #header-assert
