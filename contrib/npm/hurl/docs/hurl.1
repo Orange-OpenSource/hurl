@@ -1,4 +1,4 @@
-.TH hurl 1 "24 Mar 2025" "hurl 6.2.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "30 Jul 2025" "hurl 7.0.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -277,14 +277,6 @@ This is a cli-only option.
 
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
-.IP "--interactive "
-
-Stop between requests.
-
-This is similar to a break point, You can then continue (Press C) or quit (Press Q).
-
-This is a cli-only option.
-
 .IP "-4, --ipv4 "
 
 This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.
@@ -346,11 +338,11 @@ You can specify time units in the maximum time expression. Set Hurl to use a max
 
 See also \fI--connect-timeout\fP.
 
-This is a cli-only option.
-
 .IP "--negotiate "
 
 Tell Hurl to use Negotiate (SPNEGO) authentication.
+
+This is a cli-only option.
 
 .IP "-n, --netrc "
 
@@ -388,9 +380,15 @@ Comma-separated list of hosts which do not use a proxy.
 
 Override value from Environment variable no_proxy.
 
+.IP "--ntlm "
+
+Tell Hurl to use NTLM authentication
+
+This is a cli-only option.
+
 .IP "-o, --output <FILE> "
 
-Write output to FILE instead of stdout.
+Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.
 
 .IP "--parallel "
 
@@ -406,6 +404,16 @@ This is a cli-only option.
 
 Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.
 
+.IP "--pinnedpubkey <HASHES> "
+
+When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.
+
+.IP "--progress-bar "
+
+Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
+
+This is a cli-only option.
+
 .IP "-x, --proxy <[PROTOCOL://]HOST[:PORT]> "
 
 Use the specified proxy.
@@ -414,8 +422,6 @@ Use the specified proxy.
 
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
 times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
-
-This is a cli-only option.
 
 .IP "--report-html <DIR> "
 
@@ -466,6 +472,8 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 .IP "--secret <NAME=VALUE> "
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
+This is a cli-only option.
 
 .IP "--ssl-no-revoke "
 

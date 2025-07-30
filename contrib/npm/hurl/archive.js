@@ -19,9 +19,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-
-const rimraf = require("rimraf");
-const axios = require("axios");
+const { Readable } = require('stream');
 const tar = require("tar");
 const extract = require("extract-zip");
 
@@ -37,50 +35,53 @@ function install(url, dir, checksum) {
 
     // Install a fresh bin directory.
     if (fs.existsSync(dir)) {
-        rimraf.sync(dir);
+        fs.rmSync(dir, {recursive: true});
     }
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
+    fs.mkdirSync(dir, {recursive: true});
 
-    axios({url: url, responseType: "stream" })
+    fetch(url)
         .then(res => {
+            if (!res.ok) {
+                console.error(`Error fetching release ${url}: ${res.statusText}`);
+                process.exit(1);
+            }
+
+            // Check archive extension.
+            const isWindows = url.endsWith(".zip");
+            const isUnixLike = url.endsWith(".tar.gz");
+            if (!isWindows && !isUnixLike) {
+                console.error("Error: unsupported archive type");
+                process.exit(1);
+            }
+
+            const archive = isWindows ? "archive.zip" : "archive.tar.gz";
+            const archivePath = path.join(dir, archive);
+            const fileStream = fs.createWriteStream(archivePath);
+            const readable = Readable.fromWeb(res.body);
+
             return new Promise((resolve, reject) => {
-                // Linux, macOS archives are tar.gz files.
-                if (url.endsWith(".tar.gz")) {
-                    const archive = path.join(dir, "archive.tar.gz");
-                    const sink = res.data.pipe(fs.createWriteStream(archive));
-                    sink.on("finish", () => {
-                        verifyCheckSum(archive, checksum);
-                        tar.x({ strip: 1, C: dir, file: archive });
-                        resolve();
-                    });
-                    sink.on("error", err => reject(err));
-                }
-                // Windows archive is a zip archive.
-                else if (url.endsWith(".zip")) {
-                    const archive = path.join(dir, "archive.zip");
-                    const sink = res.data.pipe(
-                        fs.createWriteStream(archive)
-                    );
-                    sink.on("finish", () => {
-                        verifyCheckSum(archive, checksum);
-                        extract(archive, {dir: dir})
-                            .then( () => resolve())
-                            .catch( err => reject(err));
-                    });
-                    sink.on("error", err => reject(err));
-                } else {
-                    console.error("Error unsupported archive");
-                    process.exit(1);
-                }
+                readable.pipe(fileStream)
+                    .on("finish", () => {
+                        try {
+                            verifyCheckSumSync(archivePath, checksum);
+                        } catch (e) {
+                            return reject(e);
+                        }
+
+                        const extractor = isWindows
+                            ? extract(archivePath, { dir })
+                            : tar.x({ strip: 1, C: dir, file: archivePath });
+
+                        extractor.then(resolve).catch(reject);
+                    })
+                    .on("error", reject);
             });
         })
         .then(() => {
             console.log(`Archive has been installed to ${dir}!`);
         })
         .catch(e => {
-            console.error(`Error fetching release: ${e.message}`);
+            console.error(`Installation failed: ${e.message}`);
             process.exit(1);
         });
 }
@@ -90,7 +91,7 @@ function install(url, dir, checksum) {
  * @param file input file
  * @param expectedChecksum expected checksum
  */
-function verifyCheckSum(file, expectedChecksum) {
+function verifyCheckSumSync(file, expectedChecksum) {
     const checksum = sha256(file);
     if (expectedChecksum !== checksum) {
         console.error(`Downloaded archive checksum didn't match the expected checksum (actual: ${checksum}, expected ${expectedChecksum}`);
@@ -107,5 +108,6 @@ function sha256(file) {
     const data = fs.readFileSync(file);
     return crypto.createHash("sha256").update(data).digest("hex").toLowerCase();
 }
+
 
 exports.install = install;

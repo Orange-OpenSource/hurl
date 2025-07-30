@@ -1,7 +1,7 @@
 {
   "name": "@orangeopensource/hurl",
-  "version": "6.1.4",
-  "hurlBinaryVersion": "6.1.1",
+  "version": "7.0.0",
+  "hurlBinaryVersion": "7.0.0",
   "description": "Run and Test HTTP Requests with plain text and curl",
   "author": "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>",
   "contributors": [
@@ -23,9 +23,7 @@
     "postinstall": "node ./install.js"
   },
   "dependencies": {
-    "axios": "1.11.0",
     "extract-zip": "2.0.1",
-    "rimraf": "6.0.1",
     "tar": "7.4.3"
   },
   "devDependencies": {},
