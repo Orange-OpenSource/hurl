@@ -1,6 +1,6 @@
 [package]
 name = "hurl"
-version = "7.0.0-SNAPSHOT"
+version = "7.0.0"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -22,12 +22,12 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.1"
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
-clap = { version = "4.5.41", features = ["string", "wrap_help"] }
+clap = { version = "4.5.42", features = ["string", "wrap_help"] }
 curl = "0.4.48"
 curl-sys = "0.4.82"
 encoding = "0.2.33"
 glob = "0.3.2"
-hurl_core = { version = "7.0.0-SNAPSHOT", path = "../hurl_core" }
+hurl_core = { version = "7.0.0", path = "../hurl_core" }
 libflate = "2.1.0"
 libxml = "0.3.6"
 md5 = "0.7.0"
