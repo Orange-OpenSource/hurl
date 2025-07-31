@@ -1,4 +1,4 @@
-FROM alpine:3.21 AS builder
+FROM alpine:3.22 AS builder
 ARG TARGETPLATFORM
 WORKDIR /tmp/hurl-docker
 COPY . /tmp/hurl-docker
@@ -11,7 +11,7 @@ RUN apk add --no-cache bash git && \
     bash -c "bin/install_rust.sh" && \
     bash -c "./bin/release/release.sh"
 
-FROM alpine:3.21 AS runner
+FROM alpine:3.22 AS runner
 ARG docker_build_date
 ARG docker_build_tag
 LABEL "org.opencontainers.image.source"="https://github.com/Orange-OpenSource/hurl"
