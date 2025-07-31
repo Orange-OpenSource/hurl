@@ -46,13 +46,14 @@ gpg --armor --export-secret-keys "${gpg_keyid}" > /tmp/gpg/myprivatekey.asc
 ```
 echo -n "hurl_version=" && read -r hurl_version
 echo -n "Ubuntu codename=" && read -r codename
+echo -n "Gpg passphrase=" && read -r passphrase
 
 ```
 
 ## Run ubuntu container
 
 ```
-docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_version}" --env codename="${codename}" --env date="$(date -u "+%a, %d %b %Y %H:%M:%S")" --volume "/tmp/gpg:/tmp" ubuntu:"${codename}" bash
+docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_version}" --env codename="${codename}" --env passphrase="${passphrase}" --env date="$(date -u "+%a, %d %b %Y %H:%M:%S")" --volume "/tmp/gpg:/tmp" ubuntu:"${codename}" bash
 
 ```
 
@@ -70,8 +71,8 @@ apt update && \
 
 ```
 export GPG_TTY=$(tty)
-gpg --batch --passphrase <passphrase> --pinentry-mode loopback --import /tmp/mypublickey.asc
-gpg --batch --passphrase <passphrase> --pinentry-mode loopback --import /tmp/myprivatekey.asc
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/mypublickey.asc
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/myprivatekey.asc
 
 ```
 
@@ -191,7 +192,7 @@ cat debian/changelog
 ## Create deb package source
 
 ```
-yes | debuild -S -sa -k"${gpg_keyid}" -p"gpg --batch --passphrase <passphrase> --pinentry-mode loopback"
+yes | debuild -S -sa -k"${gpg_keyid}" -p"gpg --batch --passphrase ${passphrase} --pinentry-mode loopback"
 
 ```
 
