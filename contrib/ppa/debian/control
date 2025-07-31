@@ -2,7 +2,7 @@ Source: hurl
 Section: utils
 Priority: optional
 Maintainer: lepapareil <filipe.pinto@orange.com>
-Build-Depends:  debhelper (>= 10), pkg-config, gcc, curl, libxml2-dev, libssl-dev, python3
+Build-Depends:  debhelper (>= 10), pkg-config, gcc, libclang-dev, curl, libxml2-dev, libssl-dev, python3
 Standards-Version: 4.6.0
 Homepage: https://hurl.dev
 Rules-Requires-Root: no
