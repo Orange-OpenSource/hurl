@@ -160,10 +160,10 @@ fn print_capture(capture: &CaptureResult) {
 fn print_assert(assert: &AssertResult) {
     let level = 2;
     let kind = match assert {
-        AssertResult::Version { .. } => "version",
-        AssertResult::Status { .. } => "status",
-        AssertResult::Header { .. } => "header",
-        AssertResult::Body { .. } => "body",
+        AssertResult::ImplicitVersion { .. } => "version",
+        AssertResult::ImplicitStatus { .. } => "status",
+        AssertResult::ImplicitHeader { .. } => "header",
+        AssertResult::ImplicitBody { .. } => "body",
         AssertResult::Explicit { .. } => "explicit",
     };
     print(level, "type", kind);
