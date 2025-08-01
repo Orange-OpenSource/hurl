@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 set +eo pipefail
-if (curl --version | grep Features | grep -q HTTP3); then
+if (hurl --version | grep Features | grep -q HTTP3); then
   exit 255
 fi
 set -Eeuo pipefail

@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 set +eo pipefail
-curl --version | grep Features | grep -q HTTP2
+hurl --version | grep Features | grep -q HTTP2
 if [ $? -eq 1 ]; then
   exit 255
 fi
