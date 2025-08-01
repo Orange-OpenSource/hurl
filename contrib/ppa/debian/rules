@@ -5,6 +5,7 @@
 
 override_dh_clean:
 	./debian/bin/clean.sh
+	dh_clean
 
 override_dh_auto_build:
 	./debian/bin/prerequisites.sh
