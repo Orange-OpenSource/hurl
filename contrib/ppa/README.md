@@ -61,6 +61,8 @@ docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_ve
 
 ```
 export GPG_TTY=$(tty)
+apt update
+apt install -y gpg
 gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/mypublickey.asc
 gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/myprivatekey.asc
 
@@ -70,9 +72,9 @@ gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/
 
 ```
 export DEBIAN_FRONTEND=noninteractive
-apt update && \
-    apt install -y gpg git curl wget vim xz-utils gettext moreutils pv && \
-    apt install -y pkg-config gcc libclang-dev curl libxml2-dev libssl-dev devscripts debhelper
+apt update
+apt install -y git curl wget vim xz-utils gettext moreutils pv && \
+apt install -y pkg-config gcc libclang-dev curl libxml2-dev libssl-dev devscripts debhelper
 
 ```
 
