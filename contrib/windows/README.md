@@ -27,7 +27,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 Install git, llvm, nsis and python3
 
 ```pwsh
-choco install --confirm --no-progress git winlibs-llvm-free nsis
+choco install --confirm --no-progress git winlibs-llvm-free llvm nsis
 choco install --confirm --no-progress python311
 python -m pip install --upgrade pip --quiet
 ```
