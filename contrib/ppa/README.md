@@ -53,7 +53,7 @@ gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --armor --expo
 ## Run ubuntu container
 
 ```
-docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_version}" --env codename="${codename}" --env passphrase="${passphrase}" --env date="$(date -u "+%a, %d %b %Y %H:%M:%S")" --volume "/tmp/gpg:/tmp" ubuntu:"${codename}" bash
+docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_version}" --env codename="${codename}" --env passphrase="${passphrase}" --env date="$(date -u "+%a, %d %b %Y %H:%M:%S")" --volume "/tmp/gpg:/tmp/gpg" ubuntu:"${codename}" bash
 
 ```
 
@@ -71,8 +71,8 @@ apt install -y pkg-config gcc libclang-14-dev curl libxml2-dev libssl-dev devscr
 
 ```
 export GPG_TTY=$(tty)
-gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/mypublickey.asc
-gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/myprivatekey.asc
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/gpg/mypublickey.asc
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/gpg/myprivatekey.asc
 
 ```
 
