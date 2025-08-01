@@ -57,24 +57,22 @@ docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_ve
 
 ```
 
-## Import GPG key into container
-
-```
-export GPG_TTY=$(tty)
-apt update
-apt install -y gpg
-gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/mypublickey.asc
-gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/myprivatekey.asc
-
-```
-
 ## Install user prerequisites and build dependencies
 
 ```
 export DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y git curl wget vim xz-utils gettext moreutils pv && \
-apt install -y pkg-config gcc libclang-dev curl libxml2-dev libssl-dev devscripts debhelper
+apt install -y  gpg git curl wget vim xz-utils gettext moreutils pv && \
+apt install -y pkg-config gcc libclang-18-dev curl libxml2-dev libssl-dev devscripts debhelper
+
+```
+
+## Import GPG key into container
+
+```
+export GPG_TTY=$(tty)
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/mypublickey.asc
+gpg --batch --passphrase "${passphrase}" --pinentry-mode loopback --import /tmp/myprivatekey.asc
 
 ```
 
@@ -87,7 +85,7 @@ cd /tmp/ppa/hurl-"${hurl_version}"
 
 ```
 
-# Get debian conf from master
+## Get debian conf from master
 
 ```
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git /tmp/ppa/hurl-ppa
@@ -142,6 +140,7 @@ tar -c -f - "${packagelight}" | pv > "${packagelight}.tar"
 xz -T0 -9 -v "${packagelight}.tar"
 rm -fr "${package}.tar" "${packagelight}"
 done
+
 ```
 
 ## Install rust and cargo
