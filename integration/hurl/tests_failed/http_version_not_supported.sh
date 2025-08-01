@@ -2,7 +2,8 @@
 set -Eeuo pipefail
 
 set +eo pipefail
-if (hurl --version | grep Features | grep -q HTTP3); then
+features=$(hurl --version | grep Features)
+if echo "$features" | grep -q HTTP3 then
   exit 255
 fi
 set -Eeuo pipefail
