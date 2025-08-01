@@ -200,6 +200,15 @@ cat debian/changelog
 
 ```
 
+## Fix debian/control for Ubuntu <24
+
+```
+ubuntu_major_version=$(cat /etc/lsb-release | grep DISTRIB_RELEASE | cut -d'=' -f2 | cut -d'.' -f1)
+if [[ $ubuntu_major_version -lt 24 ]] ; then
+    sed -i "s/pkgconf/pkg-config/g" debian/control
+fi
+```
+
 ## Create deb package source
 
 ```
