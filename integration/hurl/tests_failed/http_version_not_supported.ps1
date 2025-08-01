@@ -2,7 +2,7 @@ Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
 $ErrorActionPreference = 'Continue'
-curl --version | grep Features | grep -q HTTP3
+hurl --version | grep Features | grep -q HTTP3
 if ($LASTEXITCODE -eq 0) {
   exit 255
 }
