@@ -62,7 +62,7 @@ docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_ve
 ```
 export DEBIAN_FRONTEND=noninteractive
 apt update && \
-    apt install -y gpg git curl wget vim xz-utils gettext moreutils && \
+    apt install -y gpg git curl wget vim xz-utils gettext moreutils pv && \
     apt install -y pkg-config gcc libclang-dev curl libxml2-dev libssl-dev devscripts debhelper
 
 ```
@@ -192,6 +192,9 @@ cat debian/changelog
 ## Create deb package source
 
 ```
+cd ..
+tar --exclude="hurl-${hurl_version}/debian" -czf - "hurl-${hurl_version}" | pv > "hurl_${hurl_version}.orig.tar.gz"
+cd "hurl-${hurl_version}"
 yes | debuild -S -sa -k"${gpg_keyid}" -p"gpg --batch --passphrase ${passphrase} --pinentry-mode loopback"
 
 ```
