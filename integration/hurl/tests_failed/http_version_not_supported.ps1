@@ -2,7 +2,7 @@ Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
 $ErrorActionPreference = 'Continue'
-$features = hurl --version | Select-String -Pattern 'Features'
+$features=hurl --version | Select-String -Pattern 'Features'
 if ($features -match 'HTTP3') {
     exit 255
 }
