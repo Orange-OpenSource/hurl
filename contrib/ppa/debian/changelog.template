@@ -1,4 +1,4 @@
-hurl (${hurl_version}-0+${codename}) ${codename}; urgency=medium
+hurl (${hurl_version}+0${codename}) ${codename}; urgency=medium
 
   * New upstream release.
 
