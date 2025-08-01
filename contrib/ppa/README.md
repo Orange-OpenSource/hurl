@@ -63,7 +63,7 @@ docker run -it --rm --env gpg_keyid="${gpg_keyid}" --env hurl_version="${hurl_ve
 export DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -y  gpg git curl wget vim xz-utils gettext moreutils pv && \
-apt install -y pkg-config gcc libclang-14-dev curl libxml2-dev libssl-dev devscripts debhelper
+apt install -y pkg-config gcc libclang-dev curl libxml2-dev libssl-dev devscripts debhelper
 
 ```
 
