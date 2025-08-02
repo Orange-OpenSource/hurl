@@ -5,6 +5,12 @@ on:
     types:
       - created
 
+# Permissions restrictives
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
@@ -28,43 +34,84 @@ jobs:
 
       - name: Check user permission
         run: |
-          comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
+          # Échapper les variables utilisateur pour éviter l'injection de commandes
+          comment_user_login="${{ github.event.comment.user.login }}"
+          # Validation du format du nom d'utilisateur
+          if [[ ! "$comment_user_login" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+            echo "Invalid username format"
+            exit 1
+          fi
+          
+          comment_user_permission=$(gh api "repos/${OWNER}/${REPO}/collaborators/${comment_user_login}/permission" -q .permission)
           if [ "${comment_user_permission}" = "admin" ] ; then
             echo "  - ✅ You have the ${comment_user_permission} permission then you are allowed to merge pull request n°${PR_NUMBER}"
           else
-            comment="❌ Sorry \`${COMMENT_USER_LOGIN}\`, you are not allowed to merge this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
+            comment="❌ Sorry \`${comment_user_login}\`, you are not allowed to merge this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
             echo "  - ${comment}"
-            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            # Utiliser printf pour éviter l'injection dans le commentaire
+            printf -v safe_comment "%s" "${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${safe_comment}"
             exit 1
           fi
 
       - name: Init all internal env vars
         id: init-all-internal-env-vars
         env:
+             # Sécuriser la variable title
              TITLE: ${{ github.event.issue.title }}
         run: |
           pr_detail_file="pr_detail.json"
-          gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
+          gh api "repos/${OWNER}/${REPO}/pulls/${PR_NUMBER}" > "${pr_detail_file}"
           jq . "${pr_detail_file}"
-          echo "github.event.issue.title: $TITLE"
-          HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
-          BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
+          
+          # Échapper et valider le titre
+          printf "github.event.issue.title: %s\n" "${TITLE}"
+          
+          HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name "${pr_detail_file}")
+          BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name "${pr_detail_file}")
+          
+          # Validation des noms de repo
+          if [[ ! "$HEAD_REPO_FULL_NAME" =~ ^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$ ]]; then
+            echo "Invalid HEAD_REPO_FULL_NAME format"
+            exit 1
+          fi
+          if [[ ! "$BASE_REPO_FULL_NAME" =~ ^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$ ]]; then
+            echo "Invalid BASE_REPO_FULL_NAME format"
+            exit 1
+          fi
+          
           if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
             HEAD_TYPE=origin
           else
             HEAD_TYPE=fork
           fi
+          
           echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
           echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
           echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
-          echo "HEAD_REF=$(jq -rc .head.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-          echo "BASE_REF=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-          echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-          echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-          echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          
+          # Sécuriser les références de branches
+          head_ref=$(jq -rc .head.ref "${pr_detail_file}")
+          base_ref=$(jq -rc .base.ref "${pr_detail_file}")
+          
+          # Validation des noms de branches
+          if [[ ! "$head_ref" =~ ^[a-zA-Z0-9_./-]+$ ]]; then
+            echo "Invalid HEAD_REF format"
+            exit 1
+          fi
+          if [[ ! "$base_ref" =~ ^[a-zA-Z0-9_.//-]+$ ]]; then
+            echo "Invalid BASE_REF format"
+            exit 1
+          fi
+          
+          echo "HEAD_REF=${head_ref}" | tee -a "${GITHUB_ENV}"
+          echo "BASE_REF=${base_ref}" | tee -a "${GITHUB_ENV}"
+          echo "PR_STATE=$(jq -rc .state "${pr_detail_file}")" | tee -a "${GITHUB_ENV}"
+          echo "PR_DRAFT=$(jq -rc .draft "${pr_detail_file}")" | tee -a "${GITHUB_ENV}"
+          echo "PR_MERGEABLE=$(jq -rc .mergeable "${pr_detail_file}")" | tee -a "${GITHUB_ENV}"
           echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"
           echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
-          echo "base_ref=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_OUTPUT}"
+          echo "base_ref=${base_ref}" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
@@ -76,13 +123,23 @@ jobs:
 
       - name: Notify user
         run: |
-          if [[ "${PR_COMMENT}" == "/accept" ]] ; then
-            order="/accept"
-          elif [[ "${PR_COMMENT}" == "/accept --force" ]] ; then
-            order="/accept --force"
-          elif [[ "${PR_COMMENT}" == "/rebase" ]] ; then
-            order="/rebase"
-          fi
+          # Utiliser une approche plus sécurisée pour déterminer l'ordre
+          case "${{ github.event.comment.body }}" in
+            "/accept")
+              order="/accept"
+              ;;
+            "/accept --force")
+              order="/accept --force"
+              ;;
+            "/rebase")
+              order="/rebase"
+              ;;
+            *)
+              echo "Invalid command"
+              exit 1
+              ;;
+          esac
+          
           comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
           gh pr comment "${PR_NUMBER}" --body "${comment}"
           echo "ORDER=${order}" | tee -a "${GITHUB_ENV}"
@@ -100,7 +157,9 @@ jobs:
       - name: Add fork source branch
         if: env.HEAD_TYPE == 'fork'
         run: |
-          git remote add fork https://${{ secrets.HURL_BOT_USER }}:${{ secrets.HURL_BOT_TOKEN }}@github.com/${{ env.HEAD_REPO_FULL_NAME}}
+          # Sécuriser l'URL du remote
+          remote_url="https://${{ secrets.HURL_BOT_USER }}:${{ secrets.HURL_BOT_TOKEN }}@github.com/${HEAD_REPO_FULL_NAME}"
+          git remote add fork "${remote_url}"
           git remote --verbose
           git fetch --all
           git remote -v
@@ -110,17 +169,17 @@ jobs:
       - name: Check if PR source branch is not master
         if: env.HEAD_REF == 'master'
         run: |
-          comment="❌ Can not ${{ env.ORDER }} this pull request because your working branch is master, please create a new branch as requested in [CONTRIBUTING.md](https://github.com/Orange-OpenSource/hurl/blob/master/CONTRIBUTING.md)."
+          comment="❌ Can not ${ORDER} this pull request because your working branch is master, please create a new branch as requested in [CONTRIBUTING.md](https://github.com/Orange-OpenSource/hurl/blob/master/CONTRIBUTING.md)."
           echo "  - ${comment}"
           gh pr comment "${PR_NUMBER}" --body "${comment}"
           exit 1
 
       - name: Check if pull request state is open
         run: |
-          if [ "${{ env.PR_STATE }}" = "open" ] ; then
-            echo "  - ✅ Pull request is ${{ env.PR_STATE }}."
+          if [ "${PR_STATE}" = "open" ] ; then
+            echo "  - ✅ Pull request is ${PR_STATE}."
           else
-            comment="❌ Can not ${{ env.ORDER }} this pull request because it is not open (actual state=${{ env.PR_STATE }})."
+            comment="❌ Can not ${ORDER} this pull request because it is not open (actual state=${PR_STATE})."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
@@ -129,10 +188,10 @@ jobs:
       - name: Check if pull request is ready
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
-          if [ "${{ env.PR_DRAFT }}" = "false" ] ; then
-            echo "  - ✅ Pull request draft state is ${{ env.PR_DRAFT }}."
+          if [ "${PR_DRAFT}" = "false" ] ; then
+            echo "  - ✅ Pull request draft state is ${PR_DRAFT}."
           else
-            comment="❌ Can not ${{ env.ORDER }} this pull request because it is still in draft."
+            comment="❌ Can not ${ORDER} this pull request because it is still in draft."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
@@ -141,8 +200,8 @@ jobs:
       - name: Check if pull request is mergeable
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
-          if [ "${{ env.PR_MERGEABLE }}" = "true" ] ; then
-            echo "  - ✅ Pull request mergeable state is ${{ env.PR_MERGEABLE }}."
+          if [ "${PR_MERGEABLE}" = "true" ] ; then
+            echo "  - ✅ Pull request mergeable state is ${PR_MERGEABLE}."
           else
             comment="❌ Pull request is not mergeable, please check unresolved discussions and pull request messages."
             echo "  - ${comment}"
@@ -154,21 +213,29 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         id: check-github-release
         run: |
-          if [ $(echo ${{ env.HEAD_REF }} | grep -Ec '^release/') -eq 0 ] ; then
+          if [ $(echo "${HEAD_REF}" | grep -Ec '^release/') -eq 0 ] ; then
             echo "  - ✅ Pull request is not about a pending GitHub release."
           else
             echo "is_a_github_release_pr=true" | tee -a "${GITHUB_OUTPUT}"
-            tag_version="$(echo ${{ env.HEAD_REF }} | cut --delimiter '/' --field 2)"
+            tag_version="$(echo "${HEAD_REF}" | cut --delimiter '/' --field 2)"
+            
+            # Validation du tag version
+            if [[ ! "$tag_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid tag version format"
+              exit 1
+            fi
+            
             major=$(echo "${tag_version}" | cut --delimiter "." --field 1)
             minor=$(echo "${tag_version}" | cut --delimiter "." --field 2)
             new_minor="$((minor + 1))"
             echo "major=${major}, minor=${minor}, new_minor=${new_minor}"
             new_version_master_snapshot_version="${major}.${new_minor}.0-SNAPSHOT"
             echo "new_version_master_snapshot_version=${new_version_master_snapshot_version}" | tee -a "${GITHUB_OUTPUT}"
-            gh_result=$(gh api repos/"${OWNER}"/"${REPO}"/releases/tags/"${tag_version}" | tr ":" "=" | tr -d '"' | tr -d " ")
+            
+            gh_result=$(gh api "repos/${OWNER}/${REPO}/releases/tags/${tag_version}" | tr ":" "=" | tr -d '"' | tr -d " ")
             echo "gh_result=${gh_result}"
             if [ $(echo "${gh_result}" | grep -Ec "message=NotFound|prerelease=true") -eq 0 ] ; then
-              comment="✅ GitHub release ${tag_version}  is published."
+              comment="✅ GitHub release ${tag_version} is published."
               echo "  - ${comment}"
             else
               comment="👁‍🗨 GitHub release ${tag_version} is still in draft/prerelease. Please don't forget to publish it after merging this release PR."
@@ -180,52 +247,52 @@ jobs:
       - name: Check if source branch is rebased from target branch
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/rebase' }}
         run: |
-          git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
+          git log --oneline --cherry "${HEAD_TYPE}/${HEAD_REF}...origin/${BASE_REF}" > "${REMAINING_COMMITS_FILE}" && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 1 ] ; then
             comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
-          diff_count=$(grep -c ^+ ${{ env.REMAINING_COMMITS_FILE }} || true)
+          diff_count=$(grep -c ^+ "${REMAINING_COMMITS_FILE}" || true)
           if [ ${diff_count} -eq 0 ] ; then
-            comment="👌 No needs to auto rebase, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` is already rebased from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\`."
+            comment="👌 No needs to auto rebase, \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` is already rebased from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\`."
             echo "${comment}" 
-            if [ "${{ env.ORDER }}" == "/rebase" ] ; then
+            if [ "${ORDER}" == "/rebase" ] ; then
                 gh pr comment "${PR_NUMBER}" --body "${comment}"
             fi
           else
             git fetch --all
-            git switch ${{ env.HEAD_REF }}
+            git switch "${HEAD_REF}"
             git pull
-            git rebase origin/${{ env.BASE_REF }} && exit_code=0 || exit_code=1
+            git rebase "origin/${BASE_REF}" && exit_code=0 || exit_code=1
             git log --oneline -n 20
             if [ ${exit_code} -eq 1 ] ; then
-              comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+              comment="❌ Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               exit 1
             fi
-            if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
-              git push fork ${{ env.HEAD_REF }} --force && exit_code=0 || exit_code=1
+            if [ "${HEAD_TYPE}" == "fork" ] ; then
+              git push fork "${HEAD_REF}" --force && exit_code=0 || exit_code=1
             else
               git push --force && exit_code=0 || exit_code=1
             fi
             if [ ${exit_code} -eq 0 ] ; then
-              comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/  -/g" ${{ env.REMAINING_COMMITS_FILE }})"
+              comment="🔨 Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` succeeds, \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` now embeds these commits:<br>$(echo ; sed "s/+/  -/g" "${REMAINING_COMMITS_FILE}")"
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
-              if [ "${{ env.ORDER }}" == "/accept" ] || [ "${{ env.ORDER }}" == "/accept --force" ] ; then
-                  comment="🕗 [${{ env.ORDER }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is still running, please wait for completion."
+              if [ "${ORDER}" == "/accept" ] || [ "${ORDER}" == "/accept --force" ] ; then
+                  comment="🕗 [${ORDER}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is still running, please wait for completion."
                   gh pr comment "${PR_NUMBER}" --body "${comment}"
                   sleep 15
               fi
             else
-              comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails on `git push --force`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+              comment="❌ Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` fails on \`git push --force\`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
             fi
-            git switch ${{ env.BASE_REF }}
+            git switch "${BASE_REF}"
           fi
 
       - name: Check if pull request checks are successful
@@ -245,18 +312,18 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           git pull
-          git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
+          git log --oneline --cherry "${HEAD_TYPE}/${HEAD_REF}...origin/${BASE_REF}" > "${REMAINING_COMMITS_FILE}" && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 1 ] ; then
             comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
-          diff_count=$(grep -c ^+ ${{ env.REMAINING_COMMITS_FILE }} || true)
+          diff_count=$(grep -c ^+ "${REMAINING_COMMITS_FILE}" || true)
           if [ ${diff_count} -eq 0 ] ; then
-            echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
+            echo "  - ✅ ${HEAD_REPO_FULL_NAME}/${HEAD_REF} is already rebased from ${BASE_REPO_FULL_NAME}/${BASE_REF}."
           else
-            comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
+            comment="❌ New commits have been pushed to \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" "${REMAINING_COMMITS_FILE}")"
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
@@ -265,12 +332,12 @@ jobs:
       - name: Get new commits list
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
-          git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
+          git log --oneline --cherry "origin/${BASE_REF}...${HEAD_TYPE}/${HEAD_REF}" | tee "${NEW_COMMITS_FILE}"
 
       - name: Merge fast forward head ref to base ref
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
-          git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
+          git merge "${HEAD_TYPE}/${HEAD_REF}" --ff-only && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
             echo "  - ✅ Merge fast forward succeeds."
           else
@@ -296,4 +363,4 @@ jobs:
           else
             comment="✅ Pull request merged with fast forward by \`${COMMENT_USER_LOGIN}\`."
           fi
-          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed 's/+/-/g' ${{ env.NEW_COMMITS_FILE }})"
+          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` branch into \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` branch:<br>$(echo ; sed 's/+/-/g' "${NEW_COMMITS_FILE}")"
