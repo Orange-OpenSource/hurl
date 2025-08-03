@@ -1,9 +1,0 @@
-error: Assert header value
-  --> tests_failed/assert_header_value.hurl:3:15
-   |
-   | GET http://localhost:8000/error-assert-header-value
-   | ...
- 3 | Content-Type: ???
-   |               ^^^ actual value is <text/html; charset=utf-8>
-   |
-

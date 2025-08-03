@@ -1,0 +1,9 @@
+error: Assert body value
+  --> tests_failed/assert_newline/assert_newline.hurl:10:1
+   |
+   | GET http://localhost:8000/error-assert-newline
+   | ...
+10 | <p>Hello</p>
+   |   +
+   |
+

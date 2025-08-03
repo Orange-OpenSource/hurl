@@ -1,9 +1,0 @@
-error: Assert status code
-  --> tests_failed/assert_status.hurl:9:6
-   |
-   | GET http://localhost:8000/not_found
-   | ...
- 9 | HTTP 200
-   |      ^^^ actual value is <404>
-   |
-

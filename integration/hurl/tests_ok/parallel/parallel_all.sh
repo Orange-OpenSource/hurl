@@ -60,24 +60,24 @@ hurl --ipv4 --parallel --test \
   tests_ok/utf8/utf8.hurl \
   tests_ok/verbose/verbose_option.hurl \
   tests_ok_not_linted/bom.hurl \
-  tests_failed/assert_base64.hurl \
-  tests_failed/assert_bytearray.hurl \
-  tests_failed/assert_content_encoding.hurl \
-  tests_failed/assert_file.hurl \
-  tests_failed/assert_header_not_found.hurl \
-  tests_failed/assert_header_value.hurl \
-  tests_failed/assert_http_version.hurl \
-  tests_failed/assert_invalid_predicate_type.hurl \
-  tests_failed/assert_match_utf8.hurl \
-  tests_failed/assert_newline.hurl \
-  tests_failed/assert_query_cookie.hurl \
-  tests_failed/assert_query_invalid_regex.hurl \
-  tests_failed/assert_query_invalid_xpath.hurl \
-  tests_failed/assert_status.hurl \
-  tests_failed/assert_template_variable_not_found.hurl \
-  tests_failed/assert_value_error.hurl \
-  tests_failed/assert_variable.hurl \
-  tests_failed/assert_xpath.hurl \
+  tests_failed/assert_base64/assert_base64.hurl \
+  tests_failed/assert_bytearray/assert_bytearray.hurl \
+  tests_failed/assert_content_encoding/assert_content_encoding.hurl \
+  tests_failed/assert_file/assert_file.hurl \
+  tests_failed/assert_header/assert_header_not_found.hurl \
+  tests_failed/assert_header/assert_header_value.hurl \
+  tests_failed/assert_http_version/assert_http_version.hurl \
+  tests_failed/assert_invalid_predicate_type/assert_invalid_predicate_type.hurl \
+  tests_failed/assert_match_utf8/assert_match_utf8.hurl \
+  tests_failed/assert_newline/assert_newline.hurl \
+  tests_failed/assert_query/assert_query_cookie.hurl \
+  tests_failed/assert_query/assert_query_invalid_regex.hurl \
+  tests_failed/assert_query/assert_query_invalid_xpath.hurl \
+  tests_failed/assert_status/assert_status.hurl \
+  tests_failed/assert_template/assert_template_variable_not_found.hurl \
+  tests_failed/assert_value_error/assert_value_error.hurl \
+  tests_failed/assert_variable/assert_variable.hurl \
+  tests_failed/assert_xpath/assert_xpath.hurl \
   tests_failed/file_read_access.hurl \
   tests_failed/filter.hurl \
   tests_failed/filter_decode.hurl \

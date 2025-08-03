@@ -1,9 +1,0 @@
-error: Header not found
-  --> tests_failed/assert_header_not_found.hurl:3:1
-   |
-   | GET http://localhost:8000/error-assert-header-not-found
-   | ...
- 3 | Custom: ???
-   | ^^^^^^ this header has not been found in the response
-   |
-

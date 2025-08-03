@@ -1,0 +1,9 @@
+error: Invalid regex
+  --> tests_failed/assert_query/assert_query_invalid_regex.hurl:4:7
+   |
+   | GET http://localhost:8000/error-assert-query-invalid-regex
+   | ...
+ 4 | regex "[x" exists
+   |       ^^^^ regex expression is not valid
+   |
+

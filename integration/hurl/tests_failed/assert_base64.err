@@ -1,9 +1,0 @@
-error: Assert body value
-  --> tests_failed/assert_base64.hurl:12:8
-   |
-   | GET http://localhost:8000/error-assert-base64
-   | ...
-12 | base64,bGluZTEKbGluZTIKbGluZTMK;
-   |        ^^^^^^^^^^^^^^^^^^^^^^^^ actual value is <6c696e65310a6c696e65320d0a6c696e65330a>
-   |
-

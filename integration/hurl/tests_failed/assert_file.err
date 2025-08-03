@@ -1,9 +1,0 @@
-error: Assert body value
-  --> tests_failed/assert_file.hurl:8:1
-   |
-   | GET http://localhost:8000/error-assert-file
-   | ...
- 8 | file,data.txt;
-   | ^ actual value is <48656c6c6f>
-   |
-

@@ -1,0 +1,48 @@
+error: Assert failure
+  --> tests_failed/assert_variable/assert_variable.hurl:8:0
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+ 8 | variable "toto" == "tata"
+   |   actual:   none
+   |   expected: string <tata>
+   |
+
+error: Undefined variable
+  --> tests_failed/assert_variable/assert_variable.hurl:9:24
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+ 9 | variable "status" == {{unknown}}
+   |                        ^^^^^^^ you must set the variable unknown
+   |
+
+error: Assert failure
+  --> tests_failed/assert_variable/assert_variable.hurl:10:0
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+10 | variable "status" == {{type}}
+   |   actual:   integer <200>
+   |   expected: string <text/html; charset=utf-8>
+   |
+
+error: Assert failure
+  --> tests_failed/assert_variable/assert_variable.hurl:11:0
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+11 | variable "status" == {{length}}
+   |   actual:   integer <200>
+   |   expected: string <0>
+   |
+
+error: Undefined variable
+  --> tests_failed/assert_variable/assert_variable.hurl:16:12
+   |
+   | GET http://localhost:8000/error-assert-variable
+   | ...
+16 | verbose: {{verbose}}
+   |            ^^^^^^^ you must set the variable verbose
+   |
+

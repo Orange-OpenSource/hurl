@@ -53,24 +53,24 @@ ok 50 - tests_ok/url/url.hurl
 ok 51 - tests_ok/utf8/utf8.hurl
 ok 52 - tests_ok/verbose/verbose_option.hurl
 ok 53 - tests_ok_not_linted/bom.hurl
-not ok 54 - tests_failed/assert_base64.hurl
-not ok 55 - tests_failed/assert_bytearray.hurl
-not ok 56 - tests_failed/assert_content_encoding.hurl
-not ok 57 - tests_failed/assert_file.hurl
-not ok 58 - tests_failed/assert_header_not_found.hurl
-not ok 59 - tests_failed/assert_header_value.hurl
-not ok 60 - tests_failed/assert_http_version.hurl
-not ok 61 - tests_failed/assert_invalid_predicate_type.hurl
-not ok 62 - tests_failed/assert_match_utf8.hurl
-not ok 63 - tests_failed/assert_newline.hurl
-not ok 64 - tests_failed/assert_query_cookie.hurl
-not ok 65 - tests_failed/assert_query_invalid_regex.hurl
-not ok 66 - tests_failed/assert_query_invalid_xpath.hurl
-not ok 67 - tests_failed/assert_status.hurl
-not ok 68 - tests_failed/assert_template_variable_not_found.hurl
-not ok 69 - tests_failed/assert_value_error.hurl
-not ok 70 - tests_failed/assert_variable.hurl
-not ok 71 - tests_failed/assert_xpath.hurl
+not ok 54 - tests_failed/assert_base64/assert_base64.hurl
+not ok 55 - tests_failed/assert_bytearray/assert_bytearray.hurl
+not ok 56 - tests_failed/assert_content_encoding/assert_content_encoding.hurl
+not ok 57 - tests_failed/assert_file/assert_file.hurl
+not ok 58 - tests_failed/assert_header/assert_header_not_found.hurl
+not ok 59 - tests_failed/assert_header/assert_header_value.hurl
+not ok 60 - tests_failed/assert_http_version/assert_http_version.hurl
+not ok 61 - tests_failed/assert_invalid_predicate_type/assert_invalid_predicate_type.hurl
+not ok 62 - tests_failed/assert_match_utf8/assert_match_utf8.hurl
+not ok 63 - tests_failed/assert_newline/assert_newline.hurl
+not ok 64 - tests_failed/assert_query/assert_query_cookie.hurl
+not ok 65 - tests_failed/assert_query/assert_query_invalid_regex.hurl
+not ok 66 - tests_failed/assert_query/assert_query_invalid_xpath.hurl
+not ok 67 - tests_failed/assert_status/assert_status.hurl
+not ok 68 - tests_failed/assert_template/assert_template_variable_not_found.hurl
+not ok 69 - tests_failed/assert_value_error/assert_value_error.hurl
+not ok 70 - tests_failed/assert_variable/assert_variable.hurl
+not ok 71 - tests_failed/assert_xpath/assert_xpath.hurl
 not ok 72 - tests_failed/file_read_access.hurl
 not ok 73 - tests_failed/filter.hurl
 not ok 74 - tests_failed/filter_decode.hurl

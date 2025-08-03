@@ -1,0 +1,9 @@
+error: Invalid XPath expression
+  --> tests_failed/assert_query/assert_query_invalid_xpath.hurl:4:7
+   |
+   | GET http://localhost:8000/utf8
+   | ...
+ 4 | xpath "//" == 1
+   |       ^^^^ XPath expression is not valid
+   |
+

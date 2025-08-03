@@ -1,0 +1,126 @@
+{
+  "cookies": [],
+  "entries": [
+    {
+      "asserts": [
+        {
+          "line": 2,
+          "success": true
+        },
+        {
+          "line": 2,
+          "success": true
+        },
+        {
+          "line": 4,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:4:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 4 | header \"content-type\" == \"XXX\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <XXX>\n   |",
+          "success": false
+        },
+        {
+          "line": 5,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:5:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 5 | header \"content-type\" != \"text/html; charset=utf-8\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <text/html; charset=utf-8>\n   |",
+          "success": false
+        },
+        {
+          "line": 6,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:6:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 6 | jsonpath \"$.id\" == \"000001\"\n   |   actual:   none\n   |   expected: string <000001>\n   |",
+          "success": false
+        },
+        {
+          "line": 7,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:7:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 7 | jsonpath \"$.values\" contains 100\n   |   actual:   list <[1,2,3]>\n   |   expected: contains integer <100>\n   |",
+          "success": false
+        },
+        {
+          "line": 8,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:8:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 8 | jsonpath \"$.count\" > 5\n   |   actual:   integer <2>\n   |   expected: greater than integer <5>\n   |",
+          "success": false
+        },
+        {
+          "line": 9,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:9:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 9 | jsonpath \"$.count\" isFloat\n   |   actual:   integer <2>\n   |   expected: float\n   |",
+          "success": false
+        },
+        {
+          "line": 10,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:10:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n10 | jsonpath \"$.line_terminator\" == \"\\r\\n\"\n   |   actual:   string <\n   |>\n   |   expected: string <\r\n   |>\n   |",
+          "success": false
+        },
+        {
+          "line": 11,
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:11:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n11 | bytes contains hex,00;\n   |   actual:   bytes <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20322c20226c696e655f7465726d696e61746f72223a20225c6e227d>\n   |   expected: contains bytes <00>\n   |",
+          "success": false
+        }
+      ],
+      "calls": [
+        {
+          "request": {
+            "cookies": [],
+            "headers": [
+              {
+                "name": "Host",
+                "value": "localhost:8000"
+              },
+              {
+                "name": "Accept",
+                "value": "*/*"
+              },
+              {
+                "name": "User-Agent",
+                "value": "hurl/<<<.*?>>>"
+              }
+            ],
+            "method": "GET",
+            "query_string": [],
+            "url": "http://localhost:8000/error-assert-value"
+          },
+          "response": {
+            "cookies": [],
+            "headers": [
+              {
+                "name": "Content-Length",
+                "value": "57"
+              },
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              },
+              {
+                "name": "Date",
+                "value": "<<<.*?>>>"
+              },
+              {
+                "name": "Server",
+                "value": "Flask Server"
+              },
+              {
+                "name": "Via",
+                "value": "waitress"
+              }
+            ],
+            "http_version": "HTTP/1.1",
+            "status": 200
+          },
+          "timings": {
+            "app_connect": <<<\d+>>>,
+            "begin_call": "<<<.*?>>>",
+            "connect": <<<\d+>>>,
+            "end_call": "<<<.*?>>>",
+            "name_lookup": <<<\d+>>>,
+            "pre_transfer": <<<\d+>>>,
+            "start_transfer": <<<\d+>>>,
+            "total": <<<\d+>>>
+          }
+        }
+      ],
+      "captures": [],
+      "curl_cmd": "curl 'http://localhost:8000/error-assert-value'",
+      "index": 1,
+      "line": 1,
+      "time": <<<\d+>>>
+    }
+  ],
+  "filename": "tests_failed/assert_value_error/assert_value_error.hurl",
+  "success": false,
+  "time": <<<\d+>>>
+}

@@ -1,9 +1,0 @@
-error: Invalid decoding
-  --> tests_failed/assert_match_utf8.hurl:4:1
-   |
-   | GET http://localhost:8000/error-assert/match-utf8
-   | ...
- 4 | body matches ".*"
-   | ^^^^ the body can not be decoded with charset 'utf-8'
-   |
-
