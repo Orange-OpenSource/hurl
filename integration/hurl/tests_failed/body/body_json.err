@@ -1,5 +1,5 @@
 error: Invalid JSON
-  --> tests_failed/body_json.hurl:3:18
+  --> tests_failed/body/body_json.hurl:3:18
    |
    | POST https://unused
    | ...

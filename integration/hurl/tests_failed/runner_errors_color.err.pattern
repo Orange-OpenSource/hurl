@@ -126,7 +126,7 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-decoding[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m 79 |[0m body == "Hello"
-[1;34m    |[0m[1;31m ^^^^ the body can not be decoded with charset 'utf-8'[0m
+[1;34m    |[0m[1;31m ^^^^ could not decode response body with charset 'utf-8'[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSON[0m

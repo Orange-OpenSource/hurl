@@ -1,5 +1,5 @@
 error: HTTP connection
-  --> tests_ok/aws_sigv4_option.hurl:1:6
+  --> tests_ok/aws_sigv4/aws_sigv4_option.hurl:1:6
    |
  1 | POST http://localhost:8000/aws-sigv4
    |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Option aws-sigv4 requires libcurl version 7.75.0 or higher

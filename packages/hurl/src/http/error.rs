@@ -95,7 +95,7 @@ impl HttpError {
                 format!("the charset '{charset}' is not valid")
             }
             HttpError::InvalidDecoding { charset } => {
-                format!("the body can not be decoded with charset '{charset}'")
+                format!("could not decode response body with charset '{charset}'")
             }
             HttpError::InvalidUrl(url, reason) => {
                 format!("invalid URL <{url}> ({reason})").to_string()

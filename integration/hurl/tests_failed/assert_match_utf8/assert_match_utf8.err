@@ -4,6 +4,6 @@ error: Invalid decoding
    | GET http://localhost:8000/error-assert/match-utf8
    | ...
  4 | body matches ".*"
-   | ^^^^ the body can not be decoded with charset 'utf-8'
+   | ^^^^ could not decode response body with charset 'utf-8'
    |
 

@@ -126,7 +126,7 @@ error: Invalid decoding
     | GET http://localhost:8000/runner_errors/invalid-decoding
     | ...
  79 | body == "Hello"
-    | ^^^^ the body can not be decoded with charset 'utf-8'
+    | ^^^^ could not decode response body with charset 'utf-8'
     |
 
 error: Invalid JSON

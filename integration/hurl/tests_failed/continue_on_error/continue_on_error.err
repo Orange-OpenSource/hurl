@@ -1,7 +1,7 @@
 error: Assert status code
   --> tests_failed/continue_on_error.hurl:2:6
    |
-   | GET http://localhost:8000/continue-on-error
+   | GET http://localhost:8000/continue_on_error/continue-on-error
  2 | HTTP 400
    |      ^^^ actual value is <200>
    |
@@ -9,7 +9,7 @@ error: Assert status code
 error: Assert status code
   --> tests_failed/continue_on_error.hurl:8:6
    |
-   | GET http://localhost:8000/continue-on-error
+   | GET http://localhost:8000/continue_on_error/continue-on-error
  8 | HTTP 400
    |      ^^^ actual value is <200>
    |
