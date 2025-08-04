@@ -1,0 +1,36 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/inline-script
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/inline-script'
+*
+> GET /inline-script HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 28 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 28
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+error: Assert body value
+  --> tests_failed/html_report_injection/html_report_injection.hurl:4:1
+   |
+   | GET http://localhost:8000/inline-script
+   | ...
+ 4 | `Hello World`
+   | ^^^^^^^^^^^^^ actual value is <<script>alert('Hi')</script>>
+   |
+
+* Writing HTML report to build/injection/report

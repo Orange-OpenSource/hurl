@@ -1,0 +1,7 @@
+error: Invalid URL
+  --> tests_failed/invalid_url/invalid_url.hurl:1:5
+   |
+ 1 | GET https://???
+   |     ^^^^^^^^^^^ invalid URL <https://???> (empty host)
+   |
+

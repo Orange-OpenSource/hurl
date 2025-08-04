@@ -81,17 +81,17 @@ hurl --ipv4 --test `
   tests_failed/assert_value_error/assert_value_error.hurl `
   tests_failed/assert_variable/assert_variable.hurl `
   tests_failed/assert_xpath/assert_xpath.hurl `
-  tests_failed/file_read_access.hurl `
-  tests_failed/filter.hurl `
-  tests_failed/filter_decode.hurl `
-  tests_failed/filter_in_capture.hurl `
-  tests_failed/hello_gb2312_failed.hurl `
-  tests_failed/http_connection.hurl `
-  tests_failed/invalid_jsonpath.hurl `
-  tests_failed/invalid_url.hurl `
-  tests_failed/invalid_xml.hurl `
-  tests_failed/max_redirect_option.hurl `
-  tests_failed/multipart_form_data.hurl `
+  tests_failed/file/file_read_access.hurl `
+  tests_failed/filter/filter.hurl `
+  tests_failed/filter/filter_decode.hurl `
+  tests_failed/filter/filter_in_capture.hurl `
+  tests_failed/hello_gb2312/hello_gb2312_failed.hurl `
+  tests_failed/http_connection/http_connection.hurl `
+  tests_failed/invalid_jsonpath/invalid_jsonpath.hurl `
+  tests_failed/invalid_url/invalid_url.hurl `
+  tests_failed/invalid_xml/invalid_xml.hurl `
+  tests_failed/max_redirect/max_redirect_option.hurl `
+  tests_failed/multipart_form_data/multipart_form_data.hurl `
   tests_failed/predicate.hurl `
   tests_failed/query_header_not_found.hurl `
   tests_failed/query_invalid_json.hurl `

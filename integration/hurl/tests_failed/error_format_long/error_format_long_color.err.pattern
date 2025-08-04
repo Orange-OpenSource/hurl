@@ -1,0 +1,180 @@
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/html'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 45
+[1;36mContent-Type[0m: text/html; charset=utf-8
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+<html><head><title>Test</title></head></html>
+
+[1;31merror[0m: [1mAssert header value[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:7:15
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 7 |[0m Content-Type: text/html
+[1;34m   |[0m[1;31m               ^^^^^^^^^ actual value is <text/html; charset=utf-8>[0m
+[1;34m   |[0m
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:9:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 9 |[0m xpath "string(//head/title)" == "Welcome!"
+[1;34m   |[0m[1;31m   actual:   string <Test>[0m
+[1;34m   |[0m[1;31m   expected: string <Welcome!>[0m
+[1;34m   |[0m
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:11:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/html[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m11 |[0m xpath "//title" count == 2
+[1;34m   |[0m[1;31m   actual:   integer <1>[0m
+[1;34m   |[0m[1;31m   expected: integer <2>[0m
+[1;34m   |[0m
+
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/json'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 115
+[1;36mContent-Type[0m: application/json
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+{"books": [{"name": "Dune", "author": "Franck Herbert"}, {"name": "Les Mis\u00e9rables", "author": "Victor Hugo"}]}
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:18:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/json[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m18 |[0m jsonpath "$.books" count == 12
+[1;34m   |[0m[1;31m   actual:   integer <2>[0m
+[1;34m   |[0m[1;31m   expected: integer <12>[0m
+[1;34m   |[0m
+
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/rfc-7807'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 258
+[1;36mContent-Type[0m: application/problem+json
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+{"type": "https://example.com/probs/out-of-credit", "title": "You do not have enough credit.", "detail": "Your current balance is 30, but that costs 50.", "instance": "/account/12345/msgs/abc", "balance": 30, "accounts": ["/account/12345", "/account/67890"]}
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:26:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/rfc-7807[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m26 |[0m jsonpath "$.title" == "You have enough credit."
+[1;34m   |[0m[1;31m   actual:   string <You do not have enough credit.>[0m
+[1;34m   |[0m[1;31m   expected: string <You have enough credit.>[0m
+[1;34m   |[0m
+
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/fhir'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 902
+[1;36mContent-Type[0m: application/fhir+json
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+{"resourceType": "Practitioner", "id": "example", "text": {"status": "generated", "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Dr Adam Careful is a Referring Practitioner for Acme Hospital from 1-Jan 2012 to 31-Mar\n        2012</p>\n    </div>"}, "identifier": [{"system": "http://www.acme.org/practitioners", "value": "23"}], "active": true, "name": [{"family": "Careful", "given": ["Adam"], "prefix": ["Dr"]}], "address": [{"use": "home", "line": ["534 Erewhon St"], "city": "PleasantVille", "state": "Vic", "postalCode": "3999"}], "qualification": [{"identifier": [{"system": "http://example.org/UniversityIdentifier", "value": "12345"}], "code": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/v2-0360/2.7", "code": "BS", "display": "Bachelor of Science"}], "text": "Bachelor of Science"}, "period": {"start": "1995"}, "issuer": {"display": "Example University"}}]}
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:34:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/fhir[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m34 |[0m jsonpath "$.id" == "foo"
+[1;34m   |[0m[1;31m   actual:   string <example>[0m
+[1;34m   |[0m[1;31m   expected: string <foo>[0m
+[1;34m   |[0m
+
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/csv'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 726
+[1;36mContent-Type[0m: text/csv; charset=utf-8
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+"Year","Score","Title"
+1968,86,"Greetings"
+1970,17,"Bloody Mama"
+1970,73,"Hi, Mom!"
+1971,40,"Born to Win"
+1973,98,"Mean Streets"
+1973,88,"Bang the Drum Slowly"
+1974,97,"The Godfather, Part II"
+1976,41,"The Last Tycoon"
+1976,99,"Taxi Driver"
+1977,47,"1900"
+1977,67,"New York, New York"
+1978,93,"The Deer Hunter"
+1980,97,"Raging Bull"
+1981,75,"True Confessions"
+1983,90,"The King of Comedy"
+1984,89,"Once Upon a Time in America"
+1984,60,"Falling in Love"
+1985,98,"Brazil"
+1986,65,"The Mission"
+1987,00,"Dear America: Letters Home From Vietnam"
+1987,80,"The Untouchables"
+1987,78,"Angel Heart"
+1988,96,"Midnight Run"
+1989,64,"Jacknife"
+1989,47,"We're No Angels"
+1990,88,"Awakenings"
+1990,29,"Stanley & Iris"
+1990,96,"Goodfellas"
+
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:42:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/csv[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m42 |[0m body split "\n" nth 9 split "," nth 2 == "\"Taxi\""
+[1;34m   |[0m[1;31m   actual:   string <"Taxi Driver">[0m
+[1;34m   |[0m[1;31m   expected: string <"Taxi">[0m
+[1;34m   |[0m
+
+[1;34m*[0m Request can be run with the following curl command:
+[1;34m*[0m curl 'http://localhost:8000/error-format-long/bytes'
+
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 4
+[1;36mContent-Type[0m: application/octet-stream
+[1;36mDate[0m: <<<.*?>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+
+Bytes <deadbeef...>
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_failed/error_format_long/error_format_long.hurl:50:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/error-format-long/bytes[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m50 |[0m bytes == hex,beef;
+[1;34m   |[0m[1;31m   actual:   bytes <deadbeef>[0m
+[1;34m   |[0m[1;31m   expected: bytes <beef>[0m
+[1;34m   |[0m
+

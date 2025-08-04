@@ -1,0 +1,9 @@
+error: File read access
+  --> tests_failed/multipart_form_data/multipart_form_data.hurl:4:15
+   |
+   | POST http://localhost:8000/unused
+   | ...
+ 4 | upload1: file,unknown;
+   |               ^^^^^^^ file unknown can not be read
+   |
+

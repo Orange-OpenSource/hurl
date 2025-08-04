@@ -1,0 +1,54 @@
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:5:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+ 5 | jsonpath "" == false
+   |          ^^ JSONPath expression '' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:6:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+ 6 | jsonpath "$.tags[0]x" == false
+   |          ^^^^^^^^^^^^ JSONPath expression '$.tags[0]x' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:7:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+ 7 | jsonpath "$.tags[0,A]" == false
+   |          ^^^^^^^^^^^^^ JSONPath expression '$.tags[0,A]' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:8:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+ 8 | jsonpath "$.tags[0:A]" == false
+   |          ^^^^^^^^^^^^^ JSONPath expression '$.tags[0:A]' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:9:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+ 9 | jsonpath "$.tags[]" == false
+   |          ^^^^^^^^^^ JSONPath expression '$.tags[]' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:10:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+10 | jsonpath "$." == false
+   |          ^^^^ JSONPath expression '$.' is not valid
+   |
+

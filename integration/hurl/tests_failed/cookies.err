@@ -1,9 +1,0 @@
-error: HTTP connection
-  --> tests_failed/cookies.hurl:5:9
-   |
-   | GET http://localhost:8000/cookies/error
-   | ...
- 5 | cookie "cookie1[Expires]" exists
-   |         ^^^^^^^ could not parse Cookie Expires attribute value <???>
-   |
-

@@ -1,0 +1,9 @@
+error: Filter error
+  --> tests_failed/filter/filter_in_capture.hurl:4:21
+   |
+   | GET http://localhost:8000/error-filter-in-capture
+   | ...
+ 4 | id: jsonpath "$.id" toInt
+   |                     ^^^^^ invalid filter input: string <123x>
+   |
+

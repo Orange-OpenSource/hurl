@@ -1,0 +1,9 @@
+error: Invalid XML
+  --> tests_failed/invalid_xml/invalid_xml.hurl:4:1
+   |
+   | GET http://localhost:8000/error-invalid-xml
+   | ...
+ 4 | xpath "xx" == 1
+   | ^^^^^^^^^^ HTTP response is not a valid XML
+   |
+

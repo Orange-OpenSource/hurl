@@ -17,7 +17,7 @@ def main():
     script_files = (
         get_files("tests_ok/**/*." + extension)
         + get_files("tests_ok_not_linted/*." + extension)
-        + get_files("tests_failed/*." + extension)
+        + get_files("tests_failed/**/*." + extension)
         + get_files("tests_failed_not_linted/*." + extension)
         + get_files("tests_error_parser/*." + extension)
         + get_files("tests_ssl/*." + extension)

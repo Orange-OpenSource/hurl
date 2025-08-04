@@ -1,7 +1,0 @@
-error: Unsupported HTTP version
-  --> tests_failed/http_version_not_supported.hurl:3:5
-   |
- 3 | GET http://localhost:8000/foo
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version
-   |
-

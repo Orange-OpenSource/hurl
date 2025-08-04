@@ -1,0 +1,9 @@
+error: Undefined variable
+  --> tests_failed/key_template/key_template.hurl:4:3
+   |
+   | GET http://localhost:8000/error-key-template
+   | ...
+ 4 | {{name}}: value
+   |   ^^^^ you must set the variable name
+   |
+
