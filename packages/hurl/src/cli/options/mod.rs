@@ -20,6 +20,7 @@ mod duration;
 mod error;
 mod matches;
 mod variables;
+mod variables_file;
 
 use std::collections::HashMap;
 use std::env;

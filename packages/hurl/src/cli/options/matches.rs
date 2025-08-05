@@ -16,8 +16,7 @@
  *
  */
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufRead, BufReader, IsTerminal};
+use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 use std::{env, fs, io};
@@ -27,6 +26,7 @@ use hurl::runner::Value;
 use hurl_core::input::Input;
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
+use crate::cli::options::variables_file::{TypeKind, VariablesFile};
 use crate::cli::options::{
     duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output,
 };
@@ -494,40 +494,19 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
         }
     }
 
+    // Then add variables from files:
     if let Some(filenames) = get_strings(matches, "variables_file") {
-        for f in filenames.iter() {
-            let path = Path::new(&f);
-            if !path.exists() {
-                return Err(CliOptionsError::Error(format!(
-                    "Properties file {} does not exist",
-                    path.display()
-                )));
-            }
-
-            let file = File::open(path).unwrap();
-            let reader = BufReader::new(file);
-            for (index, line) in reader.lines().enumerate() {
-                let line = match line {
-                    Ok(s) => s,
-                    Err(_) => {
-                        return Err(CliOptionsError::Error(format!(
-                            "Can not parse line {} of {}",
-                            index + 1,
-                            path.display()
-                        )))
-                    }
-                };
-                let line = line.trim();
-                if line.starts_with('#') || line.is_empty() {
-                    continue;
-                }
-                let inferred = true;
-                let (name, value) = variables::parse(line, inferred)?;
+        for f in &filenames {
+            let filename = Path::new(f);
+            let vars = VariablesFile::open(filename, TypeKind::Inferred)?;
+            for var in vars {
+                let (name, value) = var?;
                 variables.insert(name.to_string(), value);
             }
         }
     }
 
+    // Finally, add singles variables from command line.
     if let Some(input) = get_strings(matches, "variable") {
         for s in input {
             let inferred = true;
