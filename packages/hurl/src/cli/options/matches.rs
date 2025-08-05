@@ -428,18 +428,38 @@ pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsEr
 
 pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut secrets = HashMap::new();
+
+    if let Some(filenames) = get_strings(matches, "secrets_file") {
+        for f in &filenames {
+            let filename = Path::new(f);
+            let vars = VariablesFile::open(filename, TypeKind::String)?;
+            for var in vars {
+                let (name, value) = var?;
+                // We check that there is no existing secrets
+                if secrets.contains_key(&name) {
+                    return Err(CliOptionsError::Error(format!(
+                        "secret '{}' can't be reassigned",
+                        &name
+                    )));
+                }
+                // Secrets can only be string.
+                if let Value::String(value) = value {
+                    secrets.insert(name.to_string(), value);
+                }
+            }
+        }
+    }
+
     if let Some(secret) = get_strings(matches, "secret") {
         for s in secret {
             let inferred = false;
             let (name, value) = variables::parse(&s, inferred)?;
-            // We check that there is no existing secrets
             if secrets.contains_key(&name) {
                 return Err(CliOptionsError::Error(format!(
                     "secret '{}' can't be reassigned",
                     &name
                 )));
             }
-            // Secrets can only be string.
             if let Value::String(value) = value {
                 secrets.insert(name, value);
             }

@@ -494,6 +494,16 @@ Define secret value to be redacted from logs and report. When defined, secrets c
 
 This is a cli-only option.
 
+### --secrets-file <FILE> {#secrets-file}
+
+Define a secrets file in which you define your secrets
+
+Each secret is defined as name=value exactly as with [`--secret`](#secret) option.
+
+Note that defining a secret twice produces an error.
+
+This is a cli-only option.
+
 ### --ssl-no-revoke {#ssl-no-revoke}
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.

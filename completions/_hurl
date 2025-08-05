@@ -74,6 +74,7 @@ _hurl() {
     '--retry[Maximum number of retries, 0 for no retries, -1 for unlimited retries]: :' \
     '--retry-interval[Interval in milliseconds before a retry]: :' \
     '*--secret[Define a variable which value is secret]: :' \
+    '*--secrets-file[Define a secrets file in which you define your secrets]: :_files' \
     '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks]' \
     '--test[Activate test mode (use parallel execution)]' \
     '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]: :' \

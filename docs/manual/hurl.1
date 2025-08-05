@@ -1,4 +1,4 @@
-.TH hurl 1 "30 Jul 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "05 Aug 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -472,6 +472,16 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 .IP "--secret <NAME=VALUE> "
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
+This is a cli-only option.
+
+.IP "--secrets-file <FILE> "
+
+Define a secrets file in which you define your secrets
+
+Each secret is defined as name=value exactly as with \fI--secret\fP option.
+
+Note that defining a secret twice produces an error.
 
 This is a cli-only option.
 

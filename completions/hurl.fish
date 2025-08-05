@@ -57,6 +57,7 @@ complete -c hurl -l resolve -d 'Provide a custom address for a specific HOST and
 complete -c hurl -l retry -d 'Maximum number of retries, 0 for no retries, -1 for unlimited retries'
 complete -c hurl -l retry-interval -d 'Interval in milliseconds before a retry'
 complete -c hurl -l secret -d 'Define a variable which value is secret'
+complete -c hurl -l secrets-file -d 'Define a secrets file in which you define your secrets'
 complete -c hurl -l ssl-no-revoke -d '(Windows) Tell Hurl to disable certificate revocation checks'
 complete -c hurl -l test -d 'Activate test mode (use parallel execution)'
 complete -c hurl -l to-entry -d 'Execute Hurl file to ENTRY_NUMBER (starting at 1)'

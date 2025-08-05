@@ -107,6 +107,7 @@ Run options:
                                        retries
       --retry-interval <MILLISECONDS>  Interval in milliseconds before a retry [default: 1000]
       --secret <NAME=VALUE>            Define a variable which value is secret
+      --secrets-file <FILE>            Define a secrets file in which you define your secrets
       --test                           Activate test mode (use parallel execution)
       --to-entry <ENTRY_NUMBER>        Execute Hurl file to ENTRY_NUMBER (starting at 1)
       --variable <NAME=VALUE>          Define a variable

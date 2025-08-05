@@ -79,6 +79,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--retry', 'retry', [CompletionResultType]::ParameterName, 'Maximum number of retries, 0 for no retries, -1 for unlimited retries')
             [CompletionResult]::new('--retry-interval', 'retry-interval', [CompletionResultType]::ParameterName, 'Interval in milliseconds before a retry')
             [CompletionResult]::new('--secret', 'secret', [CompletionResultType]::ParameterName, 'Define a variable which value is secret')
+            [CompletionResult]::new('--secrets-file', 'secrets-file', [CompletionResultType]::ParameterName, 'Define a secrets file in which you define your secrets')
             [CompletionResult]::new('--ssl-no-revoke', 'ssl-no-revoke', [CompletionResultType]::ParameterName, '(Windows) Tell Hurl to disable certificate revocation checks')
             [CompletionResult]::new('--test', 'test', [CompletionResultType]::ParameterName, 'Activate test mode (use parallel execution)')
             [CompletionResult]::new('--to-entry', 'to-entry', [CompletionResultType]::ParameterName, 'Execute Hurl file to ENTRY_NUMBER (starting at 1)')

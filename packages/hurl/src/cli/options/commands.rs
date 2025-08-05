@@ -573,6 +573,16 @@ pub fn secret() -> clap::Arg {
         .action(clap::ArgAction::Append)
 }
 
+pub fn secrets_file() -> clap::Arg {
+    clap::Arg::new("secrets_file")
+        .long("secrets-file")
+        .value_name("FILE")
+        .help("Define a secrets file in which you define your secrets")
+        .help_heading("Run options")
+        .num_args(1)
+        .action(clap::ArgAction::Append)
+}
+
 pub fn ssl_no_revoke() -> clap::Arg {
     clap::Arg::new("ssl_no_revoke")
         .long("ssl-no-revoke")

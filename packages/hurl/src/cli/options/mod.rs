@@ -248,6 +248,7 @@ pub fn parse(allow_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::retry())
         .arg(commands::retry_interval())
         .arg(commands::secret())
+        .arg(commands::secrets_file())
         .arg(commands::test())
         .arg(commands::to_entry())
         .arg(commands::variable())
