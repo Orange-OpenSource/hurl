@@ -71,7 +71,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.3.0
+      uses: actions/download-artifact@v5.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -125,7 +125,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.3.0
+      uses: actions/download-artifact@v5.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -177,7 +177,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.3.0
+      uses: actions/download-artifact@v5.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -240,7 +240,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v4.3.0
+      uses: actions/download-artifact@v5.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -688,7 +688,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@v4.3.0
+      - uses: actions/download-artifact@v5.0.0
         with:
           path: artifacts
       - name: Prerequisites
