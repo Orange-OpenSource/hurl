@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_failed/query_invalid_json.hurl
+
+hurl tests_failed/predicate/predicate.hurl

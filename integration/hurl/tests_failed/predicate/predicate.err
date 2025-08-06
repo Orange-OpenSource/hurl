@@ -1,5 +1,5 @@
 error: Assert failure
-  --> tests_failed/predicate.hurl:4:0
+  --> tests_failed/predicate/predicate.hurl:4:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -9,7 +9,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:5:0
+  --> tests_failed/predicate/predicate.hurl:5:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -19,7 +19,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:6:0
+  --> tests_failed/predicate/predicate.hurl:6:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -29,7 +29,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:7:0
+  --> tests_failed/predicate/predicate.hurl:7:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -39,7 +39,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:8:0
+  --> tests_failed/predicate/predicate.hurl:8:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -49,7 +49,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:9:0
+  --> tests_failed/predicate/predicate.hurl:9:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -60,7 +60,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:10:0
+  --> tests_failed/predicate/predicate.hurl:10:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -71,7 +71,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:11:0
+  --> tests_failed/predicate/predicate.hurl:11:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -82,7 +82,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:12:0
+  --> tests_failed/predicate/predicate.hurl:12:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -93,7 +93,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:13:0
+  --> tests_failed/predicate/predicate.hurl:13:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -104,7 +104,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:14:0
+  --> tests_failed/predicate/predicate.hurl:14:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -115,7 +115,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:15:0
+  --> tests_failed/predicate/predicate.hurl:15:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -126,7 +126,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:16:0
+  --> tests_failed/predicate/predicate.hurl:16:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -137,7 +137,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:17:0
+  --> tests_failed/predicate/predicate.hurl:17:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -148,7 +148,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:18:0
+  --> tests_failed/predicate/predicate.hurl:18:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -158,7 +158,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:19:0
+  --> tests_failed/predicate/predicate.hurl:19:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -168,7 +168,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:20:0
+  --> tests_failed/predicate/predicate.hurl:20:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -178,7 +178,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:21:0
+  --> tests_failed/predicate/predicate.hurl:21:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -188,7 +188,7 @@ error: Assert failure
    |
 
 error: Invalid regex
-  --> tests_failed/predicate.hurl:22:22
+  --> tests_failed/predicate/predicate.hurl:22:22
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -197,7 +197,7 @@ error: Invalid regex
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:23:0
+  --> tests_failed/predicate/predicate.hurl:23:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -207,7 +207,7 @@ error: Assert failure
    |
 
 error: Filter error
-  --> tests_failed/predicate.hurl:24:22
+  --> tests_failed/predicate/predicate.hurl:24:22
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -216,7 +216,7 @@ error: Filter error
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:25:0
+  --> tests_failed/predicate/predicate.hurl:25:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -226,7 +226,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:26:0
+  --> tests_failed/predicate/predicate.hurl:26:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -236,7 +236,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:27:0
+  --> tests_failed/predicate/predicate.hurl:27:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -246,7 +246,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:28:0
+  --> tests_failed/predicate/predicate.hurl:28:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -256,7 +256,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:29:0
+  --> tests_failed/predicate/predicate.hurl:29:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -266,7 +266,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:30:0
+  --> tests_failed/predicate/predicate.hurl:30:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -276,7 +276,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:31:0
+  --> tests_failed/predicate/predicate.hurl:31:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -286,7 +286,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:32:0
+  --> tests_failed/predicate/predicate.hurl:32:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -296,7 +296,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:33:0
+  --> tests_failed/predicate/predicate.hurl:33:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -306,7 +306,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:34:0
+  --> tests_failed/predicate/predicate.hurl:34:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -316,7 +316,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:35:0
+  --> tests_failed/predicate/predicate.hurl:35:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -326,7 +326,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:36:0
+  --> tests_failed/predicate/predicate.hurl:36:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -336,7 +336,7 @@ error: Assert failure
    |
 
 error: Filter error
-  --> tests_failed/predicate.hurl:37:24
+  --> tests_failed/predicate/predicate.hurl:37:24
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -345,7 +345,7 @@ error: Filter error
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:38:0
+  --> tests_failed/predicate/predicate.hurl:38:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -355,7 +355,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:39:0
+  --> tests_failed/predicate/predicate.hurl:39:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -365,7 +365,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:40:0
+  --> tests_failed/predicate/predicate.hurl:40:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -375,7 +375,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:41:0
+  --> tests_failed/predicate/predicate.hurl:41:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -385,7 +385,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:42:0
+  --> tests_failed/predicate/predicate.hurl:42:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -395,7 +395,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:43:0
+  --> tests_failed/predicate/predicate.hurl:43:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -405,7 +405,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:44:0
+  --> tests_failed/predicate/predicate.hurl:44:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -415,7 +415,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:45:0
+  --> tests_failed/predicate/predicate.hurl:45:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -425,7 +425,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:46:0
+  --> tests_failed/predicate/predicate.hurl:46:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -435,7 +435,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:47:0
+  --> tests_failed/predicate/predicate.hurl:47:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -445,7 +445,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:48:0
+  --> tests_failed/predicate/predicate.hurl:48:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -455,7 +455,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:49:0
+  --> tests_failed/predicate/predicate.hurl:49:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -465,7 +465,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:50:0
+  --> tests_failed/predicate/predicate.hurl:50:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -475,7 +475,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:51:0
+  --> tests_failed/predicate/predicate.hurl:51:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -485,7 +485,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:52:0
+  --> tests_failed/predicate/predicate.hurl:52:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -495,7 +495,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:53:0
+  --> tests_failed/predicate/predicate.hurl:53:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -505,7 +505,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:54:0
+  --> tests_failed/predicate/predicate.hurl:54:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -515,7 +515,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:55:0
+  --> tests_failed/predicate/predicate.hurl:55:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -525,7 +525,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:56:0
+  --> tests_failed/predicate/predicate.hurl:56:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -535,7 +535,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:57:0
+  --> tests_failed/predicate/predicate.hurl:57:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -545,7 +545,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:58:0
+  --> tests_failed/predicate/predicate.hurl:58:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -555,7 +555,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:59:0
+  --> tests_failed/predicate/predicate.hurl:59:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -565,7 +565,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:60:0
+  --> tests_failed/predicate/predicate.hurl:60:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -575,7 +575,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:61:0
+  --> tests_failed/predicate/predicate.hurl:61:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -585,7 +585,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:62:0
+  --> tests_failed/predicate/predicate.hurl:62:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
@@ -595,7 +595,7 @@ error: Assert failure
    |
 
 error: Assert failure
-  --> tests_failed/predicate.hurl:63:0
+  --> tests_failed/predicate/predicate.hurl:63:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...

@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl --json tests_failed/query_header_not_found.hurl
+
+hurl tests_failed/query/query_invalid_utf8.hurl

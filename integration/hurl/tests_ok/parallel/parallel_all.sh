@@ -89,11 +89,11 @@ hurl --ipv4 --parallel --test \
   tests_failed/invalid_xml/invalid_xml.hurl \
   tests_failed/max_redirect/max_redirect_option.hurl \
   tests_failed/multipart_form_data/multipart_form_data.hurl \
-  tests_failed/predicate.hurl \
-  tests_failed/query_header_not_found.hurl \
-  tests_failed/query_invalid_json.hurl \
-  tests_failed/query_invalid_utf8.hurl \
-  tests_failed/query_match_none.hurl \
+  tests_failed/predicate/predicate.hurl \
+  tests_failed/query/query_header_not_found.hurl \
+  tests_failed/query/query_invalid_json.hurl \
+  tests_failed/query/query_invalid_utf8.hurl \
+  tests_failed/query/query_match_none.hurl \
   tests_failed/retry_option.hurl \
   tests_failed/template_variable_not_found.hurl \
   tests_failed/template_variable_not_renderable.hurl

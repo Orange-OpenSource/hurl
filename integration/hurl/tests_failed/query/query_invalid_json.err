@@ -1,5 +1,5 @@
 error: Invalid JSON
-  --> tests_failed/query_invalid_json.hurl:4:1
+  --> tests_failed/query/query_invalid_json.hurl:4:1
    |
    | GET http://localhost:8000/error-query-invalid-json
    | ...

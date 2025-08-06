@@ -1,5 +1,5 @@
 error: Invalid decoding
-  --> tests_failed/query_invalid_utf8.hurl:4:1
+  --> tests_failed/query/query_invalid_utf8.hurl:4:1
    |
    | GET http://localhost:8000/error-query-invalid-utf8
    | ...

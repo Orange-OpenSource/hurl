@@ -82,11 +82,11 @@ not ok 79 - tests_failed/invalid_url/invalid_url.hurl
 not ok 80 - tests_failed/invalid_xml/invalid_xml.hurl
 not ok 81 - tests_failed/max_redirect/max_redirect_option.hurl
 not ok 82 - tests_failed/multipart_form_data/multipart_form_data.hurl
-not ok 83 - tests_failed/predicate.hurl
-not ok 84 - tests_failed/query_header_not_found.hurl
-not ok 85 - tests_failed/query_invalid_json.hurl
-not ok 86 - tests_failed/query_invalid_utf8.hurl
-not ok 87 - tests_failed/query_match_none.hurl
+not ok 83 - tests_failed/predicate/predicate.hurl
+not ok 84 - tests_failed/query/query_header_not_found.hurl
+not ok 85 - tests_failed/query/query_invalid_json.hurl
+not ok 86 - tests_failed/query/query_invalid_utf8.hurl
+not ok 87 - tests_failed/query/query_match_none.hurl
 not ok 88 - tests_failed/retry_option.hurl
 not ok 89 - tests_failed/template_variable_not_found.hurl
 not ok 90 - tests_failed/template_variable_not_renderable.hurl

@@ -1,5 +1,5 @@
 error: Assert failure
-  --> tests_failed/query_match_none.hurl:4:0
+  --> tests_failed/query/query_match_none.hurl:4:0
    |
    | GET http://localhost:8000/query-match-none
    | ...
