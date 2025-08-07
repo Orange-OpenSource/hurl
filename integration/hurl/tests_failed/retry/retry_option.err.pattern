@@ -29,7 +29,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_option.hurl:5:6
+*   --> tests_failed/retry/retry_option.hurl:5:6
 *    |
 *    | GET http://localhost:8000/not-found
 *    | ...
@@ -65,7 +65,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_option.hurl:5:6
+*   --> tests_failed/retry/retry_option.hurl:5:6
 *    |
 *    | GET http://localhost:8000/not-found
 *    | ...
@@ -103,7 +103,7 @@
 * Retry max count reached, no more retry
 *
 error: Assert status code
-  --> tests_failed/retry_option.hurl:5:6
+  --> tests_failed/retry/retry_option.hurl:5:6
    |
    | GET http://localhost:8000/not-found
    | ...

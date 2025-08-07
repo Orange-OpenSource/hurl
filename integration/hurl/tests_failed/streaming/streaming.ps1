@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_failed/retry_option.hurl --verbose
+
+hurl --max-time 5 tests_failed/streaming/streaming.hurl

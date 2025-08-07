@@ -97,6 +97,6 @@ hurl --ipv4 --test `
   tests_failed/query/query_invalid_json.hurl `
   tests_failed/query/query_invalid_utf8.hurl `
   tests_failed/query/query_match_none.hurl `
-  tests_failed/retry_option.hurl `
-  tests_failed/template_variable_not_found.hurl `
-  tests_failed/template_variable_not_renderable.hurl
+  tests_failed/retry/retry_option.hurl `
+  tests_failed/template/template_variable_not_found.hurl `
+  tests_failed/template/template_variable_not_renderable.hurl

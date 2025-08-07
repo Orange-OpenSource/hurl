@@ -27,7 +27,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry.hurl:2:6
+*   --> tests_failed/retry/retry.hurl:2:6
 *    |
 *    | GET http://localhost:8000/not-found
 *  2 | HTTP 200
@@ -62,7 +62,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry.hurl:2:6
+*   --> tests_failed/retry/retry.hurl:2:6
 *    |
 *    | GET http://localhost:8000/not-found
 *  2 | HTTP 200
@@ -97,7 +97,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry.hurl:2:6
+*   --> tests_failed/retry/retry.hurl:2:6
 *    |
 *    | GET http://localhost:8000/not-found
 *  2 | HTTP 200
@@ -132,7 +132,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry.hurl:2:6
+*   --> tests_failed/retry/retry.hurl:2:6
 *    |
 *    | GET http://localhost:8000/not-found
 *  2 | HTTP 200
@@ -167,7 +167,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry.hurl:2:6
+*   --> tests_failed/retry/retry.hurl:2:6
 *    |
 *    | GET http://localhost:8000/not-found
 *  2 | HTTP 200
@@ -204,7 +204,7 @@
 * Retry max count reached, no more retry
 *
 error: Assert status code
-  --> tests_failed/retry.hurl:2:6
+  --> tests_failed/retry/retry.hurl:2:6
    |
    | GET http://localhost:8000/not-found
  2 | HTTP 200

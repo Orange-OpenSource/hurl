@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl --max-time 5 tests_failed/streaming.hurl
+
+hurl tests_failed/template/template_variable_not_found.hurl

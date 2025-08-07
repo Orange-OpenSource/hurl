@@ -1,5 +1,5 @@
 error: Assert body value
-   --> tests_failed/runner_errors.hurl:6:1
+   --> tests_failed/runner_errors/runner_errors.hurl:6:1
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -8,7 +8,7 @@ error: Assert body value
     |
 
 error: Assert failure
-   --> tests_failed/runner_errors.hurl:12:0
+   --> tests_failed/runner_errors/runner_errors.hurl:12:0
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -18,7 +18,7 @@ error: Assert failure
     |
 
 error: Assert header value
-   --> tests_failed/runner_errors.hurl:17:17
+   --> tests_failed/runner_errors/runner_errors.hurl:17:17
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -27,7 +27,7 @@ error: Assert header value
     |
 
 error: Assert status code
-   --> tests_failed/runner_errors.hurl:21:6
+   --> tests_failed/runner_errors/runner_errors.hurl:21:6
     |
     | GET http://localhost:8000/undefined
  21 | HTTP 200
@@ -35,7 +35,7 @@ error: Assert status code
     |
 
 error: Assert HTTP version
-   --> tests_failed/runner_errors.hurl:25:1
+   --> tests_failed/runner_errors/runner_errors.hurl:25:1
     |
     | GET http://localhost:8000/undefined
  25 | HTTP/3 *
@@ -43,7 +43,7 @@ error: Assert HTTP version
     |
 
 error: Decompression error
-   --> tests_failed/runner_errors.hurl:31:1
+   --> tests_failed/runner_errors/runner_errors.hurl:31:1
     |
     | GET http://localhost:8000/runner_errors/could_not_uncompress
     | ...
@@ -52,7 +52,7 @@ error: Decompression error
     |
 
 error: File read access
-   --> tests_failed/runner_errors.hurl:35:6
+   --> tests_failed/runner_errors/runner_errors.hurl:35:6
     |
     | GET http://localhost:8000/undefined
  35 | file,undefined.txt;
@@ -60,16 +60,16 @@ error: File read access
     |
 
 error: File write access
-   --> tests_failed/runner_errors.hurl:40:9
+   --> tests_failed/runner_errors/runner_errors.hurl:40:9
     |
     | GET http://localhost:8000/runner_errors
     | ...
  40 | output: undefined/output
-    |         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)
+    |         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>runner_errors<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)
     |
 
 error: Filter error
-   --> tests_failed/runner_errors.hurl:46:5
+   --> tests_failed/runner_errors/runner_errors.hurl:46:5
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -78,7 +78,7 @@ error: Filter error
     |
 
 error: Filter error
-   --> tests_failed/runner_errors.hurl:52:7
+   --> tests_failed/runner_errors/runner_errors.hurl:52:7
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -87,7 +87,7 @@ error: Filter error
     |
 
 error: Filter error
-   --> tests_failed/runner_errors.hurl:58:6
+   --> tests_failed/runner_errors/runner_errors.hurl:58:6
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -96,7 +96,7 @@ error: Filter error
     |
 
 error: Filter error
-   --> tests_failed/runner_errors.hurl:64:16
+   --> tests_failed/runner_errors/runner_errors.hurl:64:16
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -105,14 +105,14 @@ error: Filter error
     |
 
 error: HTTP connection
-   --> tests_failed/runner_errors.hurl:67:5
+   --> tests_failed/runner_errors/runner_errors.hurl:67:5
     |
  67 | GET http://unknown
     |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
     |
 
 error: Invalid charset
-   --> tests_failed/runner_errors.hurl:73:1
+   --> tests_failed/runner_errors/runner_errors.hurl:73:1
     |
     | GET http://localhost:8000/runner_errors/invalid-charset
     | ...
@@ -121,7 +121,7 @@ error: Invalid charset
     |
 
 error: Invalid decoding
-   --> tests_failed/runner_errors.hurl:79:1
+   --> tests_failed/runner_errors/runner_errors.hurl:79:1
     |
     | GET http://localhost:8000/runner_errors/invalid-decoding
     | ...
@@ -130,7 +130,7 @@ error: Invalid decoding
     |
 
 error: Invalid JSON
-   --> tests_failed/runner_errors.hurl:85:10
+   --> tests_failed/runner_errors/runner_errors.hurl:85:10
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -139,7 +139,7 @@ error: Invalid JSON
     |
 
 error: Invalid regex
-   --> tests_failed/runner_errors.hurl:91:12
+   --> tests_failed/runner_errors/runner_errors.hurl:91:12
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -148,21 +148,21 @@ error: Invalid regex
     |
 
 error: Invalid URL
-   --> tests_failed/runner_errors.hurl:94:5
+   --> tests_failed/runner_errors/runner_errors.hurl:94:5
     |
  94 | GET {{url}}
     |     ^^^^^^^ invalid URL <localhost:8000/runner_errors> (Missing scheme <http://> or <https://>)
     |
 
 error: Invalid URL
-   --> tests_failed/runner_errors.hurl:99:5
+   --> tests_failed/runner_errors/runner_errors.hurl:99:5
     |
  99 | GET http://localhost:8000/runner_errors/redirect-custom-scheme
     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid URL <market://details?id=com.example.package> (Only <http://> and <https://> schemes are supported)
     |
 
 error: No query result
-   --> tests_failed/runner_errors.hurl:107:8
+   --> tests_failed/runner_errors/runner_errors.hurl:107:8
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -171,7 +171,7 @@ error: No query result
     |
 
 error: Header not found
-   --> tests_failed/runner_errors.hurl:112:1
+   --> tests_failed/runner_errors/runner_errors.hurl:112:1
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -180,7 +180,7 @@ error: Header not found
     |
 
 error: Invalid JSON
-   --> tests_failed/runner_errors.hurl:118:1
+   --> tests_failed/runner_errors/runner_errors.hurl:118:1
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -189,7 +189,7 @@ error: Invalid JSON
     |
 
 error: Invalid JSONPath
-   --> tests_failed/runner_errors.hurl:124:10
+   --> tests_failed/runner_errors/runner_errors.hurl:124:10
     |
     | GET http://localhost:8000/runner_errors/json-list
     | ...
@@ -198,7 +198,7 @@ error: Invalid JSONPath
     |
 
 error: Invalid XML
-   --> tests_failed/runner_errors.hurl:130:1
+   --> tests_failed/runner_errors/runner_errors.hurl:130:1
     |
     | GET http://localhost:8000/runner_errors/invalid-xml
     | ...
@@ -207,7 +207,7 @@ error: Invalid XML
     |
 
 error: Invalid XPath expression
-   --> tests_failed/runner_errors.hurl:136:7
+   --> tests_failed/runner_errors/runner_errors.hurl:136:7
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -216,7 +216,7 @@ error: Invalid XPath expression
     |
 
 error: Invalid expression type
-   --> tests_failed/runner_errors.hurl:142:12
+   --> tests_failed/runner_errors/runner_errors.hurl:142:12
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -225,7 +225,7 @@ error: Invalid expression type
     |
 
 error: Undefined variable
-   --> tests_failed/runner_errors.hurl:147:10
+   --> tests_failed/runner_errors/runner_errors.hurl:147:10
     |
     | GET http://localhost:8000/runner_errors
     | ...
@@ -234,14 +234,14 @@ error: Undefined variable
     |
 
 error: HTTP connection
-   --> tests_failed/runner_errors.hurl:150:5
+   --> tests_failed/runner_errors/runner_errors.hurl:150:5
     |
 150 | GET http://localhost:8000/runner_errors/redirect/2
     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect
     |
 
 error: Unauthorized file access
-   --> tests_failed/runner_errors.hurl:157:6
+   --> tests_failed/runner_errors/runner_errors.hurl:157:6
     |
     | GET http://localhost:8000/runner_errors
 157 | file,/root/file;
@@ -249,7 +249,7 @@ error: Unauthorized file access
     |
 
 error: Unrenderable expression
-   --> tests_failed/runner_errors.hurl:165:4
+   --> tests_failed/runner_errors/runner_errors.hurl:165:4
     |
     | GET http://localhost:8000/runner_errors
 165 | `{{list}}`
@@ -257,7 +257,7 @@ error: Unrenderable expression
     |
 
 error: Decompression error
-   --> tests_failed/runner_errors.hurl:171:1
+   --> tests_failed/runner_errors/runner_errors.hurl:171:1
     |
     | GET http://localhost:8000/runner_errors/unsupported-content-encoding
     | ...

@@ -1,5 +1,5 @@
 error: HTTP connection
-  --> tests_failed/streaming.hurl:13:5
+  --> tests_failed/streaming/streaming.hurl:13:5
    |
 13 | GET http://localhost:8000/streaming
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (28) Operation timed out after 5<<<.*?>>> milliseconds with 10 bytes received

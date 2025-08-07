@@ -1,5 +1,5 @@
 error: Unrenderable expression
-  --> tests_failed/template_variable_not_renderable.hurl:12:9
+  --> tests_failed/template/template_variable_not_renderable.hurl:12:9
    |
    | GET http://localhost:8000/undefined
    | ...
@@ -8,7 +8,7 @@ error: Unrenderable expression
    |
 
 error: Unrenderable expression
-  --> tests_failed/template_variable_not_renderable.hurl:17:11
+  --> tests_failed/template/template_variable_not_renderable.hurl:17:11
    |
    | GET http://localhost:8000/undefined
    | ...
@@ -17,7 +17,7 @@ error: Unrenderable expression
    |
 
 error: Unrenderable expression
-  --> tests_failed/template_variable_not_renderable.hurl:22:12
+  --> tests_failed/template/template_variable_not_renderable.hurl:22:12
    |
    | GET http://localhost:8000/undefined
    | ...

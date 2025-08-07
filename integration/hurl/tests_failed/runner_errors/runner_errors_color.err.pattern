@@ -1,5 +1,5 @@
 [1;31merror[0m: [1mAssert body value[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:6:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:6:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -8,7 +8,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mAssert failure[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:12:0
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:12:0
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -18,7 +18,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mAssert header value[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:17:17
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:17:17
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -27,7 +27,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mAssert status code[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:21:6
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:21:6
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/undefined[0m
 [1;34m 21 |[0m HTTP 200
@@ -35,7 +35,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mAssert HTTP version[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:25:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:25:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/undefined[0m
 [1;34m 25 |[0m HTTP/3 *
@@ -43,7 +43,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mDecompression error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:31:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:31:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/could_not_uncompress[0m
 [1;34m    |[0m[90m ...[0m
@@ -52,7 +52,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFile read access[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:35:6
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:35:6
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/undefined[0m
 [1;34m 35 |[0m file,undefined.txt;
@@ -60,16 +60,16 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFile write access[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:40:9
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:40:9
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m 40 |[0m output: undefined/output
-[1;34m    |[0m[1;31m         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)[0m
+[1;34m    |[0m[1;31m         ^^^^^^^^^^^^^^^^ tests_failed<<<[/\\]>>>runner_errors<<<[/\\]>>>undefined<<<[/\\]>>>output can not be written (<<<.*?>>>)[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:46:5
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:46:5
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -78,7 +78,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:52:7
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:52:7
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -87,7 +87,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:58:6
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:58:6
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -96,7 +96,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:64:16
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:64:16
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -105,14 +105,14 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mHTTP connection[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:67:5
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:67:5
 [1;34m    |[0m
 [1;34m 67 |[0m GET http://unknown
 [1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid charset[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:73:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:73:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-charset[0m
 [1;34m    |[0m[90m ...[0m
@@ -121,7 +121,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid decoding[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:79:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:79:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-decoding[0m
 [1;34m    |[0m[90m ...[0m
@@ -130,7 +130,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSON[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:85:10
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:85:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -139,7 +139,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid regex[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:91:12
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:91:12
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -148,21 +148,21 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid URL[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:94:5
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:94:5
 [1;34m    |[0m
 [1;34m 94 |[0m GET {{url}}
 [1;34m    |[0m[1;31m     ^^^^^^^ invalid URL <localhost:8000/runner_errors> (Missing scheme <http://> or <https://>)[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid URL[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:99:5
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:99:5
 [1;34m    |[0m
 [1;34m 99 |[0m GET http://localhost:8000/runner_errors/redirect-custom-scheme
 [1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid URL <market://details?id=com.example.package> (Only <http://> and <https://> schemes are supported)[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mNo query result[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:107:8
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:107:8
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -171,7 +171,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mHeader not found[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:112:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:112:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -180,7 +180,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSON[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:118:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:118:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -189,7 +189,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid JSONPath[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:124:10
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:124:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/json-list[0m
 [1;34m    |[0m[90m ...[0m
@@ -198,7 +198,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XML[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:130:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:130:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/invalid-xml[0m
 [1;34m    |[0m[90m ...[0m
@@ -207,7 +207,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid XPath expression[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:136:7
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:136:7
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -216,7 +216,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid expression type[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:142:12
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:142:12
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -225,7 +225,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUndefined variable[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:147:10
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:147:10
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
@@ -234,14 +234,14 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mHTTP connection[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:150:5
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:150:5
 [1;34m    |[0m
 [1;34m150 |[0m GET http://localhost:8000/runner_errors/redirect/2
 [1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUnauthorized file access[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:157:6
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:157:6
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m157 |[0m file,/root/file;
@@ -249,7 +249,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mUnrenderable expression[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:165:4
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:165:4
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m165 |[0m `{{list}}`
@@ -257,7 +257,7 @@
 [1;34m    |[0m
 
 [1;31merror[0m: [1mDecompression error[0m
-   [1;34m-->[0m tests_failed/runner_errors.hurl:171:1
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:171:1
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors/unsupported-content-encoding[0m
 [1;34m    |[0m[90m ...[0m
