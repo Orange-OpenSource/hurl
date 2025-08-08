@@ -1,3 +1,14 @@
+[7.1.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.1.0)
+========================================================================================================================
+
+Thanks to
+[@MikhailWahib](https://github.com/MikhailWahib),
+
+Enhancements:
+
+* Support --secrets-file for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
+
+
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
 ========================================================================================================================
 
