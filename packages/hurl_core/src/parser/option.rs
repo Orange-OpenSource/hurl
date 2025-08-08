@@ -85,6 +85,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
         "ntlm" => option_ntlm(reader)?,
+        "negotiate" => option_negotiate(reader)?,
         _ => {
             return Err(ParseError::new(
                 start.pos,
@@ -298,6 +299,11 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_ntlm(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Ntlm(value))
+}
+
+fn option_negotiate(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = non_recover(boolean_option, reader)?;
+    Ok(OptionKind::Negotiate(value))
 }
 
 fn count(reader: &mut Reader) -> ParseResult<Count> {

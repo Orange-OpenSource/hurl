@@ -394,6 +394,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::Verbose(value) => visitor.visit_bool_option(value),
         OptionKind::VeryVerbose(value) => visitor.visit_bool_option(value),
         OptionKind::Ntlm(value) => visitor.visit_bool_option(value),
+        OptionKind::Negotiate(value) => visitor.visit_bool_option(value),
     };
     visitor.visit_lt(&option.line_terminator0);
 }

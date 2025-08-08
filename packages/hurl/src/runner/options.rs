@@ -273,6 +273,9 @@ pub fn get_entry_options(
             OptionKind::Ntlm(value) => {
                 eval_boolean_option(value, variables)?;
             }
+            OptionKind::Negotiate(value) => {
+                eval_boolean_option(value, variables)?;
+            }
         }
         logger.debug(&option.kind.to_string());
     }

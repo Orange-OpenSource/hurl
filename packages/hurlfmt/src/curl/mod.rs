@@ -75,7 +75,8 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::retry())
         .arg(commands::url())
         .arg(commands::url_param())
-        .arg(commands::ntlm());
+        .arg(commands::ntlm())
+        .arg(commands::negotiate());
 
     let params = args::split(s)?;
     let arg_matches = match command.try_get_matches_from_mut(params) {
@@ -414,6 +415,18 @@ ntlm: true
 "#;
         assert_eq!(
             parse_line(format!("curl --ntlm http://localhost:8000/hello").as_str()).unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_negotiate_flag() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+[Options]
+negotiate: true
+"#;
+        assert_eq!(
+            parse_line(format!("curl --negotiate http://localhost:8000/hello").as_str()).unwrap(),
             hurl_str
         );
     }
