@@ -379,6 +379,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::NetRc(value) => visitor.visit_bool_option(value),
         OptionKind::NetRcFile(filename) => visitor.visit_filename(filename),
         OptionKind::NetRcOptional(value) => visitor.visit_bool_option(value),
+        OptionKind::Ntlm(value) => visitor.visit_bool_option(value),
         OptionKind::Output(filename) => visitor.visit_filename(filename),
         OptionKind::PathAsIs(value) => visitor.visit_bool_option(value),
         OptionKind::PinnedPublicKey(value) => visitor.visit_template(value),

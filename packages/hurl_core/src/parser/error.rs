@@ -181,6 +181,7 @@ impl DisplaySourceError for ParseError {
                     "netrc-file",
                     "netrc-optional",
                     "noproxy",
+                    "ntlm",
                     "output",
                     "path-as-is",
                     "pinnedpubkey",

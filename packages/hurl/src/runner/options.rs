@@ -212,6 +212,10 @@ pub fn get_entry_options(
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.netrc_optional = value;
             }
+            OptionKind::Ntlm(value) => {
+                let value = eval_boolean_option(value, variables)?;
+                entry_options.ntlm = value;
+            }
             OptionKind::Output(output) => {
                 let filename = eval_template(output, variables)?;
                 let output = Output::new(&filename);

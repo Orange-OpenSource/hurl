@@ -70,6 +70,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "netrc" => option_netrc(reader)?,
         "netrc-file" => option_netrc_file(reader)?,
         "netrc-optional" => option_netrc_optional(reader)?,
+        "ntlm" => option_ntlm(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
         "pinnedpubkey" => option_pinned_pub_key(reader)?,
@@ -222,6 +223,11 @@ fn option_netrc_file(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_netrc_optional(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::NetRcOptional(value))
+}
+
+fn option_ntlm(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = non_recover(boolean_option, reader)?;
+    Ok(OptionKind::Ntlm(value))
 }
 
 fn option_output(reader: &mut Reader) -> ParseResult<OptionKind> {

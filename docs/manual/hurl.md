@@ -403,8 +403,6 @@ Override value from Environment variable no_proxy.
 
 Tell Hurl to use NTLM authentication
 
-This is a cli-only option.
-
 ### -o, --output <FILE> {#output}
 
 Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.

@@ -27,6 +27,7 @@ max-time: 100s
 netrc: false
 netrc-file: netrcfile
 netrc-optional: false
+ntlm: false
 output: output.txt
 path-as-is: false
 pinnedpubkey: pinnedpubkeyfile
@@ -78,6 +79,7 @@ max-time: {{max-time}}
 netrc: {{netrc}}
 netrc-file: {{netrc-file}}
 netrc-optional: {{netrc-optional}}
+ntlm: {{ntlm}}
 output: {{output}}
 path-as-is: {{path-as-is}}
 pinnedpubkey: {{pinnedpubkey}}
