@@ -41,6 +41,14 @@ status < 500
 
 GET https://localhost:8001/hello
 [Options]
+user: "user:pass"
+
+GET https://localhost:8001/hello
+[Options]
+user: "user:pass"
+
+GET https://localhost:8001/hello
+[Options]
 insecure: true
 
 GET https://localhost:8001/hello

@@ -101,6 +101,10 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     if has_flag(arg_matches, "negotiate") {
         options.push(HurlOption::new("negotiate", "true"));
     }
+    if let Some(value) = get::<String>(arg_matches, "user") {
+        options.push(HurlOption::new("user", value.to_string().as_str()));
+    }
+
     options
 }
 

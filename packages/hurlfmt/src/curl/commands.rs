@@ -148,3 +148,7 @@ pub fn ntlm() -> clap::Arg {
 pub fn negotiate() -> clap::Arg {
     clap::Arg::new("negotiate").long("negotiate").num_args(0)
 }
+
+pub fn user() -> clap::Arg {
+    clap::Arg::new("user").long("user").short('u').num_args(1)
+}
