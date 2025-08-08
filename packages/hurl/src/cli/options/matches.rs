@@ -26,7 +26,8 @@ use hurl::runner::Value;
 use hurl_core::input::Input;
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
 
-use crate::cli::options::variables_file::{TypeKind, VariablesFile};
+use crate::cli::options::variables::TypeKind;
+use crate::cli::options::variables_file::VariablesFile;
 use crate::cli::options::{
     duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output,
 };
@@ -429,43 +430,49 @@ pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsEr
 pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut secrets = HashMap::new();
 
+    // Secrets are always parsed as string.
+    let type_kind = TypeKind::String;
+
+    // Add secrets from files:
     if let Some(filenames) = get_strings(matches, "secrets_file") {
         for f in &filenames {
             let filename = Path::new(f);
-            let vars = VariablesFile::open(filename, TypeKind::String)?;
+            let vars = VariablesFile::open(filename, type_kind)?;
             for var in vars {
                 let (name, value) = var?;
-                // We check that there is no existing secrets
-                if secrets.contains_key(&name) {
-                    return Err(CliOptionsError::Error(format!(
-                        "secret '{}' can't be reassigned",
-                        &name
-                    )));
-                }
-                // Secrets can only be string.
-                if let Value::String(value) = value {
-                    secrets.insert(name.to_string(), value);
-                }
+                add_secret(&mut secrets, name, value)?;
             }
         }
     }
 
+    // Finally, add single secrets.
     if let Some(secret) = get_strings(matches, "secret") {
         for s in secret {
-            let inferred = false;
-            let (name, value) = variables::parse(&s, inferred)?;
-            if secrets.contains_key(&name) {
-                return Err(CliOptionsError::Error(format!(
-                    "secret '{}' can't be reassigned",
-                    &name
-                )));
-            }
-            if let Value::String(value) = value {
-                secrets.insert(name, value);
-            }
+            let (name, value) = variables::parse(&s, type_kind)?;
+            add_secret(&mut secrets, name, value)?;
         }
     }
     Ok(secrets)
+}
+
+/// Add a secret with `name` and `value` to the `secrets` hash map.
+fn add_secret(
+    secrets: &mut HashMap<String, String>,
+    name: String,
+    value: Value,
+) -> Result<(), CliOptionsError> {
+    // We check that there is no existing secrets
+    if secrets.contains_key(&name) {
+        return Err(CliOptionsError::Error(format!(
+            "secret '{}' can't be reassigned",
+            &name
+        )));
+    }
+    // Secrets can only be string.
+    if let Value::String(value) = value {
+        secrets.insert(name.to_string(), value);
+    }
+    Ok(())
 }
 
 pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
@@ -505,11 +512,13 @@ pub fn user_agent(arg_matches: &ArgMatches) -> Option<String> {
 pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOptionsError> {
     let mut variables = HashMap::new();
 
+    // Variables are typed, based on their values.
+    let type_kind = TypeKind::Inferred;
+
     // Use environment variables prefix by HURL_
     for (env_name, env_value) in env::vars() {
         if let Some(name) = env_name.strip_prefix("HURL_") {
-            let inferred = true;
-            let value = variables::parse_value(env_value.as_str(), inferred)?;
+            let value = variables::parse_value(env_value.as_str(), type_kind)?;
             variables.insert(name.to_string(), value);
         }
     }
@@ -518,7 +527,7 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
     if let Some(filenames) = get_strings(matches, "variables_file") {
         for f in &filenames {
             let filename = Path::new(f);
-            let vars = VariablesFile::open(filename, TypeKind::Inferred)?;
+            let vars = VariablesFile::open(filename, type_kind)?;
             for var in vars {
                 let (name, value) = var?;
                 variables.insert(name.to_string(), value);
@@ -526,11 +535,10 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliOpti
         }
     }
 
-    // Finally, add singles variables from command line.
+    // Finally, add single variables from command line.
     if let Some(input) = get_strings(matches, "variable") {
         for s in input {
-            let inferred = true;
-            let (name, value) = variables::parse(&s, inferred)?;
+            let (name, value) = variables::parse(&s, type_kind)?;
             variables.insert(name.to_string(), value);
         }
     }

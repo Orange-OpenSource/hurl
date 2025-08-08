@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::cli::options::variables::TypeKind;
 use crate::cli::options::{variables, CliOptionsError};
 use hurl::runner::Value;
 use std::fs::File;
@@ -32,25 +33,19 @@ use std::path::{Path, PathBuf};
 ///
 /// [`VariablesFile`] is an iterator that returns a tuple ([`String`], [`Value`]) on each iteration.
 pub struct VariablesFile {
-    iterator: Enumerate<Lines<BufReader<File>>>,
+    /// Iterator on this variables file lines.
+    lines: Enumerate<Lines<BufReader<File>>>,
+    /// Path of this variables file.
     path: PathBuf,
+    /// How do we type variables?
     type_kind: TypeKind,
-}
-
-#[allow(dead_code)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TypeKind {
-    /// Variables type inferred from value
-    Inferred,
-    /// Variables are forced to be string
-    String,
 }
 
 impl VariablesFile {
     /// Opens the variables file at `path`.
     /// Each variable will be typed: either variable type are inferred from their value, or variable
     /// are forced to be string.
-    pub fn open(path: &Path, kind: TypeKind) -> Result<Self, CliOptionsError> {
+    pub fn open(path: &Path, type_kind: TypeKind) -> Result<Self, CliOptionsError> {
         if !path.exists() {
             return Err(CliOptionsError::Error(format!(
                 "Variables file {} does not exist",
@@ -62,11 +57,11 @@ impl VariablesFile {
             let error = CliOptionsError::Error(format!("Error opening {}", path.display()));
             return Err(error);
         };
-        let iterator = BufReader::new(file).lines().enumerate();
+        let lines = BufReader::new(file).lines().enumerate();
         Ok(VariablesFile {
-            iterator,
+            lines,
             path: path.to_path_buf(),
-            type_kind: kind,
+            type_kind,
         })
     }
 }
@@ -76,7 +71,7 @@ impl Iterator for VariablesFile {
 
     fn next(&mut self) -> Option<Self::Item> {
         loop {
-            let (index, line) = self.iterator.next()?;
+            let (index, line) = self.lines.next()?;
             let line = match line {
                 Ok(s) => s,
                 Err(_) => {
@@ -92,8 +87,7 @@ impl Iterator for VariablesFile {
             if line.starts_with('#') || line.is_empty() {
                 continue;
             }
-            let inferred = self.type_kind == TypeKind::Inferred;
-            let (name, value) = match variables::parse(line, inferred) {
+            let (name, value) = match variables::parse(line, self.type_kind) {
                 Ok(v) => v,
                 Err(err) => return Some(Err(err)),
             };
