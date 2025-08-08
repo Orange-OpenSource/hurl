@@ -51,6 +51,10 @@ GET https://localhost:8001/hello
 [Options]
 verbose: true
 
+GET https://localhost:8001/hello
+[Options]
+ntlm: true
+
 GET http://localhost:8000/hello
 Empty-Header:
 

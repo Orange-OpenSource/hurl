@@ -347,6 +347,7 @@ impl ToJson for EntryOption {
             }
             OptionKind::Verbose(value) => value.to_json(),
             OptionKind::VeryVerbose(value) => value.to_json(),
+            OptionKind::Ntlm(value) => value.to_json(),
         };
 
         // If the value contains the unit such as `{ "value": 10, "unit": "second" }`

@@ -140,3 +140,7 @@ pub fn verbose() -> clap::Arg {
         .short('v')
         .num_args(0)
 }
+
+pub fn ntlm() -> clap::Arg {
+    clap::Arg::new("ntlm").long("ntlm").num_args(0)
+}

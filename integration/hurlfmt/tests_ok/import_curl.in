@@ -8,5 +8,6 @@ curl --retry 4 'http://localhost:8000/retry/until-200'
 curl -k https://localhost:8001/hello
 curl -v https://localhost:8001/hello
 curl --verbose https://localhost:8001/hello
+curl --ntlm https://localhost:8001/hello
 curl --header 'Empty-Header;' http://localhost:8000/hello
 

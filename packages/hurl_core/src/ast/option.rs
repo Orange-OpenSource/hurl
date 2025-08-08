@@ -72,6 +72,7 @@ pub enum OptionKind {
     Variable(VariableDefinition),
     Verbose(BooleanOption),
     VeryVerbose(BooleanOption),
+    Ntlm(BooleanOption),
 }
 
 impl OptionKind {
@@ -116,6 +117,7 @@ impl OptionKind {
             OptionKind::Variable(_) => "variable",
             OptionKind::Verbose(_) => "verbose",
             OptionKind::VeryVerbose(_) => "very-verbose",
+            OptionKind::Ntlm(_) => "ntlm",
         }
     }
 }
@@ -161,6 +163,7 @@ impl fmt::Display for OptionKind {
             OptionKind::Variable(value) => value.to_string(),
             OptionKind::Verbose(value) => value.to_string(),
             OptionKind::VeryVerbose(value) => value.to_string(),
+            OptionKind::Ntlm(value) => value.to_string(),
         };
         write!(f, "{}: {}", self.identifier(), value)
     }
