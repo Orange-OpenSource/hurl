@@ -171,10 +171,10 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsE
         } else if path.is_dir() {
             Ok(Some(path.to_path_buf()))
         } else {
-            return Err(CliOptionsError::Error(format!(
+            Err(CliOptionsError::Error(format!(
                 "{} is not a valid directory",
                 path.display()
-            )));
+            )))
         }
     } else {
         Ok(None)
@@ -315,10 +315,10 @@ pub fn json_report_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliO
         } else if path.is_dir() {
             Ok(Some(path.to_path_buf()))
         } else {
-            return Err(CliOptionsError::Error(format!(
+            Err(CliOptionsError::Error(format!(
                 "{} is not a valid directory",
                 path.display()
-            )));
+            )))
         }
     } else {
         Ok(None)
