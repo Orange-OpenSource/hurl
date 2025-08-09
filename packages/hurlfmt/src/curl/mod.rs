@@ -74,7 +74,8 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::method())
         .arg(commands::retry())
         .arg(commands::url())
-        .arg(commands::url_param());
+        .arg(commands::url_param())
+        .arg(commands::user());
 
     let params = args::split(s)?;
     let arg_matches = match command.try_get_matches_from_mut(params) {
@@ -401,6 +402,20 @@ verbose: true
         for flag in flags {
             assert_eq!(
                 parse_line(format!("curl {flag} http://localhost:8000/hello").as_str()).unwrap(),
+                hurl_str
+            );
+        }
+    }
+
+    #[test]
+    fn test_user_option() {
+        let user = "test_user:test_pass";
+        let hurl_str = format!("GET http://localhost:8000/hello\n[Options]\nuser: {user}\n");
+
+        let flags = vec!["-u", "--user"];
+        for flag in flags {
+            assert_eq!(
+                parse_line(&format!("curl {flag} '{user}' http://localhost:8000/hello")).unwrap(),
                 hurl_str
             );
         }

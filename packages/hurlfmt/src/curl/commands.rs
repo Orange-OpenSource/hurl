@@ -134,6 +134,10 @@ pub fn url_param() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn user() -> clap::Arg {
+    clap::Arg::new("user").long("user").short('u').num_args(1)
+}
+
 pub fn verbose() -> clap::Arg {
     clap::Arg::new("verbose")
         .long("verbose")
