@@ -140,3 +140,7 @@ pub fn verbose() -> clap::Arg {
         .short('v')
         .num_args(0)
 }
+
+pub fn user() -> clap::Arg {
+    clap::Arg::new("user").long("user").short('u').num_args(1)
+}

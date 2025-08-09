@@ -5,6 +5,8 @@ curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n 
 curl --header 'Content-Type:' --data '@tests_ok/data.bin' 'http://localhost:8000/post-file'
 curl --location 'http://localhost:8000/redirect-absolute'
 curl --retry 4 'http://localhost:8000/retry/until-200'
+curl --user "user:pass" https://localhost:8001/hello
+curl -u "user:pass" https://localhost:8001/hello
 curl -k https://localhost:8001/hello
 curl -v https://localhost:8001/hello
 curl --verbose https://localhost:8001/hello
