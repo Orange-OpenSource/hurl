@@ -63,6 +63,10 @@ GET https://localhost:8001/hello
 [Options]
 ntlm: true
 
+GET https://localhost:8001/hello
+[Options]
+negotiate: true
+
 GET http://localhost:8000/hello
 Empty-Header:
 
