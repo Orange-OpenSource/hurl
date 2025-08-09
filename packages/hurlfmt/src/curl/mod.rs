@@ -69,13 +69,14 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::cookies())
         .arg(commands::insecure())
         .arg(commands::verbose())
+        .arg(commands::ntlm())
         .arg(commands::location())
         .arg(commands::max_redirects())
         .arg(commands::method())
         .arg(commands::retry())
+        .arg(commands::user())
         .arg(commands::url())
-        .arg(commands::url_param())
-        .arg(commands::user());
+        .arg(commands::url_param());
 
     let params = args::split(s)?;
     let arg_matches = match command.try_get_matches_from_mut(params) {
@@ -419,5 +420,17 @@ verbose: true
                 hurl_str
             );
         }
+    }
+
+    #[test]
+    fn test_ntlm_flag() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+[Options]
+ntlm: true
+"#;
+        assert_eq!(
+            parse_line("curl --ntlm http://localhost:8000/hello").unwrap(),
+            hurl_str
+        );
     }
 }

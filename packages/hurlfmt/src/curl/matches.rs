@@ -89,6 +89,9 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     if let Some(value) = get::<i32>(arg_matches, "max_redirects") {
         options.push(HurlOption::new("max-redirs", value.to_string().as_str()));
     }
+    if has_flag(arg_matches, "ntlm") {
+        options.push(HurlOption::new("ntlm", "true"));
+    }
     if let Some(value) = get::<i32>(arg_matches, "retry") {
         options.push(HurlOption::new("retry", value.to_string().as_str()));
     }

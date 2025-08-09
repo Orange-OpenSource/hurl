@@ -112,6 +112,10 @@ pub fn method() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn ntlm() -> clap::Arg {
+    clap::Arg::new("ntlm").long("ntlm").num_args(0)
+}
+
 pub fn retry() -> clap::Arg {
     clap::Arg::new("retry")
         .long("retry")
