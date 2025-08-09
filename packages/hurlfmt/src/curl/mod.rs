@@ -70,6 +70,7 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::insecure())
         .arg(commands::verbose())
         .arg(commands::ntlm())
+        .arg(commands::negotiate())
         .arg(commands::location())
         .arg(commands::max_redirects())
         .arg(commands::method())
@@ -430,6 +431,18 @@ ntlm: true
 "#;
         assert_eq!(
             parse_line("curl --ntlm http://localhost:8000/hello").unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_negotiate_flag() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+[Options]
+negotiate: true
+"#;
+        assert_eq!(
+            parse_line("curl --negotiate http://localhost:8000/hello").unwrap(),
             hurl_str
         );
     }
