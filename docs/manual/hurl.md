@@ -361,8 +361,6 @@ See also [`--connect-timeout`](#connect-timeout).
 
 Tell Hurl to use Negotiate (SPNEGO) authentication.
 
-This is a cli-only option.
-
 ### -n, --netrc {#netrc}
 
 Scan the .netrc file in the user's home directory for the username and password.

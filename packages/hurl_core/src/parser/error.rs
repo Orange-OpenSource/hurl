@@ -177,6 +177,7 @@ impl DisplaySourceError for ParseError {
                     "location-trusted",
                     "max-redirs",
                     "max-time",
+                    "negotiate",
                     "netrc",
                     "netrc-file",
                     "netrc-optional",

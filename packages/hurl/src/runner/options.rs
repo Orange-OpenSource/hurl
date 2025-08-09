@@ -200,6 +200,10 @@ pub fn get_entry_options(
                 let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
                 entry_options.timeout = value;
             }
+            OptionKind::Negotiate(value) => {
+                let value = eval_boolean_option(value, variables)?;
+                entry_options.negotiate = value;
+            }
             OptionKind::NetRc(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.netrc = value;

@@ -472,6 +472,7 @@ impl Lint for OptionKind {
             OptionKind::LimitRate(value) => value.lint(),
             OptionKind::MaxRedirect(value) => value.lint(),
             OptionKind::MaxTime(value) => lint_duration_option(value, DurationUnit::MilliSecond),
+            OptionKind::Negotiate(value) => value.lint(),
             OptionKind::NetRc(value) => value.lint(),
             OptionKind::NetRcFile(value) => value.lint(),
             OptionKind::NetRcOptional(value) => value.lint(),

@@ -376,6 +376,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::LimitRate(value) => visitor.visit_natural_option(value),
         OptionKind::MaxRedirect(value) => visitor.visit_count_option(value),
         OptionKind::MaxTime(value) => visitor.visit_duration_option(value),
+        OptionKind::Negotiate(value) => visitor.visit_bool_option(value),
         OptionKind::NetRc(value) => visitor.visit_bool_option(value),
         OptionKind::NetRcFile(filename) => visitor.visit_filename(filename),
         OptionKind::NetRcOptional(value) => visitor.visit_bool_option(value),

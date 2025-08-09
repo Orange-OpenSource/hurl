@@ -67,6 +67,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "location-trusted" => option_follow_location_trusted(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
         "max-time" => option_max_time(reader)?,
+        "negotiate" => option_negotiate(reader)?,
         "netrc" => option_netrc(reader)?,
         "netrc-file" => option_netrc_file(reader)?,
         "netrc-optional" => option_netrc_optional(reader)?,
@@ -208,6 +209,11 @@ fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_max_time(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = duration_option(reader)?;
     Ok(OptionKind::MaxTime(value))
+}
+
+fn option_negotiate(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = boolean_option(reader)?;
+    Ok(OptionKind::Negotiate(value))
 }
 
 fn option_netrc(reader: &mut Reader) -> ParseResult<OptionKind> {
