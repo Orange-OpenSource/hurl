@@ -10,5 +10,6 @@ curl -u "user:pass" https://localhost:8001/hello
 curl -k https://localhost:8001/hello
 curl -v https://localhost:8001/hello
 curl --verbose https://localhost:8001/hello
+curl --ntlm https://localhost:8001/hello
 curl --header 'Empty-Header;' http://localhost:8000/hello
 

@@ -104,6 +104,9 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     if has_flag(arg_matches, "verbose") {
         options.push(HurlOption::new("verbose", "true"));
     }
+    if has_flag(arg_matches, "ntlm") {
+        options.push(HurlOption::new("ntlm", "true"));
+    }
     options
 }
 
