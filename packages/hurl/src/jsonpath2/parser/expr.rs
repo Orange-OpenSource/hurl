@@ -16,20 +16,40 @@
  *
  */
 
+use super::{primitives::literal, primitives::try_literal, ParseResult};
+use crate::jsonpath2::{parser::selector, ChildSegment, DescendantSegment, JsonPathExpr, Segment};
 use hurl_core::reader::Reader;
-
-use super::{primitives::literal, ParseResult};
-use crate::jsonpath2::JsonPathExpr;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonPathExpr> {
     literal("$", reader)?;
-    let segments = vec![];
+    let mut segments = vec![];
+    while !reader.is_eof() {
+        let segment = segment(reader)?;
+        segments.push(segment);
+    }
     Ok(JsonPathExpr::new(segments))
+}
+
+fn segment(reader: &mut Reader) -> ParseResult<Segment> {
+    let is_descendant_segment = try_literal("..", reader);
+    literal("[", reader)?;
+    let first_selector = selector::parse(reader)?;
+    let selectors = vec![first_selector];
+    // TODO: select more than one selector
+    literal("]", reader)?;
+    let segment = if is_descendant_segment {
+        Segment::Descendant(DescendantSegment::new(selectors))
+    } else {
+        Segment::Child(ChildSegment::new(selectors))
+    };
+    Ok(segment)
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath2::parser::{ParseError, ParseErrorKind};
+
+    use super::super::{ParseError, ParseErrorKind};
+    use crate::jsonpath2::{NameSelector, Selector};
     use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
@@ -50,5 +70,18 @@ mod tests {
 
         assert_eq!(parse(&mut reader).unwrap(), JsonPathExpr::new(vec![]));
         assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    pub fn test_child_segment() {
+        let mut reader = Reader::new("$['store']");
+
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            JsonPathExpr::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Name(NameSelector::new("store".to_string()))
+            ]))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(10));
     }
 }

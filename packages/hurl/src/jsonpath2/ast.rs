@@ -67,6 +67,12 @@ pub struct ChildSegment {
     selectors: Vec<Selector>,
 }
 
+impl ChildSegment {
+    pub fn new(selectors: Vec<Selector>) -> ChildSegment {
+        ChildSegment { selectors }
+    }
+}
+
 impl Display for ChildSegment {
     fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
         todo!()
@@ -75,7 +81,15 @@ impl Display for ChildSegment {
 
 /// Descendant segment
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct DescendantSegment;
+pub struct DescendantSegment {
+    selectors: Vec<Selector>,
+}
+
+impl DescendantSegment {
+    pub fn new(selectors: Vec<Selector>) -> DescendantSegment {
+        DescendantSegment { selectors }
+    }
+}
 
 impl Display for DescendantSegment {
     fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -98,7 +112,15 @@ pub enum Selector {
 /// Name selector
 /// selects at most one object member value
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct NameSelector;
+pub struct NameSelector {
+    value: String,
+}
+
+impl NameSelector {
+    pub fn new(value: String) -> NameSelector {
+        NameSelector { value }
+    }
+}
 
 /// Wildcard selector
 #[derive(Clone, Debug, PartialEq, Eq)]

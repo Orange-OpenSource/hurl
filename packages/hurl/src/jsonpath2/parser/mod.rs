@@ -19,6 +19,7 @@
 mod error;
 mod expr;
 mod primitives;
+mod selector;
 
 pub use error::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;

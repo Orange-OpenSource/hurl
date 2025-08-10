@@ -21,7 +21,6 @@ use super::{ParseError, ParseErrorKind, ParseResult};
 
 pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
-    // non recoverable reader
     // => use combinator recover to make it recoverable
     let start = reader.cursor();
     if reader.is_eof() {
@@ -48,6 +47,34 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         }
     }
     Ok(())
+}
+
+pub fn try_literal(s: &str, reader: &mut Reader) -> bool {
+    let initial_state = reader.cursor();
+    if literal(s, reader).is_ok() {
+        true
+    } else {
+        reader.seek(initial_state);
+        false
+    }
+}
+
+/// Try to parse a string literal
+/// if it does not start with a quote it returns `None` rather than a `ParseError`
+///
+// TODO: implement full spec with double-quoted and single-quoted parser
+pub fn string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
+    if try_literal("\"", reader) {
+        let s = reader.read_while(|c| c != '"');
+        literal("\"", reader)?;
+        Ok(Some(s))
+    } else if try_literal("'", reader) {
+        let s = reader.read_while(|c| c != '\'');
+        literal("'", reader)?;
+        Ok(Some(s))
+    } else {
+        Ok(None)
+    }
 }
 
 #[cfg(test)]
@@ -99,5 +126,34 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, CharPos(2));
+    }
+
+    #[test]
+    fn test_string_literal() {
+        let mut reader = Reader::new("'store'");
+        assert_eq!(
+            string_literal(&mut reader).unwrap().unwrap(),
+            "store".to_string()
+        );
+        assert_eq!(reader.cursor().index, CharPos(7));
+        let mut reader = Reader::new("\"store\"");
+        assert_eq!(
+            string_literal(&mut reader).unwrap().unwrap(),
+            "store".to_string()
+        );
+        assert_eq!(reader.cursor().index, CharPos(7));
+
+        let mut reader = Reader::new("0");
+        assert!(string_literal(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
+    }
+
+    #[test]
+    fn test_string_literal_error() {
+        let mut reader = Reader::new("'store");
+        assert_eq!(
+            string_literal(&mut reader).unwrap_err(),
+            ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting("'".to_string()))
+        );
     }
 }
