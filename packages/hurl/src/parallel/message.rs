@@ -17,9 +17,10 @@
  */
 use std::io;
 
-use crate::parallel::job::{Job, JobResult};
-use crate::parallel::worker::WorkerId;
 use crate::util::term::{Stderr, Stdout};
+
+use super::job::{Job, JobResult};
+use super::worker::WorkerId;
 
 /// Represents a message sent from the worker to the runner (running on the main thread).
 #[allow(clippy::large_enum_variant)]

@@ -19,17 +19,15 @@ use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::{fmt, thread};
 
-use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::parser;
-
-use crate::parallel::job::{Job, JobResult};
-use crate::parallel::message::{
-    CompletedMsg, InputReadErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage,
-};
 use crate::runner;
 use crate::runner::EventListener;
 use crate::util::logger::Logger;
 use crate::util::term::{Stderr, Stdout, WriteMode};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::parser;
+
+use super::job::{Job, JobResult};
+use super::message::{CompletedMsg, InputReadErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage};
 
 /// A worker runs job in its own thread.
 pub struct Worker {

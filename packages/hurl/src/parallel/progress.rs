@@ -17,12 +17,12 @@
  */
 use std::time::{Duration, Instant};
 
+use crate::util::term::Stderr;
 use hurl_core::text::{Format, Style, StyledString};
 
-use crate::parallel::job::JobResult;
-use crate::parallel::runner::WorkerState;
-use crate::parallel::worker::Worker;
-use crate::util::term::Stderr;
+use super::job::JobResult;
+use super::runner::WorkerState;
+use super::worker::Worker;
 
 /// A progress reporter to display advancement of parallel runs execution in test mode.
 pub struct ParProgress {
