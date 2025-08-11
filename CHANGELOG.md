@@ -2,11 +2,19 @@
 ========================================================================================================================
 
 Thanks to
+[@gugahoa](https://github.com/gugahoa),
 [@MikhailWahib](https://github.com/MikhailWahib),
 
 Enhancements:
 
 * Support --secrets-file for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
+* Add `--ntlm` option per request [#4322](https://github.com/Orange-OpenSource/hurl/issues/4322)
+* Add --negotiate option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
+
+
+Bugs Fixed:
+
+* Parse `--user`, `--negotiate`, and `--ntlm` options in hurlfmt [#4213](https://github.com/Orange-OpenSource/hurl/issues/4213)
 
 
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
