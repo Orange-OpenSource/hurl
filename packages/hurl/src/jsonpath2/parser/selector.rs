@@ -17,16 +17,22 @@
  */
 
 use super::{ParseError, ParseErrorKind};
-use crate::jsonpath2::{parser::primitives::string_literal, NameSelector, Selector};
+use crate::jsonpath2::{
+    parser::primitives::{string_literal, try_integer},
+    IndexSelector, NameSelector, Selector,
+};
 use hurl_core::reader::Reader;
 
 use super::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
     let initial_state = reader.cursor();
-    if let Some(name_selector) = name_selector(reader)? {
+    if let Some(name_selector) = try_name_selector(reader)? {
         return Ok(Selector::Name(name_selector));
+    } else if let Some(index_selector) = try_index_selector(reader)? {
+        return Ok(Selector::Index(index_selector));
     }
+    {}
 
     Err(ParseError::new(
         initial_state.pos,
@@ -35,9 +41,15 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 /// Try to parse a name selector
-fn name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
+fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
     let value = string_literal(reader)?;
     Ok(value.map(NameSelector::new))
+}
+
+/// Try to parse an index selector
+fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>> {
+    let value = try_integer(reader)?;
+    Ok(value.map(IndexSelector::new))
 }
 
 #[cfg(test)]
@@ -60,9 +72,19 @@ mod tests {
     pub fn test_name_selector() {
         let mut reader = Reader::new("'store'");
         assert_eq!(
-            name_selector(&mut reader).unwrap().unwrap(),
+            try_name_selector(&mut reader).unwrap().unwrap(),
             NameSelector::new("store".to_string())
         );
         assert_eq!(reader.cursor().index, CharPos(7));
+    }
+
+    #[test]
+    pub fn test_index_selector() {
+        let mut reader = Reader::new("1");
+        assert_eq!(
+            try_index_selector(&mut reader).unwrap().unwrap(),
+            IndexSelector::new(1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 }

@@ -20,6 +20,7 @@
 //! as defined in <https://www.rfc-editor.org/rfc/rfc9535.html>
 
 mod ast;
+mod eval;
 mod parser;
 
 pub use ast::*;

@@ -77,6 +77,31 @@ pub fn string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
     }
 }
 
+/// Try to parse a decimal integer
+/// if it does not start with a minus sign or a digit
+/// it returns `None` rather than a `ParseError`
+///
+// TODO: implement full spec
+pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i32>> {
+    if try_literal("0", reader) {
+        return Ok(Some(0));
+    }
+    let negative = try_literal("-", reader);
+    let saved_pos = reader.cursor().pos;
+    let s = reader.read_while(|c| c.is_ascii_digit());
+
+    if s.is_empty() || s.starts_with('0') {
+        if negative {
+            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
+            return Err(ParseError::new(saved_pos, kind));
+        } else {
+            return Ok(None);
+        }
+    }
+    let sign = if negative { -1 } else { 1 };
+    Ok(Some(sign * s.parse::<i32>().unwrap()))
+}
+
 #[cfg(test)]
 mod tests {
     use hurl_core::reader::{CharPos, Pos};
@@ -155,5 +180,12 @@ mod tests {
             string_literal(&mut reader).unwrap_err(),
             ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting("'".to_string()))
         );
+    }
+
+    #[test]
+    fn test_integerl() {
+        let mut reader = Reader::new("1");
+        assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 }

@@ -29,6 +29,10 @@ impl JsonPathExpr {
     pub fn new(segments: Vec<Segment>) -> JsonPathExpr {
         JsonPathExpr { segments }
     }
+
+    pub fn segments(&self) -> &[Segment] {
+        &self.segments
+    }
 }
 
 impl Display for JsonPathExpr {
@@ -70,6 +74,10 @@ pub struct ChildSegment {
 impl ChildSegment {
     pub fn new(selectors: Vec<Selector>) -> ChildSegment {
         ChildSegment { selectors }
+    }
+
+    pub fn selectors(&self) -> &[Selector] {
+        &self.selectors
     }
 }
 
@@ -120,6 +128,9 @@ impl NameSelector {
     pub fn new(value: String) -> NameSelector {
         NameSelector { value }
     }
+    pub fn value(&self) -> &str {
+        &self.value
+    }
 }
 
 /// Wildcard selector
@@ -129,7 +140,17 @@ pub struct WildcardSelector;
 /// Index selector
 /// matches at most one array element value.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct IndexSelector;
+pub struct IndexSelector {
+    value: i32,
+}
+impl IndexSelector {
+    pub fn new(value: i32) -> IndexSelector {
+        IndexSelector { value }
+    }
+    pub fn value(&self) -> &i32 {
+        &self.value
+    }
+}
 
 /// Array slice selector
 /// <start>:<end>:<step>
