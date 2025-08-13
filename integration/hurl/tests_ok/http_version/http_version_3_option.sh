@@ -7,8 +7,9 @@ if [ $? -eq 1 ]; then
   exit 255
 fi
 
-# 17/02/2025;: we deactivate this test on Arch Linux:
-# The GitHub runner with Arch Linux are supporting HTTP/3 but we get this error:
+# 13/08/2025: same error on Debian Trixie
+# 17/02/2025: we deactivate this test on Arch Linux
+# The GitHub runner are supporting HTTP/3 but we get this error:
 # ```shell
 #  expected: 0  actual:3
 #  error: HTTP connection
@@ -20,6 +21,9 @@ fi
 # ```
 if [ -f /etc/os-release ]; then
     if grep -q 'NAME="Arch Linux"' /etc/os-release; then
+        exit 255
+    fi
+    if grep -q 'NAME="Debian GNU/Linux"' /etc/os-release; then
         exit 255
     fi
 fi
