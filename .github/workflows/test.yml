@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -77,7 +77,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -132,7 +132,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -174,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -216,7 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -265,7 +265,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -316,7 +316,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -365,7 +365,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -417,7 +417,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -425,7 +425,7 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v4.2.3
+      uses: actions/cache@v4.2.4
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-test-windows-x64
@@ -459,7 +459,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v5.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
