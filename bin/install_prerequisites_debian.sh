@@ -10,7 +10,6 @@ fi
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     bash \
-    software-properties-common \
     expect \
     curl \
     net-tools \
