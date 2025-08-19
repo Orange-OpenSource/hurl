@@ -700,8 +700,6 @@ jobs:
       - name: Package generic linux aarch64 anatomy
         if: ${{ always() }}
         run: bin/release/package-anatomy.sh artifacts/release-generic-linux-aarch64-artifacts/hurl-*-aarch64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
-        # FIXME: remove this next line to make the job error blocking.
-        continue-on-error: true
       - name: Package deb x64 anatomy
         if: ${{ always() }}
         run: bin/release/package-anatomy.sh artifacts/release-deb-x64-artifacts/hurl_*_amd64.deb --compare-with-dir docs/spec/packages
