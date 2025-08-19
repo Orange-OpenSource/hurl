@@ -182,7 +182,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --user 1000:1000
         run: |
           set -e
           echo "::group::Install Prerequisites"
@@ -224,7 +224,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: fedora
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --user 1000:1000
         run: |
           set -e
           echo "::group::Disable PAM for sudo with root and no tty"
@@ -273,7 +273,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: alpine
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --user 1000:1000
         run: |
           set -e
           apk update --quiet

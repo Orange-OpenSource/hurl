@@ -79,7 +79,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: ubuntu:22.04
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --user 1000:1000
         run: |
           set -e
           echo "::group::Install Prerequisites"
@@ -133,7 +133,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: debian
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --user 1000:1000
         run: |
           set -e
           echo "::group::Install system prerequisites"
@@ -185,7 +185,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --user 1000:1000
 # Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
 # Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
 #
@@ -248,7 +248,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: fedora
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --user 1000:1000
         run: |
           set -e
           echo "::group::Disable PAM for sudo with root and no tty"
@@ -321,7 +321,7 @@ jobs:
      uses: addnab/docker-run-action@v3
      with:
        image: local/hurl:amd64
-       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/amd64
+       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/amd64 --user 1000:1000
        run: |
          echo "::group::Install system prerequisites"
            set -e

@@ -40,7 +40,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/zricethezav/gitleaks:latest
-        options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged --env CARGO_TERM_COLOR=always --user 1000:1000
         run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
 
     - name: Hadolint
