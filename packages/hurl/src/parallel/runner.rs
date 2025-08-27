@@ -74,7 +74,11 @@ pub enum WorkerState {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OutputType {
     /// The last HTTP response body of a Hurl file is outputted on standard output.
-    ResponseBody { include_headers: bool, color: bool },
+    ResponseBody {
+        include_headers: bool,
+        color: bool,
+        pretty: bool,
+    },
     /// The whole Hurl file run is exported in a structured JSON export on standard output.
     Json,
     /// Nothing is outputted on standard output when a Hurl file run is completed.
@@ -312,12 +316,14 @@ impl ParallelRunner {
             OutputType::ResponseBody {
                 include_headers,
                 color,
+                pretty,
             } => {
                 if hurl_result.success {
                     let result = output::write_last_body(
                         hurl_result,
                         include_headers,
                         color,
+                        pretty,
                         filename_out,
                         stdout,
                         append,

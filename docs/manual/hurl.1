@@ -1,4 +1,4 @@
-.TH hurl 1 "09 Aug 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "27 Aug 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -403,6 +403,12 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 .IP "--pinnedpubkey <HASHES> "
 
 When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.
+
+.IP "--pretty "
+
+Prettify response output for supported content type (JSON only for the moment). By default, output os colorized, see\fI--no-color\fP to format without color.
+
+This is a cli-only option.
 
 .IP "--progress-bar "
 

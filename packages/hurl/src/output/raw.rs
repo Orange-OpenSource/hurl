@@ -18,20 +18,23 @@
 use std::cmp::min;
 use std::io::IsTerminal;
 
-use crate::output::error::OutputErrorKind;
-use crate::output::OutputError;
+use super::error::OutputErrorKind;
+use super::OutputError;
+
 use crate::runner::{HurlResult, Output};
 use crate::util::term::Stdout;
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
-/// If `filename_out` is `None`, standard output is used. If `append` is true, any existing file will
-/// be appended instead of being truncated. If `include_headers` is true, the last
-/// HTTP response headers are written before the body response.
+/// When `include_headers` is true, the last HTTP response headers are written before the body response.
+/// When `pretty` is true, the output is prettified.
+/// When `filename_out` is `None`, standard output is used.
+/// When `append` is true, any existing file will be appended instead of being truncated.
 pub fn write_last_body(
     hurl_result: &HurlResult,
     include_headers: bool,
     color: bool,
+    _pretty: bool,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
     append: bool,
@@ -62,9 +65,13 @@ pub fn write_last_body(
                 return Err(OutputError::new(source_info, kind));
             }
         };
+        // if pretty {
+        // }
         output.append(&mut bytes);
     } else {
         let bytes = &response.body;
+        // if pretty {
+        // }
         output.extend(bytes);
     }
     // We replicate curl's checks for binary output: a warning is displayed when user hasn't
@@ -217,6 +224,7 @@ mod tests {
         let result = hurl_result_json();
         let include_header = true;
         let color = false;
+        let pretty = false;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
 
@@ -224,6 +232,7 @@ mod tests {
             &result,
             include_header,
             color,
+            pretty,
             output.as_ref(),
             &mut stdout,
             true,

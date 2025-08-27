@@ -423,6 +423,12 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.
 
+### --pretty {#pretty}
+
+Prettify response output for supported content type (JSON only for the moment). By default, output os colorized, see[`--no-color`](#no-color) to format without color.
+
+This is a cli-only option.
+
 ### --progress-bar {#progress-bar}
 
 Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.

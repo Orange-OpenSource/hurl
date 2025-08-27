@@ -1,0 +1,7 @@
+name: pretty
+long: pretty
+help: Prettify JSON response output
+help_heading: Output options
+cli_only: true
+---
+Prettify response output for supported content type (JSON only for the moment). By default, output os colorized, see[`--no-color`](#no-color) to format without color.

@@ -93,6 +93,7 @@ pub struct CliOptions {
     pub parallel: bool,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
+    pub pretty: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub repeat: Option<Count>,
@@ -221,6 +222,7 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
         .arg(commands::pinned_pub_key())
+        .arg(commands::pretty())
         .arg(commands::proxy())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
@@ -349,6 +351,7 @@ fn parse_matches(
     let path_as_is = matches::path_as_is(arg_matches);
     let pinned_pub_key = matches::pinned_pub_key(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches, context);
+    let pretty = matches::pretty(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
@@ -410,6 +413,7 @@ fn parse_matches(
         path_as_is,
         pinned_pub_key,
         parallel,
+        pretty,
         progress_bar,
         proxy,
         output,
