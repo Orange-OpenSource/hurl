@@ -14,7 +14,7 @@ rust-version = "1.89.0"
 base64 = "0.22.1"
 clap = { version = "4.5.45", features = ["cargo", "wrap_help"] }
 hurl_core = { version = "7.1.0-SNAPSHOT", path = "../hurl_core" }
-regex = "1.11.1"
+regex = "1.11.2"
 
 
 [lints]
