@@ -22,7 +22,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.2"
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
-clap = { version = "4.5.45", features = ["string", "wrap_help"] }
+clap = { version = "4.5.46", features = ["string", "wrap_help"] }
 curl = "0.4.49"
 curl-sys = "0.4.83"
 encoding = "0.2.33"
