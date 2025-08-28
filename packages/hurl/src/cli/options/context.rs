@@ -27,6 +27,8 @@ pub struct RunContext {
     ci: bool,
     /// Is standard input a terminal or not?
     stdin_term: bool,
+    /// Is standard output a terminal or not?
+    stdout_term: bool,
     /// Is standard error a terminal or not?
     stderr_term: bool,
 }
@@ -38,6 +40,7 @@ impl RunContext {
         with_color: bool,
         env_vars: Vec<(String, String)>,
         stdin_term: bool,
+        stdout_term: bool,
         stderr_term: bool,
     ) -> Self {
         // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
@@ -50,6 +53,7 @@ impl RunContext {
             env_vars,
             ci,
             stdin_term,
+            stdout_term,
             stderr_term,
         }
     }
@@ -68,6 +72,10 @@ impl RunContext {
 
     pub fn is_stdin_term(&self) -> bool {
         self.stdin_term
+    }
+
+    pub fn is_stdout_term(&self) -> bool {
+        self.stdout_term
     }
 
     pub fn is_stderr_term(&self) -> bool {

@@ -46,6 +46,7 @@ mod jsonpath2;
 pub mod output;
 #[doc(hidden)]
 pub mod parallel;
+mod pretty;
 pub mod report;
 pub mod runner;
 pub mod util;

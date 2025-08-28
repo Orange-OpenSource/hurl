@@ -386,8 +386,11 @@ pub fn pinned_pub_key(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "pinned_pub_key")
 }
 
-pub fn pretty(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "pretty")
+pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> bool {
+    if has_flag(arg_matches, "pretty") {
+        return true;
+    }
+    context.is_stdout_term()
 }
 
 pub fn progress_bar(arg_matches: &ArgMatches, context: &RunContext) -> bool {

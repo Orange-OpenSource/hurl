@@ -222,7 +222,6 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
         .arg(commands::pinned_pub_key())
-        .arg(commands::pretty())
         .arg(commands::proxy())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
@@ -238,6 +237,7 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::no_color())
         .arg(commands::no_output())
         .arg(commands::output())
+        .arg(commands::pretty())
         .arg(commands::progress_bar())
         .arg(commands::verbose())
         .arg(commands::very_verbose())
@@ -281,8 +281,9 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
     // Construct the run context environment
     let env_vars = env::vars().collect();
     let stdin_term = io::stdin().is_terminal();
+    let stdout_term = io::stdout().is_terminal();
     let stderr_term = io::stderr().is_terminal();
-    let ctx = RunContext::new(with_color, env_vars, stdin_term, stderr_term);
+    let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
@@ -351,7 +352,7 @@ fn parse_matches(
     let path_as_is = matches::path_as_is(arg_matches);
     let pinned_pub_key = matches::pinned_pub_key(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches, context);
-    let pretty = matches::pretty(arg_matches);
+    let pretty = matches::pretty(arg_matches, context);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
