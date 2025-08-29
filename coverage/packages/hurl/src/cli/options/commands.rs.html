@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="517 / 517">100 %</abbr></p>
+                <abbr title="530 / 530">100 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="71 / 71">100 %</abbr></p>
+                <abbr title="73 / 73">100 %</abbr></p>
         </div>
     </div>
 
@@ -6741,7 +6741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn noproxy() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn no_pretty() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6757,7 +6757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;noproxy&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;no_pretty&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6773,7 +6773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;noproxy&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;no-pretty&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6789,7 +6789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HOST(S)&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Do not prettify response output&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6805,7 +6805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;List of hosts which do not use proxy&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6821,7 +6821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .conflicts_with(&quot;pretty&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6837,7 +6837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6885,7 +6885,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn ntlm() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn noproxy() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6901,7 +6901,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;ntlm&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;noproxy&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6917,7 +6917,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;ntlm&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;noproxy&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6933,7 +6933,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Tell Hurl to use NTLM authentication&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HOST(S)&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6949,7 +6949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;List of hosts which do not use proxy&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6965,7 +6965,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6975,13 +6975,13 @@
                 <a href="#434">434</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6997,7 +6997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7007,13 +7007,13 @@
                 <a href="#436">436</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn output() -&gt; clap::Arg {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7029,7 +7029,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;output&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn ntlm() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7045,7 +7045,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;output&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;ntlm&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7061,7 +7061,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;o&#x27;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;ntlm&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7077,7 +7077,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Tell Hurl to use NTLM authentication&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7093,7 +7093,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write to FILE instead of stdout&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7109,7 +7109,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7119,13 +7119,13 @@
                 <a href="#443">443</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7141,7 +7141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7151,13 +7151,13 @@
                 <a href="#445">445</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn output() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7173,7 +7173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn parallel() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;output&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7189,7 +7189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;parallel&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;output&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7205,7 +7205,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;parallel&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;o&#x27;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7221,7 +7221,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Run files in parallel (default in test mode)&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7237,7 +7237,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write to FILE instead of stdout&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7253,7 +7253,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7263,13 +7263,13 @@
                 <a href="#452">452</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7285,7 +7285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7295,13 +7295,13 @@
                 <a href="#454">454</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn path_as_is() -&gt; clap::Arg {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7317,7 +7317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;path_as_is&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn parallel() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7333,7 +7333,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;path-as-is&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;parallel&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7349,7 +7349,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Tell Hurl to not handle sequences of &#x2F;..&#x2F; or &#x2F;.&#x2F; in the given URL path&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;parallel&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7365,7 +7365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Run files in parallel (default in test mode)&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7381,7 +7381,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7391,13 +7391,13 @@
                 <a href="#460">460</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7413,7 +7413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7423,13 +7423,13 @@
                 <a href="#462">462</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn pinned_pub_key() -&gt; clap::Arg {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7445,7 +7445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;pinned_pub_key&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn path_as_is() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7461,7 +7461,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;pinnedpubkey&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;path_as_is&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7477,7 +7477,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HASHES&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;path-as-is&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7493,7 +7493,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Public key to verify peer against&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Tell Hurl to not handle sequences of &#x2F;..&#x2F; or &#x2F;.&#x2F; in the given URL path&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7525,7 +7525,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7573,7 +7573,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn progress_bar() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn pinned_pub_key() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7589,7 +7589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;progress_bar&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;pinned_pub_key&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7605,7 +7605,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;progress-bar&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;pinnedpubkey&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7621,7 +7621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Display a progress bar in test mode&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HASHES&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7637,7 +7637,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Public key to verify peer against&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7653,7 +7653,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7663,13 +7663,13 @@
                 <a href="#477">477</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7685,7 +7685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7695,13 +7695,13 @@
                 <a href="#479">479</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn proxy() -&gt; clap::Arg {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7717,7 +7717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;proxy&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn pretty() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7733,7 +7733,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;proxy&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;pretty&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7749,7 +7749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;x&#x27;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;pretty&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7765,7 +7765,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;[PROTOCOL:&#x2F;&#x2F;]HOST[:PORT]&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Prettify JSON response output&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7781,7 +7781,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Use proxy on given PROTOCOL&#x2F;HOST&#x2F;PORT&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7797,7 +7797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7807,13 +7807,13 @@
                 <a href="#486">486</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7829,7 +7829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7839,13 +7839,13 @@
                 <a href="#488">488</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn progress_bar() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7861,7 +7861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn repeat() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;progress_bar&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7877,7 +7877,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;repeat&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;progress-bar&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7893,7 +7893,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;repeat&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Display a progress bar in test mode&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7909,7 +7909,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NUM&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7925,7 +7925,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(i32).range(-1..))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7935,13 +7935,13 @@
                 <a href="#494">494</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .allow_hyphen_values(true)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7951,13 +7951,13 @@
                 <a href="#495">495</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Repeat the input files sequence NUM times, -1 for infinite loop&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7973,7 +7973,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn proxy() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7989,7 +7989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;proxy&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7999,13 +7999,13 @@
                 <a href="#498">498</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;proxy&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8015,13 +8015,13 @@
                 <a href="#499">499</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;x&#x27;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8037,7 +8037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn report_html() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;[PROTOCOL:&#x2F;&#x2F;]HOST[:PORT]&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8053,7 +8053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_html&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Use proxy on given PROTOCOL&#x2F;HOST&#x2F;PORT&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8069,7 +8069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-html&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8085,7 +8085,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;DIR&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8095,13 +8095,13 @@
                 <a href="#504">504</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Generate HTML report to DIR&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8111,13 +8111,13 @@
                 <a href="#505">505</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8133,7 +8133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn repeat() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8143,13 +8143,13 @@
                 <a href="#507">507</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;repeat&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8159,13 +8159,13 @@
                 <a href="#508">508</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;repeat&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8181,7 +8181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn report_json() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NUM&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8197,7 +8197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_json&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(i32).range(-1..))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8213,7 +8213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-json&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .allow_hyphen_values(true)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8229,7 +8229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;DIR&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Repeat the input files sequence NUM times, -1 for infinite loop&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8245,7 +8245,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Generate JSON report to DIR&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8261,7 +8261,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8271,13 +8271,13 @@
                 <a href="#515">515</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8293,7 +8293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8303,13 +8303,13 @@
                 <a href="#517">517</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn report_html() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8325,7 +8325,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn report_junit() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_html&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8341,7 +8341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_junit&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-html&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8357,7 +8357,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-junit&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;DIR&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8373,7 +8373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Generate HTML report to DIR&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8389,7 +8389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write a JUnit XML report to FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8405,7 +8405,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8415,13 +8415,13 @@
                 <a href="#524">524</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8437,7 +8437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8447,13 +8447,13 @@
                 <a href="#526">526</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn report_json() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8469,7 +8469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn report_tap() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_json&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8485,7 +8485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_tap&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-json&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8501,7 +8501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-tap&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;DIR&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8517,7 +8517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Generate JSON report to DIR&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8533,7 +8533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write a TAP report to FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8549,7 +8549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8559,13 +8559,13 @@
                 <a href="#533">533</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8581,7 +8581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8591,13 +8591,13 @@
                 <a href="#535">535</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn report_junit() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8613,7 +8613,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn resolve() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_junit&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8629,7 +8629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;resolve&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-junit&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8645,7 +8645,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;resolve&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8661,7 +8661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HOST:PORT:ADDR&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write a JUnit XML report to FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8677,7 +8677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Provide a custom address for a specific HOST and PORT pair&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8693,7 +8693,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8701,38 +8701,6 @@
                 id="542"
                 role="cell">
                 <a href="#542">542</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="543"
-                role="cell">
-                <a href="#543">543</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="544"
-                role="cell">
-                <a href="#544">544</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -8746,9 +8714,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="545"
+                id="543"
                 role="cell">
-                <a href="#545">545</a>
+                <a href="#543">543</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -8758,6 +8726,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="544"
+                role="cell">
+                <a href="#544">544</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn report_tap() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="545"
+                role="cell">
+                <a href="#545">545</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;report_tap&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8773,7 +8773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn retry() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;report-tap&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8789,7 +8789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;retry&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8805,7 +8805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;retry&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Write a TAP report to FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8821,7 +8821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NUM&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Report options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8837,7 +8837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(i32).range(-1..))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8847,13 +8847,13 @@
                 <a href="#551">551</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .allow_hyphen_values(true)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8863,13 +8863,13 @@
                 <a href="#552">552</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Maximum number of retries, 0 for no retries, -1 for unlimited retries&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8885,7 +8885,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn resolve() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8901,7 +8901,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;resolve&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8911,13 +8911,13 @@
                 <a href="#555">555</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;resolve&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8927,13 +8927,13 @@
                 <a href="#556">556</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;HOST:PORT:ADDR&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8949,7 +8949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn retry_interval() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Provide a custom address for a specific HOST and PORT pair&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8965,7 +8965,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;retry_interval&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8981,7 +8981,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;retry-interval&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8997,7 +8997,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;MILLISECONDS&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9007,13 +9007,13 @@
                 <a href="#561">561</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Interval in milliseconds before a retry [default: 1000]&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9023,13 +9023,13 @@
                 <a href="#562">562</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9045,7 +9045,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn retry() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9055,13 +9055,13 @@
                 <a href="#564">564</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;retry&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9071,13 +9071,13 @@
                 <a href="#565">565</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;retry&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9093,7 +9093,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn secret() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NUM&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9109,7 +9109,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;secret&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(i32).range(-1..))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9125,7 +9125,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;secret&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .allow_hyphen_values(true)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9141,7 +9141,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME=VALUE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Maximum number of retries, 0 for no retries, -1 for unlimited retries&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9157,7 +9157,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a variable which value is secret&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9173,7 +9173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9181,38 +9181,6 @@
                 id="572"
                 role="cell">
                 <a href="#572">572</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="573"
-                role="cell">
-                <a href="#573">573</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="574"
-                role="cell">
-                <a href="#574">574</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9226,9 +9194,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="575"
+                id="573"
                 role="cell">
-                <a href="#575">575</a>
+                <a href="#573">573</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9238,6 +9206,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="574"
+                role="cell">
+                <a href="#574">574</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn retry_interval() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="575"
+                role="cell">
+                <a href="#575">575</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;retry_interval&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9253,7 +9253,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn secrets_file() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;retry-interval&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9269,7 +9269,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;secrets_file&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;MILLISECONDS&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9285,7 +9285,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;secrets-file&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Interval in milliseconds before a retry [default: 1000]&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9301,7 +9301,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9317,7 +9317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a secrets file in which you define your secrets&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9327,13 +9327,13 @@
                 <a href="#581">581</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9343,13 +9343,13 @@
                 <a href="#582">582</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9365,7 +9365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn secret() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9375,13 +9375,13 @@
                 <a href="#584">584</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;secret&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9391,13 +9391,13 @@
                 <a href="#585">585</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;secret&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9413,7 +9413,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn ssl_no_revoke() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME=VALUE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9429,7 +9429,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;ssl_no_revoke&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a variable which value is secret&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9445,7 +9445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;ssl-no-revoke&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9461,7 +9461,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;(Windows) Tell Hurl to disable certificate revocation checks&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9477,7 +9477,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9487,13 +9487,13 @@
                 <a href="#591">591</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9509,7 +9509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9519,13 +9519,13 @@
                 <a href="#593">593</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn secrets_file() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9541,7 +9541,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn test() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;secrets_file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9557,7 +9557,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;test&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;secrets-file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9573,7 +9573,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;test&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9589,7 +9589,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Activate test mode (use parallel execution)&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a secrets file in which you define your secrets&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9621,7 +9621,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9631,13 +9631,13 @@
                 <a href="#600">600</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9653,7 +9653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9663,13 +9663,13 @@
                 <a href="#602">602</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn to_entry() -&gt; clap::Arg {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9685,7 +9685,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;to_entry&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn ssl_no_revoke() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9701,7 +9701,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;to-entry&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;ssl_no_revoke&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9717,7 +9717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;ENTRY_NUMBER&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;ssl-no-revoke&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9733,7 +9733,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(u32).range(1..))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;(Windows) Tell Hurl to disable certificate revocation checks&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9749,7 +9749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Execute Hurl file to ENTRY_NUMBER (starting at 1)&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9765,7 +9765,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9773,38 +9773,6 @@
                 id="609"
                 role="cell">
                 <a href="#609">609</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .conflicts_with(&quot;interactive&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="610"
-                role="cell">
-                <a href="#610">610</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="611"
-                role="cell">
-                <a href="#611">611</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9818,9 +9786,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="612"
+                id="610"
                 role="cell">
-                <a href="#612">612</a>
+                <a href="#610">610</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -9830,6 +9798,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="611"
+                role="cell">
+                <a href="#611">611</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn test() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="612"
+                role="cell">
+                <a href="#612">612</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;test&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9845,7 +9845,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn unix_socket() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;test&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9861,7 +9861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;unix_socket&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Activate test mode (use parallel execution)&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9877,7 +9877,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;unix-socket&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9893,7 +9893,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;PATH&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9903,13 +9903,13 @@
                 <a href="#617">617</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;(HTTP) Connect through this Unix domain socket, instead of using the network&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9919,13 +9919,13 @@
                 <a href="#618">618</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9941,7 +9941,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn to_entry() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9951,13 +9951,13 @@
                 <a href="#620">620</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;to_entry&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9967,13 +9967,13 @@
                 <a href="#621">621</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;to-entry&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9989,7 +9989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn user() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;ENTRY_NUMBER&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10005,7 +10005,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;user&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_parser(clap::value_parser!(u32).range(1..))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10021,7 +10021,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;user&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Execute Hurl file to ENTRY_NUMBER (starting at 1)&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10037,7 +10037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;u&#x27;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10053,7 +10053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;USER:PASSWORD&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .conflicts_with(&quot;interactive&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10069,7 +10069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Add basic Authentication header to each request&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10077,38 +10077,6 @@
                 id="628"
                 role="cell">
                 <a href="#628">628</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="629"
-                role="cell">
-                <a href="#629">629</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="630"
-                role="cell">
-                <a href="#630">630</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -10122,9 +10090,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="631"
+                id="629"
                 role="cell">
-                <a href="#631">631</a>
+                <a href="#629">629</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -10134,6 +10102,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="630"
+                role="cell">
+                <a href="#630">630</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn unix_socket() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="631"
+                role="cell">
+                <a href="#631">631</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;unix_socket&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10149,7 +10149,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn user_agent() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;unix-socket&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10165,7 +10165,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;user_agent&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;PATH&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10181,7 +10181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;user-agent&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;(HTTP) Connect through this Unix domain socket, instead of using the network&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10197,7 +10197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;A&#x27;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10213,7 +10213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10223,13 +10223,13 @@
                 <a href="#637">637</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Specify the User-Agent string to send to the HTTP server&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10239,13 +10239,13 @@
                 <a href="#638">638</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10261,7 +10261,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn user() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10271,13 +10271,13 @@
                 <a href="#640">640</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;user&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10287,13 +10287,13 @@
                 <a href="#641">641</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;user&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10309,7 +10309,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn variable() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;u&#x27;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10325,7 +10325,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;variable&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;USER:PASSWORD&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10341,7 +10341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;variable&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Add basic Authentication header to each request&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10357,7 +10357,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME=VALUE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10373,7 +10373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a variable&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10383,13 +10383,13 @@
                 <a href="#647">647</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10399,13 +10399,13 @@
                 <a href="#648">648</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10421,7 +10421,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn user_agent() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10431,13 +10431,13 @@
                 <a href="#650">650</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;user_agent&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10447,13 +10447,13 @@
                 <a href="#651">651</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;user-agent&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10469,7 +10469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn variables_file() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;A&#x27;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10485,7 +10485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;variables_file&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10501,7 +10501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;variables-file&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Specify the User-Agent string to send to the HTTP server&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10517,7 +10517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;HTTP options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10533,7 +10533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a properties file in which you define your variables&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10543,13 +10543,13 @@
                 <a href="#657">657</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10559,13 +10559,13 @@
                 <a href="#658">658</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10581,7 +10581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn variable() -&gt; clap::Arg {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10591,13 +10591,13 @@
                 <a href="#660">660</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;variable&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10607,13 +10607,13 @@
                 <a href="#661">661</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;variable&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10629,7 +10629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn verbose() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;NAME=VALUE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10645,7 +10645,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a variable&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10661,7 +10661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10677,7 +10677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;v&#x27;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10693,7 +10693,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Turn on verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10701,38 +10701,6 @@
                 id="667"
                 role="cell">
                 <a href="#667">667</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="668"
-                role="cell">
-                <a href="#668">668</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="918">
-                918
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="669"
-                role="cell">
-                <a href="#669">669</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -10746,9 +10714,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="670"
+                id="668"
                 role="cell">
-                <a href="#670">670</a>
+                <a href="#668">668</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -10758,6 +10726,38 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="669"
+                role="cell">
+                <a href="#669">669</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn variables_file() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="670"
+                role="cell">
+                <a href="#670">670</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;variables_file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10773,7 +10773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn very_verbose() -&gt; clap::Arg {</pre>
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;variables-file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10789,7 +10789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;very_verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .value_name(&quot;FILE&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10805,7 +10805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .long(&quot;very-verbose&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Define a properties file in which you define your variables&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10821,7 +10821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Turn on verbose output, including HTTP response and libcurl logs&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Run options&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10837,7 +10837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .num_args(1)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10853,7 +10853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::Append)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10871,12 +10871,284 @@
                  role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="678"
+                role="cell">
+                <a href="#678">678</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="679"
+                role="cell">
+                <a href="#679">679</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn verbose() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="680"
+                role="cell">
+                <a href="#680">680</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;verbose&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="681"
+                role="cell">
+                <a href="#681">681</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;verbose&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="682"
+                role="cell">
+                <a href="#682">682</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .short(&#x27;v&#x27;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="683"
+                role="cell">
+                <a href="#683">683</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Turn on verbose&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="684"
+                role="cell">
+                <a href="#684">684</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="685"
+                role="cell">
+                <a href="#685">685</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="686"
+                role="cell">
+                <a href="#686">686</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="687"
+                role="cell">
+                <a href="#687">687</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="688"
+                role="cell">
+                <a href="#688">688</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">pub fn very_verbose() -&gt; clap::Arg {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="689"
+                role="cell">
+                <a href="#689">689</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    clap::Arg::new(&quot;very_verbose&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="690"
+                role="cell">
+                <a href="#690">690</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .long(&quot;very-verbose&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="691"
+                role="cell">
+                <a href="#691">691</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .help(&quot;Turn on verbose output, including HTTP response and libcurl logs&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="692"
+                role="cell">
+                <a href="#692">692</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .help_heading(&quot;Output options&quot;)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="693"
+                role="cell">
+                <a href="#693">693</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="918">
+                918
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .action(clap::ArgAction::SetTrue)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="694"
+                role="cell">
+                <a href="#694">694</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
         </div></div>
 </div>
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-08-29 08:19</p>
+                    <p class="heading">Date: 2025-08-29 13:18</p>
                 </div>
             
         </footer>
