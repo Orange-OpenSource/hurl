@@ -35,6 +35,7 @@ use clap::ArgMatches;
 pub use error::CliOptionsError;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
+use hurl::pretty::PrettyMode;
 use hurl::runner::Output;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
@@ -93,7 +94,7 @@ pub struct CliOptions {
     pub parallel: bool,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
-    pub pretty: bool,
+    pub pretty: PrettyMode,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub repeat: Option<Count>,

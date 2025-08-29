@@ -18,16 +18,16 @@
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 
-use crate::output;
-use crate::util::term::{Stderr, Stdout, WriteMode};
-use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::typing::Count;
-
 use super::error::JobError;
 use super::job::{Job, JobQueue, JobResult};
 use super::message::WorkerMessage;
 use super::progress::{Mode, ParProgress};
 use super::worker::{Worker, WorkerId};
+use crate::output;
+use crate::pretty::PrettyMode;
+use crate::util::term::{Stderr, Stdout, WriteMode};
+use hurl_core::error::{DisplaySourceError, OutputFormat};
+use hurl_core::typing::Count;
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
 /// [`Job`]. To run jobs, the [`ParallelRunner::run`] method much be executed on the main thread.
@@ -77,7 +77,7 @@ pub enum OutputType {
     ResponseBody {
         include_headers: bool,
         color: bool,
-        pretty: bool,
+        pretty: PrettyMode,
     },
     /// The whole Hurl file run is exported in a structured JSON export on standard output.
     Json,

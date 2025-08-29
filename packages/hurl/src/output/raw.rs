@@ -19,6 +19,7 @@ use super::error::OutputErrorKind;
 use super::OutputError;
 use crate::pretty;
 use crate::pretty::json::Color;
+use crate::pretty::PrettyMode;
 use crate::runner::{HurlResult, Output};
 use crate::util::term::Stdout;
 use std::cmp::min;
@@ -27,14 +28,14 @@ use std::io::IsTerminal;
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
 /// When `include_headers` is true, the last HTTP response headers are written before the body response.
-/// When `pretty` is true, the output is prettified.
 /// When `filename_out` is `None`, standard output is used.
 /// When `append` is true, any existing file will be appended instead of being truncated.
+/// The body can pe prettified base on `pretty` value.
 pub fn write_last_body(
     hurl_result: &HurlResult,
     include_headers: bool,
     color: bool,
-    pretty: bool,
+    pretty: PrettyMode,
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
     append: bool,
@@ -72,8 +73,13 @@ pub fn write_last_body(
         &response.body
     };
 
-    // Prettify only JSON-like response for the momemnt.
-    if pretty && response.is_json() {
+    // Prettify only JSON-like response for the moment.
+    let pretty = match pretty {
+        PrettyMode::Automatic => response.is_json(),
+        PrettyMode::Force => true,
+        PrettyMode::None => false,
+    };
+    if pretty {
         let color_pretty = if color { Color::Ansi } else { Color::NoColor };
         match pretty::format(body_bytes, color_pretty, &mut output) {
             Ok(_) => {}
@@ -84,7 +90,7 @@ pub fn write_last_body(
                     hurl_result,
                     include_headers,
                     color,
-                    false,
+                    PrettyMode::None,
                     filename_out,
                     stdout,
                     append,
@@ -150,6 +156,7 @@ mod tests {
 
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
+    use crate::pretty::PrettyMode;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
 
@@ -242,7 +249,7 @@ mod tests {
         let result = hurl_result_json();
         let include_header = true;
         let color = false;
-        let pretty = false;
+        let pretty = PrettyMode::None;
         let output = Some(Output::Stdout);
         let mut stdout = Stdout::new(WriteMode::Buffered);
 

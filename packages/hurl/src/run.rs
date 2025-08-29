@@ -20,6 +20,7 @@ use std::path::Path;
 
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
+use hurl::pretty::PrettyMode;
 use hurl::runner::{HurlResult, Output, VariableSet};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
@@ -227,7 +228,7 @@ impl cli::OutputType {
         &self,
         include_headers: bool,
         color: bool,
-        pretty: bool,
+        pretty: PrettyMode,
     ) -> parallel::runner::OutputType {
         match self {
             cli::OutputType::ResponseBody => parallel::runner::OutputType::ResponseBody {

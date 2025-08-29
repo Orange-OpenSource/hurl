@@ -17,3 +17,13 @@
  */
 pub mod json;
 pub use json::format;
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum PrettyMode {
+    /// Prettify based on response content type
+    Automatic,
+    /// Force by user, try to prettify even if there is no `Content-Type` reponse header.
+    Force,
+    /// No prettiyfing.
+    None,
+}

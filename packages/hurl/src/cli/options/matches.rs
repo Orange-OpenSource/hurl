@@ -21,6 +21,7 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use clap::ArgMatches;
+use hurl::pretty::PrettyMode;
 use hurl::runner::Value;
 use hurl_core::input::Input;
 use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
@@ -386,14 +387,18 @@ pub fn pinned_pub_key(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "pinned_pub_key")
 }
 
-pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> bool {
+pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> PrettyMode {
     if has_flag(arg_matches, "pretty") {
-        return true;
+        return PrettyMode::Force;
     }
     if has_flag(arg_matches, "no_pretty") {
-        return false;
+        return PrettyMode::None;
     }
-    context.is_stdout_term()
+    if context.is_stdout_term() {
+        PrettyMode::Automatic
+    } else {
+        PrettyMode::None
+    }
 }
 
 pub fn progress_bar(arg_matches: &ArgMatches, context: &RunContext) -> bool {
