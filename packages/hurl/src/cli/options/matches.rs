@@ -390,6 +390,9 @@ pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> bool {
     if has_flag(arg_matches, "pretty") {
         return true;
     }
+    if has_flag(arg_matches, "no_pretty") {
+        return false;
+    }
     context.is_stdout_term()
 }
 

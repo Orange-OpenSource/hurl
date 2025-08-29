@@ -1,4 +1,4 @@
-.TH hurl 1 "27 Aug 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "29 Aug 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -372,6 +372,13 @@ Suppress output. By default, Hurl outputs the body of the last response.
 
 This is a cli-only option.
 
+.IP "--no-pretty "
+
+Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
+standard output is a terminal.
+
+This is a cli-only option.
+
 .IP "--noproxy <HOST(S)> "
 
 Comma-separated list of hosts which do not use a proxy.
@@ -406,7 +413,7 @@ When negotiating a TLS or SSL connection, the server sends a certificate indicat
 
 .IP "--pretty "
 
-Prettify response output for supported content type (JSON only for the moment). By default, output os colorized, see\fI--no-color\fP to format without color.
+Prettify response output for supported content type (JSON only for the moment). By default, JSON response is prettified if standard output is a terminal, and colorized, see\fI--no-color\fP to format without color.
 
 This is a cli-only option.
 

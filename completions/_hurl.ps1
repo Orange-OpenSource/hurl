@@ -62,6 +62,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--netrc-optional', 'netrc-optional', [CompletionResultType]::ParameterName, 'Use either .netrc or the URL')
             [CompletionResult]::new('--no-color', 'no-color', [CompletionResultType]::ParameterName, 'Do not colorize output')
             [CompletionResult]::new('--no-output', 'no-output', [CompletionResultType]::ParameterName, 'Suppress output. By default, Hurl outputs the body of the last response')
+            [CompletionResult]::new('--no-pretty', 'no-pretty', [CompletionResultType]::ParameterName, 'Do not prettify response output')
             [CompletionResult]::new('--noproxy', 'noproxy', [CompletionResultType]::ParameterName, 'List of hosts which do not use proxy')
             [CompletionResult]::new('--ntlm', 'ntlm', [CompletionResultType]::ParameterName, 'Tell Hurl to use NTLM authentication')
             [CompletionResult]::new('--output', 'output', [CompletionResultType]::ParameterName, 'Write to FILE instead of stdout')

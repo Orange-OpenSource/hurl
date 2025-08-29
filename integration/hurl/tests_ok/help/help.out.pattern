@@ -88,7 +88,9 @@ Output options:
       --no-color               Do not colorize output
       --no-output              Suppress output. By default, Hurl outputs the body of the last
                                response
+      --no-pretty              Do not prettify response output
   -o, --output <FILE>          Write to FILE instead of stdout
+      --pretty                 Prettify JSON response output
       --progress-bar           Display a progress bar in test mode
   -v, --verbose                Turn on verbose
       --very-verbose           Turn on verbose output, including HTTP response and libcurl logs

@@ -1,0 +1,9 @@
+name: no_pretty
+long: no-pretty
+help: Do not prettify response output
+help_heading: Output options
+conflict: pretty
+cli_only: true
+---
+Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
+standard output is a terminal.

@@ -391,6 +391,13 @@ Suppress output. By default, Hurl outputs the body of the last response.
 
 This is a cli-only option.
 
+### --no-pretty {#no-pretty}
+
+Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
+standard output is a terminal.
+
+This is a cli-only option.
+
 ### --noproxy <HOST(S)> {#noproxy}
 
 Comma-separated list of hosts which do not use a proxy.
@@ -425,7 +432,7 @@ When negotiating a TLS or SSL connection, the server sends a certificate indicat
 
 ### --pretty {#pretty}
 
-Prettify response output for supported content type (JSON only for the moment). By default, output os colorized, see[`--no-color`](#no-color) to format without color.
+Prettify response output for supported content type (JSON only for the moment). By default, JSON response is prettified if standard output is a terminal, and colorized, see[`--no-color`](#no-color) to format without color.
 
 This is a cli-only option.
 

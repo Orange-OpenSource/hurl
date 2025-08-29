@@ -57,6 +57,7 @@ _hurl() {
     '--netrc-optional[Use either .netrc or the URL]' \
     '--no-color[Do not colorize output]' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
+    '--no-pretty[Do not prettify response output]' \
     '--noproxy[List of hosts which do not use proxy]: :' \
     '--ntlm[Tell Hurl to use NTLM authentication]' \
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \

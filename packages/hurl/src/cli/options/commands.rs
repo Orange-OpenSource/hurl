@@ -416,6 +416,15 @@ pub fn no_output() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn no_pretty() -> clap::Arg {
+    clap::Arg::new("no_pretty")
+        .long("no-pretty")
+        .help("Do not prettify response output")
+        .help_heading("Output options")
+        .conflicts_with("pretty")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn noproxy() -> clap::Arg {
     clap::Arg::new("noproxy")
         .long("noproxy")

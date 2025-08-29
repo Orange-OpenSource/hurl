@@ -236,6 +236,7 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::json())
         .arg(commands::no_color())
         .arg(commands::no_output())
+        .arg(commands::no_pretty())
         .arg(commands::output())
         .arg(commands::pretty())
         .arg(commands::progress_bar())
