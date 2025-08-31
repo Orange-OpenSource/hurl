@@ -55,6 +55,11 @@ To have a test oriented output, you can use [`--test`](#test) option:
 $ hurl --test *.hurl
 ```
 
+Wildcard `*.hurl` does not work recursively. If you need to search all nested folders, you can combine Hurl with `find` command:
+
+```shell
+find . -type f -name \"*.hurl\" | xargs hurl --test
+```
 
 ## Hurl File Format
 
