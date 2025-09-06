@@ -16,13 +16,13 @@
  *
  */
 
-use crate::jsonpath2::{eval::NodeList, IndexSelector, NameSelector, Selector};
+use crate::jsonpath2::{eval::NodeList, IndexSelector, NameSelector, Selector, WildcardSelector};
 
 impl Selector {
     pub fn eval(&self, node: &serde_json::Value) -> NodeList {
         match self {
             Selector::Name(name_selector) => name_selector.eval(node),
-            Selector::Wildcard(_wildcard_selector) => todo!(),
+            Selector::Wildcard(wildcard_selector) => wildcard_selector.eval(node),
             Selector::Index(index_selector) => index_selector.eval(node),
             Selector::ArraySlice(_array_slice_selector) => todo!(),
             Selector::Filter(_filter_selector) => todo!(),
@@ -36,6 +36,17 @@ impl NameSelector {
             if let Some(value) = key_values.get(self.value()) {
                 return vec![value.clone()];
             }
+        }
+        vec![]
+    }
+}
+
+impl WildcardSelector {
+    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+        if let serde_json::Value::Object(key_values) = node {
+            return key_values.values().cloned().collect::<NodeList>();
+        } else if let serde_json::Value::Array(values) = node {
+            return values.to_vec();
         }
         vec![]
     }
@@ -64,6 +75,7 @@ mod tests {
     #[allow(unused_imports)]
     use crate::jsonpath2::{
         ChildSegment, IndexSelector, JsonPathExpr, NameSelector, Segment, Selector,
+        WildcardSelector,
     };
 
     #[test]
@@ -81,6 +93,25 @@ mod tests {
         assert_eq!(
             NameSelector::new("greeting".to_string()).eval(&value),
             vec![json!("Hello")]
+        );
+    }
+
+    #[test]
+    fn test_wildcard_selector() {
+        assert_eq!(
+            WildcardSelector {}.eval(&json!({
+              "o": {"j": 1, "k": 2},
+              "a": [5, 3]
+            })),
+            vec![json!([5, 3]), json!({"j": 1, "k": 2})]
+        );
+        assert_eq!(
+            WildcardSelector {}.eval(&json!({"j": 1, "k": 2})),
+            vec![json!(1), json!(2)]
+        );
+        assert_eq!(
+            WildcardSelector {}.eval(&json!([5, 3])),
+            vec![json!(5), json!(3)]
         );
     }
 

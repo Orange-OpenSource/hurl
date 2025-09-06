@@ -91,6 +91,18 @@ fn book_value() -> serde_json::Value {
      )
 }
 
+fn bicycle_value() -> serde_json::Value {
+    serde_json::from_str(
+        r#"
+{
+      "color": "red",
+      "price": 19.95
+    }
+    "#,
+    )
+    .unwrap()
+}
+
 fn book0_value() -> serde_json::Value {
     json!(  { "category": "reference",
       "author": "Nigel Rees",
@@ -115,4 +127,10 @@ fn child_child_segment() {
 
     let expr = jsonpath2::parse("$['book'][0]['author']").unwrap();
     assert_eq!(expr.eval(&store_value()), vec![json!("Nigel Rees")]);
+
+    let expr = jsonpath2::parse("$[*]").unwrap();
+    assert_eq!(
+        expr.eval(&store_value()),
+        vec![bicycle_value(), book_value()]
+    );
 }

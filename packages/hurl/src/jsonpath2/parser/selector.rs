@@ -18,8 +18,8 @@
 
 use super::{ParseError, ParseErrorKind};
 use crate::jsonpath2::{
-    parser::primitives::{string_literal, try_integer},
-    IndexSelector, NameSelector, Selector,
+    parser::primitives::{string_literal, try_integer, try_literal},
+    IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use hurl_core::reader::Reader;
 
@@ -29,10 +29,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
     let initial_state = reader.cursor();
     if let Some(name_selector) = try_name_selector(reader)? {
         return Ok(Selector::Name(name_selector));
+    } else if let Some(wildcard_selector) = try_wildcard_selector(reader) {
+        return Ok(Selector::Wildcard(wildcard_selector));
     } else if let Some(index_selector) = try_index_selector(reader)? {
         return Ok(Selector::Index(index_selector));
     }
-    {}
 
     Err(ParseError::new(
         initial_state.pos,
@@ -46,6 +47,16 @@ fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
     Ok(value.map(NameSelector::new))
 }
 
+/// Try to parse a wildcard selector
+/// Returns None if it can not be parse. It can not fail.
+fn try_wildcard_selector(reader: &mut Reader) -> Option<WildcardSelector> {
+    if try_literal("*", reader) {
+        Some(WildcardSelector)
+    } else {
+        None
+    }
+}
+
 /// Try to parse an index selector
 fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>> {
     let value = try_integer(reader)?;
@@ -54,9 +65,8 @@ fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>>
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::reader::{CharPos, Reader};
-
     use super::*;
+    use hurl_core::reader::{CharPos, Reader};
 
     #[test]
     pub fn test_parse() {
@@ -76,6 +86,16 @@ mod tests {
             NameSelector::new("store".to_string())
         );
         assert_eq!(reader.cursor().index, CharPos(7));
+    }
+
+    #[test]
+    pub fn test_wildcard_selector() {
+        let mut reader = Reader::new("*");
+        assert_eq!(
+            try_wildcard_selector(&mut reader).unwrap(),
+            WildcardSelector
+        );
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 
     #[test]
