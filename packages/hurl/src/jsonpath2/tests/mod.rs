@@ -17,7 +17,7 @@ use serde_json::json;
  * limitations under the License.
  *
  */
-use crate::jsonpath2::{self};
+use crate::jsonpath2::{self, eval::NodeList};
 
 fn store_value() -> serde_json::Value {
     json!(
@@ -111,26 +111,26 @@ fn book0_value() -> serde_json::Value {
     })
 }
 
+fn eval(value: &serde_json::Value, query: &str) -> NodeList {
+    let expr = jsonpath2::parse(query).unwrap();
+    expr.eval(value)
+}
+
 #[test]
 fn root_identifier() {
-    let expr = jsonpath2::parse("$").unwrap();
-    assert_eq!(expr.eval(&store_value()), vec![store_value()]);
+    assert_eq!(eval(&store_value(), "$"), vec![store_value()]);
 }
 
 #[test]
 fn child_child_segment() {
-    let expr = jsonpath2::parse("$['book']").unwrap();
-    assert_eq!(expr.eval(&store_value()), vec![book_value()]);
-
-    let expr = jsonpath2::parse("$['book'][0]").unwrap();
-    assert_eq!(expr.eval(&store_value()), vec![book0_value()]);
-
-    let expr = jsonpath2::parse("$['book'][0]['author']").unwrap();
-    assert_eq!(expr.eval(&store_value()), vec![json!("Nigel Rees")]);
-
-    let expr = jsonpath2::parse("$[*]").unwrap();
+    assert_eq!(eval(&store_value(), "$['book']"), vec![book_value()]);
+    assert_eq!(eval(&store_value(), "$['book'][0]"), vec![book0_value()]);
     assert_eq!(
-        expr.eval(&store_value()),
+        eval(&store_value(), "$['book'][0]['author']"),
+        vec![json!("Nigel Rees")]
+    );
+    assert_eq!(
+        eval(&store_value(), "$[*]"),
         vec![bicycle_value(), book_value()]
     );
 }
