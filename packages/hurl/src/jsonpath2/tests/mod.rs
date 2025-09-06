@@ -111,6 +111,14 @@ fn book0_value() -> serde_json::Value {
     })
 }
 
+fn book1_value() -> serde_json::Value {
+    json!( { "category": "fiction",
+      "author": "Evelyn Waugh",
+      "title": "Sword of Honour",
+      "price": 12.99
+    })
+}
+
 fn eval(value: &serde_json::Value, query: &str) -> NodeList {
     let expr = jsonpath2::parse(query).unwrap();
     expr.eval(value)
@@ -132,5 +140,9 @@ fn child_child_segment() {
     assert_eq!(
         eval(&store_value(), "$[*]"),
         vec![bicycle_value(), book_value()]
+    );
+    assert_eq!(
+        eval(&store_value(), "$['book'][:2]"),
+        vec![book0_value(), book1_value()]
     );
 }

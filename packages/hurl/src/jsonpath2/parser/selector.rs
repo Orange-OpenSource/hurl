@@ -18,8 +18,8 @@
 
 use super::{ParseError, ParseErrorKind};
 use crate::jsonpath2::{
-    parser::primitives::{string_literal, try_integer, try_literal},
-    IndexSelector, NameSelector, Selector, WildcardSelector,
+    parser::primitives::{literal, string_literal, try_integer, try_literal},
+    ArraySliceSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use hurl_core::reader::Reader;
 
@@ -33,6 +33,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
         return Ok(Selector::Wildcard(wildcard_selector));
     } else if let Some(index_selector) = try_index_selector(reader)? {
         return Ok(Selector::Index(index_selector));
+    } else if let Some(array_slice_selector) = try_array_slice_selector(reader)? {
+        return Ok(Selector::ArraySlice(array_slice_selector));
     }
 
     Err(ParseError::new(
@@ -61,6 +63,19 @@ fn try_wildcard_selector(reader: &mut Reader) -> Option<WildcardSelector> {
 fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>> {
     let value = try_integer(reader)?;
     Ok(value.map(IndexSelector::new))
+}
+
+/// Try to parse an array_slice_selector
+fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySliceSelector>> {
+    let start = try_integer(reader)?;
+    literal(":", reader)?;
+    let end = try_integer(reader)?;
+    let step = if try_literal(":", reader) {
+        try_integer(reader)?.unwrap_or(1)
+    } else {
+        1
+    };
+    Ok(Some(ArraySliceSelector::new(start, end, step)))
 }
 
 #[cfg(test)]
@@ -106,5 +121,43 @@ mod tests {
             IndexSelector::new(1)
         );
         assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    pub fn test_array_slice_selector() {
+        let mut reader = Reader::new("1:3");
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(Some(1), Some(3), 1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("5:");
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(Some(5), None, 1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(2));
+
+        let mut reader = Reader::new("1:5:2");
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(Some(1), Some(5), 2)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("1:5:-2");
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(Some(1), Some(5), -2)
+        );
+        assert_eq!(reader.cursor().index, CharPos(6));
+
+        let mut reader = Reader::new("::-1");
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(None, None, -1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(4));
     }
 }

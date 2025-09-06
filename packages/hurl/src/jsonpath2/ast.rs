@@ -155,7 +155,25 @@ impl IndexSelector {
 /// Array slice selector
 /// <start>:<end>:<step>
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ArraySliceSelector;
+pub struct ArraySliceSelector {
+    start: Option<i32>,
+    end: Option<i32>,
+    step: i32,
+}
+impl ArraySliceSelector {
+    pub fn new(start: Option<i32>, end: Option<i32>, step: i32) -> ArraySliceSelector {
+        ArraySliceSelector { start, end, step }
+    }
+    pub fn start(&self) -> Option<i32> {
+        self.start
+    }
+    pub fn end(&self) -> Option<i32> {
+        self.end
+    }
+    pub fn step(&self) -> i32 {
+        self.step
+    }
+}
 
 /// Filter selector
 /// used to iterate over the elements or members of structured values,
