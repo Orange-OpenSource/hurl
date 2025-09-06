@@ -1,4 +1,4 @@
-use crate::jsonpath2::{JsonPathExpr, Segment, Selector};
+use crate::jsonpath2::{JsonPathExpr, Segment};
 
 /*
  * Hurl (https://hurl.dev)
@@ -17,6 +17,8 @@ use crate::jsonpath2::{JsonPathExpr, Segment, Selector};
  * limitations under the License.
  *
  */
+mod selector;
+
 #[allow(dead_code)]
 pub type NodeList = Vec<serde_json::Value>;
 
@@ -50,39 +52,6 @@ impl Segment {
     }
 }
 
-impl Selector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
-        let _ = node;
-
-        match self {
-            Selector::Name(name_selector) => {
-                if let serde_json::Value::Object(key_values) = node {
-                    if let Some(value) = key_values.get(name_selector.value()) {
-                        return vec![value.clone()];
-                    }
-                }
-                vec![]
-            }
-            Selector::Wildcard(_wildcard_selector) => todo!(),
-            Selector::Index(index_selector) => {
-                if let serde_json::Value::Array(values) = node {
-                    let index = if *index_selector.value() < 0 {
-                        values.len() - ((*index_selector.value()).unsigned_abs() as usize)
-                    } else {
-                        *index_selector.value() as usize
-                    };
-                    if let Some(value) = values.get(index) {
-                        return vec![value.clone()];
-                    }
-                }
-                vec![]
-            }
-            Selector::ArraySlice(_array_slice_selector) => todo!(),
-            Selector::Filter(_filter_selector) => todo!(),
-        }
-    }
-}
-
 mod tests {
     #[allow(unused_imports)]
     use serde_json::json;
@@ -106,30 +75,5 @@ mod tests {
             Selector::Name(NameSelector::new("greeting".to_string())),
         ]))]);
         assert_eq!(jsonpath1.eval(&value), vec![json!("Hello")]);
-    }
-
-    #[test]
-    fn test_name_selector() {
-        let value = json!({"greeting": "Hello"});
-        assert_eq!(
-            Selector::Name(NameSelector::new("greeting".to_string())).eval(&value),
-            vec![json!("Hello")]
-        );
-    }
-
-    #[test]
-    fn test_index_selector() {
-        let value = json!(["a", "b"]);
-        assert_eq!(
-            Selector::Index(IndexSelector::new(1)).eval(&value),
-            vec![json!("b")]
-        );
-        assert_eq!(
-            Selector::Index(IndexSelector::new(-2)).eval(&value),
-            vec![json!("a")]
-        );
-        assert!(Selector::Index(IndexSelector::new(2))
-            .eval(&value)
-            .is_empty());
     }
 }
