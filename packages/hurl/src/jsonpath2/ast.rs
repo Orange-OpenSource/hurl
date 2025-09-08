@@ -18,16 +18,16 @@
 
 use std::fmt::{Display, Formatter};
 
-/// JSONPath expression
+/// JSONPath Query
 /// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct JsonPathExpr {
+pub struct Query {
     segments: Vec<Segment>,
 }
 
-impl JsonPathExpr {
-    pub fn new(segments: Vec<Segment>) -> JsonPathExpr {
-        JsonPathExpr { segments }
+impl Query {
+    pub fn new(segments: Vec<Segment>) -> Query {
+        Query { segments }
     }
 
     pub fn segments(&self) -> &[Segment] {
@@ -35,7 +35,7 @@ impl JsonPathExpr {
     }
 }
 
-impl Display for JsonPathExpr {
+impl Display for Query {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let segments = self
             .segments

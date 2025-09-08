@@ -144,8 +144,8 @@ mod tests {
 
     #[allow(unused_imports)]
     use crate::jsonpath2::{
-        ArraySliceSelector, ChildSegment, IndexSelector, JsonPathExpr, NameSelector, Segment,
-        Selector, WildcardSelector,
+        ArraySliceSelector, ChildSegment, IndexSelector, NameSelector, Segment, Selector,
+        WildcardSelector,
     };
 
     #[test]

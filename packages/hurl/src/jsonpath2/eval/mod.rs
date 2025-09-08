@@ -1,4 +1,4 @@
-use crate::jsonpath2::{JsonPathExpr, Segment};
+use crate::jsonpath2::{Query, Segment};
 
 /*
  * Hurl (https://hurl.dev)
@@ -22,8 +22,8 @@ mod selector;
 #[allow(dead_code)]
 pub type NodeList = Vec<serde_json::Value>;
 
-impl JsonPathExpr {
-    /// Eval a `JsonPathExpr` for a `serde_json::Value` input.
+impl Query {
+    /// Eval a JSONPath `Query` for a `serde_json::Value` input.
     /// It returns a `NodeList`
     #[allow(dead_code)]
     pub fn eval(&self, value: &serde_json::Value) -> NodeList {
@@ -36,7 +36,7 @@ impl JsonPathExpr {
 }
 
 impl Segment {
-    /// Eval a `JsonPathExpr` for a `serde_json::Value` input.
+    /// Eval a `Segment` for a `serde_json::Value` input.
     /// It returns a `NodeList`
     pub fn eval(&self, node: &serde_json::Value) -> NodeList {
         match self {
@@ -57,21 +57,19 @@ mod tests {
     use serde_json::json;
 
     #[allow(unused_imports)]
-    use crate::jsonpath2::{
-        ChildSegment, IndexSelector, JsonPathExpr, NameSelector, Segment, Selector,
-    };
+    use crate::jsonpath2::{ChildSegment, IndexSelector, NameSelector, Query, Segment, Selector};
 
     #[test]
     fn test_root_identifier() {
         let value = json!({"greeting": "Hello"});
-        let root_identifier = JsonPathExpr::new(vec![]);
+        let root_identifier = Query::new(vec![]);
         assert_eq!(root_identifier.eval(&value), vec![value]);
     }
 
     #[test]
     fn test_child_segment() {
         let value = json!({"greeting": "Hello"});
-        let jsonpath1 = JsonPathExpr::new(vec![Segment::Child(ChildSegment::new(vec![
+        let jsonpath1 = Query::new(vec![Segment::Child(ChildSegment::new(vec![
             Selector::Name(NameSelector::new("greeting".to_string())),
         ]))]);
         assert_eq!(jsonpath1.eval(&value), vec![json!("Hello")]);

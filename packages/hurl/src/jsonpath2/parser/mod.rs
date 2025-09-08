@@ -17,19 +17,20 @@
  */
 
 mod error;
-mod expr;
 mod primitives;
+mod query;
+mod segments;
 mod selector;
 
 pub use error::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
-use super::JsonPathExpr;
+use super::Query;
 
 pub type ParseResult<T> = Result<T, ParseError>;
 
 #[allow(dead_code)]
-pub fn parse(s: &str) -> ParseResult<JsonPathExpr> {
+pub fn parse(s: &str) -> ParseResult<Query> {
     let mut reader = Reader::new(s);
-    expr::parse(&mut reader)
+    query::parse(&mut reader)
 }
