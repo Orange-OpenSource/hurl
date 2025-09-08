@@ -178,4 +178,53 @@ impl ArraySliceSelector {
 /// Filter selector
 /// used to iterate over the elements or members of structured values,
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FilterSelector;
+pub struct FilterSelector {
+    expr: LogicalExpr,
+}
+
+impl FilterSelector {
+    pub fn new(expr: LogicalExpr) -> FilterSelector {
+        FilterSelector { expr }
+    }
+
+    pub fn expr(&self) -> &LogicalExpr {
+        &self.expr
+    }
+}
+
+/// Logical expression
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LogicalExpr {
+    value: RelQuery,
+}
+impl LogicalExpr {
+    pub fn new(value: RelQuery) -> LogicalExpr {
+        LogicalExpr { value }
+    }
+    pub fn value(&self) -> &RelQuery {
+        &self.value
+    }
+}
+
+#[allow(dead_code)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FilterQuery {
+    Rel(RelQuery),
+    Jsonpath(Query),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+
+pub struct RelQuery {
+    segments: Vec<Segment>,
+}
+
+impl RelQuery {
+    pub fn new(segments: Vec<Segment>) -> RelQuery {
+        RelQuery { segments }
+    }
+
+    pub fn segments(&self) -> &[Segment] {
+        &self.segments
+    }
+}

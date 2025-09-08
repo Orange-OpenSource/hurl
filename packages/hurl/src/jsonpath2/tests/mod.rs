@@ -119,6 +119,25 @@ fn book1_value() -> serde_json::Value {
     })
 }
 
+fn book2_value() -> serde_json::Value {
+    json!( {
+      "category": "fiction",
+      "author": "Herman Melville",
+      "title": "Moby Dick",
+      "isbn": "0-553-21311-3",
+      "price": 8.99
+    })
+}
+
+fn book3_value() -> serde_json::Value {
+    json!({ "category": "fiction",
+      "author": "J. R. R. Tolkien",
+      "title": "The Lord of the Rings",
+      "isbn": "0-395-19395-8",
+      "price": 22.99
+    })
+}
+
 fn eval(value: &serde_json::Value, query: &str) -> NodeList {
     let expr = jsonpath2::parse(query).unwrap();
     expr.eval(value)
@@ -130,7 +149,7 @@ fn root_identifier() {
 }
 
 #[test]
-fn child_child_segment() {
+fn child_segment() {
     assert_eq!(eval(&store_value(), "$['book']"), vec![book_value()]);
     assert_eq!(eval(&store_value(), "$['book'][0]"), vec![book0_value()]);
     assert_eq!(
@@ -144,5 +163,9 @@ fn child_child_segment() {
     assert_eq!(
         eval(&store_value(), "$['book'][:2]"),
         vec![book0_value(), book1_value()]
+    );
+    assert_eq!(
+        eval(&store_value(), "$['book'][?@['isbn']]"),
+        vec![book2_value(), book3_value()]
     );
 }

@@ -33,7 +33,9 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Query> {
 mod tests {
 
     use super::super::{ParseError, ParseErrorKind};
-    use crate::jsonpath2::{ChildSegment, NameSelector, Segment, Selector};
+    use crate::jsonpath2::{
+        ChildSegment, FilterSelector, LogicalExpr, NameSelector, RelQuery, Segment, Selector,
+    };
     use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
@@ -67,5 +69,18 @@ mod tests {
             ]))])
         );
         assert_eq!(reader.cursor().index, CharPos(10));
+
+        let mut reader = Reader::new("$[?@['isbn']]");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Query::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Filter(FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "isbn".to_string()
+                    ))]))
+                ]))))
+            ]))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(13));
     }
 }

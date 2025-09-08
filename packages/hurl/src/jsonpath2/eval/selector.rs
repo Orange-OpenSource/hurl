@@ -19,7 +19,8 @@
 use std::cmp::{max, min};
 
 use crate::jsonpath2::{
-    eval::NodeList, ArraySliceSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
+    eval::NodeList, ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector,
+    RelQuery, Selector, WildcardSelector,
 };
 
 impl Selector {
@@ -29,7 +30,7 @@ impl Selector {
             Selector::Wildcard(wildcard_selector) => wildcard_selector.eval(node),
             Selector::Index(index_selector) => index_selector.eval(node),
             Selector::ArraySlice(array_slice_selector) => array_slice_selector.eval(node),
-            Selector::Filter(_filter_selector) => todo!(),
+            Selector::Filter(filter_selector) => filter_selector.eval(node),
         }
     }
 }
@@ -130,11 +131,45 @@ impl ArraySliceSelector {
     }
 }
 
+impl FilterSelector {
+    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+        if let serde_json::Value::Object(key_values) = node {
+            return key_values
+                .values()
+                .filter(|v| filter(v, self.expr()))
+                .cloned()
+                .collect::<NodeList>();
+        } else if let serde_json::Value::Array(values) = node {
+            return values
+                .iter()
+                .filter(|v| filter(v, self.expr()))
+                .cloned()
+                .collect::<NodeList>();
+        }
+        vec![]
+    }
+}
+
+fn filter(value: &serde_json::Value, logical_expr: &LogicalExpr) -> bool {
+    let results = logical_expr.value().eval(value);
+    !results.is_empty()
+}
+
 fn normalize_index(i: i32, len: i32) -> i32 {
     if i >= 0 {
         i
     } else {
         len + i
+    }
+}
+
+impl RelQuery {
+    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
+        let mut results = vec![value.clone()];
+        for segment in self.segments() {
+            results = results.iter().flat_map(|node| segment.eval(node)).collect();
+        }
+        results
     }
 }
 
@@ -144,8 +179,8 @@ mod tests {
 
     #[allow(unused_imports)]
     use crate::jsonpath2::{
-        ArraySliceSelector, ChildSegment, IndexSelector, NameSelector, Segment, Selector,
-        WildcardSelector,
+        ArraySliceSelector, ChildSegment, FilterSelector, IndexSelector, LogicalExpr, NameSelector,
+        Query, RelQuery, Segment, Selector, WildcardSelector,
     };
 
     #[test]
@@ -239,6 +274,30 @@ mod tests {
                 json!("c"),
                 json!("b"),
                 json!("a")
+            ]
+        );
+    }
+
+    #[test]
+    fn test_filter_selector() {
+        let value = json!([3, 5, 1, 2, 4, 6,
+         {"b": "j"},
+         {"b": "k"},
+         {"b": {}},
+         {"b": "kilo"}
+        ]);
+
+        let filter_selector =
+            FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![Segment::Child(
+                ChildSegment::new(vec![Selector::Name(NameSelector::new("b".to_string()))]),
+            )])));
+        assert_eq!(
+            filter_selector.eval(&value),
+            vec![
+                json!({"b": "j"}),
+                json!({"b": "k"}),
+                json!({"b": {}}),
+                json!({"b": "kilo"}),
             ]
         );
     }

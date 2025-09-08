@@ -17,9 +17,11 @@
  */
 
 use super::{ParseError, ParseErrorKind};
+use crate::jsonpath2::parser::segments;
 use crate::jsonpath2::{
     parser::primitives::{literal, string_literal, try_integer, try_literal},
-    ArraySliceSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
+    ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector, RelQuery,
+    Selector, WildcardSelector,
 };
 use hurl_core::reader::Reader;
 
@@ -35,6 +37,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
         return Ok(Selector::Index(index_selector));
     } else if let Some(array_slice_selector) = try_array_slice_selector(reader)? {
         return Ok(Selector::ArraySlice(array_slice_selector));
+    } else if let Some(filter_selector) = try_filter_selector(reader)? {
+        return Ok(Selector::Filter(filter_selector));
     }
 
     Err(ParseError::new(
@@ -67,8 +71,15 @@ fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>>
 
 /// Try to parse an array_slice_selector
 fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySliceSelector>> {
-    let start = try_integer(reader)?;
+    let start = if let Some(':') = reader.peek() {
+        None
+    } else if let Some(value) = try_integer(reader)? {
+        Some(value)
+    } else {
+        return Ok(None);
+    };
     literal(":", reader)?;
+
     let end = try_integer(reader)?;
     let step = if try_literal(":", reader) {
         try_integer(reader)?.unwrap_or(1)
@@ -78,8 +89,30 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
     Ok(Some(ArraySliceSelector::new(start, end, step)))
 }
 
+/// Try to parse a filter selector
+fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
+    if try_literal("?", reader) {
+        let rel_query = try_rel_query(reader)?.unwrap();
+        let expr = LogicalExpr::new(rel_query);
+        Ok(Some(FilterSelector::new(expr)))
+    } else {
+        Ok(None)
+    }
+}
+
+fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelQuery>> {
+    if try_literal("@", reader) {
+        let segments = segments::parse(reader)?;
+        Ok(Some(RelQuery::new(segments)))
+    } else {
+        Ok(None)
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::jsonpath2::{ChildSegment, Segment};
+
     use super::*;
     use hurl_core::reader::{CharPos, Reader};
 
@@ -159,5 +192,39 @@ mod tests {
             ArraySliceSelector::new(None, None, -1)
         );
         assert_eq!(reader.cursor().index, CharPos(4));
+
+        let mut reader = Reader::new(":2"); // First 2 items
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(None, Some(2), 1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(2));
+
+        let mut reader = Reader::new("?@['isbn']]");
+        assert!(try_array_slice_selector(&mut reader).unwrap().is_none());
+    }
+
+    #[test]
+    pub fn test_filter_selector() {
+        let mut reader = Reader::new("?@['isbn']");
+        assert_eq!(
+            try_filter_selector(&mut reader).unwrap().unwrap(),
+            FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![Segment::Child(
+                ChildSegment::new(vec![Selector::Name(NameSelector::new("isbn".to_string()))])
+            )])))
+        );
+        assert_eq!(reader.cursor().index, CharPos(10));
+    }
+
+    #[test]
+    pub fn test_rel_query() {
+        let mut reader = Reader::new("@['isbn']");
+        assert_eq!(
+            try_rel_query(&mut reader).unwrap().unwrap(),
+            RelQuery::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Name(NameSelector::new("isbn".to_string()))
+            ]))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(9));
     }
 }
