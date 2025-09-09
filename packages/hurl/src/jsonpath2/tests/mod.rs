@@ -151,21 +151,22 @@ fn root_identifier() {
 #[test]
 fn child_segment() {
     assert_eq!(eval(&store_value(), "$['book']"), vec![book_value()]);
-    assert_eq!(eval(&store_value(), "$['book'][0]"), vec![book0_value()]);
+    assert_eq!(eval(&store_value(), "$.book"), vec![book_value()]);
+    assert_eq!(eval(&store_value(), "$.book[0]"), vec![book0_value()]);
     assert_eq!(
-        eval(&store_value(), "$['book'][0]['author']"),
+        eval(&store_value(), "$.book[0].author"),
         vec![json!("Nigel Rees")]
     );
     assert_eq!(
-        eval(&store_value(), "$[*]"),
+        eval(&store_value(), "$.*"),
         vec![bicycle_value(), book_value()]
     );
     assert_eq!(
-        eval(&store_value(), "$['book'][:2]"),
+        eval(&store_value(), "$.book[:2]"),
         vec![book0_value(), book1_value()]
     );
     assert_eq!(
-        eval(&store_value(), "$['book'][?@['isbn']]"),
+        eval(&store_value(), "$.book[?@.isbn]"),
         vec![book2_value(), book3_value()]
     );
 }

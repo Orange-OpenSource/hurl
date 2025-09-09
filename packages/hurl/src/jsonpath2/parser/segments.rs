@@ -17,7 +17,10 @@
  */
 
 use super::{primitives::literal, primitives::try_literal, ParseResult};
-use crate::jsonpath2::{parser::selector, ChildSegment, DescendantSegment, Segment};
+use crate::jsonpath2::{
+    parser::{selector, ParseError, ParseErrorKind},
+    ChildSegment, DescendantSegment, NameSelector, Segment, Selector, WildcardSelector,
+};
 use hurl_core::reader::Reader;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
@@ -28,7 +31,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
     Ok(segments)
 }
 
-pub fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
+fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
+    if let Some(segment) = try_segment_shorthand(reader)? {
+        return Ok(Some(segment));
+    }
+
     let is_descendant_segment = if try_literal("..[", reader) {
         true
     } else if try_literal("[", reader) {
@@ -48,10 +55,56 @@ pub fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
     Ok(Some(segment))
 }
 
+// try to parse a shorthand notation
+fn try_segment_shorthand(reader: &mut Reader) -> ParseResult<Option<Segment>> {
+    if try_literal(".*", reader) {
+        Ok(Some(Segment::Child(ChildSegment::new(vec![
+            Selector::Wildcard(WildcardSelector),
+        ]))))
+    } else if try_literal("..*", reader) {
+        Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
+            Selector::Wildcard(WildcardSelector),
+        ]))))
+    } else if try_literal("..", reader) {
+        let name = member_name_shorthand(reader)?;
+        Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
+            Selector::Name(NameSelector::new(name)),
+        ]))))
+    } else if try_literal(".", reader) {
+        let name = member_name_shorthand(reader)?;
+        Ok(Some(Segment::Child(ChildSegment::new(vec![
+            Selector::Name(NameSelector::new(name)),
+        ]))))
+    } else {
+        Ok(None)
+    }
+}
+
+fn member_name_shorthand(reader: &mut Reader) -> ParseResult<String> {
+    let mut name = alpha(reader)?.to_string();
+    name.push_str(&reader.read_while(|c| c.is_alphanumeric()));
+    Ok(name)
+}
+
+fn alpha(reader: &mut Reader) -> ParseResult<char> {
+    let pos = reader.cursor().pos;
+    if let Some(c) = reader.read() {
+        if c.is_alphabetic() {
+            Ok(c)
+        } else {
+            let kind = ParseErrorKind::Expecting("a character".to_string());
+            Err(ParseError::new(pos, kind))
+        }
+    } else {
+        let kind = ParseErrorKind::Expecting("a character".to_string());
+        Err(ParseError::new(pos, kind))
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath2::{NameSelector, Selector};
+    use crate::jsonpath2::{NameSelector, Selector, WildcardSelector};
     use hurl_core::reader::{CharPos, Reader};
 
     use super::*;
@@ -88,5 +141,44 @@ mod tests {
             ))]))
         );
         assert_eq!(reader.cursor().index, CharPos(9));
+    }
+
+    #[test]
+    pub fn test_shorthand_notation() {
+        let mut reader = Reader::new(".book");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "book".to_string()
+            ))]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("..book");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Descendant(DescendantSegment::new(vec![Selector::Name(
+                NameSelector::new("book".to_string())
+            )]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(6));
+
+        let mut reader = Reader::new(".*");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
+                WildcardSelector
+            )]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(2));
+
+        let mut reader = Reader::new("..*");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Descendant(DescendantSegment::new(vec![Selector::Wildcard(
+                WildcardSelector
+            )]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
     }
 }

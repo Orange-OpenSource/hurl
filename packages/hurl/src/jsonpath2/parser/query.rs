@@ -82,5 +82,14 @@ mod tests {
             ]))])
         );
         assert_eq!(reader.cursor().index, CharPos(13));
+
+        let mut reader = Reader::new("$.book");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Query::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Name(NameSelector::new("book".to_string()))
+            ]))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(6));
     }
 }
