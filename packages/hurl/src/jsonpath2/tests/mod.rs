@@ -172,3 +172,22 @@ fn child_segment() {
         vec![book2_value(), book3_value()]
     );
 }
+
+#[test]
+fn descendant_segment() {
+    assert_eq!(
+        eval(&store_value(), "$..author"),
+        vec![
+            json!("Nigel Rees"),
+            json!("Evelyn Waugh"),
+            json!("Herman Melville"),
+            json!("J. R. R. Tolkien")
+        ]
+    );
+    assert_eq!(eval(&store_value(), "$..book[2]"), vec![book2_value()]);
+    assert_eq!(eval(&store_value(), "$..book[-1]"), vec![book3_value()]);
+    assert_eq!(
+        eval(&store_value(), "$..book[:2]"),
+        vec![book0_value(), book1_value()]
+    );
+}

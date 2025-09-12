@@ -97,6 +97,10 @@ impl DescendantSegment {
     pub fn new(selectors: Vec<Selector>) -> DescendantSegment {
         DescendantSegment { selectors }
     }
+
+    pub fn selectors(&self) -> &[Selector] {
+        &self.selectors
+    }
 }
 
 impl Display for DescendantSegment {
