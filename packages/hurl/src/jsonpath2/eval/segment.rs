@@ -1,0 +1,81 @@
+/*
+ * Hurl (https://hurl.dev)
+ * Copyright (C) 2025 Orange
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+use crate::jsonpath2::{eval::NodeList, ChildSegment, DescendantSegment, Segment};
+
+impl Segment {
+    /// Eval a `Segment` for a `serde_json::Value` input.
+    /// It returns a `NodeList`
+    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+        match self {
+            Segment::Child(child_segment) => child_segment.eval(node),
+            Segment::Descendant(descendant_segment) => descendant_segment.eval(node),
+        }
+    }
+}
+
+impl ChildSegment {
+    /// Eval a `ChildSegment` for a `serde_json::Value` input.
+    /// It returns a `NodeList`
+    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+        let mut results = vec![];
+        for selector in self.selectors() {
+            results.append(&mut selector.eval(node));
+        }
+        results
+    }
+}
+
+impl DescendantSegment {
+    /// Eval a `DescendantSegment` for a `serde_json::Value` input.
+    /// It returns a `NodeList`
+    pub fn eval(&self, _node: &serde_json::Value) -> NodeList {
+        todo!()
+    }
+}
+
+mod tests {
+    #[allow(unused_imports)]
+    use crate::jsonpath2::{ChildSegment, NameSelector, Segment, Selector};
+    #[allow(unused_imports)]
+    use serde_json::json;
+
+    #[test]
+    fn test_segment() {
+        let value = json!({"greeting": "Hello"});
+
+        assert_eq!(
+            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "greeting".to_string()
+            )),]))
+            .eval(&value),
+            vec![json!("Hello")]
+        );
+    }
+
+    #[test]
+    fn test_child_segment() {
+        let value = json!({"greeting": "Hello"});
+        assert_eq!(
+            ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "greeting".to_string()
+            )),])
+            .eval(&value),
+            vec![json!("Hello")]
+        );
+    }
+}

@@ -1,5 +1,3 @@
-use crate::jsonpath2::{Query, Segment};
-
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -17,6 +15,9 @@ use crate::jsonpath2::{Query, Segment};
  * limitations under the License.
  *
  */
+use crate::jsonpath2::Query;
+
+mod segment;
 mod selector;
 
 #[allow(dead_code)]
@@ -35,43 +36,16 @@ impl Query {
     }
 }
 
-impl Segment {
-    /// Eval a `Segment` for a `serde_json::Value` input.
-    /// It returns a `NodeList`
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
-        match self {
-            Segment::Child(child_segment) => {
-                let mut results = vec![];
-                for selector in child_segment.selectors() {
-                    results.append(&mut selector.eval(node));
-                }
-                results
-            }
-            Segment::Descendant(_descendant_segment) => todo!(),
-        }
-    }
-}
-
 mod tests {
     #[allow(unused_imports)]
-    use serde_json::json;
-
+    use crate::{json, jsonpath2::Query};
     #[allow(unused_imports)]
-    use crate::jsonpath2::{ChildSegment, IndexSelector, NameSelector, Query, Segment, Selector};
+    use serde_json::json;
 
     #[test]
     fn test_root_identifier() {
         let value = json!({"greeting": "Hello"});
         let root_identifier = Query::new(vec![]);
         assert_eq!(root_identifier.eval(&value), vec![value]);
-    }
-
-    #[test]
-    fn test_child_segment() {
-        let value = json!({"greeting": "Hello"});
-        let jsonpath1 = Query::new(vec![Segment::Child(ChildSegment::new(vec![
-            Selector::Name(NameSelector::new("greeting".to_string())),
-        ]))]);
-        assert_eq!(jsonpath1.eval(&value), vec![json!("Hello")]);
     }
 }
