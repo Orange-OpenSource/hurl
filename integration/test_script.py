@@ -254,6 +254,8 @@ def ignore_lines(text: str) -> str:
             continue
         if "libcurl.so.4: no version information available" in line:
             continue
+        if "* boolean setopt(81) got unsupported argument 2, treated as 1" in line:
+            continue
         lines.append(line)
 
     return "\n".join(lines)
