@@ -18,7 +18,7 @@
 
 use super::{primitives::literal, primitives::try_literal, ParseResult};
 use crate::jsonpath2::{
-    parser::{selector, ParseError, ParseErrorKind},
+    parser::{selectors, ParseError, ParseErrorKind},
     ChildSegment, DescendantSegment, NameSelector, Segment, Selector, WildcardSelector,
 };
 use hurl_core::reader::Reader;
@@ -43,9 +43,7 @@ fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
     } else {
         return Ok(None);
     };
-    let first_selector = selector::parse(reader)?;
-    let selectors = vec![first_selector];
-    // TODO: select more than one selector
+    let selectors = selectors::parse(reader)?;
     literal("]", reader)?;
     let segment = if is_descendant_segment {
         Segment::Descendant(DescendantSegment::new(selectors))

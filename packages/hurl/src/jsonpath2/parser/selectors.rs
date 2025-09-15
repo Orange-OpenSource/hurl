@@ -27,7 +27,19 @@ use hurl_core::reader::Reader;
 
 use super::ParseResult;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<Selector> {
+pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Selector>> {
+    let mut selectors = vec![];
+    loop {
+        let selector = selector(reader)?;
+        selectors.push(selector);
+        if !try_literal(",", reader) {
+            break;
+        }
+    }
+    Ok(selectors)
+}
+
+pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
     let initial_state = reader.cursor();
     if let Some(name_selector) = try_name_selector(reader)? {
         return Ok(Selector::Name(name_selector));
@@ -118,9 +130,22 @@ mod tests {
 
     #[test]
     pub fn test_parse() {
-        let mut reader = Reader::new("'store'");
+        let mut reader = Reader::new("'store',0");
         assert_eq!(
             parse(&mut reader).unwrap(),
+            vec![
+                Selector::Name(NameSelector::new("store".to_string())),
+                Selector::Index(IndexSelector::new(0))
+            ]
+        );
+        assert_eq!(reader.cursor().index, CharPos(9));
+    }
+
+    #[test]
+    pub fn test_selector() {
+        let mut reader = Reader::new("'store'");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
             Selector::Name(NameSelector::new("store".to_string()))
         );
         assert_eq!(reader.cursor().index, CharPos(7));

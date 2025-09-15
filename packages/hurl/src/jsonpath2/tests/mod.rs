@@ -171,6 +171,10 @@ fn child_segment() {
         eval(&store_value(), "$.book[?@.isbn]"),
         vec![book2_value(), book3_value()]
     );
+    assert_eq!(
+        eval(&store_value(), "$.book[0,1]"),
+        vec![book0_value(), book1_value()]
+    );
 }
 
 #[test]

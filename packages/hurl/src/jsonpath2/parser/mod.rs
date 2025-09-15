@@ -20,7 +20,7 @@ mod error;
 mod primitives;
 mod query;
 mod segments;
-mod selector;
+mod selectors;
 
 pub use error::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
