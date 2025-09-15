@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-
-use encoding::EncodingRef;
+use encoding_rs::Encoding;
 
 use crate::http::header::CONTENT_ENCODING;
 use crate::http::response_decoding::ContentEncoding;
@@ -31,16 +30,16 @@ impl HeaderVec {
     /// Returns character encoding from this list of headers.
     ///
     /// If no character encoding can be found, returns UTF-8.
-    pub fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
+    pub fn character_encoding(&self) -> Result<&'static Encoding, HttpError> {
         match self.content_type() {
             Some(content_type) => match mimetype::charset(content_type) {
-                Some(charset) => match encoding::label::encoding_from_whatwg_label(&charset) {
+                Some(charset) => match Encoding::for_label(charset.as_bytes()) {
                     None => Err(HttpError::InvalidCharset { charset }),
                     Some(enc) => Ok(enc),
                 },
-                None => Ok(encoding::all::UTF_8),
+                None => Ok(encoding_rs::UTF_8),
             },
-            None => Ok(encoding::all::UTF_8),
+            None => Ok(encoding_rs::UTF_8),
         }
     }
 
@@ -107,15 +106,18 @@ mod tests {
     fn character_encoding() {
         let mut headers = HeaderVec::new();
         headers.push(Header::new("Content-Type", "text/html; charset=utf-8"));
-        assert_eq!(headers.character_encoding().unwrap().name(), "utf-8");
+        assert_eq!(headers.character_encoding().unwrap(), encoding_rs::UTF_8);
 
         let mut headers = HeaderVec::new();
         headers.push(Header::new("content-type", "text/plain; charset=us-ascii"));
-        assert_eq!(headers.character_encoding().unwrap().name(), "windows-1252");
+        assert_eq!(
+            headers.character_encoding().unwrap(),
+            encoding_rs::WINDOWS_1252
+        );
 
         let mut headers = HeaderVec::new();
         headers.push(Header::new("content-type", "text/plain"));
-        assert_eq!(headers.character_encoding().unwrap().name(), "utf-8");
+        assert_eq!(headers.character_encoding().unwrap(), encoding_rs::UTF_8);
     }
 
     #[test]

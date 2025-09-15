@@ -23,8 +23,6 @@
 /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 use std::io::prelude::*;
 
-use encoding::DecoderTrap;
-
 use crate::http::{mimetype, HttpError, Response};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -74,9 +72,9 @@ impl Response {
             &self.uncompress_body()?
         };
         let character_encoding = self.headers.character_encoding()?;
-        match character_encoding.decode(body, DecoderTrap::Strict) {
-            Ok(s) => Ok(s),
-            Err(_) => Err(HttpError::InvalidDecoding {
+        match character_encoding.decode_without_bom_handling_and_without_replacement(body) {
+            Some(s) => Ok(s.to_string()),
+            None => Err(HttpError::InvalidDecoding {
                 charset: character_encoding.name().to_string(),
             }),
         }
@@ -364,28 +362,22 @@ pub mod tests {
     #[test]
     pub fn test_character_encoding() {
         assert_eq!(
-            hello_response()
-                .headers
-                .character_encoding()
-                .unwrap()
-                .name(),
-            "utf-8"
+            hello_response().headers.character_encoding().unwrap(),
+            encoding_rs::UTF_8
         );
         assert_eq!(
             utf8_encoding_response()
                 .headers
                 .character_encoding()
-                .unwrap()
-                .name(),
-            "utf-8"
+                .unwrap(),
+            encoding_rs::UTF_8
         );
         assert_eq!(
             latin1_encoding_response()
                 .headers
                 .character_encoding()
-                .unwrap()
-                .name(),
-            "windows-1252"
+                .unwrap(),
+            encoding_rs::WINDOWS_1252
         );
     }
 
@@ -431,7 +423,7 @@ pub mod tests {
             .err()
             .unwrap(),
             HttpError::InvalidDecoding {
-                charset: "utf-8".to_string()
+                charset: "UTF-8".to_string()
             }
         );
 

@@ -4,7 +4,7 @@ error: Invalid decoding
    | GET http://localhost:8000/body-binary
    | ...
  3 | {
-   | ^ could not decode response body with charset 'utf-8'
+   | ^ could not decode response body with charset 'UTF-8'
    |
 
 error: Invalid decoding
@@ -13,7 +13,7 @@ error: Invalid decoding
    | GET http://localhost:8000/body-binary
    | ...
 10 | <?xml version="1.0" encoding="UTF-8"?>
-   | ^ could not decode response body with charset 'utf-8'
+   | ^ could not decode response body with charset 'UTF-8'
    |
 
 error: Invalid decoding
@@ -22,6 +22,6 @@ error: Invalid decoding
    | GET http://localhost:8000/body-binary
    | ...
 21 | ```
-   | ^ could not decode response body with charset 'utf-8'
+   | ^ could not decode response body with charset 'UTF-8'
    |
 

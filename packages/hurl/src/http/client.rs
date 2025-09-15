@@ -25,8 +25,6 @@ use base64::Engine;
 use chrono::Utc;
 use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Version};
-use encoding::all::ISO_8859_1;
-use encoding::{DecoderTrap, Encoding};
 use hurl_core::typing::Count;
 
 use crate::http::certificate::Certificate;
@@ -930,7 +928,25 @@ fn split_lines(data: &[u8]) -> Vec<String> {
 fn decode_header(data: &[u8]) -> Option<String> {
     match str::from_utf8(data) {
         Ok(s) => Some(s.to_string()),
-        Err(_) => ISO_8859_1.decode(data, DecoderTrap::Strict).ok(),
+        Err(_) => {
+            // See the [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/#note-latin1-ascii).
+            //
+            // > The windows-1252 encoding has various labels, such as "latin1", "iso-8859-1", and "ascii",
+            // > which have historically been confusing for developers. On the web, and in any software
+            // > that seeks to be web-compatible by implementing this standard, these are synonyms: "latin1"
+            // > and "ascii" are just labels for windows-1252, and any software following this standard will,
+            // > for example, decode 0x80 as U+20AC (€) when asked for the "Latin1" or "ASCII" decoding of that byte.
+            // So: in the web platform world, ISO-8859-1 is just an alias for Windows-1252.
+            //
+            // In the [encoding_rs crate doc](https://docs.rs/encoding_rs/latest/encoding_rs/#iso-8859-1)
+            //
+            // > ISO-8859-1 does not exist as a distinct encoding from windows-1252 in the Encoding Standard.
+            // > Therefore, an encoding that maps the unsigned byte value to the same Unicode scalar value is
+            // > not available via Encoding in this crate.
+            encoding_rs::WINDOWS_1252
+                .decode_without_bom_handling_and_without_replacement(data)
+                .map(|s| s.to_string())
+        }
     }
 }
 

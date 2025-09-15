@@ -1122,7 +1122,7 @@ pub mod tests {
         assert_eq!(
             error.kind,
             RunnerErrorKind::Http(HttpError::InvalidDecoding {
-                charset: "utf-8".to_string()
+                charset: "UTF-8".to_string()
             })
         );
     }
@@ -1143,7 +1143,7 @@ pub mod tests {
         assert_eq!(
             error.kind,
             RunnerErrorKind::Http(HttpError::InvalidDecoding {
-                charset: "utf-8".to_string()
+                charset: "UTF-8".to_string()
             })
         );
     }

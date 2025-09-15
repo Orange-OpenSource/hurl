@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use encoding::DecoderTrap;
-
 use crate::http::{mimetype, HeaderVec};
 use crate::runner::hex;
 use crate::util::logger::Logger;
@@ -44,9 +42,9 @@ pub fn log_body(body: &[u8], headers: &HeaderVec, debug: bool, logger: &mut Logg
         }
     };
 
-    match encoding.decode(body, DecoderTrap::Strict) {
-        Ok(text) => log_text(&text, debug, logger),
-        Err(_) => log_bytes(body, 64, debug, logger),
+    match encoding.decode_without_bom_handling_and_without_replacement(body) {
+        Some(text) => log_text(&text, debug, logger),
+        None => log_bytes(body, 64, debug, logger),
     }
 }
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use encoding::DecoderTrap;
+use encoding_rs::Encoding;
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
@@ -31,21 +31,19 @@ pub fn eval_decode(
 ) -> Result<Option<Value>, RunnerError> {
     let encoding = eval_template(encoding, variables)?;
     match value {
-        Value::Bytes(value) => {
-            match encoding::label::encoding_from_whatwg_label(encoding.as_str()) {
+        Value::Bytes(value) => match Encoding::for_label(encoding.as_bytes()) {
+            None => {
+                let kind = RunnerErrorKind::FilterInvalidEncoding(encoding);
+                Err(RunnerError::new(source_info, kind, assert))
+            }
+            Some(enc) => match enc.decode_without_bom_handling_and_without_replacement(value) {
+                Some(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 None => {
-                    let kind = RunnerErrorKind::FilterInvalidEncoding(encoding);
+                    let kind = RunnerErrorKind::FilterDecode(encoding);
                     Err(RunnerError::new(source_info, kind, assert))
                 }
-                Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
-                    Ok(decoded) => Ok(Some(Value::String(decoded))),
-                    Err(_) => {
-                        let kind = RunnerErrorKind::FilterDecode(encoding);
-                        Err(RunnerError::new(source_info, kind, assert))
-                    }
-                },
-            }
-        }
+            },
+        },
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
             Err(RunnerError::new(source_info, kind, assert))

@@ -4,6 +4,6 @@ error: Invalid decoding
    | GET http://localhost:8000/error-query-invalid-utf8
    | ...
  4 | jsonpath "$.errors" count == 2
-   | ^^^^^^^^^^^^^^^^^^^ could not decode response body with charset 'utf-8'
+   | ^^^^^^^^^^^^^^^^^^^ could not decode response body with charset 'UTF-8'
    |
 
