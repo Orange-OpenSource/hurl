@@ -520,6 +520,33 @@ impl<'input> Formatter<'input> {
     }
 
     /// Read and advances to the next UTF-8 char (may advance 1 to 4 bytes).
+    /// The code check for UTF-8 validity, reference is from <https://en.wikipedia.org/wiki/UTF-8>
+    /// Bytes bounds values and logic are extracted from this [table](https://en.wikipedia.org/wiki/UTF-8#Byte_map):
+    ///
+    /// |   | 0   | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | A   | B   | C   | D   | E   | F   |
+    /// |---|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+    /// | 0 | NUL | SOH | STX | ETX | EOT | ENQ | ACK | BEL | BS  | HT  | LF  | VT  | FF  | CR  | SO  | SI  |
+    /// | 1 | DLE | DC1 | DC2 | DC3 | DC4 | NAK | SYN | ETB | CAN | EM  | SUB | ESC | FS  | GS  | RS  | US  |
+    /// | 2 | SP  | !   | "   | #   | $   | %   | &   | '   | (   | )   | *   | +   | ,   | -   | .   | /   |
+    /// | 3 | 0   | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | :   | ;   | <   | =   | >   | ?   |
+    /// | 4 | @   | A   | B   | C   | D   | E   | F   | G   | H   | I   | J   | K   | L   | M   | N   | O   |
+    /// | 5 | P   | Q   | R   | S   | T   | U   | V   | W   | X   | Y   | Z   | [   | \   | ]   | ^   | _   |
+    /// | 6 | `   | a   | b   | c   | d   | e   | f   | g   | h   | i   | j   | k   | l   | m   | n   | o   |
+    /// | 7 | p   | q   | r   | s   | t   | u   | v   | w   | x   | y   | z   | {   | \|  | }   | ~   | DEL |
+    /// | 8 | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con |
+    /// | 9 | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con |
+    /// | A | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con |
+    /// | B | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con | con |
+    /// | C |  ▒  |  ▒  | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   |
+    /// | D | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   | 2   |
+    /// | E | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   | 3   |
+    /// | F | 4   | 4   | 4   | 4   | 4   |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |  ▒  |
+    ///
+    /// - con => Continuation byte
+    /// - 2   => First byte of 2-byte sequence
+    /// - 3   => First byte of 3-byte sequence
+    /// - 4   => First byte of 4-byte sequence
+    /// - ▒   => not used
     fn next_utf8_char(&mut self) -> FormatResult<()> {
         #[inline(always)]
         fn cont(b: u8) -> bool {
@@ -528,11 +555,13 @@ impl<'input> Formatter<'input> {
 
         let start_pos = self.pos;
 
+        // Case 1: Single-byte ASCII character (0xxxxxxx).
         let b1 = self.next_byte().ok_or(FormatError::Eof)?;
         if b1 < 0x80 {
             return Ok(());
         }
 
+        // Case 2: Two-byte sequence (110xxxxx 10xxxxxx).
         let b2 = self.next_byte().ok_or(FormatError::Eof)?;
         if b1 < 0xE0 {
             return if (0xC2..=0xDF).contains(&b1) && cont(b2) {
@@ -542,11 +571,18 @@ impl<'input> Formatter<'input> {
             };
         }
 
+        // Case 3: Three-byte sequence (1110xxxx 10xxxxxx 10xxxxxx).
         let b3 = self.next_byte().ok_or(FormatError::Eof)?;
         if b1 < 0xF0 {
             return if match b1 {
+                // See <https://en.wikipedia.org/wiki/UTF-8#Error_handling>
+                // Overlong encodings:
+                // > An overlong encoding (0xE0 followed by less than 0xA0, ...)
                 0xE0 => (0xA0..=0xBF).contains(&b2) && cont(b3),
-                0xED => (0x80..=0x9F).contains(&b2) && cont(b3), // no surrogates
+                // Can't be UTF-16 surrogates:
+                // > A 3-byte sequence that decodes to a UTF-16 surrogate U+0xD800–0xDFFF (0xED followed by 0xA0 or greater)
+                0xED => (0x80..=0x9F).contains(&b2) && cont(b3),
+                // General case: 2 continuation bytes
                 0xE1..=0xEC | 0xEE..=0xEF => cont(b2) && cont(b3),
                 _ => false,
             } {
@@ -556,10 +592,17 @@ impl<'input> Formatter<'input> {
             };
         }
 
+        // Case 4: Four-byte sequence (11110xxx 10xxxxxx 10xxxxxx 10xxxxxx).
         let b4 = self.next_byte().ok_or(FormatError::Eof)?;
         if match b1 {
+            // See <https://en.wikipedia.org/wiki/UTF-8#Error_handling>
+            // Overlong encodings:
+            // > An overlong encoding (..., or 0xF0 followed by less than 0x90)
             0xF0 => (0x90..=0xBF).contains(&b2) && cont(b3) && cont(b4),
+            // Limit to code point 0x10FFFF
+            // > A 4-byte sequence that decodes to a value greater than U+10FFFF (0xF4 followed by 0x90 or greater)
             0xF4 => (0x80..=0x8F).contains(&b2) && cont(b3) && cont(b4),
+            // General case: 3 continuation bytes
             0xF1..=0xF3 => cont(b2) && cont(b3) && cont(b4),
             _ => false,
         } {
