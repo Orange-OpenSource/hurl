@@ -19,6 +19,8 @@
 pub mod error;
 pub mod job;
 mod message;
+pub mod metrics;
 mod progress;
+pub mod rate_limiter;
 pub mod runner;
 mod worker;

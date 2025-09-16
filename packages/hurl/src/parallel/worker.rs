@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, RecvTimeoutError};
+use std::time::Duration;
 use std::sync::{Arc, Mutex};
 use std::{fmt, thread};
 
@@ -27,6 +28,7 @@ use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::parser;
 
 use super::job::{Job, JobResult};
+use super::error::{WorkerError, WorkerResult};
 use super::message::{CompletedMsg, InputReadErrorMsg, ParsingErrorMsg, RunningMsg, WorkerMessage};
 
 /// A worker runs job in its own thread.
@@ -74,8 +76,11 @@ impl Worker {
         let tx = tx.clone();
 
         let thread = thread::spawn(move || loop {
-            let Ok(job) = rx.lock().unwrap().recv() else {
-                return;
+            // Use a timeout to periodically check if we should continue running
+            let job = match rx.lock().unwrap().recv_timeout(Duration::from_millis(100)) {
+                Ok(job) => job,
+                Err(RecvTimeoutError::Timeout) => continue,
+                Err(RecvTimeoutError::Disconnected) => return,
             };
             // In parallel execution, standard output and standard error messages are buffered
             // (in sequential mode, we'll use immediate standard output and error).
@@ -95,7 +100,9 @@ impl Worker {
                 Ok(c) => c,
                 Err(e) => {
                     let msg = InputReadErrorMsg::new(worker_id, &job, e);
-                    _ = tx.send(WorkerMessage::InputReadError(msg));
+                    if let Err(err) = tx.send(WorkerMessage::InputReadError(msg)) {
+                        eprintln!("Worker {}: Failed to send input read error: {}", worker_id, err);
+                    }
                     return;
                 }
             };
@@ -114,7 +121,9 @@ impl Worker {
                     );
                     logger.error_rich(&message);
                     let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
-                    _ = tx.send(WorkerMessage::ParsingError(msg));
+                    if let Err(err) = tx.send(WorkerMessage::ParsingError(msg)) {
+                        eprintln!("Worker {}: Failed to send parsing error: {}", worker_id, err);
+                    }
                     return;
                 }
             };
@@ -139,7 +148,9 @@ impl Worker {
             }
             let job_result = JobResult::new(job, content, result);
             let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
-            _ = tx.send(WorkerMessage::Completed(msg));
+            if let Err(err) = tx.send(WorkerMessage::Completed(msg)) {
+                eprintln!("Worker {}: Failed to send completion message: {}", worker_id, err);
+            }
         });
 
         Worker {
@@ -173,6 +184,8 @@ impl WorkerProgress {
 impl EventListener for WorkerProgress {
     fn on_running(&self, entry_index: usize, entry_count: usize) {
         let msg = RunningMsg::new(self.worker_id, &self.job, entry_index, entry_count);
-        _ = self.tx.send(WorkerMessage::Running(msg));
+        if let Err(err) = self.tx.send(WorkerMessage::Running(msg)) {
+            eprintln!("Worker {}: Failed to send running message: {}", self.worker_id, err);
+        }
     }
 }

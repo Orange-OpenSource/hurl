@@ -23,9 +23,12 @@ use crate::util::term::{Stderr, Stdout, WriteMode};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::typing::Count;
 
-use super::error::JobError;
-use super::job::{Job, JobQueue, JobResult};
+use std::time::Instant;
+use super::error::{JobError, JobResult};
+use super::job::{Job, JobQueue};
 use super::message::WorkerMessage;
+use super::metrics::{Metrics, Timer};
+use super::rate_limiter::RateLimiter;
 use super::progress::{Mode, ParProgress};
 use super::worker::{Worker, WorkerId};
 
@@ -55,6 +58,10 @@ pub struct ParallelRunner {
     output_type: OutputType,
     /// Repeat mode for the runner: infinite or finite.
     repeat: Count,
+    /// Rate limiter to control request frequency.
+    rate_limiter: Option<RateLimiter>,
+    /// Metrics collector for performance monitoring.
+    metrics: Metrics,
 }
 
 /// Represents a worker's state.
@@ -84,6 +91,30 @@ pub enum OutputType {
 const MAX_RUNNING_DISPLAYED: usize = 8;
 
 impl ParallelRunner {
+    /// Shuts down all workers and cleans up resources.
+    ///
+    /// This method is called automatically when the runner is dropped, but can also be called
+    /// manually if needed.
+    fn shutdown(&mut self) -> JobResult<()> {
+        // Drop the sender to signal workers to stop
+        drop(self.tx.take());
+        
+        // Wait for all worker threads to complete
+        for worker in &mut self.workers {
+            if let Some(thread) = worker.0.take_thread() {
+                thread.join().map_err(|e| {
+                    let error_msg = if let Some(s) = e.downcast_ref::<String>() {
+                        s.clone()
+                    } else {
+                        "Unknown panic".to_string()
+                    };
+                    JobError::Thread(format!("Worker thread panicked: {}", error_msg))
+                })?;
+            }
+        }
+        
+        Ok(())
+    }
     /// Creates a new parallel runner, with `worker_count` worker thread.
     ///
     /// The runner runs a list of [`Job`] in parallel. It creates two channels to communicate
@@ -141,6 +172,8 @@ impl ParallelRunner {
             progress,
             output_type,
             repeat,
+            rate_limiter: None,
+            metrics: Metrics::new(),
         }
     }
 
@@ -149,7 +182,32 @@ impl ParallelRunner {
     /// Results are returned ordered by the sequence number, and not their execution order. So, the
     /// order of the `jobs` is the same as the order of the `jobs` results, independently of the
     /// worker's count.
-    pub fn run(&mut self, jobs: &[Job]) -> Result<Vec<JobResult>, JobError> {
+    /// Sets a rate limiter for this runner.
+    ///
+    /// # Arguments
+    ///
+    /// * `capacity` - Maximum number of tokens the bucket can hold
+    /// * `rate` - Rate at which tokens are added to the bucket (tokens per second)
+    /// Returns a reference to the metrics collector.
+    pub fn metrics(&self) -> &Metrics {
+        &self.metrics
+    }
+
+    /// Sets a rate limiter for this runner.
+    pub fn with_rate_limit(&mut self, capacity: usize, rate: f64) -> &mut Self {
+        self.rate_limiter = Some(RateLimiter::new(capacity, rate));
+        self
+    }
+
+    /// Runs a list of [`Job`] in parallel and returns the results.
+    ///
+    /// Results are returned ordered by the sequence number, and not their execution order. So, the
+    /// order of the `jobs` is the same as the order of the `jobs` results, independently of the
+    /// worker's count.
+    pub fn run(&mut self, jobs: &[Job]) -> JobResult<Vec<super::job::JobResult>> {
+        // Start the overall execution timer
+        let _execution_timer = Timer::new(&self.metrics, "total_execution");
+        
         // The parallel runner runs on the main thread. It's responsible for displaying standard
         // output and standard error. Workers are buffering their output and error in memory, and
         // delegate the display to the runners.
@@ -159,6 +217,12 @@ impl ParallelRunner {
         // Create the jobs queue:
         let mut queue = JobQueue::new(jobs, self.repeat);
         let jobs_count = queue.jobs_count();
+        
+        // Record the number of jobs and workers in metrics
+        if let Some(count) = jobs_count {
+            self.metrics.set_gauge("total_jobs", count as f64);
+        }
+        self.metrics.set_gauge("worker_count", self.workers.len() as f64);
 
         // Initiate the runner, fill our workers:
         self.workers.iter().for_each(|_| {
@@ -244,6 +308,14 @@ impl ParallelRunner {
 
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
+                    
+                    // Record job completion metrics
+                    self.metrics.increment_counter("jobs_completed");
+                    if msg.result.hurl_result.success {
+                        self.metrics.increment_counter("jobs_successful");
+                    } else {
+                        self.metrics.increment_counter("jobs_failed");
+                    }
 
                     results.push(msg.result);
 
@@ -263,6 +335,14 @@ impl ParallelRunner {
                     let job = queue.next();
                     match job {
                         Some(job) => {
+                            // Apply rate limiting if configured
+                            if let Some(rate_limiter) = &self.rate_limiter {
+                                let _timer = Timer::new(&self.metrics, "rate_limiting");
+                                rate_limiter.acquire(None)?;
+                            }
+                            
+                            // Record job dispatch
+                            self.metrics.increment_counter("jobs_dispatched");
                             _ = self.tx.as_ref().unwrap().send(job);
                         }
                         None => {
@@ -280,12 +360,7 @@ impl ParallelRunner {
 
         // We gracefully shut down workers, by dropping the sender and wait for each thread workers
         // to join.
-        drop(self.tx.take());
-        for worker in &mut self.workers {
-            if let Some(thread) = worker.0.take_thread() {
-                thread.join().unwrap();
-            }
-        }
+        self.shutdown()?
 
         // All jobs have been executed, we sort results by sequence number to get the same order
         // as the input jobs list.
@@ -349,5 +424,14 @@ impl ParallelRunner {
             OutputType::NoOutput => {}
         }
         Ok(())
+    }
+}
+
+impl Drop for ParallelRunner {
+    fn drop(&mut self) {
+        // Ensure all workers are properly shut down when the runner is dropped
+        if let Err(e) = self.shutdown() {
+            eprintln!("Error shutting down parallel runner: {}", e);
+        }
     }
 }
