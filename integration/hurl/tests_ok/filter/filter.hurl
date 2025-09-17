@@ -51,6 +51,8 @@ jsonpath "$.ten" toInt == 10
 jsonpath "$.url" urlQueryParam "x" == "шеллы"
 jsonpath "$.url" urlQueryParam "y" not exists
 jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
+jsonpath "$.utf8_bytes" base64Decode utf8Decode == "Hello World"
+jsonpath "$.message" utf8Encode toHex == "48656c6c6f20426f6221"
 {
   "file": "0YjQtdC70LvRiw==",
   "text_encoded": "PDw_Pz8-Pg",
@@ -69,7 +71,8 @@ jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
   "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10",
   "json": "{\"message\": \"Hello\"}",
   "pi": "3.141592653589793",
-  "ten": 10
+  "ten": 10,
+  "utf8_bytes": "SGVsbG8gV29ybGQ="
 }
 
 
@@ -102,5 +105,6 @@ jsonpath "$.list" nth {{index_last}} == 3
   "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10",
   "json": "{\"message\": \"Hello\"}",
   "pi": "3.141592653589793",
-  "ten": 10
+  "ten": 10,
+  "utf8_bytes": "SGVsbG8gV29ybGQ="
 }

@@ -21,5 +21,6 @@ def filter():
   "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10",
   "json": "{\\"message\\": \\"Hello\\"}",
   "pi": "3.141592653589793",
-  "ten": 10
+  "ten": 10,
+  "utf8_bytes": "SGVsbG8gV29ybGQ="
 }"""
