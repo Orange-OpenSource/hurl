@@ -324,7 +324,9 @@ impl Lint for FilterValue {
             | FilterValue::ToInt
             | FilterValue::ToString
             | FilterValue::UrlDecode
-            | FilterValue::UrlEncode => {}
+            | FilterValue::UrlEncode
+            | FilterValue::Utf8Decode
+            | FilterValue::Utf8Encode => {}
         }
         s
     }

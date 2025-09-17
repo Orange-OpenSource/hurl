@@ -45,6 +45,8 @@ use crate::runner::filter::to_string::eval_to_string;
 use crate::runner::filter::url_decode::eval_url_decode;
 use crate::runner::filter::url_encode::eval_url_encode;
 use crate::runner::filter::url_query_param::eval_url_query_param;
+use crate::runner::filter::utf8_decode::eval_utf8_decode;
+use crate::runner::filter::utf8_encode::eval_utf8_encode;
 use crate::runner::filter::xpath::eval_xpath;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -78,39 +80,40 @@ pub fn eval_filter(
     variables: &VariableSet,
     in_assert: bool,
 ) -> Result<Option<Value>, RunnerError> {
+    let source_info = filter.source_info;
     match &filter.value {
-        FilterValue::Base64Decode => eval_base64_decode(value, filter.source_info, in_assert),
-        FilterValue::Base64Encode => eval_base64_encode(value, filter.source_info, in_assert),
+        FilterValue::Base64Decode => eval_base64_decode(value, source_info, in_assert),
+        FilterValue::Base64Encode => eval_base64_encode(value, source_info, in_assert),
         FilterValue::Base64UrlSafeDecode => {
-            eval_base64_url_safe_decode(value, filter.source_info, in_assert)
+            eval_base64_url_safe_decode(value, source_info, in_assert)
         }
         FilterValue::Base64UrlSafeEncode => {
-            eval_base64_url_safe_encode(value, filter.source_info, in_assert)
+            eval_base64_url_safe_encode(value, source_info, in_assert)
         }
-        FilterValue::Count => eval_count(value, filter.source_info, in_assert),
-        FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
-        FilterValue::DaysBeforeNow => eval_days_before_now(value, filter.source_info, in_assert),
+        FilterValue::Count => eval_count(value, source_info, in_assert),
+        FilterValue::DaysAfterNow => eval_days_after_now(value, source_info, in_assert),
+        FilterValue::DaysBeforeNow => eval_days_before_now(value, source_info, in_assert),
         FilterValue::Decode { encoding, .. } => {
-            eval_decode(value, encoding, variables, filter.source_info, in_assert)
+            eval_decode(value, encoding, variables, source_info, in_assert)
         }
-        FilterValue::First => eval_first(value, filter.source_info, in_assert),
+        FilterValue::First => eval_first(value, source_info, in_assert),
         FilterValue::Format { fmt, .. } => {
-            eval_date_format(value, fmt, variables, filter.source_info, in_assert)
+            eval_date_format(value, fmt, variables, source_info, in_assert)
         }
         FilterValue::DateFormat { fmt, .. } => {
-            eval_date_format(value, fmt, variables, filter.source_info, in_assert)
+            eval_date_format(value, fmt, variables, source_info, in_assert)
         }
-        FilterValue::HtmlEscape => eval_html_escape(value, filter.source_info, in_assert),
-        FilterValue::HtmlUnescape => eval_html_unescape(value, filter.source_info, in_assert),
+        FilterValue::HtmlEscape => eval_html_escape(value, source_info, in_assert),
+        FilterValue::HtmlUnescape => eval_html_unescape(value, source_info, in_assert),
         FilterValue::JsonPath { expr, .. } => {
-            eval_jsonpath(value, expr, variables, filter.source_info, in_assert)
+            eval_jsonpath(value, expr, variables, source_info, in_assert)
         }
-        FilterValue::Last => eval_last(value, filter.source_info, in_assert),
-        FilterValue::Location => eval_location(value, filter.source_info, in_assert),
+        FilterValue::Last => eval_last(value, source_info, in_assert),
+        FilterValue::Location => eval_location(value, source_info, in_assert),
         FilterValue::Regex {
             value: regex_value, ..
-        } => eval_regex(value, regex_value, variables, filter.source_info, in_assert),
-        FilterValue::Nth { n, .. } => eval_nth(value, n, variables, filter.source_info, in_assert),
+        } => eval_regex(value, regex_value, variables, source_info, in_assert),
+        FilterValue::Nth { n, .. } => eval_nth(value, n, variables, source_info, in_assert),
         FilterValue::Replace {
             old_value,
             new_value,
@@ -118,38 +121,31 @@ pub fn eval_filter(
         } => eval_replace(
             value,
             variables,
-            filter.source_info,
+            source_info,
             in_assert,
             old_value,
             new_value,
         ),
         FilterValue::ReplaceRegex {
             pattern, new_value, ..
-        } => eval_replace_regex(
-            value,
-            variables,
-            filter.source_info,
-            in_assert,
-            pattern,
-            new_value,
-        ),
-        FilterValue::Split { sep, .. } => {
-            eval_split(value, variables, filter.source_info, in_assert, sep)
-        }
+        } => eval_replace_regex(value, variables, source_info, in_assert, pattern, new_value),
+        FilterValue::Split { sep, .. } => eval_split(value, variables, source_info, in_assert, sep),
         FilterValue::ToDate { fmt, .. } => {
-            eval_to_date(value, fmt, variables, filter.source_info, in_assert)
+            eval_to_date(value, fmt, variables, source_info, in_assert)
         }
-        FilterValue::ToFloat => eval_to_float(value, filter.source_info, in_assert),
-        FilterValue::ToHex => eval_to_hex(value, filter.source_info, in_assert),
-        FilterValue::ToInt => eval_to_int(value, filter.source_info, in_assert),
-        FilterValue::ToString => eval_to_string(value, filter.source_info, in_assert),
-        FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
-        FilterValue::UrlEncode => eval_url_encode(value, filter.source_info, in_assert),
+        FilterValue::ToFloat => eval_to_float(value, source_info, in_assert),
+        FilterValue::ToHex => eval_to_hex(value, source_info, in_assert),
+        FilterValue::ToInt => eval_to_int(value, source_info, in_assert),
+        FilterValue::ToString => eval_to_string(value, source_info, in_assert),
+        FilterValue::UrlDecode => eval_url_decode(value, source_info, in_assert),
+        FilterValue::UrlEncode => eval_url_encode(value, source_info, in_assert),
         FilterValue::UrlQueryParam { param, .. } => {
-            eval_url_query_param(value, param, variables, filter.source_info, in_assert)
+            eval_url_query_param(value, param, variables, source_info, in_assert)
         }
+        FilterValue::Utf8Decode => eval_utf8_decode(value, source_info, in_assert),
+        FilterValue::Utf8Encode => eval_utf8_encode(value, source_info, in_assert),
         FilterValue::XPath { expr, .. } => {
-            eval_xpath(value, expr, variables, filter.source_info, in_assert)
+            eval_xpath(value, expr, variables, source_info, in_assert)
         }
     }
 }

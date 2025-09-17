@@ -485,16 +485,18 @@ pub fn walk_filter<V: Visitor>(visitor: &mut V, filter: &Filter) {
         FilterValue::ToFloat => {}
         FilterValue::ToHex => {}
         FilterValue::ToInt => {}
+        FilterValue::ToString => {}
         FilterValue::UrlDecode => {}
         FilterValue::UrlEncode => {}
-        FilterValue::XPath { space0, expr } => {
-            visitor.visit_whitespace(space0);
-            visitor.visit_template(expr);
-        }
-        FilterValue::ToString => {}
         FilterValue::UrlQueryParam { space0, param } => {
             visitor.visit_whitespace(space0);
             visitor.visit_template(param);
+        }
+        FilterValue::Utf8Decode => {}
+        FilterValue::Utf8Encode => {}
+        FilterValue::XPath { space0, expr } => {
+            visitor.visit_whitespace(space0);
+            visitor.visit_template(expr);
         }
     }
 }

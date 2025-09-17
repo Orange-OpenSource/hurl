@@ -365,6 +365,8 @@ pub enum FilterValue {
         space0: Whitespace,
         param: Template,
     },
+    Utf8Decode,
+    Utf8Encode,
     XPath {
         space0: Whitespace,
         expr: Template,
@@ -404,6 +406,8 @@ impl FilterValue {
             FilterValue::UrlDecode => "urlDecode",
             FilterValue::UrlEncode => "urlEncode",
             FilterValue::UrlQueryParam { .. } => "urlQueryParam",
+            FilterValue::Utf8Decode => "utf8Decode",
+            FilterValue::Utf8Encode => "utf8Encode",
             FilterValue::XPath { .. } => "xpath",
         }
     }

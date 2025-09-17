@@ -82,6 +82,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             url_decode_filter,
             url_encode_filter,
             url_query_param_filter,
+            utf8_decode_filter,
+            utf8_encode_filter,
             xpath_filter,
         ],
         reader,

@@ -15,40 +15,22 @@
  * limitations under the License.
  *
  */
+use crate::runner::{RunnerError, RunnerErrorKind, Value};
+use hurl_core::ast::SourceInfo;
 
-pub use eval::eval_filters;
-pub use jsonpath::eval_jsonpath_json;
-pub use xpath::eval_xpath_doc;
-
-mod base64_decode;
-mod base64_encode;
-mod base64_url_safe_decode;
-mod base64_url_safe_encode;
-mod count;
-mod days_after_now;
-mod days_before_now;
-mod decode;
-mod eval;
-mod first;
-mod format;
-mod html_escape;
-mod html_unescape;
-mod jsonpath;
-mod last;
-mod location;
-mod nth;
-mod regex;
-mod replace;
-mod replace_regex;
-mod split;
-mod to_date;
-mod to_float;
-mod to_hex;
-mod to_int;
-mod to_string;
-mod url_decode;
-mod url_encode;
-mod url_query_param;
-mod utf8_decode;
-mod utf8_encode;
-mod xpath;
+pub fn eval_utf8_encode(
+    value: &Value,
+    source_info: SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, RunnerError> {
+    match value {
+        Value::String(value) => {
+            let encoded = value.bytes().collect::<Vec<_>>();
+            Ok(Some(Value::Bytes(encoded)))
+        }
+        v => {
+            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            Err(RunnerError::new(source_info, kind, assert))
+        }
+    }
+}

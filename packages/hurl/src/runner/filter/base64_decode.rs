@@ -68,6 +68,7 @@ mod tests {
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Bytes(bytes));
     }
+
     #[test]
     fn eval_filter_base64_decode_ko_invalid_characters() {
         let variables = VariableSet::new();
