@@ -34,3 +34,29 @@ pub fn eval_utf8_encode(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+
+    #[test]
+    fn eval_filter_utf8_decode_ok() {
+        let datas = [
+            ("Hello World", b"Hello World".to_vec()),
+            // With emojis
+            (
+                "🐶🐱🐭🐹",
+                b"\xF0\x9F\x90\xB6\xF0\x9F\x90\xB1\xF0\x9F\x90\xAD\xF0\x9F\x90\xB9".to_vec(),
+            ),
+        ];
+        let source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10));
+
+        for (str, expected) in datas {
+            let ret = eval_utf8_encode(&Value::String(str.to_string()), source_info, false);
+            assert_eq!(ret.unwrap().unwrap(), Value::Bytes(expected));
+        }
+    }
+}
