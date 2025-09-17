@@ -581,6 +581,8 @@ filter:
   | url-decode-filter
   | url-encode-filter
   | url-query-param-filter
+  | utf8-decode-filter
+  | utf8-encode-filter
   | xpath-filter
 
 base64-decode-filter: "base64Decode"
@@ -638,6 +640,10 @@ url-decode-filter: "urlDecode"
 url-encode-filter: "urlEncode"
 
 url-query-param-filter: "urlQueryParam" sp quoted-string
+
+utf8-decode-filter: "utf8Decode"
+
+utf8-encode-filter: "utf8Encode"
 
 xpath-filter: "xpath" sp quoted-string
 

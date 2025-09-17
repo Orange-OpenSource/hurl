@@ -302,6 +302,16 @@ fn url_query_param_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     Ok(FilterValue::UrlQueryParam { space0, param })
 }
 
+fn utf8_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("utf8Decode", reader)?;
+    Ok(FilterValue::Utf8Decode)
+}
+
+fn utf8_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("utf8Encode", reader)?;
+    Ok(FilterValue::Utf8Encode)
+}
+
 fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
