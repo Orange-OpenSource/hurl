@@ -47,9 +47,9 @@ In the following example:
 
 ```hurl
 GET https://example.org/api
-x-token: BEEF \#STEACK # Some comment
+x-token: BEEF \#STEAK # Some comment
 HTTP 200
 ```
 
-We're sending a header `x-token` with value `BEEF #STEACK`
+We're sending a header `x-token` with value `BEEF #STEAK`
 
