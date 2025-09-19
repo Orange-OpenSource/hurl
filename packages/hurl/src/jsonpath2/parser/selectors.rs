@@ -17,9 +17,10 @@
  */
 
 use super::{ParseError, ParseErrorKind};
+use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
 use crate::jsonpath2::parser::segments;
 use crate::jsonpath2::{
-    parser::primitives::{expect_str, match_str, string_literal, try_integer},
+    parser::primitives::{expect_str, match_str},
     ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector, RelQuery,
     Selector, WildcardSelector,
 };
@@ -61,7 +62,7 @@ pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 
 /// Try to parse a name selector
 fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
-    let value = string_literal(reader)?;
+    let value = try_string_literal(reader)?;
     Ok(value.map(NameSelector::new))
 }
 

@@ -232,3 +232,13 @@ impl RelQuery {
         &self.segments
     }
 }
+
+#[derive(Clone, Debug, PartialEq)]
+#[allow(dead_code)]
+pub enum Literal {
+    Bool(bool),
+    Integer(i32),
+    Null,
+    Number(f64),
+    String(String),
+}

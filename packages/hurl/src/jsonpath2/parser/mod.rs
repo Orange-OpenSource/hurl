@@ -17,6 +17,7 @@
  */
 
 mod error;
+mod literal;
 mod primitives;
 mod query;
 mod segments;

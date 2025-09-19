@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  */
+
+/// This module provides basic parsing functions
+/// which are used by other parsers.
 use hurl_core::reader::Reader;
 
 use super::{ParseError, ParseErrorKind, ParseResult};
@@ -62,49 +65,6 @@ pub fn match_str(s: &str, reader: &mut Reader) -> bool {
         reader.seek(initial_state);
         false
     }
-}
-
-/// Try to parse a string literal
-/// if it does not start with a quote it returns `None` rather than a `ParseError`
-///
-// TODO: implement full spec with double-quoted and single-quoted parser
-pub fn string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
-    if match_str("\"", reader) {
-        let s = reader.read_while(|c| c != '"');
-        expect_str("\"", reader)?;
-        Ok(Some(s))
-    } else if match_str("'", reader) {
-        let s = reader.read_while(|c| c != '\'');
-        expect_str("'", reader)?;
-        Ok(Some(s))
-    } else {
-        Ok(None)
-    }
-}
-
-/// Try to parse a decimal integer
-/// if it does not start with a minus sign or a digit
-/// it returns `None` rather than a `ParseError`
-///
-// TODO: implement full spec
-pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i32>> {
-    if match_str("0", reader) {
-        return Ok(Some(0));
-    }
-    let negative = match_str("-", reader);
-    let saved_pos = reader.cursor().pos;
-    let s = reader.read_while(|c| c.is_ascii_digit());
-
-    if s.is_empty() || s.starts_with('0') {
-        if negative {
-            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
-            return Err(ParseError::new(saved_pos, kind));
-        } else {
-            return Ok(None);
-        }
-    }
-    let sign = if negative { -1 } else { 1 };
-    Ok(Some(sign * s.parse::<i32>().unwrap()))
 }
 
 #[cfg(test)]
@@ -156,41 +116,5 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, CharPos(2));
-    }
-
-    #[test]
-    fn test_string_literal() {
-        let mut reader = Reader::new("'store'");
-        assert_eq!(
-            string_literal(&mut reader).unwrap().unwrap(),
-            "store".to_string()
-        );
-        assert_eq!(reader.cursor().index, CharPos(7));
-        let mut reader = Reader::new("\"store\"");
-        assert_eq!(
-            string_literal(&mut reader).unwrap().unwrap(),
-            "store".to_string()
-        );
-        assert_eq!(reader.cursor().index, CharPos(7));
-
-        let mut reader = Reader::new("0");
-        assert!(string_literal(&mut reader).unwrap().is_none());
-        assert_eq!(reader.cursor().index, CharPos(0));
-    }
-
-    #[test]
-    fn test_string_literal_error() {
-        let mut reader = Reader::new("'store");
-        assert_eq!(
-            string_literal(&mut reader).unwrap_err(),
-            ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting("'".to_string()))
-        );
-    }
-
-    #[test]
-    fn test_integer() {
-        let mut reader = Reader::new("1");
-        assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
-        assert_eq!(reader.cursor().index, CharPos(1));
     }
 }
