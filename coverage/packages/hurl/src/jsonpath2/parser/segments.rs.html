@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::{primitives::literal, primitives::try_literal, ParseResult};</pre>
+                <pre class="has-background-white py-0 px-2">use super::{primitives::expect_str, primitives::match_str, ParseResult};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    let is_descendant_segment = if try_literal(&quot;..[&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    let is_descendant_segment = if match_str(&quot;..[&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    } else if try_literal(&quot;[&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    } else if match_str(&quot;[&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    literal(&quot;]&quot;, reader)?;</pre>
+                <pre class="has-background-danger-light py-0 px-2">    expect_str(&quot;]&quot;, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -965,7 +965,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    if try_literal(&quot;.*&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    if match_str(&quot;.*&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1029,7 +1029,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    } else if try_literal(&quot;..*&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    } else if match_str(&quot;..*&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1093,7 +1093,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    } else if try_literal(&quot;..&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    } else if match_str(&quot;..&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1173,7 +1173,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    } else if try_literal(&quot;.&quot;, reader) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    } else if match_str(&quot;.&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2956,7 +2956,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-09-18 20:42</p>
+                    <p class="heading">Date: 2025-09-19 07:05</p>
                 </div>
             
         </footer>
