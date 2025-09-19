@@ -16,7 +16,7 @@
  *
  */
 
-use super::{primitives::literal, primitives::try_literal, ParseResult};
+use super::{primitives::expect_str, primitives::match_str, ParseResult};
 use crate::jsonpath2::{
     parser::{selectors, ParseError, ParseErrorKind},
     ChildSegment, DescendantSegment, NameSelector, Segment, Selector, WildcardSelector,
@@ -36,15 +36,15 @@ fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
         return Ok(Some(segment));
     }
 
-    let is_descendant_segment = if try_literal("..[", reader) {
+    let is_descendant_segment = if match_str("..[", reader) {
         true
-    } else if try_literal("[", reader) {
+    } else if match_str("[", reader) {
         false
     } else {
         return Ok(None);
     };
     let selectors = selectors::parse(reader)?;
-    literal("]", reader)?;
+    expect_str("]", reader)?;
     let segment = if is_descendant_segment {
         Segment::Descendant(DescendantSegment::new(selectors))
     } else {
@@ -55,20 +55,20 @@ fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
 
 // try to parse a shorthand notation
 fn try_segment_shorthand(reader: &mut Reader) -> ParseResult<Option<Segment>> {
-    if try_literal(".*", reader) {
+    if match_str(".*", reader) {
         Ok(Some(Segment::Child(ChildSegment::new(vec![
             Selector::Wildcard(WildcardSelector),
         ]))))
-    } else if try_literal("..*", reader) {
+    } else if match_str("..*", reader) {
         Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
             Selector::Wildcard(WildcardSelector),
         ]))))
-    } else if try_literal("..", reader) {
+    } else if match_str("..", reader) {
         let name = member_name_shorthand(reader)?;
         Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
             Selector::Name(NameSelector::new(name)),
         ]))))
-    } else if try_literal(".", reader) {
+    } else if match_str(".", reader) {
         let name = member_name_shorthand(reader)?;
         Ok(Some(Segment::Child(ChildSegment::new(vec![
             Selector::Name(NameSelector::new(name)),

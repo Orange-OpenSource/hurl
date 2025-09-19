@@ -19,7 +19,7 @@
 use super::{ParseError, ParseErrorKind};
 use crate::jsonpath2::parser::segments;
 use crate::jsonpath2::{
-    parser::primitives::{literal, string_literal, try_integer, try_literal},
+    parser::primitives::{expect_str, match_str, string_literal, try_integer},
     ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector, RelQuery,
     Selector, WildcardSelector,
 };
@@ -32,7 +32,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Selector>> {
     loop {
         let selector = selector(reader)?;
         selectors.push(selector);
-        if !try_literal(",", reader) {
+        if !match_str(",", reader) {
             break;
         }
     }
@@ -68,7 +68,7 @@ fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
 /// Try to parse a wildcard selector
 /// Returns None if it can not be parse. It can not fail.
 fn try_wildcard_selector(reader: &mut Reader) -> Option<WildcardSelector> {
-    if try_literal("*", reader) {
+    if match_str("*", reader) {
         Some(WildcardSelector)
     } else {
         None
@@ -90,10 +90,10 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
     } else {
         return Ok(None);
     };
-    literal(":", reader)?;
+    expect_str(":", reader)?;
 
     let end = try_integer(reader)?;
-    let step = if try_literal(":", reader) {
+    let step = if match_str(":", reader) {
         try_integer(reader)?.unwrap_or(1)
     } else {
         1
@@ -103,7 +103,7 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
 
 /// Try to parse a filter selector
 fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
-    if try_literal("?", reader) {
+    if match_str("?", reader) {
         let rel_query = try_rel_query(reader)?.unwrap();
         let expr = LogicalExpr::new(rel_query);
         Ok(Some(FilterSelector::new(expr)))
@@ -113,7 +113,7 @@ fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector
 }
 
 fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelQuery>> {
-    if try_literal("@", reader) {
+    if match_str("@", reader) {
         let segments = segments::parse(reader)?;
         Ok(Some(RelQuery::new(segments)))
     } else {

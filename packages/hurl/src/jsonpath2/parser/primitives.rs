@@ -19,7 +19,9 @@ use hurl_core::reader::Reader;
 
 use super::{ParseError, ParseErrorKind, ParseResult};
 
-pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
+/// Expect the given string `s` at the current position of the reader
+/// It returns a ParseError if the string does not match
+pub fn expect_str(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
     // => use combinator recover to make it recoverable
     let start = reader.cursor();
@@ -49,9 +51,12 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     Ok(())
 }
 
-pub fn try_literal(s: &str, reader: &mut Reader) -> bool {
+/// Try to match the given string `s` at the current position of the reader
+/// It returns true if the string matches, false otherwise
+/// If it does not match, the reader position is reset to the initial position
+pub fn match_str(s: &str, reader: &mut Reader) -> bool {
     let initial_state = reader.cursor();
-    if literal(s, reader).is_ok() {
+    if expect_str(s, reader).is_ok() {
         true
     } else {
         reader.seek(initial_state);
@@ -64,13 +69,13 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> bool {
 ///
 // TODO: implement full spec with double-quoted and single-quoted parser
 pub fn string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
-    if try_literal("\"", reader) {
+    if match_str("\"", reader) {
         let s = reader.read_while(|c| c != '"');
-        literal("\"", reader)?;
+        expect_str("\"", reader)?;
         Ok(Some(s))
-    } else if try_literal("'", reader) {
+    } else if match_str("'", reader) {
         let s = reader.read_while(|c| c != '\'');
-        literal("'", reader)?;
+        expect_str("'", reader)?;
         Ok(Some(s))
     } else {
         Ok(None)
@@ -83,10 +88,10 @@ pub fn string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
 ///
 // TODO: implement full spec
 pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i32>> {
-    if try_literal("0", reader) {
+    if match_str("0", reader) {
         return Ok(Some(0));
     }
-    let negative = try_literal("-", reader);
+    let negative = match_str("-", reader);
     let saved_pos = reader.cursor().pos;
     let s = reader.read_while(|c| c.is_ascii_digit());
 
@@ -109,17 +114,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_literal() {
+    fn test_expect_str() {
         let mut reader = Reader::new("hello");
-        assert_eq!(literal("hello", &mut reader), Ok(()));
+        assert_eq!(expect_str("hello", &mut reader), Ok(()));
         assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("hello ");
-        assert_eq!(literal("hello", &mut reader), Ok(()));
+        assert_eq!(expect_str("hello", &mut reader), Ok(()));
         assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("");
-        let error = literal("hello", &mut reader).err().unwrap();
+        let error = expect_str("hello", &mut reader).err().unwrap();
         assert_eq!(
             error,
             ParseError::new(
@@ -130,7 +135,7 @@ mod tests {
         assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("hi");
-        let error = literal("hello", &mut reader).err().unwrap();
+        let error = expect_str("hello", &mut reader).err().unwrap();
         assert_eq!(
             error,
             ParseError::new(
@@ -142,7 +147,7 @@ mod tests {
         assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("he");
-        let error = literal("hello", &mut reader).err().unwrap();
+        let error = expect_str("hello", &mut reader).err().unwrap();
         assert_eq!(
             error,
             ParseError::new(
@@ -183,7 +188,7 @@ mod tests {
     }
 
     #[test]
-    fn test_integerl() {
+    fn test_integer() {
         let mut reader = Reader::new("1");
         assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
         assert_eq!(reader.cursor().index, CharPos(1));

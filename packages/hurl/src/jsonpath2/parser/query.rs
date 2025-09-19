@@ -19,12 +19,12 @@
 use hurl_core::reader::Reader;
 
 use crate::jsonpath2::{
-    parser::{primitives::literal, segments, ParseResult},
+    parser::{primitives::expect_str, segments, ParseResult},
     Query,
 };
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Query> {
-    literal("$", reader)?;
+    expect_str("$", reader)?;
     let segments = segments::parse(reader)?;
     Ok(Query::new(segments))
 }
