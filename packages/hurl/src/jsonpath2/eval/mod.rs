@@ -15,37 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::jsonpath2::Query;
 
+mod query;
 mod segment;
 mod selector;
 
 #[allow(dead_code)]
 pub type NodeList = Vec<serde_json::Value>;
-
-impl Query {
-    /// Eval a JSONPath `Query` for a `serde_json::Value` input.
-    /// It returns a `NodeList`
-    #[allow(dead_code)]
-    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
-        let mut results = vec![value.clone()];
-        for segment in self.segments() {
-            results = results.iter().flat_map(|node| segment.eval(node)).collect();
-        }
-        results
-    }
-}
-
-mod tests {
-    #[allow(unused_imports)]
-    use crate::{json, jsonpath2::Query};
-    #[allow(unused_imports)]
-    use serde_json::json;
-
-    #[test]
-    fn test_root_identifier() {
-        let value = json!({"greeting": "Hello"});
-        let root_identifier = Query::new(vec![]);
-        assert_eq!(root_identifier.eval(&value), vec![value]);
-    }
-}

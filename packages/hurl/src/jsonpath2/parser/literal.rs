@@ -18,12 +18,10 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::{
-    parser::{
-        primitives::{expect_str, match_str},
-        ParseError, ParseErrorKind, ParseResult,
-    },
-    Literal,
+use crate::jsonpath2::ast::expr::Literal;
+use crate::jsonpath2::parser::{
+    primitives::{expect_str, match_str},
+    ParseError, ParseErrorKind, ParseResult,
 };
 
 /// Parse a literal

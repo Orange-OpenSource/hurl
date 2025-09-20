@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use crate::jsonpath2::{eval::NodeList, ChildSegment, DescendantSegment, Segment};
+use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
+use crate::jsonpath2::eval::NodeList;
 
 impl Segment {
     /// Eval a `Segment` for a `serde_json::Value` input.
@@ -78,8 +79,10 @@ mod tests {
     use super::*;
 
     #[allow(unused_imports)]
-    use crate::jsonpath2::{
-        ChildSegment, IndexSelector, NameSelector, Segment, Selector, WildcardSelector,
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
+    #[allow(unused_imports)]
+    use crate::jsonpath2::ast::selector::{
+        IndexSelector, NameSelector, Selector, WildcardSelector,
     };
     #[allow(unused_imports)]
     use serde_json::json;

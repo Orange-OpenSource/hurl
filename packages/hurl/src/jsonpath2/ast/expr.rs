@@ -16,15 +16,28 @@
  *
  */
 
-//! JSONPath
-//! as defined in <https://www.rfc-editor.org/rfc/rfc9535.html>
+use super::query::RelativeQuery;
 
-mod ast;
-mod eval;
-mod parser;
+/// Logical expression
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LogicalExpr {
+    value: RelativeQuery,
+}
+impl LogicalExpr {
+    pub fn new(value: RelativeQuery) -> LogicalExpr {
+        LogicalExpr { value }
+    }
+    pub fn value(&self) -> &RelativeQuery {
+        &self.value
+    }
+}
 
-#[allow(unused_imports)]
-pub use parser::parse;
-
-#[cfg(test)]
-mod tests;
+#[derive(Clone, Debug, PartialEq)]
+#[allow(dead_code)]
+pub enum Literal {
+    Bool(bool),
+    Integer(i32),
+    Null,
+    Number(f64),
+    String(String),
+}

@@ -17,13 +17,14 @@
  */
 
 use super::{ParseError, ParseErrorKind};
-use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
-use crate::jsonpath2::parser::segments;
-use crate::jsonpath2::{
-    parser::primitives::{expect_str, match_str},
-    ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector, RelQuery,
-    Selector, WildcardSelector,
+use crate::jsonpath2::ast::expr::LogicalExpr;
+use crate::jsonpath2::ast::query::RelativeQuery;
+use crate::jsonpath2::ast::selector::{
+    ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
+use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
+use crate::jsonpath2::parser::primitives::{expect_str, match_str};
+use crate::jsonpath2::parser::segments;
 use hurl_core::reader::Reader;
 
 use super::ParseResult;
@@ -113,10 +114,10 @@ fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector
     }
 }
 
-fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelQuery>> {
+fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
     if match_str("@", reader) {
         let segments = segments::parse(reader)?;
-        Ok(Some(RelQuery::new(segments)))
+        Ok(Some(RelativeQuery::new(segments)))
     } else {
         Ok(None)
     }
@@ -124,7 +125,7 @@ fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelQuery>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath2::{ChildSegment, Segment};
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
 
     use super::*;
     use hurl_core::reader::{CharPos, Reader};
@@ -235,7 +236,7 @@ mod tests {
         let mut reader = Reader::new("?@['isbn']");
         assert_eq!(
             try_filter_selector(&mut reader).unwrap().unwrap(),
-            FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![Segment::Child(
+            FilterSelector::new(LogicalExpr::new(RelativeQuery::new(vec![Segment::Child(
                 ChildSegment::new(vec![Selector::Name(NameSelector::new("isbn".to_string()))])
             )])))
         );
@@ -247,7 +248,7 @@ mod tests {
         let mut reader = Reader::new("@['isbn']");
         assert_eq!(
             try_rel_query(&mut reader).unwrap().unwrap(),
-            RelQuery::new(vec![Segment::Child(ChildSegment::new(vec![
+            RelativeQuery::new(vec![Segment::Child(ChildSegment::new(vec![
                 Selector::Name(NameSelector::new("isbn".to_string()))
             ]))])
         );

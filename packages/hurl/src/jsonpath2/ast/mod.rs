@@ -16,15 +16,13 @@
  *
  */
 
-//! JSONPath
-//! as defined in <https://www.rfc-editor.org/rfc/rfc9535.html>
+pub(crate) mod expr;
+pub(crate) mod query;
+pub(crate) mod segment;
+pub(crate) mod selector;
 
-mod ast;
-mod eval;
-mod parser;
-
-#[allow(unused_imports)]
-pub use parser::parse;
-
-#[cfg(test)]
-mod tests;
+/// JSONPath Query
+/// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
+/// This is the standard JSONPath query used outside the module
+#[allow(dead_code)]
+pub(crate) type JsonPathQuery = query::AbsoluteQuery;

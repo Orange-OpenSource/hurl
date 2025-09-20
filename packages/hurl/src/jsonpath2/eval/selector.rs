@@ -18,11 +18,13 @@
 
 use std::cmp::{max, min};
 
-use crate::jsonpath2::{
-    eval::NodeList, ArraySliceSelector, FilterSelector, IndexSelector, LogicalExpr, NameSelector,
-    RelQuery, Selector, WildcardSelector,
+use crate::jsonpath2::ast::query::RelativeQuery;
+use crate::jsonpath2::ast::selector::{
+    ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
+use crate::jsonpath2::eval::NodeList;
 
+use crate::jsonpath2::ast::expr::LogicalExpr;
 impl Selector {
     pub fn eval(&self, node: &serde_json::Value) -> NodeList {
         match self {
@@ -163,7 +165,7 @@ fn normalize_index(i: i32, len: i32) -> i32 {
     }
 }
 
-impl RelQuery {
+impl RelativeQuery {
     pub fn eval(&self, value: &serde_json::Value) -> NodeList {
         let mut results = vec![value.clone()];
         for segment in self.segments() {
@@ -178,9 +180,14 @@ mod tests {
     use serde_json::json;
 
     #[allow(unused_imports)]
-    use crate::jsonpath2::{
-        ArraySliceSelector, ChildSegment, FilterSelector, IndexSelector, LogicalExpr, NameSelector,
-        Query, RelQuery, Segment, Selector, WildcardSelector,
+    use crate::jsonpath2::ast::expr::LogicalExpr;
+    #[allow(unused_imports)]
+    use crate::jsonpath2::ast::query::{AbsoluteQuery, RelativeQuery};
+    #[allow(unused_imports)]
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
+    #[allow(unused_imports)]
+    use crate::jsonpath2::ast::selector::{
+        ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
     };
 
     #[test]
@@ -288,7 +295,7 @@ mod tests {
         ]);
 
         let filter_selector =
-            FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![Segment::Child(
+            FilterSelector::new(LogicalExpr::new(RelativeQuery::new(vec![Segment::Child(
                 ChildSegment::new(vec![Selector::Name(NameSelector::new("b".to_string()))]),
             )])));
         assert_eq!(

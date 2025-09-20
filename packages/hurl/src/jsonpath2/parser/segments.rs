@@ -17,10 +17,9 @@
  */
 
 use super::{primitives::expect_str, primitives::match_str, ParseResult};
-use crate::jsonpath2::{
-    parser::{selectors, ParseError, ParseErrorKind},
-    ChildSegment, DescendantSegment, NameSelector, Segment, Selector, WildcardSelector,
-};
+use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
+use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
+use crate::jsonpath2::parser::{selectors, ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
@@ -102,7 +101,7 @@ fn alpha(reader: &mut Reader) -> ParseResult<char> {
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath2::{NameSelector, Selector, WildcardSelector};
+    use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
     use hurl_core::reader::{CharPos, Reader};
 
     use super::*;

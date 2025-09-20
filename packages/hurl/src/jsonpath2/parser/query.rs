@@ -18,24 +18,23 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::{
-    parser::{primitives::expect_str, segments, ParseResult},
-    Query,
-};
+use crate::jsonpath2::ast::query::AbsoluteQuery;
+use crate::jsonpath2::parser::{primitives::expect_str, segments, ParseResult};
 
-pub fn parse(reader: &mut Reader) -> ParseResult<Query> {
+pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;
     let segments = segments::parse(reader)?;
-    Ok(Query::new(segments))
+    Ok(AbsoluteQuery::new(segments))
 }
 
 #[cfg(test)]
 mod tests {
 
     use super::super::{ParseError, ParseErrorKind};
-    use crate::jsonpath2::{
-        ChildSegment, FilterSelector, LogicalExpr, NameSelector, RelQuery, Segment, Selector,
-    };
+    use crate::jsonpath2::ast::expr::LogicalExpr;
+    use crate::jsonpath2::ast::query::RelativeQuery;
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
+    use crate::jsonpath2::ast::selector::{FilterSelector, NameSelector, Selector};
     use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
@@ -54,7 +53,7 @@ mod tests {
     pub fn test_root_identifier() {
         let mut reader = Reader::new("$");
 
-        assert_eq!(parse(&mut reader).unwrap(), Query::new(vec![]));
+        assert_eq!(parse(&mut reader).unwrap(), AbsoluteQuery::new(vec![]));
         assert_eq!(reader.cursor().index, CharPos(1));
     }
 
@@ -64,7 +63,7 @@ mod tests {
 
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Query::new(vec![Segment::Child(ChildSegment::new(vec![
+            AbsoluteQuery::new(vec![Segment::Child(ChildSegment::new(vec![
                 Selector::Name(NameSelector::new("store".to_string()))
             ]))])
         );
@@ -73,12 +72,12 @@ mod tests {
         let mut reader = Reader::new("$[?@['isbn']]");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Query::new(vec![Segment::Child(ChildSegment::new(vec![
-                Selector::Filter(FilterSelector::new(LogicalExpr::new(RelQuery::new(vec![
-                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
-                        "isbn".to_string()
-                    ))]))
-                ]))))
+            AbsoluteQuery::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Filter(FilterSelector::new(LogicalExpr::new(RelativeQuery::new(
+                    vec![Segment::Child(ChildSegment::new(vec![Selector::Name(
+                        NameSelector::new("isbn".to_string())
+                    )]))]
+                ))))
             ]))])
         );
         assert_eq!(reader.cursor().index, CharPos(13));
@@ -86,7 +85,7 @@ mod tests {
         let mut reader = Reader::new("$.book");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Query::new(vec![Segment::Child(ChildSegment::new(vec![
+            AbsoluteQuery::new(vec![Segment::Child(ChildSegment::new(vec![
                 Selector::Name(NameSelector::new("book".to_string()))
             ]))])
         );
