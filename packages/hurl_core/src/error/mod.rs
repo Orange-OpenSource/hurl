@@ -138,7 +138,11 @@ pub fn add_carets(message: &str, source_info: SourceInfo, content: &[&str]) -> S
     } else {
         1
     };
-    let line_raw = content.get(error_line - 1).unwrap();
+    let line_raw = if let Some(value) = content.get(error_line - 1) {
+        value
+    } else {
+        ""
+    };
     let prefix = get_carets(line_raw, error_column, width);
 
     let mut s = String::new();
@@ -225,7 +229,11 @@ fn get_carets(line_raw: &str, error_column: usize, width: usize) -> String {
 }
 
 pub fn add_source_line(text: &mut StyledString, content: &[&str], line: usize) {
-    let line = content.get(line - 1).unwrap();
+    let line = if let Some(value) = content.get(line - 1) {
+        value
+    } else {
+        ""
+    };
     let line = line.replace('\t', "    ");
     text.push(" ");
     text.push(&line);
@@ -302,6 +310,37 @@ mod tests {
             ),
             " ^^^^^^^^^^^^^ actual value is <Hello World!>".to_string()
         );
+
+        // end of file missing ```
+        let content = [
+            "POST https://fake.com",
+            "```",
+            "{ \"test\": true}",
+            "",
+            "HTTP 200",
+        ];
+        assert_eq!(
+            add_carets(
+                "expecting '```'",
+                SourceInfo::new(Pos::new(6, 1), Pos::new(6, 1)),
+                &content
+            ),
+            " ^ expecting '```'".to_string()
+        );
+    }
+
+    #[test]
+    fn test_add_source_line() {
+        let mut text = StyledString::new();
+        let content = ["Invalid method", "get http://localhost"];
+        add_source_line(&mut text, &content, 2);
+        eprintln!("{:?}", text);
+        assert_eq!(text.to_string(Format::Plain), " get http://localhost\n");
+
+        let mut text = StyledString::new();
+        add_source_line(&mut text, &content, 6);
+        eprintln!("{:?}", text);
+        assert_eq!(text.to_string(Format::Plain), " \n");
     }
 
     #[test]
