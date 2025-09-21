@@ -18,13 +18,40 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::ast::query::AbsoluteQuery;
-use crate::jsonpath2::parser::{primitives::expect_str, segments, ParseResult};
+use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
+use crate::jsonpath2::parser::primitives::{expect_str, match_str};
+use crate::jsonpath2::parser::{segments, ParseError, ParseErrorKind, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;
-    let segments = segments::parse(reader)?;
+    let segments = segments::parse(reader, false)?;
     Ok(AbsoluteQuery::new(segments))
+}
+
+/// Parse a singular query.
+/// Regardless of the input value, the expression produces a nodelist containing at most one node
+#[allow(dead_code)]
+pub fn singular_query(reader: &mut Reader) -> ParseResult<Query> {
+    if match_str("$", reader) {
+        let segments = segments::parse(reader, true)?;
+        Ok(Query::AbsoluteQuery(AbsoluteQuery::new(segments)))
+    } else if match_str("@", reader) {
+        let segments = segments::parse(reader, true)?;
+        Ok(Query::RelativeQuery(RelativeQuery::new(segments)))
+    } else {
+        let pos = reader.cursor().pos;
+        let kind = ParseErrorKind::Expecting("a singular query".to_string());
+        Err(ParseError::new(pos, kind))
+    }
+}
+
+pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
+    if match_str("@", reader) {
+        let segments = segments::parse(reader, false)?;
+        Ok(Some(RelativeQuery::new(segments)))
+    } else {
+        Ok(None)
+    }
 }
 
 #[cfg(test)]
@@ -90,5 +117,17 @@ mod tests {
             ]))])
         );
         assert_eq!(reader.cursor().index, CharPos(6));
+    }
+
+    #[test]
+    pub fn test_relative_query() {
+        let mut reader = Reader::new("@['isbn']");
+        assert_eq!(
+            try_relative_query(&mut reader).unwrap().unwrap(),
+            RelativeQuery::new(vec![Segment::Child(ChildSegment::new(vec![
+                Selector::Name(NameSelector::new("isbn".to_string()))
+            ]))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(9));
     }
 }

@@ -22,12 +22,42 @@ use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
 use crate::jsonpath2::parser::{selectors, ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
+/// Parse segments
+/// Only parse singular segments by setting `only_singular` to true
+pub fn parse(reader: &mut Reader, only_singular: bool) -> ParseResult<Vec<Segment>> {
     let mut segments = vec![];
+    let mut current_pos = reader.cursor().pos;
+
+    // Parsing singular segments
+    // In the spec, it is defined as parsing only name and index segments
+    // For reporting error, we will first parse any segment instead, and then check whether the segment is singular
     while let Some(segment) = try_segment(reader)? {
+        if only_singular && !segment.is_singular() {
+            return Err(ParseError::new(
+                current_pos,
+                ParseErrorKind::Expecting("singular segment".to_string()),
+            ));
+        }
         segments.push(segment);
+        current_pos = reader.cursor().pos;
     }
     Ok(segments)
+}
+
+impl Segment {
+    fn is_singular(&self) -> bool {
+        if let Segment::Child(child_segment) = self {
+            for selector in child_segment.selectors() {
+                if !matches!(selector, Selector::Name(_)) && !matches!(selector, Selector::Index(_))
+                {
+                    return false;
+                }
+            }
+            true
+        } else {
+            false
+        }
+    }
 }
 
 fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
@@ -52,7 +82,7 @@ fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
     Ok(Some(segment))
 }
 
-// try to parse a shorthand notation
+/// try to parse a shorthand notation
 fn try_segment_shorthand(reader: &mut Reader) -> ParseResult<Option<Segment>> {
     if match_str(".*", reader) {
         Ok(Some(Segment::Child(ChildSegment::new(vec![
@@ -102,7 +132,7 @@ fn alpha(reader: &mut Reader) -> ParseResult<char> {
 mod tests {
 
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
-    use hurl_core::reader::{CharPos, Reader};
+    use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
 
@@ -111,7 +141,7 @@ mod tests {
         let mut reader = Reader::new("['isbn']]");
 
         assert_eq!(
-            parse(&mut reader).unwrap(),
+            parse(&mut reader, false).unwrap(),
             vec![Segment::Child(ChildSegment::new(vec![Selector::Name(
                 NameSelector::new("isbn".to_string())
             )]))]
@@ -177,5 +207,33 @@ mod tests {
             )]))
         );
         assert_eq!(reader.cursor().index, CharPos(3));
+    }
+
+    #[test]
+    pub fn test_singular_segments() {
+        let mut reader = Reader::new(".*");
+
+        assert_eq!(
+            parse(&mut reader, true).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("singular segment".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(2));
+    }
+
+    #[test]
+    pub fn test_is_singular() {
+        assert!(
+            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "name".to_string()
+            ))]))
+            .is_singular()
+        );
+        assert!(!Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
+            WildcardSelector
+        )]))
+        .is_singular());
     }
 }

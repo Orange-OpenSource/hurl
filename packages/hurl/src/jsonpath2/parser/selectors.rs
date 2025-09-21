@@ -18,13 +18,12 @@
 
 use super::{ParseError, ParseErrorKind};
 use crate::jsonpath2::ast::expr::LogicalExpr;
-use crate::jsonpath2::ast::query::RelativeQuery;
 use crate::jsonpath2::ast::selector::{
     ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
 use crate::jsonpath2::parser::primitives::{expect_str, match_str};
-use crate::jsonpath2::parser::segments;
+use crate::jsonpath2::parser::query::try_relative_query;
 use hurl_core::reader::Reader;
 
 use super::ParseResult;
@@ -106,7 +105,7 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
 /// Try to parse a filter selector
 fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
     if match_str("?", reader) {
-        let rel_query = try_rel_query(reader)?.unwrap();
+        let rel_query = try_relative_query(reader)?.unwrap();
         let expr = LogicalExpr::new(rel_query);
         Ok(Some(FilterSelector::new(expr)))
     } else {
@@ -114,18 +113,12 @@ fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector
     }
 }
 
-fn try_rel_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
-    if match_str("@", reader) {
-        let segments = segments::parse(reader)?;
-        Ok(Some(RelativeQuery::new(segments)))
-    } else {
-        Ok(None)
-    }
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
+    use crate::jsonpath2::ast::{
+        query::RelativeQuery,
+        segment::{ChildSegment, Segment},
+    };
 
     use super::*;
     use hurl_core::reader::{CharPos, Reader};
@@ -241,17 +234,5 @@ mod tests {
             )])))
         );
         assert_eq!(reader.cursor().index, CharPos(10));
-    }
-
-    #[test]
-    pub fn test_rel_query() {
-        let mut reader = Reader::new("@['isbn']");
-        assert_eq!(
-            try_rel_query(&mut reader).unwrap().unwrap(),
-            RelativeQuery::new(vec![Segment::Child(ChildSegment::new(vec![
-                Selector::Name(NameSelector::new("isbn".to_string()))
-            ]))])
-        );
-        assert_eq!(reader.cursor().index, CharPos(9));
     }
 }
