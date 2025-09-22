@@ -10,7 +10,8 @@ if (Get-Command makensis -ErrorAction SilentlyContinue) {
     echo "makensis already installed"
 } else {
     choco install --confirm --no-progress nsis
-    $env:Path = 'C:\Program Files (x86)\NSIS\Bin' + ";" + "$env:Path"
+    Move-Item "C:\Program Files (x86)\NSIS" "C:\NSIS"
+    $env:Path = 'C:\NSIS\Bin' + ";" + "$env:Path"
 }
 $nsis_dir=(Get-Command makensis).path | Split-Path -Parent
 Expand-Archive -Path "$PSScriptRoot\..\..\bin\windows\EnVar_plugin.zip" -DestinationPath "$nsis_dir" -Force -Verbose
