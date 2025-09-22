@@ -28,7 +28,7 @@ Get-Content $package_dir\version.txt
 # add hurl to PATH
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
-$env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
+$env:Path = "$package_dir" + ";" + "$env:Path" + ";" + "$registry_user_path" + ";" + "$registry_machine_path"
 sleep 10
 
 # hurl infos
@@ -40,4 +40,3 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
-
