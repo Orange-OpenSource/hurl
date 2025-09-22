@@ -6,7 +6,7 @@ write-host -foregroundcolor Cyan "----- create windows64 installer -----"
 $actual_dir=(Get-Location).Path
 
 # install NSIS
-if (Get-Command makensis) {echo "makensis already installed"} else {choco install --confirm --no-progress nsis}
+if (Get-Command makensis -ErrorAction SilentlyContinue) {echo "makensis already installed"} else {choco install --confirm --no-progress nsis}
 $nsis_dir=(Get-Command makensis).path | Split-Path -Parent
 Expand-Archive -Path "$PSScriptRoot\..\..\bin\windows\EnVar_plugin.zip" -DestinationPath "$nsis_dir" -Force -Verbose
 
