@@ -31,6 +31,16 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
+    - name: test
+      run: |
+        Set-StrictMode -Version latest
+        $ErrorActionPreference = 'Stop'
+        write-host -foregroundcolor Cyan "----- create windows64 installer -----"
+        $actual_dir=(Get-Location).Path
+        # install NSIS
+        if (Get-Command makensis -ErrorAction SilentlyContinue) {echo "makensis already installed"} else {choco install --confirm --no-progress nsis}
+        Get-ChildItem -Path "C:\" -Recurse -Filter "makensis.exe" -ErrorAction SilentlyContinue
+        $nsis_dir=(Get-Command makensis).path | Split-Path -Parent
     - name: Install Rust
       run: |
         .\bin\install_rust.ps1
