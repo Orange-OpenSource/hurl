@@ -2,14 +2,20 @@
 ========================================================================================================================
 
 Thanks to
+[@Nezteb](https://github.com/Nezteb),
+[@quantonganh](https://github.com/quantonganh),
 [@gugahoa](https://github.com/gugahoa),
 [@MikhailWahib](https://github.com/MikhailWahib),
 
 Enhancements:
 
+* Add CLI option to pretty print the response body [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
+* Add pretty print option [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
 * Support --secrets-file for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
 * Add `--ntlm` option per request [#4322](https://github.com/Orange-OpenSource/hurl/issues/4322)
 * Add --negotiate option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
+* Add utf8Decode/utf8Encode filters [#4382](https://github.com/Orange-OpenSource/hurl/issues/4382)
+* Replace unmaintained encoding crate with encoding_rs crate. [#4399](https://github.com/Orange-OpenSource/hurl/issues/4399)
 
 
 Bugs Fixed:
