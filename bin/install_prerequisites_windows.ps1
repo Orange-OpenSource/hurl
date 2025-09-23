@@ -8,17 +8,15 @@ $vcpkg_dir=((Get-command vcpkg).Source | Split-Path)
 $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
 git -C $vcpkg_dir pull
 
-# install libxml and libcurl[openssl]
-vcpkg install --recurse curl[core,non-http,schannel,ssl,sspi,http2]:x64-windows
+# install libxml and libcurl
+vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows
 vcpkg install --recurse libxml2[core,iconv]:x64-windows
+
 vcpkg update
 if ($LASTEXITCODE) { Throw }
 vcpkg upgrade --no-dry-run
 if ($LASTEXITCODE) { Throw }
 vcpkg integrate install
-if ($LASTEXITCODE) { Throw }
-Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
-$env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")
 if ($LASTEXITCODE) { Throw }
 
 # install python 3.11
