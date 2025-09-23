@@ -89,6 +89,8 @@ jsonpath "$.books" count == 12
 | [urlDecode](#urldecode)                     | Replaces %xx escapes with their single-character equivalent.                                                                           | string           | string |
 | [urlEncode](#urlencode)                     | Percent-encodes all the characters which are not included in unreserved chars (see [RFC3986]) with the exception of forward slash (/). | string           | string |
 | [urlQueryParam](#urlqueryparam)             | Returns the value of a query parameter in a URL.                                                                                       | string           | string |
+| [utf8Decode](#utf8Decode)                   | Decodes bytes to string using UTF-8 encoding.                                                                                          | bytes            | string |
+| [utf8Encode](#utf8Encode)                   | Encodes a string to bytes using UTF-8 encoding.                                                                                        | string           | bytes  |
 | [xpath](#xpath)                             | Evaluates a [XPath] expression.                                                                                                        | string           | string |
 
 ### base64Decode
@@ -170,7 +172,7 @@ certificate "Start-Date" daysBeforeNow < 100
 
 ### decode
 
-Decodes bytes to string using encoding.
+Decodes bytes to string using encoding. Encoding labels are defined in [Encoding Standard].
 
 ```hurl
 # The 'Content-Type' HTTP response header does not precise the charset 'gb2312'
@@ -413,7 +415,7 @@ jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"
 
 ### urlEncode
 
-Percent-encodes all the characters which are not included in unreserved chars (see [RFC3986]) with the exception of forward slash (/).
+Percent-encodes all the characters which are not included in unreserved chars (see [RFC3986]) except forward slash (/).
 
 ```hurl
 GET https://example.org/foo
@@ -433,6 +435,29 @@ HTTP 200
 jsonpath "$.url" urlQueryParam "x" == "шеллы"
 ```
 
+### utf8Decode
+
+Decodes bytes to string using UTF-8 encoding.
+
+```hurl
+GET https://example.org/messages
+HTTP 200
+[Asserts]
+// From a Base64 string to UTF-8 bytes to final string 
+jsonpath "$.bytesInBase64" base64Decode utf8Decode == "Hello World" 
+```
+
+### utf8Encode
+
+Encodes a string to bytes using UTF-8 encoding.
+
+```hurl
+GET https://example.org/drinks
+HTTP 200
+[Asserts]
+jsonpath "$.beverage" utf8Encode toHex == "636166C3A9"
+```
+
 ### xpath
 
 Evaluates a [XPath] expression.
@@ -444,7 +469,6 @@ HTTP 200
 bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 ```
 
-
 [Captures]: /docs/capturing-response.md
 [asserts]: /docs/asserting-response.md
 [RFC3986]: https://www.rfc-editor.org/rfc/rfc3986
@@ -453,3 +477,5 @@ bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Base64 encoded string]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
 [Base64 URL safe encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-5
+[Encoding labels]: https://encoding.spec.whatwg.org/]https://encoding.spec.whatwg.org/#concept-encoding-get
+
