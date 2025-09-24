@@ -18,13 +18,12 @@
 
 use std::cmp::{max, min};
 
-use crate::jsonpath2::ast::query::RelativeQuery;
+use crate::jsonpath2::ast::expr::LogicalExpr;
 use crate::jsonpath2::ast::selector::{
     ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use crate::jsonpath2::eval::NodeList;
 
-use crate::jsonpath2::ast::expr::LogicalExpr;
 impl Selector {
     pub fn eval(&self, node: &serde_json::Value) -> NodeList {
         match self {
@@ -162,16 +161,6 @@ fn normalize_index(i: i32, len: i32) -> i32 {
         i
     } else {
         len + i
-    }
-}
-
-impl RelativeQuery {
-    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
-        let mut results = vec![value.clone()];
-        for segment in self.segments() {
-            results = results.iter().flat_map(|node| segment.eval(node)).collect();
-        }
-        results
     }
 }
 

@@ -16,8 +16,33 @@
  *
  */
 
-use crate::jsonpath2::ast::query::AbsoluteQuery;
+use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
 use crate::jsonpath2::eval::NodeList;
+
+impl Query {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
+        match self {
+            Query::AbsoluteQuery(absolute_query) => absolute_query.eval(root_value),
+            Query::RelativeQuery(relative_query) => relative_query.eval(current_value),
+        }
+    }
+}
+
+impl RelativeQuery {
+    /// Eval a `RelativeQuery` for a `serde_json::Value` input.
+    /// It returns a `NodeList`{
+    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
+        let mut results = vec![value.clone()];
+        for segment in self.segments() {
+            results = results.iter().flat_map(|node| segment.eval(node)).collect();
+        }
+        results
+    }
+}
 
 impl AbsoluteQuery {
     /// Eval a JSONPath `Query` for a `serde_json::Value` input.

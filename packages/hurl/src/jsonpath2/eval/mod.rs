@@ -16,6 +16,7 @@
  *
  */
 
+mod comparison;
 mod query;
 mod segment;
 mod selector;

@@ -16,6 +16,7 @@
  *
  */
 
+mod comparison;
 mod error;
 mod literal;
 mod primitives;
