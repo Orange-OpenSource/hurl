@@ -1,9 +1,9 @@
 # Your First Hurl File
 
 Throughout this tutorial, we'll walk through the creation of multiple
-Hurl files to test a basic web application about movies called _Movies Box_. We'll show how to test
-this site locally, and how to automate these integration tests in a CI/CD
-chain like [GitHub Action] and [GitLab CI/CD].
+Hurl files to test a basic web application about movies called _Movies Box_. The source code of the project is at 
+<https://github.com/jcamiel/hurl-express-tutorial>. We'll show how to test this site locally, and how to automate these 
+integration tests in a CI/CD chain like [GitHub Action] and [GitLab CI/CD].
 
 Our Movies Box website consists of:
 
