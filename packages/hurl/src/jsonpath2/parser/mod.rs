@@ -23,6 +23,7 @@ mod primitives;
 mod query;
 mod segments;
 mod selectors;
+mod singular_query;
 
 use crate::jsonpath2::ast::JsonPathQuery;
 pub use error::{ParseError, ParseErrorKind};

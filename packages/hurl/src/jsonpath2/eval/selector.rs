@@ -27,9 +27,9 @@ use crate::jsonpath2::eval::NodeList;
 impl Selector {
     pub fn eval(&self, node: &serde_json::Value) -> NodeList {
         match self {
-            Selector::Name(name_selector) => name_selector.eval(node),
+            Selector::Name(name_selector) => name_selector.eval(node).into_iter().collect(),
             Selector::Wildcard(wildcard_selector) => wildcard_selector.eval(node),
-            Selector::Index(index_selector) => index_selector.eval(node),
+            Selector::Index(index_selector) => index_selector.eval(node).into_iter().collect(),
             Selector::ArraySlice(array_slice_selector) => array_slice_selector.eval(node),
             Selector::Filter(filter_selector) => filter_selector.eval(node),
         }
@@ -37,13 +37,13 @@ impl Selector {
 }
 
 impl NameSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(&self, node: &serde_json::Value) -> Option<serde_json::Value> {
         if let serde_json::Value::Object(key_values) = node {
             if let Some(value) = key_values.get(self.value()) {
-                return vec![value.clone()];
+                return Some(value.clone());
             }
         }
-        vec![]
+        None
     }
 }
 
@@ -59,7 +59,7 @@ impl WildcardSelector {
 }
 
 impl IndexSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(&self, node: &serde_json::Value) -> Option<serde_json::Value> {
         if let serde_json::Value::Array(values) = node {
             let index = if *self.value() < 0 {
                 values.len() - ((*self.value()).unsigned_abs() as usize)
@@ -67,10 +67,10 @@ impl IndexSelector {
                 *self.value() as usize
             };
             if let Some(value) = values.get(index) {
-                return vec![value.clone()];
+                return Some(value.clone());
             }
         }
-        vec![]
+        None
     }
 }
 
@@ -192,8 +192,10 @@ mod tests {
     fn test_name_selector() {
         let value = json!({"greeting": "Hello"});
         assert_eq!(
-            NameSelector::new("greeting".to_string()).eval(&value),
-            vec![json!("Hello")]
+            NameSelector::new("greeting".to_string())
+                .eval(&value)
+                .unwrap(),
+            json!("Hello")
         );
     }
 
@@ -219,9 +221,9 @@ mod tests {
     #[test]
     fn test_index_selector() {
         let value = json!(["a", "b"]);
-        assert_eq!(IndexSelector::new(1).eval(&value), vec![json!("b")]);
-        assert_eq!(IndexSelector::new(-2).eval(&value), vec![json!("a")]);
-        assert!(IndexSelector::new(2).eval(&value).is_empty());
+        assert_eq!(IndexSelector::new(1).eval(&value).unwrap(), json!("b"));
+        assert_eq!(IndexSelector::new(-2).eval(&value).unwrap(), json!("a"));
+        assert!(IndexSelector::new(2).eval(&value).is_none());
     }
 
     #[test]

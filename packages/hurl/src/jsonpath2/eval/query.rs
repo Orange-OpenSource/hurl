@@ -20,6 +20,7 @@ use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
 use crate::jsonpath2::eval::NodeList;
 
 impl Query {
+    #[allow(dead_code)]
     pub fn eval(
         &self,
         current_value: &serde_json::Value,

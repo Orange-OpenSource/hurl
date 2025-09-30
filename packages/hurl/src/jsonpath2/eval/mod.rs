@@ -20,6 +20,7 @@ mod comparison;
 mod query;
 mod segment;
 mod selector;
+mod singular_query;
 
 #[allow(dead_code)]
 pub type NodeList = Vec<serde_json::Value>;

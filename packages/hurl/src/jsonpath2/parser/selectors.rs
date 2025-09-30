@@ -61,7 +61,7 @@ pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 /// Try to parse a name selector
-fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
+pub fn try_name_selector(reader: &mut Reader) -> ParseResult<Option<NameSelector>> {
     let value = try_string_literal(reader)?;
     Ok(value.map(NameSelector::new))
 }

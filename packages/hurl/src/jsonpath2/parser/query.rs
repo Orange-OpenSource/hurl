@@ -18,36 +18,19 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
+use crate::jsonpath2::ast::query::{AbsoluteQuery, RelativeQuery};
 use crate::jsonpath2::parser::primitives::{expect_str, match_str};
-use crate::jsonpath2::parser::{segments, ParseError, ParseErrorKind, ParseResult};
+use crate::jsonpath2::parser::{segments, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;
-    let segments = segments::parse(reader, false)?;
+    let segments = segments::parse(reader)?;
     Ok(AbsoluteQuery::new(segments))
-}
-
-/// Parse a singular query.
-/// Regardless of the input value, the expression produces a nodelist containing at most one node
-#[allow(dead_code)]
-pub fn singular_query(reader: &mut Reader) -> ParseResult<Query> {
-    if match_str("$", reader) {
-        let segments = segments::parse(reader, true)?;
-        Ok(Query::AbsoluteQuery(AbsoluteQuery::new(segments)))
-    } else if match_str("@", reader) {
-        let segments = segments::parse(reader, true)?;
-        Ok(Query::RelativeQuery(RelativeQuery::new(segments)))
-    } else {
-        let pos = reader.cursor().pos;
-        let kind = ParseErrorKind::Expecting("a singular query".to_string());
-        Err(ParseError::new(pos, kind))
-    }
 }
 
 pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
     if match_str("@", reader) {
-        let segments = segments::parse(reader, false)?;
+        let segments = segments::parse(reader)?;
         Ok(Some(RelativeQuery::new(segments)))
     } else {
         Ok(None)

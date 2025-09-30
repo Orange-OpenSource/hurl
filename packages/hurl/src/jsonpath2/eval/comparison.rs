@@ -62,16 +62,8 @@ impl Comparable {
     ) -> Option<serde_json::Value> {
         match self {
             Comparable::Literal(literal) => Some(literal.eval()),
-            Comparable::SingularQuery(query) => {
-                let values = query.eval(current_value, root_value);
-                if values.is_empty() {
-                    None
-                } else if values.len() == 1 {
-                    Some(values[0].clone())
-                } else {
-                    // TODO: Create specific type for Singular Query with eval returning Option<Value>
-                    panic!("Should not happen for SingularQuery")
-                }
+            Comparable::SingularQuery(singular_query) => {
+                singular_query.eval(current_value, root_value)
             }
         }
     }
@@ -96,18 +88,17 @@ mod tests {
 
     use serde_json::json;
 
+    use super::*;
+    use crate::jsonpath2::ast::singular_query::SingularQuerySegment;
     use crate::jsonpath2::ast::{
-        query::{AbsoluteQuery, Query},
-        segment::{ChildSegment, Segment},
-        selector::{NameSelector, Selector},
+        selector::NameSelector,
+        singular_query::{AbsoluteSingularQuery, SingularQuery},
     };
 
-    use super::*;
-
-    fn name_query(name: &str) -> Query {
-        Query::AbsoluteQuery(AbsoluteQuery::new(vec![Segment::Child(ChildSegment::new(
-            vec![Selector::Name(NameSelector::new(name.to_string()))],
-        ))]))
+    fn name_query(name: &str) -> SingularQuery {
+        SingularQuery::Absolute(AbsoluteSingularQuery::new(vec![
+            SingularQuerySegment::Name(NameSelector::new(name.to_string())),
+        ]))
     }
 
     #[test]

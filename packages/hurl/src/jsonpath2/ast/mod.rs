@@ -21,6 +21,7 @@ pub(crate) mod expr;
 pub(crate) mod query;
 pub(crate) mod segment;
 pub(crate) mod selector;
+pub(crate) mod singular_query;
 
 /// JSONPath Query
 /// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
