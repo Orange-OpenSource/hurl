@@ -29,11 +29,11 @@ encoding_rs = "0.8.35"
 glob = "0.3.3"
 hurl_core = { version = "7.1.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.1.0"
-libxml = "0.3.7"
+libxml = "0.3.8"
 md5 = "0.7.0"
 percent-encoding = "2.3.2"
-regex = "1.11.2"
-serde = { version = "1.0.225", features = ["derive"] }
+regex = "1.11.3"
+serde = { version = "1.0.227", features = ["derive"] }
 serde_json = { version = "1.0.145", features = ["arbitrary_precision"] }
 sha2 = "0.10.9"
 url = "2.5.7"
