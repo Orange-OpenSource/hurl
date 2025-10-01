@@ -141,14 +141,27 @@ def test_stderr(f, result):
     if not os.path.exists(f):
         return
 
-    expected = ignore_lines(open(f, encoding="utf-8").read())
+    # Whether actual data newlines are \r\n or \n, the expected file is using \n
+    # and we don't want to take the newlines diff into account.
+    # By not specifying `newline` parameter in `open` we ask Python to convert the expected newlines
+    # to the platform ones.
+    # <https://docs.python.org/3/library/functions.html#open>:
+    # > newline determines how to parse newline characters from the stream. It can be None, '', '\n', '\r', and '\r\n'. It works as follows:
+    # > When reading input from the stream, if newline is None, universal newlines mode is enabled. Lines in the input
+    # > can end in '\n', '\r', or '\r\n', and these are translated into '\n' before being returned to the caller.
+    expected = ignore_lines(open(f, encoding="utf-8", newline=None).read())
+
     actual = ignore_lines(decode_string(result.stderr))
     if actual != expected:
         print(">>> error in stderr")
         print("actual:")
-        print(actual)
+        print("---")
+        print(show_invisibles(actual))
+        print("---")
         print("expected:")
-        print(expected)
+        print("---")
+        print(show_invisibles(expected))
+        print("---")
         sys.exit(1)
 
 
@@ -168,6 +181,9 @@ def test_stderr_pattern(f, result):
 
     actual = decode_string(result.stderr)
     actual = ignore_lines(actual)
+
+    # Whether actual data newlines are \r\n or \n, the expected file is using \n
+    # and we don't want to take the newlines diff into account.
     actual_lines = re.split(r"\r?\n", actual)
 
     if len(actual_lines) != len(expected_pattern_lines):
@@ -190,11 +206,16 @@ def test_stderr_pattern(f, result):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
             print(f">>> error in stderr in line {i + 1}")
             print("actual:")
-            print(actual_lines[i])
+            print("---")
+            print(show_invisibles(actual_lines[i]))
+            print("---")
             print("expected (pattern):")
-            print(expected_lines[i])
+            print("---")
+            print(show_invisibles(expected_lines[i]))
+            print("---")
             print("expected (regex):")
-            print(expected_pattern_lines[i])
+            print("---")
+            print(show_invisibles(expected_pattern_lines[i]))
             sys.exit(1)
 
 
@@ -259,6 +280,21 @@ def ignore_lines(text: str) -> str:
         lines.append(line)
 
     return "\n".join(lines)
+
+
+def show_invisibles(text: str) -> str:
+    """Replace invisibles char with visible placeholders"""
+
+    replacements = [
+        # we keep a newline for newlines to display
+        ("\n", "[\\n]\n"),
+        ("\r", "[\\r]"),
+        ("\t", "[\\t]"),
+    ]
+    dst = text
+    for old, new in replacements:
+        dst = dst.replace(old, f"\x1b[33m{new}\x1b[0m")
+    return dst
 
 
 def main():
