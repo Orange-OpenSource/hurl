@@ -6,6 +6,7 @@ Thanks to
 [@quantonganh](https://github.com/quantonganh),
 [@gugahoa](https://github.com/gugahoa),
 [@MikhailWahib](https://github.com/MikhailWahib),
+[@ashishajr](https://github.com/ashishajr),
 
 Enhancements:
 
@@ -16,11 +17,14 @@ Enhancements:
 * Add --negotiate option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
 * Add utf8Decode/utf8Encode filters [#4382](https://github.com/Orange-OpenSource/hurl/issues/4382)
 * Replace unmaintained encoding crate with encoding_rs crate. [#4399](https://github.com/Orange-OpenSource/hurl/issues/4399)
+* Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
+* HTML report enhancements [#4445](https://github.com/Orange-OpenSource/hurl/issues/4445) [#4446](https://github.com/Orange-OpenSource/hurl/issues/4446)
 
 
 Bugs Fixed:
 
 * Parse `--user`, `--negotiate`, and `--ntlm` options in hurlfmt [#4213](https://github.com/Orange-OpenSource/hurl/issues/4213)
+* Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
 
 
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
