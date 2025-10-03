@@ -1,7 +1,0 @@
-error: Undefined variable
-  --> tests_failed/template/template_variable_not_found.hurl:1:7
-   |
- 1 | GET {{url}}
-   |       ^^^ you must set the variable url
-   |
-

@@ -1,1 +1,0 @@
-curl --path-as-is http://localhost:8000/path-as-is/../resource

@@ -1,7 +1,0 @@
-error: Parsing predicate value
-  --> tests_error_parser/predicate_startwith_value.hurl:4:26
-   |
- 4 | header "toto" startsWith 1
-   |                          ^ invalid predicate value
-   |
-

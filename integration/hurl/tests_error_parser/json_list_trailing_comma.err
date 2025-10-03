@@ -1,7 +1,0 @@
-error: Parsing JSON
-  --> tests_error_parser/json_list_trailing_comma.hurl:3:20
-   |
- 3 |   "name": ["c", "d", ]
-   |                    ^ trailing comma is not allowed
-   |
-

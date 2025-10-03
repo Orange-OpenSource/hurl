@@ -1,3 +1,0 @@
-curl 'http://localhost:8000/predicates-string'
-curl 'http://localhost:8000/predicates-string-empty'
-curl 'http://localhost:8000/predicates-string-unicode'

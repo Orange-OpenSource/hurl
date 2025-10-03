@@ -1,2 +1,0 @@
-curl 'http://localhost:8000/dummy_bytes'
-curl --limit-rate 2000000 'http://localhost:8000/dummy_bytes'

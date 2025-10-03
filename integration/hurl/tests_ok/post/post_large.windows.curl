@@ -1,1 +1,0 @@
-curl --header 'Content-Type: application/octet-stream' --data-binary '@tests_ok\post_large.bin' 'http://localhost:8000/post_large'

@@ -1,5 +1,0 @@
-curl 'http://localhost:8000/assert-json'
-curl 'http://localhost:8000/assert-json/index'
-curl 'http://localhost:8000/assert-json'
-curl 'http://localhost:8000/assert-json/list'
-curl 'http://localhost:8000/assert-json/filter'

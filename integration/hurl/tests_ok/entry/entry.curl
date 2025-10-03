@@ -1,3 +1,0 @@
-curl 'http://localhost:8000/to-entry/2'
-curl 'http://localhost:8000/to-entry/3'
-curl 'http://localhost:8000/to-entry/4'

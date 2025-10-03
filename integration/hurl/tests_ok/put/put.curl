@@ -1,1 +1,0 @@
-curl --request PUT 'http://localhost:8000/put'

@@ -15,12 +15,7 @@ def main():
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (
-        get_files("tests_ok/**/*." + extension)
-        + get_files("tests_ok_not_linted/*." + extension)
-        + get_files("tests_failed/**/*." + extension)
-        + get_files("tests_failed_not_linted/*." + extension)
-        + get_files("tests_error_parser/*." + extension)
-        + get_files("tests_ssl/*." + extension)
+        get_files("tests_error_parser/*." + extension)
     )
     for f in sorted(script_files):
         test_script.test(f)

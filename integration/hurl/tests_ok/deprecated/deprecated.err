@@ -1,2 +1,0 @@
-warning: multilines string attributes are now deprecated, they will be removed in next Hurl versions
-warning: <includes> predicate is now deprecated in favor of <contains> predicate

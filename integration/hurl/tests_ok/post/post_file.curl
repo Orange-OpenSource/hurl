@@ -1,2 +1,0 @@
-curl --header 'Content-Type:' --data-binary '@tests_ok/post/data.bin' 'http://localhost:8000/post-file'
-curl --header 'Content-Type:' --data-binary '@tests_ok/post/post_file_with space' 'http://localhost:8000/post-file'

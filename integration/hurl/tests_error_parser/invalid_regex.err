@@ -1,7 +1,0 @@
-error: Parsing regex
-  --> tests_error_parser/invalid_regex.hurl:4:23
-   |
- 4 | jsonpath "$.data" == /aa{a}/
-   |                       ^ invalid Regex expression: repetition quantifier expects a valid decimal
-   |
-

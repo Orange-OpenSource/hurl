@@ -1,3 +1,0 @@
-curl --header 'Content-Type: application/json' --data '{ "user": "bob" }' --output build/../build/output_request_1.bin 'http://localhost:8000/output/endpoint1'
-curl 'http://localhost:8000/output/endpoint2'
-curl 'http://localhost:8000/output/endpoint3'

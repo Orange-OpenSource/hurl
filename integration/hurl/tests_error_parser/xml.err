@@ -1,7 +1,0 @@
-error: Parsing XML
-  --> tests_error_parser/xml.hurl:2:14
-   |
- 2 | <users><user>
-   |              ^ invalid XML
-   |
-

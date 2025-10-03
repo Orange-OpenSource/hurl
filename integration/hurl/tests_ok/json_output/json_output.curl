@@ -1,6 +1,0 @@
-curl 'http://localhost:8000/hello'
-curl 'http://localhost:8000/cookies/set-session-cookie2-valueA'
-curl --cookie 'cookie2=valueA' --header 'Accept: text/plain' 'http://localhost:8000/follow-redirect'
-curl --cookie 'cookie2=valueA' --header 'Accept: text/plain' --location 'http://localhost:8000/follow-redirect'
-curl --cookie 'cookie2=valueA' 'http://localhost:8000/captures'
-curl --cookie 'cookie2=valueA' 'http://localhost:8000/assert-json'

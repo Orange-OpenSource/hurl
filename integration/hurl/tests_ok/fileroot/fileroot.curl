@@ -1,3 +1,0 @@
-curl --output build/fileroot.bin 'http://localhost:8000/fileroot'
-curl --header 'Content-Type:' --data-binary '@build/fileroot.bin' 'http://localhost:8000/fileroot'
-curl --header 'Content-Type:' --data-binary '@build/../build/fileroot.bin' 'http://localhost:8000/fileroot'

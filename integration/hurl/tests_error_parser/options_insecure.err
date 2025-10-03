@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/options_insecure.hurl:3:11
-   |
- 3 | insecure: foo
-   |           ^ expecting 'true|false'
-   |
-

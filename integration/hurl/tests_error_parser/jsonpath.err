@@ -1,7 +1,0 @@
-error: Parsing jsonpath expression
-  --> tests_error_parser/jsonpath.hurl:4:10
-   |
- 4 | jsonpath ? equals 1
-   |          ^ expecting a jsonpath expression
-   |
-

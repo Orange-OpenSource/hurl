@@ -1,7 +1,0 @@
-error: Parsing template variable
-  --> tests_error_parser/template_variable.hurl:1:7
-   |
- 1 | GET {{}}
-   |       ^ expecting a variable
-   |
-

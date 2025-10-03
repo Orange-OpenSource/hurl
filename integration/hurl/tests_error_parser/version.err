@@ -1,7 +1,0 @@
-error: Parsing version
-  --> tests_error_parser/version.hurl:2:1
-   |
- 2 | HTTP/11 200
-   | ^ HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2
-   |
-

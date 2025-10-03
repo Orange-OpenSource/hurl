@@ -1,1 +1,0 @@
-curl --netrc-file 'tests_ok/netrc/netrc_file.netrc' 'http://localhost:8000/basic-authentication'

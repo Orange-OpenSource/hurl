@@ -1,7 +1,0 @@
-error: Parsing JSON
-  --> tests_error_parser/json_object_expecting_element.hurl:2:11
-   |
- 2 | { "name": x
-   |           ^ expecting a boolean, number, string, array, object or null
-   |
-

@@ -1,7 +1,0 @@
-error: Parsing cookie attribute
-  --> tests_error_parser/invalid_cookiepath.hurl:4:17
-   |
- 4 | cookie "cookie1[X]" equals "1"
-   |                 ^ the cookie attribute is not valid
-   |
-

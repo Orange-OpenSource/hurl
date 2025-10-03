@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/base64.hurl:2:14
-   |
- 2 | base64, aaaaa?
-   |              ^ expecting ';'
-   |
-

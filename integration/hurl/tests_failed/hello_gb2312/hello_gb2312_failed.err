@@ -1,9 +1,0 @@
-error: Invalid decoding
-  --> tests_failed/hello_gb2312/hello_gb2312_failed.hurl:10:1
-   |
-   | GET http://localhost:8000/hello_gb2312_failed
-   | ...
-10 | xpath "string(//body)" == "你好世界"
-   | ^^^^^^^^^^^^^^^^^^^^^^ could not decode response body with charset 'UTF-8'
-   |
-

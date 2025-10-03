@@ -1,1 +1,0 @@
-curl --head 'http://localhost:8000/head'

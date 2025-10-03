@@ -1,7 +1,0 @@
-error: Parsing request section name
-  --> tests_error_parser/invalid_section.hurl:2:2
-   |
- 2 | [Asserts]
-   |  ^ the section is not valid. Valid values are QueryStringParams, FormParams, MultipartFormData, Cookies, Options
-   |
-

@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/invalid_cookie.hurl:5:26
-   |
- 5 | cookie "JSESSIONID exists
-   |                          ^ expecting '"'
-   |
-

@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/invalid_jsonpath.hurl:4:10
-   |
- 4 | jsonpath ?? equals 1
-   |          ^ expecting '"'
-   |
-

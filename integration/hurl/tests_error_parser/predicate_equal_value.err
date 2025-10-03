@@ -1,7 +1,0 @@
-error: Parsing predicate value
-  --> tests_error_parser/predicate_equal_value.hurl:4:18
-   |
- 4 | header "toto" == xx
-   |                  ^ invalid predicate value
-   |
-

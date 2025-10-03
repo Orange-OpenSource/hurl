@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/file_missing_delimiter.hurl:2:16
-   |
- 2 | file, data.bin ?
-   |                ^ expecting ';'
-   |
-

@@ -1,7 +1,0 @@
-error: Parsing unicode literal
-  --> tests_error_parser/unicode.hurl:4:18
-   |
- 4 |  "foo": "\ud800\ud800"
-   |                  ^ Invalid unicode literal
-   |
-

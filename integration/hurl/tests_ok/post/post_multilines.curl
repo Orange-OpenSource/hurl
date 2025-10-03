@@ -1,3 +1,0 @@
-curl --header 'Content-Type:' --data $'name,age\nbob,10\nbill,22\n' 'http://localhost:8000/post-multilines'
-curl 'http://localhost:8000/get-bob-age'
-curl --header 'Content-Type:' --data $'name,age\nbob,10\nbill,22\n' 'http://localhost:8000/post-multilines'

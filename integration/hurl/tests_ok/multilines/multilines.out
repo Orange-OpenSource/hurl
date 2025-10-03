@@ -1,1 +1,0 @@
-{"query":"{\n  hero {\n    name\n    # Queries can have comments!\n    friends {\n      name\n    }\n  }\n}"}

@@ -1,3 +1,0 @@
-curl --connect-to foo.com:80:localhost:8000 --connect-to bar.com:80:localhost:8000 --connect-to baz.com:80:localhost:8000 'http://foo.com/connect-to'
-curl --connect-to foo.com:80:localhost:8000 --connect-to bar.com:80:localhost:8000 --connect-to baz.com:80:localhost:8000 'http://bar.com/connect-to'
-curl --connect-to foo.com:80:localhost:8000 --connect-to bar.com:80:localhost:8000 --connect-to baz.com:80:localhost:8000 'http://baz.com/connect-to'

@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/missing_quote.hurl:4:41
-   |
- 4 | jsonpath "$.error.message" == "not found
-   |                                         ^ expecting '"'
-   |
-

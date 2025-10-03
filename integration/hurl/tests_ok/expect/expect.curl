@@ -1,1 +1,0 @@
-curl --header 'Expect: 100-continue' --header 'Content-Type:' --data 'data' 'http://localhost:8000/expect'

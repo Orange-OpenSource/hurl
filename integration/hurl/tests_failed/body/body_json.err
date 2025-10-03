@@ -1,9 +1,0 @@
-error: Invalid JSON
-  --> tests_failed/body/body_json.hurl:3:18
-   |
-   | POST https://unused
-   | ...
- 3 |     "success": {{success}}
-   |                  ^^^^^^^ actual value is <invalid>
-   |
-

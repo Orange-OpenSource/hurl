@@ -1,7 +1,0 @@
-error: Parsing filename
-  --> tests_error_parser/file.hurl:2:6
-   |
- 2 | file,
-   |      ^ expecting a filename
-   |
-

@@ -149,18 +149,28 @@ def test_stderr(f, result):
     # > newline determines how to parse newline characters from the stream. It can be None, '', '\n', '\r', and '\r\n'. It works as follows:
     # > When reading input from the stream, if newline is None, universal newlines mode is enabled. Lines in the input
     # > can end in '\n', '\r', or '\r\n', and these are translated into '\n' before being returned to the caller.
-    expected = ignore_lines(open(f, encoding="utf-8", newline=None).read())
+    expected = open(f, encoding="utf-8", newline=None).read()
+    expected_filtered = ignore_lines(expected)
 
-    actual = ignore_lines(decode_string(result.stderr))
-    if actual != expected:
+    actual = decode_string(result.stderr)
+    actual_filtered = ignore_lines(actual)
+    if actual_filtered != expected_filtered:
         print(">>> error in stderr")
-        print("actual:")
+        print("actual (original):")
         print("---")
         print(show_invisibles(actual))
         print("---")
-        print("expected:")
+        print("expected (original):")
         print("---")
         print(show_invisibles(expected))
+        print("---")
+        print("actual (filtered):")
+        print("---")
+        print(show_invisibles(actual_filtered))
+        print("---")
+        print("expected (filtered):")
+        print("---")
+        print(show_invisibles(expected_filtered))
         print("---")
         sys.exit(1)
 

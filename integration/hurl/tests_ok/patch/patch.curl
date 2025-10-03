@@ -1,1 +1,0 @@
-curl --request PATCH --header 'Host: www.example.com' --header 'Content-Type: application/example' --header 'If-Match: "e0023aa4e"' 'http://localhost:8000/patch/file.txt'

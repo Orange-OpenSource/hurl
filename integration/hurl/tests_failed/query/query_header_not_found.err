@@ -1,9 +1,0 @@
-error: Header not found
-  --> tests_failed/query/query_header_not_found.hurl:3:1
-   |
-   | GET http://localhost:8000/error-query-header-not-found
-   | ...
- 3 | Custom: XXX
-   | ^^^^^^ this header has not been found in the response
-   |
-

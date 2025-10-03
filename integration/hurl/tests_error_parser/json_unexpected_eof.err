@@ -1,7 +1,0 @@
-error: Parsing JSON
-  --> tests_error_parser/json_unexpected_eof.hurl:2:10
-   |
- 2 | { "name":
-   |          ^ expecting an element; found empty element instead
-   |
-

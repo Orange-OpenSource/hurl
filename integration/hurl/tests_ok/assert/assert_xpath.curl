@@ -1,4 +1,0 @@
-curl 'http://localhost:8000/assert-xpath'
-curl 'http://localhost:8000/assert-xpath-simple-namespaces'
-curl 'http://localhost:8000/assert-xpath-svg'
-curl 'http://localhost:8000/assert-xpath-namespaces'

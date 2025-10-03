@@ -1,5 +1,0 @@
-curl --header 'Content-Type: application/json' --data '{"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}' 'http://localhost:8000/graphql'
-curl --header 'Content-Type: application/json' --data '{"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}' 'http://localhost:8000/graphql'
-curl --header 'Content-Type: application/json' --data '{"query":"query Query {\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}' 'http://localhost:8000/graphql'
-curl --header 'Content-Type: application/json' --data '{"query":"query Person($id: ID!) {\n  person(id: $id) {\n    name\n  }\n}","variables":{"id":"cGVvcGxlOjQ="}}' 'http://localhost:8000/graphql'
-curl --header 'Content-Type: application/json' --data '{"query":"query Person($id: ID!) {\n  person(id: $id) {\n    name\n  }\n}","variables":{"id":"cGVvcGxlOjQ="}}' 'http://localhost:8000/graphql'

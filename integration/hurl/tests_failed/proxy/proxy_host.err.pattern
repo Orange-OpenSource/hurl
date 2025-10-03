@@ -1,7 +1,0 @@
-error: HTTP connection
-  --> tests_failed/proxy/proxy.hurl:1:5
-   |
- 1 | GET http://localhost:8000/hello
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ (5) Could not resolve proxy: <<<(unknown|localhost)>>>
-   |
-

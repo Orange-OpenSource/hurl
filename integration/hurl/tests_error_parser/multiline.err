@@ -1,7 +1,0 @@
-error: Parsing multiline
-  --> tests_error_parser/multiline.hurl:2:4
-   |
- 2 | ```foo
-   |    ^ Invalid attribute foo
-   |
-

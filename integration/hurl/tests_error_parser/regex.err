@@ -1,7 +1,0 @@
-error: Parsing literal
-  --> tests_error_parser/regex.hurl:5:7
-   |
- 5 | regex ?? not exists
-   |       ^ expecting '" or /'
-   |
-

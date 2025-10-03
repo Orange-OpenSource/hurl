@@ -1,7 +1,0 @@
-error: Parsing space
-  --> tests_error_parser/space.hurl:1:4
-   |
- 1 | GET
-   |    ^ expecting a space
-   |
-

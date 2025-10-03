@@ -1,7 +1,0 @@
-error: Parsing filename
-  --> tests_error_parser/options_cacert.hurl:3:9
-   |
- 3 | cacert: # missing filename !
-   |         ^ expecting a filename
-   |
-

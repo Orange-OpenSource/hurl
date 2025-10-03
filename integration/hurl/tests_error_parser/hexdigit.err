@@ -1,7 +1,0 @@
-error: Parsing hexadecimal number
-  --> tests_error_parser/hexdigit.hurl:2:17
-   |
- 2 | {"smiley":"\uf64"}
-   |                 ^ expecting a valid hexadecimal number
-   |
-

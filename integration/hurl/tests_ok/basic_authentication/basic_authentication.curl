@@ -1,1 +1,0 @@
-curl --user 'bob@email.com:secret' 'http://localhost:8000/basic-authentication'

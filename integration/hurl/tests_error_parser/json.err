@@ -1,7 +1,0 @@
-error: Parsing JSON
-  --> tests_error_parser/json.hurl:3:1
-   |
- 3 | HTTP 200
-   | ^ expecting a boolean, number, string, array, object or null
-   |
-

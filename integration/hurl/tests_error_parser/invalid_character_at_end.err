@@ -1,7 +1,0 @@
-error: Parsing method
-  --> tests_error_parser/invalid_character_at_end.hurl:3:1
-   |
- 3 | xxx
-   | ^ the HTTP method <xxx> is not valid. Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
-   |
-
