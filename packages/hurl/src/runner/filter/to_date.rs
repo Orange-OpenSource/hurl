@@ -34,6 +34,12 @@ pub fn eval_to_date(
 
     match value {
         Value::String(v) => {
+            // Chrono’s parser enforces strictly parsing on `DateTime`, `NaiveDateTime` and `NaiveDate`.
+            // If we try to parse a string "2024-12-31" into a `NaiveDateTime`, Chrono
+            // considers that there are missing information (time) and can't parse this value. As we
+            // can't enforce the user input date format, we heuristically try to parse it from the richer
+            // format to the information-less format: date + time + timezone, date + time and finally
+            // date.
             if let Ok(dt) = DateTime::parse_from_str(v, format.as_str()) {
                 return Ok(Some(Value::Date(dt.with_timezone(&Utc))));
             }
