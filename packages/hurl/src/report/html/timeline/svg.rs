@@ -35,6 +35,7 @@ pub enum ElementKind {
     Svg,          // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg
     Symbol,       // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/symbol
     Text,         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
+    Title,        // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title
     Use,          // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
 }
 
@@ -54,6 +55,7 @@ impl ElementKind {
             ElementKind::Svg => "svg",
             ElementKind::Symbol => "symbol",
             ElementKind::Text => "text",
+            ElementKind::Title => "title",
             ElementKind::Use => "use",
         }
     }
@@ -361,6 +363,13 @@ pub fn new_path(d: &str) -> Element {
 /// Returns a new `<use>` element.
 pub fn new_use() -> Element {
     Element::new(ElementKind::Use)
+}
+
+/// Returns a new `<title>` element.
+pub fn new_title(content: &str) -> Element {
+    let mut elt = Element::new(ElementKind::Title);
+    elt.set_content(content);
+    elt
 }
 
 #[cfg(test)]

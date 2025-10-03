@@ -133,12 +133,14 @@ fn new_calls(
             let url = &call.request.url.to_string().redact(secrets);
             let url = url.strip_prefix("http://").unwrap_or(url);
             let url = url.strip_prefix("https://").unwrap_or(url);
-            let text = format!("{} {url}", call.request.method);
-            let text = trunc_str(&text, 24);
+            let full_text = format!("{} {url}", call.request.method);
+            let text = trunc_str(&full_text, 24);
             let mut elt = svg::new_text(x.0, y.0, &text);
             if call_ctx.kind == CallContextKind::Failure {
                 elt.add_attr(Fill("red".to_string()));
             }
+            let title = svg::new_title(&full_text);
+            elt.add_child(title);
             group.add_child(elt);
 
             // Status code
