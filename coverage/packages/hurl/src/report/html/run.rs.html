@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="122 / 122">100 %</abbr></p>
+                <abbr title="124 / 124">100 %</abbr></p>
         </div>
     </div>
 
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let values = vec![</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start_date = call.timings.begin_call.to_rfc2822();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        (&quot;Request URL&quot;, url.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">    let values = vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1989,7 +1989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        (&quot;Request Method&quot;, call.request.method.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Start Date&quot;, start_date.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2005,7 +2005,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        (&quot;Version&quot;, version.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Request URL&quot;, url.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        (&quot;Status code&quot;, status.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Request Method&quot;, call.request.method.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2037,7 +2037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        (&quot;Source&quot;, source.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Version&quot;, version.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2047,13 +2047,13 @@
                 <a href="#126">126</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="840">
+                840
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    ];</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Status code&quot;, status.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;General&quot;, &amp;values);</pre>
+                <pre class="has-background-success-light py-0 px-2">        (&quot;Source&quot;, source.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2077,6 +2077,38 @@
                 id="128"
                 role="cell">
                 <a href="#128">128</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    ];</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="129"
+                role="cell">
+                <a href="#129">129</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="840">
+                840
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;General&quot;, &amp;values);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="130"
+                role="cell">
+                <a href="#130">130</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2090,9 +2122,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="129"
+                id="131"
                 role="cell">
-                <a href="#129">129</a>
+                <a href="#131">131</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -2106,9 +2138,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="130"
+                id="132"
                 role="cell">
-                <a href="#130">130</a>
+                <a href="#132">132</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -2122,9 +2154,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="131"
+                id="133"
                 role="cell">
-                <a href="#131">131</a>
+                <a href="#133">133</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2134,38 +2166,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">    if let Some(certificate) = &amp;call.response.certificate {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="132"
-                role="cell">
-                <a href="#132">132</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let start_date = certificate.start_date.to_string();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="133"
-                role="cell">
-                <a href="#133">133</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="9">
-                9
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let end_date = certificate.expire_date.to_string();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let values = vec![</pre>
+                <pre class="has-background-success-light py-0 px-2">        let start_date = certificate.start_date.to_string();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (&quot;Subject&quot;, certificate.subject.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        let end_date = certificate.expire_date.to_string();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2213,7 +2213,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (&quot;Issuer&quot;, certificate.issuer.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">        let values = vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2229,7 +2229,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (&quot;Start Date&quot;, start_date.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            (&quot;Subject&quot;, certificate.subject.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2245,7 +2245,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (&quot;Expire Date&quot;, end_date.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            (&quot;Issuer&quot;, certificate.issuer.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            (&quot;Serial Number&quot;, certificate.serial_number.as_str()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            (&quot;Start Date&quot;, start_date.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        ];</pre>
+                <pre class="has-background-success-light py-0 px-2">            (&quot;Expire Date&quot;, end_date.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let table = new_table(&quot;Certificate&quot;, &amp;values);</pre>
+                <pre class="has-background-success-light py-0 px-2">            (&quot;Serial Number&quot;, certificate.serial_number.as_str()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        text.push_str(&amp;table);</pre>
+                <pre class="has-background-success-light py-0 px-2">        ];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2317,6 +2317,38 @@
                 id="143"
                 role="cell">
                 <a href="#143">143</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        let table = new_table(&quot;Certificate&quot;, &amp;values);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="144"
+                role="cell">
+                <a href="#144">144</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="9">
+                9
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        text.push_str(&amp;table);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="145"
+                role="cell">
+                <a href="#145">145</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -2330,9 +2362,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="144"
+                id="146"
                 role="cell">
-                <a href="#144">144</a>
+                <a href="#146">146</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -2342,38 +2374,6 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="145"
-                role="cell">
-                <a href="#145">145</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="840">
-                840
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut values = call</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="146"
-                role="cell">
-                <a href="#146">146</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="840">
-                840
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .request</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .headers</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut values = call</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
+                <pre class="has-background-success-light py-0 px-2">        .request</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2416,12 +2416,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3271">
-                3271
+                role="cell" aria-label="840">
+                840
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .map(|h| (h.name.as_str(), h.value.redact(secrets)))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .headers</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .collect::&lt;Vec&lt;(&amp;str, String)&gt;&gt;();</pre>
+                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2448,12 +2448,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3226">
-                3226
+                role="cell" aria-label="3271">
+                3271
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    values.sort_by(|a, b| a.0.to_lowercase().cmp(&amp;b.0.to_lowercase()));</pre>
+                <pre class="has-background-success-light py-0 px-2">        .map(|h| (h.name.as_str(), h.value.redact(secrets)))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;Request Headers&quot;, &amp;values);</pre>
+                <pre class="has-background-success-light py-0 px-2">        .collect::&lt;Vec&lt;(&amp;str, String)&gt;&gt;();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2480,12 +2480,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="840">
-                840
+                role="cell" aria-label="3226">
+                3226
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;table);</pre>
+                <pre class="has-background-success-light py-0 px-2">    values.sort_by(|a, b| a.0.to_lowercase().cmp(&amp;b.0.to_lowercase()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2495,13 +2495,13 @@
                 <a href="#154">154</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="840">
+                840
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;Request Headers&quot;, &amp;values);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,7 +2517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut values = call</pre>
+                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;table);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2527,13 +2527,13 @@
                 <a href="#156">156</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="840">
-                840
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .response</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2549,7 +2549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .headers</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut values = call</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
+                <pre class="has-background-success-light py-0 px-2">        .response</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2576,12 +2576,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4825">
-                4825
+                role="cell" aria-label="840">
+                840
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .map(|h| (h.name.as_str(), h.value.redact(secrets)))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .headers</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2597,7 +2597,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .collect::&lt;Vec&lt;(&amp;str, String)&gt;&gt;();</pre>
+                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2608,12 +2608,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4258">
-                4258
+                role="cell" aria-label="4825">
+                4825
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    values.sort_by(|a, b| a.0.to_lowercase().cmp(&amp;b.0.to_lowercase()));</pre>
+                <pre class="has-background-success-light py-0 px-2">        .map(|h| (h.name.as_str(), h.value.redact(secrets)))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2629,7 +2629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;Response Headers&quot;, &amp;values);</pre>
+                <pre class="has-background-success-light py-0 px-2">        .collect::&lt;Vec&lt;(&amp;str, String)&gt;&gt;();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2640,12 +2640,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="840">
-                840
+                role="cell" aria-label="4258">
+                4258
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;table);</pre>
+                <pre class="has-background-success-light py-0 px-2">    values.sort_by(|a, b| a.0.to_lowercase().cmp(&amp;b.0.to_lowercase()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2655,13 +2655,13 @@
                 <a href="#164">164</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="840">
+                840
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    let table = new_table(&quot;Response Headers&quot;, &amp;values);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2677,7 +2677,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    text</pre>
+                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;table);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2703,13 +2703,13 @@
                 <a href="#167">167</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="840">
+                840
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    text</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2725,7 +2725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an HTML table with a `title` and a list of key&#x2F;values. Values are redacted using `secrets`.</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2735,13 +2735,13 @@
                 <a href="#169">169</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3420">
-                3420
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn new_table&lt;T: AsRef&lt;str&gt;, U: AsRef&lt;str&gt; + std::fmt::Display&gt;(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2751,13 +2751,13 @@
                 <a href="#170">170</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3420">
-                3420
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    title: &amp;str,</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns an HTML table with a `title` and a list of key&#x2F;values. Values are redacted using `secrets`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2773,7 +2773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    data: &amp;[(T, U)],</pre>
+                <pre class="has-background-success-light py-0 px-2">fn new_table&lt;T: AsRef&lt;str&gt;, U: AsRef&lt;str&gt; + std::fmt::Display&gt;(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2789,7 +2789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; String {</pre>
+                <pre class="has-background-success-light py-0 px-2">    title: &amp;str,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2805,7 +2805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut text = String::new();</pre>
+                <pre class="has-background-success-light py-0 px-2">    data: &amp;[(T, U)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;format!(</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2837,7 +2837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th colspan=\&quot;2\&quot;&gt;{title}&lt;&#x2F;tr&gt;&lt;&#x2F;th&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;&quot;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut text = String::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    ));</pre>
+                <pre class="has-background-success-light py-0 px-2">    text.push_str(&amp;format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2864,12 +2864,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="3420">
+                3420
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    data.iter().for_each(|(name, value)| {</pre>
+                <pre class="has-background-success-light py-0 px-2">        &quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th colspan=\&quot;2\&quot;&gt;{title}&lt;&#x2F;tr&gt;&lt;&#x2F;th&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2880,12 +2880,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="3420">
+                3420
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        text.push_str(&amp;format!(</pre>
+                <pre class="has-background-success-light py-0 px-2">    ));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2896,12 +2896,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="13605">
+                13605
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            &quot;&lt;tr&gt;&lt;td class=\&quot;name\&quot;&gt;{}&lt;&#x2F;td&gt;&lt;td class=\&quot;value\&quot;&gt;{}&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">    data.iter().for_each(|(name, value)| {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2912,12 +2912,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="13605">
+                13605
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            name.as_ref(),</pre>
+                <pre class="has-background-success-light py-0 px-2">        text.push_str(&amp;format!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2928,12 +2928,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="13605">
+                13605
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            value</pre>
+                <pre class="has-background-success-light py-0 px-2">            &quot;&lt;tr&gt;&lt;td class=\&quot;name\&quot;&gt;{}&lt;&#x2F;td&gt;&lt;td class=\&quot;value\&quot;&gt;{}&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2944,12 +2944,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="13605">
+                13605
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        ));</pre>
+                <pre class="has-background-success-light py-0 px-2">            name.as_ref(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2960,8 +2960,40 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12765">
-                12765
+                role="cell" aria-label="13605">
+                13605
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            value</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="184"
+                role="cell">
+                <a href="#184">184</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="13605">
+                13605
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        ));</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="185"
+                role="cell">
+                <a href="#185">185</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="13605">
+                13605
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2970,9 +3002,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="184"
+                id="186"
                 role="cell">
-                <a href="#184">184</a>
+                <a href="#186">186</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2986,9 +3018,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="185"
+                id="187"
                 role="cell">
-                <a href="#185">185</a>
+                <a href="#187">187</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -3002,9 +3034,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="186"
+                id="188"
                 role="cell">
-                <a href="#186">186</a>
+                <a href="#188">188</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -3020,7 +3052,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-10-03 19:08</p>
+                    <p class="heading">Date: 2025-10-03 20:03</p>
                 </div>
             
         </footer>
