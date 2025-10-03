@@ -85,6 +85,10 @@ pub enum RunnerErrorKind {
         error: String,
     },
     FilterDecode(String),
+    FilterDateParsingError {
+        date: String,
+        format: String,
+    },
     FilterInvalidEncoding(String),
     /// Input of the filter is not valid, with a given reason.
     FilterInvalidInput(String),
@@ -143,6 +147,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::ExpressionInvalidType { .. } => "Invalid expression type".to_string(),
             RunnerErrorKind::FileReadAccess { .. } => "File read access".to_string(),
             RunnerErrorKind::FileWriteAccess { .. } => "File write access".to_string(),
+            RunnerErrorKind::FilterDateParsingError { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterDecode { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidEncoding { .. } => "Filter error".to_string(),
             RunnerErrorKind::FilterInvalidInput { .. } => "Filter error".to_string(),
@@ -230,6 +235,11 @@ impl DisplaySourceError for RunnerError {
             }
             RunnerErrorKind::FileWriteAccess { path, error } => {
                 let message = &format!("{} can not be written ({error})", path.to_string_lossy());
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+            RunnerErrorKind::FilterDateParsingError { date, format } => {
+                let message = &format!("value <{date}> could not be parsed with <{format}> format");
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }

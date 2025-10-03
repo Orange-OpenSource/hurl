@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use chrono::NaiveDateTime;
+use chrono::{DateTime, NaiveDate, NaiveDateTime, Utc};
 use hurl_core::ast::{SourceInfo, Template};
 
 use crate::runner::template::eval_template;
@@ -33,15 +33,30 @@ pub fn eval_to_date(
     let format = eval_template(format, variables)?;
 
     match value {
-        Value::String(v) => match NaiveDateTime::parse_from_str(v, format.as_str()) {
-            Ok(v) => Ok(Some(Value::Date(
-                v.and_local_timezone(chrono::Utc).unwrap(),
-            ))),
-            Err(_) => {
-                let kind = RunnerErrorKind::FilterInvalidInput(value.repr());
-                Err(RunnerError::new(source_info, kind, assert))
+        Value::String(v) => {
+            if let Ok(dt) = DateTime::parse_from_str(v, format.as_str()) {
+                return Ok(Some(Value::Date(dt.with_timezone(&Utc))));
             }
-        },
+
+            if let Ok(dt) = NaiveDateTime::parse_from_str(v, format.as_str()) {
+                return Ok(Some(Value::Date(
+                    DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc),
+                )));
+            }
+
+            if let Ok(date) = NaiveDate::parse_from_str(v, format.as_str()) {
+                let dt = date.and_hms_opt(0, 0, 0).unwrap();
+                return Ok(Some(Value::Date(
+                    DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc),
+                )));
+            }
+
+            let kind = RunnerErrorKind::FilterDateParsingError {
+                date: v.to_string(),
+                format,
+            };
+            Err(RunnerError::new(source_info, kind, assert))
+        }
         v => {
             let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
             Err(RunnerError::new(source_info, kind, assert))
