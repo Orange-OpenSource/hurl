@@ -117,7 +117,9 @@ fn get_call_html(
     let url = &call.request.url.to_string().redact(secrets);
     let url = format!("<a href=\"{url}\">{url}</a>");
     let source = format!("<a href=\"{source}#l{line}\">{filename}:{line}</a>");
+    let start_date = call.timings.begin_call.to_rfc2822();
     let values = vec![
+        ("Start Date", start_date.as_str()),
         ("Request URL", url.as_str()),
         ("Request Method", call.request.method.as_str()),
         ("Version", version.as_str()),
