@@ -149,7 +149,7 @@ error: Filter error
    | GET http://localhost:8000/error-filter
    | ...
 20 | jsonpath "$.id" toDate "%a, %d %b %Y %H:%M:%S GMT" == "unused"
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string <123x>
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ value <123x> could not be parsed with <%a, %d %b %Y %H:%M:%S GMT> format
    |
 
 error: Filter error

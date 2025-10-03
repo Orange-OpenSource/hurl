@@ -22,5 +22,8 @@ def filter():
   "json": "{\\"message\\": \\"Hello\\"}",
   "pi": "3.141592653589793",
   "ten": 10,
-  "utf8_bytes": "SGVsbG8gV29ybGQ="
+  "utf8_bytes": "SGVsbG8gV29ybGQ=",
+  "date_with_tz": "2020-08-27T09:07:46+0200",
+  "date_no_tz": "2020-08-27T09:07:46",
+  "date_no_time": "2020-08-27"
 }"""

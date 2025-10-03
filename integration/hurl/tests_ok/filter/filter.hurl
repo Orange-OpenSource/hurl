@@ -53,6 +53,9 @@ jsonpath "$.url" urlQueryParam "y" not exists
 jsonpath "$.encoded_url" urlQueryParam "x" == "шеллы"
 jsonpath "$.utf8_bytes" base64Decode utf8Decode == "Hello World"
 jsonpath "$.message" utf8Encode toHex == "48656c6c6f20426f6221"
+jsonpath "$.date_with_tz" toDate "%Y-%m-%dT%H:%M:%S%z" dateFormat "%a %b %d %H:%M:%S %Y %z" == "Thu Aug 27 07:07:46 2020 +0000"
+jsonpath "$.date_no_tz" toDate "%Y-%m-%dT%H:%M:%S" dateFormat "%a %b %d %H:%M:%S %Y %z" == "Thu Aug 27 09:07:46 2020 +0000"
+jsonpath "$.date_no_time" toDate "%Y-%m-%d" dateFormat "%a %b %d %H:%M:%S %Y %z" == "Thu Aug 27 00:00:00 2020 +0000"
 {
   "file": "0YjQtdC70LvRiw==",
   "text_encoded": "PDw_Pz8-Pg",
@@ -72,7 +75,10 @@ jsonpath "$.message" utf8Encode toHex == "48656c6c6f20426f6221"
   "json": "{\"message\": \"Hello\"}",
   "pi": "3.141592653589793",
   "ten": 10,
-  "utf8_bytes": "SGVsbG8gV29ybGQ="
+  "utf8_bytes": "SGVsbG8gV29ybGQ=",
+  "date_with_tz": "2020-08-27T09:07:46+0200",
+  "date_no_tz": "2020-08-27T09:07:46",
+  "date_no_time": "2020-08-27"
 }
 
 
@@ -106,5 +112,8 @@ jsonpath "$.list" nth {{index_last}} == 3
   "json": "{\"message\": \"Hello\"}",
   "pi": "3.141592653589793",
   "ten": 10,
-  "utf8_bytes": "SGVsbG8gV29ybGQ="
+  "utf8_bytes": "SGVsbG8gV29ybGQ=",
+  "date_with_tz": "2020-08-27T09:07:46+0200",
+  "date_no_tz": "2020-08-27T09:07:46",
+  "date_no_time": "2020-08-27"
 }
