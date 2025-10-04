@@ -24,21 +24,20 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use chrono::Utc;
 use curl::easy::{List, NetRc, SslOpt};
-use curl::{easy, Version};
+use curl::{easy, Error, Version};
 use hurl_core::typing::Count;
 
-use crate::http::certificate::Certificate;
-use crate::http::curl_cmd::CurlCmd;
-use crate::http::debug::log_body;
-use crate::http::header::{
-    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, LOCATION, SET_COOKIE,
-    USER_AGENT,
+use super::certificate::Certificate;
+use super::curl_cmd::CurlCmd;
+use super::debug::log_body;
+use super::header::{
+    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, LOCATION, USER_AGENT,
 };
-use crate::http::ip::IpAddr;
-use crate::http::options::ClientOptions;
-use crate::http::timings::Timings;
-use crate::http::url::Url;
-use crate::http::{
+use super::ip::IpAddr;
+use super::options::ClientOptions;
+use super::timings::Timings;
+use super::url::Url;
+use super::{
     easy_ext, Body, Call, Cookie, FileParam, Header, HttpError, HttpVersion, IpResolve, Method,
     MultipartParam, Param, Request, RequestCookie, RequestSpec, RequestedHttpVersion, Response,
     Verbosity,
@@ -84,6 +83,7 @@ impl Client {
     ) -> Result<Vec<Call>, HttpError> {
         let mut calls = vec![];
 
+        let original_url = &request_spec.url;
         let mut request_spec = request_spec.clone();
         let mut options = options.clone();
 
@@ -126,10 +126,13 @@ impl Client {
             // > By default, libcurl only sends Authentication: or explicitly set Cookie: headers
             // > to the initial host given in the original URL, to avoid leaking username + password
             // > to other sites.
-            let host_changed = request_url.host() != redirect_url.host();
-            if host_changed && !options.follow_location_trusted {
+            if should_strip_credentials_on_redirect(
+                original_url,
+                &redirect_url,
+                options.follow_location_trusted,
+            ) {
                 headers.retain(|h| !h.name_eq(AUTHORIZATION));
-                headers.retain(|h| !h.name_eq(SET_COOKIE));
+                headers.retain(|h| !h.name_eq(COOKIE));
                 options.user = None;
             }
 
@@ -370,8 +373,7 @@ impl Client {
         // > By passing the empty string ("") to this option, you enable the cookie
         // > engine without reading any initial cookies.
         self.handle
-            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())
-            .unwrap();
+            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())?;
 
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
@@ -399,11 +401,11 @@ impl Client {
         self.handle.certinfo(true)?;
 
         if !options.connects_to.is_empty() {
-            let connects = to_list(&options.connects_to);
+            let connects = to_list(&options.connects_to)?;
             self.handle.connect_to(connects)?;
         }
         if !options.resolves.is_empty() {
-            let resolves = to_list(&options.resolves);
+            let resolves = to_list(&options.resolves)?;
             self.handle.resolve(resolves)?;
         }
         self.handle.ssl_verify_host(!options.insecure)?;
@@ -649,11 +651,9 @@ impl Client {
         if !params.is_empty() {
             let mut form = easy::Form::new();
             for param in params {
-                // TODO: we could remove these `unwrap` if we implement conversion
-                // from libcurl::FormError to HttpError
                 match param {
                     MultipartParam::Param(Param { name, value }) => {
-                        form.part(name).contents(value.as_bytes()).add().unwrap();
+                        form.part(name).contents(value.as_bytes()).add()?;
                     }
                     MultipartParam::FileParam(FileParam {
                         name,
@@ -664,8 +664,7 @@ impl Client {
                         .part(name)
                         .buffer(filename, data.clone())
                         .content_type(content_type)
-                        .add()
-                        .unwrap(),
+                        .add()?,
                 }
             }
             self.handle.httppost(form)?;
@@ -834,6 +833,27 @@ impl Client {
     }
 }
 
+/// Tests if credentials (`Authorization:`, `Cookie:` headers) should be filtered when there is a redirection
+/// from the first `original_url` to `redirect_url`.
+fn should_strip_credentials_on_redirect(
+    original_url: &Url,
+    redirect_url: &Url,
+    follow_location_trusted: bool,
+) -> bool {
+    if follow_location_trusted {
+        return false;
+    }
+    // Different origin != strip credentials
+    if original_url.scheme() != redirect_url.scheme() {
+        return true;
+    }
+    if original_url.host() != redirect_url.host() {
+        return true;
+    }
+    // Treat different ports as different origins
+    original_url.port() != redirect_url.port()
+}
+
 /// Returns the method used for redirecting a request/response with `response_status`.
 fn redirect_method(response_status: u32, original_method: &Method) -> Method {
     // This replicates curl's behavior
@@ -910,6 +930,9 @@ fn split_lines(data: &[u8]) -> Vec<String> {
     let mut lines = vec![];
     let mut start = 0;
     let mut i = 0;
+    if data.is_empty() {
+        return lines;
+    }
     while i < (data.len() - 1) {
         if data[i] == 13 && data[i + 1] == 10 {
             if let Ok(s) = str::from_utf8(&data[start..i]) {
@@ -951,10 +974,12 @@ fn decode_header(data: &[u8]) -> Option<String> {
 }
 
 /// Converts a list of [`String`] to a libcurl's list of strings.
-fn to_list(items: &[String]) -> List {
+fn to_list(items: &[String]) -> Result<List, Error> {
     let mut list = List::new();
-    items.iter().for_each(|l| list.append(l).unwrap());
-    list
+    for item in items {
+        list.append(item)?;
+    }
+    Ok(list)
 }
 
 /// Parses a cert file name, with a potential user provided password, and returns a pair of
@@ -1132,6 +1157,58 @@ mod tests {
                 Method(redirected.to_string())
             );
         }
+    }
+
+    #[test]
+    fn test_should_strip_credentials_on_redirect() {
+        let url1 = Url::from_str("http://example.com").unwrap();
+        let url2 = Url::from_str("http://example.com:8080").unwrap();
+        let url3 = Url::from_str("https://example.com").unwrap();
+        let url4 = Url::from_str("http://other.com").unwrap();
+
+        let follow_location_trusted = false;
+        assert!(should_strip_credentials_on_redirect(
+            &url1,
+            &url2,
+            follow_location_trusted
+        ));
+        assert!(should_strip_credentials_on_redirect(
+            &url1,
+            &url3,
+            follow_location_trusted
+        ));
+        assert!(should_strip_credentials_on_redirect(
+            &url1,
+            &url4,
+            follow_location_trusted
+        ));
+        assert!(should_strip_credentials_on_redirect(
+            &url1,
+            &url3,
+            follow_location_trusted
+        ));
+
+        let follow_location_trusted = true;
+        assert!(!should_strip_credentials_on_redirect(
+            &url1,
+            &url2,
+            follow_location_trusted
+        ));
+        assert!(!should_strip_credentials_on_redirect(
+            &url1,
+            &url3,
+            follow_location_trusted
+        ));
+        assert!(!should_strip_credentials_on_redirect(
+            &url1,
+            &url4,
+            follow_location_trusted
+        ));
+        assert!(!should_strip_credentials_on_redirect(
+            &url1,
+            &url3,
+            follow_location_trusted
+        ));
     }
 
     #[test]

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use core::str;
 use std::fmt;
 use std::str::FromStr;
 
@@ -68,6 +69,22 @@ impl Url {
             .collect()
     }
 
+    /// Returns the parsed representation of the host for this URL.
+    /// See also the `host_str` method.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::str::FromStr;
+    /// use hurl::http::Url;
+    ///
+    /// let url = Url::from_str("https://127.0.0.1/index.html").unwrap();
+    /// assert_eq!(url.host(), "127.0.0.1".to_string());
+    ///
+    /// let url = Url::from_str("http://foo.com/index.html").unwrap();
+    /// assert_eq!(url.host(), "foo.com".to_string());
+    ///
+    /// ```
     pub fn host(&self) -> String {
         self.inner
             .host()
@@ -75,12 +92,49 @@ impl Url {
             .to_string()
     }
 
-    pub fn domain(&self) -> Option<String> {
-        self.inner.domain().map(|s| s.to_string())
+    /// Returns the scheme of this URL, lower-cased, as an ASCII string without the ':' delimiter.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use hurl::http::Url;
+    ///
+    /// let url: Url = "http://toto.com/foo".parse().unwrap();
+    /// assert_eq!(url.scheme(), "http");
+    /// ```
+    pub fn scheme(&self) -> &str {
+        self.inner.scheme()
     }
 
-    pub fn path(&self) -> String {
-        self.inner.path().to_string()
+    /// Returns the port of this URL.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::str::FromStr;
+    /// use hurl::http::Url;
+    ///
+    /// let url = Url::from_str("https://bar.com:8081/foo").unwrap();
+    /// assert_eq!(url.port(), Some(8081));
+    ///
+    /// let url = Url::from_str("https://baz.com").unwrap();
+    /// assert_eq!(url.port(), Some(443));
+    /// ```
+    pub fn port(&self) -> Option<u16> {
+        self.inner.port().or_else(|| match self.scheme() {
+            "http" | "ws" => Some(80),
+            "https" | "wss" => Some(443),
+            "ftp" => Some(21),
+            _ => None,
+        })
+    }
+
+    pub fn domain(&self) -> Option<&str> {
+        self.inner.domain()
+    }
+
+    pub fn path(&self) -> &str {
+        self.inner.path()
     }
 
     /// Parse a string `input` as an URL, with this URL as the base URL.
@@ -100,27 +154,12 @@ impl Url {
     }
 }
 
-/// Extracting scheme from `url`
-///
-/// The parse method from the url crate does not seem to parse url without scheme
-/// For example, "localhost:8000" is parsed with its scheme set to "localhost"
-///
-fn scheme(url: &str) -> Option<String> {
-    let re = Regex::new("^([a-z]+://).*").unwrap();
-    if let Some(caps) = re.captures(url) {
-        let scheme = &caps[1];
-        Some(scheme.to_string())
-    } else {
-        None
-    }
-}
-
 impl FromStr for Url {
     type Err = UrlError;
 
     /// Parses an absolute URL from a string.
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        match scheme(value) {
+        match try_scheme(value) {
             None => {
                 return Err(UrlError::new(
                     value,
@@ -143,6 +182,21 @@ impl FromStr for Url {
     }
 }
 
+/// Extracting scheme from `url`
+///
+/// The parse method from the url crate does not seem to parse url without scheme
+/// For example, "localhost:8000" is parsed with its scheme set to "localhost"
+///
+fn try_scheme(url: &str) -> Option<String> {
+    let re = Regex::new("^([a-z]+://).*").unwrap();
+    if let Some(caps) = re.captures(url) {
+        let scheme = &caps[1];
+        Some(scheme.to_string())
+    } else {
+        None
+    }
+}
+
 impl fmt::Display for Url {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.inner)
@@ -159,8 +213,7 @@ impl From<UrlError> for HttpError {
 mod tests {
     use std::str::FromStr;
 
-    use super::{Url, UrlError};
-    use crate::http::url::scheme;
+    use super::{try_scheme, Url, UrlError};
     use crate::http::Param;
 
     #[test]
@@ -240,10 +293,10 @@ mod tests {
 
     #[test]
     fn test_extract_scheme() {
-        assert!(scheme("localhost:8000").is_none());
-        assert!(scheme("http1://localhost:8000").is_none());
-        assert!(scheme("://localhost:8000").is_none());
-        assert_eq!(scheme("file://data").unwrap(), "file://".to_string());
-        assert_eq!(scheme("http://data").unwrap(), "http://".to_string());
+        assert!(try_scheme("localhost:8000").is_none());
+        assert!(try_scheme("http1://localhost:8000").is_none());
+        assert!(try_scheme("://localhost:8000").is_none());
+        assert_eq!(try_scheme("file://data").unwrap(), "file://".to_string());
+        assert_eq!(try_scheme("http://data").unwrap(), "http://".to_string());
     }
 }

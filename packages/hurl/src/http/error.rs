@@ -60,6 +60,14 @@ impl From<curl::Error> for HttpError {
     }
 }
 
+impl From<curl::FormError> for HttpError {
+    fn from(err: curl::FormError) -> Self {
+        let code = err.code() as i32;
+        let description = err.description().to_string();
+        HttpError::Libcurl { code, description }
+    }
+}
+
 impl HttpError {
     pub fn description(&self) -> String {
         match self {
