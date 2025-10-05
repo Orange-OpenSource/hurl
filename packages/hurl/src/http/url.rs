@@ -159,26 +159,25 @@ impl FromStr for Url {
 
     /// Parses an absolute URL from a string.
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        match try_scheme(value) {
-            None => {
-                return Err(UrlError::new(
+        // We try the happy path first: for the moment we're only supporting HTTP/HTTPS scheme.
+        // Other scheme will go into `try_scheme` which uses regex and can be less performant in
+        // stress tests usages than this simple `starts_with`.
+        if value.starts_with("https://") || value.starts_with("http://") {
+            let raw = value.to_string();
+            let inner = url::Url::parse(&raw).map_err(|e| UrlError::new(value, &e.to_string()))?;
+            Ok(Url { raw, inner })
+        } else {
+            match try_scheme(value) {
+                Some(_) => Err(UrlError::new(
+                    value,
+                    "Only <http://> and <https://> schemes are supported",
+                )),
+                None => Err(UrlError::new(
                     value,
                     "Missing scheme <http://> or <https://>",
-                ));
-            }
-            Some(scheme) => {
-                if scheme != "http://" && scheme != "https://" {
-                    return Err(UrlError::new(
-                        value,
-                        "Only <http://> and <https://> schemes are supported",
-                    ));
-                }
+                )),
             }
         }
-
-        let raw = value.to_string();
-        let inner = url::Url::parse(value).map_err(|e| UrlError::new(value, &e.to_string()))?;
-        Ok(Url { raw, inner })
     }
 }
 
