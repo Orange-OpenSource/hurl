@@ -443,7 +443,7 @@ Decodes bytes to string using UTF-8 encoding.
 GET https://example.org/messages
 HTTP 200
 [Asserts]
-// From a Base64 string to UTF-8 bytes to final string 
+# From a Base64 string to UTF-8 bytes to final string 
 jsonpath "$.bytesInBase64" base64Decode utf8Decode == "Hello World" 
 ```
 

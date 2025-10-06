@@ -57,6 +57,9 @@ Failed files:      1 (50.0%)
 Duration:          10 ms
 ```
 
+> With or without `--test`, all asserts are always executed. `--test` adds a run recap and disables the output of the 
+> last response. To ignore asserts execution, you can use [`--ignore-asserts`].
+
 In test mode, files are executed in parallel to speed-ud the execution. If a sequential run is needed, you can use
 [`--jobs 1`] option to execute tests one by one.
 
@@ -64,7 +67,7 @@ In test mode, files are executed in parallel to speed-ud the execution. If a seq
 $ hurl --test --jobs 1 *.hurl
 ```
 
-[`--repeat` option] can be used to repeat run files and do performance check. For instance, this call will run 1000 tests
+[`--repeat` option] can be used to repeat run files and do [performance check]. For instance, this call will run 1000 tests
 in parallel:
 
 ```shell
@@ -197,6 +200,90 @@ Failed files:      0 (0.0%)
 Duration:          187 ms
 ```
 
+## Stress and Performance Tests
+
+Hurl can be used to perform stress tests:
+
+- with [query duration]:
+
+```hurl
+GET https://example.org/foo
+HTTP 200
+[Asserts]
+duration < 1200
+```
+
+- [response metrics] with [`--very-verbose`] or [`--json`] to get structured timing data:
+
+```shell
+$ hurl --json foo.hurl | jq
+...
+          "timings": {
+            "app_connect": 0,
+            "begin_call": "2025-10-06T07:00:57.127794Z",
+            "connect": 120915,
+            "end_call": "2025-10-06T07:00:57.280724Z",
+            "name_lookup": 92987,
+            "pre_transfer": 121014,
+            "start_transfer": 152721,
+            "total": 152807
+          }
+...
+```
+
+In performance uses-cases, it's important to know how Hurl is working to get the best request per second load. Each Hurl file 
+is processed by its own libcurl instance (roughly speaking a living HTTP connection). Let's say we want to stress our 
+application with 100,000 HTTP requests and see how it's behaving. The simplest idea would be to make a single Hurl file 
+repeating 100,000 requests:
+
+```hurl
+GET https://my-website/health
+[Options]
+repeat: 100000
+```
+
+and run it:
+
+```shell
+$ hurl --test perf.hurl
+```
+
+With a single Hurl file, we won't benefit from any parallel runs (files are run in parallel, requests _within_ a file are
+run sequentially). To benefit from parallel run, we can use [`--repeat`] as a CLI argument to repeat file execution. It's 
+as if we've written 100,000 identical Hurl files and run them:
+
+
+```hurl
+GET https://my-website/health
+```
+
+and run it:
+
+```shell
+$ hurl --test --repeat 100000 perf.hurl
+```
+
+In this case, we're running 100,000 Hurl files in parallel. Now, we have another problem: as each file is basically a
+HTTP connection, we can run out of TCP port, a phenomenon known as [ephemeral ports exhaustion]. So, to recap:
+
+- running 100,000 requests in a single file won't benefit from parallel run
+- running 100,000 one request files can lead to TCP port resources issues
+
+The solution is to combine the two approaches: running 10 files of 10,000 HTTP requests. With 10 files of 10,000
+requests, we're going to execute those files in parallel in their own worker. Each worker will be working sequentially, 
+maximizing the usage and not running into TCP ports exhaustion. We can force jobs count to be exactly 10 so 
+all workers start at the same time and no one is waiting to get a job done:
+
+```hurl
+GET https://my-website/health
+[Options]
+repeat: 10000
+```
+
+```shell
+$ hurl --test --repeat 10 --jobs 10 perf.hurl
+```
+
 
 
 ## Generating Report
@@ -272,4 +359,9 @@ You will find a detailed description in the [Injecting Variables] section of the
 [`very-verbose`]: /docs/manual.md#very-verbose
 [`--output` option]: /docs/manual.md#output
 [`--repeat` option]: /docs/manual.md#repeat
-
+[query duration]: /docs/asserting-response.md#duration-assert
+[response metrics]: /docs/response.md#timings
+[`--ignore-asserts`]: /docs/manual.md#ignore-asserts
+[performance check]: /docs/running-tests.md#stress-and-performance-tests
+[ephemeral ports exhaustion]: https://blog.cloudflare.com/how-to-stop-running-out-of-ephemeral-ports-and-start-to-love-long-lived-connections/
+[`--repeat`]: /docs/manual.md#repeat
