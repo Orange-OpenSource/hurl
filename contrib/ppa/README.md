@@ -285,3 +285,24 @@ echo -e "GET https://hurl.dev\n\nHTTP 200" | hurl --test --color
 echo -e "GET https://hurl.dev\n\nHTTP 200" > /tmp/test.hurl
 hurl --test --color /tmp/test.hurl
 ```
+
+# Build libxml2
+
+If you want to build another version of libxml2 on ubuntu:
+
+```
+minimum_version="2.9.11"
+libxml2_installed_version=$(apt list --installed 2>/dev/null | grep libxml2 | cut --delimiter ' ' --field 2 | cut --delimiter '+' --field 1)
+if dpkg --compare-versions "${libxml2_installed_version}" ge "${minimum_version}" ; then
+    echo "ok"
+else
+    tar xf libxml2-"${minimum_version}".tar.gz
+    cd libxml2-"${minimum_version}"
+    ./configure --prefix=/opt/libxml2-"${minimum_version}" --with-zlib
+    make -j$(nproc)
+    make install
+    export PKG_CONFIG_PATH=/opt/libxml2-"${minimum_version}"/lib/pkgconfig:$PKG_CONFIG_PATH
+    export LD_LIBRARY_PATH=/opt/libxml2-"${minimum_version}"/lib:$LD_LIBRARY_PATH
+    export PATH=/opt/libxml2-"${minimum_version}"/bin:$PATH
+fi
+```
