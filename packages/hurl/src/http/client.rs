@@ -375,11 +375,6 @@ impl Client {
         self.handle
             .cookie_file(options.cookie_input_file.clone().unwrap_or_default())?;
 
-        // We force libcurl verbose mode regardless of Hurl verbose option to be able
-        // to capture HTTP request headers in libcurl `debug_function`. That's the only
-        // way to get access to the outgoing headers.
-        self.handle.verbose(true)?;
-
         // We check libcurl HTTP version support.
         let http_version = options.http_version;
         if (http_version == RequestedHttpVersion::Http2 && !self.http2)
@@ -517,6 +512,13 @@ impl Client {
         if *method == Method("HEAD".to_string()) {
             self.handle.nobody(true)?;
         }
+
+        // We force libcurl verbose mode regardless of Hurl verbose option to be able to capture HTTP
+        // request headers in libcurl `debug_function`. That's the only way to get access to the
+        // outgoing headers. We call this at the end of the libcurl handle configuration to avoid
+        // unwanted noisy logs from curl (see <https://github.com/Orange-OpenSource/hurl/issues/4406>)
+        self.handle.verbose(true)?;
+
         Ok((url, method.clone()))
     }
 
