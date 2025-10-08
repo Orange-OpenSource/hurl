@@ -4,6 +4,7 @@
 Thanks to
 [@Nezteb](https://github.com/Nezteb),
 [@quantonganh](https://github.com/quantonganh),
+[@linkdd](https://github.com/linkdd),
 [@gugahoa](https://github.com/gugahoa),
 [@MikhailWahib](https://github.com/MikhailWahib),
 [@ashishajr](https://github.com/ashishajr),
@@ -12,6 +13,7 @@ Enhancements:
 
 * Add CLI option to pretty print the response body [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
 * Add pretty print option [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
+* Use happy path with http/https scheme for URL parsing to improve stress test use-cases [#4144](https://github.com/Orange-OpenSource/hurl/issues/4144)
 * Support --secrets-file for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
 * Add `--ntlm` option per request [#4322](https://github.com/Orange-OpenSource/hurl/issues/4322)
 * Add --negotiate option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
@@ -25,6 +27,7 @@ Bugs Fixed:
 
 * Parse `--user`, `--negotiate`, and `--ntlm` options in hurlfmt [#4213](https://github.com/Orange-OpenSource/hurl/issues/4213)
 * Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
+* Fix filtering of Authorization: and Cookie: headers when following redirections [#4460](https://github.com/Orange-OpenSource/hurl/issues/4460)
 
 
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
