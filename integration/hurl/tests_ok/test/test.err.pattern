@@ -25,5 +25,5 @@ Executed files:    4
 Executed requests: 5 (<<<.*?>>>/s)
 Succeeded files:   2 (50.0%)
 Failed files:      2 (50.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 

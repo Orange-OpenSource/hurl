@@ -103,5 +103,5 @@ Executed files:    100
 Executed requests: 100 (<<<[\d.]+>>>/s)
 Succeeded files:   100 (100.0%)
 Failed files:      0 (0.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 

@@ -10,5 +10,5 @@ Executed files:    7
 Executed requests: 7 (<<<.*?>>>/s)
 Succeeded files:   7 (100.0%)
 Failed files:      0 (0.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 

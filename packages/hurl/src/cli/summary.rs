@@ -32,14 +32,26 @@ pub fn summary(runs: &[HurlRun], duration: Duration) -> String {
     let success_percent = 100.0 * success_files as f32 / total_files as f32;
     let failed = total_files - success_files;
     let failed_percent = 100.0 * failed as f32 / total_files as f32;
+    let formatted_duration = format_duration(duration);
     format!(
         "--------------------------------------------------------------------------------\n\
              Executed files:    {total_files}\n\
              Executed requests: {total_requests} ({requests_rate:.1}/s)\n\
              Succeeded files:   {success_files} ({success_percent:.1}%)\n\
              Failed files:      {failed} ({failed_percent:.1}%)\n\
-             Duration:          {duration_in_ms} ms\n"
+             Duration:          {duration_in_ms} ms ({formatted_duration})\n"
     )
+}
+
+/// Returns a formatted duration string (h:m:s:ms).
+fn format_duration(duration: Duration) -> String {
+    let total_ms = duration.as_millis();
+    let hours = total_ms / 3600000;
+    let minutes = (total_ms % 3600000) / 60000;
+    let seconds = (total_ms % 60000) / 1000;
+    let milliseconds = total_ms % 1000;
+
+    format!("{}h:{}m:{}s:{}ms", hours, minutes, seconds, milliseconds)
 }
 
 /// Returns the total number of executed HTTP requests in this list of `runs`.
@@ -103,7 +115,7 @@ pub mod tests {
              Executed requests: 0 (0.0/s)\n\
              Succeeded files:   3 (100.0%)\n\
              Failed files:      0 (0.0%)\n\
-             Duration:          128 ms\n"
+             Duration:          128 ms (0h:0m:0s:128ms)\n"
         );
 
         let runs = vec![new_run(true, 10), new_run(false, 10), new_run(true, 40)];
@@ -116,7 +128,20 @@ pub mod tests {
             Executed requests: 0 (0.0/s)\n\
             Succeeded files:   2 (66.7%)\n\
             Failed files:      1 (33.3%)\n\
-            Duration:          200 ms\n"
+            Duration:          200 ms (0h:0m:0s:200ms)\n"
+        );
+
+        let runs = vec![new_run(true, 5), new_run(true, 15)];
+        let duration = Duration::from_millis(3661111);
+        let s = summary(&runs, duration);
+        assert_eq!(
+            s,
+            "--------------------------------------------------------------------------------\n\
+             Executed files:    2\n\
+             Executed requests: 0 (0.0/s)\n\
+             Succeeded files:   2 (100.0%)\n\
+             Failed files:      0 (0.0%)\n\
+             Duration:          3661111 ms (1h:1m:1s:111ms)\n"
         );
     }
 }

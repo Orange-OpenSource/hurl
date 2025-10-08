@@ -14,7 +14,7 @@ Executed files:    2
 Executed requests: 3 (<<<.*?>>>/s)
 Succeeded files:   1 (50.0%)
 Failed files:      1 (50.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 
 Success tests_ok/junit/test.3.hurl (1 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ Executed files:    1
 Executed requests: 1 (<<<.*?>>>/s)
 Succeeded files:   1 (100.0%)
 Failed files:      0 (0.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 
 error: Assert body value
   --> tests_ok/junit/test.4.hurl:3:1
@@ -39,5 +39,5 @@ Executed files:    1
 Executed requests: 1 (<<<.*?>>>/s)
 Succeeded files:   0 (0.0%)
 Failed files:      1 (100.0%)
-Duration:          <<<\d+>>> ms
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
 
