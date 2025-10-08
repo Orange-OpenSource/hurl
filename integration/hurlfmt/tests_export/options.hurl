@@ -11,6 +11,8 @@ connect-timeout: 60s
 delay: 1000
 delay: 1000ms
 delay: 1s
+delay: 1m
+delay: 1h
 location: false
 location-trusted: false
 header: key: value
