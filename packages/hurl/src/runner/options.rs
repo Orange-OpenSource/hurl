@@ -414,6 +414,7 @@ fn eval_duration_option(
                 DurationUnit::MilliSecond => literal.value.as_u64(),
                 DurationUnit::Second => literal.value.as_u64() * 1000,
                 DurationUnit::Minute => literal.value.as_u64() * 1000 * 60,
+                DurationUnit::Hour => literal.value.as_u64() * 1000 * 60 * 60,
             }
         }
         DurationOption::Placeholder(Placeholder { expr, .. }) => match expr::eval(expr, variables)?
@@ -430,6 +431,7 @@ fn eval_duration_option(
                         DurationUnit::MilliSecond => value as u64,
                         DurationUnit::Second => (value * 1000) as u64,
                         DurationUnit::Minute => (value * 1000 * 60) as u64,
+                        DurationUnit::Hour => (value * 1000 * 60 * 60) as u64,
                     }
                 }
             }

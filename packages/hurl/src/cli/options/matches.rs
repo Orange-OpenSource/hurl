@@ -633,6 +633,7 @@ fn get_duration(s: &str, default_unit: DurationUnit) -> Result<Duration, CliOpti
         DurationUnit::MilliSecond => duration.value.as_u64(),
         DurationUnit::Second => duration.value.as_u64() * 1000,
         DurationUnit::Minute => duration.value.as_u64() * 1000 * 60,
+        DurationUnit::Hour => duration.value.as_u64() * 1000 * 60 * 60,
     };
     Ok(Duration::from_millis(millis))
 }

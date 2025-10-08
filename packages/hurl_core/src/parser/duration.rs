@@ -73,6 +73,11 @@ mod tests {
             duration_unit(&mut reader).unwrap().unwrap(),
             DurationUnit::Minute
         );
+        let mut reader = Reader::new("h\n");
+        assert_eq!(
+            duration_unit(&mut reader).unwrap().unwrap(),
+            DurationUnit::Hour
+        );
     }
 
     #[test]
@@ -105,6 +110,16 @@ mod tests {
                 U64::new(10000, "10000".to_source()),
                 Some(DurationUnit::MilliSecond)
             )
+        );
+        let mut reader = Reader::new("1m");
+        assert_eq!(
+            duration(&mut reader).unwrap(),
+            Duration::new(U64::new(1, "1".to_source()), Some(DurationUnit::Minute))
+        );
+        let mut reader = Reader::new("1h");
+        assert_eq!(
+            duration(&mut reader).unwrap(),
+            Duration::new(U64::new(1, "1".to_source()), Some(DurationUnit::Hour))
         );
     }
 

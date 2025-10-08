@@ -72,6 +72,7 @@ pub enum DurationUnit {
     MilliSecond,
     Second,
     Minute,
+    Hour,
 }
 
 impl fmt::Display for DurationUnit {
@@ -80,6 +81,7 @@ impl fmt::Display for DurationUnit {
             DurationUnit::MilliSecond => write!(f, "ms"),
             DurationUnit::Second => write!(f, "s"),
             DurationUnit::Minute => write!(f, "m"),
+            DurationUnit::Hour => write!(f, "h"),
         }
     }
 }
@@ -92,6 +94,7 @@ impl FromStr for DurationUnit {
             "ms" => Ok(DurationUnit::MilliSecond),
             "s" => Ok(DurationUnit::Second),
             "m" => Ok(DurationUnit::Minute),
+            "h" => Ok(DurationUnit::Hour),
             x => Err(format!("Invalid duration unit {x}")),
         }
     }

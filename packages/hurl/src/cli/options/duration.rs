@@ -88,5 +88,12 @@ mod tests {
                 unit: Some(DurationUnit::Minute)
             }
         );
+        assert_eq!(
+            parse("3h").unwrap(),
+            Duration {
+                value: U64::new(3, "3".to_source()),
+                unit: Some(DurationUnit::Hour)
+            }
+        );
     }
 }
