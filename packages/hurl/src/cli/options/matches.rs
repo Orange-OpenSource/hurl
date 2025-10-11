@@ -417,6 +417,10 @@ pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "proxy")
 }
 
+pub fn proxy_headers(arg_matches: &ArgMatches) -> Vec<String> {
+    get_strings(arg_matches, "proxy_header").unwrap_or_default()
+}
+
 pub fn repeat(arg_matches: &ArgMatches) -> Option<Count> {
     match get::<i32>(arg_matches, "repeat") {
         Some(-1) => Some(Count::Infinite),

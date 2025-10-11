@@ -97,6 +97,7 @@ pub struct CliOptions {
     pub pretty: PrettyMode,
     pub progress_bar: bool,
     pub proxy: Option<String>,
+    pub proxy_headers: Vec<String>,
     pub repeat: Option<Count>,
     pub resolves: Vec<String>,
     pub retry: Option<Count>,
@@ -224,6 +225,7 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::path_as_is())
         .arg(commands::pinned_pub_key())
         .arg(commands::proxy())
+        .arg(commands::proxy_header())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
         .arg(commands::unix_socket())
@@ -356,6 +358,7 @@ fn parse_matches(
     let progress_bar = matches::progress_bar(arg_matches, context);
     let pretty = matches::pretty(arg_matches, context);
     let proxy = matches::proxy(arg_matches);
+    let proxy_headers = matches::proxy_headers(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
     let repeat = matches::repeat(arg_matches);
@@ -419,6 +422,7 @@ fn parse_matches(
         pretty,
         progress_bar,
         proxy,
+        proxy_headers,
         output,
         output_type,
         repeat,
@@ -510,6 +514,7 @@ impl CliOptions {
             None
         };
         let proxy = self.proxy.clone();
+        let proxy_headers = &self.proxy_headers;
         let resolves = self.resolves.clone();
         let retry = self.retry;
         let retry_interval = self.retry_interval;
@@ -558,6 +563,7 @@ impl CliOptions {
             .post_entry(post_entry)
             .pre_entry(pre_entry)
             .proxy(proxy)
+            .proxy_headers(proxy_headers)
             .resolves(&resolves)
             .retry(retry)
             .retry_interval(retry_interval)

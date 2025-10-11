@@ -446,6 +446,12 @@ This is a cli-only option.
 
 Use the specified proxy.
 
+### --proxy-header <HEADER> {#proxy-header}
+
+Sends extra header to include in the request when sending HTTP to a proxy
+
+This is a cli-only option.
+
 ### --repeat <NUM> {#repeat}
 
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two

@@ -479,6 +479,10 @@ impl ClientOptions {
             arguments.push("--proxy".to_string());
             arguments.push(format!("'{proxy}'"));
         }
+        for header in &self.proxy_headers {
+            arguments.push("--proxy-header".to_string());
+            arguments.push(format!("'{header}'"));
+        }
         for resolve in self.resolves.iter() {
             arguments.push("--resolve".to_string());
             arguments.push(resolve.clone());
@@ -673,6 +677,10 @@ mod tests {
             path_as_is: true,
             pinned_pub_key: None,
             proxy: Some("localhost:3128".to_string()),
+            proxy_headers: vec![
+                "Proxy-Authorization: Basic dXNlcjpwYXNz".to_string(),
+                "X-Proxy-Header: value".to_string(),
+            ],
             no_proxy: None,
             resolves: vec![
                 "foo.com:80:192.168.0.1".to_string(),
@@ -710,6 +718,8 @@ mod tests {
         --ntlm \
         --path-as-is \
         --proxy 'localhost:3128' \
+        --proxy-header 'Proxy-Authorization: Basic dXNlcjpwYXNz' \
+        --proxy-header 'X-Proxy-Header: value' \
         --resolve foo.com:80:192.168.0.1 \
         --resolve bar.com:443:127.0.0.1 \
         --unix-socket '/var/run/example.sock' \

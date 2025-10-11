@@ -1,0 +1,8 @@
+name: proxy_header
+long: proxy-header
+value: HEADER
+help: Send custom header to proxy
+help_heading: HTTP options
+cli_only: true
+---
+Sends extra header to include in the request when sending HTTP to a proxy
