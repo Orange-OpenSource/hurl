@@ -32,7 +32,7 @@ libflate = "2.1.0"
 libxml = "0.3.8"
 md5 = "0.7.0"
 percent-encoding = "2.3.2"
-regex = "1.11.3"
+regex = "1.12.1"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.145", features = ["arbitrary_precision"] }
 sha2 = "0.10.9"
@@ -50,7 +50,7 @@ termion = "4.0.5"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.40"
+cc = "1.2.41"
 
 [lints]
 workspace = true
