@@ -37,7 +37,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x1 pause 0 ms)
+* Retry on entry 1 (count: 1/2, interval: 0 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -73,7 +73,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x2 pause 0 ms)
+* Retry on entry 1 (count: 2/2, interval: 0 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
