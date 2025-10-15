@@ -64,7 +64,7 @@
 *    |   expected: string <COMPLETED>
 *    |
 *
-* Retry entry 2 (x1 pause 100 ms)
+* Retry on entry 2 (count: 1/10, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
@@ -101,7 +101,7 @@
 *    |   expected: string <COMPLETED>
 *    |
 *
-* Retry entry 2 (x2 pause 100 ms)
+* Retry on entry 2 (count: 2/10, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
@@ -138,7 +138,7 @@
 *    |   expected: string <COMPLETED>
 *    |
 *
-* Retry entry 2 (x3 pause 100 ms)
+* Retry on entry 2 (count: 3/10, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
@@ -175,7 +175,7 @@
 *    |   expected: string <COMPLETED>
 *    |
 *
-* Retry entry 2 (x4 pause 100 ms)
+* Retry on entry 2 (count: 4/10, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *

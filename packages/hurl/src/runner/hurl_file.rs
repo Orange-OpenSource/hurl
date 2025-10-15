@@ -396,9 +396,13 @@ fn run_request(
         }
 
         let delay = options.retry_interval.as_millis();
+        let retry_max = match options.retry.unwrap() {
+            Count::Finite(max) => max.to_string(),
+            Count::Infinite => "ꝏ".to_string(),
+        };
         logger.debug("");
         logger.debug_important(&format!(
-            "Retry entry {entry_index} (x{retry_count} pause {delay} ms)"
+            "Retry on entry {entry_index} (count: {retry_count}/{retry_max}, interval: {delay} ms)"
         ));
         retry_count += 1;
         // If we retry the entry, we do not want to display a 'blank' progress bar during the
