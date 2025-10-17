@@ -270,6 +270,7 @@ impl ClientOptions {
             pinned_pub_key: runner_options.pinned_pub_key.clone(),
             proxy: runner_options.proxy.clone(),
             no_proxy: runner_options.no_proxy.clone(),
+            proxy_headers: runner_options.proxy_headers.clone(),
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
             ssl_no_revoke: runner_options.ssl_no_revoke,

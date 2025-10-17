@@ -67,6 +67,8 @@ HTTP options:
           Public key to verify peer against
   -x, --proxy <[PROTOCOL://]HOST[:PORT]>
           Use proxy on given PROTOCOL/HOST/PORT
+      --proxy-header <HEADER>
+          Send custom header to proxy
       --resolve <HOST:PORT:ADDR>
           Provide a custom address for a specific HOST and PORT pair
       --ssl-no-revoke

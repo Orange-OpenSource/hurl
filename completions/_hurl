@@ -67,6 +67,7 @@ _hurl() {
     '--pretty[Prettify JSON response output]' \
     '--progress-bar[Display a progress bar in test mode]' \
     '(-x --proxy)'{-x,--proxy}'[Use proxy on given PROTOCOL/HOST/PORT]: :' \
+    '--proxy-header[Send custom header to proxy]: :' \
     '--repeat[Repeat the input files sequence NUM times, -1 for infinite loop]: :' \
     '--report-html[Generate HTML report to DIR]: :' \
     '--report-json[Generate JSON report to DIR]: :' \
