@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
 
     load_tests()
-    serve(app, host=args.host, port=args.port)
+    serve(app, host=args.host, port=args.port, threads=4)
 
 
 if __name__ == "__main__":
