@@ -23,7 +23,7 @@ use hurl_core::ast::{Entry, OptionKind, SourceInfo};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::parser;
-use hurl_core::types::Count;
+use hurl_core::types::{Count, Index};
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;
@@ -156,7 +156,7 @@ pub fn run_entries(
     let mut http_client = Client::new();
     let mut entries_result = vec![];
     let mut variables = variables.clone();
-    let mut entry_index = runner_options.from_entry.unwrap_or(1);
+    let mut entry_index = Index::new(runner_options.from_entry.unwrap_or(1));
     let mut repeat_count = 0;
     let n = runner_options.to_entry.unwrap_or(entries.len());
     let default_verbosity = logger.verbosity;
@@ -190,7 +190,7 @@ pub fn run_entries(
         if entry_index > n {
             break;
         }
-        let entry = &entries[entry_index - 1];
+        let entry = &entries[entry_index.to_zero_based()];
 
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry);
@@ -212,7 +212,7 @@ pub fn run_entries(
 
         // We can report the progression of the run for --test mode.
         if let Some(listener) = listener {
-            listener.on_running(entry_index - 1, n);
+            listener.on_running(entry_index, n);
         }
 
         // The real execution of the entry happens here, first: we compute the overridden request
@@ -334,7 +334,7 @@ pub fn run_entries(
 #[allow(clippy::too_many_arguments)]
 fn run_request(
     entry: &Entry,
-    entry_index: usize,
+    entry_index: Index,
     content: &str,
     filename: Option<&Input>,
     http_client: &mut Client,
@@ -579,7 +579,7 @@ fn log_errors(
 }
 
 /// Logs the header indicating the begin of the entry run.
-fn log_run_entry(entry_index: usize, logger: &mut Logger) {
+fn log_run_entry(entry_index: Index, logger: &mut Logger) {
     logger.debug_important(
         "------------------------------------------------------------------------------",
     );

@@ -151,14 +151,14 @@ mod tests {
     use std::str::FromStr;
     use std::time::Duration;
 
-    use hurl_core::ast::SourceInfo;
-    use hurl_core::reader::Pos;
-
     use crate::http::{Call, Header, HeaderVec, HttpVersion, Request, Response, Url};
     use crate::output::write_last_body;
     use crate::pretty::PrettyMode;
     use crate::runner::{EntryResult, HurlResult, Output};
     use crate::util::term::{Stdout, WriteMode};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::reader::Pos;
+    use hurl_core::types::Index;
 
     fn default_response() -> Response {
         Response {
@@ -184,7 +184,7 @@ mod tests {
         HurlResult {
             entries: vec![
                 EntryResult {
-                    entry_index: 1,
+                    entry_index: Index::new(1),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
@@ -199,7 +199,7 @@ mod tests {
                     ..Default::default()
                 },
                 EntryResult {
-                    entry_index: 2,
+                    entry_index: Index::new(2),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {
@@ -214,7 +214,7 @@ mod tests {
                     ..Default::default()
                 },
                 EntryResult {
-                    entry_index: 3,
+                    entry_index: Index::new(3),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     calls: vec![Call {
                         request: Request {

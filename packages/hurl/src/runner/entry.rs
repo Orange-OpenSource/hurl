@@ -15,10 +15,6 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{
-    Assert, Capture, Entry, FilterValue, PredicateFuncValue, Response, SourceInfo,
-};
-
 use crate::http;
 use crate::http::{ClientOptions, CurlCmd};
 use crate::runner::cache::BodyCache;
@@ -28,6 +24,10 @@ use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{request, response, CaptureResult, RunnerErrorKind, VariableSet};
 use crate::util::logger::{Logger, Verbosity};
 use crate::util::term::WriteMode;
+use hurl_core::ast::{
+    Assert, Capture, Entry, FilterValue, PredicateFuncValue, Response, SourceInfo,
+};
+use hurl_core::types::Index;
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///
@@ -37,7 +37,7 @@ use crate::util::term::WriteMode;
 /// `variables` are used to render values at runtime, and can be updated by captures.
 pub fn run(
     entry: &Entry,
-    entry_index: usize,
+    entry_index: Index,
     http_client: &mut http::Client,
     variables: &mut VariableSet,
     runner_options: &RunnerOptions,

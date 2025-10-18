@@ -27,7 +27,7 @@ use crate::output;
 use crate::pretty::PrettyMode;
 use crate::util::term::{Stderr, Stdout, WriteMode};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::types::Count;
+use hurl_core::types::{Count, Index};
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
 /// [`Job`]. To run jobs, the [`ParallelRunner::run`] method much be executed on the main thread.
@@ -62,11 +62,11 @@ pub struct ParallelRunner {
 pub enum WorkerState {
     /// Worker has no job to run.
     Idle,
-    /// Worker is currently running a `job`, the entry being executed is at 0-based index
-    /// `entry_index`, the total number of entries being `entry_count`.
+    /// Worker is currently running a `job`, the entry index being executed is `entry_index`,
+    /// the total number of entries being `entry_count`.
     Running {
         job: Job,
-        entry_index: usize,
+        entry_index: Index,
         entry_count: usize,
     },
 }

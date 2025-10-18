@@ -234,7 +234,7 @@ fn new_call_timings(
     let mut group = svg::new_group();
     group.add_attr(Class("call-summary".to_string()));
 
-    let offset_y = CALL_HEIGHT * (call_ctx.call_index - 1) + pixels_y.start;
+    let offset_y = CALL_HEIGHT * call_ctx.call_index.to_zero_based() + pixels_y.start;
     let y = offset_y + CALL_INSET;
     let height = CALL_HEIGHT - CALL_INSET * 2;
 
@@ -327,7 +327,7 @@ fn new_call_tooltip(
         .to_std()
         .unwrap_or_default();
     let offset_x = to_pixel(offset_x, scale_x);
-    let offset_y = CALL_HEIGHT * (call_ctx.call_index - 1) + pixels_y.start;
+    let offset_y = CALL_HEIGHT * call_ctx.call_index.to_zero_based() + pixels_y.start;
     let offset_y = offset_y + CALL_HEIGHT - CALL_INSET;
     let max_width = pixels_x.end - pixels_x.start;
     // We bound the tooltip background to the overall bounding box.

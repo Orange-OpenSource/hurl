@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
+use hurl_core::types::Index;
+
 /// This trait is implemented by run event observers, during the execution of one Hurl file.
 pub trait EventListener {
-    /// Call when running an entry, `entry_index` is the entry 0-based index in the Hurl file,
+    /// Call when running an entry, `entry_index` is the entry index in the Hurl file,
     /// and `entry_count` is the total number of entries in the Hurl file.
-    fn on_running(&self, entry_index: usize, entry_count: usize);
+    fn on_running(&self, entry_index: Index, entry_count: usize);
 }

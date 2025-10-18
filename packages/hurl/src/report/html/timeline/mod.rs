@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::HurlFile;
-
 use crate::http::Call;
 use crate::report::html::nav::Tab;
 use crate::report::html::timeline::unit::Pixel;
 use crate::report::html::Testcase;
 use crate::runner::EntryResult;
+use hurl_core::ast::HurlFile;
+use hurl_core::types::Index;
 
 mod calls;
 mod nice;
@@ -44,10 +44,10 @@ pub enum CallContextKind {
 /// of a [`Call`]
 pub struct CallContext {
     pub kind: CallContextKind, // If the parent entry is successful, retried or in error.
-    pub line: usize,           // Line number of the source entry (1-based)
-    pub entry_index: usize,    // Index of the runtime EntryResult
-    pub call_entry_index: usize, // Index of the runtime Call in the current entry
-    pub call_index: usize,     // Index of the runtime Call in the whole run
+    pub line: Index,           // Line number of the source entry
+    pub entry_index: Index,    // Index of the runtime EntryResult
+    pub call_entry_index: Index, // Index of the runtime Call in the current entry
+    pub call_index: Index,     // Index of the runtime Call in the whole run
     pub source_filename: String,
     pub run_filename: String,
 }
@@ -101,15 +101,15 @@ impl Testcase {
                 (false, false) => CallContextKind::Failure,
             };
             for (call_entry_index, _) in e.calls.iter().enumerate() {
-                let entry_src_index = e.entry_index - 1;
+                let entry_src_index = e.entry_index.to_zero_based();
                 let entry_src = hurl_file.entries.get(entry_src_index).unwrap();
-                let line = entry_src.source_info().start.line;
+                let line = Index::new(entry_src.source_info().start.line);
                 let ctx = CallContext {
                     kind,
                     line,
-                    entry_index: entry_index + 1,
-                    call_entry_index: call_entry_index + 1,
-                    call_index: calls_ctx.len() + 1,
+                    entry_index: Index::from_zero_based(entry_index),
+                    call_entry_index: Index::from_zero_based(call_entry_index),
+                    call_index: Index::from_zero_based(calls_ctx.len()),
                     source_filename: self.source_filename(),
                     run_filename: self.run_filename(),
                 };

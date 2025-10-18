@@ -18,6 +18,10 @@
 //! Hurl common types.
 use core::fmt;
 use std::borrow::Borrow;
+use std::cmp::Ordering;
+use std::fmt::Formatter;
+use std::num::NonZero;
+use std::ops::AddAssign;
 use std::str::FromStr;
 
 use crate::ast::U64;
@@ -30,7 +34,7 @@ pub enum Count {
 }
 
 impl fmt::Display for Count {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Count::Finite(n) => {
                 write!(f, "{n}")
@@ -56,7 +60,7 @@ impl Duration {
 }
 
 impl fmt::Display for Duration {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let unit = if let Some(value) = self.unit {
             value.to_string()
         } else {
@@ -76,7 +80,7 @@ pub enum DurationUnit {
 }
 
 impl fmt::Display for DurationUnit {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             DurationUnit::MilliSecond => write!(f, "ms"),
             DurationUnit::Second => write!(f, "s"),
@@ -105,7 +109,7 @@ impl FromStr for DurationUnit {
 pub struct BytesPerSec(pub u64);
 
 impl fmt::Display for BytesPerSec {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
@@ -170,7 +174,7 @@ impl ToSource for &str {
 }
 
 impl fmt::Display for SourceString {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
@@ -178,5 +182,57 @@ impl fmt::Display for SourceString {
 impl Borrow<str> for SourceString {
     fn borrow(&self) -> &str {
         &self.0
+    }
+}
+
+/// Represents a 1-based index.
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Index {
+    value: NonZero<usize>,
+}
+
+impl Index {
+    /// Creates a new index from 1-based usize index.
+    pub fn new(value: usize) -> Index {
+        let value = NonZero::new(value).unwrap();
+        Index { value }
+    }
+
+    /// Creates a new index from 0-based usize index.
+    pub fn from_zero_based(value: usize) -> Index {
+        Index::new(value + 1)
+    }
+
+    pub fn get(&self) -> usize {
+        self.value.get()
+    }
+
+    pub fn to_zero_based(&self) -> usize {
+        self.value.get() - 1
+    }
+}
+
+impl fmt::Display for Index {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl AddAssign<usize> for Index {
+    fn add_assign(&mut self, other: usize) {
+        // Adding a usize to a NonZero is always a NonZero.
+        self.value = NonZero::new(self.value.get() + other).unwrap();
+    }
+}
+
+impl PartialEq<usize> for Index {
+    fn eq(&self, other: &usize) -> bool {
+        self.value.get().eq(other)
+    }
+}
+
+impl PartialOrd<usize> for Index {
+    fn partial_cmp(&self, other: &usize) -> Option<Ordering> {
+        self.value.get().partial_cmp(other)
     }
 }

@@ -72,19 +72,19 @@ fn requests_count(runs: &[HurlRun]) -> usize {
 
 #[cfg(test)]
 pub mod tests {
+    use super::*;
     use hurl::http::CurlCmd;
     use hurl::runner::{EntryResult, HurlResult};
     use hurl_core::ast::SourceInfo;
     use hurl_core::input::Input;
     use hurl_core::reader::Pos;
-
-    use super::*;
+    use hurl_core::types::Index;
 
     #[test]
     fn create_run_summary() {
         fn new_run(success: bool, entries_count: usize) -> HurlRun {
             let dummy_entry = EntryResult {
-                entry_index: 0,
+                entry_index: Index::new(1),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 calls: vec![],
                 captures: vec![],

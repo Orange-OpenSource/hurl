@@ -248,7 +248,7 @@ impl EntryResultJson {
             .map(|a| AssertJson::from_assert(a, content, filename, entry.source_info, secrets))
             .collect::<Vec<_>>();
         Ok(EntryResultJson {
-            index: entry.entry_index,
+            index: entry.entry_index.get(),
             line: entry.source_info.start.line,
             calls,
             captures,

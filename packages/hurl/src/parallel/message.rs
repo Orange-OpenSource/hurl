@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-use std::io;
-
 use crate::util::term::{Stderr, Stdout};
+use hurl_core::types::Index;
+use std::io;
 
 use super::job::{Job, JobResult};
 use super::worker::WorkerId;
@@ -86,15 +86,15 @@ pub struct RunningMsg {
     pub worker_id: WorkerId,
     /// Job originator of this message.
     pub job: Job,
-    /// 0-based index of the current entry.
-    pub entry_index: usize,
+    /// Index of the current entry.
+    pub entry_index: Index,
     /// Number of entries
     pub entry_count: usize,
 }
 
 impl RunningMsg {
     /// Creates a new running message: the job is in progress.
-    pub fn new(worker_id: WorkerId, job: &Job, entry_index: usize, entry_count: usize) -> Self {
+    pub fn new(worker_id: WorkerId, job: &Job, entry_index: Index, entry_count: usize) -> Self {
         RunningMsg {
             worker_id,
             job: job.clone(),

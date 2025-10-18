@@ -132,14 +132,14 @@ fn create_testsuite(testcases: &[Testcase], secrets: &[&str]) -> Element {
 mod tests {
     use std::time::Duration;
 
-    use hurl_core::ast::SourceInfo;
-    use hurl_core::input::Input;
-    use hurl_core::reader::Pos;
-
     use crate::http::HttpError;
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
     use crate::runner::{EntryResult, HurlResult, RunnerError, RunnerErrorKind};
+    use hurl_core::ast::SourceInfo;
+    use hurl_core::input::Input;
+    use hurl_core::reader::Pos;
+    use hurl_core::types::Index;
 
     #[test]
     fn create_junit_report() {
@@ -158,7 +158,7 @@ mod tests {
 
         let res = HurlResult {
             entries: vec![EntryResult {
-                entry_index: 1,
+                entry_index: Index::new(1),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
@@ -178,7 +178,7 @@ mod tests {
 
         let res = HurlResult {
             entries: vec![EntryResult {
-                entry_index: 1,
+                entry_index: Index::new(1),
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
                 errors: vec![RunnerError::new(
                     SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
