@@ -34,7 +34,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x1 pause 100 ms)
+* Retry on entry 1 (count: 1/5, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -69,7 +69,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x2 pause 100 ms)
+* Retry on entry 1 (count: 2/5, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -104,7 +104,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x3 pause 100 ms)
+* Retry on entry 1 (count: 3/5, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -139,7 +139,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x4 pause 100 ms)
+* Retry on entry 1 (count: 4/5, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -174,7 +174,7 @@
 *    |      ^^^ actual value is <404>
 *    |
 *
-* Retry entry 1 (x5 pause 100 ms)
+* Retry on entry 1 (count: 5/5, interval: 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
