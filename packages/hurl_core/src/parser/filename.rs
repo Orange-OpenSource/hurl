@@ -20,7 +20,7 @@ use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
 use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-use crate::typing::ToSource;
+use crate::types::ToSource;
 
 /// Parse a filename.
 ///

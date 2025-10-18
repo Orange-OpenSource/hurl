@@ -410,7 +410,7 @@ mod tests {
     use super::*;
     use crate::ast::*;
     use crate::reader::CharPos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_parse_error() {

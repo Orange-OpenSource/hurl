@@ -330,7 +330,7 @@ mod tests {
         PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
     };
     use crate::reader::CharPos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_section_name() {

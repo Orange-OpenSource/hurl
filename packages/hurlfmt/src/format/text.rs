@@ -22,7 +22,7 @@ use hurl_core::ast::{
     Whitespace, U64,
 };
 use hurl_core::text::{Format, Style, StyledString};
-use hurl_core::typing::{DurationUnit, SourceString, ToSource};
+use hurl_core::types::{DurationUnit, SourceString, ToSource};
 
 /// Format a Hurl `file` to text, using ANSI escape code if `color` is true.
 pub fn format(file: &HurlFile, color: bool) -> String {

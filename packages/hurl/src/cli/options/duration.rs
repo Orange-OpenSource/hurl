@@ -18,7 +18,7 @@
 use std::str::FromStr;
 
 use hurl_core::ast::U64;
-use hurl_core::typing::{Duration, DurationUnit, ToSource};
+use hurl_core::types::{Duration, DurationUnit, ToSource};
 use regex::Regex;
 
 /// Parses a string to a `Duration`, including time unit.

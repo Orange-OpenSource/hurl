@@ -111,7 +111,7 @@ mod tests {
         Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {

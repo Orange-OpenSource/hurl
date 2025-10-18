@@ -24,7 +24,7 @@ use hurl_core::ast::{
     Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
     VersionValue, I64, U64,
 };
-use hurl_core::typing::{Count, Duration, DurationUnit, ToSource};
+use hurl_core::types::{Count, Duration, DurationUnit, ToSource};
 
 /// Lint a parsed `HurlFile` to a string.
 pub fn lint_hurl_file(file: &HurlFile) -> String {

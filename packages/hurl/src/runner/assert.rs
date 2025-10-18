@@ -208,7 +208,7 @@ pub mod tests {
         PredicateValue, SourceInfo, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::super::query;
     use super::*;

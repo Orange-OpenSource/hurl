@@ -41,7 +41,7 @@ use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
 use hurl_core::input::{Input, InputKind};
-use hurl_core::typing::{BytesPerSec, Count};
+use hurl_core::types::{BytesPerSec, Count};
 
 use crate::cli;
 use crate::cli::options::context::RunContext;

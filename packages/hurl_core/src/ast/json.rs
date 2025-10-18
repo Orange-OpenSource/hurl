@@ -17,7 +17,7 @@
  */
 use crate::ast::primitive::Placeholder;
 use crate::ast::Template;
-use crate::typing::{SourceString, ToSource};
+use crate::types::{SourceString, ToSource};
 
 /// This the AST for the JSON used within Hurl (for instance in [implicit JSON body request](https://hurl.dev/docs/request.html#json-body)).
 ///

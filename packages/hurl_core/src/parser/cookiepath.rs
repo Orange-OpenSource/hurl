@@ -73,7 +73,7 @@ mod tests {
         Expr, ExprKind, Placeholder, SourceInfo, Template, TemplateElement, Variable, Whitespace,
     };
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn cookiepath_simple() {

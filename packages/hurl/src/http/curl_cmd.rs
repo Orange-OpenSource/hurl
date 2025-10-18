@@ -19,7 +19,7 @@ use core::fmt;
 use std::collections::HashMap;
 use std::path::Path;
 
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 use crate::http::client::all_cookies;
 use crate::http::{
@@ -550,7 +550,7 @@ mod tests {
     use std::str::FromStr;
     use std::time::Duration;
 
-    use hurl_core::typing::BytesPerSec;
+    use hurl_core::types::BytesPerSec;
 
     use super::*;
     use crate::http::{HeaderVec, Url};

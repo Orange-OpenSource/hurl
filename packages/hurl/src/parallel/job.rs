@@ -16,7 +16,7 @@
  *
  */
 use hurl_core::input::Input;
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 use crate::runner::{HurlResult, RunnerOptions, VariableSet};
 use crate::util::logger::LoggerOptions;
@@ -153,7 +153,7 @@ impl Iterator for JobQueue<'_> {
 #[cfg(test)]
 mod tests {
     use hurl_core::input::Input;
-    use hurl_core::typing::Count;
+    use hurl_core::types::Count;
 
     use crate::parallel::job::{Job, JobQueue};
     use crate::runner::{RunnerOptionsBuilder, VariableSet};

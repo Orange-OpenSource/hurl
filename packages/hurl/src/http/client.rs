@@ -25,7 +25,7 @@ use base64::Engine;
 use chrono::Utc;
 use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Error, Version};
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 use super::certificate::Certificate;
 use super::curl_cmd::CurlCmd;

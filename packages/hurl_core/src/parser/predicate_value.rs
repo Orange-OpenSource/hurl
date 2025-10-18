@@ -91,7 +91,7 @@ mod tests {
     use crate::ast::{Float, Number, I64};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_predicate_value() {

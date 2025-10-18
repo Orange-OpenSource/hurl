@@ -244,7 +244,7 @@ mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, TemplateElement, Variable, Whitespace};
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_unquoted_template_empty() {

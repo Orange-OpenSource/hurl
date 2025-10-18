@@ -22,7 +22,7 @@ use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
 use crate::parser::{base64, filename, key_string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-use crate::typing::{SourceString, ToSource};
+use crate::types::{SourceString, ToSource};
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.cursor();
@@ -427,7 +427,7 @@ mod tests {
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, Template, TemplateElement, Variable};
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_space() {

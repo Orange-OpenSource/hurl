@@ -28,7 +28,7 @@ use crate::ast::{
     PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
     StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
 };
-use crate::typing::{Count, Duration, DurationUnit, SourceString, ToSource};
+use crate::types::{Count, Duration, DurationUnit, SourceString, ToSource};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default
 /// implementation recursively visits the substructure of the input via the corresponding `walk` method;

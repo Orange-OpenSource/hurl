@@ -30,7 +30,7 @@ use crate::parser::primitives::{
 use crate::parser::string::{quoted_template, unquoted_template};
 use crate::parser::{filename, filename_password, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-use crate::typing::Count;
+use crate::types::Count;
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
@@ -470,7 +470,7 @@ mod tests {
     use super::*;
     use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace, I64};
     use crate::reader::Pos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_option_insecure() {

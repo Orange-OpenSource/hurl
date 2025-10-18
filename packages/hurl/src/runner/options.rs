@@ -19,7 +19,7 @@ use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
     OptionKind, Placeholder, VariableDefinition, VariableValue,
 };
-use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
+use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::eval_template;
@@ -474,7 +474,7 @@ fn eval_number(number: &AstNumber) -> Value {
 mod tests {
     use hurl_core::ast::{Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace, U64};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::{Duration, DurationUnit, ToSource};
+    use hurl_core::types::{Duration, DurationUnit, ToSource};
 
     use super::*;
     use crate::runner::RunnerErrorKind;

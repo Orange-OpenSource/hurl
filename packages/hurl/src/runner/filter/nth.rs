@@ -80,7 +80,7 @@ fn eval_integer_value(n: &IntegerValue, variables: &VariableSet) -> Result<i64, 
 mod tests {
     use hurl_core::ast::{Filter, FilterValue, IntegerValue, SourceInfo, Whitespace, I64};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::filter::nth::try_nth;

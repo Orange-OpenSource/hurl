@@ -224,7 +224,7 @@ mod tests {
         MultilineStringKind, Template, TemplateElement, Whitespace,
     };
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_hurl_file() {

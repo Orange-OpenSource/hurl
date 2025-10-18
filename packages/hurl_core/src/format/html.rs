@@ -24,7 +24,7 @@ use crate::ast::{
     CookiePath, HurlFile, MultilineString, Number, PredicateFuncValue, QueryValue, StatusValue,
     VersionValue,
 };
-use crate::typing::{DurationUnit, SourceString, ToSource};
+use crate::types::{DurationUnit, SourceString, ToSource};
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
@@ -358,7 +358,7 @@ mod tests {
     };
     use crate::format::html::HtmlFormatter;
     use crate::reader::Pos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_multiline_string() {

@@ -25,7 +25,7 @@ use hurl_core::ast::{
     PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, StatusValue,
     VersionValue,
 };
-use hurl_core::typing::{Count, Duration, ToSource};
+use hurl_core::types::{Count, Duration, ToSource};
 
 use crate::format::serialize_json::JValue;
 
@@ -735,7 +735,7 @@ pub mod tests {
         TemplateElement, Version, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::*;
 

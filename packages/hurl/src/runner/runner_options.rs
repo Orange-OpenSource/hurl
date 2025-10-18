@@ -18,7 +18,7 @@
 use std::time::Duration;
 
 use hurl_core::ast::Entry;
-use hurl_core::typing::{BytesPerSec, Count};
+use hurl_core::types::{BytesPerSec, Count};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::Output;

@@ -20,7 +20,7 @@ use std::fmt;
 use crate::ast::primitive::{
     LineTerminator, Number, Placeholder, SourceInfo, Template, Whitespace, U64,
 };
-use crate::typing::{Count, Duration, SourceString, ToSource};
+use crate::types::{Count, Duration, SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryOption {

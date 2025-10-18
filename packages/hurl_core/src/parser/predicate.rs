@@ -331,7 +331,7 @@ mod tests {
         Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable, I64,
     };
     use crate::reader::Pos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_predicate_not() {

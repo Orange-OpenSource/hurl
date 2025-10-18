@@ -47,7 +47,7 @@ pub fn eval_replace(
 mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Value, VariableSet};

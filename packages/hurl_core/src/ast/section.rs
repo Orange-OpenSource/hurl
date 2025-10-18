@@ -23,7 +23,7 @@ use crate::ast::primitive::{
     SourceInfo, Template, Whitespace,
 };
 use crate::ast::Filter;
-use crate::typing::{SourceString, ToSource};
+use crate::types::{SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Section {
@@ -462,7 +462,7 @@ mod tests {
     use super::*;
     use crate::ast::primitive::{SourceInfo, Template, TemplateElement};
     use crate::reader::Pos;
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     fn whitespace() -> Whitespace {
         Whitespace {

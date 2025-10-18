@@ -62,7 +62,7 @@ pub fn eval_url_query_param(
 mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::*;
     use crate::runner::filter::eval::eval_filter;

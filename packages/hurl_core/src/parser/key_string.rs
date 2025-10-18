@@ -20,7 +20,7 @@ use crate::ast::{SourceInfo, Template, TemplateElement};
 use crate::parser::primitives::try_literal;
 use crate::parser::{string, ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
-use crate::typing::ToSource;
+use crate::types::ToSource;
 
 /// Parses a string into a [key string](https://hurl.dev/docs/grammar.html#key-string).
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {

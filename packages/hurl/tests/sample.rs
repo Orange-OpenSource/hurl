@@ -24,7 +24,7 @@ use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder, VariableSet};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
 use hurl_core::input::Input;
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 #[test]
 fn simple_sample() {

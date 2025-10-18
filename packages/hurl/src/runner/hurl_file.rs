@@ -23,7 +23,7 @@ use hurl_core::ast::{Entry, OptionKind, SourceInfo};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::parser;
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 use crate::http::{Call, Client};
 use crate::runner::event::EventListener;

@@ -237,7 +237,7 @@ mod tests {
     };
     use crate::parser::filter::filters;
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_query() {

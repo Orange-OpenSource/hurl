@@ -27,7 +27,7 @@ use crate::output;
 use crate::pretty::PrettyMode;
 use crate::util::term::{Stderr, Stdout, WriteMode};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 /// A parallel runner manages a list of `Worker`. Each worker is either idle or is running a
 /// [`Job`]. To run jobs, the [`ParallelRunner::run`] method much be executed on the main thread.

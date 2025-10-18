@@ -792,7 +792,7 @@ mod tests {
         Expr, ExprKind, Float, Placeholder, Regex, Template, TemplateElement, Variable, Whitespace,
         I64,
     };
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::{PredicateResult, *};
 

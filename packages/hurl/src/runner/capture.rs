@@ -80,7 +80,7 @@ pub mod tests {
         LineTerminator, Query, QueryValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use self::super::super::query;
     use super::*;

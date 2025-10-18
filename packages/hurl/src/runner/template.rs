@@ -47,7 +47,7 @@ fn eval_template_element(
 mod tests {
     use hurl_core::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::*;
     use crate::runner::{Number, RunnerErrorKind, Value};

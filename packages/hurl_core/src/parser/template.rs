@@ -19,7 +19,7 @@ use crate::ast::{Placeholder, SourceInfo, TemplateElement};
 use crate::parser::primitives::zero_or_more_spaces;
 use crate::parser::{error, expr, ParseResult};
 use crate::reader::{Pos, Reader};
-use crate::typing::SourceString;
+use crate::types::SourceString;
 
 pub struct EncodedString {
     pub source_info: SourceInfo,
@@ -137,7 +137,7 @@ mod tests {
 
     use super::*;
     use crate::ast::{Expr, ExprKind, Placeholder, Variable, Whitespace};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_templatize_empty_string() {

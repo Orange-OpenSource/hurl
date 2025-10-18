@@ -26,7 +26,7 @@ use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
-use hurl_core::typing::Count;
+use hurl_core::types::Count;
 
 use crate::cli::options::CliOptions;
 use crate::cli::CliError;
@@ -305,7 +305,7 @@ impl Iterator for InputQueue<'_> {
 #[cfg(test)]
 mod tests {
     use hurl_core::input::Input;
-    use hurl_core::typing::Count;
+    use hurl_core::types::Count;
 
     use crate::run::InputQueue;
 

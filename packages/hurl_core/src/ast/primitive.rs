@@ -20,7 +20,7 @@ use std::fmt::Formatter;
 
 use crate::ast::JsonValue;
 use crate::reader::Pos;
-use crate::typing::{SourceString, ToSource};
+use crate::types::{SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct KeyValue {
@@ -586,7 +586,7 @@ impl fmt::Display for Function {
 mod tests {
     use super::*;
     use crate::ast::json::{JsonListElement, JsonObjectElement, JsonValue};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_float() {

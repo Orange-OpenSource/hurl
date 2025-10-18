@@ -21,7 +21,7 @@ use std::io::Read;
 
 use hurl_core::ast::JsonValue;
 use hurl_core::parser::ParseError;
-use hurl_core::typing::ToSource;
+use hurl_core::types::ToSource;
 
 #[test]
 fn debug() {

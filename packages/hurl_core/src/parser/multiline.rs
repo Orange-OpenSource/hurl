@@ -279,7 +279,7 @@ mod tests {
     use super::*;
     use crate::ast::{JsonObjectElement, JsonValue, TemplateElement};
     use crate::reader::{CharPos, Pos};
-    use crate::typing::ToSource;
+    use crate::types::ToSource;
 
     #[test]
     fn test_multiline_string_text() {

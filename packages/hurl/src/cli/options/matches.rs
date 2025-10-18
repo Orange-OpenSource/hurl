@@ -24,7 +24,7 @@ use clap::ArgMatches;
 use hurl::pretty::PrettyMode;
 use hurl::runner::Value;
 use hurl_core::input::Input;
-use hurl_core::typing::{BytesPerSec, Count, DurationUnit};
+use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use super::context::RunContext;
 use super::variables::TypeKind;

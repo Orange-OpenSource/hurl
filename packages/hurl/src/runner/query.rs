@@ -509,7 +509,7 @@ pub mod tests {
 
     use hurl_core::ast::{SourceInfo, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::*;
     use crate::http::{HeaderVec, HttpError, HttpVersion};

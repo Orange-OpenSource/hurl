@@ -131,7 +131,7 @@ mod tests {
     use crate::runner::{Value, VariableSet};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     #[test]
     fn eval_filter_jsonpath() {

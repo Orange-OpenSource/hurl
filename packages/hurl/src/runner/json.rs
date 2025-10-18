@@ -180,7 +180,7 @@ fn encode_json_char(c: char) -> String {
 mod tests {
     use hurl_core::ast::*;
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use super::super::error::RunnerErrorKind;
     use super::*;

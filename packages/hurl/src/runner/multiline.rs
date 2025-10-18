@@ -56,7 +56,7 @@ mod tests {
         MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
-    use hurl_core::typing::ToSource;
+    use hurl_core::types::ToSource;
 
     use crate::runner::multiline::eval_multiline;
     use crate::runner::VariableSet;

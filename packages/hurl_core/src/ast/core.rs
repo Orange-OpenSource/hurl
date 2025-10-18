@@ -25,7 +25,7 @@ use crate::ast::section::{
     Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
 };
 use crate::ast::Placeholder;
-use crate::typing::{SourceString, ToSource};
+use crate::types::{SourceString, ToSource};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
