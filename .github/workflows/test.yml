@@ -310,7 +310,7 @@ jobs:
           ./**/*.log
 
   test-macos-x64:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     strategy:
       matrix:
         rust: [stable]
@@ -359,7 +359,7 @@ jobs:
           ./**/*.log
 
   test-macos-aarch64:
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       matrix:
         rust: [stable]

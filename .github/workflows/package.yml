@@ -514,7 +514,7 @@ jobs:
         path: target/upload/*
 
   package-macos-x64:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5.0.0
@@ -564,7 +564,7 @@ jobs:
         path: target/upload/*
 
   package-macos-aarch64:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5.0.0
