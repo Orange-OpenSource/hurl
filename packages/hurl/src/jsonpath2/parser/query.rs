@@ -20,12 +20,19 @@ use hurl_core::reader::Reader;
 
 use crate::jsonpath2::ast::query::{AbsoluteQuery, RelativeQuery};
 use crate::jsonpath2::parser::primitives::{expect_str, match_str};
-use crate::jsonpath2::parser::{segments, ParseResult};
+use crate::jsonpath2::parser::{segments, ParseError, ParseErrorKind, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;
     let segments = segments::parse(reader)?;
-    Ok(AbsoluteQuery::new(segments))
+    if reader.is_eof() {
+        Ok(AbsoluteQuery::new(segments))
+    } else {
+        Err(ParseError::new(
+            reader.cursor().pos,
+            ParseErrorKind::Expecting("end of query".to_string()),
+        ))
+    }
 }
 
 pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
@@ -57,6 +64,19 @@ mod tests {
             ParseError::new(Pos::new(1, 1), ParseErrorKind::Expecting("$".to_string()))
         );
         assert_eq!(reader.cursor().index, CharPos(0));
+    }
+
+    #[test]
+    pub fn test_trailing_space() {
+        let mut reader = Reader::new("$ ");
+        assert_eq!(
+            parse(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 2),
+                ParseErrorKind::Expecting("end of query".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(1));
     }
 
     #[test]
