@@ -259,7 +259,7 @@ fn load_testcases() -> Vec<TestCase> {
 fn run() {
     let testcases = load_testcases();
     // TODO: Remove Limit when all the todo! has been removed
-    let testcases = testcases.iter().take(20);
+    let testcases = testcases.iter().take(40);
     let count_total = testcases.len();
 
     let errors = testcases
