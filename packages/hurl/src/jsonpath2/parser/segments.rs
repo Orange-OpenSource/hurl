@@ -79,23 +79,55 @@ fn try_segment_shorthand(reader: &mut Reader) -> ParseResult<Option<Segment>> {
 }
 
 fn member_name_shorthand(reader: &mut Reader) -> ParseResult<String> {
-    let mut name = alpha(reader)?.to_string();
-    name.push_str(&reader.read_while(|c| c.is_alphanumeric()));
-    Ok(name)
+    let mut value = if let Some(c) = name_first(reader) {
+        c.to_string()
+    } else {
+        return Err(ParseError::new(
+            reader.cursor().pos,
+            ParseErrorKind::Expecting("a member name".to_string()),
+        ));
+    };
+    while let Some(c) = name_char(reader) {
+        value.push(c);
+    }
+
+    Ok(value)
 }
 
-fn alpha(reader: &mut Reader) -> ParseResult<char> {
-    let pos = reader.cursor().pos;
+fn name_first(reader: &mut Reader) -> Option<char> {
+    let save = reader.cursor();
     if let Some(c) = reader.read() {
-        if c.is_alphabetic() {
-            Ok(c)
+        let unicode = c as u32;
+        if c.is_alphabetic()
+            || c == '_'
+            || (0x80..=0xD7FF).contains(&unicode)
+            || (0xE000..=0x0010_FFFF).contains(&unicode)
+        {
+            Some(c)
         } else {
-            let kind = ParseErrorKind::Expecting("a character".to_string());
-            Err(ParseError::new(pos, kind))
+            reader.seek(save);
+            None
         }
     } else {
-        let kind = ParseErrorKind::Expecting("a character".to_string());
-        Err(ParseError::new(pos, kind))
+        None
+    }
+}
+
+fn name_char(reader: &mut Reader) -> Option<char> {
+    name_first(reader).or_else(|| digit(reader))
+}
+
+fn digit(reader: &mut Reader) -> Option<char> {
+    let save = reader.cursor();
+    if let Some(c) = reader.read() {
+        if c.is_ascii_digit() {
+            Some(c)
+        } else {
+            reader.seek(save);
+            None
+        }
+    } else {
+        None
     }
 }
 
@@ -152,6 +184,15 @@ mod tests {
         );
         assert_eq!(reader.cursor().index, CharPos(5));
 
+        let mut reader = Reader::new(".☺");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "☺".to_string()
+            ))]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(2));
+
         let mut reader = Reader::new("..book");
         assert_eq!(
             try_segment(&mut reader).unwrap().unwrap(),
@@ -178,5 +219,20 @@ mod tests {
             )]))
         );
         assert_eq!(reader.cursor().index, CharPos(3));
+    }
+
+    #[test]
+    pub fn test_name_first() {
+        let mut reader = Reader::new("a");
+        assert_eq!(name_first(&mut reader).unwrap(), 'a');
+
+        let mut reader = Reader::new("_");
+        assert_eq!(name_first(&mut reader).unwrap(), '_');
+
+        let mut reader = Reader::new("☺");
+        assert_eq!(name_first(&mut reader).unwrap(), '☺');
+
+        let mut reader = Reader::new("1");
+        assert!(name_first(&mut reader).is_none());
     }
 }
