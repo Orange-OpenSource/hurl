@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::types::Index;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::types::{Count, Index};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1461,7 +1461,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        count: Option&lt;usize&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">        total: Count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1637,7 +1637,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            count,</pre>
+                <pre class="has-background-success-light py-0 px-2">            total,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; total number of jobs. `count` is the optional total number of files to execute.</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; total number of jobs. `total` is the total number of files to execute.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3509,7 +3509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    count: Option&lt;usize&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">    total: Count,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4133,7 +4133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let progress = match count {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let progress = match total {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4149,7 +4149,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(count) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        Count::Finite(total) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4165,7 +4165,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let percent = (completed as f64 * 100.0 &#x2F; count as f64) as usize;</pre>
+                <pre class="has-background-success-light py-0 px-2">            let percent = (completed as f64 * 100.0 &#x2F; total as f64) as usize;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4181,7 +4181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            format!(&quot;Executed files: {completed}&#x2F;{count} ({percent}%)\n&quot;)</pre>
+                <pre class="has-background-success-light py-0 px-2">            format!(&quot;Executed files: {completed}&#x2F;{total} ({percent}%)\n&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4213,7 +4213,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        None =&gt; format!(&quot;Executed files: {completed}\n&quot;),</pre>
+                <pre class="has-background-danger-light py-0 px-2">        Count::Infinite =&gt; format!(&quot;Executed files: {completed}\n&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5365,7 +5365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::types::Index;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::types::{Count, Index};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6181,7 +6181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let total = Some(100);</pre>
+                <pre class="has-background-white py-0 px-2">        let total = Count::Finite(100);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8764,7 +8764,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-10-24 05:04</p>
+                    <p class="heading">Date: 2025-10-24 20:43</p>
                 </div>
             
         </footer>
