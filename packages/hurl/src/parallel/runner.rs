@@ -271,7 +271,7 @@ impl ParallelRunner {
                         }
                         None => {
                             // If we have received all the job results, we can stop the run.
-                            if let Some(jobs_count) = jobs_count {
+                            if let Count::Finite(jobs_count) = jobs_count {
                                 if results.len() == jobs_count {
                                     break;
                                 }

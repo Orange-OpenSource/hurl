@@ -22,7 +22,7 @@ use super::runner::WorkerState;
 use super::worker::Worker;
 use crate::util::term::Stderr;
 use hurl_core::text::{Format, Style, StyledString};
-use hurl_core::types::Index;
+use hurl_core::types::{Count, Index};
 
 /// A progress reporter to display advancement of parallel runs execution in test mode.
 pub struct ParProgress {
@@ -86,7 +86,7 @@ impl ParProgress {
         &mut self,
         workers: &[(Worker, WorkerState)],
         completed: usize,
-        count: Option<usize>,
+        total: Count,
         stderr: &mut Stderr,
     ) {
         if !matches!(self.mode, Mode::TestWithProgress) {
@@ -97,7 +97,7 @@ impl ParProgress {
         let Some(progress) = build_progress(
             workers,
             completed,
-            count,
+            total,
             self.max_running_displayed,
             self.format,
             self.max_width,
@@ -205,7 +205,7 @@ impl Throttle {
 }
 
 /// Returns a progress string, given a list of `workers`, a number of `completed` jobs and the
-/// total number of jobs. `count` is the optional total number of files to execute.
+/// total number of jobs. `total` is the total number of files to execute.
 ///
 /// `max_running_displayed` is used to limit the number of running progress bar. If more jobs are
 /// running, a label "...x more" is displayed.
@@ -214,7 +214,7 @@ impl Throttle {
 fn build_progress(
     workers: &[(Worker, WorkerState)],
     completed: usize,
-    count: Option<usize>,
+    total: Count,
     max_running_displayed: usize,
     format: Format,
     max_width: Option<usize>,
@@ -253,12 +253,12 @@ fn build_progress(
 
     // Construct all the progress strings
     let mut all_progress = String::new();
-    let progress = match count {
-        Some(count) => {
-            let percent = (completed as f64 * 100.0 / count as f64) as usize;
-            format!("Executed files: {completed}/{count} ({percent}%)\n")
+    let progress = match total {
+        Count::Finite(total) => {
+            let percent = (completed as f64 * 100.0 / total as f64) as usize;
+            format!("Executed files: {completed}/{total} ({percent}%)\n")
         }
-        None => format!("Executed files: {completed}\n"),
+        Count::Infinite => format!("Executed files: {completed}\n"),
     };
     // We don't wrap this string for the moment, there is low chance to overlap the maximum width
     // of the terminal.
@@ -330,7 +330,7 @@ mod tests {
     use crate::util::logger::LoggerOptionsBuilder;
     use hurl_core::input::Input;
     use hurl_core::text::Format;
-    use hurl_core::types::Index;
+    use hurl_core::types::{Count, Index};
 
     fn new_workers() -> (Worker, Worker, Worker, Worker, Worker) {
         let (tx_out, _) = mpsc::channel();
@@ -381,7 +381,7 @@ mod tests {
         let (w0, w1, w2, w3, w4) = new_workers();
         let jobs = new_jobs();
         let completed = 75;
-        let total = Some(100);
+        let total = Count::Finite(100);
         let max_displayed = 3;
 
         let mut workers = vec![
