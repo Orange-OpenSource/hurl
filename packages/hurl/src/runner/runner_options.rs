@@ -62,6 +62,7 @@ pub struct RunnerOptionsBuilder {
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(&Entry) -> bool>,
     proxy: Option<String>,
+    proxy_headers: Vec<String>,
     repeat: Option<Count>,
     resolves: Vec<String>,
     retry: Option<Count>,
@@ -114,6 +115,7 @@ impl Default for RunnerOptionsBuilder {
             post_entry: None,
             pre_entry: None,
             proxy: None,
+            proxy_headers: vec![],
             repeat: None,
             resolves: vec![],
             retry: None,
@@ -389,6 +391,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the proxy headers.
+    pub fn proxy_headers(&mut self, proxy_headers: &[String]) -> &mut Self {
+        self.proxy_headers = proxy_headers.to_vec();
+        self
+    }
+
     /// Set the number of repetition for a given entry.
     pub fn repeat(&mut self, repeat: Option<Count>) -> &mut Self {
         self.repeat = repeat;
@@ -500,6 +508,7 @@ impl RunnerOptionsBuilder {
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
+            proxy_headers: self.proxy_headers.clone(),
             repeat: self.repeat,
             resolves: self.resolves.clone(),
             retry: self.retry,
@@ -593,6 +602,8 @@ pub struct RunnerOptions {
     pub(crate) pre_entry: Option<fn(&Entry) -> bool>,
     /// Sets the specified proxy to be used.
     pub(crate) proxy: Option<String>,
+    /// Sets the proxy headers.
+    pub(crate) proxy_headers: Vec<String>,
     /// Set the number of repetition for a given entry.
     pub(crate) repeat: Option<Count>,
     /// Provides a custom address for a specific host and port pair.
@@ -665,6 +676,7 @@ impl PartialEq for RunnerOptions {
             path_as_is,
             pinned_pub_key,
             proxy,
+            proxy_headers,
             repeat,
             resolves,
             retry,
@@ -716,6 +728,7 @@ impl PartialEq for RunnerOptions {
             && path_as_is == &other.path_as_is
             && pinned_pub_key == &other.pinned_pub_key
             && proxy == &other.proxy
+            && proxy_headers == &other.proxy_headers
             && repeat == &other.repeat
             && resolves == &other.resolves
             && retry == &other.retry
