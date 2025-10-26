@@ -189,7 +189,8 @@ impl Stderr {
         self.buffer = buffer;
     }
 
-    /// Clears any progress and reset cursor terminal to the position of the last "real" message.
+    /// Clears any progress and reset cursor terminal to the position of the last "real" message
+    /// (only in [`WriteMode::Immediate`] mode).
     fn rewind_cursor(&self) {
         if self.progress_bar.is_empty() {
             return;
@@ -197,8 +198,7 @@ impl Stderr {
         match self.mode {
             WriteMode::Immediate => {
                 // We count the number of new lines \n. We can't use the `String::lines()` because
-                // it counts a line for a single carriage return. We don't want to go up for a
-                // single carriage return.
+                // it counts a line for a single char and we don't want to go up for a single char.
                 let lines = self.progress_bar.chars().filter(|c| *c == '\n').count();
 
                 // We used the following ANSI codes:

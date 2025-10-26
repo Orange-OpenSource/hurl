@@ -62,12 +62,13 @@ pub struct ParallelRunner {
 pub enum WorkerState {
     /// Worker has no job to run.
     Idle,
-    /// Worker is currently running a `job`, the entry index being executed is `entry_index`,
-    /// the total number of entries being `entry_count`.
+    /// Worker is currently running a `job`, the entry index being executed is `current_entry`,
+    /// the last entry index to be run is `last_entry` and `retry_count` is the number of retries.
     Running {
         job: Job,
-        entry_index: Index,
-        entry_count: usize,
+        current_entry: Index,
+        last_entry: Index,
+        retry_count: usize,
     },
 }
 
@@ -203,8 +204,9 @@ impl ParallelRunner {
                 WorkerMessage::Running(msg) => {
                     self.workers[msg.worker_id.0].1 = WorkerState::Running {
                         job: msg.job,
-                        entry_index: msg.entry_index,
-                        entry_count: msg.entry_count,
+                        current_entry: msg.current_entry,
+                        last_entry: msg.last_entry,
+                        retry_count: msg.retry_count,
                     };
 
                     if self.progress.can_update() {

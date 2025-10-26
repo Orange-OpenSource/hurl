@@ -171,8 +171,8 @@ impl WorkerProgress {
 }
 
 impl EventListener for WorkerProgress {
-    fn on_running(&self, entry_index: Index, entry_count: usize) {
-        let msg = RunningMsg::new(self.worker_id, &self.job, entry_index, entry_count);
+    fn on_entry_running(&self, current: Index, last: Index, retry_count: usize) {
+        let msg = RunningMsg::new(self.worker_id, &self.job, current, last, retry_count);
         _ = self.tx.send(WorkerMessage::Running(msg));
     }
 }

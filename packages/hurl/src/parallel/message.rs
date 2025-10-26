@@ -87,19 +87,28 @@ pub struct RunningMsg {
     /// Job originator of this message.
     pub job: Job,
     /// Index of the current entry.
-    pub entry_index: Index,
-    /// Number of entries
-    pub entry_count: usize,
+    pub current_entry: Index,
+    /// Index of the last entry to be run.
+    pub last_entry: Index,
+    /// Number of actual retries
+    pub retry_count: usize,
 }
 
 impl RunningMsg {
     /// Creates a new running message: the job is in progress.
-    pub fn new(worker_id: WorkerId, job: &Job, entry_index: Index, entry_count: usize) -> Self {
+    pub fn new(
+        worker_id: WorkerId,
+        job: &Job,
+        current_entry: Index,
+        last_entry: Index,
+        retry_count: usize,
+    ) -> Self {
         RunningMsg {
             worker_id,
             job: job.clone(),
-            entry_index,
-            entry_count,
+            current_entry,
+            last_entry,
+            retry_count,
         }
     }
 }

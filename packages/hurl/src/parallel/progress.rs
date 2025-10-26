@@ -244,7 +244,7 @@ fn build_progress(
     let max = workers
         .iter()
         .map(|(_, state)| match state {
-            WorkerState::Running { entry_count, .. } => *entry_count,
+            WorkerState::Running { last_entry, .. } => last_entry.get(),
             WorkerState::Idle => 0,
         })
         .max()
@@ -267,13 +267,14 @@ fn build_progress(
     for (_, state) in &workers {
         if let WorkerState::Running {
             job,
-            entry_index,
-            entry_count,
+            current_entry,
+            last_entry,
+            retry_count,
         } = state
         {
-            let requests = format!("{entry_index}/{entry_count}");
+            let requests = format!("{current_entry}/{last_entry}");
             let padding = " ".repeat(max_completed_width - requests.len());
-            let bar = progress_bar(*entry_index, *entry_count);
+            let bar = progress_bar(*current_entry, *last_entry);
 
             let mut progress = StyledString::new();
             progress.push(&bar);
@@ -282,6 +283,11 @@ fn build_progress(
             progress.push_with("Running", Style::new().cyan().bold());
             progress.push(" ");
             progress.push_with(&job.filename.to_string(), Style::new().bold());
+            if *retry_count > 0 {
+                let retry = format!("(retry {})", retry_count);
+                progress.push(" ");
+                progress.push_with(&retry, Style::new().yellow());
+            }
             progress.push("\n");
 
             // We wrap the progress string with new lines if necessary
@@ -304,10 +310,10 @@ fn build_progress(
 }
 
 /// Returns the progress bar of a single operation with the current `index`.
-fn progress_bar(index: Index, count: usize) -> String {
+fn progress_bar(current: Index, last: Index) -> String {
     const WIDTH: usize = 24;
     // We report the number of items already processed.
-    let progress = index.to_zero_based() as f64 / count as f64;
+    let progress = current.to_zero_based() as f64 / last.get() as f64;
     let col = (progress * WIDTH as f64) as usize;
     let completed = if col > 0 {
         "=".repeat(col)
@@ -315,7 +321,7 @@ fn progress_bar(index: Index, count: usize) -> String {
         String::new()
     };
     let void = " ".repeat(WIDTH - col - 1);
-    format!("[{completed}>{void}] {index}/{count}")
+    format!("[{completed}>{void}] {current}/{last}")
 }
 
 #[cfg(test)]
@@ -368,11 +374,17 @@ mod tests {
             .collect()
     }
 
-    fn new_running_state(job: &Job, entry_index: Index, entry_count: usize) -> WorkerState {
+    fn new_running_state(
+        job: &Job,
+        current_entry: Index,
+        last_entry: Index,
+        retry_count: usize,
+    ) -> WorkerState {
         WorkerState::Running {
             job: job.clone(),
-            entry_index,
-            entry_count,
+            current_entry,
+            last_entry,
+            retry_count,
         }
     }
 
@@ -402,11 +414,11 @@ mod tests {
         );
         assert!(progress.is_none());
 
-        workers[0].1 = new_running_state(&jobs[0], Index::new(1), 10);
-        workers[1].1 = new_running_state(&jobs[1], Index::new(1), 2);
-        workers[2].1 = new_running_state(&jobs[2], Index::new(1), 5);
-        workers[3].1 = new_running_state(&jobs[3], Index::new(1), 7);
-        workers[4].1 = new_running_state(&jobs[4], Index::new(1), 4);
+        workers[0].1 = new_running_state(&jobs[0], Index::new(1), Index::new(10), 0);
+        workers[1].1 = new_running_state(&jobs[1], Index::new(1), Index::new(2), 0);
+        workers[2].1 = new_running_state(&jobs[2], Index::new(1), Index::new(5), 0);
+        workers[3].1 = new_running_state(&jobs[3], Index::new(1), Index::new(7), 0);
+        workers[4].1 = new_running_state(&jobs[4], Index::new(1), Index::new(4), 0);
 
         let progress = build_progress(
             &workers,
@@ -427,11 +439,11 @@ Executed files: 75/100 (75%)\n\
 "
         );
 
-        workers[0].1 = new_running_state(&jobs[0], Index::new(6), 10);
-        workers[1].1 = new_running_state(&jobs[1], Index::new(2), 2);
-        workers[2].1 = new_running_state(&jobs[2], Index::new(3), 5);
-        workers[3].1 = new_running_state(&jobs[3], Index::new(4), 7);
-        workers[4].1 = new_running_state(&jobs[4], Index::new(2), 4);
+        workers[0].1 = new_running_state(&jobs[0], Index::new(6), Index::new(10), 0);
+        workers[1].1 = new_running_state(&jobs[1], Index::new(2), Index::new(2), 0);
+        workers[2].1 = new_running_state(&jobs[2], Index::new(3), Index::new(5), 0);
+        workers[3].1 = new_running_state(&jobs[3], Index::new(4), Index::new(7), 0);
+        workers[4].1 = new_running_state(&jobs[4], Index::new(2), Index::new(4), 0);
 
         let progress = build_progress(
             &workers,
@@ -452,11 +464,11 @@ Executed files: 75/100 (75%)\n\
 "
         );
 
-        workers[0].1 = new_running_state(&jobs[0], Index::new(10), 10);
-        workers[1].1 = new_running_state(&jobs[5], Index::new(1), 6);
-        workers[2].1 = new_running_state(&jobs[2], Index::new(5), 5);
-        workers[3].1 = new_running_state(&jobs[3], Index::new(6), 7);
-        workers[4].1 = new_running_state(&jobs[4], Index::new(3), 4);
+        workers[0].1 = new_running_state(&jobs[0], Index::new(10), Index::new(10), 0);
+        workers[1].1 = new_running_state(&jobs[5], Index::new(1), Index::new(6), 0);
+        workers[2].1 = new_running_state(&jobs[2], Index::new(5), Index::new(5), 0);
+        workers[3].1 = new_running_state(&jobs[3], Index::new(6), Index::new(7), 0);
+        workers[4].1 = new_running_state(&jobs[4], Index::new(3), Index::new(4), 0);
 
         let progress = build_progress(
             &workers,
@@ -478,10 +490,10 @@ Executed files: 75/100 (75%)\n\
         );
 
         workers[0].1 = WorkerState::Idle;
-        workers[1].1 = new_running_state(&jobs[5], Index::new(3), 6);
+        workers[1].1 = new_running_state(&jobs[5], Index::new(3), Index::new(6), 0);
         workers[2].1 = WorkerState::Idle;
         workers[3].1 = WorkerState::Idle;
-        workers[4].1 = new_running_state(&jobs[4], Index::new(4), 4);
+        workers[4].1 = new_running_state(&jobs[4], Index::new(4), Index::new(4), 0);
 
         let progress = build_progress(
             &workers,
@@ -501,7 +513,7 @@ Executed files: 75/100 (75%)\n\
         );
 
         workers[0].1 = WorkerState::Idle;
-        workers[1].1 = new_running_state(&jobs[5], Index::new(6), 6);
+        workers[1].1 = new_running_state(&jobs[5], Index::new(6), Index::new(6), 0);
         workers[2].1 = WorkerState::Idle;
         workers[3].1 = WorkerState::Idle;
         workers[4].1 = WorkerState::Idle;
@@ -521,25 +533,47 @@ Executed files: 75/100 (75%)\n\
 [====================>   ] 6/6 Running f.hurl\n\
 "
         );
+
+        workers[0].1 = WorkerState::Idle;
+        workers[1].1 = new_running_state(&jobs[5], Index::new(6), Index::new(6), 1);
+        workers[2].1 = WorkerState::Idle;
+        workers[3].1 = WorkerState::Idle;
+        workers[4].1 = WorkerState::Idle;
+
+        let progress = build_progress(
+            &workers,
+            completed,
+            total,
+            max_displayed,
+            Format::Plain,
+            None,
+        );
+        assert_eq!(
+            progress.unwrap(),
+            "\
+Executed files: 75/100 (75%)\n\
+[====================>   ] 6/6 Running f.hurl (retry 1)\n\
+"
+        );
     }
 
     #[rustfmt::skip]
     #[test]
     fn test_progress_bar() {
         // Progress strings with 20 entries:
-        assert_eq!(progress_bar(Index::new(1), 20),  "[>                       ] 1/20");
-        assert_eq!(progress_bar(Index::new(2), 20),  "[=>                      ] 2/20");
-        assert_eq!(progress_bar(Index::new(5), 20),  "[====>                   ] 5/20");
-        assert_eq!(progress_bar(Index::new(10), 20), "[==========>             ] 10/20");
-        assert_eq!(progress_bar(Index::new(15), 20), "[================>       ] 15/20");
-        assert_eq!(progress_bar(Index::new(20), 20), "[======================> ] 20/20");
+        assert_eq!(progress_bar(Index::new(1), Index::new(20)),  "[>                       ] 1/20");
+        assert_eq!(progress_bar(Index::new(2), Index::new(20)),  "[=>                      ] 2/20");
+        assert_eq!(progress_bar(Index::new(5), Index::new(20)),  "[====>                   ] 5/20");
+        assert_eq!(progress_bar(Index::new(10), Index::new(20)), "[==========>             ] 10/20");
+        assert_eq!(progress_bar(Index::new(15), Index::new(20)), "[================>       ] 15/20");
+        assert_eq!(progress_bar(Index::new(20), Index::new(20)), "[======================> ] 20/20");
 
         // Progress strings with 3 entries:
-        assert_eq!(progress_bar(Index::new(1), 3), "[>                       ] 1/3");
-        assert_eq!(progress_bar(Index::new(2), 3), "[========>               ] 2/3");
-        assert_eq!(progress_bar(Index::new(3), 3), "[================>       ] 3/3");
+        assert_eq!(progress_bar(Index::new(1), Index::new(3)), "[>                       ] 1/3");
+        assert_eq!(progress_bar(Index::new(2), Index::new(3)), "[========>               ] 2/3");
+        assert_eq!(progress_bar(Index::new(3), Index::new(3)), "[================>       ] 3/3");
 
         // Progress strings with 1 entry:
-        assert_eq!(progress_bar(Index::new(1), 1), "[>                       ] 1/1");
+        assert_eq!(progress_bar(Index::new(1), Index::new(1)), "[>                       ] 1/1");
     }
 }
