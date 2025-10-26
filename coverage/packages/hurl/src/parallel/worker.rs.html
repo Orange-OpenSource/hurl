@@ -2816,12 +2816,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2133">
-                2133
+                role="cell" aria-label="2175">
+                2175
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn on_running(&amp;self, entry_index: Index, entry_count: usize) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn on_entry_running(&amp;self, current: Index, last: Index, retry_count: usize) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2832,12 +2832,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2133">
-                2133
+                role="cell" aria-label="2175">
+                2175
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let msg = RunningMsg::new(self.worker_id, &amp;self.job, entry_index, entry_count);</pre>
+                <pre class="has-background-success-light py-0 px-2">        let msg = RunningMsg::new(self.worker_id, &amp;self.job, current, last, retry_count);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2848,8 +2848,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="2133">
-                2133
+                role="cell" aria-label="2175">
+                2175
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2892,7 +2892,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2025-10-26 05:19</p>
+                    <p class="heading">Date: 2025-10-26 21:07</p>
                 </div>
             
         </footer>
