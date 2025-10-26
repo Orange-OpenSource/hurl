@@ -153,6 +153,15 @@ pub fn run_entries(
     listener: Option<&dyn EventListener>,
     logger: &mut Logger,
 ) -> HurlResult {
+    // Early returns for empty entries.
+    if entries.is_empty() {
+        return HurlResult {
+            success: true,
+            variables: variables.clone(),
+            ..Default::default()
+        };
+    }
+
     let mut http_client = Client::new();
     let mut entries_result = vec![];
     let mut variables = variables.clone();
