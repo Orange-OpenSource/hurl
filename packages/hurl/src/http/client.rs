@@ -142,20 +142,27 @@ impl Client {
             // > When libcurl switches method to GET, it then uses that method without sending any
             // > request body. If it does not change the method, it sends the subsequent request the
             // > same way as the previous one; including the request body if one was provided.
-            let (form, multipart, body) = if redirect_method != request_spec.method {
-                (vec![], vec![], Body::Binary(vec![]))
-            } else {
-                (request_spec.form, request_spec.multipart, request_spec.body)
-            };
+            let (form, multipart, body, implicit_content_type) =
+                if redirect_method != request_spec.method {
+                    (vec![], vec![], Body::Binary(vec![]), None)
+                } else {
+                    (
+                        request_spec.form,
+                        request_spec.multipart,
+                        request_spec.body,
+                        request_spec.implicit_content_type,
+                    )
+                };
             request_spec = RequestSpec {
                 method: redirect_method,
                 url: redirect_url,
                 headers,
+                querystring: vec![],
                 form,
                 multipart,
-                body,
                 cookies: request_spec.cookies,
-                ..Default::default()
+                body,
+                implicit_content_type,
             };
         }
         Ok(calls)

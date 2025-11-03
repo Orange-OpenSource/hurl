@@ -137,12 +137,12 @@ header "Location" not exists
 # With a 308 redirection, the method remains POST. In this case, the request body is
 # copy from redirection through redirection.
 POST http://localhost:8000/follow-redirect-308
-Content-Type: text/plain
-Accept: text/plain
-`Hello world!`
+[Form]
+user: bob
+pass: 123
 HTTP 200
 [Asserts]
 redirects count == 1
-redirects nth 0 location == "http://localhost:8000/followed-redirect-post"
-url == "http://localhost:8000/followed-redirect-post"
-`Followed redirect POST!`
+redirects nth 0 location == "http://localhost:8000/followed-redirect-308"
+url == "http://localhost:8000/followed-redirect-308"
+`Followed redirect 308!`

@@ -49,17 +49,18 @@ url == "http://localhost:8000/followed-redirect-from-post"
 
 
 POST http://localhost:8000/follow-redirect-308
-Accept: text/plain
 [Options]
 location: true
-`Hello world!`
+[Form]
+user: bob
+pass: 123
 HTTP 200
 [Asserts]
 header "Location" not exists
 redirects count == 1
-redirects nth 0 location == "http://localhost:8000/followed-redirect-post"
-url == "http://localhost:8000/followed-redirect-post"
-`Followed redirect POST!`
+redirects nth 0 location == "http://localhost:8000/followed-redirect-308"
+url == "http://localhost:8000/followed-redirect-308"
+`Followed redirect 308!`
 
 
 GET http://localhost:8000/follow-redirect/relative/foo

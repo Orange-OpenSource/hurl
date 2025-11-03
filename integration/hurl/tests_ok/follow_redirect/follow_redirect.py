@@ -53,7 +53,18 @@ def followed_redirect_post():
 
 @app.route("/follow-redirect-308", methods=["POST"])
 def follow_redirect_308():
-    return redirect("http://localhost:8000/followed-redirect-post", code=308)
+    assert request.headers["Content-Type"] == "application/x-www-form-urlencoded"
+    assert request.form.get("user") == "bob"
+    assert request.form.get("pass") == "123"
+    return redirect("http://localhost:8000/followed-redirect-308", code=308)
+
+
+@app.route("/followed-redirect-308", methods=["POST"])
+def followed_redirect_308():
+    assert request.headers["Content-Type"] == "application/x-www-form-urlencoded"
+    assert request.form.get("user") == "bob"
+    assert request.form.get("pass") == "123"
+    return "Followed redirect 308!"
 
 
 @app.route("/follow-redirect-basic-auth")
