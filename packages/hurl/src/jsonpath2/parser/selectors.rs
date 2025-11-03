@@ -22,7 +22,7 @@ use crate::jsonpath2::ast::selector::{
     ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
-use crate::jsonpath2::parser::primitives::{expect_str, match_str};
+use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::query::try_relative_query;
 use hurl_core::reader::Reader;
 
@@ -46,10 +46,10 @@ pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
         return Ok(Selector::Name(name_selector));
     } else if let Some(wildcard_selector) = try_wildcard_selector(reader) {
         return Ok(Selector::Wildcard(wildcard_selector));
-    } else if let Some(index_selector) = try_index_selector(reader)? {
-        return Ok(Selector::Index(index_selector));
     } else if let Some(array_slice_selector) = try_array_slice_selector(reader)? {
         return Ok(Selector::ArraySlice(array_slice_selector));
+    } else if let Some(index_selector) = try_index_selector(reader)? {
+        return Ok(Selector::Index(index_selector));
     } else if let Some(filter_selector) = try_filter_selector(reader)? {
         return Ok(Selector::Filter(filter_selector));
     }
@@ -84,15 +84,14 @@ fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>>
 
 /// Try to parse an array_slice_selector
 fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySliceSelector>> {
-    let start = if let Some(':') = reader.peek() {
-        None
-    } else if let Some(value) = try_integer(reader)? {
-        Some(value)
-    } else {
+    let save = reader.cursor();
+    let start = try_integer(reader)?;
+    if !match_str(":", reader) {
+        // This is not a slice-selector
+        // but can still be a valid index or name selector
+        reader.seek(save);
         return Ok(None);
-    };
-    expect_str(":", reader)?;
-
+    }
     let end = try_integer(reader)?;
     let step = if match_str(":", reader) {
         try_integer(reader)?.unwrap_or(1)
@@ -134,6 +133,16 @@ mod tests {
             ]
         );
         assert_eq!(reader.cursor().index, CharPos(9));
+
+        let mut reader = Reader::new("1,5:7");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            vec![
+                Selector::Index(IndexSelector::new(1)),
+                Selector::ArraySlice(ArraySliceSelector::new(Some(5), Some(7), 1))
+            ]
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
     }
 
     #[test]
@@ -219,6 +228,17 @@ mod tests {
             ArraySliceSelector::new(None, Some(2), 1)
         );
         assert_eq!(reader.cursor().index, CharPos(2));
+
+        let mut reader = Reader::new("::-1"); // Reverse items
+        assert_eq!(
+            try_array_slice_selector(&mut reader).unwrap().unwrap(),
+            ArraySliceSelector::new(None, None, -1)
+        );
+        assert_eq!(reader.cursor().index, CharPos(4));
+
+        let mut reader = Reader::new("2"); // This is an index selector
+        assert!(try_array_slice_selector(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
 
         let mut reader = Reader::new("?@['isbn']]");
         assert!(try_array_slice_selector(&mut reader).unwrap().is_none());
