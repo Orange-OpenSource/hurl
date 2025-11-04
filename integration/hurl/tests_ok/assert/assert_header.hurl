@@ -16,6 +16,7 @@ header "Set-Cookie" exists
 header "Set-Cookie" count == 3
 header "Set-Cookie" contains "cookie1=value1; Path=/"
 header "Set-Cookie" not contains "cookie4=value4; Path=/"
+header "X-Fruit" isList
 header "X-Fruit" isCollection
 header "x-fruit" count == 4
 header "X-Fruit" nth 0 == "Banana"
@@ -33,7 +34,9 @@ HTTP 200
 [Captures]
 fruits: header "X-fruit"
 [Asserts]
+header "X-Fruit" isList
 header "X-Fruit" isCollection
+variable "fruits" isList
 variable "fruits" isCollection
 variable "fruits" count == 4
 variable "fruits" nth 0 == "Banana"

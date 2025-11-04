@@ -190,18 +190,19 @@ fn expected_no_value(
             let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("matches regex <{expected}>"))
         }
-        PredicateFuncValue::IsInteger => Ok("integer".to_string()),
-        PredicateFuncValue::IsFloat => Ok("float".to_string()),
+        PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsBoolean => Ok("boolean".to_string()),
-        PredicateFuncValue::IsString => Ok("string".to_string()),
         PredicateFuncValue::IsCollection => Ok("collection".to_string()),
         PredicateFuncValue::IsDate => Ok("date".to_string()),
-        PredicateFuncValue::IsIsoDate => Ok("date".to_string()),
-        PredicateFuncValue::Exist => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
-        PredicateFuncValue::IsNumber => Ok("number".to_string()),
+        PredicateFuncValue::IsFloat => Ok("float".to_string()),
+        PredicateFuncValue::IsInteger => Ok("integer".to_string()),
         PredicateFuncValue::IsIpv4 => Ok("ipv4".to_string()),
         PredicateFuncValue::IsIpv6 => Ok("ipv6".to_string()),
+        PredicateFuncValue::IsIsoDate => Ok("date".to_string()),
+        PredicateFuncValue::IsNumber => Ok("number".to_string()),
+        PredicateFuncValue::IsList => Ok("list".to_string()),
+        PredicateFuncValue::IsString => Ok("string".to_string()),
         PredicateFuncValue::IsUuid => Ok("uuid".to_string()),
     }
 }
@@ -268,18 +269,19 @@ fn eval_predicate_func(
             value,
             context_dir,
         ),
-        PredicateFuncValue::IsInteger => eval_is_integer(value),
-        PredicateFuncValue::IsFloat => eval_is_float(value),
+        PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsBoolean => eval_is_boolean(value),
-        PredicateFuncValue::IsString => eval_is_string(value),
         PredicateFuncValue::IsCollection => eval_is_collection(value),
         PredicateFuncValue::IsDate => eval_is_date(value),
-        PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
-        PredicateFuncValue::Exist => eval_exist(value),
         PredicateFuncValue::IsEmpty => eval_is_empty(value),
-        PredicateFuncValue::IsNumber => eval_is_number(value),
+        PredicateFuncValue::IsFloat => eval_is_float(value),
+        PredicateFuncValue::IsInteger => eval_is_integer(value),
         PredicateFuncValue::IsIpv4 => eval_is_ipv4(value),
         PredicateFuncValue::IsIpv6 => eval_is_ipv6(value),
+        PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
+        PredicateFuncValue::IsList => eval_is_list(value),
+        PredicateFuncValue::IsNumber => eval_is_number(value),
+        PredicateFuncValue::IsString => eval_is_string(value),
         PredicateFuncValue::IsUuid => eval_is_uuid(value),
     }
 }
@@ -521,6 +523,16 @@ fn eval_is_collection(actual: &Value) -> Result<PredicateResult, RunnerError> {
         success: actual.is_collection(),
         actual: actual.repr(),
         expected: "collection".to_string(),
+        type_mismatch: false,
+    })
+}
+
+/// Evaluates if an `actual` value is a list.
+fn eval_is_list(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
+        success: actual.is_list(),
+        actual: actual.repr(),
+        expected: "list".to_string(),
         type_mismatch: false,
     })
 }

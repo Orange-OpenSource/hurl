@@ -35,9 +35,7 @@ impl Value {
         }
     }
 
-    /// Returns `true` if the value starts with the given prefix.
-    ///
-    /// Returns `false` if it does not.
+    /// Returns `true` if the value starts with the given prefix; otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value types are not supported.
     pub fn starts_with(&self, other: &Value) -> Result<bool, EvalError> {
@@ -48,9 +46,7 @@ impl Value {
         }
     }
 
-    /// Returns `true` if the value ends with the given suffix.
-    ///
-    /// Returns `false` if it does not.
+    /// Returns `true` if the value ends with the given suffix, otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value types are not supported.
     pub fn ends_with(&self, other: &Value) -> Result<bool, EvalError> {
@@ -61,10 +57,8 @@ impl Value {
         }
     }
 
-    /// Returns `true` if the value contains another value.
+    /// Returns `true` if the value contains another value, otherwise `false`.
     ///
-    /// Returns `false` if it does not.
-    ///     
     /// Returns a [`EvalError::Type`] if the given value types are not supported.
     pub fn contains(&self, other: &Value) -> Result<bool, EvalError> {
         match (self, other) {
@@ -87,10 +81,8 @@ impl Value {
         }
     }
 
-    /// Returns `true` if the list value includes another value.
+    /// Returns `true` if the list value includes another value, otherwise `false`.
     ///
-    /// Returns `false` if it does not.
-    ///     
     /// Returns a [`EvalError::Type`] if the given value types are not supported.
     ///
     /// TODO: deprecate method in favor of contains.
@@ -110,16 +102,17 @@ impl Value {
         }
     }
 
-    /// Returns `true` the value is a boolean.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a boolean, otherwise `false`.
     pub fn is_boolean(&self) -> bool {
         self.kind() == ValueKind::Bool
     }
 
-    /// Returns `true` the value is a collection.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a list, otherwise `false`.
+    pub fn is_list(&self) -> bool {
+        self.kind() == ValueKind::Bytes || self.kind() == ValueKind::List
+    }
+
+    /// Returns `true` the value is a collection, otherwise `false`.
     pub fn is_collection(&self) -> bool {
         self.kind() == ValueKind::Bytes
             || self.kind() == ValueKind::List
@@ -127,44 +120,32 @@ impl Value {
             || self.kind() == ValueKind::Object
     }
 
-    /// Returns `true` the value is a date.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a date, otherwise `false`.
     pub fn is_date(&self) -> bool {
         self.kind() == ValueKind::Date
     }
 
-    /// Returns `true` the value is a float.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a float, otherwise `false`.
     pub fn is_float(&self) -> bool {
         self.kind() == ValueKind::Float
     }
 
-    /// Returns `true` the value is an integer.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is an integer, otherwise `false`.
     pub fn is_integer(&self) -> bool {
         self.kind() == ValueKind::Integer
     }
 
-    /// Returns `true` the value is a number.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a number, otherwise `false`.
     pub fn is_number(&self) -> bool {
         self.kind() == ValueKind::Integer || self.kind() == ValueKind::Float
     }
 
-    /// Returns `true` the value is a String.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a string, otherwise `false`.
     pub fn is_string(&self) -> bool {
         self.kind() == ValueKind::String || self.kind() == ValueKind::Secret
     }
 
-    /// Returns `true` the value is an IPv4 address.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is an IPv4 address, otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value is not a String.
     pub fn is_ipv4(&self) -> Result<bool, EvalError> {
@@ -177,9 +158,7 @@ impl Value {
         }
     }
 
-    /// Returns `true` the value is a IPv6 address.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a IPv6 address, otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value is not a String.
     pub fn is_ipv6(&self) -> Result<bool, EvalError> {
@@ -192,9 +171,7 @@ impl Value {
         }
     }
 
-    /// Returns `true` the value is a UUID.
-    ///
-    /// Returns `false` if it is not.
+    /// Returns `true` the value is a UUID, otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value is not a String.
     pub fn is_uuid(&self) -> Result<bool, EvalError> {
@@ -207,9 +184,8 @@ impl Value {
         }
     }
 
-    /// Returns `true` the string value represents a RFC339 date (format YYYY-MM-DDTHH:mm:ss.sssZ).
-    ///
-    /// Returns `false` if it does not.
+    /// Returns `true` the string value represents a RFC339 date (format YYYY-MM-DDTHH:mm:ss.sssZ),
+    /// otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the given value is not a String.
     pub fn is_iso_date(&self) -> Result<bool, EvalError> {
@@ -233,9 +209,7 @@ impl Value {
         }
     }
 
-    /// Returns `true` if and only if there is a match for the regex anywhere in the value.
-    ///
-    /// Returns `false` otherwise.
+    /// Returns `true` if and only if there is a match for the regex anywhere in the value, otherwise `false`.
     ///
     /// Returns a [`EvalError::Type`] if the type of the value is not supported.
     ///

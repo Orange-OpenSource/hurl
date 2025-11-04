@@ -683,18 +683,19 @@ pub fn walk_predicate<V: Visitor>(visitor: &mut V, pred: &Predicate) {
             visitor.visit_whitespace(space0);
             visitor.visit_predicate_value(value);
         }
-        PredicateFuncValue::IsInteger
-        | PredicateFuncValue::IsFloat
+        PredicateFuncValue::Exist
         | PredicateFuncValue::IsBoolean
-        | PredicateFuncValue::IsString
         | PredicateFuncValue::IsCollection
         | PredicateFuncValue::IsDate
-        | PredicateFuncValue::IsIsoDate
-        | PredicateFuncValue::Exist
         | PredicateFuncValue::IsEmpty
-        | PredicateFuncValue::IsNumber
+        | PredicateFuncValue::IsFloat
+        | PredicateFuncValue::IsInteger
         | PredicateFuncValue::IsIpv4
         | PredicateFuncValue::IsIpv6
+        | PredicateFuncValue::IsIsoDate
+        | PredicateFuncValue::IsList
+        | PredicateFuncValue::IsNumber
+        | PredicateFuncValue::IsString
         | PredicateFuncValue::IsUuid => {}
     }
 }

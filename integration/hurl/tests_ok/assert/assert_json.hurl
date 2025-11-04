@@ -27,8 +27,10 @@ jsonpath "$.success" != null
 jsonpath "$.success" exists
 jsonpath "$.success" isBoolean
 jsonpath "$.errors" count == 2
+jsonpath "$.errors" isList
 jsonpath "$.errors" isCollection
 jsonpath "$.failures" count == 1
+jsonpath "$.failures" isList
 jsonpath "$.failures" isCollection
 jsonpath "$.warnings" count == 0
 jsonpath "$.warnings" isEmpty
@@ -38,6 +40,7 @@ jsonpath "$.toto" not exists
 jsonpath "$.failures" exists
 jsonpath "$.warnings" exists
 jsonpath "$.errors[0]" exists
+jsonpath "$.errors[0]" not isList
 jsonpath "$.errors[0]" isCollection
 jsonpath "$.errors[0].id" == "error1"
 jsonpath "$.errors[0].id" isString
