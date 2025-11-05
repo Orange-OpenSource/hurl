@@ -249,7 +249,7 @@ jobs:
           echo "::group::Tests"
             bin/test/test.sh
           echo "::endgroup::"
-    - name: find artifacts
+    - name: Find artifacts
       run: |
         pwd
         find . -name "*.log"
@@ -297,7 +297,7 @@ jobs:
           echo "::group::Tests"
             bin/test/test.sh
           echo "::endgroup::"
-    - name: find artifacts
+    - name: Find artifacts
       run: |
         pwd
         find . -name "*.log"
@@ -346,7 +346,7 @@ jobs:
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
-    - name: find artifacts
+    - name: Find artifacts
       run: |
         pwd
         find . -name "*.log"
@@ -395,7 +395,7 @@ jobs:
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
-    - name: find artifacts
+    - name: Find artifacts
       run: |
         pwd
         find . -name "*.log"

@@ -345,7 +345,7 @@ jobs:
          echo "::group::Integration tests"
            bash bin/test/test_integ.sh
          echo "::endgroup::"
-   - name: find artifacts
+   - name: Find artifacts
      run: |
        pwd
        find . -name "*.log"
