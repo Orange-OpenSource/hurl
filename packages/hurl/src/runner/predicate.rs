@@ -200,8 +200,9 @@ fn expected_no_value(
         PredicateFuncValue::IsIpv4 => Ok("ipv4".to_string()),
         PredicateFuncValue::IsIpv6 => Ok("ipv6".to_string()),
         PredicateFuncValue::IsIsoDate => Ok("date".to_string()),
-        PredicateFuncValue::IsNumber => Ok("number".to_string()),
         PredicateFuncValue::IsList => Ok("list".to_string()),
+        PredicateFuncValue::IsNumber => Ok("number".to_string()),
+        PredicateFuncValue::IsObject => Ok("object".to_string()),
         PredicateFuncValue::IsString => Ok("string".to_string()),
         PredicateFuncValue::IsUuid => Ok("uuid".to_string()),
     }
@@ -281,6 +282,7 @@ fn eval_predicate_func(
         PredicateFuncValue::IsIsoDate => eval_is_iso_date(value),
         PredicateFuncValue::IsList => eval_is_list(value),
         PredicateFuncValue::IsNumber => eval_is_number(value),
+        PredicateFuncValue::IsObject => eval_is_object(value),
         PredicateFuncValue::IsString => eval_is_string(value),
         PredicateFuncValue::IsUuid => eval_is_uuid(value),
     }
@@ -533,6 +535,16 @@ fn eval_is_list(actual: &Value) -> Result<PredicateResult, RunnerError> {
         success: actual.is_list(),
         actual: actual.repr(),
         expected: "list".to_string(),
+        type_mismatch: false,
+    })
+}
+
+/// Evaluates if an `actual` value is an object.
+fn eval_is_object(actual: &Value) -> Result<PredicateResult, RunnerError> {
+    Ok(PredicateResult {
+        success: actual.is_object(),
+        actual: actual.repr(),
+        expected: "object".to_string(),
         type_mismatch: false,
     })
 }

@@ -18,6 +18,7 @@ header "Set-Cookie" contains "cookie1=value1; Path=/"
 header "Set-Cookie" not contains "cookie4=value4; Path=/"
 header "X-Fruit" isList
 header "X-Fruit" isCollection
+header "X-Fruit" not isObject
 header "x-fruit" count == 4
 header "X-Fruit" nth 0 == "Banana"
 header "x-fruit" nth 1 == "Lemon"
@@ -38,6 +39,7 @@ header "X-Fruit" isList
 header "X-Fruit" isCollection
 variable "fruits" isList
 variable "fruits" isCollection
+variable "fruits" not isObject
 variable "fruits" count == 4
 variable "fruits" nth 0 == "Banana"
 variable "fruits" nth 3 == "Strawberry"

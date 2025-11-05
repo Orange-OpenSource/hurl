@@ -88,6 +88,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
             string_predicate,
             collection_predicate,
             is_list_predicate,
+            is_object_predicate,
             date_predicate,
             iso_date_predicate,
             exist_predicate,
@@ -328,6 +329,11 @@ fn is_uuid_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 fn is_list_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isList", reader)?;
     Ok(PredicateFuncValue::IsList)
+}
+
+fn is_object_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
+    try_literal("isObject", reader)?;
+    Ok(PredicateFuncValue::IsObject)
 }
 
 #[cfg(test)]

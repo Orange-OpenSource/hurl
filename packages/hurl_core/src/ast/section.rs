@@ -414,6 +414,7 @@ pub enum PredicateFuncValue {
     IsIsoDate,
     IsList,
     IsNumber,
+    IsObject,
     IsString,
     IsUuid,
 }
@@ -445,6 +446,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsIsoDate => "isIsoDate",
             PredicateFuncValue::IsList => "isList",
             PredicateFuncValue::IsNumber => "isNumber",
+            PredicateFuncValue::IsObject => "isObject",
             PredicateFuncValue::IsString => "isString",
             PredicateFuncValue::IsUuid => "isUuid",
         }

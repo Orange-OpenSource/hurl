@@ -695,6 +695,7 @@ pub fn walk_predicate<V: Visitor>(visitor: &mut V, pred: &Predicate) {
         | PredicateFuncValue::IsIsoDate
         | PredicateFuncValue::IsList
         | PredicateFuncValue::IsNumber
+        | PredicateFuncValue::IsObject
         | PredicateFuncValue::IsString
         | PredicateFuncValue::IsUuid => {}
     }

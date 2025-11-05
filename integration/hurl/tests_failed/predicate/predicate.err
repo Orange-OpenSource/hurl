@@ -469,9 +469,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-50 | jsonpath "$.not-exist" isDate
+50 | jsonpath "$.not-exist" isObject
    |   actual:   none
-   |   expected: date
+   |   expected: object
    |
 
 error: Assert failure
@@ -479,9 +479,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-51 | jsonpath "$.not-exist" exists
+51 | jsonpath "$.not-exist" isDate
    |   actual:   none
-   |   expected: something
+   |   expected: date
    |
 
 error: Assert failure
@@ -489,9 +489,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-52 | jsonpath "$.not-exist" isEmpty
+52 | jsonpath "$.not-exist" exists
    |   actual:   none
-   |   expected: empty
+   |   expected: something
    |
 
 error: Assert failure
@@ -499,9 +499,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-53 | jsonpath "$.not-exist" isIpv4
+53 | jsonpath "$.not-exist" isEmpty
    |   actual:   none
-   |   expected: ipv4
+   |   expected: empty
    |
 
 error: Assert failure
@@ -509,9 +509,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-54 | jsonpath "$.not-exist" isIpv6
+54 | jsonpath "$.not-exist" isIpv4
    |   actual:   none
-   |   expected: ipv6
+   |   expected: ipv4
    |
 
 error: Assert failure
@@ -519,9 +519,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-55 | jsonpath "$.not-exist" isUuid
+55 | jsonpath "$.not-exist" isIpv6
    |   actual:   none
-   |   expected: uuid
+   |   expected: ipv6
    |
 
 error: Assert failure
@@ -529,9 +529,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-56 | jsonpath "$.not_a_date" isIsoDate
-   |   actual:   2018
-   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
+56 | jsonpath "$.not-exist" isUuid
+   |   actual:   none
+   |   expected: uuid
    |
 
 error: Assert failure
@@ -539,9 +539,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-57 | jsonpath "$.is_a_date" not isIsoDate
-   |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: not string with format YYYY-MM-DDTHH:mm:ss.sssZ
+57 | jsonpath "$.not_a_date" isIsoDate
+   |   actual:   2018
+   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
 error: Assert failure
@@ -549,9 +549,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-58 | jsonpath "$.not_a_date" isNumber
-   |   actual:   string <2018>
-   |   expected: number
+58 | jsonpath "$.is_a_date" not isIsoDate
+   |   actual:   2018-12-10T13:45:00.000Z
+   |   expected: not string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
 error: Assert failure
@@ -559,9 +559,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-59 | jsonpath "$.is_a_date" isIpv4
-   |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: string in IPv4 format
+59 | jsonpath "$.not_a_date" isNumber
+   |   actual:   string <2018>
+   |   expected: number
    |
 
 error: Assert failure
@@ -569,9 +569,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-60 | jsonpath "$.is_a_date" isIpv6
+60 | jsonpath "$.is_a_date" isIpv4
    |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: string in IPv6 format
+   |   expected: string in IPv4 format
    |
 
 error: Assert failure
@@ -579,8 +579,8 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-61 | jsonpath "$.ipv4" isIpv6
-   |   actual:   127.0.0.1
+61 | jsonpath "$.is_a_date" isIpv6
+   |   actual:   2018-12-10T13:45:00.000Z
    |   expected: string in IPv6 format
    |
 
@@ -589,9 +589,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-62 | jsonpath "$.ipv4" not isIpv4
+62 | jsonpath "$.ipv4" isIpv6
    |   actual:   127.0.0.1
-   |   expected: not string in IPv4 format
+   |   expected: string in IPv6 format
    |
 
 error: Assert failure
@@ -599,9 +599,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-63 | jsonpath "$.ipv6" isIpv4
-   |   actual:   2001:db8::1
-   |   expected: string in IPv4 format
+63 | jsonpath "$.ipv4" not isIpv4
+   |   actual:   127.0.0.1
+   |   expected: not string in IPv4 format
    |
 
 error: Assert failure
@@ -609,7 +609,17 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-64 | jsonpath "$.ipv6" not isIpv6
+64 | jsonpath "$.ipv6" isIpv4
+   |   actual:   2001:db8::1
+   |   expected: string in IPv4 format
+   |
+
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:65:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+65 | jsonpath "$.ipv6" not isIpv6
    |   actual:   2001:db8::1
    |   expected: not string in IPv6 format
    |

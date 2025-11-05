@@ -47,6 +47,7 @@ jsonpath "$.not-exist" isBoolean
 jsonpath "$.not-exist" isString
 jsonpath "$.not-exist" isCollection
 jsonpath "$.not-exist" isList
+jsonpath "$.not-exist" isObject
 jsonpath "$.not-exist" isDate
 jsonpath "$.not-exist" exists
 jsonpath "$.not-exist" isEmpty

@@ -632,6 +632,7 @@ impl Lint for PredicateFuncValue {
             | PredicateFuncValue::IsIsoDate
             | PredicateFuncValue::IsList
             | PredicateFuncValue::IsNumber
+            | PredicateFuncValue::IsObject
             | PredicateFuncValue::IsString
             | PredicateFuncValue::IsUuid => {}
         }

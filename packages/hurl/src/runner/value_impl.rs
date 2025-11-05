@@ -112,6 +112,11 @@ impl Value {
         self.kind() == ValueKind::Bytes || self.kind() == ValueKind::List
     }
 
+    /// Returns `true` the value is an object, otherwise `false`.
+    pub fn is_object(&self) -> bool {
+        self.kind() == ValueKind::Nodeset || self.kind() == ValueKind::Object
+    }
+
     /// Returns `true` the value is a collection, otherwise `false`.
     pub fn is_collection(&self) -> bool {
         self.kind() == ValueKind::Bytes
