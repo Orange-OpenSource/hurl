@@ -325,6 +325,7 @@ predicate-func:
   | is-ipv6-predicate
   | is-iso-date-predicate
   | is-list
+  | is-object
   | is-string-predicate
   | is-uuid-predicate
   | less-or-equal-predicate
@@ -366,6 +367,8 @@ is-ipv6-predicate: "isIpv6"
 is-iso-date-predicate: "isIsoDate"
 
 is-list: "isList"
+
+is-object: "isObject"
 
 is-string-predicate: "isString"
 
