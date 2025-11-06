@@ -18,6 +18,8 @@
 use core::fmt;
 use std::str::FromStr;
 
+use regex::Regex;
+
 use crate::util::redacted::Redact;
 
 /// [Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) returned by
@@ -138,7 +140,9 @@ impl FromStr for Cookie {
     type Err = ParseCookieError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
+        // Matches either a sequence of non-whitespace characters or a quoted string ("a b").
+        let re = Regex::new(r#""[^"]*"|\S+"#).unwrap();
+        let tokens: Vec<&str> = re.find_iter(s).map(|m| m.as_str()).collect();
         let (http_only, domain) = if let Some(&v) = tokens.first() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
                 (true, domain.to_string())
@@ -220,6 +224,20 @@ mod tests {
                 expires: "1".to_string(),
                 name: "cookie2".to_string(),
                 value: String::new(),
+                http_only: false,
+            }
+        );
+
+        assert_eq!(
+            Cookie::from_str("localhost\tFALSE\t/\tFALSE\t0\tcookie\t\"a b\"").unwrap(),
+            Cookie {
+                domain: "localhost".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "0".to_string(),
+                name: "cookie".to_string(),
+                value: "\"a b\"".to_string(),
                 http_only: false,
             }
         );
