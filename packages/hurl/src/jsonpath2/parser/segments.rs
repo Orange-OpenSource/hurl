@@ -16,9 +16,11 @@
  *
  */
 
-use super::{primitives::expect_str, primitives::match_str, ParseResult};
+use super::primitives::match_str;
+use super::ParseResult;
 use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
 use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
+use crate::jsonpath2::parser::primitives::expect_str;
 use crate::jsonpath2::parser::{selectors, ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
@@ -31,48 +33,75 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
     Ok(segments)
 }
 
+///  Try to parse a segment
 fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
-    if let Some(segment) = try_segment_shorthand(reader)? {
-        return Ok(Some(segment));
+    if let Some(descendant_segment) = try_descendant_segment(reader)? {
+        return Ok(Some(Segment::Descendant(descendant_segment)));
+    } else if let Some(child_segment) = try_child_segment(reader)? {
+        return Ok(Some(Segment::Child(child_segment)));
     }
-
-    let is_descendant_segment = if match_str("..[", reader) {
-        true
-    } else if match_str("[", reader) {
-        false
-    } else {
-        return Ok(None);
-    };
-    let selectors = selectors::parse(reader)?;
-    expect_str("]", reader)?;
-    let segment = if is_descendant_segment {
-        Segment::Descendant(DescendantSegment::new(selectors))
-    } else {
-        Segment::Child(ChildSegment::new(selectors))
-    };
-    Ok(Some(segment))
+    Ok(None)
 }
 
-/// try to parse a shorthand notation
-fn try_segment_shorthand(reader: &mut Reader) -> ParseResult<Option<Segment>> {
-    if match_str(".*", reader) {
-        Ok(Some(Segment::Child(ChildSegment::new(vec![
-            Selector::Wildcard(WildcardSelector),
-        ]))))
-    } else if match_str("..*", reader) {
-        Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
-            Selector::Wildcard(WildcardSelector),
-        ]))))
-    } else if match_str("..", reader) {
-        let name = member_name_shorthand(reader)?;
-        Ok(Some(Segment::Descendant(DescendantSegment::new(vec![
-            Selector::Name(NameSelector::new(name)),
-        ]))))
+/// Try to parse a child segment
+fn try_child_segment(reader: &mut Reader) -> ParseResult<Option<ChildSegment>> {
+    if let Some(selectors) = try_bracketed_selection(reader)? {
+        Ok(Some(ChildSegment::new(selectors)))
     } else if match_str(".", reader) {
-        let name = member_name_shorthand(reader)?;
-        Ok(Some(Segment::Child(ChildSegment::new(vec![
-            Selector::Name(NameSelector::new(name)),
-        ]))))
+        let save_state = reader.cursor();
+        if match_str("*", reader) {
+            Ok(Some(ChildSegment::new(vec![Selector::Wildcard(
+                WildcardSelector,
+            )])))
+        } else if let Ok(name) = member_name_shorthand(reader) {
+            Ok(Some(ChildSegment::new(vec![Selector::Name(
+                NameSelector::new(name),
+            )])))
+        } else {
+            Err(ParseError::new(
+                save_state.pos,
+                ParseErrorKind::Expecting(
+                    "a wildcard-selector or member-name shorthand".to_string(),
+                ),
+            ))
+        }
+    } else {
+        Ok(None)
+    }
+}
+
+// Try to parse a descendant segment
+fn try_descendant_segment(reader: &mut Reader) -> ParseResult<Option<DescendantSegment>> {
+    if match_str("..", reader) {
+        let save_state = reader.cursor();
+        if let Some(selectors) = try_bracketed_selection(reader)? {
+            Ok(Some(DescendantSegment::new(selectors)))
+        } else if match_str("*", reader) {
+            Ok(Some(DescendantSegment::new(vec![Selector::Wildcard(
+                WildcardSelector,
+            )])))
+        } else if let Ok(name) = member_name_shorthand(reader) {
+            Ok(Some(DescendantSegment::new(vec![Selector::Name(
+                NameSelector::new(name),
+            )])))
+        } else {
+            Err(ParseError::new(
+                save_state.pos,
+                ParseErrorKind::Expecting(
+                    "a bracketed-selection, wildcard-selector or member-name shorthand".to_string(),
+                ),
+            ))
+        }
+    } else {
+        Ok(None)
+    }
+}
+
+fn try_bracketed_selection(reader: &mut Reader) -> ParseResult<Option<Vec<Selector>>> {
+    if match_str("[", reader) {
+        let selectors = selectors::parse(reader)?;
+        expect_str("]", reader)?;
+        Ok(Some(selectors))
     } else {
         Ok(None)
     }
@@ -134,8 +163,10 @@ fn digit(reader: &mut Reader) -> Option<char> {
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
-    use hurl_core::reader::{CharPos, Reader};
+    use crate::jsonpath2::ast::selector::{
+        IndexSelector, NameSelector, Selector, WildcardSelector,
+    };
+    use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
 
@@ -153,24 +184,85 @@ mod tests {
     }
 
     #[test]
+    pub fn test_segment() {
+        let mut reader = Reader::new("['store']");
+        assert_eq!(
+            try_segment(&mut reader).unwrap().unwrap(),
+            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                "store".to_string()
+            ))]))
+        );
+        assert_eq!(reader.cursor().index, CharPos(9));
+    }
+
+    #[test]
     pub fn test_child_segment() {
         let mut reader = Reader::new("['store']");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
-            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
-                "store".to_string()
-            ))]))
+            try_child_segment(&mut reader).unwrap().unwrap(),
+            ChildSegment::new(vec![Selector::Name(NameSelector::new("store".to_string()))])
         );
         assert_eq!(reader.cursor().index, CharPos(9));
+    }
 
-        let mut reader = Reader::new("['store']");
+    #[test]
+    pub fn test_child_segment_error() {
+        let mut reader = Reader::new(".1");
+        assert_eq!(
+            try_child_segment(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 2),
+                ParseErrorKind::Expecting(
+                    "a wildcard-selector or member-name shorthand".to_string()
+                )
+            )
+        );
+    }
+
+    #[test]
+    pub fn test_descendant_segment() {
+        let mut reader = Reader::new("..[1]");
+        assert_eq!(
+            try_descendant_segment(&mut reader).unwrap().unwrap(),
+            DescendantSegment::new(vec![Selector::Index(IndexSelector::new(1))])
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("..[1]");
         assert_eq!(
             try_segment(&mut reader).unwrap().unwrap(),
-            Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
-                "store".to_string()
-            ))]))
+            Segment::Descendant(DescendantSegment::new(vec![Selector::Index(
+                IndexSelector::new(1)
+            )]))
         );
-        assert_eq!(reader.cursor().index, CharPos(9));
+        assert_eq!(reader.cursor().index, CharPos(5));
+    }
+
+    #[test]
+    pub fn test_descendant_segment_error() {
+        let mut reader = Reader::new("..1");
+        assert_eq!(
+            try_descendant_segment(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 3),
+                ParseErrorKind::Expecting(
+                    "a bracketed-selection, wildcard-selector or member-name shorthand".to_string()
+                )
+            )
+        );
+    }
+
+    #[test]
+    pub fn test_bracketed_selection() {
+        let mut reader = Reader::new("[1,'store']");
+        assert_eq!(
+            try_bracketed_selection(&mut reader).unwrap().unwrap(),
+            vec![
+                Selector::Index(IndexSelector::new(1)),
+                Selector::Name(NameSelector::new("store".to_string()))
+            ]
+        );
+        assert_eq!(reader.cursor().index, CharPos(11));
     }
 
     #[test]
