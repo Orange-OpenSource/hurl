@@ -33,8 +33,12 @@ pub struct RunContext {
     stderr_term: bool,
 }
 
+const LEGACY_VARIABLE_PREFIX: &str = "HURL_";
+const VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
+const SECRET_PREFIX: &str = "HURL_SECRET_";
+
 impl RunContext {
-    /// Creates a new context. The environment is captured and will be seen as non mutable for the
+    /// Creates a new context. The environment is captured and will be seen as non-mutable for the
     /// execution with this context.
     pub fn new(
         with_color: bool,
@@ -58,27 +62,188 @@ impl RunContext {
         }
     }
 
+    /// Returns `true` if ANSI escape codes are authorized, `false` otherwise.
     pub fn is_with_color(&self) -> bool {
         self.with_color
     }
 
-    pub fn env_vars(&self) -> &[(String, String)] {
-        &self.env_vars
+    /// Returns the list of Hurl variables injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_VARIABLE_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn var_env_vars(&self) -> Vec<(&str, &str)> {
+        self.env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(VARIABLE_PREFIX)
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
     }
 
+    /// Returns the list of legacy Hurl variables injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn legacy_var_env_vars(&self) -> Vec<(&str, &str)> {
+        self.env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(LEGACY_VARIABLE_PREFIX)
+                    // Not a new variable
+                    .filter(|_| !name.starts_with(VARIABLE_PREFIX))
+                    // Not a secret
+                    .filter(|_| !name.starts_with(SECRET_PREFIX))
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
+    }
+
+    /// Returns the list of Hurl secrets injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_SECRET_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn secret_env_vars(&self) -> Vec<(&str, &str)> {
+        self.env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(SECRET_PREFIX)
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
+    }
+
+    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
+    /// `false` otherwise.
     pub fn is_ci(&self) -> bool {
         self.ci
     }
 
+    /// Checks if standard input is a terminal.
     pub fn is_stdin_term(&self) -> bool {
         self.stdin_term
     }
 
+    /// Checks if standard output is a terminal.
     pub fn is_stdout_term(&self) -> bool {
         self.stdout_term
     }
 
+    /// Checks if standard error is a terminal.
     pub fn is_stderr_term(&self) -> bool {
         self.stderr_term
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::cli::options::context::RunContext;
+
+    #[test]
+    fn empty_variables_secrets_from_env() {
+        let with_color = false;
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        let env_vars = vec![
+            ("FOO".to_string(), "xxx".to_string()),
+            ("BAR".to_string(), "yyy".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+        ];
+
+        let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
+
+        assert_eq!(ctx.var_env_vars(), vec![]);
+        assert_eq!(ctx.legacy_var_env_vars(), vec![]);
+        assert_eq!(ctx.secret_env_vars(), vec![]);
+    }
+
+    #[test]
+    fn variables_from_env() {
+        let with_color = false;
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        let env_vars = vec![
+            ("FOO".to_string(), "xxx".to_string()),
+            ("BAR".to_string(), "yyy".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+            ("HURL_VARIABLE_foo".to_string(), "true".to_string()),
+            ("HURL_VARIABLE_id".to_string(), "1234".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+            ("HURL_VARIABLE".to_string(), "1234".to_string()),
+            ("HURL_VARIABLE_".to_string(), "abcd".to_string()),
+            ("HURL_VARIABLE_FOO".to_string(), "def".to_string()),
+        ];
+
+        let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
+
+        assert_eq!(
+            ctx.var_env_vars(),
+            vec![("foo", "true"), ("id", "1234"), ("FOO", "def"),]
+        );
+        assert_eq!(ctx.legacy_var_env_vars(), vec![("VARIABLE", "1234"),]);
+        assert_eq!(ctx.secret_env_vars(), vec![]);
+    }
+
+    #[test]
+    fn legacy_variables_from_env() {
+        let with_color = false;
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        let env_vars = vec![
+            ("FOO".to_string(), "xxx".to_string()),
+            ("BAR".to_string(), "yyy".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+            ("HURL_VARIABLE_bar".to_string(), "def".to_string()),
+            ("HURL_foo".to_string(), "true".to_string()),
+            ("HURL_id".to_string(), "1234".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+            ("HURL_".to_string(), "1234".to_string()),
+            ("HURL_".to_string(), "abcd".to_string()),
+            ("HURL_FOO".to_string(), "def".to_string()),
+        ];
+
+        let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
+
+        assert_eq!(ctx.var_env_vars(), vec![("bar", "def"),]);
+        assert_eq!(
+            ctx.legacy_var_env_vars(),
+            vec![("foo", "true"), ("id", "1234"), ("FOO", "def"),]
+        );
+        assert_eq!(ctx.secret_env_vars(), vec![]);
+    }
+
+    #[test]
+    fn legacy_secrets_from_env() {
+        let with_color = false;
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        let env_vars = vec![
+            ("FOO".to_string(), "xxx".to_string()),
+            ("HURL_SECRET".to_string(), "48".to_string()),
+            ("HURL_SECRET_".to_string(), "48".to_string()),
+            ("HURL_SECRET_abcd".to_string(), "1234".to_string()),
+            ("HURL_SECRET_ABCD".to_string(), "5678".to_string()),
+            ("BAR".to_string(), "bar".to_string()),
+        ];
+
+        let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
+
+        assert_eq!(ctx.var_env_vars(), vec![]);
+        assert_eq!(ctx.legacy_var_env_vars(), vec![("SECRET", "48"),]);
+        assert_eq!(
+            ctx.secret_env_vars(),
+            vec![("abcd", "1234"), ("ABCD", "5678"),]
+        );
     }
 }

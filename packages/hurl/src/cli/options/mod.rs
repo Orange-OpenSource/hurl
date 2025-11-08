@@ -362,7 +362,7 @@ fn parse_matches(
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches)?;
-    let secrets = matches::secret(arg_matches)?;
+    let secrets = matches::secret(arg_matches, context)?;
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
     let tap_file = matches::tap_file(arg_matches);
     let test = matches::test(arg_matches);

@@ -442,11 +442,20 @@ pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsEr
     get_duration(&s, DurationUnit::MilliSecond)
 }
 
-pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOptionsError> {
-    let mut secrets = HashMap::new();
+pub fn secret(
+    matches: &ArgMatches,
+    context: &RunContext,
+) -> Result<HashMap<String, String>, CliOptionsError> {
+    let mut all_secrets = HashMap::new();
 
     // Secrets are always parsed as string.
     let type_kind = TypeKind::String;
+
+    // Insert environment secrets `HURL_SECRET_foo`
+    for (env_name, env_value) in context.secret_env_vars() {
+        let value = variables::parse_value(env_value, type_kind)?;
+        add_secret(&mut all_secrets, env_name.to_string(), value)?;
+    }
 
     // Add secrets from files:
     if let Some(filenames) = get_strings(matches, "secrets_file") {
@@ -455,19 +464,19 @@ pub fn secret(matches: &ArgMatches) -> Result<HashMap<String, String>, CliOption
             let vars = VariablesFile::open(filename, type_kind)?;
             for var in vars {
                 let (name, value) = var?;
-                add_secret(&mut secrets, name, value)?;
+                add_secret(&mut all_secrets, name, value)?;
             }
         }
     }
 
     // Finally, add single secrets.
-    if let Some(secret) = get_strings(matches, "secret") {
-        for s in secret {
+    if let Some(secrets) = get_strings(matches, "secret") {
+        for s in secrets {
             let (name, value) = variables::parse(&s, type_kind)?;
-            add_secret(&mut secrets, name, value)?;
+            add_secret(&mut all_secrets, name, value)?;
         }
     }
-    Ok(secrets)
+    Ok(all_secrets)
 }
 
 /// Add a secret with `name` and `value` to the `secrets` hash map.
@@ -533,12 +542,16 @@ pub fn variables(
     // Variables are typed, based on their values.
     let type_kind = TypeKind::Inferred;
 
-    // Use environment variables prefix by HURL_
-    for (env_name, env_value) in context.env_vars() {
-        if let Some(name) = env_name.strip_prefix("HURL_") {
-            let value = variables::parse_value(env_value.as_str(), type_kind)?;
-            variables.insert(name.to_string(), value);
-        }
+    // Insert environment variables `HURL_VARIABLE_foo`
+    for (env_name, env_value) in context.var_env_vars() {
+        let value = variables::parse_value(env_value, type_kind)?;
+        variables.insert(env_name.to_string(), value);
+    }
+
+    // Insert legacy environment variables `HURL_foo`
+    for (env_name, env_value) in context.legacy_var_env_vars() {
+        let value = variables::parse_value(env_value, type_kind)?;
+        variables.insert(env_name.to_string(), value);
     }
 
     // Then add variables from files:
