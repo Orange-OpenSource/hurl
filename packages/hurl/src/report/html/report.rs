@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-use std::io::Write;
-use std::path::Path;
-
-use chrono::{DateTime, Local};
-
 use crate::report::html::{HTMLResult, Testcase};
 use crate::report::ReportError;
+use chrono::{DateTime, Local};
+use regex::Regex;
+use std::io::Write;
+use std::path::Path;
+use std::sync::LazyLock;
 
 /// Creates and HTML report for this list of [`Testcase`] at `dir_path`/index.html.
 ///
@@ -79,26 +79,29 @@ fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, ReportError> {
     Ok(parse_html_report(&s))
 }
 
-/// Parses the HTML report `html` an returns a list of [`HTMLResult`].
-fn parse_html_report(html: &str) -> Vec<HTMLResult> {
-    let re = regex::Regex::new(
+static TEST_REF: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
         r#"(?x)
         data-duration="(?P<time_in_ms>\d+)"
         \s+
         data-status="(?P<status>[a-z]+)"
         \s+
-        data-filename="(?P<filename>[A-Za-z0-9_./-]+)"
+        data-filename="(?P<filename>[\p{L}\p{N}\p{M}\p{S}\p{P}\p{Zs}_./-]+)"
         \s+
         data-id="(?P<id>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
         (\s+
         data-timestamp="(?P<timestamp>[0-9]{1,10})")?
     "#,
     )
-    .unwrap();
+    .unwrap()
+});
+/// Parses the HTML report `html` and returns a list of [`HTMLResult`].
+fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     // TODO: if the existing HTML report is not valid, we consider that there is no
     // existing report to append, without displaying any error or warning. Maybe a better option
     // would be to raise an error here and ask the user to explicitly deal with this error.
-    re.captures_iter(html)
+    TEST_REF
+        .captures_iter(html)
         .map(|cap| {
             let filename = cap["filename"].to_string();
             let id = cap["id"].to_string();
@@ -192,6 +195,18 @@ mod tests {
                   <td>2023-10-05T02:37:24Z</td>
                   <td>0.2s</td>
                 </tr>
+                <tr class="success" data-duration="50" data-status="success" data-filename="tests/café.hurl" data-id="a151aea6-2b02-465e-be47-45a2fa9cce02" data-timestamp="1796473444">
+                  <td><a href="tests/café.hurl.html">tests/café.hurl</a></td>
+                  <td>success</td>
+                  <td>2023-10-05T02:37:24Z</td>
+                  <td>0.4s</td>
+                </tr>
+                <tr class="failure" data-duration="366" data-status="failure" data-filename="abcd[1234]@2x.hurl" data-id="2008c777-025d-4708-8016-e2928b9ef538" data-timestamp="1796473666">
+                  <td><a href="abcd[1234]@2x.hurl.html">abcd[1234]@2x.hurl</a></td>
+                  <td>failure</td>
+                  <td>2023-10-05T02:37:24Z</td>
+                  <td>0.4s</td>
+                </tr>
                 </tbody>
               <table>
            </body>
@@ -213,7 +228,21 @@ mod tests {
                     time_in_ms: 200,
                     success: false,
                     timestamp: 1696473444,
-                }
+                },
+                HTMLResult {
+                    filename: "tests/café.hurl".to_string(),
+                    id: "a151aea6-2b02-465e-be47-45a2fa9cce02".to_string(),
+                    time_in_ms: 50,
+                    success: true,
+                    timestamp: 1796473444,
+                },
+                HTMLResult {
+                    filename: "abcd[1234]@2x.hurl".to_string(),
+                    id: "2008c777-025d-4708-8016-e2928b9ef538".to_string(),
+                    time_in_ms: 366,
+                    success: false,
+                    timestamp: 1796473666,
+                },
             ]
         );
     }
