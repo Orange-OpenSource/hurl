@@ -24,10 +24,9 @@ mod variables;
 mod variables_file;
 
 use std::collections::HashMap;
-use std::io::IsTerminal;
+use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
-use std::{env, io};
 
 use clap::builder::styling::{AnsiColor, Effects};
 use clap::builder::Styles;
@@ -44,7 +43,7 @@ use hurl_core::input::{Input, InputKind};
 use hurl_core::types::{BytesPerSec, Count};
 
 use crate::cli;
-use crate::cli::options::context::RunContext;
+pub use crate::cli::options::context::RunContext;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 /// Represents the list of all options that can be used in Hurl command line.
@@ -179,11 +178,9 @@ fn get_version() -> String {
     )
 }
 
-/// Parse the Hurl CLI options and returns a [`CliOptions`] result.
-///
-/// When a [`CliOptionsError::DisplayHelp`] variant is returned, `with_color` is used
-/// to print an ANSI color help or not.
-pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
+/// Parse the Hurl CLI options and returns a [`CliOptions`] result, given a run `context`
+/// (environment variables).
+pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     let styles = Styles::styled()
         .header(AnsiColor::Green.on_default() | Effects::BOLD)
         .usage(AnsiColor::Green.on_default() | Effects::BOLD)
@@ -277,20 +274,13 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
     let arg_matches = command.try_get_matches_from_mut(env::args_os());
     let arg_matches = match arg_matches {
         Ok(args) => args,
-        Err(error) => return Err(CliOptionsError::from_clap(error, with_color)),
+        Err(error) => return Err(CliOptionsError::from_clap(error, context.is_with_color())),
     };
-
-    // Construct the run context environment
-    let env_vars = env::vars().collect();
-    let stdin_term = io::stdin().is_terminal();
-    let stdout_term = io::stdout().is_terminal();
-    let stderr_term = io::stderr().is_terminal();
-    let ctx = RunContext::new(with_color, env_vars, stdin_term, stdout_term, stderr_term);
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if !matches::has_input_files(&arg_matches, &ctx) {
-        let help = if with_color {
+    if !matches::has_input_files(&arg_matches, context) {
+        let help = if context.is_with_color() {
             command.render_help().ansi().to_string()
         } else {
             command.render_help().to_string()
@@ -298,7 +288,7 @@ pub fn parse(with_color: bool) -> Result<CliOptions, CliOptionsError> {
         return Err(CliOptionsError::NoInput(help));
     }
 
-    let opts = parse_matches(&arg_matches, &ctx)?;
+    let opts = parse_matches(&arg_matches, context)?;
     if opts.input_files.is_empty() {
         return Err(CliOptionsError::Error(
             "No input files provided".to_string(),
