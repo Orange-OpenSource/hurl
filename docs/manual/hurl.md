@@ -611,9 +611,13 @@ Sets the proxy server to use if no protocol-specific proxy is set.
 
 List of host names that shouldn't go through any proxy.
 
-### HURL_name value
+### HURL_VARIABLE_name value
 
-Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.
+Define variable (name/value) to be used in Hurl templates. This is similar to [`--variable`](#variable) and [`--variables-file`](#variables-file) options.
+
+### HURL_SECRET_name value
+
+Define secret (name/value) to be used in Hurl templates. This is similar to [`--secret`](#secret) and [`--secrets-file`](#secrets-file) options.
 
 ### NO_COLOR
 

@@ -24,9 +24,9 @@ As of Hurl 5.0.1, the way to define variables in Hurl are:
     id=1234
     ```
 
-- Environment variable prefixed by `HURL_`
-   export HURL_host=example.net
-   export HURL_id=1234
+- Environment variable prefixed by `HURL_VARIABLE_`
+   export HURL_VARIABLE_host=example.net
+   export HURL_VARIABLE_id=1234
    hurl test.hurl
 - `[Options]` section, inside a Hurl file
 

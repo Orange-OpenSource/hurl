@@ -150,7 +150,7 @@ Variables can be injected in a Hurl file:
 
 - by using [`--variable` option]
 - by using [`--variables-file` option]
-- by defining environment variables, for instance `HURL_foo=bar`
+- by defining environment variables, for instance `HURL_VARIABLE_foo=bar`
 - by defining variables in an [`[Options]` section][options]
 
 Lets' see how to inject variables, given this `test.hurl`:
@@ -189,11 +189,11 @@ id=1234
 
 ### Environment variable
 
-We can use environment variables in the form of `HURL_name=value`:
+We can use environment variables in the form of `HURL_VARIABLE_name=value`:
 
 ```shell
-$ export HURL_host=example.net
-$ export HURL_id=1234 
+$ export HURL_VARIABLE_host=example.net
+$ export HURL_VARIABLE_id=1234 
 $ hurl test.hurl
 ```
 

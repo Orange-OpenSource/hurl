@@ -333,7 +333,7 @@ To use variables in your tests, you can:
 
 - use [`--variable` option]
 - use [`--variables-file` option]
-- define environment variables, for instance `HURL_foo=bar`
+- define environment variables, for instance `HURL_VARIABLE_foo=bar`
 
 You will find a detailed description in the [Injecting Variables] section of the docs.
 

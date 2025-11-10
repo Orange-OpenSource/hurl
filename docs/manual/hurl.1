@@ -1,4 +1,4 @@
-.TH hurl 1 "10 Oct 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "10 Nov 2025" "hurl 7.1.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -592,9 +592,13 @@ Sets the proxy server to use if no protocol-specific proxy is set.
 
 List of host names that shouldn't go through any proxy.
 
-.IP "HURL_name value"
+.IP "HURL_VARIABLE_name value"
 
-Define variable (name/value) to be used in Hurl templates. This is similar than \fI--variable\fP and \fI--variables-file\fP options.
+Define variable (name/value) to be used in Hurl templates. This is similar to \fI--variable\fP and \fI--variables-file\fP options.
+
+.IP "HURL_SECRET_name value"
+
+Define secret (name/value) to be used in Hurl templates. This is similar to \fI--secret\fP and \fI--secrets-file\fP options.
 
 .IP "NO_COLOR"
 

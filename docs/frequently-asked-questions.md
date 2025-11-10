@@ -239,12 +239,12 @@ $ TOMORROW=$(date '+%y%m%d' -d"+1days")
 $ hurl --variable "today=$TODAY" --variable "tomorrow=$TOMORROW" test.hurl
 ```
 
-You can also use environment variables that begins with `HURL_` to inject data in an Hurl file.
+You can also use environment variables that begins with `HURL_VARIABLE_` to inject data in an Hurl file.
 For instance, to inject `today` and `tomorrow` variables:
 
 ```shell
-$ export HURL_today=$(date '+%y%m%d')
-$ export HURL_tomorrow=$(date '+%y%m%d' -d"+1days")
+$ export HURL_VARIABLE_today=$(date '+%y%m%d')
+$ export HURL_VARIABLE_tomorrow=$(date '+%y%m%d' -d"+1days")
 $ hurl test.hurl
 ```
 
