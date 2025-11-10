@@ -4,6 +4,7 @@
 Thanks to
 [@Nezteb](https://github.com/Nezteb),
 [@quantonganh](https://github.com/quantonganh),
+[@lambrospetrou](https://github.com/lambrospetrou),
 [@linkdd](https://github.com/linkdd),
 [@gugahoa](https://github.com/gugahoa),
 [@MikhailWahib](https://github.com/MikhailWahib),
@@ -14,18 +15,21 @@ Enhancements:
 
 * Add CLI option to pretty print the response body [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
 * Add pretty print option [#1760](https://github.com/Orange-OpenSource/hurl/issues/1760)
+* Support adding secret with HURL_SECRET_foo env variable [#3901](https://github.com/Orange-OpenSource/hurl/issues/3901)
 * Use happy path with http/https scheme for URL parsing to improve stress test use-cases [#4144](https://github.com/Orange-OpenSource/hurl/issues/4144)
-* Support --secrets-file for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
+* Support `--secrets-file` for injecting secrets [#4309](https://github.com/Orange-OpenSource/hurl/issues/4309)
 * Add `--ntlm` option per request [#4322](https://github.com/Orange-OpenSource/hurl/issues/4322)
-* Add --negotiate option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
+* Add `--negotiate` option per request [#4323](https://github.com/Orange-OpenSource/hurl/issues/4323)
 * Add utf8Decode/utf8Encode filters [#4382](https://github.com/Orange-OpenSource/hurl/issues/4382)
-* Replace unmaintained encoding crate with encoding_rs crate. [#4399](https://github.com/Orange-OpenSource/hurl/issues/4399)
+* Replace unmaintained encoding crate with encoding_rs crate [#4399](https://github.com/Orange-OpenSource/hurl/issues/4399)
 * Enhance logging for retry [#4419](https://github.com/Orange-OpenSource/hurl/issues/4419)
 * Add support for hour duration  [#4422](https://github.com/Orange-OpenSource/hurl/issues/4422)
-* Enhance --test duration logging [#4423](https://github.com/Orange-OpenSource/hurl/issues/4423)
+* Enhance `--test` duration logging [#4423](https://github.com/Orange-OpenSource/hurl/issues/4423)
 * Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
 * HTML report enhancements [#4445](https://github.com/Orange-OpenSource/hurl/issues/4445) [#4446](https://github.com/Orange-OpenSource/hurl/issues/4446)
 * Add retry count in the progress bar (only if retry >= 1) [#4511](https://github.com/Orange-OpenSource/hurl/issues/4511)
+* Add isList predicate [#4520](https://github.com/Orange-OpenSource/hurl/issues/4520)
+* Add isObject predicate [#4520](https://github.com/Orange-OpenSource/hurl/issues/4520)
 
 
 Bugs Fixed:
@@ -33,7 +37,7 @@ Bugs Fixed:
 * Parse `--user`, `--negotiate`, and `--ntlm` options in hurlfmt [#4213](https://github.com/Orange-OpenSource/hurl/issues/4213)
 * Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
 * Fix filtering of Authorization: and Cookie: headers when following redirections [#4460](https://github.com/Orange-OpenSource/hurl/issues/4460)
-* Fix implicit "Content-Type" headers when following redirections. [#4522](https://github.com/Orange-OpenSource/hurl/issues/4522)
+* Fix implicit "Content-Type" headers when following redirections [#4522](https://github.com/Orange-OpenSource/hurl/issues/4522)
 
 
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
