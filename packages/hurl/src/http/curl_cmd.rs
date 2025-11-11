@@ -25,7 +25,7 @@ use crate::runner::Output;
 use crate::util::path::ContextDir;
 
 use super::client;
-use super::core::Cookie;
+use super::cookie::Cookie;
 use super::header::{Header, HeaderVec, CONTENT_TYPE};
 use super::options::ClientOptions;
 use super::param::Param;

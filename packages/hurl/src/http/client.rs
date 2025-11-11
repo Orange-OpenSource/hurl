@@ -29,7 +29,7 @@ use hurl_core::types::Count;
 
 use super::call::Call;
 use super::certificate::Certificate;
-use super::core::Cookie;
+use super::cookie::Cookie;
 use super::curl_cmd::CurlCmd;
 use super::debug;
 use super::easy_ext;
