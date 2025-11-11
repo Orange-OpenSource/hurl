@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-use crate::http::RequestedHttpVersion;
+use super::request::RequestedHttpVersion;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HttpError {

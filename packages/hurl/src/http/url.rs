@@ -21,7 +21,8 @@ use std::str::FromStr;
 
 use regex::Regex;
 
-use crate::http::{HttpError, Param};
+use super::core::Param;
+use super::error::HttpError;
 
 /// Represents errors for the URL module.
 #[derive(Clone, Eq, PartialEq, Debug)]

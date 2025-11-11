@@ -20,7 +20,7 @@ use std::time::Duration;
 use chrono::{DateTime, Utc};
 use curl::easy::Easy;
 
-use crate::http::easy_ext;
+use super::easy_ext;
 
 /// Timing information for an HTTP transfer (see <https://hurl.dev/docs/response.html#timings>).
 // See [`easy_ext::namelookup_time_t`], [`easy_ext::connect_time_t`], [`easy_ext::app_connect_time_t`],

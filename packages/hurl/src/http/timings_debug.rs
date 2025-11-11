@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::http::Timings;
 use crate::util::logger::Logger;
+
+use super::Timings;
 
 impl Timings {
     /// Logs the response timings information.

@@ -17,9 +17,10 @@
  */
 use encoding_rs::Encoding;
 
-use crate::http::header::CONTENT_ENCODING;
-use crate::http::response_decoding::ContentEncoding;
-use crate::http::{mimetype, Header, HeaderVec, HttpError, CONTENT_TYPE};
+use super::error::HttpError;
+use super::header::{Header, HeaderVec, CONTENT_ENCODING, CONTENT_TYPE};
+use super::mimetype;
+use super::response_decoding::ContentEncoding;
 
 impl HeaderVec {
     /// Returns optional Content-type header value.

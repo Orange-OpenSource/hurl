@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 
-use crate::http::easy_ext::CertInfo;
+use super::easy_ext::CertInfo;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Certificate {

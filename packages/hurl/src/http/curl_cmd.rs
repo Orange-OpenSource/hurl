@@ -21,13 +21,15 @@ use std::path::Path;
 
 use hurl_core::types::Count;
 
-use crate::http::client::all_cookies;
-use crate::http::{
-    Body, ClientOptions, Cookie, FileParam, Header, HeaderVec, IpResolve, Method, MultipartParam,
-    Param, RequestSpec, RequestedHttpVersion, CONTENT_TYPE,
-};
 use crate::runner::Output;
 use crate::util::path::ContextDir;
+
+use super::client;
+use super::core::{Cookie, Param};
+use super::header::{Header, HeaderVec, CONTENT_TYPE};
+use super::options::ClientOptions;
+use super::request::{IpResolve, RequestedHttpVersion};
+use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 
 /// Represents a curl command, with arguments.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -194,7 +196,7 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
 fn cookies_params(request_spec: &RequestSpec, cookies: &[Cookie]) -> Vec<String> {
     let mut args = vec![];
 
-    let cookies = all_cookies(cookies, request_spec);
+    let cookies = client::all_cookies(cookies, request_spec);
     if !cookies.is_empty() {
         args.push("--cookie".to_string());
         args.push(format!(

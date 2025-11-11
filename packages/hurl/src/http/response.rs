@@ -18,9 +18,10 @@
 use std::fmt;
 use std::time::Duration;
 
-use crate::http::certificate::Certificate;
-use crate::http::ip::IpAddr;
-use crate::http::{HeaderVec, Url};
+use super::certificate::Certificate;
+use super::header::HeaderVec;
+use super::ip::IpAddr;
+use super::url::Url;
 
 /// Represents a runtime HTTP response.
 /// This is a real response, that has been executed by our HTTP client.

@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
-use crate::http::{Request, Response, Timings};
+use super::request::Request;
+use super::response::Response;
+use super::timings::Timings;
 
 /// Holds an HTTP request and the corresponding HTTP response.
 /// The request and responses are the runtime, evaluated data created by an HTTP exchange.

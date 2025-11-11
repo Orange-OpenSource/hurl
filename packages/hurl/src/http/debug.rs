@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
-use crate::http::{mimetype, HeaderVec};
 use crate::runner::hex;
 use crate::util::logger::Logger;
+
+use super::header::HeaderVec;
+use super::mimetype;
 
 /// Logs a buffer of bytes representing an HTTP request or response `body`.
 /// If the body is kind of text, we log all the text lines. If we can't detect that this is a text

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 ///
 /// Decompresses body response
 /// using the Content-Encoding response header
@@ -23,7 +22,9 @@
 /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 use std::io::prelude::*;
 
-use crate::http::{mimetype, HttpError, Response};
+use super::error::HttpError;
+use super::mimetype;
+use super::response::Response;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ContentEncoding {

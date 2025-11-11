@@ -17,8 +17,11 @@
  */
 use hurl_core::text::{Format, Style, StyledString};
 
-use crate::http::{debug, mimetype, Response};
 use crate::util::logger::Logger;
+
+use super::debug;
+use super::mimetype;
+use super::response::Response;
 
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.

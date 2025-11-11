@@ -27,21 +27,25 @@ use curl::easy::{List, NetRc, SslOpt};
 use curl::{easy, Error, Version};
 use hurl_core::types::Count;
 
+use super::call::Call;
 use super::certificate::Certificate;
+use super::core::{Cookie, Param, RequestCookie};
 use super::curl_cmd::CurlCmd;
-use super::debug::log_body;
+use super::debug;
+use super::easy_ext;
+use super::error::HttpError;
 use super::header::{
-    HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, LOCATION, USER_AGENT,
+    Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, LOCATION,
+    USER_AGENT,
 };
 use super::ip::IpAddr;
-use super::options::ClientOptions;
+use super::options::{ClientOptions, Verbosity};
+use super::request::{IpResolve, Request, RequestedHttpVersion};
+use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
+use super::response::{HttpVersion, Response};
 use super::timings::Timings;
 use super::url::Url;
-use super::{
-    easy_ext, Body, Call, Cookie, FileParam, Header, HttpError, HttpVersion, IpResolve, Method,
-    MultipartParam, Param, Request, RequestCookie, RequestSpec, RequestedHttpVersion, Response,
-    Verbosity,
-};
+
 use crate::runner::Output;
 use crate::util::logger::Logger;
 use crate::util::path::ContextDir;
@@ -230,7 +234,7 @@ impl Client {
                     // call `easy::InfoType::DataOut` if there is no data to send.
                     if !has_body_data && very_verbose {
                         logger.debug_important("Request body:");
-                        log_body(&[], &request_headers, true, logger);
+                        debug::log_body(&[], &request_headers, true, logger);
                     }
                 }
                 // We use this callback to get the real body bytes sent by libcurl and logs request
@@ -238,7 +242,7 @@ impl Client {
                 easy::InfoType::DataOut => {
                     if very_verbose {
                         logger.debug_important("Request body:");
-                        log_body(data, &request_headers, true, logger);
+                        debug::log_body(data, &request_headers, true, logger);
                     }
                     // Constructs request body from libcurl debug info.
                     request_body.extend(data);
