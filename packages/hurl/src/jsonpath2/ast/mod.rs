@@ -18,6 +18,7 @@
 
 pub(crate) mod comparison;
 pub(crate) mod expr;
+pub(crate) mod literal;
 pub(crate) mod query;
 pub(crate) mod segment;
 pub(crate) mod selector;

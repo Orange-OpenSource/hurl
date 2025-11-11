@@ -16,28 +16,70 @@
  *
  */
 
-use super::query::RelativeQuery;
+use super::comparison::ComparisonExpr;
+use super::query::Query;
 
 /// Logical expression
+/// evaluates to a boolean value
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct LogicalExpr {
-    value: RelativeQuery,
+pub enum LogicalExpr {
+    /// Comparison expression (e.g., @.price > 10)
+    #[allow(dead_code)]
+    Comparison(ComparisonExpr),
+
+    /// Test expression (e.g., @.name)
+    #[allow(dead_code)]
+    Test(TestExpr),
+
+    /// Logical AND expression (e.g., expr1 && expr2 && expr3)
+    #[allow(dead_code)]
+    And(AndExpr),
+
+    /// Logical OR expression (e.g., expr1 || expr2 || expr3)
+    #[allow(dead_code)]
+    Or(OrExpr),
 }
-impl LogicalExpr {
-    pub fn new(value: RelativeQuery) -> LogicalExpr {
-        LogicalExpr { value }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TestExpr {
+    not: bool,
+    kind: TestExprKind,
+}
+impl TestExpr {
+    #[allow(dead_code)]
+    pub fn new(not: bool, kind: TestExprKind) -> Self {
+        Self { not, kind }
     }
-    pub fn value(&self) -> &RelativeQuery {
-        &self.value
+
+    #[allow(dead_code)]
+    pub fn not(&self) -> bool {
+        self.not
+    }
+    #[allow(dead_code)]
+    pub fn kind(&self) -> &TestExprKind {
+        &self.kind
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
-#[allow(dead_code)]
-pub enum Literal {
-    Bool(bool),
-    Integer(i32),
-    Null,
-    Number(f64),
-    String(String),
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TestExprKind {
+    #[allow(dead_code)]
+    FilterQuery(Query),
+    #[allow(dead_code)]
+    FunctionExpr(FunctionExpr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FunctionExpr;
+
+/// Logical AND expression that can handle multiple operands
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AndExpr {
+    operands: Vec<LogicalExpr>,
+}
+
+/// Logical OR expression that can handle multiple operands
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OrExpr {
+    operands: Vec<LogicalExpr>,
 }

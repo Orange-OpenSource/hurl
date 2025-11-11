@@ -15,73 +15,94 @@
  * limitations under the License.
  *
  */
-
-use super::{primitives::literal, primitives::try_literal, ParseResult};
-use crate::jsonpath2::{parser::selector, ChildSegment, DescendantSegment, JsonPathExpr, Segment};
+use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::query::try_filter_query;
+use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<JsonPathExpr> {
-    literal("$", reader)?;
-    let mut segments = vec![];
-    while !reader.is_eof() {
-        let segment = segment(reader)?;
-        segments.push(segment);
-    }
-    Ok(JsonPathExpr::new(segments))
+#[allow(dead_code)]
+pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+    // TODO: parse several operands
+    logical_and_expr(reader)
 }
 
-fn segment(reader: &mut Reader) -> ParseResult<Segment> {
-    let is_descendant_segment = try_literal("..", reader);
-    literal("[", reader)?;
-    let first_selector = selector::parse(reader)?;
-    let selectors = vec![first_selector];
-    // TODO: select more than one selector
-    literal("]", reader)?;
-    let segment = if is_descendant_segment {
-        Segment::Descendant(DescendantSegment::new(selectors))
+fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+    // TODO: parse several operands
+    basic_expr(reader)
+}
+
+fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+    let save = reader.cursor();
+    if let Some(test_expr) = try_test_expr(reader)? {
+        Ok(LogicalExpr::Test(test_expr))
     } else {
-        Segment::Child(ChildSegment::new(selectors))
-    };
-    Ok(segment)
+        Err(ParseError::new(
+            save.pos,
+            ParseErrorKind::Expecting("basic expression".to_string()),
+        ))
+    }
+}
+
+fn try_test_expr(reader: &mut Reader) -> ParseResult<Option<TestExpr>> {
+    let not = match_str("!", reader);
+
+    if let Some(query) = try_filter_query(reader)? {
+        let kind = TestExprKind::FilterQuery(query);
+        Ok(Some(TestExpr::new(not, kind)))
+    } else {
+        Ok(None)
+    }
 }
 
 #[cfg(test)]
 mod tests {
 
-    use super::super::{ParseError, ParseErrorKind};
-    use crate::jsonpath2::{NameSelector, Selector};
-    use hurl_core::reader::{CharPos, Pos, Reader};
-
     use super::*;
 
+    use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::selector::{NameSelector, Selector};
+    use hurl_core::reader::Reader;
+
     #[test]
-    pub fn test_empty() {
-        let mut reader = Reader::new("");
+    fn test_parse_logical_or_expr() {
+        let mut reader = Reader::new("@.b");
         assert_eq!(
-            parse(&mut reader).unwrap_err(),
-            ParseError::new(Pos::new(1, 1), ParseErrorKind::Expecting("$".to_string()))
+            logical_or_expr(&mut reader).unwrap(),
+            LogicalExpr::Test(TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(crate::jsonpath2::ast::query::Query::RelativeQuery(
+                    crate::jsonpath2::ast::query::RelativeQuery::new(vec![
+                        crate::jsonpath2::ast::segment::Segment::Child(
+                            crate::jsonpath2::ast::segment::ChildSegment::new(vec![
+                                Selector::Name(NameSelector::new("b".to_string()))
+                            ])
+                        )
+                    ])
+                ))
+            ))
         );
-        assert_eq!(reader.cursor().index, CharPos(0));
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
     }
 
     #[test]
-    pub fn test_root_identifier() {
-        let mut reader = Reader::new("$");
-
-        assert_eq!(parse(&mut reader).unwrap(), JsonPathExpr::new(vec![]));
-        assert_eq!(reader.cursor().index, CharPos(1));
-    }
-
-    #[test]
-    pub fn test_child_segment() {
-        let mut reader = Reader::new("$['store']");
-
+    fn test_parse_test_expr() {
+        let mut reader = Reader::new("@.b");
         assert_eq!(
-            parse(&mut reader).unwrap(),
-            JsonPathExpr::new(vec![Segment::Child(ChildSegment::new(vec![
-                Selector::Name(NameSelector::new("store".to_string()))
-            ]))])
+            try_test_expr(&mut reader).unwrap().unwrap(),
+            TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(crate::jsonpath2::ast::query::Query::RelativeQuery(
+                    crate::jsonpath2::ast::query::RelativeQuery::new(vec![
+                        crate::jsonpath2::ast::segment::Segment::Child(
+                            crate::jsonpath2::ast::segment::ChildSegment::new(vec![
+                                Selector::Name(NameSelector::new("b".to_string()))
+                            ])
+                        )
+                    ])
+                ))
+            )
         );
-        assert_eq!(reader.cursor().index, CharPos(10));
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
     }
 }

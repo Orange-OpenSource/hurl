@@ -17,7 +17,7 @@
  */
 
 use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
-use crate::jsonpath2::ast::expr::Literal;
+use crate::jsonpath2::ast::literal::Literal;
 
 impl ComparisonExpr {
     #[allow(dead_code)]

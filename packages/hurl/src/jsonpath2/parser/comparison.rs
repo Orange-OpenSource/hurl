@@ -66,7 +66,7 @@ fn comparison_op(reader: &mut Reader) -> ParseResult<ComparisonOp> {
 mod tests {
 
     use crate::jsonpath2::ast::comparison::ComparisonOp;
-    use crate::jsonpath2::ast::expr::Literal;
+    use crate::jsonpath2::ast::literal::Literal;
     use hurl_core::reader::{CharPos, Reader};
 
     use super::*;

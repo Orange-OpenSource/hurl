@@ -17,13 +17,12 @@
  */
 
 use super::{ParseError, ParseErrorKind};
-use crate::jsonpath2::ast::expr::LogicalExpr;
 use crate::jsonpath2::ast::selector::{
     ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
+use crate::jsonpath2::parser::expr::logical_or_expr;
 use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
 use crate::jsonpath2::parser::primitives::match_str;
-use crate::jsonpath2::parser::query::try_relative_query;
 use hurl_core::reader::Reader;
 
 use super::ParseResult;
@@ -104,8 +103,7 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
 /// Try to parse a filter selector
 fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
     if match_str("?", reader) {
-        let rel_query = try_relative_query(reader)?.unwrap();
-        let expr = LogicalExpr::new(rel_query);
+        let expr = logical_or_expr(reader)?;
         Ok(Some(FilterSelector::new(expr)))
     } else {
         Ok(None)
@@ -115,7 +113,8 @@ fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector
 #[cfg(test)]
 mod tests {
     use crate::jsonpath2::ast::{
-        query::RelativeQuery,
+        expr::{LogicalExpr, TestExpr, TestExprKind},
+        query::{Query, RelativeQuery},
         segment::{ChildSegment, Segment},
     };
 
@@ -249,9 +248,14 @@ mod tests {
         let mut reader = Reader::new("?@['isbn']");
         assert_eq!(
             try_filter_selector(&mut reader).unwrap().unwrap(),
-            FilterSelector::new(LogicalExpr::new(RelativeQuery::new(vec![Segment::Child(
-                ChildSegment::new(vec![Selector::Name(NameSelector::new("isbn".to_string()))])
-            )])))
+            FilterSelector::new(LogicalExpr::Test(TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "isbn".to_string()
+                    ))]))
+                ])))
+            )))
         );
         assert_eq!(reader.cursor().index, CharPos(10));
     }

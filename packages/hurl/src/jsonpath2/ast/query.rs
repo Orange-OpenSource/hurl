@@ -69,6 +69,7 @@ pub struct RelativeQuery {
 }
 
 impl RelativeQuery {
+    #[allow(dead_code)]
     pub fn new(segments: Vec<Segment>) -> RelativeQuery {
         RelativeQuery { segments }
     }

@@ -18,7 +18,7 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::ast::query::{AbsoluteQuery, RelativeQuery};
+use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
 use crate::jsonpath2::parser::primitives::{expect_str, match_str};
 use crate::jsonpath2::parser::{segments, ParseError, ParseErrorKind, ParseResult};
 
@@ -35,6 +35,16 @@ pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     }
 }
 
+#[allow(dead_code)]
+pub fn try_filter_query(reader: &mut Reader) -> ParseResult<Option<Query>> {
+    if let Some(relative_query) = try_relative_query(reader)? {
+        Ok(Some(Query::RelativeQuery(relative_query)))
+    } else {
+        Ok(None)
+    }
+}
+
+#[allow(dead_code)]
 pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
     if match_str("@", reader) {
         let segments = segments::parse(reader)?;
@@ -48,8 +58,8 @@ pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQue
 mod tests {
 
     use super::super::{ParseError, ParseErrorKind};
-    use crate::jsonpath2::ast::expr::LogicalExpr;
-    use crate::jsonpath2::ast::query::RelativeQuery;
+    use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::query::{Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{FilterSelector, NameSelector, Selector};
     use hurl_core::reader::{CharPos, Pos, Reader};
@@ -103,10 +113,13 @@ mod tests {
         assert_eq!(
             parse(&mut reader).unwrap(),
             AbsoluteQuery::new(vec![Segment::Child(ChildSegment::new(vec![
-                Selector::Filter(FilterSelector::new(LogicalExpr::new(RelativeQuery::new(
-                    vec![Segment::Child(ChildSegment::new(vec![Selector::Name(
-                        NameSelector::new("isbn".to_string())
-                    )]))]
+                Selector::Filter(FilterSelector::new(LogicalExpr::Test(TestExpr::new(
+                    false,
+                    TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                        Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                            "isbn".to_string()
+                        ))]))
+                    ])))
                 ))))
             ]))])
         );

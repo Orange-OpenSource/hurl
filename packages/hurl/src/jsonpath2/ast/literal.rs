@@ -16,24 +16,14 @@
  *
  */
 
-mod comparison;
-mod error;
-mod expr;
-mod literal;
-mod primitives;
-mod query;
-mod segments;
-mod selectors;
-mod singular_query;
-
-use crate::jsonpath2::ast::JsonPathQuery;
-pub use error::{ParseError, ParseErrorKind};
-use hurl_core::reader::Reader;
-
-pub type ParseResult<T> = Result<T, ParseError>;
-
+#[derive(Clone, Debug, PartialEq)]
 #[allow(dead_code)]
-pub fn parse(s: &str) -> ParseResult<JsonPathQuery> {
-    let mut reader = Reader::new(s);
-    query::parse(&mut reader)
+pub enum Literal {
+    Bool(bool),
+    Integer(i32),
+    Null,
+    Number(f64),
+    String(String),
 }
+
+impl Eq for Literal {}

@@ -137,13 +137,13 @@ impl FilterSelector {
         if let serde_json::Value::Object(key_values) = node {
             return key_values
                 .values()
-                .filter(|v| filter(v, self.expr()))
+                .filter(|node| filter(node, self.expr()))
                 .cloned()
                 .collect::<NodeList>();
         } else if let serde_json::Value::Array(values) = node {
             return values
                 .iter()
-                .filter(|v| filter(v, self.expr()))
+                .filter(|node| filter(node, self.expr()))
                 .cloned()
                 .collect::<NodeList>();
         }
@@ -151,9 +151,12 @@ impl FilterSelector {
     }
 }
 
-fn filter(value: &serde_json::Value, logical_expr: &LogicalExpr) -> bool {
-    let results = logical_expr.value().eval(value);
-    !results.is_empty()
+fn filter(node: &serde_json::Value, logical_expr: &LogicalExpr) -> bool {
+    // TODO: Pass both current_value and root_value as params
+    let current_value = node;
+    let root_value = node;
+
+    logical_expr.eval(current_value, root_value)
 }
 
 fn normalize_index(i: i32, len: i32) -> i32 {
@@ -164,14 +167,15 @@ fn normalize_index(i: i32, len: i32) -> i32 {
     }
 }
 
+#[cfg(test)]
 mod tests {
     #[allow(unused_imports)]
     use serde_json::json;
 
     #[allow(unused_imports)]
-    use crate::jsonpath2::ast::expr::LogicalExpr;
+    use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
     #[allow(unused_imports)]
-    use crate::jsonpath2::ast::query::{AbsoluteQuery, RelativeQuery};
+    use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     #[allow(unused_imports)]
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     #[allow(unused_imports)]
@@ -285,10 +289,14 @@ mod tests {
          {"b": "kilo"}
         ]);
 
-        let filter_selector =
-            FilterSelector::new(LogicalExpr::new(RelativeQuery::new(vec![Segment::Child(
-                ChildSegment::new(vec![Selector::Name(NameSelector::new("b".to_string()))]),
-            )])));
+        let filter_selector = FilterSelector::new(LogicalExpr::Test(TestExpr::new(
+            false,
+            TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                    "b".to_string(),
+                ))])),
+            ]))),
+        )));
         assert_eq!(
             filter_selector.eval(&value),
             vec![
