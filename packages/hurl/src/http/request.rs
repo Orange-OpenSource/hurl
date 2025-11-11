@@ -17,8 +17,8 @@
  */
 use std::fmt;
 
-use super::core::RequestCookie;
 use super::header::{HeaderVec, COOKIE};
+use super::request_cookie::RequestCookie;
 use super::url::Url;
 
 /// Represents a runtime HTTP request.

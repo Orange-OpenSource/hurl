@@ -40,14 +40,6 @@ pub struct Cookie {
     pub http_only: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RequestCookie {
-    pub name: String,
-    pub value: String,
-}
-
-
-
 impl fmt::Display for Cookie {
     /// Formats this cookie using Netscape cookie format.
     ///
@@ -103,13 +95,6 @@ impl Redact for Cookie {
         )
     }
 }
-
-impl fmt::Display for RequestCookie {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}={}", self.name, self.value)
-    }
-}
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParseCookieError;

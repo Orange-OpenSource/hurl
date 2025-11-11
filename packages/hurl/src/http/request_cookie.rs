@@ -17,25 +17,14 @@
  */
 use core::fmt;
 
-/// A key/value pair used for query params, form params and multipart-form params.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Param {
+pub struct RequestCookie {
     pub name: String,
     pub value: String,
 }
 
-impl Param {
-    /// Creates a new param pair.
-    pub fn new(name: &str, value: &str) -> Param {
-        Param {
-            name: name.to_string(),
-            value: value.to_string(),
-        }
-    }
-}
-
-impl fmt::Display for Param {
+impl fmt::Display for RequestCookie {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}: {}", self.name, self.value)
+        write!(f, "{}={}", self.name, self.value)
     }
 }

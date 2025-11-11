@@ -22,9 +22,7 @@
 pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
-pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::Cookie;
-pub(crate) use self::core::RequestCookie;
 pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{
@@ -33,8 +31,10 @@ pub use self::header::{
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub(crate) use self::param::Param;
 pub use self::request::{IpResolve, Request, RequestedHttpVersion};
+pub(crate) use self::request_cookie::RequestCookie;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub use self::response::{HttpVersion, Response};
+pub use self::response_cookie::{CookieAttribute, ResponseCookie};
 #[cfg(test)]
 pub use self::tests::*;
 pub use self::timings::Timings;
@@ -57,6 +57,7 @@ mod mimetype;
 mod options;
 mod param;
 mod request;
+mod request_cookie;
 mod request_spec;
 mod response;
 mod response_cookie;

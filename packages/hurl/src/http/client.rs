@@ -29,7 +29,7 @@ use hurl_core::types::Count;
 
 use super::call::Call;
 use super::certificate::Certificate;
-use super::core::{Cookie, RequestCookie};
+use super::core::Cookie;
 use super::curl_cmd::CurlCmd;
 use super::debug;
 use super::easy_ext;
@@ -42,6 +42,7 @@ use super::ip::IpAddr;
 use super::options::{ClientOptions, Verbosity};
 use super::param::Param;
 use super::request::{IpResolve, Request, RequestedHttpVersion};
+use super::request_cookie::RequestCookie;
 use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 use super::response::{HttpVersion, Response};
 use super::timings::Timings;
