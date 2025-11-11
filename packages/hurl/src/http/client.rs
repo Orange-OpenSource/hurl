@@ -778,7 +778,7 @@ impl Client {
         let mut cookies = vec![];
         for cookie in list.iter() {
             let line = str::from_utf8(cookie).unwrap();
-            if let Ok(cookie) = Cookie::from_str(line) {
+            if let Ok(cookie) = Cookie::from_netscape_str(line) {
                 cookies.push(cookie);
             } else {
                 logger.warning(&format!("Line <{line}> can not be parsed as cookie"));
@@ -790,9 +790,7 @@ impl Client {
     /// Adds a cookie to the cookie jar.
     pub fn add_cookie(&mut self, cookie: &Cookie, logger: &mut Logger) {
         logger.debug(&format!("Add to cookie store <{cookie}> (experimental)"));
-        self.handle
-            .cookie_list(cookie.to_string().as_str())
-            .unwrap();
+        self.handle.cookie_list(&cookie.to_netscape_str()).unwrap();
     }
 
     /// Clears cookie storage.

@@ -16,7 +16,7 @@
  *
  */
 use core::fmt;
-use std::str::FromStr;
+use std::fmt::Formatter;
 
 use crate::util::redacted::Redact;
 
@@ -40,7 +40,7 @@ pub struct Cookie {
     pub http_only: bool,
 }
 
-impl fmt::Display for Cookie {
+impl Cookie {
     /// Formats this cookie using Netscape cookie format.
     ///
     /// <http://www.cookiecentral.com/faq/#3.5>
@@ -64,9 +64,8 @@ impl fmt::Display for Cookie {
     /// > - number of seconds since Jan 1, 1970 00:00:00 GMT.
     /// > - name - The name of the variable.
     /// > - value - The value of the variable.
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
+    pub fn to_netscape_str(&self) -> String {
+        format!(
             "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
             if self.http_only { "#HttpOnly_" } else { "" },
             self.domain,
@@ -78,31 +77,9 @@ impl fmt::Display for Cookie {
             self.value
         )
     }
-}
 
-impl Redact for Cookie {
-    fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
-        format!(
-            "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
-            if self.http_only { "#HttpOnly_" } else { "" },
-            self.domain,
-            self.include_subdomain,
-            self.path,
-            self.https,
-            self.expires,
-            self.name,
-            self.value.redact(secrets)
-        )
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ParseCookieError;
-
-impl FromStr for Cookie {
-    type Err = ParseCookieError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    /// Creates a [`Cookie`] from a Nescape cookie formatted string.
+    pub fn from_netscape_str(s: &str) -> Result<Self, ParseCookieError> {
         let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
         let (http_only, domain) = if let Some(&v) = tokens.first() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
@@ -156,6 +133,32 @@ impl FromStr for Cookie {
     }
 }
 
+impl fmt::Display for Cookie {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let repr = self.to_netscape_str();
+        write!(f, "{repr}")
+    }
+}
+
+impl Redact for Cookie {
+    fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
+        format!(
+            "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            if self.http_only { "#HttpOnly_" } else { "" },
+            self.domain,
+            self.include_subdomain,
+            self.path,
+            self.https,
+            self.expires,
+            self.name,
+            self.value.redact(secrets)
+        )
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ParseCookieError;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -163,7 +166,7 @@ mod tests {
     #[test]
     pub fn parse_cookie_from_str() {
         assert_eq!(
-            Cookie::from_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA").unwrap(),
+            Cookie::from_netscape_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA").unwrap(),
             Cookie {
                 domain: "httpbin.org".to_string(),
                 include_subdomain: "FALSE".to_string(),
@@ -176,7 +179,7 @@ mod tests {
             }
         );
         assert_eq!(
-            Cookie::from_str("localhost\tFALSE\t/\tFALSE\t1\tcookie2\t").unwrap(),
+            Cookie::from_netscape_str("localhost\tFALSE\t/\tFALSE\t1\tcookie2\t").unwrap(),
             Cookie {
                 domain: "localhost".to_string(),
                 include_subdomain: "FALSE".to_string(),
@@ -189,6 +192,9 @@ mod tests {
             }
         );
 
-        assert_eq!(Cookie::from_str("xxx").err().unwrap(), ParseCookieError);
+        assert_eq!(
+            Cookie::from_netscape_str("xxx").err().unwrap(),
+            ParseCookieError
+        );
     }
 }
