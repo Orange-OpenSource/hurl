@@ -21,8 +21,8 @@ use std::str::FromStr;
 
 use regex::Regex;
 
-use super::core::Param;
 use super::error::HttpError;
+use super::param::Param;
 
 /// Represents errors for the URL module.
 #[derive(Clone, Eq, PartialEq, Debug)]

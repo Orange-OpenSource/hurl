@@ -24,13 +24,14 @@ pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::Cookie;
-pub(crate) use self::core::{Param, RequestCookie};
+pub(crate) use self::core::RequestCookie;
 pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{
     Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,
 };
 pub(crate) use self::options::{ClientOptions, Verbosity};
+pub(crate) use self::param::Param;
 pub use self::request::{IpResolve, Request, RequestedHttpVersion};
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub use self::response::{HttpVersion, Response};
@@ -54,6 +55,7 @@ mod headers_helper;
 mod ip;
 mod mimetype;
 mod options;
+mod param;
 mod request;
 mod request_spec;
 mod response;

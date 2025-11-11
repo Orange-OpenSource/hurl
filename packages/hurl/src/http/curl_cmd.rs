@@ -25,9 +25,10 @@ use crate::runner::Output;
 use crate::util::path::ContextDir;
 
 use super::client;
-use super::core::{Cookie, Param};
+use super::core::Cookie;
 use super::header::{Header, HeaderVec, CONTENT_TYPE};
 use super::options::ClientOptions;
+use super::param::Param;
 use super::request::{IpResolve, RequestedHttpVersion};
 use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 
