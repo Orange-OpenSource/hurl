@@ -258,7 +258,7 @@ fn load_testcases() -> Vec<TestCase> {
 #[test]
 fn run() {
     let testcases = load_testcases();
-    // TODO: Remove Limit when all the todo! has been removed
+    // TODO: Remove Limit when spec is fully implemented
     let testcases = testcases.iter().take(40);
     let count_total = testcases.len();
 
@@ -269,15 +269,18 @@ fn run() {
         .filter_map(|test_case| test_case.clone().err())
         .collect::<Vec<TestCaseError>>();
 
-    let count_failed = errors.len();
-    let count_passed = count_total - count_failed;
-    for error in &errors {
-        eprintln!("{}\n", error);
+    if !errors.is_empty() {
+        let count_failed = errors.len();
+        let count_passed = count_total - count_failed;
+        let mut s = String::new();
+        for error in &errors {
+            s.push_str(&error.to_string());
+            s.push_str("\n\n");
+        }
+        s.push_str("RFC9535 Compliance tests:\n");
+        s.push_str(format!("Total:  {count_total}\n").as_str());
+        s.push_str(format!("Passed: {count_passed}\n").as_str());
+        s.push_str(format!("Failed: {count_failed}\n").as_str());
+        panic!("{}", s);
     }
-
-    // TODO: Make it fail when spec has been fully implemented (might have to skip specific tests)
-    eprintln!("RFC9535 Compliance tests:");
-    eprintln!("Total:  {count_total}");
-    eprintln!("Passed: {count_passed}");
-    eprintln!("Failed: {count_failed}");
 }
