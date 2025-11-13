@@ -28,7 +28,7 @@ curl-sys = "0.4.84"
 encoding_rs = "0.8.35"
 glob = "0.3.3"
 hurl_core = { version = "7.1.0-SNAPSHOT", path = "../hurl_core" }
-libflate = "2.2.0"
+libflate = "2.2.1"
 libxml = "0.3.8"
 md5 = "0.7.0"
 percent-encoding = "2.3.2"
