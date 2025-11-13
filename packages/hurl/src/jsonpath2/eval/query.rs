@@ -20,6 +20,12 @@ use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
 use crate::jsonpath2::eval::NodeList;
 
 impl Query {
+    /// Eval a `Query`
+    /// It returns a `NodeList`
+    ///
+    /// Note that the absolute and relative queries are not symmetrical
+    /// An absolute query only need the root value
+    /// while the relative query needs both the current value and the root value
     #[allow(dead_code)]
     pub fn eval(
         &self,
@@ -28,31 +34,41 @@ impl Query {
     ) -> NodeList {
         match self {
             Query::AbsoluteQuery(absolute_query) => absolute_query.eval(root_value),
-            Query::RelativeQuery(relative_query) => relative_query.eval(current_value),
+            Query::RelativeQuery(relative_query) => relative_query.eval(current_value, root_value),
         }
     }
 }
 
 impl RelativeQuery {
-    /// Eval a `RelativeQuery` for a `serde_json::Value` input.
+    /// Eval a `RelativeQuery` for the current `serde_json::Value` input.
     /// It returns a `NodeList`{
-    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
-        let mut results = vec![value.clone()];
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
+        let mut results = vec![current_value.clone()];
         for segment in self.segments() {
-            results = results.iter().flat_map(|node| segment.eval(node)).collect();
+            results = results
+                .iter()
+                .flat_map(|current_value| segment.eval(current_value, root_value))
+                .collect();
         }
         results
     }
 }
 
 impl AbsoluteQuery {
-    /// Eval a JSONPath `Query` for a `serde_json::Value` input.
+    /// Eval a JSONPath `Query` for a root `serde_json::Value` input.
     /// It returns a `NodeList`
     #[allow(dead_code)]
-    pub fn eval(&self, value: &serde_json::Value) -> NodeList {
-        let mut results = vec![value.clone()];
+    pub fn eval(&self, root_value: &serde_json::Value) -> NodeList {
+        let mut results = vec![root_value.clone()];
         for segment in self.segments() {
-            results = results.iter().flat_map(|node| segment.eval(node)).collect();
+            results = results
+                .iter()
+                .flat_map(|current_value| segment.eval(current_value, root_value))
+                .collect();
         }
         results
     }
@@ -68,8 +84,8 @@ mod tests {
 
     #[test]
     fn test_root_identifier() {
-        let value = json!({"greeting": "Hello"});
+        let root_value = json!({"greeting": "Hello"});
         let root_identifier = AbsoluteQuery::new(vec![]);
-        assert_eq!(root_identifier.eval(&value), vec![value]);
+        assert_eq!(root_identifier.eval(&root_value), vec![root_value]);
     }
 }

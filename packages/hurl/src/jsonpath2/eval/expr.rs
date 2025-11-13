@@ -31,6 +31,7 @@ impl LogicalExpr {
 }
 
 impl TestExpr {
+    /// eval the test expression to a boolean value
     #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         match self.kind() {
@@ -45,24 +46,43 @@ impl TestExpr {
 #[cfg(test)]
 mod tests {
     use crate::jsonpath2::ast::expr::{TestExpr, TestExprKind};
-    use crate::jsonpath2::ast::selector::{NameSelector, Selector};
+    use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
+    use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
 
     #[test]
     fn test_eval_test_expr() {
         // @.b
         let test_expr = TestExpr::new(
             false,
-            TestExprKind::FilterQuery(crate::jsonpath2::ast::query::Query::RelativeQuery(
-                crate::jsonpath2::ast::query::RelativeQuery::new(vec![
-                    crate::jsonpath2::ast::segment::Segment::Child(
-                        crate::jsonpath2::ast::segment::ChildSegment::new(vec![Selector::Name(
-                            NameSelector::new("b".to_string()),
-                        )]),
-                    ),
-                ]),
-            )),
+            TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                    "b".to_string(),
+                ))])),
+            ]))),
         );
         assert!(test_expr.eval(&serde_json::json!({"b": "j"}), &serde_json::json!({})));
         assert!(!test_expr.eval(&serde_json::json!(3), &serde_json::json!({})));
+
+        // $.*.name
+        let test_expr = TestExpr::new(
+            false,
+            TestExprKind::FilterQuery(Query::AbsoluteQuery(AbsoluteQuery::new(vec![
+                Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
+                    WildcardSelector,
+                )])),
+                Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                    "name".to_string(),
+                ))])),
+            ]))),
+        );
+        assert!(test_expr.eval(
+            &serde_json::json!({"name": "bob"}),
+            &serde_json::json!([1, {"name": "bob"}])
+        ));
+        assert!(!test_expr.eval(
+            &serde_json::json!({"name": "bob"}),
+            &serde_json::json!([1, 2])
+        ));
     }
 }

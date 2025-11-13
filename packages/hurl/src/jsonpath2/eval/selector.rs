@@ -25,20 +25,28 @@ use crate::jsonpath2::ast::selector::{
 use crate::jsonpath2::eval::NodeList;
 
 impl Selector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
         match self {
-            Selector::Name(name_selector) => name_selector.eval(node).into_iter().collect(),
-            Selector::Wildcard(wildcard_selector) => wildcard_selector.eval(node),
-            Selector::Index(index_selector) => index_selector.eval(node).into_iter().collect(),
-            Selector::ArraySlice(array_slice_selector) => array_slice_selector.eval(node),
-            Selector::Filter(filter_selector) => filter_selector.eval(node),
+            Selector::Name(name_selector) => {
+                name_selector.eval(current_value).into_iter().collect()
+            }
+            Selector::Wildcard(wildcard_selector) => wildcard_selector.eval(current_value),
+            Selector::Index(index_selector) => {
+                index_selector.eval(current_value).into_iter().collect()
+            }
+            Selector::ArraySlice(array_slice_selector) => array_slice_selector.eval(current_value),
+            Selector::Filter(filter_selector) => filter_selector.eval(current_value, root_value),
         }
     }
 }
 
 impl NameSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> Option<serde_json::Value> {
-        if let serde_json::Value::Object(key_values) = node {
+    pub fn eval(&self, current_value: &serde_json::Value) -> Option<serde_json::Value> {
+        if let serde_json::Value::Object(key_values) = current_value {
             if let Some(value) = key_values.get(self.value()) {
                 return Some(value.clone());
             }
@@ -48,10 +56,10 @@ impl NameSelector {
 }
 
 impl WildcardSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
-        if let serde_json::Value::Object(key_values) = node {
+    pub fn eval(&self, current_value: &serde_json::Value) -> NodeList {
+        if let serde_json::Value::Object(key_values) = current_value {
             return key_values.values().cloned().collect::<NodeList>();
-        } else if let serde_json::Value::Array(values) = node {
+        } else if let serde_json::Value::Array(values) = current_value {
             return values.to_vec();
         }
         vec![]
@@ -59,8 +67,8 @@ impl WildcardSelector {
 }
 
 impl IndexSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> Option<serde_json::Value> {
-        if let serde_json::Value::Array(values) = node {
+    pub fn eval(&self, current_value: &serde_json::Value) -> Option<serde_json::Value> {
+        if let serde_json::Value::Array(values) = current_value {
             let index = if *self.value() < 0 {
                 values.len() - ((*self.value()).unsigned_abs() as usize)
             } else {
@@ -75,8 +83,8 @@ impl IndexSelector {
 }
 
 impl ArraySliceSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
-        if let serde_json::Value::Array(values) = node {
+    pub fn eval(&self, current_value: &serde_json::Value) -> NodeList {
+        if let serde_json::Value::Array(values) = current_value {
             if self.step() == 0 {
                 return vec![];
             }
@@ -133,17 +141,21 @@ impl ArraySliceSelector {
 }
 
 impl FilterSelector {
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
-        if let serde_json::Value::Object(key_values) = node {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
+        if let serde_json::Value::Object(key_values) = current_value {
             return key_values
                 .values()
-                .filter(|node| filter(node, self.expr()))
+                .filter(|current_value| filter(current_value, root_value, self.expr()))
                 .cloned()
                 .collect::<NodeList>();
-        } else if let serde_json::Value::Array(values) = node {
+        } else if let serde_json::Value::Array(values) = current_value {
             return values
                 .iter()
-                .filter(|node| filter(node, self.expr()))
+                .filter(|current_value| filter(current_value, root_value, self.expr()))
                 .cloned()
                 .collect::<NodeList>();
         }
@@ -151,11 +163,11 @@ impl FilterSelector {
     }
 }
 
-fn filter(node: &serde_json::Value, logical_expr: &LogicalExpr) -> bool {
-    // TODO: Pass both current_value and root_value as params
-    let current_value = node;
-    let root_value = node;
-
+fn filter(
+    current_value: &serde_json::Value,
+    root_value: &serde_json::Value,
+    logical_expr: &LogicalExpr,
+) -> bool {
     logical_expr.eval(current_value, root_value)
 }
 
@@ -185,19 +197,21 @@ mod tests {
 
     #[test]
     fn test_selector() {
-        let value = json!({"greeting": "Hello"});
+        let current_value = json!({"greeting": "Hello"});
+        let root_value = json!("unused");
         assert_eq!(
-            Selector::Name(NameSelector::new("greeting".to_string())).eval(&value),
+            Selector::Name(NameSelector::new("greeting".to_string()))
+                .eval(&current_value, &root_value),
             vec![json!("Hello")]
         );
     }
 
     #[test]
     fn test_name_selector() {
-        let value = json!({"greeting": "Hello"});
+        let current_value = json!({"greeting": "Hello"});
         assert_eq!(
             NameSelector::new("greeting".to_string())
-                .eval(&value)
+                .eval(&current_value)
                 .unwrap(),
             json!("Hello")
         );
@@ -224,50 +238,68 @@ mod tests {
 
     #[test]
     fn test_index_selector() {
-        let value = json!(["a", "b"]);
-        assert_eq!(IndexSelector::new(1).eval(&value).unwrap(), json!("b"));
-        assert_eq!(IndexSelector::new(-2).eval(&value).unwrap(), json!("a"));
-        assert!(IndexSelector::new(2).eval(&value).is_none());
+        let current_value = json!(["a", "b"]);
+        assert_eq!(
+            IndexSelector::new(1).eval(&current_value).unwrap(),
+            json!("b")
+        );
+        assert_eq!(
+            IndexSelector::new(-2).eval(&current_value).unwrap(),
+            json!("a")
+        );
+        assert!(IndexSelector::new(2).eval(&current_value).is_none());
     }
 
     #[test]
     fn test_array_slice_selector() {
-        let value = json!(["a", "b", "c", "d", "e", "f", "g"]);
+        let current_value = json!(["a", "b", "c", "d", "e", "f", "g"]);
 
         assert!(ArraySliceSelector::new(Some(1), Some(3), 0)
-            .eval(&value)
+            .eval(&current_value)
             .is_empty(),);
 
         let array_selector = ArraySliceSelector::new(Some(1), Some(3), 1);
         assert_eq!(array_selector.get_start(7), 1);
         assert_eq!(array_selector.get_end(7), 3);
         assert_eq!(array_selector.get_bounds(7), (1, 3));
-        assert_eq!(array_selector.eval(&value), vec![json!("b"), json!("c")]);
+        assert_eq!(
+            array_selector.eval(&current_value),
+            vec![json!("b"), json!("c")]
+        );
 
         let array_selector = ArraySliceSelector::new(Some(5), None, 1);
         assert_eq!(array_selector.get_start(7), 5);
         assert_eq!(array_selector.get_end(7), 7);
         assert_eq!(array_selector.get_bounds(7), (5, 7));
-        assert_eq!(array_selector.eval(&value), vec![json!("f"), json!("g")]);
+        assert_eq!(
+            array_selector.eval(&current_value),
+            vec![json!("f"), json!("g")]
+        );
 
         let array_selector = ArraySliceSelector::new(Some(1), Some(5), 2);
         assert_eq!(array_selector.get_start(7), 1);
         assert_eq!(array_selector.get_end(7), 5);
         assert_eq!(array_selector.get_bounds(7), (1, 5));
-        assert_eq!(array_selector.eval(&value), vec![json!("b"), json!("d")]);
+        assert_eq!(
+            array_selector.eval(&current_value),
+            vec![json!("b"), json!("d")]
+        );
 
         let array_selector = ArraySliceSelector::new(Some(5), Some(1), -2);
         assert_eq!(array_selector.get_start(7), 5);
         assert_eq!(array_selector.get_end(7), 1);
         assert_eq!(array_selector.get_bounds(7), (1, 5));
-        assert_eq!(array_selector.eval(&value), vec![json!("f"), json!("d")]);
+        assert_eq!(
+            array_selector.eval(&current_value),
+            vec![json!("f"), json!("d")]
+        );
 
         let array_selector = ArraySliceSelector::new(None, None, -1);
         assert_eq!(array_selector.get_start(7), 6);
         assert_eq!(array_selector.get_end(7), -8);
         assert_eq!(array_selector.get_bounds(7), (-1, 6));
         assert_eq!(
-            array_selector.eval(&value),
+            array_selector.eval(&current_value),
             vec![
                 json!("g"),
                 json!("f"),
@@ -282,13 +314,14 @@ mod tests {
 
     #[test]
     fn test_filter_selector() {
-        let value = json!([3, 5, 1, 2, 4, 6,
+        let current_value = json!([3, 5, 1, 2, 4, 6,
          {"b": "j"},
          {"b": "k"},
          {"b": {}},
          {"b": "kilo"}
         ]);
 
+        // @.b
         let filter_selector = FilterSelector::new(LogicalExpr::Test(TestExpr::new(
             false,
             TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -297,8 +330,9 @@ mod tests {
                 ))])),
             ]))),
         )));
+        let root_value = json!({});
         assert_eq!(
-            filter_selector.eval(&value),
+            filter_selector.eval(&current_value, &root_value),
             vec![
                 json!({"b": "j"}),
                 json!({"b": "k"}),

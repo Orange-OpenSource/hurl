@@ -19,37 +19,51 @@ use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
 use crate::jsonpath2::eval::NodeList;
 
 impl Segment {
-    /// Eval a `Segment` for a `serde_json::Value` input.
+    /// Eval a `Segment` for the current `serde_json::Value` input.
     /// It returns a `NodeList`
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
         match self {
-            Segment::Child(child_segment) => child_segment.eval(node),
-            Segment::Descendant(descendant_segment) => descendant_segment.eval(node),
+            Segment::Child(child_segment) => child_segment.eval(current_value, root_value),
+            Segment::Descendant(descendant_segment) => {
+                descendant_segment.eval(current_value, root_value)
+            }
         }
     }
 }
 
 impl ChildSegment {
-    /// Eval a `ChildSegment` for a `serde_json::Value` input.
+    /// Eval a `ChildSegment` for the current `serde_json::Value` input.
     /// It returns a `NodeList`
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
         let mut results = vec![];
         for selector in self.selectors() {
-            results.append(&mut selector.eval(node));
+            results.append(&mut selector.eval(current_value, root_value));
         }
         results
     }
 }
 
 impl DescendantSegment {
-    /// Eval a `DescendantSegment` for a `serde_json::Value` input.
+    /// Eval a `DescendantSegment` for the current `serde_json::Value` input.
     /// It returns a `NodeList`
-    pub fn eval(&self, node: &serde_json::Value) -> NodeList {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> NodeList {
         let mut nodes = vec![];
 
-        for descendent in &descendants(node) {
+        for descendent in &descendants(current_value) {
             for selector in self.selectors() {
-                nodes.append(&mut selector.eval(descendent));
+                nodes.append(&mut selector.eval(descendent, root_value));
             }
         }
         nodes
@@ -89,46 +103,50 @@ mod tests {
 
     #[test]
     fn test_segment() {
-        let value = json!({"greeting": "Hello"});
-
+        let current_value = json!({"greeting": "Hello"});
+        let root_value = json!("unused");
         assert_eq!(
             Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
                 "greeting".to_string()
             )),]))
-            .eval(&value),
+            .eval(&current_value, &root_value),
             vec![json!("Hello")]
         );
     }
 
     #[test]
     fn test_child_segment() {
-        let value = json!({"greeting": "Hello"});
+        let current_value = json!({"greeting": "Hello"});
+        let root_value = json!("unused");
         assert_eq!(
             ChildSegment::new(vec![Selector::Name(NameSelector::new(
                 "greeting".to_string()
             )),])
-            .eval(&value),
+            .eval(&current_value, &root_value),
             vec![json!("Hello")]
         );
     }
 
     #[test]
     fn test_descendant_segment() {
-        let value = json!({
+        let current_value = json!({
           "o": {"j": 1, "k": 2},
           "a": [5, 3, [{"j": 4}, {"k": 6}]]
         });
+        let root_value = json!("unused");
         assert_eq!(
             DescendantSegment::new(vec![Selector::Name(NameSelector::new("j".to_string()))])
-                .eval(&value),
+                .eval(&current_value, &root_value),
             vec![json!(4), json!(1),]
         );
         assert_eq!(
-            DescendantSegment::new(vec![Selector::Index(IndexSelector::new(0))]).eval(&value),
+            DescendantSegment::new(vec![Selector::Index(IndexSelector::new(0))])
+                .eval(&current_value, &root_value),
             vec![json!(5), json!({"j": 4}),]
         );
         assert_eq!(
-            DescendantSegment::new(vec![Selector::Wildcard(WildcardSelector)]).eval(&value),
+            DescendantSegment::new(vec![Selector::Wildcard(WildcardSelector)])
+                .eval(&current_value, &root_value),
             vec![
                 json!([5, 3, [{"j": 4}, {"k": 6}]]),
                 json!({"j": 1, "k": 2}),

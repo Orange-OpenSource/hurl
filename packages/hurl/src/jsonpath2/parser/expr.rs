@@ -61,6 +61,8 @@ mod tests {
     use super::*;
 
     use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
+    use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector};
     use hurl_core::reader::Reader;
 
@@ -71,15 +73,11 @@ mod tests {
             logical_or_expr(&mut reader).unwrap(),
             LogicalExpr::Test(TestExpr::new(
                 false,
-                TestExprKind::FilterQuery(crate::jsonpath2::ast::query::Query::RelativeQuery(
-                    crate::jsonpath2::ast::query::RelativeQuery::new(vec![
-                        crate::jsonpath2::ast::segment::Segment::Child(
-                            crate::jsonpath2::ast::segment::ChildSegment::new(vec![
-                                Selector::Name(NameSelector::new("b".to_string()))
-                            ])
-                        )
-                    ])
-                ))
+                TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "b".to_string()
+                    ))]))
+                ])))
             ))
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
@@ -92,17 +90,23 @@ mod tests {
             try_test_expr(&mut reader).unwrap().unwrap(),
             TestExpr::new(
                 false,
-                TestExprKind::FilterQuery(crate::jsonpath2::ast::query::Query::RelativeQuery(
-                    crate::jsonpath2::ast::query::RelativeQuery::new(vec![
-                        crate::jsonpath2::ast::segment::Segment::Child(
-                            crate::jsonpath2::ast::segment::ChildSegment::new(vec![
-                                Selector::Name(NameSelector::new("b".to_string()))
-                            ])
-                        )
-                    ])
-                ))
+                TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "b".to_string()
+                    ))]))
+                ])))
             )
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
+
+        let mut reader = Reader::new("$");
+        assert_eq!(
+            try_test_expr(&mut reader).unwrap().unwrap(),
+            TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(Query::AbsoluteQuery(AbsoluteQuery::new(vec![])))
+            )
+        );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(1));
     }
 }
