@@ -160,9 +160,9 @@ fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, Run
     }
 }
 
-/// Experimental feature
-/// @cookie_storage_add
-pub fn cookie_storage_set(request: &Request) -> Option<String> {
+/// Experimental feature `@cookie_storage_add`
+/// Returns the string used to set a new cookie in the cookie store.
+pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
     for line_terminator in request.line_terminators.iter() {
         if let Some(s) = &line_terminator.comment {
             if s.value.contains("@cookie_storage_set:") {
@@ -175,9 +175,9 @@ pub fn cookie_storage_set(request: &Request) -> Option<String> {
     None
 }
 
-/// Experimental feature
-/// @cookie_storage_clear
-pub fn cookie_storage_clear(request: &Request) -> bool {
+/// Experimental feature `@cookie_storage_clear`
+/// Checks if the cookie storage must be cleared or not.
+pub fn get_cmd_cookie_storage_clear(request: &Request) -> bool {
     for line_terminator in request.line_terminators.iter() {
         if let Some(s) = &line_terminator.comment {
             if s.value.contains("@cookie_storage_clear") {
@@ -399,14 +399,14 @@ mod tests {
 
     #[test]
     fn clear_cookie_store() {
-        assert!(!cookie_storage_clear(&hello_request()));
+        assert!(!get_cmd_cookie_storage_clear(&hello_request()));
 
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
             newline: whitespace(),
         };
-        assert!(cookie_storage_clear(&Request {
+        assert!(get_cmd_cookie_storage_clear(&Request {
             line_terminators: vec![LineTerminator {
                 space0: whitespace(),
                 comment: Some(Comment {
@@ -436,7 +436,7 @@ mod tests {
 
     #[test]
     fn add_cookie_in_storage() {
-        assert_eq!(None, cookie_storage_set(&hello_request()));
+        assert_eq!(None, get_cmd_cookie_storage_set(&hello_request()));
 
         let line_terminator = LineTerminator {
             space0: whitespace(),
@@ -445,7 +445,7 @@ mod tests {
         };
         assert_eq!(
             Some("localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA".to_string()),
-            cookie_storage_set(&Request {
+            get_cmd_cookie_storage_set(&Request {
                 line_terminators: vec![LineTerminator {
                     space0: whitespace(),
                     comment: Some(Comment {

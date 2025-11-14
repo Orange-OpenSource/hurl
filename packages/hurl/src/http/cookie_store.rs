@@ -15,10 +15,44 @@
  * limitations under the License.
  *
  */
+use crate::http::Url;
 use core::fmt;
 use std::fmt::Formatter;
 
-use crate::util::redacted::Redact;
+/// Represents the storage of cookies for an HTTP client.
+#[derive(Default)]
+pub struct CookieStore {
+    cookies: Vec<Cookie>,
+}
+
+impl CookieStore {
+    /// Create a new instance.
+    pub fn new() -> Self {
+        CookieStore { cookies: vec![] }
+    }
+
+    /// Add a new cookie from a Netscape formatted string <http://www.cookiecentral.com/faq/#3.5>.
+    pub fn add_cookie(&mut self, netscape_str: &str) -> Result<(), ParseCookieError> {
+        let cookie = Cookie::from_netscape_str(netscape_str)?;
+        self.cookies.push(cookie);
+        Ok(())
+    }
+
+    /// Returns an iterator over [`Cookie`].
+    pub fn cookies(&self) -> impl Iterator<Item = &Cookie> {
+        self.cookies.iter()
+    }
+
+    /// Consumes the store and transform it into a vec of [`Cookie`]
+    pub fn into_vec(self) -> Vec<Cookie> {
+        self.cookies
+    }
+
+    /// Returns true if the cookie store contains no cookie.
+    pub fn is_empty(&self) -> bool {
+        self.cookies.is_empty()
+    }
+}
 
 /// [Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) returned by
 /// the server with `Set-Cookie` header, and saved in the cookie storage of the internal HTTP
@@ -78,7 +112,7 @@ impl Cookie {
         )
     }
 
-    /// Creates a [`Cookie`] from a Nescape cookie formatted string.
+    /// Creates a [`Cookie`] from a Netscape cookie formatted string.
     pub fn from_netscape_str(s: &str) -> Result<Self, ParseCookieError> {
         let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
         let (http_only, domain) = if let Some(&v) = tokens.first() {
@@ -131,6 +165,24 @@ impl Cookie {
             http_only,
         })
     }
+
+    pub fn is_expired(&self) -> bool {
+        // cookie expired when libcurl set value to 1?
+        self.expires == "1"
+    }
+
+    pub fn match_domain(&self, url: &Url) -> bool {
+        if let Some(domain) = url.domain() {
+            if self.include_subdomain == "FALSE" {
+                if self.domain != domain {
+                    return false;
+                }
+            } else if !domain.ends_with(&self.domain) {
+                return false;
+            }
+        }
+        url.path().starts_with(&self.path)
+    }
 }
 
 impl fmt::Display for Cookie {
@@ -140,28 +192,13 @@ impl fmt::Display for Cookie {
     }
 }
 
-impl Redact for Cookie {
-    fn redact(&self, secrets: &[impl AsRef<str>]) -> String {
-        format!(
-            "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
-            if self.http_only { "#HttpOnly_" } else { "" },
-            self.domain,
-            self.include_subdomain,
-            self.path,
-            self.https,
-            self.expires,
-            self.name,
-            self.value.redact(secrets)
-        )
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParseCookieError;
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::str::FromStr;
 
     #[test]
     pub fn parse_cookie_from_str() {
@@ -196,5 +233,36 @@ mod tests {
             Cookie::from_netscape_str("xxx").err().unwrap(),
             ParseCookieError
         );
+    }
+
+    #[test]
+    fn test_match_cookie() {
+        let cookie = Cookie {
+            domain: "example.com".to_string(),
+            include_subdomain: "FALSE".to_string(),
+            path: "/".to_string(),
+            https: String::new(),
+            expires: String::new(),
+            name: String::new(),
+            value: String::new(),
+            http_only: false,
+        };
+        assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
+        assert!(!cookie.match_domain(&Url::from_str("http://sub.example.com/tata").unwrap()));
+        assert!(!cookie.match_domain(&Url::from_str("http://toto/tata").unwrap()));
+
+        let cookie = Cookie {
+            domain: "example.com".to_string(),
+            include_subdomain: "TRUE".to_string(),
+            path: "/toto".to_string(),
+            https: String::new(),
+            expires: String::new(),
+            name: String::new(),
+            value: String::new(),
+            http_only: false,
+        };
+        assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
+        assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/toto").unwrap()));
+        assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
     }
 }

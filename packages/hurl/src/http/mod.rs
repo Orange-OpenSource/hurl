@@ -22,7 +22,7 @@
 pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
-pub use self::cookie::Cookie;
+pub use self::cookie_store::Cookie;
 pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{
@@ -44,7 +44,7 @@ pub use self::version::libcurl_version_info;
 mod call;
 mod certificate;
 mod client;
-mod cookie;
+mod cookie_store;
 mod curl_cmd;
 mod debug;
 mod easy_ext;

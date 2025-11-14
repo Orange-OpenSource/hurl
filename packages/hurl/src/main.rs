@@ -329,7 +329,7 @@ fn create_cookies_file(
         s.push_str(&format!("# Cookies for file <{}>", run.filename));
         s.push('\n');
         for cookie in run.hurl_result.cookies.iter() {
-            s.push_str(&cookie.redact(secrets));
+            s.push_str(&cookie.to_netscape_str().redact(secrets));
             s.push('\n');
         }
     }

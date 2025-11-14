@@ -24,8 +24,7 @@ use hurl_core::types::Count;
 use crate::runner::Output;
 use crate::util::path::ContextDir;
 
-use super::client;
-use super::cookie::Cookie;
+use super::cookie_store::CookieStore;
 use super::header::{Header, HeaderVec, CONTENT_TYPE};
 use super::options::ClientOptions;
 use super::param::Param;
@@ -58,7 +57,7 @@ impl CurlCmd {
     /// and runner options.
     pub fn new(
         request_spec: &RequestSpec,
-        cookies: &[Cookie],
+        cookie_store: &CookieStore,
         context_dir: &ContextDir,
         output: Option<&Output>,
         options: &ClientOptions,
@@ -84,7 +83,7 @@ impl CurlCmd {
         let mut params = body_params(request_spec, context_dir);
         args.append(&mut params);
 
-        let mut params = cookies_params(request_spec, cookies);
+        let mut params = cookies_params(request_spec, cookie_store);
         args.append(&mut params);
 
         let mut params = other_options_params(context_dir, output, options);
@@ -194,21 +193,38 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
 }
 
 /// Returns the curl args corresponding to a list of cookies.
-fn cookies_params(request_spec: &RequestSpec, cookies: &[Cookie]) -> Vec<String> {
-    let mut args = vec![];
-
-    let cookies = client::all_cookies(cookies, request_spec);
-    if !cookies.is_empty() {
-        args.push("--cookie".to_string());
-        args.push(format!(
-            "'{}'",
-            cookies
-                .iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<String>>()
-                .join("; ")
-        ));
+fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec<String> {
+    if request_spec.cookies.is_empty() && cookie_store.is_empty() {
+        return vec![];
     }
+
+    let mut args = vec![];
+    args.push("--cookie".to_string());
+
+    // Constructs cookies values from current request
+    let mut cookies_from_req = request_spec
+        .cookies
+        .iter()
+        .map(|c| (&c.name, &c.value))
+        .collect::<Vec<_>>();
+
+    // Constructs cookies values from cookie store for this URL, that are not expired
+    let mut cookies_from_store = cookie_store
+        .cookies()
+        .filter(|c| !c.is_expired())
+        .filter(|c| c.match_domain(&request_spec.url))
+        .map(|c| (&c.name, &c.value))
+        .collect::<Vec<_>>();
+
+    let mut all_cookies = vec![];
+    all_cookies.append(&mut cookies_from_req);
+    all_cookies.append(&mut cookies_from_store);
+    let value = all_cookies
+        .iter()
+        .map(|(name, value)| format!("{name}={value}"))
+        .collect::<Vec<String>>()
+        .join("; ");
+    args.push(format!("'{value}'"));
     args
 }
 
@@ -566,17 +582,29 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(cmd.to_string(), "curl 'http://localhost:8000/hello'");
 
         // Same requests with some output:
         let output = Some(Output::new("foo.out"));
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -589,7 +617,13 @@ mod tests {
         headers.push(Header::new("User-Agent", "iPhone"));
         headers.push(Header::new("Foo", "Bar"));
         request.headers = headers;
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -600,29 +634,20 @@ mod tests {
         );
 
         // With some cookies:
-        let cookies = vec![
-            Cookie {
-                domain: "localhost".to_string(),
-                include_subdomain: "TRUE".to_string(),
-                path: "/".to_string(),
-                https: "FALSE".to_string(),
-                expires: "0".to_string(),
-                name: "cookie1".to_string(),
-                value: "valueA".to_string(),
-                http_only: false,
-            },
-            Cookie {
-                domain: "localhost".to_string(),
-                include_subdomain: "FALSE".to_string(),
-                path: "/".to_string(),
-                https: "FALSE".to_string(),
-                expires: "1".to_string(),
-                name: "cookie2".to_string(),
-                value: String::new(),
-                http_only: true,
-            },
-        ];
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let mut cookie_store = CookieStore::new();
+        cookie_store
+            .add_cookie("localhost  TRUE    /   FALSE   0   cookie1 valueA")
+            .unwrap();
+        cookie_store
+            .add_cookie("localhost  FALSE    /   FALSE   1   cookie2 valueB")
+            .unwrap();
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -642,8 +667,8 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions {
             allow_reuse: true,
             aws_sigv4: None,
@@ -689,7 +714,7 @@ mod tests {
             verbosity: None,
         };
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, None, &options);
+        let cmd = CurlCmd::new(&request, &cookie_store, &context_dir, None, &options);
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -730,12 +755,12 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookies = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
         assert_eq!(
             cmd.to_string(),
             "curl 'https://example.org/hello/../to/../your/../file'"
@@ -750,12 +775,18 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -782,12 +813,18 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl 'http://localhost:8000/querystring-params?param1=value1&param2=a%20b'",
@@ -797,7 +834,13 @@ mod tests {
         request.url =
             Url::from_str("http://localhost:8000/querystring-params?param3=foo&param4=bar")
                 .unwrap();
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl 'http://localhost:8000/querystring-params?param3=foo&param4=bar&param1=value1&param2=a%20b'",
@@ -821,12 +864,18 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -850,12 +899,18 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -866,7 +921,13 @@ mod tests {
 
         // Add a non-empty body
         request.body = Body::Text("{\"foo\":\"bar\"}".to_string());
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -877,7 +938,13 @@ mod tests {
 
         // Change method
         request.method = Method("PUT".to_string());
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \
@@ -897,12 +964,18 @@ mod tests {
             ..Default::default()
         };
 
-        let context_dir = &ContextDir::default();
-        let cookies = vec![];
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
         let options = ClientOptions::default();
         let output = None;
 
-        let cmd = CurlCmd::new(&request, &cookies, context_dir, output.as_ref(), &options);
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
         assert_eq!(
             cmd.to_string(),
             "curl \

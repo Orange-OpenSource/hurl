@@ -29,7 +29,7 @@ use hurl_core::types::Count;
 
 use super::call::Call;
 use super::certificate::Certificate;
-use super::cookie::Cookie;
+use super::cookie_store::{Cookie, CookieStore};
 use super::curl_cmd::CurlCmd;
 use super::debug;
 use super::easy_ext;
@@ -772,19 +772,17 @@ impl Client {
         Ok(Some(url))
     }
 
-    /// Returns cookie storage.
-    pub fn cookie_storage(&mut self, logger: &mut Logger) -> Vec<Cookie> {
-        let list = self.handle.cookies().unwrap();
-        let mut cookies = vec![];
+    /// Returns cookie store.
+    pub fn cookie_store(&mut self, logger: &mut Logger) -> Result<CookieStore, HttpError> {
+        let list = self.handle.cookies()?;
+        let mut cookie_store = CookieStore::new();
         for cookie in list.iter() {
             let line = str::from_utf8(cookie).unwrap();
-            if let Ok(cookie) = Cookie::from_netscape_str(line) {
-                cookies.push(cookie);
-            } else {
+            if cookie_store.add_cookie(line).is_err() {
                 logger.warning(&format!("Line <{line}> can not be parsed as cookie"));
             }
         }
-        cookies
+        Ok(cookie_store)
     }
 
     /// Adds a cookie to the cookie jar.
@@ -808,7 +806,7 @@ impl Client {
         options: &ClientOptions,
         logger: &mut Logger,
     ) -> CurlCmd {
-        let cookies = self.cookie_storage(logger);
+        let cookies = self.cookie_store(logger).unwrap();
         CurlCmd::new(request_spec, &cookies, context_dir, output, options)
     }
 
@@ -876,37 +874,6 @@ fn redirect_method(response_status: u32, original_method: &Method) -> Method {
         // codes not converted to GET above.
         _ => original_method.clone(),
     }
-}
-
-/// Returns cookies from both cookies from the cookie storage and the request.
-pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec<RequestCookie> {
-    let mut cookies = request_spec.cookies.clone();
-    cookies.append(
-        &mut cookie_storage
-            .iter()
-            .filter(|c| c.expires != "1") // cookie expired when libcurl set value to 1?
-            .filter(|c| match_cookie(c, &request_spec.url))
-            .map(|c| RequestCookie {
-                name: c.name.clone(),
-                value: c.value.clone(),
-            })
-            .collect(),
-    );
-    cookies
-}
-
-/// Matches cookie for a given URL.
-fn match_cookie(cookie: &Cookie, url: &Url) -> bool {
-    if let Some(domain) = url.domain() {
-        if cookie.include_subdomain == "FALSE" {
-            if cookie.domain != domain {
-                return false;
-            }
-        } else if !domain.ends_with(cookie.domain.as_str()) {
-            return false;
-        }
-    }
-    url.path().starts_with(cookie.path.as_str())
 }
 
 impl Header {
@@ -1093,55 +1060,6 @@ mod tests {
         assert_eq!(lines.first().unwrap().as_str(), "GET /hello HTTP/1.1");
         assert_eq!(lines.get(1).unwrap().as_str(), "Host: localhost:8000");
         assert_eq!(lines.get(2).unwrap().as_str(), "");
-    }
-
-    #[test]
-    fn test_match_cookie() {
-        let cookie = Cookie {
-            domain: "example.com".to_string(),
-            include_subdomain: "FALSE".to_string(),
-            path: "/".to_string(),
-            https: String::new(),
-            expires: String::new(),
-            name: String::new(),
-            value: String::new(),
-            http_only: false,
-        };
-        assert!(match_cookie(
-            &cookie,
-            &Url::from_str("http://example.com/toto").unwrap()
-        ));
-        assert!(!match_cookie(
-            &cookie,
-            &Url::from_str("http://sub.example.com/tata").unwrap()
-        ));
-        assert!(!match_cookie(
-            &cookie,
-            &Url::from_str("http://toto/tata").unwrap()
-        ));
-
-        let cookie = Cookie {
-            domain: "example.com".to_string(),
-            include_subdomain: "TRUE".to_string(),
-            path: "/toto".to_string(),
-            https: String::new(),
-            expires: String::new(),
-            name: String::new(),
-            value: String::new(),
-            http_only: false,
-        };
-        assert!(match_cookie(
-            &cookie,
-            &Url::from_str("http://example.com/toto").unwrap()
-        ));
-        assert!(match_cookie(
-            &cookie,
-            &Url::from_str("http://sub.example.com/toto").unwrap()
-        ));
-        assert!(!match_cookie(
-            &cookie,
-            &Url::from_str("http://example.com/tata").unwrap()
-        ));
     }
 
     #[test]

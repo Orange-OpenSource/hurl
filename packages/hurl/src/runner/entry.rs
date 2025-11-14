@@ -87,14 +87,14 @@ pub fn run(
     let client_options = ClientOptions::from(runner_options, logger.verbosity);
 
     // Experimental features with cookie storage
-    if let Some(s) = request::cookie_storage_set(&entry.request) {
+    if let Some(s) = request::get_cmd_cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_netscape_str(&s) {
             http_client.add_cookie(&cookie, logger);
         } else {
             logger.warning(&format!("Cookie string can not be parsed: '{s}'"));
         }
     }
-    if request::cookie_storage_clear(&entry.request) {
+    if request::get_cmd_cookie_storage_clear(&entry.request) {
         http_client.clear_cookie_storage(logger);
     }
 
@@ -292,9 +292,11 @@ fn log_request(
     request: &http::RequestSpec,
     logger: &mut Logger,
 ) {
+    let cookie_store = http_client.cookie_store(logger).unwrap();
+
     logger.debug("");
     logger.debug_important("Cookie store:");
-    for cookie in &http_client.cookie_storage(logger) {
+    for cookie in cookie_store.cookies() {
         logger.debug(&cookie.to_string());
     }
 
