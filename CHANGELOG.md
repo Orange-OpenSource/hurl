@@ -38,6 +38,7 @@ Bugs Fixed:
 * Add parsing support for more types of date time strings to toDate filter  [#4439](https://github.com/Orange-OpenSource/hurl/issues/4439) [#4440](https://github.com/Orange-OpenSource/hurl/issues/4440) [#4441](https://github.com/Orange-OpenSource/hurl/issues/4441)
 * Accept more path names when appending HTML reports [#4459](https://github.com/Orange-OpenSource/hurl/issues/4459)
 * Fix filtering of Authorization: and Cookie: headers when following redirections [#4460](https://github.com/Orange-OpenSource/hurl/issues/4460)
+* Fix supporting space in cookie storage cookie values [#4461](https://github.com/Orange-OpenSource/hurl/issues/4461)
 * Fix implicit "Content-Type" headers when following redirections [#4522](https://github.com/Orange-OpenSource/hurl/issues/4522)
 
 
