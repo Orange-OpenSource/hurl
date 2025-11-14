@@ -22,7 +22,9 @@ impl LogicalExpr {
     #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         match self {
-            LogicalExpr::Comparison(_comparison_expr) => todo!(),
+            LogicalExpr::Comparison(comparison_expr) => {
+                comparison_expr.eval(current_value, root_value)
+            }
             LogicalExpr::Test(test_expr) => test_expr.eval(current_value, root_value),
             LogicalExpr::And(_and_expr) => todo!(),
             LogicalExpr::Or(_or_expr) => todo!(),

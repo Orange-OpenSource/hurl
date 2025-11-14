@@ -16,6 +16,7 @@
  *
  */
 use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
 use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::query::try_filter_query;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
@@ -34,7 +35,9 @@ fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 
 fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     let save = reader.cursor();
-    if let Some(test_expr) = try_test_expr(reader)? {
+    if let Some(comparison_expr) = try_comparison(reader)? {
+        Ok(LogicalExpr::Comparison(comparison_expr))
+    } else if let Some(test_expr) = try_test_expr(reader)? {
         Ok(LogicalExpr::Test(test_expr))
     } else {
         Err(ParseError::new(
@@ -63,7 +66,7 @@ mod tests {
     use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
     use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
-    use crate::jsonpath2::ast::selector::{NameSelector, Selector};
+    use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
     use hurl_core::reader::Reader;
 
     #[test]
@@ -108,5 +111,22 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(1));
+
+        let mut reader = Reader::new("$.*.a]");
+        assert_eq!(
+            try_test_expr(&mut reader).unwrap().unwrap(),
+            TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(Query::AbsoluteQuery(AbsoluteQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
+                        WildcardSelector
+                    )])),
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "a".to_string()
+                    ))]))
+                ])))
+            )
+        );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(5));
     }
 }

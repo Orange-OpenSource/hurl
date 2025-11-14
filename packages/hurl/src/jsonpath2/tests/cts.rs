@@ -259,7 +259,7 @@ fn load_testcases() -> Vec<TestCase> {
 fn run() {
     let testcases = load_testcases();
     // TODO: Remove Limit when spec is fully implemented
-    let testcases = testcases.iter().take(47);
+    let testcases = testcases.iter().take(97);
     let count_total = testcases.len();
 
     let errors = testcases

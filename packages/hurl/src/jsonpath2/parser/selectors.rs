@@ -112,13 +112,15 @@ fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::jsonpath2::ast::{
+        comparison::{Comparable, ComparisonExpr, ComparisonOp},
         expr::{LogicalExpr, TestExpr, TestExprKind},
+        literal::Literal,
         query::{Query, RelativeQuery},
         segment::{ChildSegment, Segment},
+        singular_query::{RelativeSingularQuery, SingularQuery},
     };
-
-    use super::*;
     use hurl_core::reader::{CharPos, Reader};
 
     #[test]
@@ -258,5 +260,18 @@ mod tests {
             )))
         );
         assert_eq!(reader.cursor().index, CharPos(10));
+
+        let mut reader = Reader::new("?@>3]");
+        assert_eq!(
+            try_filter_selector(&mut reader).unwrap().unwrap(),
+            FilterSelector::new(LogicalExpr::Comparison(ComparisonExpr::new(
+                Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                    vec![]
+                ))),
+                Comparable::Literal(Literal::Integer(3)),
+                ComparisonOp::Greater
+            )))
+        );
+        assert_eq!(reader.cursor().index, CharPos(4));
     }
 }

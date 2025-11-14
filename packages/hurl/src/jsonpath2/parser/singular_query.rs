@@ -28,28 +28,26 @@ use crate::jsonpath2::parser::ParseResult;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
-/// Parse a singular query.
+/// Try to parse a singular query.
 /// It differs from a regular query in that it only matches a single node.
 #[allow(dead_code)]
-pub fn parse(reader: &mut Reader) -> ParseResult<SingularQuery> {
+pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<SingularQuery>> {
     if match_str("$", reader) {
         let segments = singular_query_segments(reader)?;
-        Ok(SingularQuery::Absolute(AbsoluteSingularQuery::new(
+        Ok(Some(SingularQuery::Absolute(AbsoluteSingularQuery::new(
             segments,
-        )))
+        ))))
     } else if match_str("@", reader) {
         let segments = singular_query_segments(reader)?;
-        Ok(SingularQuery::Relative(RelativeSingularQuery::new(
+        Ok(Some(SingularQuery::Relative(RelativeSingularQuery::new(
             segments,
-        )))
+        ))))
     } else {
-        let pos = reader.cursor().pos;
-        let kind = ParseErrorKind::Expecting("a singular query".to_string());
-        Err(ParseError::new(pos, kind))
+        Ok(None)
     }
 }
 
-/// Parse singular segments
+/// Parse singular segments.
 fn singular_query_segments(reader: &mut Reader) -> ParseResult<Vec<SingularQuerySegment>> {
     let mut segments = vec![];
     while let Some(segment) = try_singular_query_segment(reader)? {
@@ -58,6 +56,7 @@ fn singular_query_segments(reader: &mut Reader) -> ParseResult<Vec<SingularQuery
     Ok(segments)
 }
 
+/// Try to parse a singular query segment.
 fn try_singular_query_segment(reader: &mut Reader) -> ParseResult<Option<SingularQuerySegment>> {
     let save = reader.cursor();
     if match_str("[", reader) {
@@ -68,18 +67,15 @@ fn try_singular_query_segment(reader: &mut Reader) -> ParseResult<Option<Singula
             expect_str("]", reader)?;
             Ok(Some(SingularQuerySegment::Index(IndexSelector::new(value))))
         } else {
-            Err(ParseError::new(
-                save.pos,
-                ParseErrorKind::Expecting("singular query segment".to_string()),
-            ))
+            Ok(None)
         }
     } else if match_str(".", reader) {
         match member_name_shorthand(reader) {
             Ok(name) => Ok(Some(SingularQuerySegment::Name(NameSelector::new(name)))),
-            Err(_) => Err(ParseError::new(
-                save.pos,
-                ParseErrorKind::Expecting("singular query segment".to_string()),
-            )),
+            Err(_) => {
+                reader.seek(save);
+                Ok(None)
+            }
         }
     } else {
         Ok(None)
@@ -109,19 +105,18 @@ fn alpha(reader: &mut Reader) -> ParseResult<char> {
 
 #[cfg(test)]
 mod tests {
-    use super::super::{ParseError, ParseErrorKind};
     use super::*;
     use crate::jsonpath2::ast::singular_query::{
         AbsoluteSingularQuery, SingularQuery, SingularQuerySegment,
     };
-    use hurl_core::reader::{CharPos, Pos, Reader};
+    use hurl_core::reader::{CharPos, Reader};
 
     #[test]
     pub fn test_singular_query() {
         let mut reader = Reader::new("$.store");
 
         assert_eq!(
-            parse(&mut reader).unwrap(),
+            try_parse(&mut reader).unwrap().unwrap(),
             SingularQuery::Absolute(AbsoluteSingularQuery::new(vec![
                 SingularQuerySegment::Name(NameSelector::new("store".to_string()))
             ]))
@@ -130,16 +125,10 @@ mod tests {
     }
 
     #[test]
-    pub fn test_singular_query_error() {
-        let mut reader = Reader::new("$.*");
-
-        assert_eq!(
-            parse(&mut reader).unwrap_err(),
-            ParseError::new(
-                Pos::new(1, 2),
-                ParseErrorKind::Expecting("singular query segment".to_string())
-            )
-        );
+    pub fn test_singular_query_none() {
+        let mut reader = Reader::new("1");
+        assert!(try_parse(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 
     #[test]
@@ -159,12 +148,7 @@ mod tests {
     #[test]
     pub fn test_singular_query_segment_error() {
         let mut reader = Reader::new(".*");
-        assert_eq!(
-            try_singular_query_segment(&mut reader).unwrap_err(),
-            ParseError::new(
-                Pos::new(1, 1),
-                ParseErrorKind::Expecting("singular query segment".to_string())
-            )
-        );
+        assert!(try_singular_query_segment(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 }
