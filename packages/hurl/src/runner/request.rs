@@ -160,7 +160,8 @@ fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, Run
     }
 }
 
-/// Experimental feature `@cookie_storage_add`
+/// Experimental feature `@cookie_storage_add`.
+///
 /// Returns the string used to set a new cookie in the cookie store.
 pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
     for line_terminator in request.line_terminators.iter() {
@@ -175,8 +176,9 @@ pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
     None
 }
 
-/// Experimental feature `@cookie_storage_clear`
-/// Checks if the cookie storage must be cleared or not.
+/// Experimental feature `@cookie_storage_clear`.
+///
+/// Returns `true` if the cookie storage should be cleared, `false` otherwise.
 pub fn get_cmd_cookie_storage_clear(request: &Request) -> bool {
     for line_terminator in request.line_terminators.iter() {
         if let Some(s) = &line_terminator.comment {

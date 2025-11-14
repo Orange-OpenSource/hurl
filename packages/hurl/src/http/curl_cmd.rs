@@ -194,13 +194,6 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
 
 /// Returns the curl args corresponding to a list of cookies.
 fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec<String> {
-    if request_spec.cookies.is_empty() && cookie_store.is_empty() {
-        return vec![];
-    }
-
-    let mut args = vec![];
-    args.push("--cookie".to_string());
-
     // Constructs cookies values from current request
     let mut cookies_from_req = request_spec
         .cookies
@@ -219,6 +212,12 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
     let mut all_cookies = vec![];
     all_cookies.append(&mut cookies_from_req);
     all_cookies.append(&mut cookies_from_store);
+    if all_cookies.is_empty() {
+        return vec![];
+    }
+
+    let mut args = vec![];
+    args.push("--cookie".to_string());
     let value = all_cookies
         .iter()
         .map(|(name, value)| format!("{name}={value}"))

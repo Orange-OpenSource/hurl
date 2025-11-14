@@ -328,7 +328,7 @@ pub fn run_entries(
     }
 
     let duration = start.elapsed();
-    let cookie_store = http_client.cookie_store(logger).unwrap();
+    let cookie_store = http_client.cookie_store(logger);
     let cookies = cookie_store.into_vec();
     let success = is_success(&entries_result);
     HurlResult {

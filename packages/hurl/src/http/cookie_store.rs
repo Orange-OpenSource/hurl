@@ -114,11 +114,8 @@ impl Cookie {
 
     /// Creates a [`Cookie`] from a Netscape cookie formatted string.
     pub fn from_netscape_str(s: &str) -> Result<Self, ParseCookieError> {
-        // The Netscape format uses tab as separator, we want also to import cookie with a space
-        // separator (for inline use in Hurl files with `@cookie_storage` command for instance).
-        // The format has only 7 values, and the last token can include whitespaces.
-        let tokens: Vec<&str> = s.splitn(7, |c: char| c.is_ascii_whitespace()).collect();
-        let (http_only, domain) = if let Some(&v) = tokens.first() {
+        let mut tokens = CookieAttributes::new(s);
+        let (http_only, domain) = if let Some(v) = tokens.next() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
                 (true, domain.to_string())
             } else {
@@ -127,32 +124,32 @@ impl Cookie {
         } else {
             return Err(ParseCookieError);
         };
-        let include_subdomain = if let Some(&v) = tokens.get(1) {
+        let include_subdomain = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             return Err(ParseCookieError);
         };
-        let path = if let Some(&v) = tokens.get(2) {
+        let path = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             return Err(ParseCookieError);
         };
-        let https = if let Some(&v) = tokens.get(3) {
+        let https = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             return Err(ParseCookieError);
         };
-        let expires = if let Some(&v) = tokens.get(4) {
+        let expires = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             return Err(ParseCookieError);
         };
-        let name = if let Some(&v) = tokens.get(5) {
+        let name = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             return Err(ParseCookieError);
         };
-        let value = if let Some(&v) = tokens.get(6) {
+        let value = if let Some(v) = tokens.next() {
             v.to_string()
         } else {
             String::new()
@@ -192,6 +189,76 @@ impl fmt::Display for Cookie {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let repr = self.to_netscape_str();
         write!(f, "{repr}")
+    }
+}
+
+/// Represents an iterator over cookie attributes parsed from a Netscape formatted string
+/// (see <http://www.cookiecentral.com/faq/#3.5>).
+/// The Netscape format uses tab as separator, we want also to import cookie with a space
+/// separator (for inline use in Hurl files with `@cookie_storage` command for instance).
+/// The format has only 7 values, and the last token can include whitespaces.
+struct CookieAttributes<'line> {
+    line: &'line str,
+    /// Current index of the char
+    pos: BytePos,
+    /// Number of values parsed
+    parts: usize,
+}
+
+#[derive(Copy, Clone)]
+struct BytePos(usize);
+
+impl<'line> CookieAttributes<'line> {
+    fn new(line: &'line str) -> Self {
+        CookieAttributes {
+            line,
+            pos: BytePos(0),
+            parts: 0,
+        }
+    }
+
+    #[inline]
+    fn skip_whitespace(&mut self) {
+        let bytes = self.line.as_bytes();
+        while self.pos.0 < bytes.len() && is_whitespace(bytes[self.pos.0]) {
+            self.pos.0 += 1;
+        }
+    }
+}
+
+#[inline]
+fn is_whitespace(b: u8) -> bool {
+    matches!(b, b' ' | b'\t' | b'\r' | b'\n')
+}
+
+impl<'line> Iterator for CookieAttributes<'line> {
+    type Item = &'line str;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.parts == 7 {
+            return None;
+        }
+
+        // Skip leading whitespace
+        self.skip_whitespace();
+        if self.pos.0 >= self.line.len() {
+            return None;
+        }
+
+        // 7th logical field = remainder (value may contain spaces)
+        if self.parts == 6 {
+            self.parts += 1;
+            return Some(&self.line[self.pos.0..]);
+        }
+
+        let start = self.pos;
+        let bytes = self.line.as_bytes();
+        while self.pos.0 < bytes.len() && !is_whitespace(bytes[self.pos.0]) {
+            self.pos.0 += 1;
+        }
+        let end = self.pos;
+        self.parts += 1;
+        Some(&self.line[start.0..end.0])
     }
 }
 
@@ -295,5 +362,47 @@ mod tests {
         assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
         assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/toto").unwrap()));
         assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
+    }
+
+    #[test]
+    fn test_add_cookie() {
+        let mut cookie_store = CookieStore::new();
+        cookie_store
+            .add_cookie("localhost  TRUE    /   FALSE   0   cookie1 valueA")
+            .unwrap();
+        cookie_store
+            .add_cookie(
+                "#HttpOnly_example.com\t\t   FALSE\t\t  \t/\tFALSE\t1\tcookie2\tfoo bar baz",
+            )
+            .unwrap();
+        let cookies = cookie_store.into_vec();
+
+        assert_eq!(cookies.len(), 2);
+        assert_eq!(
+            cookies[0],
+            Cookie {
+                domain: "localhost".to_string(),
+                include_subdomain: "TRUE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "0".to_string(),
+                name: "cookie1".to_string(),
+                value: "valueA".to_string(),
+                http_only: false,
+            }
+        );
+        assert_eq!(
+            cookies[1],
+            Cookie {
+                domain: "example.com".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "1".to_string(),
+                name: "cookie2".to_string(),
+                value: "foo bar baz".to_string(),
+                http_only: true,
+            }
+        );
     }
 }

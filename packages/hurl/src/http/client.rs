@@ -773,16 +773,21 @@ impl Client {
     }
 
     /// Returns cookie store.
-    pub fn cookie_store(&mut self, logger: &mut Logger) -> Result<CookieStore, HttpError> {
-        let list = self.handle.cookies()?;
+    pub fn cookie_store(&mut self, logger: &mut Logger) -> CookieStore {
         let mut cookie_store = CookieStore::new();
+
+        let Ok(list) = self.handle.cookies() else {
+            logger.warning("Cannot get cookies from libcurl");
+            return cookie_store;
+        };
+
         for cookie in list.iter() {
             let line = str::from_utf8(cookie).unwrap();
             if cookie_store.add_cookie(line).is_err() {
                 logger.warning(&format!("Line <{line}> can not be parsed as cookie"));
             }
         }
-        Ok(cookie_store)
+        cookie_store
     }
 
     /// Adds a cookie to the cookie jar.
@@ -806,7 +811,7 @@ impl Client {
         options: &ClientOptions,
         logger: &mut Logger,
     ) -> CurlCmd {
-        let cookies = self.cookie_store(logger).unwrap();
+        let cookies = self.cookie_store(logger);
         CurlCmd::new(request_spec, &cookies, context_dir, output, options)
     }
 

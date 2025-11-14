@@ -292,7 +292,7 @@ fn log_request(
     request: &http::RequestSpec,
     logger: &mut Logger,
 ) {
-    let cookie_store = http_client.cookie_store(logger).unwrap();
+    let cookie_store = http_client.cookie_store(logger);
 
     logger.debug("");
     logger.debug_important("Cookie store:");
