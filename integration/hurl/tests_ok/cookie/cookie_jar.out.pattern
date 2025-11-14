@@ -5,3 +5,4 @@
 #HttpOnly_localhost	FALSE	/accounts	FALSE	<<<(17\d{8}|3409338181)>>>	LSID	DQAAAKEaem_vYg
 #HttpOnly_.localhost	TRUE	/	FALSE	<<<(17\d{8}|3409338181)>>>	HSID	AYQEVnDKrdst
 #HttpOnly_.localhost	TRUE	/	FALSE	<<<(17\d{8}|3409338181)>>>	SSID	Ap4PGTEq
+.localhost	TRUE	/	FALSE	<<<(17\d{8}|3093675001)>>>	foo	"a b c"

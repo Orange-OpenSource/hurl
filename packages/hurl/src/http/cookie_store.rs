@@ -114,7 +114,10 @@ impl Cookie {
 
     /// Creates a [`Cookie`] from a Netscape cookie formatted string.
     pub fn from_netscape_str(s: &str) -> Result<Self, ParseCookieError> {
-        let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
+        // The Netscape format uses tab as separator, we want also to import cookie with a space
+        // separator (for inline use in Hurl files with `@cookie_storage` command for instance).
+        // The format has only 7 values, and the last token can include whitespaces.
+        let tokens: Vec<&str> = s.splitn(7, |c: char| c.is_ascii_whitespace()).collect();
         let (http_only, domain) = if let Some(&v) = tokens.first() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
                 (true, domain.to_string())
@@ -226,6 +229,34 @@ mod tests {
                 name: "cookie2".to_string(),
                 value: String::new(),
                 http_only: false,
+            }
+        );
+
+        assert_eq!(
+            Cookie::from_netscape_str("localhost FALSE / FALSE 1 cookie3 value3").unwrap(),
+            Cookie {
+                domain: "localhost".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "1".to_string(),
+                name: "cookie3".to_string(),
+                value: "value3".to_string(),
+                http_only: false,
+            }
+        );
+
+        assert_eq!(
+            Cookie::from_netscape_str("#HttpOnly_localhost FALSE / FALSE 1 cookie3 a b c").unwrap(),
+            Cookie {
+                domain: "localhost".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "1".to_string(),
+                name: "cookie3".to_string(),
+                value: "a b c".to_string(),
+                http_only: true,
             }
         );
 

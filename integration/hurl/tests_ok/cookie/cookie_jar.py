@@ -28,4 +28,12 @@ def set_cookie_jar():
         expires="Thu, 13 Jan 2078 22:23:01 GMT",
         httponly=True,
     )
+    resp.set_cookie(
+        "foo",
+        "a b c",
+        domain="localhost",
+        path="/",
+        expires="Thu, 13 Jan 2068 10:10:01 GMT",
+        httponly=False,
+    )
     return resp
