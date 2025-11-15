@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, OrExpr, TestExpr, TestExprKind};
 use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
 use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::query::try_filter_query;
@@ -24,8 +24,24 @@ use hurl_core::reader::Reader;
 
 #[allow(dead_code)]
 pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
-    // TODO: parse several operands
-    logical_and_expr(reader)
+    let mut operands = vec![];
+
+    operands.push(logical_and_expr(reader)?);
+
+    // Parse additional operands separated by "||"
+    loop {
+        if !match_str("||", reader) {
+            break;
+        }
+        operands.push(logical_or_expr(reader)?);
+    }
+
+    // If we only have one operand, return it directly
+    if operands.len() == 1 {
+        Ok(operands.into_iter().next().unwrap())
+    } else {
+        Ok(LogicalExpr::Or(OrExpr::new(operands)))
+    }
 }
 
 fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
@@ -103,6 +119,30 @@ mod tests {
             ))
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
+    }
+
+    #[test]
+    fn test_parse_or_expression() {
+        let mut reader = Reader::new("@<2||@>4");
+        assert_eq!(
+            logical_or_expr(&mut reader).unwrap(),
+            LogicalExpr::Or(OrExpr::new(vec![
+                LogicalExpr::Comparison(ComparisonExpr::new(
+                    Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                        vec![]
+                    ))),
+                    Comparable::Literal(Literal::Integer(2)),
+                    ComparisonOp::Less
+                )),
+                LogicalExpr::Comparison(ComparisonExpr::new(
+                    Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                        vec![]
+                    ))),
+                    Comparable::Literal(Literal::Integer(4)),
+                    ComparisonOp::Greater
+                ))
+            ]))
+        );
     }
 
     #[test]

@@ -94,3 +94,15 @@ impl AndExpr {
 pub struct OrExpr {
     operands: Vec<LogicalExpr>,
 }
+
+impl OrExpr {
+    #[allow(dead_code)]
+    pub fn new(operands: Vec<LogicalExpr>) -> Self {
+        Self { operands }
+    }
+
+    #[allow(dead_code)]
+    pub fn operands(&self) -> &Vec<LogicalExpr> {
+        &self.operands
+    }
+}
