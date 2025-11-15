@@ -16,7 +16,7 @@
  *
  */
 
-use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
 
 impl LogicalExpr {
     #[allow(dead_code)]
@@ -26,7 +26,7 @@ impl LogicalExpr {
                 comparison_expr.eval(current_value, root_value)
             }
             LogicalExpr::Test(test_expr) => test_expr.eval(current_value, root_value),
-            LogicalExpr::And(_and_expr) => todo!(),
+            LogicalExpr::And(and_expr) => and_expr.eval(current_value, root_value),
             LogicalExpr::Or(_or_expr) => todo!(),
         }
     }
@@ -45,12 +45,29 @@ impl TestExpr {
     }
 }
 
+impl AndExpr {
+    /// eval and end expression to a boolean value
+    #[allow(dead_code)]
+    pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
+        for operand in self.operands() {
+            if !operand.eval(current_value, root_value) {
+                return false;
+            }
+        }
+        true
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath2::ast::expr::{TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
+    use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::literal::Literal;
     use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
+    use crate::jsonpath2::ast::singular_query::{RelativeSingularQuery, SingularQuery};
+    use serde_json::json;
 
     #[test]
     fn test_eval_test_expr() {
@@ -86,5 +103,28 @@ mod tests {
             &serde_json::json!({"name": "bob"}),
             &serde_json::json!([1, 2])
         ));
+    }
+
+    #[test]
+    fn test_eval_and_expr() {
+        // @>1 && @<4
+        let and_expr = LogicalExpr::And(AndExpr::new(vec![
+            LogicalExpr::Comparison(ComparisonExpr::new(
+                Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                    vec![],
+                ))),
+                Comparable::Literal(Literal::Integer(1)),
+                ComparisonOp::Greater,
+            )),
+            LogicalExpr::Comparison(ComparisonExpr::new(
+                Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                    vec![],
+                ))),
+                Comparable::Literal(Literal::Integer(4)),
+                ComparisonOp::Less,
+            )),
+        ]));
+        assert!(!and_expr.eval(&json!(1), &json!([1, 2, 3, 4, 5, 6])));
+        assert!(and_expr.eval(&json!(2), &json!([1, 2, 3, 4, 5, 6])));
     }
 }

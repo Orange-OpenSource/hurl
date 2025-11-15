@@ -78,6 +78,17 @@ pub struct AndExpr {
     operands: Vec<LogicalExpr>,
 }
 
+impl AndExpr {
+    #[allow(dead_code)]
+    pub fn new(operands: Vec<LogicalExpr>) -> Self {
+        Self { operands }
+    }
+
+    #[allow(dead_code)]
+    pub fn operands(&self) -> &Vec<LogicalExpr> {
+        &self.operands
+    }
+}
 /// Logical OR expression that can handle multiple operands
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OrExpr {

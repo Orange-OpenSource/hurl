@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
 use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
 use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::query::try_filter_query;
@@ -29,8 +29,24 @@ pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 }
 
 fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
-    // TODO: parse several operands
-    basic_expr(reader)
+    let mut operands = vec![];
+
+    operands.push(basic_expr(reader)?);
+
+    // Parse additional operands separated by "&&"
+    loop {
+        if !match_str("&&", reader) {
+            break;
+        }
+        operands.push(basic_expr(reader)?);
+    }
+
+    // If we only have one operand, return it directly
+    if operands.len() == 1 {
+        Ok(operands.into_iter().next().unwrap())
+    } else {
+        Ok(LogicalExpr::And(AndExpr::new(operands)))
+    }
 }
 
 fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
@@ -63,10 +79,13 @@ mod tests {
 
     use super::*;
 
-    use crate::jsonpath2::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
+    use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::literal::Literal;
     use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
+    use crate::jsonpath2::ast::singular_query::{RelativeSingularQuery, SingularQuery};
     use hurl_core::reader::Reader;
 
     #[test]
@@ -84,6 +103,30 @@ mod tests {
             ))
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(3));
+    }
+
+    #[test]
+    fn test_parse_and_expression() {
+        let mut reader = Reader::new("@>1&&@<4");
+        assert_eq!(
+            logical_and_expr(&mut reader).unwrap(),
+            LogicalExpr::And(AndExpr::new(vec![
+                LogicalExpr::Comparison(ComparisonExpr::new(
+                    Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                        vec![]
+                    ))),
+                    Comparable::Literal(Literal::Integer(1)),
+                    ComparisonOp::Greater
+                )),
+                LogicalExpr::Comparison(ComparisonExpr::new(
+                    Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                        vec![]
+                    ))),
+                    Comparable::Literal(Literal::Integer(4)),
+                    ComparisonOp::Less
+                ))
+            ]))
+        );
     }
 
     #[test]
