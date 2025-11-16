@@ -20,3 +20,7 @@ cookie "LSID[Secure]" not exists
 cookie "LSID[HttpOnly]" exists
 cookie "LSID[SameSite]" not exists
 cookie "foo" == "\"a b c\""
+
+
+GET http://localhost:8000/cookie-jar/hello
+HTTP 200

@@ -171,13 +171,19 @@ impl Cookie {
         self.expires == "1"
     }
 
+    pub fn include_subdomain(&self) -> bool {
+        self.include_subdomain == "TRUE"
+    }
+
     pub fn match_domain(&self, url: &Url) -> bool {
-        if let Some(domain) = url.domain() {
-            if self.include_subdomain == "FALSE" {
-                if self.domain != domain {
+        // We remove the legacy optional dot in cookie domain.
+        let cookie_domain = self.domain.strip_prefix(".").unwrap_or(&self.domain);
+        if let Some(url_domain) = url.domain() {
+            if !self.include_subdomain() {
+                if url_domain != cookie_domain {
                     return false;
                 }
-            } else if !domain.ends_with(&self.domain) {
+            } else if !url_domain.ends_with(&cookie_domain) {
                 return false;
             }
         }
@@ -362,6 +368,22 @@ mod tests {
         assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
         assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/toto").unwrap()));
         assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
+
+        // Lecacy cookie domain
+        let cookie = Cookie {
+            domain: ".example.com".to_string(),
+            include_subdomain: "TRUE".to_string(),
+            path: "/foo".to_string(),
+            https: String::new(),
+            expires: String::new(),
+            name: String::new(),
+            value: String::new(),
+            http_only: false,
+        };
+        assert!(cookie.match_domain(&Url::from_str("http://example.com/foo").unwrap()));
+        assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/foo").unwrap()));
+        assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
+        assert!(!cookie.match_domain(&Url::from_str("http://sub.example.com/tata").unwrap()));
     }
 
     #[test]
