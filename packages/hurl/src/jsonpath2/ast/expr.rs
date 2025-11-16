@@ -38,6 +38,10 @@ pub enum LogicalExpr {
     /// Logical OR expression (e.g., expr1 || expr2 || expr3)
     #[allow(dead_code)]
     Or(OrExpr),
+
+    /// Logical NOT expression (e.g., !expr)
+    #[allow(dead_code)]
+    Not(NotExpr),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -104,5 +108,25 @@ impl OrExpr {
     #[allow(dead_code)]
     pub fn operands(&self) -> &Vec<LogicalExpr> {
         &self.operands
+    }
+}
+
+/// Logical AND expression
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct NotExpr {
+    expr: Box<LogicalExpr>,
+}
+
+impl NotExpr {
+    #[allow(dead_code)]
+    pub fn new(expr: LogicalExpr) -> Self {
+        Self {
+            expr: Box::new(expr),
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn expr(&self) -> &LogicalExpr {
+        &self.expr
     }
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, OrExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, NotExpr, OrExpr, TestExpr, TestExprKind};
 use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
 use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::query::try_filter_query;
@@ -67,7 +67,9 @@ fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 
 fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     let save = reader.cursor();
-    if let Some(comparison_expr) = try_comparison(reader)? {
+    if let Some(expr) = try_paren_expr(reader)? {
+        Ok(expr)
+    } else if let Some(comparison_expr) = try_comparison(reader)? {
         Ok(LogicalExpr::Comparison(comparison_expr))
     } else if let Some(test_expr) = try_test_expr(reader)? {
         Ok(LogicalExpr::Test(test_expr))
@@ -79,9 +81,32 @@ fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     }
 }
 
+fn try_paren_expr(reader: &mut Reader) -> ParseResult<Option<LogicalExpr>> {
+    let save = reader.cursor();
+    let not = match_str("!", reader);
+    if match_str("(", reader) {
+        let expr = logical_or_expr(reader)?;
+        if match_str(")", reader) {
+            let logical_expr = if not {
+                LogicalExpr::Not(NotExpr::new(expr))
+            } else {
+                expr
+            };
+            Ok(Some(logical_expr))
+        } else {
+            Err(ParseError::new(
+                reader.cursor().pos,
+                ParseErrorKind::Expecting("')'".to_string()),
+            ))
+        }
+    } else {
+        reader.seek(save);
+        Ok(None)
+    }
+}
+
 fn try_test_expr(reader: &mut Reader) -> ParseResult<Option<TestExpr>> {
     let not = match_str("!", reader);
-
     if let Some(query) = try_filter_query(reader)? {
         let kind = TestExprKind::FilterQuery(query);
         Ok(Some(TestExpr::new(not, kind)))
@@ -170,6 +195,30 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_paren_expression() {
+        let mut reader = Reader::new("!(@.b)");
+        assert_eq!(
+            try_paren_expr(&mut reader).unwrap().unwrap(),
+            LogicalExpr::Not(NotExpr::new(LogicalExpr::Test(TestExpr::new(
+                false,
+                TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "b".to_string()
+                    ))]))
+                ])))
+            ))))
+        );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(6));
+    }
+
+    #[test]
+    fn test_parse_paren_expression_none() {
+        let mut reader = Reader::new("!@.b");
+        assert!(try_paren_expr(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(0));
+    }
+
+    #[test]
     fn test_parse_test_expr() {
         let mut reader = Reader::new("@.b");
         assert_eq!(
@@ -211,5 +260,19 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(5));
+
+        let mut reader = Reader::new("!@.a");
+        assert_eq!(
+            try_test_expr(&mut reader).unwrap().unwrap(),
+            TestExpr::new(
+                true,
+                TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
+                    Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
+                        "a".to_string()
+                    ))]))
+                ])))
+            )
+        );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(4));
     }
 }

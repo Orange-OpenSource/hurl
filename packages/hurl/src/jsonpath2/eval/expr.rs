@@ -16,7 +16,7 @@
  *
  */
 
-use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, OrExpr, TestExpr, TestExprKind};
+use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, NotExpr, OrExpr, TestExpr, TestExprKind};
 
 impl LogicalExpr {
     #[allow(dead_code)]
@@ -28,6 +28,7 @@ impl LogicalExpr {
             LogicalExpr::Test(test_expr) => test_expr.eval(current_value, root_value),
             LogicalExpr::And(and_expr) => and_expr.eval(current_value, root_value),
             LogicalExpr::Or(or_expr) => or_expr.eval(current_value, root_value),
+            LogicalExpr::Not(not_expr) => not_expr.eval(current_value, root_value),
         }
     }
 }
@@ -36,11 +37,16 @@ impl TestExpr {
     /// eval the test expression to a boolean value
     #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
-        match self.kind() {
+        let value = match self.kind() {
             TestExprKind::FilterQuery(filter_query) => {
                 !filter_query.eval(current_value, root_value).is_empty()
             }
             TestExprKind::FunctionExpr(_function_expr) => todo!(),
+        };
+        if self.not() {
+            !value
+        } else {
+            value
         }
     }
 }
@@ -68,6 +74,14 @@ impl OrExpr {
             }
         }
         false
+    }
+}
+
+impl NotExpr {
+    /// eval not expression to a boolean value
+    #[allow(dead_code)]
+    pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
+        !self.expr().eval(current_value, root_value)
     }
 }
 
