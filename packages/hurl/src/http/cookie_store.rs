@@ -47,11 +47,6 @@ impl CookieStore {
     pub fn into_vec(self) -> Vec<Cookie> {
         self.cookies
     }
-
-    /// Returns true if the cookie store contains no cookie.
-    pub fn is_empty(&self) -> bool {
-        self.cookies.is_empty()
-    }
 }
 
 /// [Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) returned by
@@ -369,7 +364,7 @@ mod tests {
         assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/toto").unwrap()));
         assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
 
-        // Lecacy cookie domain
+        // Legacy cookie domain with dot prefix
         let cookie = Cookie {
             domain: ".example.com".to_string(),
             include_subdomain: "TRUE".to_string(),
