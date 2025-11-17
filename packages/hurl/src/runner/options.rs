@@ -317,6 +317,7 @@ pub fn get_entry_verbosity(
     Ok(verbosity)
 }
 
+/// Evaluates a boolean option, using a set of `variables`.
 fn eval_boolean_option(
     boolean_value: &BooleanOption,
     variables: &VariableSet,
@@ -338,6 +339,7 @@ fn eval_boolean_option(
     }
 }
 
+/// Evaluates a natural option, using a set of `variables`.
 fn eval_natural_option(
     natural_value: &NaturalOption,
     variables: &VariableSet,
@@ -369,6 +371,7 @@ fn eval_natural_option(
     }
 }
 
+/// Evaluates a count option, using a set of `variables`.
 fn eval_count_option(
     count_value: &CountOption,
     variables: &VariableSet,
@@ -400,7 +403,8 @@ fn eval_count_option(
     }
 }
 
-/// return duration value in milliseconds
+/// Evaluates a duration option, using a set of `variables`, and a default unit if unit is
+/// not explicit in `duration_value`.
 fn eval_duration_option(
     duration_value: &DurationOption,
     variables: &VariableSet,
@@ -447,6 +451,7 @@ fn eval_duration_option(
     Ok(std::time::Duration::from_millis(millis))
 }
 
+/// Evaluates a variable, using a set of `variables`.
 fn eval_variable_value(
     variable_value: &VariableValue,
     variables: &mut VariableSet,
@@ -462,6 +467,7 @@ fn eval_variable_value(
     }
 }
 
+/// Evaluates a number.
 fn eval_number(number: &AstNumber) -> Value {
     match number {
         AstNumber::Float(value) => Value::Number(Number::Float(value.as_f64())),
