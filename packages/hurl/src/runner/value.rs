@@ -18,9 +18,9 @@
 use std::cmp::Ordering;
 use std::fmt;
 
-use crate::runner::hex;
-use crate::runner::HttpResponse;
-use crate::runner::Number;
+use super::hex;
+use super::http_response::HttpResponse;
+use super::number::Number;
 
 /// System types used in Hurl.
 ///

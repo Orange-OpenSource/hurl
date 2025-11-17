@@ -1,4 +1,3 @@
-use chrono::Utc;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2025 Orange
@@ -16,6 +15,7 @@ use chrono::Utc;
  * limitations under the License.
  *
  */
+use chrono::Utc;
 use hurl_core::ast::{
     CertificateAttributeName, CookieAttribute, CookieAttributeName, CookiePath, Query, QueryValue,
     RegexValue, SourceInfo, Template,
@@ -23,12 +23,17 @@ use hurl_core::ast::{
 use regex::Regex;
 use sha2::Digest;
 
-use crate::http;
-use crate::runner::cache::BodyCache;
-use crate::runner::error::{RunnerError, RunnerErrorKind};
-use crate::runner::template::eval_template;
-use crate::runner::xpath::{Document, Format};
-use crate::runner::{filter, HttpResponse, Number, Value, VariableSet};
+use crate::http::{HttpError, Response, ResponseCookie};
+
+use super::cache::BodyCache;
+use super::error::{RunnerError, RunnerErrorKind};
+use super::filter;
+use super::http_response::HttpResponse;
+use super::number::Number;
+use super::template::eval_template;
+use super::value::Value;
+use super::variable::VariableSet;
+use super::xpath::{Document, Format};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
@@ -36,7 +41,7 @@ pub type QueryResult = Result<Option<Value>, RunnerError>;
 pub fn eval_query(
     query: &Query,
     variables: &VariableSet,
-    responses: &[&http::Response],
+    responses: &[&Response],
     cache: &mut BodyCache,
 ) -> QueryResult {
     let last_response = responses.last().unwrap();
@@ -74,14 +79,14 @@ pub fn eval_query(
 }
 
 /// Evaluates the response status code using the HTTP `response`.
-fn eval_query_status(response: &http::Response) -> QueryResult {
+fn eval_query_status(response: &Response) -> QueryResult {
     Ok(Some(Value::Number(Number::Integer(i64::from(
         response.status,
     )))))
 }
 
 /// Evaluates the version on the HTTP `response`
-fn eval_query_version(response: &http::Response) -> QueryResult {
+fn eval_query_version(response: &Response) -> QueryResult {
     Ok(Some(Value::String(
         response
             .version
@@ -93,16 +98,12 @@ fn eval_query_version(response: &http::Response) -> QueryResult {
 }
 
 /// Evaluates the final URL of the HTTP `response`.
-fn eval_query_url(response: &http::Response) -> QueryResult {
+fn eval_query_url(response: &Response) -> QueryResult {
     Ok(Some(Value::String(response.url.to_string())))
 }
 
 /// Evaluates a response query header `name`, on the HTTP `response` given a set of `variables`.
-fn eval_query_header(
-    response: &http::Response,
-    name: &Template,
-    variables: &VariableSet,
-) -> QueryResult {
+fn eval_query_header(response: &Response, name: &Template, variables: &VariableSet) -> QueryResult {
     let name = eval_template(name, variables)?;
     let values = response.headers.values(&name);
     if values.is_empty() {
@@ -121,7 +122,7 @@ fn eval_query_header(
 
 /// Evaluates a cookie query `name` with optional attributes, on the HTTP `response` given a set of `variables`.
 fn eval_query_cookie(
-    response: &http::Response,
+    response: &Response,
     name: &Template,
     attribute: &Option<CookieAttribute>,
     variables: &VariableSet,
@@ -144,7 +145,7 @@ fn eval_query_cookie(
 /// Evaluates the HTTP `response` body as text.
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
-fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
+fn eval_query_body(response: &Response, query_source_info: SourceInfo) -> QueryResult {
     // Can return a string if encoding is known and utf8.
     match response.text() {
         Ok(s) => Ok(Some(Value::String(s))),
@@ -160,7 +161,7 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_xpath(
-    response: &http::Response,
+    response: &Response,
     cache: &mut BodyCache,
     expr: &Template,
     variables: &VariableSet,
@@ -178,7 +179,7 @@ fn eval_query_xpath(
 ///
 /// `query_source_info` is used for error reporting.
 fn parse_cache_xml<'cache>(
-    response: &http::Response,
+    response: &Response,
     cache: &'cache mut BodyCache,
     query_source_info: SourceInfo,
 ) -> Result<&'cache Document, RunnerError> {
@@ -214,7 +215,7 @@ fn parse_cache_xml<'cache>(
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_jsonpath(
-    response: &http::Response,
+    response: &Response,
     cache: &mut BodyCache,
     expr: &Template,
     variables: &VariableSet,
@@ -231,7 +232,7 @@ fn eval_query_jsonpath(
 ///
 /// `query_source_info` is used for error reporting.
 fn parse_cache_json<'cache>(
-    response: &http::Response,
+    response: &Response,
     cache: &'cache mut BodyCache,
     query_source_info: SourceInfo,
 ) -> Result<&'cache serde_json::Value, RunnerError> {
@@ -265,7 +266,7 @@ fn parse_cache_json<'cache>(
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
 fn eval_query_regex(
-    response: &http::Response,
+    response: &Response,
     regex: &RegexValue,
     variables: &VariableSet,
     query_source_info: SourceInfo,
@@ -317,7 +318,7 @@ fn eval_query_variable(name: &Template, variables: &VariableSet) -> QueryResult 
 
 /// Evaluates the effective duration of the HTTP `response` (only transfer time, assert and captures
 /// are not taken into account).
-fn eval_query_duration(response: &http::Response) -> QueryResult {
+fn eval_query_duration(response: &Response) -> QueryResult {
     Ok(Some(Value::Number(Number::Integer(
         response.duration.as_millis() as i64,
     ))))
@@ -326,7 +327,7 @@ fn eval_query_duration(response: &http::Response) -> QueryResult {
 /// Evaluates the HTTP `response` body as bytes.
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
-fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
+fn eval_query_bytes(response: &Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
         Err(inner) => Err(RunnerError::new(
@@ -340,7 +341,7 @@ fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) ->
 /// Evaluates the SHA-256 hash of the HTTP `response` body bytes.
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
-fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
+fn eval_query_sha256(response: &Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
@@ -361,7 +362,7 @@ fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -
 /// Evaluates the MD-5 hash of the HTTP `response` body bytes.
 ///
 /// `query_source_info` is the source position of the query, used if an error is returned.
-fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
+fn eval_query_md5(response: &Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
@@ -378,7 +379,7 @@ fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> Q
 
 /// Evaluates the SSL certificate attribute, of the HTTP `response`.
 fn eval_query_certificate(
-    response: &http::Response,
+    response: &Response,
     certificate_attribute: CertificateAttributeName,
 ) -> QueryResult {
     if let Some(certificate) = &response.certificate {
@@ -398,12 +399,12 @@ fn eval_query_certificate(
 }
 
 /// Evaluates the ip address of the HTTP `response`.
-fn eval_ip(response: &http::Response) -> QueryResult {
+fn eval_ip(response: &Response) -> QueryResult {
     Ok(Some(Value::String(response.ip_addr.to_string())))
 }
 
 /// Evaluates the redirects within a list of HTTP `responses`
-fn eval_redirects(responses: &[&http::Response]) -> QueryResult {
+fn eval_redirects(responses: &[&Response]) -> QueryResult {
     let mut it = responses.iter().peekable();
     let mut values: Vec<Value> = vec![];
     while let Some(r) = it.next() {
@@ -422,7 +423,7 @@ fn eval_redirects(responses: &[&http::Response]) -> QueryResult {
 
 fn eval_cookie_attribute_name(
     cookie_attribute_name: CookieAttributeName,
-    cookie: http::ResponseCookie,
+    cookie: ResponseCookie,
     query_source_info: SourceInfo,
 ) -> QueryResult {
     match cookie_attribute_name {
@@ -442,7 +443,7 @@ fn eval_cookie_attribute_name(
                 } else {
                     Err(RunnerError::new(
                         query_source_info,
-                        RunnerErrorKind::Http(http::HttpError::CouldNotParseCookieExpires(s)),
+                        RunnerErrorKind::Http(HttpError::CouldNotParseCookieExpires(s)),
                         true,
                     ))
                 }
@@ -512,10 +513,11 @@ pub mod tests {
     use hurl_core::types::ToSource;
 
     use super::*;
+    use crate::http;
     use crate::http::{HeaderVec, HttpError, HttpVersion};
 
-    fn default_response() -> http::Response {
-        http::Response {
+    fn default_response() -> Response {
+        Response {
             version: HttpVersion::Http10,
             status: 200,
             headers: HeaderVec::new(),
@@ -831,7 +833,7 @@ pub mod tests {
         let mut headers = HeaderVec::new();
         headers.push(http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly"));
 
-        let response = http::Response {
+        let response = Response {
             headers,
             ..default_response()
         };
@@ -951,7 +953,7 @@ pub mod tests {
 
     #[test]
     fn test_eval_cookie_attribute_name() {
-        let cookie = http::ResponseCookie {
+        let cookie = ResponseCookie {
             name: "LSID".to_string(),
             value: "DQAAAKEaem_vYg".to_string(),
             attributes: vec![
@@ -1060,7 +1062,7 @@ pub mod tests {
 
     #[test]
     fn test_eval_cookie_attribute_expires_error() {
-        let cookie = http::ResponseCookie {
+        let cookie = ResponseCookie {
             name: "cookie1".to_string(),
             value: "value1".to_string(),
             attributes: vec![http::CookieAttribute {
@@ -1132,7 +1134,7 @@ pub mod tests {
         let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
-        let http_response = http::Response {
+        let http_response = Response {
             body: vec![200],
             ..default_response()
         };
@@ -1302,7 +1304,7 @@ pub mod tests {
     fn test_query_invalid_json() {
         let variables = VariableSet::new();
         let mut cache = BodyCache::new();
-        let http_response = http::Response {
+        let http_response = Response {
             body: String::into_bytes(String::from("xxx")),
             ..default_response()
         };
@@ -1323,7 +1325,7 @@ pub mod tests {
         let variables = VariableSet::new();
         let mut cache = BodyCache::new();
 
-        let http_response = http::Response {
+        let http_response = Response {
             body: String::into_bytes(String::from("{}")),
             ..default_response()
         };
@@ -1449,7 +1451,7 @@ pub mod tests {
                     value: QueryValue::Sha256 {},
                 },
                 &variables,
-                &[&http::Response {
+                &[&Response {
                     body: vec![0xff],
                     ..default_response()
                 }],
@@ -1467,7 +1469,7 @@ pub mod tests {
     #[test]
     fn test_query_certificate() {
         assert!(eval_query_certificate(
-            &http::Response {
+            &Response {
                 ..default_response()
             },
             CertificateAttributeName::Subject
@@ -1476,7 +1478,7 @@ pub mod tests {
         .is_none());
         assert_eq!(
             eval_query_certificate(
-                &http::Response {
+                &Response {
                     certificate: Some(http::Certificate {
                         subject: "A=B, C=D".to_string(),
                         issuer: String::new(),

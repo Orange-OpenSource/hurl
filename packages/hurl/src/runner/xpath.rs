@@ -22,7 +22,8 @@ use std::ptr;
 use libxml::bindings::{htmlReadMemory, xmlReadMemory};
 use libxml::parser::{ParseFormat, Parser, XmlParseError};
 
-use crate::runner::{Number, Value};
+use super::number::Number;
+use super::value::Value;
 
 /// An error for XPath evaluation.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

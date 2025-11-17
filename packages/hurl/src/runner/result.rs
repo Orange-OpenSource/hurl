@@ -17,16 +17,18 @@
  */
 use std::time::Duration;
 
-use crate::http::{Call, Cookie, CurlCmd};
-use crate::runner::error::RunnerError;
-use crate::runner::output::Output;
-use crate::runner::value::Value;
-use crate::runner::{RunnerErrorKind, VariableSet};
-use crate::util::path::ContextDir;
-use crate::util::term::Stdout;
 use hurl_core::ast::SourceInfo;
 use hurl_core::reader::Pos;
 use hurl_core::types::Index;
+
+use crate::http::{Call, Cookie, CurlCmd};
+use crate::util::path::ContextDir;
+use crate::util::term::Stdout;
+
+use super::error::{RunnerError, RunnerErrorKind};
+use super::output::Output;
+use super::value::Value;
+use super::variable::VariableSet;
 
 /// Represents the result of a valid Hurl file execution.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

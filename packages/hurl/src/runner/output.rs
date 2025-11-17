@@ -22,9 +22,10 @@ use std::{fmt, io};
 
 use hurl_core::ast::SourceInfo;
 
-use crate::runner::{RunnerError, RunnerErrorKind};
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
+
+use super::error::{RunnerError, RunnerErrorKind};
 
 /// Represents the output of write operation: can be either a file or standard output.
 #[derive(Clone, Debug, PartialEq, Eq)]

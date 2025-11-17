@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::runner::xpath;
+use super::xpath;
 
 /// This is a cache to hold parsed structured data (XML/JSON/text), computed from an HTTP response
 /// body bytes. This cache lives for a given request, and allows reusing parsed response for

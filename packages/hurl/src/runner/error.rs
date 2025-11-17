@@ -24,7 +24,8 @@ use hurl_core::error::DisplaySourceError;
 use hurl_core::text::{Style, StyledString};
 
 use crate::http::HttpError;
-use crate::runner::diff::DiffHunk;
+
+use super::diff::DiffHunk;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of

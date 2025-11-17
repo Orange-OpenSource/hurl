@@ -19,8 +19,8 @@ use chrono::Utc;
 use hurl_core::ast::Function;
 use uuid::Uuid;
 
-use crate::runner::error::RunnerError;
-use crate::runner::value::Value;
+use super::error::RunnerError;
+use super::value::Value;
 
 /// Evaluates the function `function`, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(function: &Function) -> Result<Value, RunnerError> {

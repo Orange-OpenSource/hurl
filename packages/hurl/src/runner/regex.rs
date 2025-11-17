@@ -18,8 +18,9 @@
 use hurl_core::ast::RegexValue;
 use regex::Regex;
 
-use crate::runner::template::eval_template;
-use crate::runner::{RunnerError, RunnerErrorKind, VariableSet};
+use super::error::{RunnerError, RunnerErrorKind};
+use super::template::eval_template;
+use super::variable::VariableSet;
 
 pub fn eval_regex_value(
     regex_value: &RegexValue,

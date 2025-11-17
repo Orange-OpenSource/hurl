@@ -15,19 +15,23 @@
  * limitations under the License.
  *
  */
-use crate::http;
-use crate::http::{ClientOptions, CurlCmd};
-use crate::runner::cache::BodyCache;
-use crate::runner::error::RunnerError;
-use crate::runner::result::{AssertResult, EntryResult};
-use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{request, response, CaptureResult, RunnerErrorKind, VariableSet};
-use crate::util::logger::{Logger, Verbosity};
-use crate::util::term::WriteMode;
 use hurl_core::ast::{
     Assert, Capture, Entry, FilterValue, PredicateFuncValue, Response, SourceInfo,
 };
 use hurl_core::types::Index;
+
+use crate::http;
+use crate::http::{ClientOptions, CurlCmd};
+use crate::util::logger::{Logger, Verbosity};
+use crate::util::term::WriteMode;
+
+use super::cache::BodyCache;
+use super::error::{RunnerError, RunnerErrorKind};
+use super::request;
+use super::response;
+use super::result::{AssertResult, CaptureResult, EntryResult};
+use super::runner_options::RunnerOptions;
+use super::variable::VariableSet;
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///

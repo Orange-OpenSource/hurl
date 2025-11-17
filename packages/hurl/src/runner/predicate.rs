@@ -20,11 +20,13 @@ use std::cmp::Ordering;
 use hurl_core::ast::{Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo};
 use hurl_core::reader::Pos;
 
-use crate::runner::error::RunnerError;
-use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
-use crate::runner::value::{EvalError, Value};
-use crate::runner::{Number, RunnerErrorKind, VariableSet};
 use crate::util::path::ContextDir;
+
+use super::error::{RunnerError, RunnerErrorKind};
+use super::number::Number;
+use super::predicate_value::{eval_predicate_value, eval_predicate_value_template};
+use super::value::{EvalError, Value};
+use super::variable::VariableSet;
 
 /// Evaluates a `predicate` against an actual `value`.
 ///

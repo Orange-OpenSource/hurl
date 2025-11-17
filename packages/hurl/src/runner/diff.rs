@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::text::{Style, StyledString};
 use similar::{ChangeTag, DiffOp, DiffTag, TextDiff};
 

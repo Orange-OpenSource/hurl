@@ -15,15 +15,19 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Number, Placeholder, PredicateValue};
+use hurl_core::ast::Number as AstNumber;
+use hurl_core::ast::{Placeholder, PredicateValue};
 
-use crate::runner::body::eval_file; // TODO move function out of body module
-use crate::runner::error::RunnerError;
-use crate::runner::expr::eval;
-use crate::runner::multiline::eval_multiline;
-use crate::runner::template::eval_template;
-use crate::runner::{Number as ValueNumber, Value, VariableSet};
 use crate::util::path::ContextDir;
+
+use super::body::eval_file; // TODO move function out of body module
+use super::error::RunnerError;
+use super::expr;
+use super::multiline::eval_multiline;
+use super::number::Number;
+use super::template::eval_template;
+use super::value::Value;
+use super::variable::VariableSet;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
@@ -49,7 +53,7 @@ pub fn eval_predicate_value(
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Placeholder(Placeholder { expr, .. }) => {
-            let value = eval(expr, variables)?;
+            let value = expr::eval(expr, variables)?;
             Ok(value)
         }
         PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner.clone())),
@@ -68,10 +72,10 @@ pub fn eval_predicate_value_template(
     }
 }
 
-fn eval_number(number: &Number) -> ValueNumber {
+fn eval_number(number: &AstNumber) -> Number {
     match number {
-        Number::Float(value) => ValueNumber::Float(value.as_f64()),
-        Number::Integer(value) => ValueNumber::Integer(value.as_i64()),
-        Number::BigInteger(value) => ValueNumber::BigInteger(value.clone()),
+        AstNumber::Float(value) => Number::Float(value.as_f64()),
+        AstNumber::Integer(value) => Number::Integer(value.as_i64()),
+        AstNumber::BigInteger(value) => Number::BigInteger(value.clone()),
     }
 }

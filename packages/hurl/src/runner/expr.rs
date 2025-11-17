@@ -17,10 +17,10 @@
  */
 use hurl_core::ast::{Expr, ExprKind};
 
+use super::error::{RunnerError, RunnerErrorKind};
 use super::function;
-use crate::runner::error::{RunnerError, RunnerErrorKind};
-use crate::runner::value::Value;
-use crate::runner::VariableSet;
+use super::value::Value;
+use super::variable::VariableSet;
 
 /// Evaluates the expression `expr` with `variables` map, returns a [`Value`] on success or an [`RunnerError`] .
 pub fn eval(expr: &Expr, variables: &VariableSet) -> Result<Value, RunnerError> {

@@ -18,11 +18,19 @@
 use hurl_core::ast::{Base64, Body, Bytes, Hex, Response, SourceInfo, StatusValue};
 
 use crate::http;
-use crate::runner::cache::BodyCache;
-use crate::runner::error::{RunnerError, RunnerErrorKind};
-use crate::runner::result::{AssertResult, CaptureResult};
-use crate::runner::{assert, body, capture, json, multiline, template, Value, VariableSet};
 use crate::util::path::ContextDir;
+
+use super::assert;
+use super::body;
+use super::cache::BodyCache;
+use super::capture;
+use super::error::{RunnerError, RunnerErrorKind};
+use super::json;
+use super::multiline;
+use super::result::{AssertResult, CaptureResult};
+use super::template;
+use super::value::Value;
+use super::variable::VariableSet;
 
 /// Returns a list of assert results on the response status code and HTTP version,
 /// given a set of `variables`, an actual `http_response` and a spec `response`.

@@ -21,11 +21,12 @@ use std::path::Path;
 use hurl_core::ast::{FilenameParam, FilenameValue, KeyValue, MultipartParam};
 
 use crate::http;
-use crate::runner::body::eval_file;
-use crate::runner::error::RunnerError;
-use crate::runner::template::eval_template;
-use crate::runner::VariableSet;
 use crate::util::path::ContextDir;
+
+use super::body::eval_file;
+use super::error::RunnerError;
+use super::template::eval_template;
+use super::variable::VariableSet;
 
 /// Evaluates a multipart param AST to a runtime multipart param, given a set of `variables` and
 /// a [`ContextDir`] instance.

@@ -19,15 +19,17 @@ use hurl_core::ast::{Assert, SourceInfo};
 use hurl_core::reader::Pos;
 
 use crate::http;
-use crate::runner::cache::BodyCache;
-use crate::runner::diff::diff;
-use crate::runner::error::{RunnerError, RunnerErrorKind};
-use crate::runner::filter::eval_filters;
-use crate::runner::predicate::eval_predicate;
-use crate::runner::query::eval_query;
-use crate::runner::result::AssertResult;
-use crate::runner::{Value, VariableSet};
 use crate::util::path::ContextDir;
+
+use super::cache::BodyCache;
+use super::diff::diff;
+use super::error::{RunnerError, RunnerErrorKind};
+use super::filter::eval_filters;
+use super::predicate::eval_predicate;
+use super::query::eval_query;
+use super::result::AssertResult;
+use super::value::Value;
+use super::variable::VariableSet;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.

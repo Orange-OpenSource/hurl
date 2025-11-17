@@ -21,8 +21,9 @@ use hurl_core::ast::Entry;
 use hurl_core::types::{BytesPerSec, Count};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
-use crate::runner::Output;
 use crate::util::path::ContextDir;
+
+use super::output::Output;
 
 /// Build a [`RunnerOptions`] instance.
 pub struct RunnerOptionsBuilder {

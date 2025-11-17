@@ -22,11 +22,16 @@ use hurl_core::ast::{
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
-use crate::runner::template::eval_template;
-use crate::runner::{
-    expr, Number, Output, RunnerError, RunnerErrorKind, RunnerOptions, Value, VariableSet,
-};
 use crate::util::logger::{Logger, Verbosity};
+
+use super::error::{RunnerError, RunnerErrorKind};
+use super::expr;
+use super::number::Number;
+use super::output::Output;
+use super::runner_options::RunnerOptions;
+use super::template::eval_template;
+use super::value::Value;
+use super::variable::VariableSet;
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
 /// and a default `runner_options`.

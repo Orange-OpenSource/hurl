@@ -26,11 +26,15 @@ use hurl_core::parser;
 use hurl_core::types::{Count, Index};
 
 use crate::http::{Call, Client};
-use crate::runner::event::EventListener;
-use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, VariableSet};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
+
+use super::entry;
+use super::event::EventListener;
+use super::options;
+use super::result::{EntryResult, HurlResult};
+use super::runner_options::RunnerOptions;
+use super::variable::VariableSet;
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///

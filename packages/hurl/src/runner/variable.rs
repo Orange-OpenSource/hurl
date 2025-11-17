@@ -17,7 +17,7 @@
  */
 use std::collections::{HashMap, HashSet};
 
-use crate::runner::Value;
+use super::value::Value;
 
 /// Represents a variable named to hold `Value`.
 #[derive(Clone, Debug, Eq, PartialEq)]

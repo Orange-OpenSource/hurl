@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::http::Url;
 use std::fmt::Display;
+
+use crate::http::Url;
 
 /// Represents an HTTP request for `Value::HttpResponse`
 #[derive(Clone, Debug)]

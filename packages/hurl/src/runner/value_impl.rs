@@ -20,7 +20,7 @@ use std::net::IpAddr;
 use std::str::FromStr;
 
 use super::value::ValueKind;
-use super::{EvalError, Value};
+use super::value::{EvalError, Value};
 
 impl Value {
     /// Compare with another value.
