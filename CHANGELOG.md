@@ -1,4 +1,4 @@
-[7.1.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.1.0)
+[7.1.0 (2025-11-18](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.1.0)
 ========================================================================================================================
 
 Thanks to
@@ -40,6 +40,7 @@ Bugs Fixed:
 * Fix filtering of Authorization: and Cookie: headers when following redirections [#4460](https://github.com/Orange-OpenSource/hurl/issues/4460)
 * Fix supporting space in cookie storage cookie values [#4461](https://github.com/Orange-OpenSource/hurl/issues/4461)
 * Fix implicit "Content-Type" headers when following redirections [#4522](https://github.com/Orange-OpenSource/hurl/issues/4522)
+* Fix curl debug command with dot-prefixed cookie domain [#4558](https://github.com/Orange-OpenSource/hurl/issues/4558)
 
 
 [7.0.0 (2025-07-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.0.0)
