@@ -1,6 +1,6 @@
 [package]
 name = "hurl_core"
-version = "7.1.0"
+version = "7.2.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"

@@ -1,6 +1,6 @@
 [package]
 name = "hurl"
-version = "7.1.0"
+version = "7.2.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>", "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>", "Filipe Pinto <filipe.pinto@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ curl = "0.4.49"
 curl-sys = "0.4.84"
 encoding_rs = "0.8.35"
 glob = "0.3.3"
-hurl_core = { version = "7.1.0", path = "../hurl_core" }
+hurl_core = { version = "7.2.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.2.1"
 libxml = "0.3.8"
 md5 = "0.7.0"
