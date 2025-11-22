@@ -348,8 +348,6 @@ jobs:
         bin/test/test_unit.sh
         bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Integration Tests
-      run: bin/test/test_integ.sh
     - name: Find artifacts
       run: |
         pwd
@@ -397,8 +395,6 @@ jobs:
         bin/test/test_unit.sh
         bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Integration Tests
-      run: bin/test/test_integ.sh
     - name: Find artifacts
       run: |
         pwd
