@@ -28,9 +28,6 @@ Used to publish a new release from master branch (normal process).
 - Test release on external test project
 - Change the release status from draft to public on github
 - Accept the PR from `release/x.y.0` to `master` with `/accept`
-- Run `extra-package.yml` workflow on `master` branch  filling in the `desired tag version` and selecting  wanted extra packages
-  - Once `push to chocolatey` is done, all notifications about validation process will be sent to lepapareil's mail
-  - To make `push to winget` work, please wait for the message "Initiating GitHub login..." in job log and follow the guide !  
 - Run `update-branch-version.yml` workflow on `master` branch, filling in the `desired SNAPSHOT version`, it will:
   - Create `bot/update-branch-version-master` branch
   - Checkout this new branch
@@ -38,6 +35,7 @@ Used to publish a new release from master branch (normal process).
   - Commit all updates
   - Create PR from `bot/update-branch-version-master` to `master`
 - Accept the PR from `bot/update-branch-version-master` to `master` with `/accept`
+- Create/Build/Push all others manual packages like chocolatey, winget, brew, node, docker etc...
 
 ## Hotfix steps
 
