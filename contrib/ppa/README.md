@@ -211,8 +211,9 @@ fi
 ## Create deb package source
 
 ```
+hurl_long_version=$(head -1 debian/changelog | cut -d'(' -f2 | cut -d')' -f1)
 cd ..
-tar --exclude="hurl-${hurl_version}/debian" -c -z -f - "hurl-${hurl_version}" | pv > "hurl_${hurl_version}.orig.tar.gz"
+tar --exclude="hurl-${hurl_version}/debian" -c -z -f - "hurl-${hurl_version}" | pv > "hurl_${hurl_long_version}.orig.tar.gz"
 cd "hurl-${hurl_version}"
 lintian -i -E --profile debian --display-info --display-experimental --suppress-tags source-is-missing
 yes | debuild -S -sa -k"${gpg_keyid}" -p"gpg --batch --passphrase ${passphrase} --pinentry-mode loopback"
