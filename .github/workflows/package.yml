@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -176,7 +176,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -239,7 +239,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -293,7 +293,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
-     uses: actions/checkout@v5.0.1
+     uses: actions/checkout@v6.0.0
      with:
        persist-credentials: false
        ref: ${{ inputs.branch }}
@@ -365,7 +365,7 @@ jobs:
     runs-on: ubuntu-22.04-arm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -417,7 +417,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -469,7 +469,7 @@ jobs:
     runs-on: ubuntu-22.04-arm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -521,7 +521,7 @@ jobs:
     runs-on: macos-15-intel
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -571,7 +571,7 @@ jobs:
     runs-on: macos-15
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -625,7 +625,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v5.0.1
+      uses: actions/checkout@v6.0.0
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -686,7 +686,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5.0.1
+        uses: actions/checkout@v6.0.0
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
