@@ -38,6 +38,10 @@ const IGNORED_TESTS: &[&str] = &[
     // $[?(@[0, 0, 'a'])]
     // The union selector cannot be used directly as a boolean predicate.
     // The standard-compliant expression is $[?(@[0] || @['a'])]
+    "filter, non-singular existence, slice",
+    // $[?@[0:2]]
+    // The slice selector cannot be used directly as a boolean predicate
+    // To check that the array has at least 2 elements, you can use $[?(@[1] exists)]
 ];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
