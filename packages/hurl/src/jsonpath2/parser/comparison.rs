@@ -20,7 +20,7 @@ use crate::jsonpath2::ast::comparison::Comparable;
 use crate::jsonpath2::ast::comparison::ComparisonExpr;
 use crate::jsonpath2::ast::comparison::ComparisonOp;
 use crate::jsonpath2::parser::literal;
-use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use crate::jsonpath2::parser::singular_query::try_parse as try_singular_query;
 use crate::jsonpath2::parser::ParseResult;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind};
@@ -36,12 +36,14 @@ pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<ComparisonExpr>> {
     } else {
         return Ok(None);
     };
+    skip_whitespace(reader);
     let operator = if let Some(value) = try_comparison_op(reader) {
         value
     } else {
         reader.seek(save);
         return Ok(None);
     };
+    skip_whitespace(reader);
     let right = comparable(reader)?;
     Ok(Some(ComparisonExpr::new(left, right, operator)))
 }
@@ -92,8 +94,10 @@ fn try_comparison_op(reader: &mut Reader) -> Option<ComparisonOp> {
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath2::ast::comparison::ComparisonOp;
     use crate::jsonpath2::ast::literal::Literal;
+    use crate::jsonpath2::ast::selector::NameSelector;
+    use crate::jsonpath2::ast::singular_query::{RelativeSingularQuery, SingularQuerySegment};
+    use crate::jsonpath2::ast::{comparison::ComparisonOp, singular_query::SingularQuery};
     use hurl_core::reader::{CharPos, Reader};
 
     use super::*;
@@ -110,6 +114,21 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, CharPos(4));
+
+        let mut reader = Reader::new("@.a == 1");
+        assert_eq!(
+            try_parse(&mut reader).unwrap().unwrap(),
+            ComparisonExpr::new(
+                Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                    vec![SingularQuerySegment::Name(NameSelector::new(
+                        "a".to_string()
+                    ))]
+                ))),
+                Comparable::Literal(Literal::Integer(1)),
+                ComparisonOp::Equal
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(8));
     }
 
     #[test]

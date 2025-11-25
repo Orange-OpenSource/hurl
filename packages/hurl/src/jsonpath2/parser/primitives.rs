@@ -67,6 +67,17 @@ pub fn match_str(s: &str, reader: &mut Reader) -> bool {
     }
 }
 
+/// Skip optional whitespace characters
+pub fn skip_whitespace(reader: &mut Reader) {
+    while let Some(c) = reader.peek() {
+        if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
+            reader.read();
+        } else {
+            break;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use hurl_core::reader::{CharPos, Pos};
