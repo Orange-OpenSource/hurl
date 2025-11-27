@@ -1567,7 +1567,7 @@ $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 
 #### Debian / Ubuntu
 
-For Debian >=12 / Ubuntu >=22.04, Hurl can be installed using a binary .deb file provided in each Hurl release.
+For Debian >=12 / Ubuntu 22.04 and 24.04, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
 $ VERSION=7.1.0
