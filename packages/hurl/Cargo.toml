@@ -22,7 +22,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.2"
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
-clap = { version = "4.5.52", features = ["string", "wrap_help"] }
+clap = { version = "4.5.53", features = ["string", "wrap_help"] }
 curl = "0.4.49"
 curl-sys = "0.4.84"
 encoding_rs = "0.8.35"
@@ -44,13 +44,13 @@ similar = "2.7.0"
 terminal_size = "0.4.3"
 
 [target.'cfg(unix)'.dependencies]
-termion = "4.0.5"
+termion = "4.0.6"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.46"
+cc = "1.2.47"
 
 [lints]
 workspace = true
