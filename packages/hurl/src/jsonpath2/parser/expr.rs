@@ -17,7 +17,7 @@
  */
 use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, NotExpr, OrExpr, TestExpr, TestExprKind};
 use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
-use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use crate::jsonpath2::parser::query::try_filter_query;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
@@ -30,9 +30,11 @@ pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 
     // Parse additional operands separated by "||"
     loop {
+        skip_whitespace(reader);
         if !match_str("||", reader) {
             break;
         }
+        skip_whitespace(reader);
         operands.push(logical_or_expr(reader)?);
     }
 
@@ -51,9 +53,11 @@ fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 
     // Parse additional operands separated by "&&"
     loop {
+        skip_whitespace(reader);
         if !match_str("&&", reader) {
             break;
         }
+        skip_whitespace(reader);
         operands.push(basic_expr(reader)?);
     }
 
@@ -148,7 +152,7 @@ mod tests {
 
     #[test]
     fn test_parse_or_expression() {
-        let mut reader = Reader::new("@<2||@>4");
+        let mut reader = Reader::new("@<2 || @>4");
         assert_eq!(
             logical_or_expr(&mut reader).unwrap(),
             LogicalExpr::Or(OrExpr::new(vec![
@@ -168,6 +172,7 @@ mod tests {
                 ))
             ]))
         );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(10));
     }
 
     #[test]
