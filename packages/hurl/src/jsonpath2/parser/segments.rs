@@ -21,6 +21,7 @@ use super::ParseResult;
 use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
 use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
 use crate::jsonpath2::parser::primitives::expect_str;
+use crate::jsonpath2::parser::primitives::skip_whitespace;
 use crate::jsonpath2::parser::{selectors, ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
@@ -99,7 +100,9 @@ fn try_descendant_segment(reader: &mut Reader) -> ParseResult<Option<DescendantS
 
 fn try_bracketed_selection(reader: &mut Reader) -> ParseResult<Option<Vec<Selector>>> {
     if match_str("[", reader) {
+        skip_whitespace(reader);
         let selectors = selectors::parse(reader)?;
+        skip_whitespace(reader);
         expect_str("]", reader)?;
         Ok(Some(selectors))
     } else {

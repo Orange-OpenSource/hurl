@@ -22,7 +22,7 @@ use crate::jsonpath2::ast::selector::{
 };
 use crate::jsonpath2::parser::expr::logical_or_expr;
 use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
-use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use hurl_core::reader::Reader;
 
 use super::ParseResult;
@@ -32,9 +32,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Selector>> {
     loop {
         let selector = selector(reader)?;
         selectors.push(selector);
+        skip_whitespace(reader);
         if !match_str(",", reader) {
             break;
         }
+        skip_whitespace(reader);
     }
     Ok(selectors)
 }
