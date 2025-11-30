@@ -18,6 +18,7 @@
 
 mod comparison;
 mod expr;
+mod function;
 mod literal;
 mod query;
 mod segment;

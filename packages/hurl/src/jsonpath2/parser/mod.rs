@@ -19,6 +19,7 @@
 mod comparison;
 mod error;
 mod expr;
+mod function;
 mod literal;
 mod primitives;
 mod query;
