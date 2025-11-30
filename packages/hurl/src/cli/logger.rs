@@ -52,6 +52,9 @@ impl BaseLogger {
 
     /// Prints an error `message` on standard error.
     pub fn error(&self, message: &str) {
+        if message.is_empty() {
+            return;
+        }
         let mut s = StyledString::new();
         s.push_with("error", Style::new().red().bold());
         s.push(": ");
