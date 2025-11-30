@@ -19,6 +19,7 @@
 use crate::jsonpath2::ast::comparison::Comparable;
 use crate::jsonpath2::ast::comparison::ComparisonExpr;
 use crate::jsonpath2::ast::comparison::ComparisonOp;
+use crate::jsonpath2::parser::function::functions::try_value_type_function;
 use crate::jsonpath2::parser::literal;
 use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use crate::jsonpath2::parser::singular_query::try_parse as try_singular_query;
@@ -66,6 +67,8 @@ fn try_comparable(reader: &mut Reader) -> ParseResult<Option<Comparable>> {
         Ok(Some(Comparable::Literal(literal)))
     } else if let Some(singular_query) = try_singular_query(reader)? {
         Ok(Some(Comparable::SingularQuery(singular_query)))
+    } else if let Some(function) = try_value_type_function(reader)? {
+        Ok(Some(Comparable::Function(function)))
     } else {
         Ok(None)
     }

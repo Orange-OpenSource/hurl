@@ -16,17 +16,15 @@
  *
  */
 
-pub(crate) mod comparison;
-pub(crate) mod expr;
-pub(crate) mod function;
-pub(crate) mod literal;
-pub(crate) mod query;
-pub(crate) mod segment;
-pub(crate) mod selector;
-pub(crate) mod singular_query;
+/// Function extensions:
+/// <https://www.rfc-editor.org/rfc/rfc9535.html#name-function-extensions>
+/// This module implements the functions defined in the RFC.
+/// It defines the function types and their arguments.
+pub mod argument;
+pub mod functions;
 
-/// JSONPath Query
-/// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
-/// This is the standard JSONPath query used outside the module
-#[allow(dead_code)]
-pub(crate) type JsonPathQuery = query::AbsoluteQuery;
+use crate::jsonpath2::eval::NodeList;
+
+pub type ValueType = Option<serde_json::Value>;
+pub type LogicalType = bool;
+pub type NodesType = NodeList;

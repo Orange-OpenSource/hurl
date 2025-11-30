@@ -88,6 +88,9 @@ impl Comparable {
             Comparable::SingularQuery(singular_query) => {
                 singular_query.eval(current_value, root_value)
             }
+            Comparable::Function(value_type_function) => {
+                value_type_function.eval(current_value, root_value)
+            }
         }
     }
 }

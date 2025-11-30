@@ -16,53 +16,33 @@
  *
  */
 
-use crate::jsonpath2::ast::function::functions::ValueTypeFunction;
+use super::functions::LogicalTypeFunction;
+use super::functions::ValueTypeFunction;
+use crate::jsonpath2::ast::expr::LogicalExpr;
 use crate::jsonpath2::ast::literal::Literal;
+use crate::jsonpath2::ast::query::Query;
 use crate::jsonpath2::ast::singular_query::SingularQuery;
 
+/// Arguments with ValueType
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(dead_code)]
-pub struct ComparisonExpr {
-    left: Comparable,
-    right: Comparable,
-    operator: ComparisonOp,
-}
-
-impl ComparisonExpr {
-    pub fn new(left: Comparable, right: Comparable, operator: ComparisonOp) -> ComparisonExpr {
-        ComparisonExpr {
-            left,
-            right,
-            operator,
-        }
-    }
-    pub fn left(&self) -> &Comparable {
-        &self.left
-    }
-
-    pub fn right(&self) -> &Comparable {
-        &self.right
-    }
-    pub fn operator(&self) -> &ComparisonOp {
-        &self.operator
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)]
-pub enum Comparable {
+pub enum ValueTypeArgument {
     Literal(Literal),
     SingularQuery(SingularQuery),
-    Function(ValueTypeFunction),
+    Function(Box<ValueTypeFunction>),
 }
 
+/// Arguments with LogicalType
 #[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ComparisonOp {
-    Equal,
-    NotEqual,
-    LessOrEqual,
-    Less,
-    GreaterOrEqual,
-    Greater,
+pub enum LogicalTypeArgument {
+    LogicalExpr(LogicalExpr),
+    LogicalTypeFunction(Box<LogicalTypeFunction>),
+}
+
+/// Arguments with NodesType
+#[allow(dead_code)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum NodesTypeArgument {
+    FilterQuery(Query),
 }

@@ -16,17 +16,21 @@
  *
  */
 
-pub(crate) mod comparison;
-pub(crate) mod expr;
-pub(crate) mod function;
-pub(crate) mod literal;
-pub(crate) mod query;
-pub(crate) mod segment;
-pub(crate) mod selector;
-pub(crate) mod singular_query;
+use super::argument::{NodesTypeArgument, ValueTypeArgument};
 
-/// JSONPath Query
-/// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
-/// This is the standard JSONPath query used outside the module
+/// Functions returning a LogicalType
 #[allow(dead_code)]
-pub(crate) type JsonPathQuery = query::AbsoluteQuery;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum LogicalTypeFunction {
+    Match(ValueTypeArgument, ValueTypeArgument),
+    Search(ValueTypeArgument, ValueTypeArgument),
+}
+
+/// Functions returning a ValueType
+#[allow(dead_code)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ValueTypeFunction {
+    Length(ValueTypeArgument),
+    Count(NodesTypeArgument),
+    Value(NodesTypeArgument),
+}

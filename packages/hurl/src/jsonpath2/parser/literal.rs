@@ -49,6 +49,21 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
     }
 }
 
+#[allow(dead_code)]
+pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<Literal>> {
+    if try_null(reader) {
+        Ok(Some(Literal::Null))
+    } else if let Some(value) = try_boolean(reader) {
+        Ok(Some(Literal::Bool(value)))
+    } else if let Some(value) = try_number(reader)? {
+        Ok(Some(Literal::Number(value)))
+    } else if let Some(value) = try_string_literal(reader)? {
+        Ok(Some(Literal::String(value)))
+    } else {
+        Ok(None)
+    }
+}
+
 /// Try to parse a boolean literal
 #[allow(dead_code)]
 fn try_boolean(reader: &mut Reader) -> Option<bool> {
