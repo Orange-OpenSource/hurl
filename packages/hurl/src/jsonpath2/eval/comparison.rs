@@ -17,7 +17,6 @@
  */
 
 use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
-use crate::jsonpath2::ast::literal::Literal;
 
 impl ComparisonExpr {
     #[allow(dead_code)]
@@ -35,9 +34,29 @@ impl ComparisonExpr {
         }
     }
 }
+
+/// Check equality between 2 serde_json::Value
+/// Use numeric equality for numbers
+/// 110 must be equal to 110.0
 fn is_equal(left: &Option<serde_json::Value>, right: &Option<serde_json::Value>) -> bool {
-    left == right
+    if left.is_none() && right.is_none() {
+        true
+    } else if let (Some(left), Some(right)) = (left, right) {
+        match (left, right) {
+            (serde_json::Value::Number(left_num), serde_json::Value::Number(right_num)) => {
+                f64_equals(left_num.as_f64().unwrap(), right_num.as_f64().unwrap())
+            }
+            _ => left == right,
+        }
+    } else {
+        false
+    }
 }
+
+fn f64_equals(a: f64, b: f64) -> bool {
+    (a - b).abs() < 1e-12
+}
+
 fn is_less(left: &Option<serde_json::Value>, right: &Option<serde_json::Value>) -> bool {
     match (left, right) {
         (Some(serde_json::Value::String(left)), Some(serde_json::Value::String(right))) => {
@@ -45,13 +64,17 @@ fn is_less(left: &Option<serde_json::Value>, right: &Option<serde_json::Value>) 
         }
         (Some(serde_json::Value::Number(left)), Some(serde_json::Value::Number(right))) => {
             if let (Some(left), Some(right)) = (left.as_f64(), right.as_f64()) {
-                left < right
+                f64_less(left, right)
             } else {
                 false
             }
         }
         _ => false,
     }
+}
+
+fn f64_less(a: f64, b: f64) -> bool {
+    (b - a) > 1e-12
 }
 
 impl Comparable {
@@ -69,36 +92,41 @@ impl Comparable {
     }
 }
 
-impl Literal {
-    pub fn eval(&self) -> serde_json::Value {
-        match self {
-            Literal::String(s) => serde_json::Value::String(s.clone()),
-            Literal::Number(n) => {
-                serde_json::Value::Number(serde_json::Number::from_f64(*n).unwrap())
-            }
-            Literal::Bool(b) => serde_json::Value::Bool(*b),
-            Literal::Null => serde_json::Value::Null,
-            Literal::Integer(n) => serde_json::Number::from_i128(*n as i128).unwrap().into(),
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
 
     use serde_json::json;
 
     use super::*;
+    use crate::jsonpath2::ast::literal::{Literal, Number};
     use crate::jsonpath2::ast::singular_query::SingularQuerySegment;
     use crate::jsonpath2::ast::{
         selector::NameSelector,
-        singular_query::{AbsoluteSingularQuery, SingularQuery},
+        singular_query::{AbsoluteSingularQuery, RelativeSingularQuery, SingularQuery},
     };
 
     fn name_query(name: &str) -> SingularQuery {
         SingularQuery::Absolute(AbsoluteSingularQuery::new(vec![
             SingularQuerySegment::Name(NameSelector::new(name.to_string())),
         ]))
+    }
+
+    #[test]
+    pub fn test_is_equal() {
+        assert!(is_equal(&Some(json!(110)), &Some(json!(110.0))));
+        assert!(is_equal(
+            &Some(json!(110.0)),
+            &Some(json!(110.00000000000001))
+        ));
+    }
+
+    #[test]
+    pub fn test_is_less() {
+        assert!(!is_less(&Some(json!(110)), &Some(json!(110.0))));
+        assert!(!is_less(
+            &Some(json!(110.0)),
+            &Some(json!(110.00000000000001))
+        ));
     }
 
     #[test]
@@ -150,23 +178,23 @@ mod tests {
 
         // Numeric comparison
         assert!(ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
-            Comparable::Literal(Literal::Integer(2)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
+            Comparable::Literal(Literal::Number(Number::Integer(2))),
             ComparisonOp::LessOrEqual
         )
         .eval(current_value, &root_value));
 
         // Numeric comparison
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
-            Comparable::Literal(Literal::Integer(2)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
+            Comparable::Literal(Literal::Number(Number::Integer(2))),
             ComparisonOp::Greater
         )
         .eval(current_value, &root_value));
 
         // Type mismatch
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(13)),
+            Comparable::Literal(Literal::Number(Number::Integer(13))),
             Comparable::Literal(Literal::String("13".to_string())),
             ComparisonOp::Equal
         )
@@ -239,7 +267,7 @@ mod tests {
         // Type mismatch
         assert!(!ComparisonExpr::new(
             Comparable::SingularQuery(name_query("obj")),
-            Comparable::Literal(Literal::Integer(17)),
+            Comparable::Literal(Literal::Number(Number::Integer(17))),
             ComparisonOp::Equal
         )
         .eval(current_value, &root_value));
@@ -247,7 +275,7 @@ mod tests {
         // Type mismatch
         assert!(ComparisonExpr::new(
             Comparable::SingularQuery(name_query("obj")),
-            Comparable::Literal(Literal::Integer(17)),
+            Comparable::Literal(Literal::Number(Number::Integer(17))),
             ComparisonOp::NotEqual
         )
         .eval(current_value, &root_value));
@@ -286,7 +314,7 @@ mod tests {
 
         // Arrays do not offer < comparison
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
             Comparable::SingularQuery(name_query("arr")),
             ComparisonOp::LessOrEqual
         )
@@ -294,7 +322,7 @@ mod tests {
 
         // Arrays do not offer < comparison
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
             Comparable::SingularQuery(name_query("arr")),
             ComparisonOp::GreaterOrEqual
         )
@@ -302,7 +330,7 @@ mod tests {
 
         // Arrays do not offer < comparison
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
             Comparable::SingularQuery(name_query("arr")),
             ComparisonOp::Greater
         )
@@ -310,7 +338,7 @@ mod tests {
 
         // Arrays do not offer < comparison
         assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Integer(1)),
+            Comparable::Literal(Literal::Number(Number::Integer(1))),
             Comparable::SingularQuery(name_query("arr")),
             ComparisonOp::Less
         )
@@ -331,5 +359,32 @@ mod tests {
             ComparisonOp::Greater
         )
         .eval(current_value, &root_value));
+    }
+
+    #[test]
+    pub fn test_number() {
+        // @.a==110
+        let comparison = ComparisonExpr::new(
+            Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(vec![
+                SingularQuerySegment::Name(NameSelector::new("a".to_string())),
+            ]))),
+            Comparable::Literal(Literal::Number(Number::Integer(110))),
+            ComparisonOp::Equal,
+        );
+        assert!(comparison.eval(&serde_json::json!({"a":110}), &serde_json::json!({})));
+        assert!(comparison.eval(&serde_json::json!({"a":110.0}), &serde_json::json!({})));
+        assert!(comparison.eval(&serde_json::json!({"a":1.1e2}), &serde_json::json!({})));
+
+        // @.a==110.0
+        let comparison = ComparisonExpr::new(
+            Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(vec![
+                SingularQuerySegment::Name(NameSelector::new("a".to_string())),
+            ]))),
+            Comparable::Literal(Literal::Number(Number::Float(110.0))),
+            ComparisonOp::Equal,
+        );
+        assert!(comparison.eval(&serde_json::json!({"a":110}), &serde_json::json!({})));
+        assert!(comparison.eval(&serde_json::json!({"a":110.0}), &serde_json::json!({})));
+        assert!(comparison.eval(&serde_json::json!({"a":1.1e2}), &serde_json::json!({})));
     }
 }

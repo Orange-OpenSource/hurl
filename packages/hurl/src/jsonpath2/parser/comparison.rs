@@ -94,7 +94,7 @@ fn try_comparison_op(reader: &mut Reader) -> Option<ComparisonOp> {
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath2::ast::literal::Literal;
+    use crate::jsonpath2::ast::literal::{Literal, Number};
     use crate::jsonpath2::ast::selector::NameSelector;
     use crate::jsonpath2::ast::singular_query::{RelativeSingularQuery, SingularQuerySegment};
     use crate::jsonpath2::ast::{comparison::ComparisonOp, singular_query::SingularQuery};
@@ -108,8 +108,8 @@ mod tests {
         assert_eq!(
             try_parse(&mut reader).unwrap().unwrap(),
             ComparisonExpr::new(
-                Comparable::Literal(Literal::Integer(1)),
-                Comparable::Literal(Literal::Integer(2)),
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::Literal(Literal::Number(Number::Integer(2))),
                 ComparisonOp::LessOrEqual
             )
         );
@@ -124,7 +124,7 @@ mod tests {
                         "a".to_string()
                     ))]
                 ))),
-                Comparable::Literal(Literal::Integer(1)),
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
                 ComparisonOp::Equal
             )
         );
@@ -149,7 +149,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             comparable(&mut reader).unwrap(),
-            Comparable::Literal(Literal::Integer(1))
+            Comparable::Literal(Literal::Number(Number::Integer(1)))
         );
         assert_eq!(reader.cursor().index, CharPos(1));
     }

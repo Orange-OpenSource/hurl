@@ -18,7 +18,7 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::ast::literal::Literal;
+use crate::jsonpath2::ast::literal::{Literal, Number};
 use crate::jsonpath2::parser::{
     primitives::{expect_str, match_str},
     ParseError, ParseErrorKind, ParseResult,
@@ -27,15 +27,18 @@ use crate::jsonpath2::parser::{
 /// Parse a literal
 /// This includes standard JSON primitives (number, string, bool or null)
 /// with the addition of string literals with quotes
-// TODO: implement full spec with number parsing
+///
+/// Number can be either integer, or floats
+/// If the number contains a decimal point or an exponent, it is parsed as a float (Like Serde::json)
+/// 110 is an integer, but 110.0 or 1.1e2 are floats
 #[allow(dead_code)]
 pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
     if try_null(reader) {
         Ok(Literal::Null)
     } else if let Some(value) = try_boolean(reader) {
         Ok(Literal::Bool(value))
-    } else if let Some(value) = try_integer(reader)? {
-        Ok(Literal::Integer(value))
+    } else if let Some(value) = try_number(reader)? {
+        Ok(Literal::Number(value))
     } else if let Some(value) = try_string_literal(reader)? {
         Ok(Literal::String(value))
     } else {
@@ -67,8 +70,6 @@ fn try_null(reader: &mut Reader) -> bool {
 /// Try to parse a decimal integer
 /// if it does not start with a minus sign or a digit
 /// it returns `None` rather than a `ParseError`
-///
-// TODO: implement full spec
 pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i32>> {
     if match_str("0", reader) {
         return Ok(Some(0));
@@ -87,6 +88,72 @@ pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i32>> {
     }
     let sign = if negative { -1 } else { 1 };
     Ok(Some(sign * s.parse::<i32>().unwrap()))
+}
+
+// Try to parse a number
+pub fn try_number(reader: &mut Reader) -> ParseResult<Option<Number>> {
+    let save = reader.cursor();
+
+    let int = if match_str("-0", reader) {
+        0
+    } else if let Some(value) = try_integer(reader)? {
+        value
+    } else {
+        reader.seek(save);
+        return Ok(None);
+    };
+
+    let fraction = try_fraction(reader)?;
+    let exponent = try_exponent(reader)?;
+
+    // At least a fraction or an exponent must be present to make it a float
+    // otherwise it is an integer
+    if fraction.is_none() && exponent.is_none() {
+        Ok(Some(Number::Integer(int)))
+    } else {
+        let mut value = int as f64;
+        if let Some(frac) = fraction {
+            value += frac;
+        }
+        if let Some(exp) = exponent {
+            value *= 10f64.powi(exp);
+        }
+        Ok(Some(Number::Float(value)))
+    }
+}
+
+fn try_fraction(reader: &mut Reader) -> ParseResult<Option<f64>> {
+    if match_str(".", reader) {
+        let digits = reader.read_while(|c| c.is_ascii_digit());
+        if digits.is_empty() {
+            let kind = ParseErrorKind::Expecting("digit after decimal point".to_string());
+            return Err(ParseError::new(reader.cursor().pos, kind));
+        }
+        let frac_string = format!("0.{}", digits);
+        Ok(Some(frac_string.parse::<f64>().unwrap()))
+    } else {
+        Ok(None)
+    }
+}
+
+fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
+    if match_str("e", reader) || match_str("E", reader) {
+        let mut exp_string = String::new();
+        if match_str("+", reader) {
+            exp_string.push('+');
+        } else if match_str("-", reader) {
+            exp_string.push('-');
+        }
+        let digits = reader.read_while(|c| c.is_ascii_digit());
+        if digits.is_empty() {
+            let kind = ParseErrorKind::Expecting("digit in exponent".to_string());
+            return Err(ParseError::new(reader.cursor().pos, kind));
+        }
+        exp_string.push_str(&digits);
+        Ok(Some(exp_string.parse::<i32>().unwrap()))
+    } else {
+        Ok(None)
+    }
 }
 
 /// Try to parse a string literal
@@ -167,9 +234,76 @@ mod tests {
     }
 
     #[test]
+    fn test_number() {
+        let mut reader = Reader::new("110");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Integer(110)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("110.0");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(110.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("1.1e2");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(110.00000000000001)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+    }
+
+    #[test]
+    fn test_float() {
+        let mut reader = Reader::new("1.0");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(1.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("1e2");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(100.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+    }
+
+    #[test]
     fn test_integer() {
         let mut reader = Reader::new("1");
         assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
         assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    fn test_fraction() {
+        let mut reader = Reader::new(".02");
+        assert_eq!(try_fraction(&mut reader).unwrap().unwrap(), 0.02);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("e+2");
+        assert!(try_fraction(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
+    }
+
+    #[test]
+    fn test_exponent() {
+        let mut reader = Reader::new("e-2");
+        assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), -2);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("E+2");
+        assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), 2);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("]");
+        assert!(try_exponent(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
     }
 }

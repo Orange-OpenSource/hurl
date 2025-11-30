@@ -118,7 +118,7 @@ mod tests {
     use crate::jsonpath2::ast::{
         comparison::{Comparable, ComparisonExpr, ComparisonOp},
         expr::{LogicalExpr, TestExpr, TestExprKind},
-        literal::Literal,
+        literal::{Literal, Number},
         query::{Query, RelativeQuery},
         segment::{ChildSegment, Segment},
         singular_query::{RelativeSingularQuery, SingularQuery},
@@ -270,7 +270,7 @@ mod tests {
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![]
                 ))),
-                Comparable::Literal(Literal::Integer(3)),
+                Comparable::Literal(Literal::Number(Number::Integer(3))),
                 ComparisonOp::Greater
             )))
         );

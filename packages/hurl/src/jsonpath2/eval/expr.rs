@@ -89,7 +89,7 @@ impl NotExpr {
 mod tests {
     use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
     use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, OrExpr, TestExpr, TestExprKind};
-    use crate::jsonpath2::ast::literal::Literal;
+    use crate::jsonpath2::ast::literal::{Literal, Number};
     use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
@@ -140,14 +140,14 @@ mod tests {
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![],
                 ))),
-                Comparable::Literal(Literal::Integer(2)),
+                Comparable::Literal(Literal::Number(Number::Integer(2))),
                 ComparisonOp::Less,
             )),
             LogicalExpr::Comparison(ComparisonExpr::new(
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![],
                 ))),
-                Comparable::Literal(Literal::Integer(4)),
+                Comparable::Literal(Literal::Number(Number::Integer(4))),
                 ComparisonOp::Greater,
             )),
         ]));
@@ -163,14 +163,14 @@ mod tests {
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![],
                 ))),
-                Comparable::Literal(Literal::Integer(1)),
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
                 ComparisonOp::Greater,
             )),
             LogicalExpr::Comparison(ComparisonExpr::new(
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![],
                 ))),
-                Comparable::Literal(Literal::Integer(4)),
+                Comparable::Literal(Literal::Number(Number::Integer(4))),
                 ComparisonOp::Less,
             )),
         ]));

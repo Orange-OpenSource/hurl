@@ -20,10 +20,16 @@
 #[allow(dead_code)]
 pub enum Literal {
     Bool(bool),
-    Integer(i32),
+    Number(Number),
     Null,
-    Number(f64),
     String(String),
 }
 
 impl Eq for Literal {}
+
+#[derive(Clone, Debug, PartialEq)]
+#[allow(dead_code)]
+pub enum Number {
+    Integer(i32),
+    Float(f64),
+}
