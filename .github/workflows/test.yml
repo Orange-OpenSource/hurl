@@ -436,11 +436,11 @@ jobs:
     - name: Environment
       run: |
         .\bin\activate_python3_venv.ps1
-        .\bin\environment.ps1
     - name: Build and test
       run: |
         .\bin\activate_python3_venv.ps1
-        .\bin\test\test.ps1
+        .\bin\test\test_prerequisites.ps1
+        .\bin\test\test_unit.ps1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v5.0.0
       if: ${{ always() }}
