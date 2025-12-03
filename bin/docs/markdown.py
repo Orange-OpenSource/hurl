@@ -9,9 +9,10 @@ This module allows to manipulate Markdown document:
 
 import re
 import unicodedata
-from parser import Parser
 from textwrap import dedent
 from typing import List, Optional
+
+from parser import Parser
 
 
 class Node:
