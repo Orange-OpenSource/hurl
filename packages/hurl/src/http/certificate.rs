@@ -28,6 +28,7 @@ pub struct Certificate {
     pub start_date: DateTime<Utc>,
     pub expire_date: DateTime<Utc>,
     pub serial_number: String,
+    pub subject_alt_name: Option<String>,
 }
 
 impl TryFrom<CertInfo> for Certificate {
@@ -44,12 +45,14 @@ impl TryFrom<CertInfo> for Certificate {
         let start_date = parse_start_date(&attributes)?;
         let expire_date = parse_expire_date(&attributes)?;
         let serial_number = parse_serial_number(&attributes)?;
+        let subject_alt_name = parse_subject_alt_name(&attributes).ok();
         Ok(Certificate {
             subject,
             issuer,
             start_date,
             expire_date,
             serial_number,
+            subject_alt_name,
         })
     }
 }
@@ -133,6 +136,15 @@ fn parse_serial_number(attributes: &HashMap<String, String>) -> Result<String, S
     Ok(normalized_value)
 }
 
+fn parse_subject_alt_name(attributes: &HashMap<String, String>) -> Result<String, String> {
+    match attributes.get("x509v3 subject alternative name") {
+        None => Err(format!(
+            "missing x509v3 subject alternative name attribute in {attributes:?}"
+        )),
+        Some(value) => Ok(value.clone()),
+    }
+}
+
 fn parse_attributes(data: &Vec<String>) -> HashMap<String, String> {
     let mut map = HashMap::new();
     for s in data {
@@ -182,7 +194,7 @@ mod tests {
             parse_start_date(&attributes).unwrap(),
             chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                 .unwrap()
-                .with_timezone(&chrono::Utc)
+                .with_timezone(&Utc)
         );
 
         let mut attributes = HashMap::new();
@@ -194,7 +206,7 @@ mod tests {
             parse_start_date(&attributes).unwrap(),
             chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                 .unwrap()
-                .with_timezone(&chrono::Utc)
+                .with_timezone(&Utc)
         );
     }
 
@@ -222,6 +234,19 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_subject_alt_name() {
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "x509v3 subject alternative name".to_string(),
+            "DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string(),
+        );
+        assert_eq!(
+            parse_subject_alt_name(&attributes).unwrap(),
+            "DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string()
+        );
+    }
+
+    #[test]
     fn test_try_from() {
         assert_eq!(
             Certificate::try_from(CertInfo {
@@ -233,6 +258,8 @@ mod tests {
                     "Serial Number:1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string(),
                     "Start date:Jan 10 08:29:52 2023 GMT".to_string(),
                     "Expire date:Oct 30 08:29:52 2025 GMT".to_string(),
+                    "x509v3 subject alternative name:DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1"
+                        .to_string(),
                 ]
             })
             .unwrap(),
@@ -242,12 +269,13 @@ mod tests {
                 issuer: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
                 start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
-                    .with_timezone(&chrono::Utc),
+                    .with_timezone(&Utc),
                 expire_date: chrono::DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
                     .unwrap()
-                    .with_timezone(&chrono::Utc),
+                    .with_timezone(&Utc),
                 serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
-                    .to_string()
+                    .to_string(),
+                subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string())
             }
         );
         assert_eq!(

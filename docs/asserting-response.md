@@ -960,7 +960,7 @@ duration < 1000   # Check that response time is less than one second
 Check the SSL certificate properties. Certificate assert consists of the keyword `certificate`, followed by the 
 certificate attribute value.
 
-The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date` and `Serial-Number`.
+The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date`, `Serial-Number`, and `Subject-Alt-Name`.
 
 ```hurl
 GET https://example.org
@@ -970,6 +970,8 @@ certificate "Subject" == "CN=example.org"
 certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches "[0-9af]+"
+certificate "Subject-Alt-Name" contains "DNS:example.org"
+certificate "Subject-Alt-Name" split "," count == 2
 ```
 
 [predicates]: #predicates

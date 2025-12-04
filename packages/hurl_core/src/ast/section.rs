@@ -296,6 +296,7 @@ pub enum CertificateAttributeName {
     StartDate,
     ExpireDate,
     SerialNumber,
+    SubjectAltName,
 }
 
 impl CertificateAttributeName {
@@ -307,6 +308,7 @@ impl CertificateAttributeName {
             CertificateAttributeName::StartDate => "Start-Date",
             CertificateAttributeName::ExpireDate => "Expire-Date",
             CertificateAttributeName::SerialNumber => "Serial-Number",
+            CertificateAttributeName::SubjectAltName => "Subject-Alt-Name",
         }
     }
 }

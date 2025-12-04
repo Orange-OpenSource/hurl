@@ -391,6 +391,12 @@ fn eval_query_certificate(
             CertificateAttributeName::SerialNumber => {
                 Value::String(certificate.serial_number.clone())
             }
+            CertificateAttributeName::SubjectAltName => {
+                match certificate.subject_alt_name.as_ref() {
+                    Some(s) => Value::String(s.clone()),
+                    None => return Ok(None),
+                }
+            }
         };
         Ok(Some(value))
     } else {
@@ -1484,7 +1490,8 @@ pub mod tests {
                         issuer: String::new(),
                         start_date: Default::default(),
                         expire_date: Default::default(),
-                        serial_number: String::new()
+                        serial_number: String::new(),
+                        subject_alt_name: Some(String::new())
                     }),
                     ..default_response()
                 },
