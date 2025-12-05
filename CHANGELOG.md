@@ -1,3 +1,14 @@
+[7.2.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.2.0)
+========================================================================================================================
+
+Thanks to
+[@spiffytech](https://github.com/spiffytech),
+
+Bugs Fixed:
+
+* Fix truncating existing output file when response is tiny [#4576](https://github.com/Orange-OpenSource/hurl/issues/4576)
+
+
 [7.1.0 (2025-11-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.1.0)
 ========================================================================================================================
 
