@@ -108,7 +108,7 @@ error: HTTP connection
    --> tests_failed/runner_errors/runner_errors.hurl:67:5
     |
  67 | GET http://unknown
-    |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
+    |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown<<<( \(Domain name not found\))?>>>
     |
 
 error: Invalid charset

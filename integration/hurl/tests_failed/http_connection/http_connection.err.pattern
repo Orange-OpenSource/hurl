@@ -2,6 +2,6 @@ error: HTTP connection
   --> tests_failed/http_connection/http_connection.hurl:1:5
    |
  1 | GET http://unknown
-   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown
+   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown<<<( \(Domain name not found\))?>>>
    |
 

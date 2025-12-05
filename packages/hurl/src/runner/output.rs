@@ -59,7 +59,8 @@ impl Output {
     /// Writes these `bytes` to the output.
     ///
     /// If output is a standard output variant, `stdout` is used to write the bytes. If `append`
-    /// the output file is created in append mode, else any existing file will be truncated.
+    /// is true, the output file is created in append mode, else any existing file will be truncated
+    /// before writing data.
     pub fn write(&self, bytes: &[u8], stdout: &mut Stdout, append: bool) -> Result<(), io::Error> {
         match self {
             Output::Stdout => stdout.write_all(bytes)?,
@@ -68,6 +69,7 @@ impl Output {
                     .create(true)
                     .write(true)
                     .append(append)
+                    .truncate(!append)
                     .open(filename)?;
                 file.write_all(bytes)?;
             }

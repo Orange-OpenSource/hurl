@@ -108,7 +108,7 @@
    [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:67:5
 [1;34m    |[0m
 [1;34m 67 |[0m GET http://unknown
-[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown[0m
+[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown<<<( \(Domain name not found\))?>>>[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mInvalid charset[0m
