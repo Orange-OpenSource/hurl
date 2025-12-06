@@ -2,5 +2,5 @@ beautifulsoup4==4.14.3
 Flask==3.1.2
 mypy==1.19.0
 requests==2.32.5
-ruff==0.14.7
+ruff==0.14.8
 waitress==3.0.2
