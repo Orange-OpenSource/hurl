@@ -680,15 +680,25 @@ pub fn verbose() -> clap::Arg {
     clap::Arg::new("verbose")
         .long("verbose")
         .short('v')
-        .help("Turn on verbose")
+        .help("Turn on verbose (alias to --verbosity verbose)")
         .help_heading("Output options")
         .action(clap::ArgAction::SetTrue)
+}
+
+pub fn verbosity() -> clap::Arg {
+    clap::Arg::new("verbosity")
+        .long("verbosity")
+        .value_name("LEVEL")
+        .value_parser(["brief", "verbose", "debug"])
+        .help("Set verbosity level for debug log")
+        .help_heading("Output options")
+        .num_args(1)
 }
 
 pub fn very_verbose() -> clap::Arg {
     clap::Arg::new("very_verbose")
         .long("very-verbose")
-        .help("Turn on verbose output, including HTTP response and libcurl logs")
+        .help("Turn on very verbose output, including HTTP response and libcurl logs (alias to --verbosity debug)")
         .help_heading("Output options")
         .action(clap::ArgAction::SetTrue)
 }

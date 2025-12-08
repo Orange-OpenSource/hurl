@@ -33,18 +33,9 @@ pub enum ErrorFormat {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
+    LowVerbose,
     Verbose,
     VeryVerbose,
-}
-
-impl Verbosity {
-    pub fn from(verbose: bool, very_verbose: bool) -> Option<Verbosity> {
-        match (verbose, very_verbose) {
-            (_, true) => Some(Verbosity::VeryVerbose),
-            (true, false) => Some(Verbosity::Verbose),
-            _ => None,
-        }
-    }
 }
 
 /// A dedicated logger for an Hurl file. This logger can display rich parsing and runtime errors.
@@ -159,7 +150,7 @@ impl Logger {
     ///
     /// Displayed debug messages start with `*`.
     pub fn debug(&mut self, message: &str) {
-        if self.verbosity.is_none() {
+        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
             return;
         }
         let fmt = self.format();
@@ -176,7 +167,7 @@ impl Logger {
     ///
     /// Displayed debug messages start with `*`.
     pub fn debug_important(&mut self, message: &str) {
-        if self.verbosity.is_none() {
+        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
             return;
         }
         let fmt = self.format();
@@ -193,7 +184,7 @@ impl Logger {
     ///
     /// Displayed libcurl debug messages start with `**`.
     pub fn debug_curl(&mut self, message: &str) {
-        if self.verbosity.is_none() {
+        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
             return;
         }
         let fmt = self.format();
@@ -229,7 +220,7 @@ impl Logger {
 
     /// Prints a HTTP response header to this logger [`Stderr`] instance, in verbose and very verbose mode.
     ///
-    /// Response HTTP headers start with `>`.
+    /// Response HTTP headers start with `<`.
     pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {
         if self.verbosity.is_none() {
             return;
@@ -316,7 +307,7 @@ impl Logger {
 
     /// Prints a capture to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn capture(&mut self, name: &str, value: &Value) {
-        if self.verbosity.is_none() {
+        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
             return;
         }
         let value = value.to_string();

@@ -1,4 +1,4 @@
-.TH hurl 1 "07 Dec 2025" "hurl 7.2.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "15 Dec 2025" "hurl 7.2.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -555,6 +555,19 @@ A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, \fI-i, --include\fP might be the option you're looking for.
+
+.IP "--verbosity <LEVEL> "
+
+Set the verbosity level for debug logs on standard error stream.
+Useful for debugging.
+
+A line starting with '>' means data sent by Hurl.
+A line staring with '<' means data received by Hurl.
+A line starting with '*' means additional info provided by Hurl.
+
+If you only want HTTP headers in the output, \fI-i, --include\fP might be the option you're looking for.
+\fI-v, --verbose–\fP is an alias for `--verbosity verbose`
+\fI--very-verbose–\fP is an alias for `--verbosity debug`
 
 .IP "--very-verbose "
 

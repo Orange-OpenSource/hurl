@@ -280,11 +280,11 @@ impl ClientOptions {
             unix_socket: runner_options.unix_socket.clone(),
             user: runner_options.user.clone(),
             user_agent: runner_options.user_agent.clone(),
-            verbosity: match verbosity {
-                Some(Verbosity::Verbose) => Some(http::Verbosity::Verbose),
-                Some(Verbosity::VeryVerbose) => Some(http::Verbosity::VeryVerbose),
-                _ => None,
-            },
+            verbosity: verbosity.map(|v| match v {
+                Verbosity::LowVerbose => http::Verbosity::LowVerbose,
+                Verbosity::Verbose => http::Verbosity::Verbose,
+                Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
+            }),
         }
     }
 }

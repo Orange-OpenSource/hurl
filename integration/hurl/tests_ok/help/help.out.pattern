@@ -92,8 +92,11 @@ Output options:
   -o, --output <FILE>          Write to FILE instead of stdout
       --pretty                 Prettify JSON response output
       --progress-bar           Display a progress bar in test mode
-  -v, --verbose                Turn on verbose
-      --very-verbose           Turn on verbose output, including HTTP response and libcurl logs
+  -v, --verbose                Turn on verbose (alias to --verbosity verbose)
+      --very-verbose           Turn on very verbose output, including HTTP response and libcurl logs
+                               (alias to --verbosity debug)
+      --verbosity <LEVEL>      Set verbosity level for debug log [possible values: brief, verbose,
+                               debug]
 
 Run options:
       --continue-on-error              Continue executing requests even if an error occurs

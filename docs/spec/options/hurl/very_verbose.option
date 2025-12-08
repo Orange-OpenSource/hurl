@@ -1,6 +1,6 @@
 name: very_verbose
 long: very-verbose
-help: Turn on verbose output, including HTTP response and libcurl logs
+help: Turn on very verbose output, including HTTP response and libcurl logs (alias to --verbosity debug)
 help_heading: Output options
 ---
 Turn on more verbose output on standard error stream.

@@ -90,8 +90,9 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--user-agent', 'user-agent', [CompletionResultType]::ParameterName, 'Specify the User-Agent string to send to the HTTP server')
             [CompletionResult]::new('--variable', 'variable', [CompletionResultType]::ParameterName, 'Define a variable')
             [CompletionResult]::new('--variables-file', 'variables-file', [CompletionResultType]::ParameterName, 'Define a properties file in which you define your variables')
-            [CompletionResult]::new('--verbose', 'verbose', [CompletionResultType]::ParameterName, 'Turn on verbose')
-            [CompletionResult]::new('--very-verbose', 'very-verbose', [CompletionResultType]::ParameterName, 'Turn on verbose output, including HTTP response and libcurl logs')
+            [CompletionResult]::new('--verbose', 'verbose', [CompletionResultType]::ParameterName, 'Turn on verbose (alias to --verbosity verbose)')
+            [CompletionResult]::new('--verbosity', 'verbosity', [CompletionResultType]::ParameterName, 'Set verbosity level for debug log')
+            [CompletionResult]::new('--very-verbose', 'very-verbose', [CompletionResultType]::ParameterName, 'Turn on very verbose output, including HTTP response and libcurl logs (alias to --verbosity debug)')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--version', 'version', [CompletionResultType]::ParameterName, 'Print version')
             break

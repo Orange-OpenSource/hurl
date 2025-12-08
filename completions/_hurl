@@ -85,8 +85,9 @@ _hurl() {
     '(-A --user-agent)'{-A,--user-agent}'[Specify the User-Agent string to send to the HTTP server]: :' \
     '*--variable[Define a variable]: :' \
     '*--variables-file[Define a properties file in which you define your variables]: :_files' \
-    '(-v --verbose)'{-v,--verbose}'[Turn on verbose]' \
-    '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]' \
+    '(-v --verbose)'{-v,--verbose}'[Turn on verbose (alias to --verbosity verbose)]' \
+    '--verbosity[Set verbosity level for debug log]: :' \
+    '--very-verbose[Turn on very verbose output, including HTTP response and libcurl logs (alias to --verbosity debug)]' \
     '--help[Print help]' \
     '--version[Print version]' \
     '*:file:_files' \

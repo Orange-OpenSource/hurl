@@ -33,7 +33,7 @@ use hurl::util::redacted::Redact;
 use hurl_core::input::Input;
 use hurl_core::text;
 
-use crate::cli::options::{CliOptions, CliOptionsError, RunContext};
+use crate::cli::options::{CliOptions, CliOptionsError, RunContext, Verbosity};
 use crate::cli::{BaseLogger, CliError};
 
 const EXIT_OK: u8 = 0;
@@ -83,7 +83,9 @@ fn main() -> ExitCode {
 
     // We create a basic logger that can just display info, warning or error generic messages.
     // We'll use a more advanced logger for rich error report when running Hurl files.
-    let verbose = opts.verbose || opts.very_verbose || opts.interactive;
+    let verbose = opts.verbosity == Some(Verbosity::Verbose)
+        || opts.verbosity == Some(Verbosity::Debug)
+        || opts.interactive;
     let base_logger = BaseLogger::new(opts.color, verbose);
     let current_dir = match env::current_dir() {
         Ok(c) => c,

@@ -30,7 +30,7 @@ use super::context::RunContext;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
 use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};
-use crate::cli::OutputType;
+use super::{OutputType, Verbosity};
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
     match get_string(arg_matches, "cacert_file") {
@@ -577,6 +577,16 @@ pub fn variables(
     Ok(variables)
 }
 
+pub fn verbosity(arg_matches: &ArgMatches) -> Option<Verbosity> {
+    let verbosity = get::<String>(arg_matches, "verbosity");
+    verbosity.map(|value| match value.as_str() {
+        "brief" => Verbosity::Brief,
+        "verbose" => Verbosity::Verbose,
+        "debug" => Verbosity::Debug,
+        _ => Verbosity::Verbose,
+    })
+}
+
 pub fn verbose(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "verbose")
 }
@@ -632,7 +642,7 @@ fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
 }
 
 /// Returns an optional list of `String` from the command line `matches` given the option `name`.
-pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
+fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())

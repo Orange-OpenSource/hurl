@@ -67,6 +67,7 @@ pub struct ClientOptions {
 // FIXME/ we could implement copy here
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
+    LowVerbose,
     Verbose,
     VeryVerbose,
 }
