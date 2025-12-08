@@ -69,6 +69,7 @@ complete -c hurl -l user-agent -d 'Specify the User-Agent string to send to the 
 complete -c hurl -l variable -d 'Define a variable'
 complete -c hurl -l variables-file -d 'Define a properties file in which you define your variables'
 complete -c hurl -l verbose -d 'Turn on verbose'
+complete -c hurl -l verbosity -d 'Set verbosity level for debug log'
 complete -c hurl -l very-verbose -d 'Turn on verbose output, including HTTP response and libcurl logs'
 complete -c hurl -l help -d 'Print help'
 complete -c hurl -l version -d 'Print version'

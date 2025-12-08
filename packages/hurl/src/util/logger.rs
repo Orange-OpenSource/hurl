@@ -33,18 +33,9 @@ pub enum ErrorFormat {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
+    LowVerbose,
     Verbose,
     VeryVerbose,
-}
-
-impl Verbosity {
-    pub fn from(verbose: bool, very_verbose: bool) -> Option<Verbosity> {
-        match (verbose, very_verbose) {
-            (_, true) => Some(Verbosity::VeryVerbose),
-            (true, false) => Some(Verbosity::Verbose),
-            _ => None,
-        }
-    }
 }
 
 /// A dedicated logger for an Hurl file. This logger can display rich parsing and runtime errors.

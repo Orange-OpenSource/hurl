@@ -685,6 +685,16 @@ pub fn verbose() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn verbosity() -> clap::Arg {
+    clap::Arg::new("verbosity")
+        .long("verbosity")
+        .value_name("LEVEL")
+        .value_parser(["brief", "verbose", "debug"])
+        .help("Set verbosity level for debug log")
+        .help_heading("Output options")
+        .num_args(1)
+}
+
 pub fn very_verbose() -> clap::Arg {
     clap::Arg::new("very_verbose")
         .long("very-verbose")

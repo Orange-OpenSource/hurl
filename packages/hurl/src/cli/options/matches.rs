@@ -29,7 +29,7 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::RunContext;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
-use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};
+use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output, Verbosity};
 use crate::cli::OutputType;
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
@@ -576,6 +576,33 @@ pub fn variables(
 
     Ok(variables)
 }
+
+pub fn verbosity(arg_matches: &ArgMatches) -> ErrorFormat {
+
+    let error_format = get::<String>(arg_matches, "verbosity");
+    match error_format {
+        Some(value) => {
+            match &value {
+                "brief" => Verbosity::Brief,
+                "verbose" => Verbosity::Verbose,
+                "debug" => Verbosity::Debug,
+            }
+            ErrorFormat::Long
+        },
+        "short" => ErrorFormat::Short,
+        _ => ErrorFormat::Short,
+    }
+
+
+        .unwrap_or("short".to_string());
+    match error_format.as_str() {
+        "long" => ErrorFormat::Long,
+        "short" => ErrorFormat::Short,
+        _ => ErrorFormat::Short,
+    }
+}
+
+
 
 pub fn verbose(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "verbose")

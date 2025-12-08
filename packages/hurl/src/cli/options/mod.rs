@@ -36,7 +36,7 @@ use hurl::http;
 use hurl::http::RequestedHttpVersion;
 use hurl::pretty::PrettyMode;
 use hurl::runner::Output;
-use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
+use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
 use hurl_core::input::{Input, InputKind};
@@ -110,9 +110,17 @@ pub struct CliOptions {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
-    pub verbose: bool,
-    pub very_verbose: bool,
+    pub verbosity: Option<Verbosity>,
 }
+
+/// Log verbosity level
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Verbosity {
+    Brief,
+    Verbose,
+    Debug,
+}
+
 
 /// Error format: long or rich.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -240,6 +248,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::progress_bar())
         .arg(commands::verbose())
         .arg(commands::very_verbose())
+        .arg(commands::verbosity())
         // Run options
         .arg(commands::continue_on_error())
         .arg(commands::delay())
@@ -362,7 +371,10 @@ fn parse_matches(
     let user = matches::user(arg_matches);
     let user_agent = matches::user_agent(arg_matches);
     let variables = matches::variables(arg_matches, context)?;
+    
+    let mut verbosity = None;
     let verbose = matches::verbose(arg_matches);
+    
     let very_verbose = matches::very_verbose(arg_matches);
     Ok(CliOptions {
         aws_sigv4,
@@ -425,8 +437,7 @@ fn parse_matches(
         user,
         user_agent,
         variables,
-        verbose,
-        very_verbose,
+        verbosity,
         jobs,
     })
 }
@@ -562,7 +573,7 @@ impl CliOptions {
 
     /// Converts this instance of [`ClipOptions`] to an instance of [`LoggerOptions`]
     pub fn to_logger_options(&self) -> LoggerOptions {
-        let verbosity = Verbosity::from(self.verbose, self.very_verbose);
+        let verbosity =
         LoggerOptionsBuilder::new()
             .color(self.color)
             .error_format(self.error_format.into())

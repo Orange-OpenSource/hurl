@@ -575,6 +575,19 @@ A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.
 
+### --verbosity <LEVEL> {#verbosity}
+
+Set the verbosity level for debug logs on standard error stream.
+Useful for debugging.
+
+A line starting with '>' means data sent by Hurl.
+A line staring with '<' means data received by Hurl.
+A line starting with '*' means additional info provided by Hurl.
+
+If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.
+[`-v, --verbose–`](#verbose) is an alias for `--verbosity verbose`
+[`--very-verbose–`](#verbose) is an alias for `--verbosity debug`
+
 ### --very-verbose {#very-verbose}
 
 Turn on more verbose output on standard error stream.

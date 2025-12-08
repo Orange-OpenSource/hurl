@@ -86,6 +86,7 @@ _hurl() {
     '*--variable[Define a variable]: :' \
     '*--variables-file[Define a properties file in which you define your variables]: :_files' \
     '(-v --verbose)'{-v,--verbose}'[Turn on verbose]' \
+    '--verbosity[Set verbosity level for debug log]: :' \
     '--very-verbose[Turn on verbose output, including HTTP response and libcurl logs]' \
     '--help[Print help]' \
     '--version[Print version]' \
