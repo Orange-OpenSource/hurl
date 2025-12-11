@@ -21,7 +21,8 @@ use crate::jsonpath2::ast::selector::{
     ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
 };
 use crate::jsonpath2::parser::expr::logical_or_expr;
-use crate::jsonpath2::parser::literal::{try_integer, try_string_literal};
+use crate::jsonpath2::parser::literal::number::try_integer;
+use crate::jsonpath2::parser::literal::string::try_parse as try_string_literal;
 use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use hurl_core::reader::Reader;
 

@@ -18,69 +18,9 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath2::ast::literal::{Literal, Number};
-use crate::jsonpath2::parser::{
-    primitives::{expect_str, match_str},
-    ParseError, ParseErrorKind, ParseResult,
-};
-
-/// Parse a literal
-/// This includes standard JSON primitives (number, string, bool or null)
-/// with the addition of string literals with quotes
-///
-/// Number can be either integer, or floats
-/// If the number contains a decimal point or an exponent, it is parsed as a float (Like Serde::json)
-/// 110 is an integer, but 110.0 or 1.1e2 are floats
-#[allow(dead_code)]
-pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
-    if try_null(reader) {
-        Ok(Literal::Null)
-    } else if let Some(value) = try_boolean(reader) {
-        Ok(Literal::Bool(value))
-    } else if let Some(value) = try_number(reader)? {
-        Ok(Literal::Number(value))
-    } else if let Some(value) = try_string_literal(reader)? {
-        Ok(Literal::String(value))
-    } else {
-        Err(ParseError::new(
-            reader.cursor().pos,
-            ParseErrorKind::Expecting("a literal".to_string()),
-        ))
-    }
-}
-
-#[allow(dead_code)]
-pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<Literal>> {
-    if try_null(reader) {
-        Ok(Some(Literal::Null))
-    } else if let Some(value) = try_boolean(reader) {
-        Ok(Some(Literal::Bool(value)))
-    } else if let Some(value) = try_number(reader)? {
-        Ok(Some(Literal::Number(value)))
-    } else if let Some(value) = try_string_literal(reader)? {
-        Ok(Some(Literal::String(value)))
-    } else {
-        Ok(None)
-    }
-}
-
-/// Try to parse a boolean literal
-#[allow(dead_code)]
-fn try_boolean(reader: &mut Reader) -> Option<bool> {
-    if match_str("true", reader) {
-        Some(true)
-    } else if match_str("false", reader) {
-        Some(false)
-    } else {
-        None
-    }
-}
-
-/// Try to parse a null literal
-#[allow(dead_code)]
-fn try_null(reader: &mut Reader) -> bool {
-    match_str("null", reader)
-}
+use crate::jsonpath2::ast::literal::Number;
+use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
 
 /// Try to parse a decimal integer
 /// if it does not start with a minus sign or a digit
@@ -171,82 +111,11 @@ fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
     }
 }
 
-/// Try to parse a string literal
-/// if it does not start with a quote it returns `None` rather than a `ParseError`
-///
-// TODO: implement full spec with double-quoted and single-quoted parser
-pub fn try_string_literal(reader: &mut Reader) -> ParseResult<Option<String>> {
-    if match_str("\"", reader) {
-        let s = reader.read_while(|c| c != '"');
-        expect_str("\"", reader)?;
-        Ok(Some(s))
-    } else if match_str("'", reader) {
-        let s = reader.read_while(|c| c != '\'');
-        expect_str("'", reader)?;
-        Ok(Some(s))
-    } else {
-        Ok(None)
-    }
-}
-
 #[cfg(test)]
 mod tests {
 
     use super::*;
-    use hurl_core::reader::{CharPos, Pos, Reader};
-
-    #[test]
-    pub fn test_literal() {
-        let mut reader = Reader::new("null");
-        assert_eq!(parse(&mut reader).unwrap(), Literal::Null);
-        assert_eq!(reader.cursor().index, CharPos(4));
-
-        let mut reader = Reader::new("true");
-        assert_eq!(parse(&mut reader).unwrap(), Literal::Bool(true));
-        assert_eq!(reader.cursor().index, CharPos(4));
-    }
-
-    #[test]
-    pub fn test_literal_error() {
-        let mut reader = Reader::new("NULL");
-        assert_eq!(
-            parse(&mut reader).unwrap_err(),
-            ParseError::new(
-                Pos::new(1, 1),
-                ParseErrorKind::Expecting("a literal".to_string())
-            )
-        );
-        assert_eq!(reader.cursor().index, CharPos(0));
-    }
-
-    #[test]
-    fn test_string_literal() {
-        let mut reader = Reader::new("'store'");
-        assert_eq!(
-            try_string_literal(&mut reader).unwrap().unwrap(),
-            "store".to_string()
-        );
-        assert_eq!(reader.cursor().index, CharPos(7));
-        let mut reader = Reader::new("\"store\"");
-        assert_eq!(
-            try_string_literal(&mut reader).unwrap().unwrap(),
-            "store".to_string()
-        );
-        assert_eq!(reader.cursor().index, CharPos(7));
-
-        let mut reader = Reader::new("0");
-        assert!(try_string_literal(&mut reader).unwrap().is_none());
-        assert_eq!(reader.cursor().index, CharPos(0));
-    }
-
-    #[test]
-    fn test_string_literal_error() {
-        let mut reader = Reader::new("'store");
-        assert_eq!(
-            try_string_literal(&mut reader).unwrap_err(),
-            ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting("'".to_string()))
-        );
-    }
+    use hurl_core::reader::{CharPos, Reader};
 
     #[test]
     fn test_number() {

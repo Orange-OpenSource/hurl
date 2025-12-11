@@ -20,7 +20,7 @@ use crate::jsonpath2::ast::selector::{IndexSelector, NameSelector};
 use crate::jsonpath2::ast::singular_query::{
     AbsoluteSingularQuery, RelativeSingularQuery, SingularQuery, SingularQuerySegment,
 };
-use crate::jsonpath2::parser::literal::try_integer;
+use crate::jsonpath2::parser::literal::number::try_integer;
 use crate::jsonpath2::parser::primitives::expect_str;
 use crate::jsonpath2::parser::primitives::match_str;
 use crate::jsonpath2::parser::selectors::try_name_selector;
