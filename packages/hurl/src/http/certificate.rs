@@ -30,7 +30,7 @@ pub struct Certificate {
     subject: Option<String>,
     issuer: Option<String>,
     start_date: Option<DateTime<Utc>>,
-    pub expire_date: Option<DateTime<Utc>>,
+    expire_date: Option<DateTime<Utc>>,
     pub serial_number: String,
     pub subject_alt_name: Option<String>,
 }
@@ -65,6 +65,10 @@ impl Certificate {
 
     pub fn start_date(&self) -> Option<DateTime<Utc>> {
         self.start_date
+    }
+
+    pub fn expire_date(&self) -> Option<DateTime<Utc>> {
+        self.expire_date
     }
 }
 

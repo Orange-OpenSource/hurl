@@ -452,7 +452,7 @@ impl CertificateJson {
             subject: c.subject().cloned(),
             issuer: c.issuer().cloned(),
             start_date: c.start_date().map(|d| d.to_string()),
-            expire_date: c.expire_date.map(|d| d.to_string()),
+            expire_date: c.expire_date().map(|d| d.to_string()),
             serial_number: c.serial_number.to_string(),
             subject_alt_name: c.subject_alt_name.clone(),
         }

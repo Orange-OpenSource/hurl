@@ -143,7 +143,7 @@ fn get_call_html(
         if let Some(start_date) = start_date.as_ref() {
             values.push(("Start Date", start_date.as_str()));
         }
-        let expire_date = certificate.expire_date.map(|d| d.to_string());
+        let expire_date = certificate.expire_date().map(|d| d.to_string());
         if let Some(expire_date) = expire_date.as_ref() {
             values.push(("Expire Date", expire_date.as_str()));
         }
