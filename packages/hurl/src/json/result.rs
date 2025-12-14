@@ -448,7 +448,7 @@ impl CertificateJson {
     fn from_certificate(c: &Certificate) -> Self {
         CertificateJson {
             subject: c.subject().cloned(),
-            issuer: c.issuer.clone(),
+            issuer: c.issuer().cloned(),
             start_date: c.start_date.to_string(),
             expire_date: c.expire_date.to_string(),
             serial_number: c.serial_number.to_string(),

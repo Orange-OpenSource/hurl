@@ -388,7 +388,7 @@ fn eval_query_certificate(
                 Some(subject) => Value::String(subject.clone()),
                 None => return Ok(None),
             },
-            CertificateAttributeName::Issuer => match certificate.issuer.as_ref() {
+            CertificateAttributeName::Issuer => match certificate.issuer() {
                 Some(issuer) => Value::String(issuer.clone()),
                 None => return Ok(None),
             },
