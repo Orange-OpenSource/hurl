@@ -29,7 +29,7 @@ use super::easy_ext::CertInfo;
 pub struct Certificate {
     subject: Option<String>,
     issuer: Option<String>,
-    pub start_date: DateTime<Utc>,
+    pub start_date: Option<DateTime<Utc>>,
     pub expire_date: DateTime<Utc>,
     pub serial_number: String,
     pub subject_alt_name: Option<String>,
@@ -40,7 +40,7 @@ impl Certificate {
     pub fn new(
         subject: Option<String>,
         issuer: Option<String>,
-        start_date: DateTime<Utc>,
+        start_date: Option<DateTime<Utc>>,
         expire_date: DateTime<Utc>,
         serial_number: String,
         subject_alt_name: Option<String>,
@@ -75,7 +75,7 @@ impl TryFrom<CertInfo> for Certificate {
         let attributes = parse_attributes(&cert_info.data);
         let subject = parse_subject(&attributes).ok();
         let issuer = parse_issuer(&attributes).ok();
-        let start_date = parse_start_date(&attributes)?;
+        let start_date = parse_start_date(&attributes).ok();
         let expire_date = parse_expire_date(&attributes)?;
         let serial_number = parse_serial_number(&attributes)?;
         let subject_alt_name = parse_subject_alt_name(&attributes).ok();
@@ -225,7 +225,7 @@ mod tests {
         );
         assert_eq!(
             parse_start_date(&attributes).unwrap(),
-            chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
+            DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                 .unwrap()
                 .with_timezone(&Utc)
         );
@@ -237,7 +237,7 @@ mod tests {
         );
         assert_eq!(
             parse_start_date(&attributes).unwrap(),
-            chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
+            DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                 .unwrap()
                 .with_timezone(&Utc)
         );
@@ -300,10 +300,10 @@ mod tests {
                 subject: Some("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
                     .to_string()),
                 issuer: Some("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()),
-                start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
+                start_date: Some(DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
-                    .with_timezone(&Utc),
-                expire_date: chrono::DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
+                    .with_timezone(&Utc)),
+                expire_date: DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&Utc),
                 serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
@@ -315,7 +315,7 @@ mod tests {
             Certificate::try_from(CertInfo { data: vec![] })
                 .err()
                 .unwrap(),
-            "missing start date attribute in {}".to_string()
+            "missing expire date attribute".to_string()
         );
     }
 }
