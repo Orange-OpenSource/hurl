@@ -140,7 +140,7 @@ fn get_call_html(
         if let Some(issuer) = certificate.issuer() {
             values.push(("Issuer", issuer.as_str()));
         }
-        let start_date = certificate.start_date.map(|d| d.to_string());
+        let start_date = certificate.start_date().map(|d| d.to_string());
         if let Some(start_date) = start_date.as_ref() {
             values.push(("Start Date", start_date.as_str()));
         }

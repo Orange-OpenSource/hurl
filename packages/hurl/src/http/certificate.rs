@@ -29,7 +29,7 @@ use super::easy_ext::CertInfo;
 pub struct Certificate {
     subject: Option<String>,
     issuer: Option<String>,
-    pub start_date: Option<DateTime<Utc>>,
+    start_date: Option<DateTime<Utc>>,
     pub expire_date: DateTime<Utc>,
     pub serial_number: String,
     pub subject_alt_name: Option<String>,
@@ -61,6 +61,10 @@ impl Certificate {
 
     pub fn issuer(&self) -> Option<&String> {
         self.issuer.as_ref()
+    }
+
+    pub fn start_date(&self) -> Option<DateTime<Utc>> {
+        self.start_date
     }
 }
 

@@ -392,8 +392,8 @@ fn eval_query_certificate(
                 Some(issuer) => Value::String(issuer.clone()),
                 None => return Ok(None),
             },
-            CertificateAttributeName::StartDate => match certificate.start_date.as_ref() {
-                Some(date) => Value::Date(*date),
+            CertificateAttributeName::StartDate => match certificate.start_date() {
+                Some(date) => Value::Date(date),
                 None => return Ok(None),
             },
             CertificateAttributeName::ExpireDate => Value::Date(certificate.expire_date),
