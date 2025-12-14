@@ -147,7 +147,7 @@ fn get_call_html(
         if let Some(expire_date) = expire_date.as_ref() {
             values.push(("Expire Date", expire_date.as_str()));
         }
-        if let Some(serial_number) = certificate.serial_number.as_ref() {
+        if let Some(serial_number) = certificate.serial_number() {
             values.push(("Serial Number", serial_number.as_str()));
         }
         if let Some(subject_alt_name) = certificate.subject_alt_name.as_ref() {

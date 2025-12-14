@@ -393,8 +393,7 @@ fn eval_query_certificate(
             CertificateAttributeName::StartDate => certificate.start_date().map(Value::Date),
             CertificateAttributeName::ExpireDate => certificate.expire_date().map(Value::Date),
             CertificateAttributeName::SerialNumber => certificate
-                .serial_number
-                .as_ref()
+                .serial_number()
                 .map(|it| Value::String(it.clone())),
             CertificateAttributeName::SubjectAltName => certificate
                 .subject_alt_name
