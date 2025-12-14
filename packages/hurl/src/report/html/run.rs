@@ -138,7 +138,9 @@ fn get_call_html(
         if let Some(subject) = certificate.subject() {
             values.push(("Subject", subject.as_str()));
         }
-        values.push(("Issuer", certificate.issuer.as_str()));
+        if let Some(issuer) = &certificate.issuer {
+            values.push(("Issuer", issuer.as_str()));
+        }
         values.push(("Start Date", start_date.as_str()));
         values.push(("Expire Date", end_date.as_str()));
         values.push(("Serial Number", certificate.serial_number.as_str()));

@@ -385,21 +385,23 @@ fn eval_query_certificate(
     if let Some(certificate) = &response.certificate {
         let value = match certificate_attribute {
             CertificateAttributeName::Subject => match certificate.subject() {
-                Some(s) => Value::String(s.clone()),
+                Some(subject) => Value::String(subject.clone()),
                 None => return Ok(None),
             },
-            CertificateAttributeName::Issuer => Value::String(certificate.issuer.clone()),
+            CertificateAttributeName::Issuer => match certificate.issuer.as_ref() {
+                Some(issuer) => Value::String(issuer.clone()),
+                None => return Ok(None),
+            },
             CertificateAttributeName::StartDate => Value::Date(certificate.start_date),
             CertificateAttributeName::ExpireDate => Value::Date(certificate.expire_date),
             CertificateAttributeName::SerialNumber => {
                 Value::String(certificate.serial_number.clone())
             }
-            CertificateAttributeName::SubjectAltName => {
-                match certificate.subject_alt_name.as_ref() {
-                    Some(s) => Value::String(s.clone()),
-                    None => return Ok(None),
-                }
-            }
+            CertificateAttributeName::SubjectAltName => match certificate.subject_alt_name.as_ref()
+            {
+                Some(alt_name) => Value::String(alt_name.clone()),
+                None => return Ok(None),
+            },
         };
         Ok(Some(value))
     } else {
@@ -1487,7 +1489,7 @@ pub mod tests {
         .is_none());
 
         let subject = Some("A=B, C=D".to_string());
-        let issuer = String::new();
+        let issuer = Some(String::new());
         let start_date = Default::default();
         let expire_date = Default::default();
         let serial_number = String::new();

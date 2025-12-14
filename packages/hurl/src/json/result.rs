@@ -191,7 +191,8 @@ struct ResponseCookieJson {
 struct CertificateJson {
     #[serde(skip_serializing_if = "Option::is_none")]
     subject: Option<String>,
-    issuer: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    issuer: Option<String>,
     start_date: String,
     expire_date: String,
     serial_number: String,

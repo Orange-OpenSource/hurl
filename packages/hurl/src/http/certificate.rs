@@ -28,7 +28,7 @@ use super::easy_ext::CertInfo;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Certificate {
     subject: Option<String>,
-    pub issuer: String,
+    pub issuer: Option<String>,
     pub start_date: DateTime<Utc>,
     pub expire_date: DateTime<Utc>,
     pub serial_number: String,
@@ -39,7 +39,7 @@ impl Certificate {
     /// Creates a new instance.
     pub fn new(
         subject: Option<String>,
-        issuer: String,
+        issuer: Option<String>,
         start_date: DateTime<Utc>,
         expire_date: DateTime<Utc>,
         serial_number: String,
@@ -70,7 +70,7 @@ impl TryFrom<CertInfo> for Certificate {
     fn try_from(cert_info: CertInfo) -> Result<Self, Self::Error> {
         let attributes = parse_attributes(&cert_info.data);
         let subject = parse_subject(&attributes).ok();
-        let issuer = parse_issuer(&attributes)?;
+        let issuer = parse_issuer(&attributes).ok();
         let start_date = parse_start_date(&attributes)?;
         let expire_date = parse_expire_date(&attributes)?;
         let serial_number = parse_serial_number(&attributes)?;
@@ -295,7 +295,7 @@ mod tests {
             Certificate {
                 subject: Some("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
                     .to_string()),
-                issuer: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
+                issuer: Some("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()),
                 start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&Utc),
@@ -311,7 +311,7 @@ mod tests {
             Certificate::try_from(CertInfo { data: vec![] })
                 .err()
                 .unwrap(),
-            "missing Issuer attribute in {}".to_string()
+            "missing start date attribute in {}".to_string()
         );
     }
 }
