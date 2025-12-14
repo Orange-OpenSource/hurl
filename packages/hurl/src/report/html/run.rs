@@ -133,13 +133,15 @@ fn get_call_html(
     if let Some(certificate) = &call.response.certificate {
         let start_date = certificate.start_date.to_string();
         let end_date = certificate.expire_date.to_string();
-        let mut values = vec![
-            ("Subject", certificate.subject.as_str()),
-            ("Issuer", certificate.issuer.as_str()),
-            ("Start Date", start_date.as_str()),
-            ("Expire Date", end_date.as_str()),
-            ("Serial Number", certificate.serial_number.as_str()),
-        ];
+        let mut values = vec![];
+
+        if let Some(subject) = certificate.subject.as_ref() {
+            values.push(("Subject", subject.as_str()));
+        }
+        values.push(("Issuer", certificate.issuer.as_str()));
+        values.push(("Start Date", start_date.as_str()));
+        values.push(("Expire Date", end_date.as_str()));
+        values.push(("Serial Number", certificate.serial_number.as_str()));
         if let Some(subject_alt_name) = certificate.subject_alt_name.as_ref() {
             values.push(("Subject Alt Name", subject_alt_name.as_str()));
         }

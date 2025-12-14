@@ -21,9 +21,13 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 
 use super::easy_ext::CertInfo;
 
+/// Represents an SSL/TLS certificate.
+///
+/// Each attribute `subject`, `issuer` etc... is optional, so we can test invalid certificate,
+/// (i.e. a certificate without serial number).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Certificate {
-    pub subject: String,
+    pub subject: Option<String>,
     pub issuer: String,
     pub start_date: DateTime<Utc>,
     pub expire_date: DateTime<Utc>,
@@ -40,7 +44,7 @@ impl TryFrom<CertInfo> for Certificate {
     /// - date format: "Jan 10 08:29:52 2023 GMT" vs "2023-01-10 08:29:52 GMT"
     fn try_from(cert_info: CertInfo) -> Result<Self, Self::Error> {
         let attributes = parse_attributes(&cert_info.data);
-        let subject = parse_subject(&attributes)?;
+        let subject = parse_subject(&attributes).ok();
         let issuer = parse_issuer(&attributes)?;
         let start_date = parse_start_date(&attributes)?;
         let expire_date = parse_expire_date(&attributes)?;
@@ -238,11 +242,11 @@ mod tests {
         let mut attributes = HashMap::new();
         attributes.insert(
             "x509v3 subject alternative name".to_string(),
-            "DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string(),
+            "DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string(),
         );
         assert_eq!(
             parse_subject_alt_name(&attributes).unwrap(),
-            "DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string()
+            "DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string()
         );
     }
 
@@ -258,14 +262,14 @@ mod tests {
                     "Serial Number:1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string(),
                     "Start date:Jan 10 08:29:52 2023 GMT".to_string(),
                     "Expire date:Oct 30 08:29:52 2025 GMT".to_string(),
-                    "x509v3 subject alternative name:DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1"
+                    "x509v3 subject alternative name:DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1"
                         .to_string(),
                 ]
             })
             .unwrap(),
             Certificate {
-                subject: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
-                    .to_string(),
+                subject: Some("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
+                    .to_string()),
                 issuer: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
                 start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
@@ -275,14 +279,14 @@ mod tests {
                     .with_timezone(&Utc),
                 serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
                     .to_string(),
-                subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP adddress:0:0:0:0:0:0:0:1".to_string())
+                subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string())
             }
         );
         assert_eq!(
             Certificate::try_from(CertInfo { data: vec![] })
                 .err()
                 .unwrap(),
-            "missing Subject attribute in {}".to_string()
+            "missing Issuer attribute in {}".to_string()
         );
     }
 }

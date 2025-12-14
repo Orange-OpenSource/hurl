@@ -189,7 +189,8 @@ struct ResponseCookieJson {
 
 #[derive(Deserialize, Serialize)]
 struct CertificateJson {
-    subject: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    subject: Option<String>,
     issuer: String,
     start_date: String,
     expire_date: String,

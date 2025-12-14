@@ -384,7 +384,10 @@ fn eval_query_certificate(
 ) -> QueryResult {
     if let Some(certificate) = &response.certificate {
         let value = match certificate_attribute {
-            CertificateAttributeName::Subject => Value::String(certificate.subject.clone()),
+            CertificateAttributeName::Subject => match certificate.subject.as_ref() {
+                Some(s) => Value::String(s.clone()),
+                None => return Ok(None),
+            },
             CertificateAttributeName::Issuer => Value::String(certificate.issuer.clone()),
             CertificateAttributeName::StartDate => Value::Date(certificate.start_date),
             CertificateAttributeName::ExpireDate => Value::Date(certificate.expire_date),
@@ -1486,7 +1489,7 @@ pub mod tests {
             eval_query_certificate(
                 &Response {
                     certificate: Some(http::Certificate {
-                        subject: "A=B, C=D".to_string(),
+                        subject: Some("A=B, C=D".to_string()),
                         issuer: String::new(),
                         start_date: Default::default(),
                         expire_date: Default::default(),
