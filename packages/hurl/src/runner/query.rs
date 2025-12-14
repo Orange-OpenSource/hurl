@@ -396,7 +396,10 @@ fn eval_query_certificate(
                 Some(date) => Value::Date(date),
                 None => return Ok(None),
             },
-            CertificateAttributeName::ExpireDate => Value::Date(certificate.expire_date),
+            CertificateAttributeName::ExpireDate => match certificate.expire_date {
+                Some(date) => Value::Date(date),
+                None => return Ok(None),
+            },
             CertificateAttributeName::SerialNumber => {
                 Value::String(certificate.serial_number.clone())
             }

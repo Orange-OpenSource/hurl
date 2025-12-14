@@ -30,7 +30,7 @@ pub struct Certificate {
     subject: Option<String>,
     issuer: Option<String>,
     start_date: Option<DateTime<Utc>>,
-    pub expire_date: DateTime<Utc>,
+    pub expire_date: Option<DateTime<Utc>>,
     pub serial_number: String,
     pub subject_alt_name: Option<String>,
 }
@@ -41,7 +41,7 @@ impl Certificate {
         subject: Option<String>,
         issuer: Option<String>,
         start_date: Option<DateTime<Utc>>,
-        expire_date: DateTime<Utc>,
+        expire_date: Option<DateTime<Utc>>,
         serial_number: String,
         subject_alt_name: Option<String>,
     ) -> Self {
@@ -80,7 +80,7 @@ impl TryFrom<CertInfo> for Certificate {
         let subject = parse_subject(&attributes).ok();
         let issuer = parse_issuer(&attributes).ok();
         let start_date = parse_start_date(&attributes).ok();
-        let expire_date = parse_expire_date(&attributes)?;
+        let expire_date = parse_expire_date(&attributes).ok();
         let serial_number = parse_serial_number(&attributes)?;
         let subject_alt_name = parse_subject_alt_name(&attributes).ok();
         Ok(Certificate {
@@ -307,9 +307,9 @@ mod tests {
                 start_date: Some(DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&Utc)),
-                expire_date: DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
+                expire_date: Some(DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
                     .unwrap()
-                    .with_timezone(&Utc),
+                    .with_timezone(&Utc)),
                 serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
                     .to_string(),
                 subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string())
@@ -319,7 +319,7 @@ mod tests {
             Certificate::try_from(CertInfo { data: vec![] })
                 .err()
                 .unwrap(),
-            "missing expire date attribute".to_string()
+            "Missing serial number attribute in {}".to_string()
         );
     }
 }
