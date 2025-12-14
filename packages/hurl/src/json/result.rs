@@ -446,7 +446,7 @@ impl ResponseCookieJson {
 impl CertificateJson {
     fn from_certificate(c: &Certificate) -> Self {
         CertificateJson {
-            subject: c.subject.clone(),
+            subject: c.subject().cloned(),
             issuer: c.issuer.clone(),
             start_date: c.start_date.to_string(),
             expire_date: c.expire_date.to_string(),

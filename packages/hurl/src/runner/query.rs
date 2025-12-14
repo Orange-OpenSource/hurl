@@ -384,7 +384,7 @@ fn eval_query_certificate(
 ) -> QueryResult {
     if let Some(certificate) = &response.certificate {
         let value = match certificate_attribute {
-            CertificateAttributeName::Subject => match certificate.subject.as_ref() {
+            CertificateAttributeName::Subject => match certificate.subject() {
                 Some(s) => Value::String(s.clone()),
                 None => return Ok(None),
             },
@@ -1485,17 +1485,25 @@ pub mod tests {
         )
         .unwrap()
         .is_none());
+
+        let subject = Some("A=B, C=D".to_string());
+        let issuer = String::new();
+        let start_date = Default::default();
+        let expire_date = Default::default();
+        let serial_number = String::new();
+        let subject_alt_name = Some(String::new());
+        let certificate = http::Certificate::new(
+            subject,
+            issuer,
+            start_date,
+            expire_date,
+            serial_number,
+            subject_alt_name,
+        );
         assert_eq!(
             eval_query_certificate(
                 &Response {
-                    certificate: Some(http::Certificate {
-                        subject: Some("A=B, C=D".to_string()),
-                        issuer: String::new(),
-                        start_date: Default::default(),
-                        expire_date: Default::default(),
-                        serial_number: String::new(),
-                        subject_alt_name: Some(String::new())
-                    }),
+                    certificate: Some(certificate),
                     ..default_response()
                 },
                 CertificateAttributeName::Subject

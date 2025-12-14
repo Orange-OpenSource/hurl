@@ -27,12 +27,37 @@ use super::easy_ext::CertInfo;
 /// (i.e. a certificate without serial number).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Certificate {
-    pub subject: Option<String>,
+    subject: Option<String>,
     pub issuer: String,
     pub start_date: DateTime<Utc>,
     pub expire_date: DateTime<Utc>,
     pub serial_number: String,
     pub subject_alt_name: Option<String>,
+}
+
+impl Certificate {
+    /// Creates a new instance.
+    pub fn new(
+        subject: Option<String>,
+        issuer: String,
+        start_date: DateTime<Utc>,
+        expire_date: DateTime<Utc>,
+        serial_number: String,
+        subject_alt_name: Option<String>,
+    ) -> Self {
+        Self {
+            subject,
+            issuer,
+            start_date,
+            expire_date,
+            serial_number,
+            subject_alt_name,
+        }
+    }
+
+    pub fn subject(&self) -> Option<&String> {
+        self.subject.as_ref()
+    }
 }
 
 impl TryFrom<CertInfo> for Certificate {

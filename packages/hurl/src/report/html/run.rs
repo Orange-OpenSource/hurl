@@ -135,7 +135,7 @@ fn get_call_html(
         let end_date = certificate.expire_date.to_string();
         let mut values = vec![];
 
-        if let Some(subject) = certificate.subject.as_ref() {
+        if let Some(subject) = certificate.subject() {
             values.push(("Subject", subject.as_str()));
         }
         values.push(("Issuer", certificate.issuer.as_str()));
