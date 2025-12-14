@@ -3,6 +3,12 @@
 
 Thanks to
 [@spiffytech](https://github.com/spiffytech),
+[@rajiv](https://github.com/rajiv),
+
+Enhancements:
+
+* Add Subject Alt Name (SAN) attribute for certificate assertions [#4617](https://github.com/Orange-OpenSource/hurl/issues/4617)
+
 
 Bugs Fixed:
 
