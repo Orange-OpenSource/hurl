@@ -384,32 +384,24 @@ fn eval_query_certificate(
 ) -> QueryResult {
     if let Some(certificate) = &response.certificate {
         let value = match certificate_attribute {
-            CertificateAttributeName::Subject => match certificate.subject() {
-                Some(subject) => Value::String(subject.clone()),
-                None => return Ok(None),
-            },
-            CertificateAttributeName::Issuer => match certificate.issuer() {
-                Some(issuer) => Value::String(issuer.clone()),
-                None => return Ok(None),
-            },
-            CertificateAttributeName::StartDate => match certificate.start_date() {
-                Some(date) => Value::Date(date),
-                None => return Ok(None),
-            },
-            CertificateAttributeName::ExpireDate => match certificate.expire_date() {
-                Some(date) => Value::Date(date),
-                None => return Ok(None),
-            },
-            CertificateAttributeName::SerialNumber => {
-                Value::String(certificate.serial_number.clone())
+            CertificateAttributeName::Subject => {
+                certificate.subject().map(|it| Value::String(it.clone()))
             }
-            CertificateAttributeName::SubjectAltName => match certificate.subject_alt_name.as_ref()
-            {
-                Some(alt_name) => Value::String(alt_name.clone()),
-                None => return Ok(None),
-            },
+            CertificateAttributeName::Issuer => {
+                certificate.issuer().map(|it| Value::String(it.clone()))
+            }
+            CertificateAttributeName::StartDate => certificate.start_date().map(Value::Date),
+            CertificateAttributeName::ExpireDate => certificate.expire_date().map(Value::Date),
+            CertificateAttributeName::SerialNumber => certificate
+                .serial_number
+                .as_ref()
+                .map(|it| Value::String(it.clone())),
+            CertificateAttributeName::SubjectAltName => certificate
+                .subject_alt_name
+                .as_ref()
+                .map(|it| Value::String(it.clone())),
         };
-        Ok(Some(value))
+        Ok(value)
     } else {
         Ok(None)
     }
@@ -1498,7 +1490,7 @@ pub mod tests {
         let issuer = Some(String::new());
         let start_date = Default::default();
         let expire_date = Default::default();
-        let serial_number = String::new();
+        let serial_number = Some(String::new());
         let subject_alt_name = Some(String::new());
         let certificate = http::Certificate::new(
             subject,

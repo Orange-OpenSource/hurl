@@ -31,7 +31,7 @@ pub struct Certificate {
     issuer: Option<String>,
     start_date: Option<DateTime<Utc>>,
     expire_date: Option<DateTime<Utc>>,
-    pub serial_number: String,
+    pub serial_number: Option<String>,
     pub subject_alt_name: Option<String>,
 }
 
@@ -42,7 +42,7 @@ impl Certificate {
         issuer: Option<String>,
         start_date: Option<DateTime<Utc>>,
         expire_date: Option<DateTime<Utc>>,
-        serial_number: String,
+        serial_number: Option<String>,
         subject_alt_name: Option<String>,
     ) -> Self {
         Self {
@@ -85,7 +85,7 @@ impl TryFrom<CertInfo> for Certificate {
         let issuer = parse_issuer(&attributes).ok();
         let start_date = parse_start_date(&attributes).ok();
         let expire_date = parse_expire_date(&attributes).ok();
-        let serial_number = parse_serial_number(&attributes)?;
+        let serial_number = parse_serial_number(&attributes).ok();
         let subject_alt_name = parse_subject_alt_name(&attributes).ok();
         Ok(Certificate {
             subject,
@@ -314,16 +314,10 @@ mod tests {
                 expire_date: Some(DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&Utc)),
-                serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
-                    .to_string(),
+                serial_number: Some("1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
+                    .to_string()),
                 subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string())
             }
-        );
-        assert_eq!(
-            Certificate::try_from(CertInfo { data: vec![] })
-                .err()
-                .unwrap(),
-            "Missing serial number attribute in {}".to_string()
         );
     }
 }

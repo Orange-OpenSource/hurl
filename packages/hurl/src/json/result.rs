@@ -197,7 +197,8 @@ struct CertificateJson {
     start_date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     expire_date: Option<String>,
-    serial_number: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    serial_number: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     subject_alt_name: Option<String>,
 }
@@ -453,7 +454,7 @@ impl CertificateJson {
             issuer: c.issuer().cloned(),
             start_date: c.start_date().map(|d| d.to_string()),
             expire_date: c.expire_date().map(|d| d.to_string()),
-            serial_number: c.serial_number.to_string(),
+            serial_number: c.serial_number.clone(),
             subject_alt_name: c.subject_alt_name.clone(),
         }
     }
