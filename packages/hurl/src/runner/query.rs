@@ -396,8 +396,7 @@ fn eval_query_certificate(
                 .serial_number()
                 .map(|it| Value::String(it.clone())),
             CertificateAttributeName::SubjectAltName => certificate
-                .subject_alt_name
-                .as_ref()
+                .subject_alt_name()
                 .map(|it| Value::String(it.clone())),
         };
         Ok(value)

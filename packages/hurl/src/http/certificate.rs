@@ -32,7 +32,7 @@ pub struct Certificate {
     start_date: Option<DateTime<Utc>>,
     expire_date: Option<DateTime<Utc>>,
     serial_number: Option<String>,
-    pub subject_alt_name: Option<String>,
+    subject_alt_name: Option<String>,
 }
 
 impl Certificate {
@@ -73,6 +73,10 @@ impl Certificate {
 
     pub fn serial_number(&self) -> Option<&String> {
         self.serial_number.as_ref()
+    }
+
+    pub fn subject_alt_name(&self) -> Option<&String> {
+        self.subject_alt_name.as_ref()
     }
 }
 
