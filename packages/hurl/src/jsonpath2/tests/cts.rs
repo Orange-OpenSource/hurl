@@ -273,7 +273,7 @@ fn load_testcases() -> Vec<TestCase> {
 fn run() {
     let testcases = load_testcases();
     // TODO: Remove Limit when spec is fully implemented
-    let testcases = testcases.iter().take(200);
+    let testcases = testcases.iter().take(220);
     let count_total = testcases.len();
     let testcases = testcases.filter(|tc| !IGNORED_TESTS.contains(&tc.name.as_str()));
     let count_ignored = count_total - testcases.clone().count();

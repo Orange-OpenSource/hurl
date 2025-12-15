@@ -33,4 +33,7 @@ impl ParseError {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ParseErrorKind {
     Expecting(String),
+    InvalidCharacter(char),
+    InvalidEscapeSequence(String),
+    InvalidUnicodeEscape(String),
 }
