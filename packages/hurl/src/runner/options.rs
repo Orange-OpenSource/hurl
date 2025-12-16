@@ -15,10 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{
-    BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
-    OptionKind, Placeholder, VariableDefinition, VariableValue,
-};
+use hurl_core::ast::{BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber, OptionKind, Placeholder, VariableDefinition, VariableValue, VerbosityOption};
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
@@ -277,6 +274,9 @@ pub fn get_entry_options(
             // verbose and very-verbose option have been previously processed as they
             // can impact the logging. We compute here their values to check the potential
             // templatized error.
+            OptionKind::Verbosity(_) => {
+                // Verbosity option doesn't support templating for the moment
+            }
             OptionKind::Verbose(value) => {
                 eval_boolean_option(value, variables)?;
             }
@@ -300,6 +300,14 @@ pub fn get_entry_verbosity(
 
     for option in entry.request.options() {
         match &option.kind {
+            OptionKind::Verbosity(value) => {
+                verbosity = match value {
+                    VerbosityOption::Brief => Some(Verbosity::LowVerbose),
+                    VerbosityOption::Verbose => Some(Verbosity::Verbose),
+                    VerbosityOption::Debug => Some(Verbosity::VeryVerbose),
+                }
+            }
+            // Aliases of verbosity
             OptionKind::Verbose(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 verbosity = if value {

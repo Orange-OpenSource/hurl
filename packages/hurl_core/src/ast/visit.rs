@@ -20,14 +20,7 @@
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
-use crate::ast::{
-    Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
-    DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue,
-    Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method, MultilineString,
-    MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue,
-    PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
-    StatusValue, Template, VariableDefinition, VariableValue, VersionValue, Whitespace, U64,
-};
+use crate::ast::{Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VerbosityOption, VersionValue, Whitespace, U64};
 use crate::types::{Count, Duration, DurationUnit, SourceString, ToSource};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default
@@ -219,6 +212,10 @@ pub trait Visitor: Sized {
         walk_variable_value(self, value);
     }
 
+    fn visit_verbosity_option(&mut self, value: &VerbosityOption) {
+        walk_verbosity_option(self, value);
+    }
+
     fn visit_version(&mut self, value: &VersionValue) {}
 
     fn visit_xml_body(&mut self, xml: &str) {}
@@ -394,6 +391,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::User(value) => visitor.visit_template(value),
         OptionKind::Variable(value) => visitor.visit_variable_def(value),
         OptionKind::Verbose(value) => visitor.visit_bool_option(value),
+        OptionKind::Verbosity(value) => visitor.visit_verbosity_option(value),
         OptionKind::VeryVerbose(value) => visitor.visit_bool_option(value),
     };
     visitor.visit_lt(&option.line_terminator0);
@@ -799,6 +797,10 @@ pub fn walk_variable_value<V: Visitor>(visitor: &mut V, value: &VariableValue) {
         VariableValue::Number(value) => visitor.visit_number(value),
         VariableValue::String(value) => visitor.visit_template(value),
     }
+}
+
+pub fn walk_verbosity_option<V: Visitor>(visitor: &mut V, value: &VerbosityOption) {
+    visitor.visit_literal(value.identifier());
 }
 
 #[cfg(test)]

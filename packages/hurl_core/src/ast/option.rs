@@ -73,6 +73,7 @@ pub enum OptionKind {
     User(Template),
     Variable(VariableDefinition),
     Verbose(BooleanOption),
+    Verbosity(VerbosityOption),
     VeryVerbose(BooleanOption),
 }
 
@@ -119,6 +120,7 @@ impl OptionKind {
             OptionKind::User(_) => "user",
             OptionKind::Variable(_) => "variable",
             OptionKind::Verbose(_) => "verbose",
+            OptionKind::Verbosity(_) => "verbosity",
             OptionKind::VeryVerbose(_) => "very-verbose",
         }
     }
@@ -166,6 +168,7 @@ impl fmt::Display for OptionKind {
             OptionKind::User(value) => value.to_string(),
             OptionKind::Variable(value) => value.to_string(),
             OptionKind::Verbose(value) => value.to_string(),
+            OptionKind::Verbosity(value) => value.to_string(),
             OptionKind::VeryVerbose(value) => value.to_string(),
         };
         write!(f, "{}: {}", self.identifier(), value)
@@ -274,6 +277,29 @@ impl ToSource for VariableValue {
             VariableValue::Bool(value) => value.to_string().to_source(),
             VariableValue::Number(value) => value.to_source(),
             VariableValue::String(value) => value.to_source(),
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum VerbosityOption {
+    Brief,
+    Verbose,
+    Debug,
+}
+
+impl fmt::Display for VerbosityOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.identifier())
+    }
+}
+
+impl VerbosityOption {
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            VerbosityOption::Brief => "brief",
+            VerbosityOption::Verbose => "verbose",
+            VerbosityOption::Debug => "debug",
         }
     }
 }

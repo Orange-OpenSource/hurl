@@ -85,6 +85,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "user" => option_user(reader)?,
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
+        "verbosity" => option_verbosity(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
         _ => {
             return Err(ParseError::new(
