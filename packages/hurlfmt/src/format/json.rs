@@ -348,6 +348,7 @@ impl ToJson for EntryOption {
                 JValue::String(format!("{}={}", value.name, value.value.to_source()))
             }
             OptionKind::Verbose(value) => value.to_json(),
+            OptionKind::Verbosity(value) => JValue::String(value.to_string()),
             OptionKind::VeryVerbose(value) => value.to_json(),
         };
 

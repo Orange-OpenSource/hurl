@@ -54,6 +54,7 @@ variable: score=7.7
 variable: name=Bob
 variable: name=Bob
 verbose: false
+verbosity: brief    # templating verbosity not supported
 very-verbose: false
 
 GET http://localhost:8000/hello
@@ -97,4 +98,5 @@ unix-socket: {{socket-file}}
 user: {{user}}
 #variable: {{variable}}     NOT SUPPORTED YET
 verbose: {{verbose}}
+verbosity: brief    # templating verbosity not supported
 very-verbose: {{very-verbose}}

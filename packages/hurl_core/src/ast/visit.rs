@@ -20,7 +20,15 @@
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
-use crate::ast::{Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue, VerbosityOption, VersionValue, Whitespace, U64};
+use crate::ast::{
+    Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
+    DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter, FilterValue,
+    Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method, MultilineString,
+    MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate, PredicateFuncValue,
+    PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue,
+    StatusValue, Template, VariableDefinition, VariableValue, VerbosityOption, VersionValue,
+    Whitespace, U64,
+};
 use crate::types::{Count, Duration, DurationUnit, SourceString, ToSource};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default
@@ -800,7 +808,7 @@ pub fn walk_variable_value<V: Visitor>(visitor: &mut V, value: &VariableValue) {
 }
 
 pub fn walk_verbosity_option<V: Visitor>(visitor: &mut V, value: &VerbosityOption) {
-    visitor.visit_literal(value.identifier());
+    visitor.visit_string(value.identifier());
 }
 
 #[cfg(test)]

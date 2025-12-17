@@ -22,7 +22,7 @@ use hurl_core::ast::{
     Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder,
     Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,
     Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VersionValue, I64, U64,
+    VerbosityOption, VersionValue, I64, U64,
 };
 use hurl_core::types::{Count, Duration, DurationUnit, ToSource};
 
@@ -498,6 +498,7 @@ impl Lint for OptionKind {
             OptionKind::User(value) => value.lint(),
             OptionKind::Variable(value) => value.lint(),
             OptionKind::Verbose(value) => value.lint(),
+            OptionKind::Verbosity(value) => value.lint(),
             OptionKind::VeryVerbose(value) => value.lint(),
         };
         s.push_str(&value);
@@ -823,6 +824,12 @@ impl Lint for VariableValue {
 impl Lint for VersionValue {
     fn lint(&self) -> String {
         self.to_source().to_string()
+    }
+}
+
+impl Lint for VerbosityOption {
+    fn lint(&self) -> String {
+        self.to_string()
     }
 }
 

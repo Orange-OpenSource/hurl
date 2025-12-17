@@ -1,0 +1,100 @@
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X_POWERED_BY: Hurl
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 14
+>
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Entry options:
+* verbosity: verbose
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/verbosity
+* X_POWERED_BY: Hurl
+*
+* Request can be run with the following curl command:
+* curl --header 'X_POWERED_BY: Hurl' --header 'Content-Type: application/json' --data '{"foo": "bar"}' 'http://localhost:8000/verbosity'
+*
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X_POWERED_BY: Hurl
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 14
+>
+* Response: (received 29 bytes in 0 ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 4
+*
+* Entry options:
+* verbosity: debug
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/verbosity
+* X_POWERED_BY: Hurl
+*
+* Request can be run with the following curl command:
+* curl --header 'X_POWERED_BY: Hurl' --header 'Content-Type: application/json' --data '{"foo": "bar"}' 'http://localhost:8000/verbosity'
+*
+** Found bundle for host: 0x6000028bc390 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X_POWERED_BY: Hurl
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 14
+>
+* Request body:
+* {"foo": "bar"}
+** upload completely sent off: 14 bytes
+** Connection #0 to host localhost left intact
+* Response: (received 29 bytes in 0 ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Response body:
+* Lorem ipsum dolor sit amet...
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<.*?>>> µs
+* connect: <<<.*?>>> µs
+* app_connect: <<<.*?>>> µs
+* pre_transfer: <<<.*?>>> µs
+* start_transfer: <<<.*?>>> µs
+* total: <<<.*?>>> µs
+*

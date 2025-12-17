@@ -18,7 +18,7 @@
 use super::placeholder;
 use crate::ast::{
     is_variable_reserved, BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption,
-    OptionKind, SourceInfo, VariableDefinition, VariableValue,
+    OptionKind, SourceInfo, VariableDefinition, VariableValue, VerbosityOption,
 };
 use crate::combinator::{choice, non_recover};
 use crate::parser::duration::duration;
@@ -300,6 +300,23 @@ fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Verbose(value))
+}
+
+fn option_verbosity(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let start = reader.cursor();
+    let name = reader.read_while(|c| c.is_ascii_alphabetic());
+    match name.as_str() {
+        "brief" => Ok(OptionKind::Verbosity(VerbosityOption::Brief)),
+        "verbose" => Ok(OptionKind::Verbosity(VerbosityOption::Verbose)),
+        "debug" => Ok(OptionKind::Verbosity(VerbosityOption::Debug)),
+        _ => {
+            reader.seek(start);
+            let kind = ParseErrorKind::Expecting {
+                value: "brief|verbose|debug".to_string(),
+            };
+            Err(ParseError::new(start.pos, false, kind))
+        }
+    }
 }
 
 fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {

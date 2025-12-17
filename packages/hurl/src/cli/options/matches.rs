@@ -583,7 +583,7 @@ pub fn verbosity(arg_matches: &ArgMatches) -> Option<Verbosity> {
         "brief" => Verbosity::Brief,
         "verbose" => Verbosity::Verbose,
         "debug" => Verbosity::Debug,
-        _ => Verbosity::Verbose,
+        _ => unreachable!(),
     })
 }
 

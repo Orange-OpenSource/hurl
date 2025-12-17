@@ -54,6 +54,7 @@
 <span class="string">variable</span>: name=<span class="string">Bob</span>
 <span class="string">variable</span>:name = <span class="string">Bob</span>
 <span class="string">verbose</span>: <span class="boolean">false</span>
+<span class="string">verbosity</span>: <span class="string">brief</span>    <span class="comment"># templating verbosity not supported</span>
 <span class="string">very-verbose</span>: <span class="boolean">false</span>
 </span></span><span class="entry"><span class="request">
 <span class="method">GET</span> <span class="url">http://localhost:8000/hello</span>
@@ -97,5 +98,6 @@
 <span class="string">user</span>: <span class="string">{{user}}</span>
 <span class="comment">#variable: {{variable}}     NOT SUPPORTED YET</span>
 <span class="string">verbose</span>: <span class="expr">{{verbose}}</span>
+<span class="string">verbosity</span>: <span class="string">brief</span>    <span class="comment"># templating verbosity not supported</span>
 <span class="string">very-verbose</span>: <span class="expr">{{very-verbose}}</span>
 </span></span></code></pre>

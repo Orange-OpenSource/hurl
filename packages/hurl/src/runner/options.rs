@@ -15,7 +15,10 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber, OptionKind, Placeholder, VariableDefinition, VariableValue, VerbosityOption};
+use hurl_core::ast::{
+    BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
+    OptionKind, Placeholder, VariableDefinition, VariableValue, VerbosityOption,
+};
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use crate::http::{IpResolve, RequestedHttpVersion};

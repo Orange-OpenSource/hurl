@@ -1,0 +1,7 @@
+error: Parsing literal
+  --> tests_error_parser/invalid_option_verbosity.hurl:3:12
+   |
+ 3 | verbosity: foo
+   |            ^ expecting 'brief|verbose|debug'
+   |
+

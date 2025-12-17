@@ -196,6 +196,7 @@ impl DisplaySourceError for ParseError {
                     "user",
                     "variable",
                     "verbose",
+                    "verbosity",
                     "very-verbose",
                 ];
                 let default = format!("Valid values are {}", valid_values.join(", "));

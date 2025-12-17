@@ -17,7 +17,7 @@
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
 < [1;32mHTTP/1.1 405 METHOD NOT ALLOWED[0m
-< [1;36mAllow[0m: HEAD, POST, OPTIONS, GET
+< [1;36mAllow[0m: <<<.*?>>>
 < [1;36mContent-Length[0m: 153
 < [1;36mContent-Type[0m: text/html; charset=utf-8
 < [1;36mDate[0m: <<<.*?>>>
