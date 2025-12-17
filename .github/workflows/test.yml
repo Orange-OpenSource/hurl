@@ -314,6 +314,7 @@ jobs:
           ./**/*.log
 
   test-macos-x64:
+    timeout-minutes: 60
     runs-on: macos-15-intel
     strategy:
       matrix:
@@ -361,6 +362,7 @@ jobs:
           ./**/*.log
 
   test-macos-aarch64:
+    timeout-minutes: 60
     runs-on: macos-15
     strategy:
       matrix:
