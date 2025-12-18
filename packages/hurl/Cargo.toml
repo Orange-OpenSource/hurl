@@ -8,7 +8,7 @@ description = "Hurl, run and test HTTP requests"
 documentation = "https://hurl.dev"
 homepage = "https://hurl.dev"
 repository = "https://github.com/Orange-OpenSource/hurl"
-rust-version = "1.91.1"
+rust-version = "1.92.0"
 
 [lib]
 name = "hurl"
