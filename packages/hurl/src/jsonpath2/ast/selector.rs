@@ -54,13 +54,13 @@ pub struct WildcardSelector;
 /// matches at most one array element value.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct IndexSelector {
-    value: i32,
+    value: i64,
 }
 impl IndexSelector {
-    pub fn new(value: i32) -> IndexSelector {
+    pub fn new(value: i64) -> IndexSelector {
         IndexSelector { value }
     }
-    pub fn value(&self) -> &i32 {
+    pub fn value(&self) -> &i64 {
         &self.value
     }
 }
@@ -69,21 +69,21 @@ impl IndexSelector {
 /// <start>:<end>:<step>
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ArraySliceSelector {
-    start: Option<i32>,
-    end: Option<i32>,
-    step: i32,
+    start: Option<i64>,
+    end: Option<i64>,
+    step: i64,
 }
 impl ArraySliceSelector {
-    pub fn new(start: Option<i32>, end: Option<i32>, step: i32) -> ArraySliceSelector {
+    pub fn new(start: Option<i64>, end: Option<i64>, step: i64) -> ArraySliceSelector {
         ArraySliceSelector { start, end, step }
     }
-    pub fn start(&self) -> Option<i32> {
+    pub fn start(&self) -> Option<i64> {
         self.start
     }
-    pub fn end(&self) -> Option<i32> {
+    pub fn end(&self) -> Option<i64> {
         self.end
     }
-    pub fn step(&self) -> i32 {
+    pub fn step(&self) -> i64 {
         self.step
     }
 }

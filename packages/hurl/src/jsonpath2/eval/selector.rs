@@ -69,7 +69,17 @@ impl WildcardSelector {
 impl IndexSelector {
     pub fn eval(&self, current_value: &serde_json::Value) -> Option<serde_json::Value> {
         if let serde_json::Value::Array(values) = current_value {
-            let index = if *self.value() < 0 {
+            // Out of Bound
+            let index = if *self.value() < -(values.len() as i64)
+                || *self.value() >= (values.len() as i64)
+            {
+                return None;
+            } else if *self.value() < 0 {
+                eprintln!(
+                    "Calculating negative index: {} of {}",
+                    *self.value(),
+                    values.len()
+                );
                 values.len() - ((*self.value()).unsigned_abs() as usize)
             } else {
                 *self.value() as usize
@@ -88,7 +98,7 @@ impl ArraySliceSelector {
             if self.step() == 0 {
                 return vec![];
             }
-            let len = values.len() as i32;
+            let len = values.len() as i64;
             let (lower, upper) = self.get_bounds(len);
             let mut results = vec![];
             if self.step() > 0 {
@@ -109,7 +119,7 @@ impl ArraySliceSelector {
         vec![]
     }
 
-    pub fn get_start(&self, len: i32) -> i32 {
+    pub fn get_start(&self, len: i64) -> i64 {
         if let Some(value) = self.start() {
             value
         } else if self.step() >= 0 {
@@ -119,7 +129,7 @@ impl ArraySliceSelector {
         }
     }
 
-    pub fn get_end(&self, len: i32) -> i32 {
+    pub fn get_end(&self, len: i64) -> i64 {
         if let Some(value) = self.end() {
             value
         } else if self.step() >= 0 {
@@ -129,7 +139,7 @@ impl ArraySliceSelector {
         }
     }
 
-    fn get_bounds(&self, len: i32) -> (i32, i32) {
+    fn get_bounds(&self, len: i64) -> (i64, i64) {
         let n_start = normalize_index(self.get_start(len), len);
         let n_end = normalize_index(self.get_end(len), len);
         if self.step() > 0 {
@@ -171,7 +181,7 @@ fn filter(
     logical_expr.eval(current_value, root_value)
 }
 
-fn normalize_index(i: i32, len: i32) -> i32 {
+fn normalize_index(i: i64, len: i64) -> i64 {
     if i >= 0 {
         i
     } else {
@@ -240,14 +250,25 @@ mod tests {
     fn test_index_selector() {
         let current_value = json!(["a", "b"]);
         assert_eq!(
+            IndexSelector::new(0).eval(&current_value).unwrap(),
+            json!("a")
+        );
+        assert_eq!(
             IndexSelector::new(1).eval(&current_value).unwrap(),
+            json!("b")
+        );
+        assert_eq!(
+            IndexSelector::new(-1).eval(&current_value).unwrap(),
             json!("b")
         );
         assert_eq!(
             IndexSelector::new(-2).eval(&current_value).unwrap(),
             json!("a")
         );
+
+        // out of bounds is not an error
         assert!(IndexSelector::new(2).eval(&current_value).is_none());
+        assert!(IndexSelector::new(-3).eval(&current_value).is_none());
     }
 
     #[test]
