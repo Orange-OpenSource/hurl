@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use crate::jsonpath2::ast::literal::{Literal, Number};
 
 impl Literal {
@@ -33,6 +32,7 @@ impl Number {
     pub fn eval(&self) -> serde_json::Value {
         match self {
             Number::Integer(n) => serde_json::Number::from_i128(*n as i128).unwrap().into(),
+            Number::BigInteger(s) => serde_json::Number::from_string_unchecked(s.clone()).into(),
             Number::Float(n) => {
                 serde_json::Value::Number(serde_json::Number::from_f64(*n).unwrap())
             }
@@ -49,7 +49,22 @@ mod tests {
     pub fn test_number() {
         // Using different float values
         let value1 = Literal::Number(Number::Float(110.0)).eval();
+        assert_eq!(value1, serde_json::json!(110.0));
         let value2 = Literal::Number(Number::Float(110.00000000000001)).eval();
+        assert_eq!(value2, serde_json::json!(110.00000000000001));
         assert!(value1 != value2);
+
+        // integer
+        let value1 = Literal::Number(Number::Integer(42)).eval();
+        assert_eq!(value1, serde_json::json!(42));
+
+        // big integer
+        let value1 = Literal::Number(Number::BigInteger("99999999999".to_string())).eval();
+        assert_eq!(
+            value1,
+            serde_json::Value::Number(serde_json::Number::from_string_unchecked(
+                "99999999999".to_string()
+            ))
+        );
     }
 }

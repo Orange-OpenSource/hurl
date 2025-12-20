@@ -30,6 +30,7 @@ impl Eq for Literal {}
 #[derive(Clone, Debug, PartialEq)]
 #[allow(dead_code)]
 pub enum Number {
-    Integer(i32),
+    Integer(i64),
+    BigInteger(String),
     Float(f64),
 }

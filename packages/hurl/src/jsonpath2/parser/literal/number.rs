@@ -25,61 +25,32 @@ use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
 /// Try to parse a decimal integer
 /// if it does not start with a minus sign or a digit
 /// it returns `None` rather than a `ParseError`
+///
+/// It returns integers that are relevant to the JSONPath processing (e.g., index values and steps).
+/// They must be within the range of exact integer values defined in Internet JSON (I-JSON)
+/// namely within the interval ±(2⁵³-1, 2⁵³-1).
+///  
+/// Integers defined as a literal with be parsed with the `try_number` function.
+/// They can be arbitrarily large and are represented as a string when they exceed the i64 range (BigInteger)
+///
 pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i64>> {
-    if match_str("0", reader) {
-        return Ok(Some(0));
-    }
-    let negative = match_str("-", reader);
     let saved_pos = reader.cursor().pos;
-    let s = reader.read_while(|c| c.is_ascii_digit());
-
-    if s.is_empty() || s.starts_with('0') {
-        if negative {
-            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
-            return Err(ParseError::new(saved_pos, kind));
-        } else {
-            return Ok(None);
-        }
-    }
-    let sign = if negative { -1 } else { 1 };
-    eprintln!("Parsed integer: {}{}", if sign == -1 { "-" } else { "" }, s);
-    // if let Ok(value) = s.parse::<i32>() {
-    //      Ok(Some(sign * value))
-    // } else {
-    //     reader.seek(save);
-    //     Ok(None)
-    // }
+    let s = if let Some(value) = try_string_integer(reader)? {
+        value
+    } else {
+        return Ok(None);
+    };
     let value = s
         .parse::<i64>()
         .map_err(|e| ParseError::new(saved_pos, ParseErrorKind::Expecting(e.to_string())))?;
-    if value > 9007199254740991 {
-        // = 2^53 -1 - This is the max value defined in internet JSON (I-JSON)
-        let kind = ParseErrorKind::Expecting("integer value too large".to_string());
+    if !(-9007199254740991..=9007199254740991).contains(&value) {
+        // = 2^53 -1 - This is the absolute max value defined in internet JSON (I-JSON)
+        let kind = ParseErrorKind::Expecting(
+            "Integer value inside the allowed range ±(2⁵³-1, 2⁵³-1)".to_string(),
+        );
         return Err(ParseError::new(saved_pos, kind));
     }
-    Ok(Some(sign * value))
-}
-
-pub fn try_string_integer(reader: &mut Reader) -> ParseResult<Option<String>> {
-    //let save = reader.cursor();
-    if match_str("0", reader) {
-        return Ok(Some("0".to_string()));
-    }
-    let negative = match_str("-", reader);
-    let saved_pos = reader.cursor().pos;
-    let s = reader.read_while(|c| c.is_ascii_digit());
-
-    if s.is_empty() || s.starts_with('0') {
-        if negative {
-            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
-            return Err(ParseError::new(saved_pos, kind));
-        } else {
-            return Ok(None);
-        }
-    }
-    let sign = if negative { -1 } else { 1 };
-    eprintln!("Parsed integer: {}{}", if sign == -1 { "-" } else { "" }, s);
-    Ok(Some(format!("{}{s}", if sign == -1 { "-" } else { "" })))
+    Ok(Some(value))
 }
 
 // Try to parse a number
@@ -100,15 +71,11 @@ pub fn try_number(reader: &mut Reader) -> ParseResult<Option<Number>> {
 
     // At least a fraction or an exponent must be present to make it a float
     // otherwise it is an integer
-    eprintln!(
-        "Parsed number: string_integer={} {:?} {:?}",
-        string_integer, fraction, exponent
-    );
     if fraction.is_none() && exponent.is_none() {
         if let Ok(value) = string_integer.parse::<i64>() {
-            return Ok(Some(Number::Integer(value)));
+            Ok(Some(Number::Integer(value)))
         } else {
-            return Ok(Some(Number::BigInteger(string_integer)));
+            Ok(Some(Number::BigInteger(string_integer)))
         }
     } else {
         let mut value = string_integer
@@ -122,6 +89,28 @@ pub fn try_number(reader: &mut Reader) -> ParseResult<Option<Number>> {
         }
         Ok(Some(Number::Float(value)))
     }
+}
+
+/// Try to parse a decimal integer as a string
+/// This parser will be used by other parsers which will return a typed integer (i64 or a BigInteger)
+fn try_string_integer(reader: &mut Reader) -> ParseResult<Option<String>> {
+    if match_str("0", reader) {
+        return Ok(Some("0".to_string()));
+    }
+    let negative = match_str("-", reader);
+    let saved_pos = reader.cursor().pos;
+    let s = reader.read_while(|c| c.is_ascii_digit());
+
+    if s.is_empty() || s.starts_with('0') {
+        if negative {
+            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
+            return Err(ParseError::new(saved_pos, kind));
+        } else {
+            return Ok(None);
+        }
+    }
+    let sign = if negative { -1 } else { 1 };
+    Ok(Some(format!("{}{s}", if sign == -1 { "-" } else { "" })))
 }
 
 fn try_fraction(reader: &mut Reader) -> ParseResult<Option<f64>> {
@@ -162,7 +151,7 @@ fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
 mod tests {
 
     use super::*;
-    use hurl_core::reader::{CharPos, Reader};
+    use hurl_core::reader::{CharPos, Pos, Reader};
 
     #[test]
     fn test_number() {
@@ -176,9 +165,16 @@ mod tests {
         let mut reader = Reader::new("99999999999");
         assert_eq!(
             try_number(&mut reader).unwrap().unwrap(),
-            Number::BigInteger("99999999999".to_string())
+            Number::Integer(99999999999)
         );
         assert_eq!(reader.cursor().index, CharPos(11));
+
+        let mut reader = Reader::new("9223372036854775808"); // i64::MAX + 1
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::BigInteger("9223372036854775808".to_string())
+        );
+        assert_eq!(reader.cursor().index, CharPos(19));
 
         let mut reader = Reader::new("110.0");
         assert_eq!(
@@ -203,6 +199,25 @@ mod tests {
             "110".to_string()
         );
         assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("01");
+        assert_eq!(
+            try_string_integer(&mut reader).unwrap().unwrap(),
+            "0".to_string()
+        );
+        assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    fn test_string_integer_error() {
+        let mut reader = Reader::new("--1");
+        assert_eq!(
+            try_string_integer(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 2),
+                ParseErrorKind::Expecting("strictly positive digit".to_string())
+            )
+        );
     }
 
     #[test]
@@ -228,8 +243,16 @@ mod tests {
         assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
         assert_eq!(reader.cursor().index, CharPos(1));
 
-        let mut reader = Reader::new("99999999999");
-        assert!(try_integer(&mut reader).is_err());
+        let mut reader = Reader::new("9007199254740992");
+        assert_eq!(
+            try_integer(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting(
+                    "Integer value inside the allowed range ±(2⁵³-1, 2⁵³-1)".to_string()
+                )
+            )
+        );
     }
 
     #[test]
