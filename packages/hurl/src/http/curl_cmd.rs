@@ -428,6 +428,9 @@ impl ClientOptions {
             arguments.push("--cookie".to_string());
             arguments.push(cookie_file.clone());
         }
+        if self.digest {
+            arguments.push("--digest".to_string());
+        }
         match self.http_version {
             RequestedHttpVersion::Default => {}
             RequestedHttpVersion::Http10 => arguments.push("--http1.0".to_string()),
@@ -678,6 +681,7 @@ mod tests {
             connect_timeout: Duration::from_secs(20),
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
             cookie_input_file: Some("cookie_file".to_string()),
+            digest: false,
             follow_location: true,
             follow_location_trusted: false,
             headers: vec![

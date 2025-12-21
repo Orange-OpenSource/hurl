@@ -65,6 +65,7 @@ fn parse_line(s: &str) -> Result<String, String> {
     let mut command = clap::Command::new("curl")
         .arg(commands::compressed())
         .arg(commands::data())
+        .arg(commands::digest())
         .arg(commands::headers())
         .arg(commands::cookies())
         .arg(commands::insecure())
@@ -256,6 +257,18 @@ cookie: name1=value1; name2=value2; name3=value3
         );
         assert_eq!(
             parse_line("curl http://localhost:8000/custom-cookies --cookie 'name1=value1' --cookie 'name2=value2;name3=value3;;'").unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_digest_flag() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+[Options]
+digest: true
+"#;
+        assert_eq!(
+            parse_line("curl --digest http://localhost:8000/hello").unwrap(),
             hurl_str
         );
     }
