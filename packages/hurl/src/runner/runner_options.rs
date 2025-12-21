@@ -39,6 +39,7 @@ pub struct RunnerOptionsBuilder {
     continue_on_error: bool,
     cookie_input_file: Option<String>,
     delay: Duration,
+    digest: bool,
     follow_location: bool,
     follow_location_trusted: bool,
     from_entry: Option<usize>,
@@ -91,6 +92,7 @@ impl Default for RunnerOptionsBuilder {
             continue_on_error: false,
             cookie_input_file: None,
             delay: Duration::from_millis(0),
+            digest: false,
             follow_location: false,
             follow_location_trusted: false,
             from_entry: None,
@@ -320,6 +322,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Enables HTTP Digest authentication.
+    pub fn digest(&mut self, digest: bool) -> &mut Self {
+        self.digest = digest;
+        self
+    }
+
     /// Sets the HTTP Negotiate (SPNEGO) authentication flag.
     pub fn negotiate(&mut self, negotiate: bool) -> &mut Self {
         self.negotiate = negotiate;
@@ -477,6 +485,7 @@ impl RunnerOptionsBuilder {
             context_dir: self.context_dir.clone(),
             continue_on_error: self.continue_on_error,
             cookie_input_file: self.cookie_input_file.clone(),
+            digest: self.digest,
             follow_location: self.follow_location,
             follow_location_trusted: self.follow_location_trusted,
             from_entry: self.from_entry,
@@ -547,6 +556,8 @@ pub struct RunnerOptions {
     pub(crate) continue_on_error: bool,
     /// Reads cookies from this file (using the Netscape cookie file format).
     pub(crate) cookie_input_file: Option<String>,
+    /// Enables HTTP Digest authentication.
+    pub(crate) digest: bool,
     /// Sets follow redirect.
     pub(crate) follow_location: bool,
     /// Sets follow redirect with trust.
@@ -644,6 +655,7 @@ impl PartialEq for RunnerOptions {
             context_dir,
             continue_on_error,
             cookie_input_file,
+            digest,
             follow_location,
             follow_location_trusted,
             from_entry,
@@ -695,6 +707,7 @@ impl PartialEq for RunnerOptions {
             && context_dir == &other.context_dir
             && continue_on_error == &other.continue_on_error
             && cookie_input_file == &other.cookie_input_file
+            && digest == &other.digest
             && follow_location == &other.follow_location
             && follow_location_trusted == &other.follow_location_trusted
             && from_entry == &other.from_entry

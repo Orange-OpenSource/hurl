@@ -128,6 +128,10 @@ pub fn delay(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
     get_duration(&s, DurationUnit::MilliSecond)
 }
 
+pub fn digest(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "digest")
+}
+
 pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
     let error_format = get::<String>(arg_matches, "error_format").unwrap_or("short".to_string());
     match error_format.as_str() {

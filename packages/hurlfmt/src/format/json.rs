@@ -315,6 +315,7 @@ impl ToJson for EntryOption {
             OptionKind::ConnectTo(value) => JValue::String(value.to_string()),
             OptionKind::ConnectTimeout(value) => value.to_json(),
             OptionKind::Delay(value) => value.to_json(),
+            OptionKind::Digest(value) => value.to_json(),
             OptionKind::FollowLocation(value) => value.to_json(),
             OptionKind::FollowLocationTrusted(value) => value.to_json(),
             OptionKind::Header(value) => JValue::String(value.to_string()),

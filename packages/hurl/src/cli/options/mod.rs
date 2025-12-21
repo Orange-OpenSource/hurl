@@ -63,6 +63,7 @@ pub struct CliOptions {
     pub cookie_output_file: Option<PathBuf>,
     pub curl_file: Option<PathBuf>,
     pub delay: Duration,
+    pub digest: bool,
     pub error_format: ErrorFormat,
     pub file_root: Option<String>,
     pub follow_location: bool,
@@ -207,6 +208,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::compressed())
         .arg(commands::connect_timeout())
         .arg(commands::connect_to())
+        .arg(commands::digest())
         .arg(commands::header())
         .arg(commands::http10())
         .arg(commands::http11())
@@ -324,6 +326,7 @@ fn parse_matches(
     let cookie_output_file = matches::cookie_output_file(arg_matches);
     let curl_file = matches::curl_file(arg_matches);
     let delay = matches::delay(arg_matches)?;
+    let digest = matches::digest(arg_matches);
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
@@ -397,6 +400,7 @@ fn parse_matches(
         cookie_output_file,
         curl_file,
         delay,
+        digest,
         error_format,
         file_root,
         follow_location,
@@ -480,6 +484,7 @@ impl CliOptions {
         let continue_on_error = self.continue_on_error;
         let cookie_input_file = self.cookie_input_file.clone();
         let delay = self.delay;
+        let digest = self.digest;
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
         let from_entry = self.from_entry;
@@ -536,6 +541,7 @@ impl CliOptions {
             .client_cert_file(client_cert_file)
             .client_key_file(client_key_file)
             .delay(delay)
+            .digest(digest)
             .compressed(compressed)
             .connect_timeout(connect_timeout)
             .connects_to(&connects_to)

@@ -255,6 +255,7 @@ impl ClientOptions {
             connect_timeout: runner_options.connect_timeout,
             connects_to: runner_options.connects_to.clone(),
             cookie_input_file: runner_options.cookie_input_file.clone(),
+            digest: runner_options.digest,
             follow_location: runner_options.follow_location,
             follow_location_trusted: runner_options.follow_location_trusted,
             headers: runner_options.headers.clone(),

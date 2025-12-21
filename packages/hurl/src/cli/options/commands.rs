@@ -145,6 +145,14 @@ pub fn delay() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn digest() -> clap::Arg {
+    clap::Arg::new("digest")
+        .long("digest")
+        .help("Tell Hurl to use HTTP Digest authentication")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn error_format() -> clap::Arg {
     clap::Arg::new("error_format")
         .long("error-format")
