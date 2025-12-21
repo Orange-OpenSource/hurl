@@ -22,6 +22,8 @@ HTTP options:
           Maximum time allowed for connection [default: 300]
       --connect-to <HOST1:PORT1:HOST2:PORT2>
           For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead
+      --digest
+          Tell Hurl to use HTTP Digest authentication
   -H, --header <HEADER>
           Pass custom header(s) to server
   -0, --http1.0
