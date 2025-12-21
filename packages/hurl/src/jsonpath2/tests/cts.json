@@ -566,6 +566,57 @@
       ]
     },
     {
+      "name": "basic, name shorthand, true",
+      "selector": "$.true",
+      "document": {
+        "true": "A",
+        "_foo": "B"
+      },
+      "result": [
+        "A"
+      ],
+      "result_paths": [
+        "$['true']"
+      ],
+      "tags": [
+        "boundary"
+      ]
+    },
+    {
+      "name": "basic, name shorthand, false",
+      "selector": "$.false",
+      "document": {
+        "false": "A",
+        "_foo": "B"
+      },
+      "result": [
+        "A"
+      ],
+      "result_paths": [
+        "$['false']"
+      ],
+      "tags": [
+        "boundary"
+      ]
+    },
+    {
+      "name": "basic, name shorthand, null",
+      "selector": "$.null",
+      "document": {
+        "null": "A",
+        "_foo": "B"
+      },
+      "result": [
+        "A"
+      ],
+      "result_paths": [
+        "$['null']"
+      ],
+      "tags": [
+        "boundary"
+      ]
+    },
+    {
       "name": "basic, descendant segment, wildcard shorthand, array data",
       "selector": "$..*",
       "document": [
@@ -3981,6 +4032,272 @@
       ]
     },
     {
+      "name": "filter, two consecutive ands",
+      "selector": "$[?@.a && @.b && @.c]",
+      "document": [
+        {
+          "a": 1,
+          "b": 2
+        },
+        {
+          "a": 1,
+          "c": 3
+        },
+        {
+          "b": 2,
+          "c": 3
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        }
+      ],
+      "result": [
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        }
+      ],
+      "result_paths": [
+        "$[3]"
+      ]
+    },
+    {
+      "name": "filter, two consecutive ors",
+      "selector": "$[?@.a || @.b || @.c]",
+      "document": [
+        {
+          "a": 1,
+          "b": 2
+        },
+        {
+          "a": 1,
+          "c": 3
+        },
+        {
+          "b": 2,
+          "c": 3
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        }
+      ],
+      "result": [
+        {
+          "a": 1,
+          "b": 2
+        },
+        {
+          "a": 1,
+          "c": 3
+        },
+        {
+          "b": 2,
+          "c": 3
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        }
+      ],
+      "result_paths": [
+        "$[0]",
+        "$[1]",
+        "$[2]",
+        "$[3]"
+      ]
+    },
+    {
+      "name": "filter, multiple consecutive ands",
+      "selector": "$[?@.a && @.b && @.c && @.d && @.e]",
+      "document": [
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4
+        },
+        {
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "c": 3,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result": [
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result_paths": [
+        "$[3]"
+      ]
+    },
+    {
+      "name": "filter, multiple consecutive ors",
+      "selector": "$[?@.a || @.b || @.c || @.d || @.e]",
+      "document": [
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4
+        },
+        {
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "c": 3,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result": [
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4
+        },
+        {
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "c": 3,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result_paths": [
+        "$[0]",
+        "$[1]",
+        "$[2]",
+        "$[3]"
+      ]
+    },
+    {
+      "name": "filter, multiple consecutive ors and ands",
+      "selector": "$[?@.a && @.b && @.c || @.d || @.e]",
+      "document": [
+        {
+          "a": 1
+        },
+        {
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2
+        },
+        {
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        },
+        {
+          "c": 3,
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "c": 3,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result": [
+        {
+          "e": 5
+        },
+        {
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        },
+        {
+          "c": 3,
+          "d": 4,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "c": 3,
+          "e": 5
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 4,
+          "e": 5
+        }
+      ],
+      "result_paths": [
+        "$[1]",
+        "$[3]",
+        "$[4]",
+        "$[5]",
+        "$[6]",
+        "$[7]"
+      ]
+    },
+    {
       "name": "filter, and binds more tightly than or",
       "selector": "$[?@.a || @.b && @.c]",
       "document": [
@@ -4355,6 +4672,58 @@
       ]
     },
     {
+      "name": "filter, quoted True, double quotes",
+      "selector": "$[?@.a==\"True\"]",
+      "document": [
+        {
+          "a": "True"
+        },
+        {
+          "a": true
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "True"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
+      "tags": [
+        "case"
+      ]
+    },
+    {
+      "name": "filter, quoted True, single quotes",
+      "selector": "$[?@.a=='True']",
+      "document": [
+        {
+          "a": "True"
+        },
+        {
+          "a": true
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "True"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
+      "tags": [
+        "case"
+      ]
+    },
+    {
       "name": "filter, false, incorrectly capitalized",
       "selector": "$[?@==False]",
       "invalid_selector": true,
@@ -4363,9 +4732,113 @@
       ]
     },
     {
+      "name": "filter, quoted False, double quotes",
+      "selector": "$[?@.a==\"False\"]",
+      "document": [
+        {
+          "a": "False"
+        },
+        {
+          "a": false
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "False"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
+      "tags": [
+        "case"
+      ]
+    },
+    {
+      "name": "filter, quoted False, single quotes",
+      "selector": "$[?@.a=='False']",
+      "document": [
+        {
+          "a": "False"
+        },
+        {
+          "a": false
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "False"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
+      "tags": [
+        "case"
+      ]
+    },
+    {
       "name": "filter, null, incorrectly capitalized",
       "selector": "$[?@==Null]",
       "invalid_selector": true,
+      "tags": [
+        "case"
+      ]
+    },
+    {
+      "name": "filter, quoted Null, double quotes",
+      "selector": "$[?@.a==\"Null\"]",
+      "document": [
+        {
+          "a": "Null"
+        },
+        {
+          "a": null
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "Null"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
+      "tags": [
+        "case"
+      ]
+    },
+    {
+      "name": "filter, quoted Null, single quotes",
+      "selector": "$[?@.a=='Null']",
+      "document": [
+        {
+          "a": "Null"
+        },
+        {
+          "a": null
+        },
+        {
+          "a": "SomethingElse"
+        }
+      ],
+      "result": [
+        {
+          "a": "Null"
+        }
+      ],
+      "result_paths": [
+        "$[0]"
+      ],
       "tags": [
         "case"
       ]
@@ -7578,6 +8051,24 @@
       ]
     },
     {
+      "name": "functions, length, non-singular query arg, multiple index selectors",
+      "selector": "$[?length(@[1, 2])<3]",
+      "invalid_selector": true,
+      "tags": [
+        "function",
+        "length"
+      ]
+    },
+    {
+      "name": "functions, length, non-singular query arg, multiple name selectors",
+      "selector": "$[?length(@['a', 'b'])<3]",
+      "invalid_selector": true,
+      "tags": [
+        "function",
+        "length"
+      ]
+    },
+    {
       "name": "functions, match, found match",
       "selector": "$[?match(@.a, 'a.*')]",
       "document": [
@@ -7801,7 +8292,7 @@
       "name": "functions, match, dot matcher on \\u2028",
       "selector": "$[?match(@, '.')]",
       "document": [
-        "",
+        " ",
         "\r",
         "\n",
         true,
@@ -7809,7 +8300,7 @@
         {}
       ],
       "result": [
-        ""
+        " "
       ],
       "result_paths": [
         "$[0]"
@@ -7823,7 +8314,7 @@
       "name": "functions, match, dot matcher on \\u2029",
       "selector": "$[?match(@, '.')]",
       "document": [
-        "",
+        " ",
         "\r",
         "\n",
         true,
@@ -7831,7 +8322,7 @@
         {}
       ],
       "result": [
-        ""
+        " "
       ],
       "result_paths": [
         "$[0]"
@@ -7942,10 +8433,10 @@
         "abc",
         "a.c",
         "axc",
-        "a\\c"
+        "a\\ c"
       ],
       "result": [
-        "a\\c"
+        "a\\ c"
       ],
       "result_paths": [
         "$[3]"
@@ -7961,10 +8452,10 @@
       "document": [
         "abc",
         "a.c",
-        "a[c"
+        "a[ c"
       ],
       "result": [
-        "a[c"
+        "a[ c"
       ],
       "result_paths": [
         "$[2]"
@@ -7980,7 +8471,7 @@
       "document": [
         "abc",
         "a.c",
-        "ac",
+        "a c",
         "a]c"
       ],
       "result": [
@@ -8310,8 +8801,8 @@
       "name": "functions, search, dot matcher on \\u2028",
       "selector": "$[?search(@, '.')]",
       "document": [
-        "",
-        "\r\n",
+        " ",
+        "\r \n",
         "\r",
         "\n",
         true,
@@ -8319,8 +8810,8 @@
         {}
       ],
       "result": [
-        "",
-        "\r\n"
+        " ",
+        "\r \n"
       ],
       "result_paths": [
         "$[0]",
@@ -8335,8 +8826,8 @@
       "name": "functions, search, dot matcher on \\u2029",
       "selector": "$[?search(@, '.')]",
       "document": [
-        "",
-        "\r\n",
+        " ",
+        "\r \n",
         "\r",
         "\n",
         true,
@@ -8344,8 +8835,8 @@
         {}
       ],
       "result": [
-        "",
-        "\r\n"
+        " ",
+        "\r \n"
       ],
       "result_paths": [
         "$[0]",
@@ -8462,10 +8953,10 @@
         "x abc y",
         "x a.c y",
         "x axc y",
-        "x a\\c y"
+        "x a\\ c y"
       ],
       "result": [
-        "x a\\c y"
+        "x a\\ c y"
       ],
       "result_paths": [
         "$[3]"
@@ -8481,10 +8972,10 @@
       "document": [
         "x abc y",
         "x a.c y",
-        "x a[c y"
+        "x a[ c y"
       ],
       "result": [
-        "x a[c y"
+        "x a[ c y"
       ],
       "result_paths": [
         "$[2]"
@@ -8500,7 +8991,7 @@
       "document": [
         "x abc y",
         "x a.c y",
-        "x ac y",
+        "x a c y",
         "x a]c y"
       ],
       "result": [

@@ -19,6 +19,10 @@
 //! Compliance Test Suite
 //! https://github.com/jsonpath-standard/jsonpath-compliance-test-suite
 
+// Update with
+// curl https://raw.githubusercontent.com/jsonpath-standard/jsonpath-compliance-test-suite/refs/heads/main/cts.json >./packages/hurl/src/jsonpath2/tests/cts.json
+//
+
 use std::fmt::{Display, Formatter};
 
 use hurl_core::reader::Pos;
