@@ -79,7 +79,7 @@ mod tests {
     use super::*;
     use crate::jsonpath2::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
     use crate::jsonpath2::ast::literal::Literal;
-    use crate::jsonpath2::ast::query::{Query, RelativeQuery};
+    use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, DescendantSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
     use crate::jsonpath2::ast::singular_query::{
@@ -99,6 +99,19 @@ mod tests {
             )))
         );
         assert_eq!(reader.cursor().index, CharPos(13));
+
+        let mut reader = Reader::new("length(value($..c))");
+        assert_eq!(
+            try_value_type_function(&mut reader).unwrap().unwrap(),
+            ValueTypeFunction::Length(ValueTypeArgument::Function(Box::new(
+                ValueTypeFunction::Value(NodesTypeArgument::FilterQuery(Query::AbsoluteQuery(
+                    AbsoluteQuery::new(vec![Segment::Descendant(DescendantSegment::new(vec![
+                        Selector::Name(NameSelector::new("c".to_string()))
+                    ]))])
+                )))
+            )))
+        );
+        assert_eq!(reader.cursor().index, CharPos(19));
     }
 
     #[test]

@@ -75,11 +75,6 @@ impl IndexSelector {
             {
                 return None;
             } else if *self.value() < 0 {
-                eprintln!(
-                    "Calculating negative index: {} of {}",
-                    *self.value(),
-                    values.len()
-                );
                 values.len() - ((*self.value()).unsigned_abs() as usize)
             } else {
                 *self.value() as usize

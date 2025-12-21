@@ -17,6 +17,7 @@
  */
 
 use crate::jsonpath2::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
+use crate::jsonpath2::parser::function::functions;
 use crate::jsonpath2::parser::literal;
 use crate::jsonpath2::parser::query::try_filter_query;
 use crate::jsonpath2::parser::singular_query;
@@ -30,6 +31,8 @@ pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
         Ok(ValueTypeArgument::Literal(v))
     } else if let Some(query) = singular_query::try_parse(reader)? {
         Ok(ValueTypeArgument::SingularQuery(query))
+    } else if let Some(function) = functions::try_value_type_function(reader)? {
+        Ok(ValueTypeArgument::Function(Box::new(function)))
     } else {
         Err(ParseError::new(
             reader.cursor().pos,
