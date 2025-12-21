@@ -474,8 +474,11 @@ impl Client {
         if let Some(pinned_pub_key) = &options.pinned_pub_key {
             self.handle.pinned_public_key(pinned_pub_key)?;
         }
-        if options.ntlm || options.negotiate {
+        if options.digest || options.ntlm || options.negotiate {
             let mut auth = easy::Auth::new();
+            if options.digest {
+                auth.digest(true);
+            }
             if options.ntlm {
                 auth.ntlm(true);
             }
@@ -606,10 +609,13 @@ impl Client {
         }
 
         if let Some(user) = &options.user {
-            if options.aws_sigv4.is_some() || options.ntlm || options.negotiate {
+            if options.aws_sigv4.is_some() || options.digest || options.ntlm || options.negotiate {
                 // curl's aws_sigv4 support needs to know the username and password for the
                 // request, as it uses those values to calculate the Authorization header for the
                 // AWS V4 signature.
+                //
+                // --digest requires a username and password to be provided in order to complete the
+                // authentication process. With curl, this would be `--digest -u username:password`
                 //
                 // --ntlm requires a username and password to be provided in order to complete the
                 // authentication process. With curl, this would be `-u username:password`
