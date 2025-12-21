@@ -279,6 +279,12 @@ fn run() {
     // TODO: Remove Limit when spec is fully implemented
     let testcases = testcases.iter().take(477);
     let count_total = testcases.len();
+
+    // Make sure that ignored tests are in the test suite
+    assert!(IGNORED_TESTS
+        .iter()
+        .all(|ignored_test| testcases.clone().any(|tc| &tc.name == ignored_test)));
+
     let testcases = testcases.filter(|tc| !IGNORED_TESTS.contains(&tc.name.as_str()));
     let count_ignored = count_total - testcases.clone().count();
     let errors = testcases
