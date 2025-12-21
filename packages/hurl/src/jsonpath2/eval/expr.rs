@@ -41,7 +41,9 @@ impl TestExpr {
             TestExprKind::FilterQuery(filter_query) => {
                 !filter_query.eval(current_value, root_value).is_empty()
             }
-            TestExprKind::FunctionExpr(_function_expr) => todo!(),
+            TestExprKind::LogicalTypeFunction(logical_type_function) => {
+                logical_type_function.eval(current_value, root_value)
+            }
         };
         if self.not() {
             !value

@@ -16,6 +16,8 @@
  *
  */
 
+use crate::jsonpath2::ast::function::functions::LogicalTypeFunction;
+
 use super::comparison::ComparisonExpr;
 use super::query::Query;
 
@@ -67,14 +69,9 @@ impl TestExpr {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TestExprKind {
-    #[allow(dead_code)]
     FilterQuery(Query),
-    #[allow(dead_code)]
-    FunctionExpr(FunctionExpr),
+    LogicalTypeFunction(Box<LogicalTypeFunction>),
 }
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FunctionExpr;
 
 /// Logical AND expression that can handle multiple operands
 #[derive(Clone, Debug, PartialEq, Eq)]

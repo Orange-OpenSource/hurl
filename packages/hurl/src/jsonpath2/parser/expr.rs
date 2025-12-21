@@ -17,6 +17,7 @@
  */
 use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, NotExpr, OrExpr, TestExpr, TestExprKind};
 use crate::jsonpath2::parser::comparison::try_parse as try_comparison;
+use crate::jsonpath2::parser::function::functions;
 use crate::jsonpath2::parser::primitives::{match_str, skip_whitespace};
 use crate::jsonpath2::parser::query::try_filter_query;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind, ParseResult};
@@ -114,6 +115,9 @@ fn try_test_expr(reader: &mut Reader) -> ParseResult<Option<TestExpr>> {
     if let Some(query) = try_filter_query(reader)? {
         let kind = TestExprKind::FilterQuery(query);
         Ok(Some(TestExpr::new(not, kind)))
+    } else if let Some(logical_type_function) = functions::try_logical_type_function(reader)? {
+        let kind = TestExprKind::LogicalTypeFunction(Box::new(logical_type_function));
+        Ok(Some(TestExpr::new(not, kind)))
     } else {
         Ok(None)
     }
@@ -126,11 +130,15 @@ mod tests {
 
     use crate::jsonpath2::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
     use crate::jsonpath2::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
+    use crate::jsonpath2::ast::function::argument::ValueTypeArgument;
+    use crate::jsonpath2::ast::function::functions::LogicalTypeFunction;
     use crate::jsonpath2::ast::literal::{Literal, Number};
     use crate::jsonpath2::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath2::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath2::ast::selector::{NameSelector, Selector, WildcardSelector};
-    use crate::jsonpath2::ast::singular_query::{RelativeSingularQuery, SingularQuery};
+    use crate::jsonpath2::ast::singular_query::{
+        RelativeSingularQuery, SingularQuery, SingularQuerySegment,
+    };
     use hurl_core::reader::Reader;
 
     #[test]
@@ -279,5 +287,22 @@ mod tests {
             )
         );
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(4));
+
+        let mut reader = Reader::new("match(@.a, 'a.*')");
+        assert_eq!(
+            try_test_expr(&mut reader).unwrap().unwrap(),
+            TestExpr::new(
+                false,
+                TestExprKind::LogicalTypeFunction(Box::new(LogicalTypeFunction::Match(
+                    ValueTypeArgument::SingularQuery(SingularQuery::Relative(
+                        RelativeSingularQuery::new(vec![SingularQuerySegment::Name(
+                            NameSelector::new("a".to_string())
+                        )])
+                    )),
+                    ValueTypeArgument::Literal(Literal::String("a.*".to_string()))
+                )))
+            )
+        );
+        assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(17));
     }
 }
