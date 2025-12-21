@@ -13,6 +13,7 @@ delay: 1000ms
 delay: 1s
 delay: 1m
 delay: 1h
+digest: false
 location: false
 location-trusted: false
 header: key: value
@@ -67,6 +68,7 @@ compressed: {{compressed}}
 connect-to: {{connect-to}}
 connect-timeout: {{connect-timeout}}
 delay: {{delay}}
+digest: {{digest}}
 location: {{location}}
 location-trusted: {{location-trusted}}
 header: {{header}}
