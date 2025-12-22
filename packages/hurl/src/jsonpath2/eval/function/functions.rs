@@ -213,6 +213,32 @@ mod tests {
         assert!(!match_function.eval(&json!({"date": "74-05-01"}), &json!({})));
         assert!(!match_function.eval(&json!({"date": "1974-04-01"}), &json!({})));
         assert!(!match_function.eval(&json!({"_date": "1974-05-01"}), &json!({})));
+
+        // match with regex . (1 character)
+        let match_function = LogicalTypeFunction::Match(
+            ValueTypeArgument::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                vec![],
+            ))),
+            ValueTypeArgument::Literal(Literal::String(".".to_string())),
+        );
+        assert!(match_function.eval(&json!("a"), &json!({})));
+        assert!(match_function.eval(&json!("\r"), &json!({}))); // JavaScript is the exception, not the rule
+        assert!(match_function.eval(&json!("\u{2028}"), &json!({}))); // line separator
+        assert!(match_function.eval(&json!("\u{2029}"), &json!({}))); // paragraph separator
+        assert!(!match_function.eval(&json!(""), &json!({})));
+        assert!(!match_function.eval(&json!("\n"), &json!({})));
+        assert!(!match_function.eval(&json!("ab"), &json!({})));
+
+        // match with regex [.b] dot or b (not any character)
+        let match_function = LogicalTypeFunction::Match(
+            ValueTypeArgument::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
+                vec![],
+            ))),
+            ValueTypeArgument::Literal(Literal::String("a[.b]c".to_string())),
+        );
+        assert!(match_function.eval(&json!("a.c"), &json!({})));
+        assert!(match_function.eval(&json!("abc"), &json!({})));
+        assert!(!match_function.eval(&json!("axc"), &json!({})));
     }
 
     #[test]

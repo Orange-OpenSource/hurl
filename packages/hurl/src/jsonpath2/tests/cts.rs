@@ -46,6 +46,14 @@ const IGNORED_TESTS: &[&str] = &[
     // $[?@[0:2]]
     // The slice selector cannot be used directly as a boolean predicate
     // To check that the array has at least 2 elements, you can use $[?(@[1] exists)]
+    "functions, match, dot matcher on \\u2028",
+    // The regex '.' should match \r (except in Javascript)
+    "functions, match, dot matcher on \\u2029",
+    // The regex '.' should match \r (except in Javascript)
+    "functions, search, dot matcher on \\u2028",
+    // The regex '.' should match \r (except in Javascript)
+    "functions, search, dot matcher on \\u2029",
+    // The regex '.' should match \r (except in Javascript)
 ];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -277,7 +285,7 @@ fn load_testcases() -> Vec<TestCase> {
 fn run() {
     let testcases = load_testcases();
     // TODO: Remove Limit when spec is fully implemented
-    let testcases = testcases.iter().take(493);
+    let testcases = testcases.iter().take(535);
     let count_total = testcases.len();
 
     // Make sure that ignored tests are in the test suite
