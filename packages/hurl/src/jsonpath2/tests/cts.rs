@@ -284,8 +284,7 @@ fn load_testcases() -> Vec<TestCase> {
 #[test]
 fn run() {
     let testcases = load_testcases();
-    // TODO: Remove Limit when spec is fully implemented
-    let testcases = testcases.iter().take(690);
+    let testcases = testcases.iter();
     let count_total = testcases.len();
 
     // Make sure that ignored tests are in the test suite
