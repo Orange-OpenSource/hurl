@@ -1,0 +1,6 @@
+name: digest
+long: digest
+help: Tell Hurl to use HTTP Digest authentication
+help_heading: HTTP options
+---
+Tell Hurl to use HTTP Digest authentication
