@@ -1,4 +1,4 @@
-.TH hurl 1 "17 Dec 2025" "hurl 7.2.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "21 Dec 2025" "hurl 7.2.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -208,6 +208,10 @@ This is a cli-only option.
 Sets delay before each request (aka sleep). The delay is not applied to requests that have been retried because of \fI--retry\fP. See \fI--retry-interval\fP to space retried requests.
 
 You can specify time units in the delay expression. Set Hurl to use a delay of 2 seconds with `--delay 2s` or set it to 500 milliseconds with `--delay 500ms`. Supported time units: ms, s, m, h. No spaces allowed.
+
+.IP "--digest "
+
+Tell Hurl to use HTTP Digest authentication
 
 .IP "--error-format <FORMAT> "
 

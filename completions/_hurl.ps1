@@ -33,6 +33,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--cookie-jar', 'cookie-jar', [CompletionResultType]::ParameterName, 'Write cookies to FILE after running the session')
             [CompletionResult]::new('--curl', 'curl', [CompletionResultType]::ParameterName, 'Export each request to a list of curl commands')
             [CompletionResult]::new('--delay', 'delay', [CompletionResultType]::ParameterName, 'Sets delay before each request (aka sleep)')
+            [CompletionResult]::new('--digest', 'digest', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP Digest authentication')
             [CompletionResult]::new('--error-format', 'error-format', [CompletionResultType]::ParameterName, 'Control the format of error messages')
             [CompletionResult]::new('--file-root', 'file-root', [CompletionResultType]::ParameterName, 'Set root directory to import files [default: input file directory]')
             [CompletionResult]::new('--location', 'location', [CompletionResultType]::ParameterName, 'Follow redirects')

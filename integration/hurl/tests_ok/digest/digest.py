@@ -1,4 +1,3 @@
-import hashlib
 import re
 
 from app import app
