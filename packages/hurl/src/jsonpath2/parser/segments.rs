@@ -36,11 +36,14 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
 
 ///  Try to parse a segment
 fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
+    let save = reader.cursor();
+    skip_whitespace(reader);
     if let Some(descendant_segment) = try_descendant_segment(reader)? {
         return Ok(Some(Segment::Descendant(descendant_segment)));
     } else if let Some(child_segment) = try_child_segment(reader)? {
         return Ok(Some(Segment::Child(child_segment)));
     }
+    reader.seek(save);
     Ok(None)
 }
 

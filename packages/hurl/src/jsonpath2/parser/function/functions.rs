@@ -28,17 +28,23 @@ pub fn try_value_type_function(reader: &mut Reader) -> ParseResult<Option<ValueT
     //let initial_state = reader.cursor();
     if match_str("length", reader) {
         expect_str("(", reader)?;
+        skip_whitespace(reader);
         let argument = argument::value_type(reader)?;
+        skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Length(argument)))
     } else if match_str("value", reader) {
         expect_str("(", reader)?;
+        skip_whitespace(reader);
         let argument = argument::nodes_type(reader)?;
+        skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Value(argument)))
     } else if match_str("count", reader) {
         expect_str("(", reader)?;
+        skip_whitespace(reader);
         let argument = argument::nodes_type(reader)?;
+        skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Count(argument)))
     } else {
@@ -52,20 +58,24 @@ pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<Logi
     //let initial_state = reader.cursor();
     if match_str("match", reader) {
         expect_str("(", reader)?;
+        skip_whitespace(reader);
         let argument1 = argument::value_type(reader)?;
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
         let argument2 = argument::value_type(reader)?;
+        skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Match(argument1, argument2)))
     } else if match_str("search", reader) {
         expect_str("(", reader)?;
+        skip_whitespace(reader);
         let argument1 = argument::value_type(reader)?;
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
         let argument2 = argument::value_type(reader)?;
+        skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Search(argument1, argument2)))
     } else {

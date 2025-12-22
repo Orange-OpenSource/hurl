@@ -89,6 +89,7 @@ fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
 fn try_paren_expr(reader: &mut Reader) -> ParseResult<Option<LogicalExpr>> {
     let save = reader.cursor();
     let not = match_str("!", reader);
+    skip_whitespace(reader);
     if match_str("(", reader) {
         let expr = logical_or_expr(reader)?;
         if match_str(")", reader) {
@@ -112,6 +113,7 @@ fn try_paren_expr(reader: &mut Reader) -> ParseResult<Option<LogicalExpr>> {
 
 fn try_test_expr(reader: &mut Reader) -> ParseResult<Option<TestExpr>> {
     let not = match_str("!", reader);
+    skip_whitespace(reader);
     if let Some(query) = try_filter_query(reader)? {
         let kind = TestExprKind::FilterQuery(query);
         Ok(Some(TestExpr::new(not, kind)))

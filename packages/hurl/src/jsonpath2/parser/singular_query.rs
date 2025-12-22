@@ -21,8 +21,8 @@ use crate::jsonpath2::ast::singular_query::{
     AbsoluteSingularQuery, RelativeSingularQuery, SingularQuery, SingularQuerySegment,
 };
 use crate::jsonpath2::parser::literal::number::try_integer;
-use crate::jsonpath2::parser::primitives::expect_str;
 use crate::jsonpath2::parser::primitives::match_str;
+use crate::jsonpath2::parser::primitives::{expect_str, skip_whitespace};
 use crate::jsonpath2::parser::selectors::try_name_selector;
 use crate::jsonpath2::parser::ParseResult;
 use crate::jsonpath2::parser::{ParseError, ParseErrorKind};
@@ -50,8 +50,10 @@ pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<SingularQuery>> {
 /// Parse singular segments.
 fn singular_query_segments(reader: &mut Reader) -> ParseResult<Vec<SingularQuerySegment>> {
     let mut segments = vec![];
+    skip_whitespace(reader);
     while let Some(segment) = try_singular_query_segment(reader)? {
         segments.push(segment);
+        skip_whitespace(reader);
     }
     Ok(segments)
 }

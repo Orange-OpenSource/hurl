@@ -87,15 +87,27 @@ fn try_index_selector(reader: &mut Reader) -> ParseResult<Option<IndexSelector>>
 /// Try to parse an array_slice_selector
 fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySliceSelector>> {
     let save = reader.cursor();
-    let start = try_integer(reader)?;
+    let start = if let Some(value) = try_integer(reader)? {
+        skip_whitespace(reader);
+        Some(value)
+    } else {
+        None
+    };
     if !match_str(":", reader) {
         // This is not a slice-selector
         // but can still be a valid index or name selector
         reader.seek(save);
         return Ok(None);
     }
-    let end = try_integer(reader)?;
+    skip_whitespace(reader);
+    let end = if let Some(value) = try_integer(reader)? {
+        skip_whitespace(reader);
+        Some(value)
+    } else {
+        None
+    };
     let step = if match_str(":", reader) {
+        skip_whitespace(reader);
         try_integer(reader)?.unwrap_or(1)
     } else {
         1
@@ -106,6 +118,7 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
 /// Try to parse a filter selector
 fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
     if match_str("?", reader) {
+        skip_whitespace(reader);
         let expr = logical_or_expr(reader)?;
         Ok(Some(FilterSelector::new(expr)))
     } else {
