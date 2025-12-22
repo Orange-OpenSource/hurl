@@ -28,6 +28,7 @@ _hurl() {
     '(-c --cookie-jar)'{-c,--cookie-jar}'[Write cookies to FILE after running the session]: :_files' \
     '--curl[Export each request to a list of curl commands]: :_files' \
     '--delay[Sets delay before each request (aka sleep)]: :' \
+    '--digest[Tell Hurl to use HTTP Digest authentication]' \
     '--error-format[Control the format of error messages]: :' \
     '--file-root[Set root directory to import files \[default: input file directory\]]: :' \
     '(-L --location)'{-L,--location}'[Follow redirects]' \
