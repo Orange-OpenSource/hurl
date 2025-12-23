@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{SourceInfo, Template};
 
-use crate::jsonpath;
+use crate::{jsonpath2};
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -107,22 +107,35 @@ pub fn eval_jsonpath_json(
 ) -> Result<Option<Value>, RunnerError> {
     let expr_str = eval_template(expr, variables)?;
     let expr_source_info = expr.source_info;
-    let jsonpath_query = match jsonpath::parse(&expr_str) {
+    // let jsonpath_query = match jsonpath::parse(&expr_str) {
+    //     Ok(q) => q,
+    //     Err(_) => {
+    //         let kind = RunnerErrorKind::QueryInvalidJsonpathExpression { value: expr_str };
+    //         return Err(RunnerError::new(expr_source_info, kind, false));
+    //     }
+    // };
+    let jsonpath_query = match jsonpath2::parse(&expr_str) {
         Ok(q) => q,
         Err(_) => {
             let kind = RunnerErrorKind::QueryInvalidJsonpathExpression { value: expr_str };
             return Err(RunnerError::new(expr_source_info, kind, false));
         }
     };
-
     let results = jsonpath_query.eval(json);
-    match results {
-        None => Ok(None),
-        Some(jsonpath::JsonpathResult::SingleEntry(value)) => Ok(Some(Value::from_json(&value))),
-        Some(jsonpath::JsonpathResult::Collection(values)) => {
-            Ok(Some(Value::from_json(&serde_json::Value::Array(values))))
-        }
+    eprintln!("jsonpath results: {:?}", results);
+    match results.len() {
+        0 => Ok(None),
+        1 => Ok(Some(Value::from_json(&results[0]))),
+        _ => Ok(Some(Value::from_json(&serde_json::Value::Array(results)))),
     }
+
+    // match results {
+    //     None => Ok(None),
+    //     Some(jsonpath::JsonpathResult::SingleEntry(value)) => Ok(Some(Value::from_json(&value))),
+    //     Some(jsonpath::JsonpathResult::Collection(values)) => {
+    //         Ok(Some(Value::from_json(&serde_json::Value::Array(values))))
+    //     }
+    // }
 }
 
 #[cfg(test)]
