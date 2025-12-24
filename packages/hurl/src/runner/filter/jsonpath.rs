@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{SourceInfo, Template};
 
-use crate::{jsonpath2};
+use crate::jsonpath2;
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
