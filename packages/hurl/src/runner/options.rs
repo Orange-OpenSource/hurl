@@ -91,6 +91,10 @@ pub fn get_entry_options(
                 let value = eval_duration_option(value, variables, DurationUnit::MilliSecond)?;
                 entry_options.delay = value;
             }
+            OptionKind::Digest(value) => {
+                let value = eval_boolean_option(value, variables)?;
+                entry_options.digest = value;
+            }
             OptionKind::Header(value) => {
                 let value = eval_template(value, variables)?;
                 entry_options.headers.push(value);

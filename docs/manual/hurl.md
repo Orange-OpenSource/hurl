@@ -228,6 +228,10 @@ Sets delay before each request (aka sleep). The delay is not applied to requests
 
 You can specify time units in the delay expression. Set Hurl to use a delay of 2 seconds with `--delay 2s` or set it to 500 milliseconds with `--delay 500ms`. Supported time units: ms, s, m, h. No spaces allowed.
 
+### --digest {#digest}
+
+Tell Hurl to use HTTP Digest authentication
+
 ### --error-format <FORMAT> {#error-format}
 
 Control the format of error message (short by default or long)
