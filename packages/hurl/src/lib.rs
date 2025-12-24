@@ -42,7 +42,6 @@
 mod html;
 pub mod http;
 mod json;
-mod jsonpath;
 mod jsonpath2;
 pub mod output;
 #[doc(hidden)]
