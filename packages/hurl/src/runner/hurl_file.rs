@@ -345,8 +345,10 @@ pub fn run_entries(
     }
 }
 
-/// Runs an HTTP request and optional retry it until there are no HTTP errors. Returns a list of
-/// [`EntryResult`].
+/// Runs an HTTP request and optionally retry it until there are no HTTP errors or the maximum retry
+/// count is reached. Returns a list of [`EntryResult`]. This list contains the results for each retry;
+/// so if there are no retry, this list contains a single entry.
+///
 /// `current` is the current index of the entry run, `last` is the index of the last entry to be run
 #[allow(clippy::too_many_arguments)]
 fn run_request(

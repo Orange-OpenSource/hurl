@@ -82,7 +82,9 @@ pub struct EntryResult {
     pub entry_index: Index,
     /// Source information of this entry.
     pub source_info: SourceInfo,
-    /// List of HTTP request / response pair.
+    /// List of HTTP request / response pairs. It holds all the requests and responses
+    /// that has been executed when following redirections. If `--follow` is not used, this list
+    /// contains exactly one call.
     pub calls: Vec<Call>,
     /// List of captures.
     pub captures: Vec<CaptureResult>,
@@ -90,7 +92,6 @@ pub struct EntryResult {
     pub asserts: Vec<AssertResult>,
     /// List of errors.
     pub errors: Vec<RunnerError>,
-
     /// Effective duration of all the HTTP transfers, excluding asserts and captures processing.
     pub transfer_duration: Duration,
     /// The entry has been executed with `--compressed` option:
