@@ -36,7 +36,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 14
 >
-* Response: (received 29 bytes in 0 ms)
+* Response: (received 29 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -76,7 +76,7 @@
 * {"foo": "bar"}
 ** upload completely sent off: 14 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 29 bytes in 0 ms)
+* Response: (received 29 bytes in <<<\d+>>> ms)
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
