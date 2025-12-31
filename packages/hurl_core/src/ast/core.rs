@@ -17,15 +17,13 @@
  */
 use std::fmt;
 
-use crate::ast::option::EntryOption;
-use crate::ast::primitive::{
-    Bytes, KeyValue, LineTerminator, SourceInfo, Template, Whitespace, I64,
-};
-use crate::ast::section::{
-    Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue,
-};
-use crate::ast::Placeholder;
 use crate::types::{SourceString, ToSource};
+
+use super::option::EntryOption;
+use super::primitive::{
+    Bytes, KeyValue, LineTerminator, Placeholder, SourceInfo, Template, Whitespace, I64,
+};
+use super::section::{Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -34,6 +32,8 @@ pub struct HurlFile {
     pub line_terminators: Vec<LineTerminator>,
 }
 
+/// Represents an entry; a request AST specification to be run and an optional response AST
+/// specification to be checked.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Entry {
     pub request: Request,

@@ -17,10 +17,11 @@
  */
 use std::fmt;
 
-use crate::ast::primitive::{
+use crate::types::{Count, Duration, SourceString, ToSource};
+
+use super::primitive::{
     LineTerminator, Number, Placeholder, SourceInfo, Template, Whitespace, U64,
 };
-use crate::types::{Count, Duration, SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryOption {

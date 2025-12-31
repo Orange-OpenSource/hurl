@@ -17,13 +17,14 @@
  */
 use std::fmt;
 
-use crate::ast::option::EntryOption;
-use crate::ast::primitive::{
+use crate::types::{SourceString, ToSource};
+
+use super::core::Filter;
+use super::option::EntryOption;
+use super::primitive::{
     Base64, File, Hex, KeyValue, LineTerminator, MultilineString, Number, Placeholder, Regex,
     SourceInfo, Template, Whitespace,
 };
-use crate::ast::Filter;
-use crate::types::{SourceString, ToSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Section {

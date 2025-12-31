@@ -18,9 +18,10 @@
 use std::fmt;
 use std::fmt::Formatter;
 
-use crate::ast::JsonValue;
 use crate::reader::Pos;
 use crate::types::{SourceString, ToSource};
+
+use super::json::JsonValue;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct KeyValue {
