@@ -21,7 +21,7 @@ jsonpath "$.cats[0].lives" == 9
 ```
 
 Body responses can be encoded by server (see [`Content-Encoding` HTTP header]) but asserts in Hurl files are not 
-affected by this content compression. All body asserts (`body`, `bytes`, `sha256` etc...) work _after_ content decoding.
+affected by this content compression. All body asserts (`body`, `bytes`, `sha256` etc...) except `rawbytes` work _after_ content decoding.
 
 Finally, body text asserts (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header] 
 so these asserts can be written with usual strings. 
@@ -668,6 +668,25 @@ header "Content-Length" == "12424"
 
 Like `body` assert, `bytes` assert works _after_ content encoding decompression (so the predicates values are not
 affected by `Content-Encoding` response header value).
+
+### RawBytes assert
+
+Check the value of the received HTTP response body as a raw bytestream. RawBytes assert consists of the keyword `rawbytes`
+followed by a predicate function and value.
+
+```hurl
+GET https://example.org/data.bin
+HTTP 200
+Content-Encoding: gzip
+[Asserts]
+header "Content-Length" == "32"
+rawbytes count == 32               # matches Content-Length (compressed size)
+bytes count == 100                 # decompressed size is larger
+rawbytes startsWith hex,1f8b;      # gzip magic bytes
+bytes startsWith hex,48656c6c6f;   # decompressed content starts with "Hello"
+```
+
+Unlike `bytes` assert, `rawbytes` returns the raw bytes _before_ any content decoding. For uncompressed responses, `rawbytes` and `bytes` return the same data.
 
 ### XPath assert
 
