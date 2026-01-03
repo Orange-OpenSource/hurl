@@ -9,6 +9,8 @@ Content-Type: text/html; charset=utf-8
 [Asserts]
 body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
+rawbytes startsWith hex,48656c6c6f;
+rawbytes count == 12
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
@@ -40,6 +42,8 @@ Content-Type: text/html; charset=utf-8
 [Asserts]
 body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
+rawbytes startsWith hex,1f8b;
+rawbytes count == 32
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
@@ -71,6 +75,8 @@ Content-Type: text/html; charset=utf-8
 [Asserts]
 body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
+rawbytes startsWith hex,789c;
+rawbytes count == 20
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
@@ -102,6 +108,8 @@ Content-Type: text/html; charset=utf-8
 [Asserts]
 body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
+rawbytes startsWith hex,212c;
+rawbytes count == 17
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
@@ -138,6 +146,8 @@ Content-Type: text/html; charset=utf-8
 [Asserts]
 body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
+rawbytes startsWith hex,212c;
+rawbytes count == 17
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 `Hello World!`
