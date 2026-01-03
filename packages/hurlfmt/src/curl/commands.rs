@@ -61,6 +61,10 @@ pub fn data() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn digest() -> clap::Arg {
+    clap::Arg::new("digest").long("digest").num_args(0)
+}
+
 pub fn headers() -> clap::Arg {
     clap::Arg::new("headers")
         .long("header")

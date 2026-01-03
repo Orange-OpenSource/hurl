@@ -80,6 +80,9 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     if has_flag(arg_matches, "compressed") {
         options.push(HurlOption::new("compressed", "true"));
     }
+    if has_flag(arg_matches, "digest") {
+        options.push(HurlOption::new("digest", "true"));
+    }
     if has_flag(arg_matches, "location") {
         options.push(HurlOption::new("location", "true"));
     }
