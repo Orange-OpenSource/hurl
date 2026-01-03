@@ -541,6 +541,7 @@ impl Lint for Query {
             }
             QueryValue::Duration => {}
             QueryValue::Bytes => {}
+            QueryValue::RawBytes => {}
             QueryValue::Sha256 => {}
             QueryValue::Md5 => {}
             QueryValue::Certificate { attribute_name, .. } => {

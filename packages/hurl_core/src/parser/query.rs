@@ -48,6 +48,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
             variable_query,
             duration_query,
             bytes_query,
+            rawbytes_query,
             sha256_query,
             md5_query,
             certificate_query,
@@ -175,6 +176,11 @@ fn duration_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn bytes_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("bytes", reader)?;
     Ok(QueryValue::Bytes)
+}
+
+fn rawbytes_query(reader: &mut Reader) -> ParseResult<QueryValue> {
+    try_literal("rawbytes", reader)?;
+    Ok(QueryValue::RawBytes)
 }
 
 fn sha256_query(reader: &mut Reader) -> ParseResult<QueryValue> {
@@ -427,5 +433,29 @@ mod tests {
             )]
         );
         assert_eq!(reader.cursor().index, CharPos(14));
+    }
+
+    #[test]
+    fn test_bytes_query() {
+        let mut reader = Reader::new("bytes");
+        assert_eq!(
+            query(&mut reader).unwrap(),
+            Query {
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
+                value: QueryValue::Bytes,
+            }
+        );
+    }
+
+    #[test]
+    fn test_rawbytes_query() {
+        let mut reader = Reader::new("rawbytes");
+        assert_eq!(
+            query(&mut reader).unwrap(),
+            Query {
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
+                value: QueryValue::RawBytes,
+            }
+        );
     }
 }

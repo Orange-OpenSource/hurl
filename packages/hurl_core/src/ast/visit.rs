@@ -629,6 +629,7 @@ pub fn walk_query<V: Visitor>(visitor: &mut V, query: &Query) {
         | QueryValue::Url
         | QueryValue::Duration
         | QueryValue::Bytes
+        | QueryValue::RawBytes
         | QueryValue::Sha256
         | QueryValue::Md5
         | QueryValue::Version

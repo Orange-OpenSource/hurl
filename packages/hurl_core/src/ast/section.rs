@@ -169,6 +169,7 @@ pub enum QueryValue {
     },
     Duration,
     Bytes,
+    RawBytes,
     Sha256,
     Md5,
     Certificate {
@@ -195,6 +196,7 @@ impl QueryValue {
             QueryValue::Variable { .. } => "variable",
             QueryValue::Duration => "duration",
             QueryValue::Bytes => "bytes",
+            QueryValue::RawBytes => "rawbytes",
             QueryValue::Sha256 => "sha256",
             QueryValue::Md5 => "md5",
             QueryValue::Certificate { .. } => "certificate",
