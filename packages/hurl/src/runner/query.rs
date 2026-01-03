@@ -67,6 +67,7 @@ pub fn eval_query(
         QueryValue::Variable { name, .. } => eval_query_variable(name, variables),
         QueryValue::Duration => eval_query_duration(last_response),
         QueryValue::Bytes => eval_query_bytes(last_response, query.source_info),
+        QueryValue::RawBytes => eval_query_rawbytes(last_response),
         QueryValue::Sha256 => eval_query_sha256(last_response, query.source_info),
         QueryValue::Md5 => eval_query_md5(last_response, query.source_info),
         QueryValue::Certificate {
@@ -336,6 +337,11 @@ fn eval_query_bytes(response: &Response, query_source_info: SourceInfo) -> Query
             false,
         )),
     }
+}
+
+/// Evaluates the HTTP `response` body as raw bytes (before content decoding).
+fn eval_query_rawbytes(response: &Response) -> QueryResult {
+    Ok(Some(Value::Bytes(response.body.clone())))
 }
 
 /// Evaluates the SHA-256 hash of the HTTP `response` body bytes.
@@ -1428,6 +1434,27 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     value: QueryValue::Bytes,
+                },
+                &variables,
+                &[&http::hello_http_response()],
+                &mut cache,
+            )
+            .unwrap()
+            .unwrap(),
+            Value::Bytes(String::into_bytes(String::from("Hello World!")))
+        );
+    }
+
+    #[test]
+    fn test_query_rawbytes() {
+        let variables = VariableSet::new();
+        let mut cache = BodyCache::new();
+
+        assert_eq!(
+            eval_query(
+                &Query {
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                    value: QueryValue::RawBytes,
                 },
                 &variables,
                 &[&http::hello_http_response()],
