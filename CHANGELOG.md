@@ -2,11 +2,15 @@
 ========================================================================================================================
 
 Thanks to
+[@jwadolowski](https://github.com/jwadolowski),
+[@ashishajr](https://github.com/ashishajr),
 [@spiffytech](https://github.com/spiffytech),
 [@rajiv](https://github.com/rajiv),
 
 Enhancements:
 
+* Add `rawbytes` query [#4250](https://github.com/Orange-OpenSource/hurl/issues/4250)
+* Add --verbosity option (globally and per request) [#4613](https://github.com/Orange-OpenSource/hurl/issues/4613)
 * Add Subject Alt Name (SAN) attribute for certificate assertions [#4617](https://github.com/Orange-OpenSource/hurl/issues/4617)
 
 
