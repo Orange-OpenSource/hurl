@@ -55,7 +55,7 @@ impl HurlResult {
     }
 
     /// Checks if a JSON value can be deserialized to a `HurlResult` instance.
-    /// This method can be used to check if the schema of the `value` is conform to
+    /// This method can be used to check if the schema of the `value` is conformed to
     /// a `HurlResult`.
     pub fn is_deserializable(value: &serde_json::Value) -> bool {
         serde_json::from_value::<HurlResultJson>(value.clone()).is_ok()
@@ -86,9 +86,9 @@ struct EntryResultJson {
 #[derive(Deserialize, Serialize)]
 struct CookieJson {
     domain: String,
-    include_subdomain: String,
+    include_subdomain: bool,
     path: String,
-    https: String,
+    https: bool,
     expires: String,
     name: String,
     value: String,
@@ -269,13 +269,13 @@ impl EntryResultJson {
 impl CookieJson {
     fn from_cookie(c: &Cookie, secrets: &[&str]) -> Self {
         CookieJson {
-            domain: c.domain.clone(),
-            include_subdomain: c.include_subdomain.clone(),
-            path: c.path.clone(),
-            https: c.https.clone(),
-            expires: c.expires.clone(),
-            name: c.name.clone(),
-            value: c.value.redact(secrets),
+            domain: c.domain().to_string(),
+            include_subdomain: c.include_subdomain(),
+            path: c.path().to_string(),
+            https: c.https(),
+            expires: c.expires().to_string(),
+            name: c.name().to_string(),
+            value: c.value().redact(secrets),
         }
     }
 }

@@ -198,7 +198,7 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
     let mut cookies_from_req = request_spec
         .cookies
         .iter()
-        .map(|c| (&c.name, &c.value))
+        .map(|c| (c.name.as_str(), c.value.as_str()))
         .collect::<Vec<_>>();
 
     // Constructs cookies values from cookie store for this URL, that are not expired
@@ -206,7 +206,7 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
         .cookies()
         .filter(|c| !c.is_expired())
         .filter(|c| c.match_domain(&request_spec.url))
-        .map(|c| (&c.name, &c.value))
+        .map(|c| (c.name(), c.value()))
         .collect::<Vec<_>>();
 
     let mut all_cookies = vec![];
