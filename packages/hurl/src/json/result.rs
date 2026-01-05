@@ -89,7 +89,7 @@ struct CookieJson {
     include_subdomain: bool,
     path: String,
     https: bool,
-    expires: String,
+    expires: u64,
     name: String,
     value: String,
 }
@@ -273,7 +273,7 @@ impl CookieJson {
             include_subdomain: c.include_subdomain(),
             path: c.path().to_string(),
             https: c.https(),
-            expires: c.expires().to_string(),
+            expires: c.expires(),
             name: c.name().to_string(),
             value: c.value().redact(secrets),
         }

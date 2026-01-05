@@ -62,7 +62,8 @@ pub struct Cookie {
     /// Indicates that the cookie is sent to the server only when a request is made with the https: scheme
     https: bool,
     /// Indicates the maximum lifetime of the cookie as an HTTP-date timestamp.
-    expires: String,
+    /// (`0` is for session cookie, `1` for expired cookie (from libcurl)).
+    expires: u64,
     name: String,
     value: String,
     /// Forbids JavaScript from accessing the cookie.
@@ -141,7 +142,10 @@ impl Cookie {
             _ => return Err(ParseCookieError),
         };
         let expires = if let Some(v) = tokens.next() {
-            v.to_string()
+            match v.parse::<u64>() {
+                Ok(v) => v,
+                Err(_) => return Err(ParseCookieError),
+            }
         } else {
             return Err(ParseCookieError);
         };
@@ -183,8 +187,8 @@ impl Cookie {
         &self.value
     }
 
-    pub fn expires(&self) -> &str {
-        &self.expires
+    pub fn expires(&self) -> u64 {
+        self.expires
     }
 
     pub fn https(&self) -> bool {
@@ -192,8 +196,9 @@ impl Cookie {
     }
 
     pub fn is_expired(&self) -> bool {
+        // From <https://github.com/curl/curl/blob/master/lib/cookie.c> see `parse_cookie_header`
         // cookie expired when libcurl set value to 1?
-        self.expires == "1"
+        self.expires == 1
     }
 
     pub fn include_subdomain(&self) -> bool {
@@ -310,7 +315,7 @@ mod tests {
                 include_subdomain: false,
                 path: "/".to_string(),
                 https: false,
-                expires: "0".to_string(),
+                expires: 0,
                 name: "cookie1".to_string(),
                 value: "valueA".to_string(),
                 http_only: false,
@@ -323,7 +328,7 @@ mod tests {
                 include_subdomain: false,
                 path: "/".to_string(),
                 https: false,
-                expires: "1".to_string(),
+                expires: 1,
                 name: "cookie2".to_string(),
                 value: String::new(),
                 http_only: false,
@@ -337,7 +342,7 @@ mod tests {
                 include_subdomain: false,
                 path: "/".to_string(),
                 https: false,
-                expires: "1".to_string(),
+                expires: 1,
                 name: "cookie3".to_string(),
                 value: "value3".to_string(),
                 http_only: false,
@@ -351,7 +356,7 @@ mod tests {
                 include_subdomain: false,
                 path: "/".to_string(),
                 https: false,
-                expires: "1".to_string(),
+                expires: 1,
                 name: "cookie3".to_string(),
                 value: "a b c".to_string(),
                 http_only: true,
@@ -371,7 +376,7 @@ mod tests {
             include_subdomain: false,
             path: "/".to_string(),
             https: true,
-            expires: String::new(),
+            expires: 0,
             name: String::new(),
             value: String::new(),
             http_only: false,
@@ -385,7 +390,7 @@ mod tests {
             include_subdomain: true,
             path: "/toto".to_string(),
             https: true,
-            expires: String::new(),
+            expires: 0,
             name: String::new(),
             value: String::new(),
             http_only: false,
@@ -400,7 +405,7 @@ mod tests {
             include_subdomain: true,
             path: "/foo".to_string(),
             https: true,
-            expires: String::new(),
+            expires: 0,
             name: String::new(),
             value: String::new(),
             http_only: false,
@@ -432,7 +437,7 @@ mod tests {
                 include_subdomain: true,
                 path: "/".to_string(),
                 https: false,
-                expires: "0".to_string(),
+                expires: 0,
                 name: "cookie1".to_string(),
                 value: "valueA".to_string(),
                 http_only: false,
@@ -445,7 +450,7 @@ mod tests {
                 include_subdomain: false,
                 path: "/".to_string(),
                 https: false,
-                expires: "1".to_string(),
+                expires: 1,
                 name: "cookie2".to_string(),
                 value: "foo bar baz".to_string(),
                 http_only: true,
