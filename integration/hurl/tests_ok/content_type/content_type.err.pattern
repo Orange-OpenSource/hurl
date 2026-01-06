@@ -205,7 +205,7 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-form
-* [FormParams]
+* [Form]
 * field1: foo
 * field2: bar
 * field2: baz
@@ -237,7 +237,7 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-form
-* [FormParams]
+* [Form]
 * field1: foo
 * field2: bar
 * field2: baz
@@ -269,7 +269,7 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-multipart
-* [MultipartFormData]
+* [Multipart]
 * field1: foo
 * field2: bar
 * field2: baz
@@ -301,7 +301,7 @@
 *
 * Request:
 * POST http://localhost:8000/content-type-multipart
-* [MultipartFormData]
+* [Multipart]
 * field1: foo
 * field2: bar
 * field2: baz

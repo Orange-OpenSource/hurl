@@ -233,13 +233,7 @@ impl DisplaySourceError for ParseError {
                 "this is not a valid section for a request".to_string()
             }
             ParseErrorKind::RequestSectionName { name } => {
-                let valid_values = [
-                    "QueryStringParams",
-                    "FormParams",
-                    "MultipartFormData",
-                    "Cookies",
-                    "Options",
-                ];
+                let valid_values = ["Query", "Form", "Multipart", "Cookies", "Options"];
                 let default = format!("Valid values are {}", valid_values.join(", "));
                 let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the section is not valid. {did_you_mean}")

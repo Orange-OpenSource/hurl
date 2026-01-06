@@ -338,7 +338,7 @@
 *
 * Request:
 * POST http://localhost:8000/very-verbose/update-cat
-* [MultipartFormData]
+* [Multipart]
 * cat: file,cat.jpg; image/jpeg
 *
 * Request can be run with the following curl command:
@@ -387,7 +387,7 @@
 *
 * Request:
 * POST http://localhost:8000/very-verbose/update-cat
-* [MultipartFormData]
+* [Multipart]
 * cat: file,cat.jpg; image/jpeg
 *
 * Request can be run with the following curl command:

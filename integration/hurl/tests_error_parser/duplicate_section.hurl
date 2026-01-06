@@ -1,5 +1,5 @@
 GET http://localhost:8000/hello
-[QueryStringParams]
+[Query]
 a: b
-[QueryStringParams]
+[Query]
 c: d

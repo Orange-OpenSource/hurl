@@ -311,19 +311,19 @@ fn log_request(
         logger.debug(&header.to_string());
     }
     if !request.querystring.is_empty() {
-        logger.debug("[QueryStringParams]");
+        logger.debug("[Query]");
         for param in &request.querystring {
             logger.debug(&param.to_string());
         }
     }
     if !request.form.is_empty() {
-        logger.debug("[FormParams]");
+        logger.debug("[Form]");
         for param in &request.form {
             logger.debug(&param.to_string());
         }
     }
     if !request.multipart.is_empty() {
-        logger.debug("[MultipartFormData]");
+        logger.debug("[Multipart]");
         for param in &request.multipart {
             logger.debug(&param.to_string());
         }
