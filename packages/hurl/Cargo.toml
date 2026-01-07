@@ -36,7 +36,7 @@ regex = "1.12.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.148", features = ["arbitrary_precision"] }
 sha2 = "0.10.9"
-url = "2.5.7"
+url = "2.5.8"
 xml-rs = { version = "0.8.28" }
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.19.0", features = ["v4" , "fast-rng"] }
