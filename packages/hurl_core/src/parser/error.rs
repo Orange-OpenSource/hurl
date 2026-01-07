@@ -255,7 +255,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
             ParseErrorKind::Variable(message) => message.clone(),
             ParseErrorKind::Version => {
-                "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string()
+                "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1, HTTP/2 or HTTP/3".to_string()
             }
             ParseErrorKind::XPathExpr => "expecting a XPath expression".to_string(),
             ParseErrorKind::Xml => "invalid XML".to_string(),
