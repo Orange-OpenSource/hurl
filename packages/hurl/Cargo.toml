@@ -34,7 +34,7 @@ md5 = "0.7.0"
 percent-encoding = "2.3.2"
 regex = "1.12.2"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = { version = "1.0.148", features = ["arbitrary_precision"] }
+serde_json = { version = "1.0.149", features = ["arbitrary_precision"] }
 sha2 = "0.10.9"
 url = "2.5.8"
 xml-rs = { version = "0.8.28" }
