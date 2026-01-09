@@ -1,4 +1,4 @@
-.TH hurl 1 "21 Dec 2025" "hurl 7.2.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "18 Jan 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -367,6 +367,12 @@ See also \fI--netrc-file\fP.
 .IP "--no-color "
 
 Do not colorize output.
+
+This is a cli-only option.
+
+.IP "--no-cookie-store "
+
+Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.
 
 This is a cli-only option.
 

@@ -97,6 +97,7 @@ cookie "UPPERCASE[Secure]" exists
 cookie "UPPERCASE[HttpOnly]" exists
 cookie "UPPERCASE[SameSite]" == "Strict"
 
+
 # Check that expires attribute value is parsed successfully
 GET http://localhost:8000/cookies/expires
 HTTP 200

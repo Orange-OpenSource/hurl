@@ -59,6 +59,8 @@ HTTP options:
           Maximum time allowed for the transfer [default: 300]
       --negotiate
           Tell Hurl to use Negotiate (SPNEGO) authentication
+      --no-cookie-store
+          Do not use cookie store between requests
       --noproxy <HOST(S)>
           List of hosts which do not use proxy
       --ntlm

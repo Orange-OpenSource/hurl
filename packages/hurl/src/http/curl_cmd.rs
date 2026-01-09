@@ -712,6 +712,7 @@ mod tests {
             ssl_no_revoke: false,
             timeout: Duration::from_secs(10),
             unix_socket: Some("/var/run/example.sock".to_string()),
+            use_cookie_store: true,
             user: Some("user:password".to_string()),
             user_agent: Some("my-useragent".to_string()),
             verbosity: None,

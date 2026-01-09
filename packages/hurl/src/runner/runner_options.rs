@@ -73,6 +73,7 @@ pub struct RunnerOptionsBuilder {
     timeout: Duration,
     to_entry: Option<usize>,
     unix_socket: Option<String>,
+    use_cookie_store: bool,
     user: Option<String>,
     user_agent: Option<String>,
 }
@@ -126,6 +127,7 @@ impl Default for RunnerOptionsBuilder {
             timeout: Duration::from_secs(300),
             to_entry: None,
             unix_socket: None,
+            use_cookie_store: true,
             user: None,
             user_agent: None,
         }
@@ -458,6 +460,10 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    pub fn use_cookie_store(&mut self, use_cookie_store: bool) -> &mut Self {
+        self.use_cookie_store = use_cookie_store;
+        self
+    }
     /// Adds basic Authentication header to each request.
     pub fn user(&mut self, user: Option<String>) -> &mut Self {
         self.user = user;
@@ -519,6 +525,7 @@ impl RunnerOptionsBuilder {
             timeout: self.timeout,
             to_entry: self.to_entry,
             unix_socket: self.unix_socket.clone(),
+            use_cookie_store: self.use_cookie_store,
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
         }
@@ -623,6 +630,8 @@ pub struct RunnerOptions {
     pub(crate) to_entry: Option<usize>,
     /// Sets the specified unix domain socket to connect through, instead of using the network.
     pub(crate) unix_socket: Option<String>,
+    /// Activates the cookie support for a single file.
+    pub(crate) use_cookie_store: bool,
     /// Adds basic Authentication header to each request.
     pub(crate) user: Option<String>,
     /// Specifies the User-Agent string to send to the HTTP server.
@@ -689,6 +698,7 @@ impl PartialEq for RunnerOptions {
             unix_socket,
             user,
             user_agent,
+            use_cookie_store,
             // These fields are excluded from comparison due to the
             // `function pointer comparisons do not produce meaningful results` error.
             pre_entry: _,
@@ -741,6 +751,7 @@ impl PartialEq for RunnerOptions {
             && unix_socket == &other.unix_socket
             && user == &other.user
             && user_agent == &other.user_agent
+            && use_cookie_store == &other.use_cookie_store
     }
 }
 

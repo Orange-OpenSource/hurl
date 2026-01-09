@@ -385,8 +385,15 @@ impl Client {
         // > requests with this handle.
         // > By passing the empty string ("") to this option, you enable the cookie
         // > engine without reading any initial cookies.
-        self.handle
-            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())?;
+        if options.use_cookie_store {
+            self.handle
+                .cookie_file(options.cookie_input_file.clone().unwrap_or_default())?;
+        }
+        // FIXME: implements the else branch.
+        // We want to set CURLOPT_COOKIEFILE to NULL in case `options.use_cookie_store` is `false`
+        // because we want to support `--no-cookie-store` per request (for the moment the option is cli only).
+        // If a handle has been configured to use cookie storage, it should be reset if we deactivate
+        // cookie mid-file with a per-request
 
         // We check libcurl HTTP version support.
         let http_version = options.http_version;
@@ -796,13 +803,13 @@ impl Client {
         cookie_store
     }
 
-    /// Adds a cookie to the cookie jar.
+    /// Adds a cookie to the cookie jar (experimental).
     pub fn add_cookie(&mut self, cookie: &Cookie, logger: &mut Logger) {
         logger.debug(&format!("Add to cookie store <{cookie}> (experimental)"));
         self.handle.cookie_list(&cookie.to_netscape()).unwrap();
     }
 
-    /// Clears cookie storage.
+    /// Clears cookie storage (experimental).
     pub fn clear_cookie_storage(&mut self, logger: &mut Logger) {
         logger.debug("Clear cookie storage (experimental)");
         self.handle.cookie_list("ALL").unwrap();

@@ -88,6 +88,7 @@ pub struct CliOptions {
     pub netrc: bool,
     pub netrc_file: Option<String>,
     pub netrc_optional: bool,
+    pub no_cookie_store: bool,
     pub no_proxy: Option<String>,
     pub ntlm: bool,
     pub output: Option<Output>,
@@ -130,11 +131,11 @@ pub enum ErrorFormat {
     Long,
 }
 
-impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
+impl From<ErrorFormat> for logger::ErrorFormat {
     fn from(value: ErrorFormat) -> Self {
         match value {
-            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
-            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
+            ErrorFormat::Short => logger::ErrorFormat::Short,
+            ErrorFormat::Long => logger::ErrorFormat::Long,
         }
     }
 }
@@ -226,6 +227,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::max_redirects())
         .arg(commands::max_time())
         .arg(commands::negotiate())
+        .arg(commands::no_cookie_store())
         .arg(commands::noproxy())
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
@@ -350,6 +352,7 @@ fn parse_matches(
     let netrc = matches::netrc(arg_matches);
     let netrc_file = matches::netrc_file(arg_matches)?;
     let netrc_optional = matches::netrc_optional(arg_matches);
+    let no_cookie_store = matches::no_cookie_store(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
     let ntlm = matches::ntlm(arg_matches);
     let parallel = matches::parallel(arg_matches);
@@ -424,6 +427,7 @@ fn parse_matches(
         netrc,
         netrc_file,
         netrc_optional,
+        no_cookie_store,
         no_proxy,
         ntlm,
         path_as_is,
@@ -532,6 +536,7 @@ impl CliOptions {
         let timeout = self.timeout;
         let to_entry = self.to_entry;
         let unix_socket = self.unix_socket.clone();
+        let use_cookie_store = !self.no_cookie_store;
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
 
@@ -579,6 +584,7 @@ impl CliOptions {
             .timeout(timeout)
             .to_entry(to_entry)
             .unix_socket(unix_socket)
+            .use_cookie_store(use_cookie_store)
             .user(user)
             .user_agent(user_agent)
             .build()

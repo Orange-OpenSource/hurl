@@ -57,6 +57,7 @@ _hurl() {
     '--netrc-file[Specify FILE for .netrc]: :_files' \
     '--netrc-optional[Use either .netrc or the URL]' \
     '--no-color[Do not colorize output]' \
+    '--no-cookie-store[Do not use cookie store between requests]' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--no-pretty[Do not prettify response output]' \
     '--noproxy[List of hosts which do not use proxy]: :' \

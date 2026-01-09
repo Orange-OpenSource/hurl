@@ -279,6 +279,7 @@ impl ClientOptions {
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
             unix_socket: runner_options.unix_socket.clone(),
+            use_cookie_store: runner_options.use_cookie_store,
             user: runner_options.user.clone(),
             user_agent: runner_options.user_agent.clone(),
             verbosity: verbosity.map(|v| match v {

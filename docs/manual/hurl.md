@@ -389,6 +389,12 @@ Do not colorize output.
 
 This is a cli-only option.
 
+### --no-cookie-store {#no-cookie-store}
+
+Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.
+
+This is a cli-only option.
+
 ### --no-output {#no-output}
 
 Suppress output. By default, Hurl outputs the body of the last response.

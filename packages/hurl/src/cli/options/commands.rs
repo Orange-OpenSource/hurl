@@ -415,6 +415,15 @@ pub fn no_color() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn no_cookie_store() -> clap::Arg {
+    clap::Arg::new("no_cookie_store")
+        .long("no-cookie-store")
+        .help("Do not use cookie store between requests")
+        .help_heading("HTTP options")
+        .conflicts_with("cookies_input_file")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn no_output() -> clap::Arg {
     clap::Arg::new("no_output")
         .long("no-output")

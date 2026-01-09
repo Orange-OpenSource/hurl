@@ -1,0 +1,83 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/no_cookie_store/set
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/no_cookie_store/set'
+*
+> GET /no_cookie_store/set HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 0 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Set-Cookie: foo=1234; Expires=<<<.*?>>>; Path=/no_cookie/check
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/no_cookie_store/check
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/no_cookie_store/check'
+*
+> GET /no_cookie_store/check HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 0 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/no_cookie_store/request_with_cookie
+* [Cookies]
+* color=blue
+*
+* Request can be run with the following curl command:
+* curl --cookie 'color=blue' 'http://localhost:8000/no_cookie_store/request_with_cookie'
+*
+> GET /no_cookie_store/request_with_cookie HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Cookie: color=blue
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 0 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 0
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* Writing cookies to build/no_cookie_store_output.txt

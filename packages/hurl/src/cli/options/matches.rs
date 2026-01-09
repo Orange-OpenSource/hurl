@@ -357,6 +357,10 @@ pub fn netrc_optional(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "netrc_optional")
 }
 
+pub fn no_cookie_store(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "no_cookie_store")
+}
+
 pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "noproxy")
 }
