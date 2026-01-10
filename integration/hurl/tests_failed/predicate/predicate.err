@@ -290,7 +290,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-32 | jsonpath "$.not-exist" == 2
+32 | jsonpath "$.not_exist" == 2
    |   actual:   none
    |   expected: integer <2>
    |
@@ -300,7 +300,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-33 | jsonpath "$.not-exist" > 3
+33 | jsonpath "$.not_exist" > 3
    |   actual:   none
    |   expected: greater than <integer <3>>
    |
@@ -310,7 +310,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-34 | jsonpath "$.not-exist" >= 3
+34 | jsonpath "$.not_exist" >= 3
    |   actual:   none
    |   expected: greater than or equals to <integer <3>>
    |
@@ -320,7 +320,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-35 | jsonpath "$.not-exist" < 1
+35 | jsonpath "$.not_exist" < 1
    |   actual:   none
    |   expected: less than <integer <1>>
    |
@@ -330,7 +330,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-36 | jsonpath "$.not-exist" <= 1
+36 | jsonpath "$.not_exist" <= 1
    |   actual:   none
    |   expected: less than or equals to <integer <1>>
    |
@@ -340,7 +340,7 @@ error: Filter error
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-37 | jsonpath "$.not-exist" count == 1
+37 | jsonpath "$.not_exist" count == 1
    |                        ^^^^^ missing value to apply filter
    |
 
@@ -349,7 +349,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-38 | jsonpath "$.not-exist" startsWith "foo"
+38 | jsonpath "$.not_exist" startsWith "foo"
    |   actual:   none
    |   expected: starts with string <foo>
    |
@@ -359,7 +359,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-39 | jsonpath "$.not-exist" startsWith hex,efbbbf;
+39 | jsonpath "$.not_exist" startsWith hex,efbbbf;
    |   actual:   none
    |   expected: starts with 3 bytes
    |
@@ -369,7 +369,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-40 | jsonpath "$.not-exist" endsWith "foo"
+40 | jsonpath "$.not_exist" endsWith "foo"
    |   actual:   none
    |   expected: ends with string <foo>
    |
@@ -379,7 +379,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-41 | jsonpath "$.not-exist" endsWith hex,00;
+41 | jsonpath "$.not_exist" endsWith hex,00;
    |   actual:   none
    |   expected: ends with 1 byte
    |
@@ -389,7 +389,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-42 | jsonpath "$.not-exist" contains 1
+42 | jsonpath "$.not_exist" contains 1
    |   actual:   none
    |   expected: contains integer <1>
    |
@@ -399,7 +399,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-43 | jsonpath "$.not-exist" matches /foo/
+43 | jsonpath "$.not_exist" matches /foo/
    |   actual:   none
    |   expected: matches regex <foo>
    |
@@ -409,7 +409,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-44 | jsonpath "$.not-exist" isInteger
+44 | jsonpath "$.not_exist" isInteger
    |   actual:   none
    |   expected: integer
    |
@@ -419,7 +419,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-45 | jsonpath "$.not-exist" isFloat
+45 | jsonpath "$.not_exist" isFloat
    |   actual:   none
    |   expected: float
    |
@@ -429,7 +429,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-46 | jsonpath "$.not-exist" isBoolean
+46 | jsonpath "$.not_exist" isBoolean
    |   actual:   none
    |   expected: boolean
    |
@@ -439,7 +439,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-47 | jsonpath "$.not-exist" isString
+47 | jsonpath "$.not_exist" isString
    |   actual:   none
    |   expected: string
    |
@@ -449,7 +449,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-48 | jsonpath "$.not-exist" isCollection
+48 | jsonpath "$.not_exist" isCollection
    |   actual:   none
    |   expected: collection
    |
@@ -459,7 +459,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-49 | jsonpath "$.not-exist" isList
+49 | jsonpath "$.not_exist" isList
    |   actual:   none
    |   expected: list
    |
@@ -469,7 +469,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-50 | jsonpath "$.not-exist" isObject
+50 | jsonpath "$.not_exist" isObject
    |   actual:   none
    |   expected: object
    |
@@ -479,7 +479,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-51 | jsonpath "$.not-exist" isDate
+51 | jsonpath "$.not_exist" isDate
    |   actual:   none
    |   expected: date
    |
@@ -489,7 +489,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-52 | jsonpath "$.not-exist" exists
+52 | jsonpath "$.not_exist" exists
    |   actual:   none
    |   expected: something
    |
@@ -499,7 +499,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-53 | jsonpath "$.not-exist" isEmpty
+53 | jsonpath "$.not_exist" isEmpty
    |   actual:   none
    |   expected: empty
    |
@@ -509,7 +509,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-54 | jsonpath "$.not-exist" isIpv4
+54 | jsonpath "$.not_exist" isIpv4
    |   actual:   none
    |   expected: ipv4
    |
@@ -519,7 +519,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-55 | jsonpath "$.not-exist" isIpv6
+55 | jsonpath "$.not_exist" isIpv6
    |   actual:   none
    |   expected: ipv6
    |
@@ -529,7 +529,7 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-56 | jsonpath "$.not-exist" isUuid
+56 | jsonpath "$.not_exist" isUuid
    |   actual:   none
    |   expected: uuid
    |

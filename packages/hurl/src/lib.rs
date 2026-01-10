@@ -42,6 +42,7 @@
 mod html;
 pub mod http;
 mod json;
+#[allow(dead_code)]
 mod jsonpath;
 mod jsonpath2;
 pub mod output;

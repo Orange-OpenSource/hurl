@@ -61,6 +61,7 @@
 //!
 
 pub use self::eval::JsonpathResult;
+#[allow(unused_imports)]
 pub use self::parser::parse;
 
 mod ast;

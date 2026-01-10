@@ -29,31 +29,31 @@ jsonpath "$.message" isUuid
 jsonpath "$.toto" exists
 jsonpath "$.message" not exists
 jsonpath "$.list" count == 2
-jsonpath "$.not-exist" == 2
-jsonpath "$.not-exist" > 3
-jsonpath "$.not-exist" >= 3
-jsonpath "$.not-exist" < 1
-jsonpath "$.not-exist" <= 1
-jsonpath "$.not-exist" count == 1
-jsonpath "$.not-exist" startsWith "foo"
-jsonpath "$.not-exist" startsWith hex,efbbbf;
-jsonpath "$.not-exist" endsWith "foo"
-jsonpath "$.not-exist" endsWith hex,00;
-jsonpath "$.not-exist" contains 1
-jsonpath "$.not-exist" matches /foo/
-jsonpath "$.not-exist" isInteger
-jsonpath "$.not-exist" isFloat
-jsonpath "$.not-exist" isBoolean
-jsonpath "$.not-exist" isString
-jsonpath "$.not-exist" isCollection
-jsonpath "$.not-exist" isList
-jsonpath "$.not-exist" isObject
-jsonpath "$.not-exist" isDate
-jsonpath "$.not-exist" exists
-jsonpath "$.not-exist" isEmpty
-jsonpath "$.not-exist" isIpv4
-jsonpath "$.not-exist" isIpv6
-jsonpath "$.not-exist" isUuid
+jsonpath "$.not_exist" == 2
+jsonpath "$.not_exist" > 3
+jsonpath "$.not_exist" >= 3
+jsonpath "$.not_exist" < 1
+jsonpath "$.not_exist" <= 1
+jsonpath "$.not_exist" count == 1
+jsonpath "$.not_exist" startsWith "foo"
+jsonpath "$.not_exist" startsWith hex,efbbbf;
+jsonpath "$.not_exist" endsWith "foo"
+jsonpath "$.not_exist" endsWith hex,00;
+jsonpath "$.not_exist" contains 1
+jsonpath "$.not_exist" matches /foo/
+jsonpath "$.not_exist" isInteger
+jsonpath "$.not_exist" isFloat
+jsonpath "$.not_exist" isBoolean
+jsonpath "$.not_exist" isString
+jsonpath "$.not_exist" isCollection
+jsonpath "$.not_exist" isList
+jsonpath "$.not_exist" isObject
+jsonpath "$.not_exist" isDate
+jsonpath "$.not_exist" exists
+jsonpath "$.not_exist" isEmpty
+jsonpath "$.not_exist" isIpv4
+jsonpath "$.not_exist" isIpv6
+jsonpath "$.not_exist" isUuid
 jsonpath "$.not_a_date" isIsoDate
 jsonpath "$.is_a_date" not isIsoDate
 jsonpath "$.not_a_date" isNumber
