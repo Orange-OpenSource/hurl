@@ -72,10 +72,8 @@ impl AbsoluteQuery {
     }
 }
 
+#[cfg(test)]
 mod tests {
-    #[allow(unused_imports)]
-    use crate::json;
-    #[allow(unused_imports)]
     use crate::jsonpath::ast::query::AbsoluteQuery;
     #[allow(unused_imports)]
     use serde_json::json;

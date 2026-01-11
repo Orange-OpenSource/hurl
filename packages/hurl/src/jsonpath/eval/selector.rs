@@ -186,16 +186,11 @@ fn normalize_index(i: i64, len: i64) -> i64 {
 
 #[cfg(test)]
 mod tests {
-    #[allow(unused_imports)]
     use serde_json::json;
 
-    #[allow(unused_imports)]
     use crate::jsonpath::ast::expr::{LogicalExpr, TestExpr, TestExprKind};
-    #[allow(unused_imports)]
-    use crate::jsonpath::ast::query::{AbsoluteQuery, Query, RelativeQuery};
-    #[allow(unused_imports)]
+    use crate::jsonpath::ast::query::{Query, RelativeQuery};
     use crate::jsonpath::ast::segment::{ChildSegment, Segment};
-    #[allow(unused_imports)]
     use crate::jsonpath::ast::selector::{
         ArraySliceSelector, FilterSelector, IndexSelector, NameSelector, Selector, WildcardSelector,
     };

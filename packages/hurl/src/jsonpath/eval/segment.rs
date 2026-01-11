@@ -88,14 +88,12 @@ fn descendants(node: &serde_json::Value) -> NodeList {
     nodes
 }
 
+#[cfg(test)]
 mod tests {
-    #[allow(unused_imports)]
-    use super::*;
 
-    #[allow(unused_imports)]
-    use crate::jsonpath::ast::segment::{ChildSegment, Segment};
-    #[allow(unused_imports)]
+    use super::*;
     use crate::jsonpath::ast::selector::{IndexSelector, NameSelector, Selector, WildcardSelector};
+
     #[allow(unused_imports)]
     use serde_json::json;
 

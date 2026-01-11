@@ -23,7 +23,6 @@ mod ast;
 mod eval;
 mod parser;
 
-#[allow(unused_imports)]
 pub use parser::parse;
 
 #[cfg(test)]
