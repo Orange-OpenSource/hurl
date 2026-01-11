@@ -1,0 +1,283 @@
+/*
+ * Hurl (https://hurl.dev)
+ * Copyright (C) 2026 Orange
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+use hurl_core::reader::Reader;
+
+use crate::jsonpath::ast::literal::Number;
+use crate::jsonpath::parser::primitives::match_str;
+use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
+
+/// Try to parse a decimal integer
+/// if it does not start with a minus sign or a digit
+/// it returns `None` rather than a `ParseError`
+///
+/// It returns integers that are relevant to the JSONPath processing (e.g., index values and steps).
+/// They must be within the range of exact integer values defined in Internet JSON (I-JSON)
+/// namely within the interval ±(2⁵³-1, 2⁵³-1).
+///  
+/// Integers defined as a literal with be parsed with the `try_number` function.
+/// They can be arbitrarily large and are represented as a string when they exceed the i64 range (BigInteger)
+///
+pub fn try_integer(reader: &mut Reader) -> ParseResult<Option<i64>> {
+    let saved_pos = reader.cursor().pos;
+    let s = if let Some(value) = try_string_integer(reader)? {
+        value
+    } else {
+        return Ok(None);
+    };
+    let value = s
+        .parse::<i64>()
+        .map_err(|e| ParseError::new(saved_pos, ParseErrorKind::Expecting(e.to_string())))?;
+    if !(-9007199254740991..=9007199254740991).contains(&value) {
+        // = 2^53 -1 - This is the absolute max value defined in internet JSON (I-JSON)
+        let kind = ParseErrorKind::Expecting(
+            "Integer value inside the allowed range ±(2⁵³-1, 2⁵³-1)".to_string(),
+        );
+        return Err(ParseError::new(saved_pos, kind));
+    }
+    Ok(Some(value))
+}
+
+// Try to parse a number
+pub fn try_number(reader: &mut Reader) -> ParseResult<Option<Number>> {
+    let save = reader.cursor();
+
+    let string_integer = if match_str("-0", reader) {
+        "0".to_string()
+    } else if let Some(value) = try_string_integer(reader)? {
+        value
+    } else {
+        reader.seek(save);
+        return Ok(None);
+    };
+
+    let fraction = try_fraction(reader)?;
+    let exponent = try_exponent(reader)?;
+
+    // At least a fraction or an exponent must be present to make it a float
+    // otherwise it is an integer
+    if fraction.is_none() && exponent.is_none() {
+        if let Ok(value) = string_integer.parse::<i64>() {
+            Ok(Some(Number::Integer(value)))
+        } else {
+            Ok(Some(Number::BigInteger(string_integer)))
+        }
+    } else {
+        let mut value = string_integer
+            .parse::<f64>()
+            .map_err(|e| ParseError::new(save.pos, ParseErrorKind::Expecting(e.to_string())))?;
+        if let Some(frac) = fraction {
+            value += frac;
+        }
+        if let Some(exp) = exponent {
+            value *= 10f64.powi(exp);
+        }
+        Ok(Some(Number::Float(value)))
+    }
+}
+
+/// Try to parse a decimal integer as a string
+/// This parser will be used by other parsers which will return a typed integer (i64 or a BigInteger)
+fn try_string_integer(reader: &mut Reader) -> ParseResult<Option<String>> {
+    if match_str("0", reader) {
+        return Ok(Some("0".to_string()));
+    }
+    let negative = match_str("-", reader);
+    let saved_pos = reader.cursor().pos;
+    let s = reader.read_while(|c| c.is_ascii_digit());
+
+    if s.is_empty() || s.starts_with('0') {
+        if negative {
+            let kind = ParseErrorKind::Expecting("strictly positive digit".to_string());
+            return Err(ParseError::new(saved_pos, kind));
+        } else {
+            return Ok(None);
+        }
+    }
+    let sign = if negative { -1 } else { 1 };
+    Ok(Some(format!("{}{s}", if sign == -1 { "-" } else { "" })))
+}
+
+fn try_fraction(reader: &mut Reader) -> ParseResult<Option<f64>> {
+    if match_str(".", reader) {
+        let digits = reader.read_while(|c| c.is_ascii_digit());
+        if digits.is_empty() {
+            let kind = ParseErrorKind::Expecting("digit after decimal point".to_string());
+            return Err(ParseError::new(reader.cursor().pos, kind));
+        }
+        let frac_string = format!("0.{}", digits);
+        Ok(Some(frac_string.parse::<f64>().unwrap()))
+    } else {
+        Ok(None)
+    }
+}
+
+fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
+    if match_str("e", reader) || match_str("E", reader) {
+        let mut exp_string = String::new();
+        if match_str("+", reader) {
+            exp_string.push('+');
+        } else if match_str("-", reader) {
+            exp_string.push('-');
+        }
+        let digits = reader.read_while(|c| c.is_ascii_digit());
+        if digits.is_empty() {
+            let kind = ParseErrorKind::Expecting("digit in exponent".to_string());
+            return Err(ParseError::new(reader.cursor().pos, kind));
+        }
+        exp_string.push_str(&digits);
+        Ok(Some(exp_string.parse::<i32>().unwrap()))
+    } else {
+        Ok(None)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use hurl_core::reader::{CharPos, Pos, Reader};
+
+    #[test]
+    fn test_number() {
+        let mut reader = Reader::new("110");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Integer(110)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("99999999999");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Integer(99999999999)
+        );
+        assert_eq!(reader.cursor().index, CharPos(11));
+
+        let mut reader = Reader::new("9223372036854775808"); // i64::MAX + 1
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::BigInteger("9223372036854775808".to_string())
+        );
+        assert_eq!(reader.cursor().index, CharPos(19));
+
+        let mut reader = Reader::new("110.0");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(110.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("1.1e2");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(110.00000000000001)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+    }
+
+    #[test]
+    fn test_string_integer() {
+        let mut reader = Reader::new("110");
+        assert_eq!(
+            try_string_integer(&mut reader).unwrap().unwrap(),
+            "110".to_string()
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("01");
+        assert_eq!(
+            try_string_integer(&mut reader).unwrap().unwrap(),
+            "0".to_string()
+        );
+        assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    fn test_string_integer_error() {
+        let mut reader = Reader::new("--1");
+        assert_eq!(
+            try_string_integer(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 2),
+                ParseErrorKind::Expecting("strictly positive digit".to_string())
+            )
+        );
+    }
+
+    #[test]
+    fn test_float() {
+        let mut reader = Reader::new("1.0");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(1.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("1e2");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(100.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(3));
+    }
+
+    #[test]
+    fn test_integer() {
+        let mut reader = Reader::new("1");
+        assert_eq!(try_integer(&mut reader).unwrap().unwrap(), 1);
+        assert_eq!(reader.cursor().index, CharPos(1));
+
+        let mut reader = Reader::new("9007199254740992");
+        assert_eq!(
+            try_integer(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting(
+                    "Integer value inside the allowed range ±(2⁵³-1, 2⁵³-1)".to_string()
+                )
+            )
+        );
+    }
+
+    #[test]
+    fn test_fraction() {
+        let mut reader = Reader::new(".02");
+        assert_eq!(try_fraction(&mut reader).unwrap().unwrap(), 0.02);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("e+2");
+        assert!(try_fraction(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
+    }
+
+    #[test]
+    fn test_exponent() {
+        let mut reader = Reader::new("e-2");
+        assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), -2);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("E+2");
+        assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), 2);
+        assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("]");
+        assert!(try_exponent(&mut reader).unwrap().is_none());
+        assert_eq!(reader.cursor().index, CharPos(0));
+    }
+}

@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{SourceInfo, Template};
 
-use crate::jsonpath2;
+use crate::jsonpath;
 use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -107,7 +107,7 @@ pub fn eval_jsonpath_json(
 ) -> Result<Option<Value>, RunnerError> {
     let expr_str = eval_template(expr, variables)?;
     let expr_source_info = expr.source_info;
-    let jsonpath_query = match jsonpath2::parse(&expr_str) {
+    let jsonpath_query = match jsonpath::parse(&expr_str) {
         Ok(q) => q,
         Err(_) => {
             let kind = RunnerErrorKind::QueryInvalidJsonpathExpression { value: expr_str };

@@ -42,7 +42,7 @@
 mod html;
 pub mod http;
 mod json;
-mod jsonpath2;
+mod jsonpath;
 pub mod output;
 #[doc(hidden)]
 pub mod parallel;
