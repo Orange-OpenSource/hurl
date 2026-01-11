@@ -21,7 +21,6 @@ use crate::jsonpath::ast::literal::Literal;
 use crate::jsonpath::ast::singular_query::SingularQuery;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)]
 pub struct ComparisonExpr {
     left: Comparable,
     right: Comparable,
@@ -49,14 +48,12 @@ impl ComparisonExpr {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)]
 pub enum Comparable {
     Literal(Literal),
     SingularQuery(SingularQuery),
     Function(ValueTypeFunction),
 }
 
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ComparisonOp {
     Equal,

@@ -25,7 +25,6 @@ use crate::jsonpath::ast::singular_query::SingularQuery;
 
 /// Arguments with ValueType
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)]
 pub enum ValueTypeArgument {
     Literal(Literal),
     SingularQuery(SingularQuery),
@@ -41,7 +40,6 @@ pub enum LogicalTypeArgument {
 }
 
 /// Arguments with NodesType
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum NodesTypeArgument {
     FilterQuery(Query),

@@ -23,7 +23,6 @@ use crate::jsonpath::parser::query::try_filter_query;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 
-#[allow(dead_code)]
 pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     let mut operands = vec![];
 

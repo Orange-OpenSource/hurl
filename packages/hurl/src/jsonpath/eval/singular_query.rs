@@ -21,7 +21,6 @@ use crate::jsonpath::ast::singular_query::{
 };
 
 impl SingularQuery {
-    #[allow(dead_code)]
     pub fn eval(
         &self,
         current_value: &serde_json::Value,

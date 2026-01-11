@@ -95,9 +95,7 @@ mod tests {
     #[allow(unused_imports)]
     use crate::jsonpath::ast::segment::{ChildSegment, Segment};
     #[allow(unused_imports)]
-    use crate::jsonpath::ast::selector::{
-        IndexSelector, NameSelector, Selector, WildcardSelector,
-    };
+    use crate::jsonpath::ast::selector::{IndexSelector, NameSelector, Selector, WildcardSelector};
     #[allow(unused_imports)]
     use serde_json::json;
 

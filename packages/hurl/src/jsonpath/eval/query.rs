@@ -26,7 +26,6 @@ impl Query {
     /// Note that the absolute and relative queries are not symmetrical
     /// An absolute query only need the root value
     /// while the relative query needs both the current value and the root value
-    #[allow(dead_code)]
     pub fn eval(
         &self,
         current_value: &serde_json::Value,
@@ -61,7 +60,6 @@ impl RelativeQuery {
 impl AbsoluteQuery {
     /// Eval a JSONPath `Query` for a root `serde_json::Value` input.
     /// It returns a `NodeList`
-    #[allow(dead_code)]
     pub fn eval(&self, root_value: &serde_json::Value) -> NodeList {
         let mut results = vec![root_value.clone()];
         for segment in self.segments() {

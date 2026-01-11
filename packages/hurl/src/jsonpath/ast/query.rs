@@ -24,7 +24,6 @@ use super::segment::Segment;
 /// This query is only used inside the jsonpath module
 /// can be either absolute with the root identifier $
 /// or relative with the current node identifier @
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Query {
     AbsoluteQuery(AbsoluteQuery),
@@ -69,7 +68,6 @@ pub struct RelativeQuery {
 }
 
 impl RelativeQuery {
-    #[allow(dead_code)]
     pub fn new(segments: Vec<Segment>) -> RelativeQuery {
         RelativeQuery { segments }
     }

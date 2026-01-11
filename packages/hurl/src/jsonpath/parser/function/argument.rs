@@ -25,7 +25,6 @@ use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 
 /// Parse an argument with ValueType
-#[allow(dead_code)]
 pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
     if let Some(v) = literal::try_parse(reader)? {
         Ok(ValueTypeArgument::Literal(v))
@@ -42,7 +41,6 @@ pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
 }
 
 /// Parse an argument with NodeType
-#[allow(dead_code)]
 pub fn nodes_type(reader: &mut Reader) -> ParseResult<NodesTypeArgument> {
     if let Some(filter_query) = try_filter_query(reader)? {
         Ok(NodesTypeArgument::FilterQuery(filter_query))

@@ -17,7 +17,6 @@
  */
 
 #[derive(Clone, Debug, PartialEq)]
-#[allow(dead_code)]
 pub enum Literal {
     Bool(bool),
     Number(Number),
@@ -28,7 +27,6 @@ pub enum Literal {
 impl Eq for Literal {}
 
 #[derive(Clone, Debug, PartialEq)]
-#[allow(dead_code)]
 pub enum Number {
     Integer(i64),
     BigInteger(String),

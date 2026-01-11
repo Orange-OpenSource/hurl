@@ -35,7 +35,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     }
 }
 
-#[allow(dead_code)]
 pub fn try_filter_query(reader: &mut Reader) -> ParseResult<Option<Query>> {
     if let Some(relative_query) = try_relative_query(reader)? {
         Ok(Some(Query::RelativeQuery(relative_query)))
@@ -46,7 +45,6 @@ pub fn try_filter_query(reader: &mut Reader) -> ParseResult<Option<Query>> {
     }
 }
 
-#[allow(dead_code)]
 pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
     if match_str("@", reader) {
         let segments = segments::parse(reader)?;
@@ -56,7 +54,6 @@ pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQue
     }
 }
 
-#[allow(dead_code)]
 pub fn try_absolute_query(reader: &mut Reader) -> ParseResult<Option<AbsoluteQuery>> {
     if match_str("$", reader) {
         let segments = segments::parse(reader)?;

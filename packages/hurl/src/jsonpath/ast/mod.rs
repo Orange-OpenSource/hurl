@@ -28,5 +28,4 @@ pub(crate) mod singular_query;
 /// JSONPath Query
 /// https://www.rfc-editor.org/rfc/rfc9535.html#name-overview-of-jsonpath-expres
 /// This is the standard JSONPath query used outside the module
-#[allow(dead_code)]
 pub(crate) type JsonPathQuery = query::AbsoluteQuery;

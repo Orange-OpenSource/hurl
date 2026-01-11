@@ -19,7 +19,6 @@
 use crate::jsonpath::ast::expr::{AndExpr, LogicalExpr, NotExpr, OrExpr, TestExpr, TestExprKind};
 
 impl LogicalExpr {
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         match self {
             LogicalExpr::Comparison(comparison_expr) => {
@@ -35,7 +34,6 @@ impl LogicalExpr {
 
 impl TestExpr {
     /// eval the test expression to a boolean value
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         let value = match self.kind() {
             TestExprKind::FilterQuery(filter_query) => {
@@ -55,7 +53,6 @@ impl TestExpr {
 
 impl AndExpr {
     /// eval and end expression to a boolean value
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         for operand in self.operands() {
             if !operand.eval(current_value, root_value) {
@@ -68,7 +65,6 @@ impl AndExpr {
 
 impl OrExpr {
     /// eval or expression to a boolean value
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         for operand in self.operands() {
             if operand.eval(current_value, root_value) {
@@ -81,7 +77,6 @@ impl OrExpr {
 
 impl NotExpr {
     /// eval not expression to a boolean value
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         !self.expr().eval(current_value, root_value)
     }

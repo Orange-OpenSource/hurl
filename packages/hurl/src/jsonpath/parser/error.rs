@@ -17,7 +17,6 @@ use hurl_core::reader::Pos;
  * limitations under the License.
  *
  */
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParseError {
     pos: Pos,

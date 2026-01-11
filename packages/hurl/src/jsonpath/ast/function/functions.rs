@@ -19,7 +19,6 @@
 use super::argument::{NodesTypeArgument, ValueTypeArgument};
 
 /// Functions returning a LogicalType
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LogicalTypeFunction {
     Match(ValueTypeArgument, ValueTypeArgument),
@@ -27,7 +26,6 @@ pub enum LogicalTypeFunction {
 }
 
 /// Functions returning a ValueType
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ValueTypeFunction {
     Length(ValueTypeArgument),

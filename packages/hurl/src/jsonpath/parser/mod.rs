@@ -33,7 +33,6 @@ use hurl_core::reader::Reader;
 
 pub type ParseResult<T> = Result<T, ParseError>;
 
-#[allow(dead_code)]
 pub fn parse(s: &str) -> ParseResult<JsonPathQuery> {
     let mut reader = Reader::new(s);
     query::parse(&mut reader)

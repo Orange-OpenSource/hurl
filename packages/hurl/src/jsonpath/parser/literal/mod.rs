@@ -32,7 +32,6 @@ use string::try_parse as try_string;
 /// Number can be either integer, or floats
 /// If the number contains a decimal point or an exponent, it is parsed as a float (Like Serde::json)
 /// 110 is an integer, but 110.0 or 1.1e2 are floats
-#[allow(dead_code)]
 pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
     if try_null(reader) {
         Ok(Literal::Null)
@@ -50,7 +49,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
     }
 }
 
-#[allow(dead_code)]
 pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<Literal>> {
     if try_null(reader) {
         Ok(Some(Literal::Null))
@@ -66,7 +64,6 @@ pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<Literal>> {
 }
 
 /// Try to parse a boolean literal
-#[allow(dead_code)]
 fn try_boolean(reader: &mut Reader) -> Option<bool> {
     if match_str("true", reader) {
         Some(true)
@@ -78,7 +75,6 @@ fn try_boolean(reader: &mut Reader) -> Option<bool> {
 }
 
 /// Try to parse a null literal
-#[allow(dead_code)]
 fn try_null(reader: &mut Reader) -> bool {
     match_str("null", reader)
 }

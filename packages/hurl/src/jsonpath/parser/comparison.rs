@@ -28,7 +28,6 @@ use crate::jsonpath::parser::{ParseError, ParseErrorKind};
 
 use hurl_core::reader::Reader;
 
-#[allow(dead_code)]
 /// Try to parse a comparison expression.
 pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<ComparisonExpr>> {
     let save = reader.cursor();

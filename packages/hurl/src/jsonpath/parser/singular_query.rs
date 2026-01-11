@@ -30,7 +30,6 @@ use hurl_core::reader::Reader;
 
 /// Try to parse a singular query.
 /// It differs from a regular query in that it only matches a single node.
-#[allow(dead_code)]
 pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<SingularQuery>> {
     if match_str("$", reader) {
         let segments = singular_query_segments(reader)?;

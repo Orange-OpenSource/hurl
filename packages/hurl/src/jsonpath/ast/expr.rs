@@ -26,23 +26,18 @@ use super::query::Query;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LogicalExpr {
     /// Comparison expression (e.g., @.price > 10)
-    #[allow(dead_code)]
     Comparison(ComparisonExpr),
 
     /// Test expression (e.g., @.name)
-    #[allow(dead_code)]
     Test(TestExpr),
 
     /// Logical AND expression (e.g., expr1 && expr2 && expr3)
-    #[allow(dead_code)]
     And(AndExpr),
 
     /// Logical OR expression (e.g., expr1 || expr2 || expr3)
-    #[allow(dead_code)]
     Or(OrExpr),
 
     /// Logical NOT expression (e.g., !expr)
-    #[allow(dead_code)]
     Not(NotExpr),
 }
 
@@ -52,16 +47,13 @@ pub struct TestExpr {
     kind: TestExprKind,
 }
 impl TestExpr {
-    #[allow(dead_code)]
     pub fn new(not: bool, kind: TestExprKind) -> Self {
         Self { not, kind }
     }
 
-    #[allow(dead_code)]
     pub fn not(&self) -> bool {
         self.not
     }
-    #[allow(dead_code)]
     pub fn kind(&self) -> &TestExprKind {
         &self.kind
     }
@@ -80,12 +72,10 @@ pub struct AndExpr {
 }
 
 impl AndExpr {
-    #[allow(dead_code)]
     pub fn new(operands: Vec<LogicalExpr>) -> Self {
         Self { operands }
     }
 
-    #[allow(dead_code)]
     pub fn operands(&self) -> &Vec<LogicalExpr> {
         &self.operands
     }
@@ -97,12 +87,10 @@ pub struct OrExpr {
 }
 
 impl OrExpr {
-    #[allow(dead_code)]
     pub fn new(operands: Vec<LogicalExpr>) -> Self {
         Self { operands }
     }
 
-    #[allow(dead_code)]
     pub fn operands(&self) -> &Vec<LogicalExpr> {
         &self.operands
     }
@@ -115,14 +103,12 @@ pub struct NotExpr {
 }
 
 impl NotExpr {
-    #[allow(dead_code)]
     pub fn new(expr: LogicalExpr) -> Self {
         Self {
             expr: Box::new(expr),
         }
     }
 
-    #[allow(dead_code)]
     pub fn expr(&self) -> &LogicalExpr {
         &self.expr
     }

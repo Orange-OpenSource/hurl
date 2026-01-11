@@ -20,7 +20,6 @@ use super::expr::LogicalExpr;
 
 /// Selector
 /// https://www.rfc-editor.org/rfc/rfc9535.html#name-selectors-2
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Selector {
     Name(NameSelector),

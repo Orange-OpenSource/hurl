@@ -18,7 +18,6 @@
 
 use crate::jsonpath::ast::selector::{IndexSelector, NameSelector};
 
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SingularQuery {
     Absolute(AbsoluteSingularQuery),
@@ -56,7 +55,6 @@ impl RelativeSingularQuery {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)]
 pub enum SingularQuerySegment {
     Name(NameSelector),
     Index(IndexSelector),

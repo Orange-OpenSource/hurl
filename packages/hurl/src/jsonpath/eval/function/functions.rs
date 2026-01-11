@@ -23,7 +23,6 @@ use crate::jsonpath::ast::function::functions::{LogicalTypeFunction, ValueTypeFu
 use crate::jsonpath::ast::function::LogicalType;
 
 impl ValueTypeFunction {
-    #[allow(dead_code)]
     pub fn eval(
         &self,
         current_value: &serde_json::Value,
@@ -56,7 +55,6 @@ impl ValueTypeFunction {
 }
 
 impl LogicalTypeFunction {
-    #[allow(dead_code)]
     pub fn eval(
         &self,
         current_value: &serde_json::Value,
@@ -111,7 +109,6 @@ impl LogicalTypeFunction {
     }
 }
 
-#[allow(dead_code)]
 pub fn length(value: &serde_json::Value) -> Option<usize> {
     match value {
         serde_json::Value::Array(arr) => Some(arr.len()),

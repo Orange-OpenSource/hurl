@@ -22,7 +22,6 @@ use super::selector::Selector;
 
 /// JSONPath segment
 /// https://www.rfc-editor.org/rfc/rfc9535.html#name-segments-2
-#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Segment {
     Child(ChildSegment),

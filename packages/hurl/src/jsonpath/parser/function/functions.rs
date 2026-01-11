@@ -23,7 +23,6 @@ use crate::jsonpath::parser::ParseResult;
 use hurl_core::reader::Reader;
 
 /// Try to parse a function return a ValueType
-#[allow(dead_code)]
 pub fn try_value_type_function(reader: &mut Reader) -> ParseResult<Option<ValueTypeFunction>> {
     //let initial_state = reader.cursor();
     if match_str("length", reader) {
@@ -53,7 +52,6 @@ pub fn try_value_type_function(reader: &mut Reader) -> ParseResult<Option<ValueT
 }
 
 /// Try to parse a function return a LogicalType
-#[allow(dead_code)]
 pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<LogicalTypeFunction>> {
     //let initial_state = reader.cursor();
     if match_str("match", reader) {

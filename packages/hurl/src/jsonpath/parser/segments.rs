@@ -169,9 +169,7 @@ fn digit(reader: &mut Reader) -> Option<char> {
 #[cfg(test)]
 mod tests {
 
-    use crate::jsonpath::ast::selector::{
-        IndexSelector, NameSelector, Selector, WildcardSelector,
-    };
+    use crate::jsonpath::ast::selector::{IndexSelector, NameSelector, Selector, WildcardSelector};
     use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;

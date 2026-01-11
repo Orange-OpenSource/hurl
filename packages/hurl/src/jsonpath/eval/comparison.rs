@@ -19,7 +19,6 @@
 use crate::jsonpath::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
 
 impl ComparisonExpr {
-    #[allow(dead_code)]
     pub fn eval(&self, current_value: &serde_json::Value, root_value: &serde_json::Value) -> bool {
         let left = self.left().eval(current_value, root_value);
         let right = self.right().eval(current_value, root_value);
