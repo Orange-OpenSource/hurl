@@ -53,14 +53,24 @@ def assert_json_filter():
             "price": {
                 "US": 100,
                 "UN": 110
-            }
+            },
+            "countries": [ "China", "New Zealand"]
         },
         {
             "name": "grape",
             "price": {
                 "US": 200,
                 "UN": 150
-            }
+            },
+            "countries": [ "France", "Italy"]
+        },
+        {
+            "name": "orange",
+            "countries": [ "Spain"]
+        },
+        {
+            "name": "kiwi",
+            "countries": [ "New Zealand", "Italy"]
         }
     ]
 }""",
@@ -112,6 +122,17 @@ def assert_json_big_number():
     return Response(
         """{
   "big_integer": 1000000000000000000000
+}""",
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-json/list-in-list")
+def assert_json_list_in_list():
+    return Response(
+        """{
+    "list": [1, 2, 3],
+    "list_in_list": [[1, 2, 3]]
 }""",
         mimetype="application/json",
     )

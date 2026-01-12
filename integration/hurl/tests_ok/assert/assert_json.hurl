@@ -140,8 +140,11 @@ jsonpath "$[?(@.id == 1)].name" == "Bob"
 GET http://localhost:8000/assert-json/filter
 HTTP 200
 [Asserts]
-jsonpath "$.fruit[?(@.price.US==200)].name" == "grape"
+jsonpath "$.fruit[?(@.price.US==100)].name" == "apple"
+jsonpath "$.fruit..[?(@.US == 100)].US" == 100
 jsonpath "$.fruit[?(@.US == 100)]" not exists
+jsonpath "$.fruit[?(@.countries[0]=='New Zealand' || @.countries[1]=='New Zealand')]" count == 2
+jsonpath "$.fruit[?(@.countries[?(@=='New Zealand')])]" count == 2
 {
     "fruit": [
         {
@@ -149,14 +152,24 @@ jsonpath "$.fruit[?(@.US == 100)]" not exists
             "price": {
                 "US": 100,
                 "UN": 110
-            }
+            },
+            "countries": [ "China", "New Zealand"]
         },
         {
             "name": "grape",
             "price": {
                 "US": 200,
                 "UN": 150
-            }
+            },
+            "countries": [ "France", "Italy"]
+        },
+        {
+            "name": "orange",
+            "countries": [ "Spain"]
+        },
+        {
+            "name": "kiwi",
+            "countries": [ "New Zealand", "Italy"]
         }
     ]
 }
@@ -223,3 +236,21 @@ jsonpath "$.big_integer" == 1000000000000000000000
 {
   "big_integer": 1000000000000000000000
 }
+
+GET http://localhost:8000/assert-json/list-in-list
+HTTP 200
+[Asserts]
+jsonpath "$.list" count == 3                   # 1 result: [1, 2, 3]
+jsonpath "$.list[0]" == 1                      # 1 result: 1
+jsonpath "$.list[*]" count == 3                # 3 results: 1, 2, 3
+jsonpath "$.list[*][0]" not exists             # integer can not be indexed
+jsonpath "$.list_in_list" count == 1           # 1 result: [[1, 2, 3]]
+jsonpath "$.list_in_list[*]" count == 3        # 1 result: [1, 2, 3]
+jsonpath "$.list_in_list[*][0]" == 1           # 1 result: 1
+jsonpath "$.list_in_list[0]" count == 3        # 1 result: [1, 2, 3]
+jsonpath "$.list_in_list[0][0]" == 1           # 1 result: 1
+{
+    "list": [1, 2, 3],
+    "list_in_list": [[1, 2, 3]]
+}
+
