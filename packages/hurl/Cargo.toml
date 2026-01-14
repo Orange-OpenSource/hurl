@@ -24,7 +24,7 @@ brotli = "8.0.2"
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
 clap = { version = "4.5.54", features = ["string", "wrap_help"] }
 curl = "0.4.49"
-curl-sys = "0.4.84"
+curl-sys = "0.4.85"
 encoding_rs = "0.8.35"
 glob = "0.3.3"
 hurl_core = { version = "7.2.0-SNAPSHOT", path = "../hurl_core" }
