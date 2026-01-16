@@ -21,7 +21,7 @@ use hurl_core::ast::SourceInfo;
 use hurl_core::reader::Pos;
 use hurl_core::types::Index;
 
-use crate::http::{Call, Cookie, CurlCmd};
+use crate::http::{Call, CookieStore, CurlCmd};
 use crate::util::path::ContextDir;
 use crate::util::term::Stdout;
 
@@ -39,8 +39,8 @@ pub struct HurlResult {
     pub duration: Duration,
     /// `true` if the run is successful, `false` if there has been runtime or asserts errors.
     pub success: bool,
-    /// The list of cookies at the end of the run.
-    pub cookies: Vec<Cookie>,
+    /// The cookie store containing the list of cookies at the end of the run.
+    pub cookie_store: CookieStore,
     /// Start of the run (in "UNIX timestamp").
     pub timestamp: i64,
     /// The set of variables, updated at the end of the run execution.

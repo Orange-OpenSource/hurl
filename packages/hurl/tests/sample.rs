@@ -33,7 +33,7 @@ fn simple_sample() {
     // - check that function parameters type are public through the hurl crate
     fn check_result(result: &HurlResult) {
         assert!(result.success);
-        assert_eq!(result.cookies.len(), 0);
+        assert_eq!(result.cookie_store.len(), 0);
         assert_eq!(result.entries.len(), 1);
         assert!(result.duration.as_millis() < 1000);
     }

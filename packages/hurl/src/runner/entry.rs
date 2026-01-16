@@ -92,7 +92,7 @@ pub fn run(
 
     // Experimental features with cookie storage
     if let Some(s) = request::get_cmd_cookie_storage_set(&entry.request) {
-        if let Ok(cookie) = http::Cookie::from_netscape_str(&s) {
+        if let Ok(cookie) = http::Cookie::from_netscape(&s) {
             http_client.add_cookie(&cookie, logger);
         } else {
             logger.warning(&format!("Cookie string can not be parsed: '{s}'"));

@@ -330,10 +330,8 @@ fn create_cookies_file(
     for run in runs.iter() {
         s.push_str(&format!("# Cookies for file <{}>", run.filename));
         s.push('\n');
-        for cookie in run.hurl_result.cookies.iter() {
-            s.push_str(&cookie.to_netscape_str().redact(secrets));
-            s.push('\n');
-        }
+        let cookies = run.hurl_result.cookie_store.to_netscape().redact(secrets);
+        s.push_str(&cookies);
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {

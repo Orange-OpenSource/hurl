@@ -22,7 +22,7 @@
 pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
-pub use self::cookie_store::Cookie;
+pub use self::cookie_store::{Cookie, CookieStore};
 pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{

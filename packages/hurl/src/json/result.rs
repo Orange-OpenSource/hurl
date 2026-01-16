@@ -217,8 +217,8 @@ impl HurlResultJson {
             .map(|e| EntryResultJson::from_entry(e, content, filename, response_dir, secrets))
             .collect::<Result<Vec<_>, _>>()?;
         let cookies = result
-            .cookies
-            .iter()
+            .cookie_store
+            .cookies()
             .map(|c| CookieJson::from_cookie(c, secrets))
             .collect::<Vec<_>>();
         Ok(HurlResultJson {

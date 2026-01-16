@@ -799,7 +799,7 @@ impl Client {
     /// Adds a cookie to the cookie jar.
     pub fn add_cookie(&mut self, cookie: &Cookie, logger: &mut Logger) {
         logger.debug(&format!("Add to cookie store <{cookie}> (experimental)"));
-        self.handle.cookie_list(&cookie.to_netscape_str()).unwrap();
+        self.handle.cookie_list(&cookie.to_netscape()).unwrap();
     }
 
     /// Clears cookie storage.

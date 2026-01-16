@@ -20,7 +20,7 @@ use core::fmt;
 use std::fmt::Formatter;
 
 /// Represents the storage of cookies for an HTTP client.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct CookieStore {
     cookies: Vec<Cookie>,
 }
@@ -33,7 +33,7 @@ impl CookieStore {
 
     /// Add a new cookie from a Netscape formatted string <http://www.cookiecentral.com/faq/#3.5>.
     pub fn add_cookie(&mut self, netscape_str: &str) -> Result<(), ParseCookieError> {
-        let cookie = Cookie::from_netscape_str(netscape_str)?;
+        let cookie = Cookie::from_netscape(netscape_str)?;
         self.cookies.push(cookie);
         Ok(())
     }
@@ -43,9 +43,33 @@ impl CookieStore {
         self.cookies.iter()
     }
 
+    /// Returns the number of cookies in this store.
+    pub fn len(&self) -> usize {
+        self.cookies.len()
+    }
+
+    /// Returns true if this cookie store is empty.
+    pub fn is_empty(&self) -> bool {
+        self.cookies.len() == 0
+    }
+
     /// Consumes the store and transform it into a vec of [`Cookie`]
     pub fn into_vec(self) -> Vec<Cookie> {
         self.cookies
+    }
+
+    /// Formats this cookie store using Netscape cookie format.
+    ///
+    /// <http://www.cookiecentral.com/faq/#3.5>
+    ///
+    /// See [`Cookie::to_netscape`]
+    pub fn to_netscape(&self) -> String {
+        let mut out = String::new();
+        for cookie in &self.cookies {
+            out.push_str(&cookie.to_netscape());
+            out.push('\n');
+        }
+        out
     }
 }
 
@@ -94,7 +118,7 @@ impl Cookie {
     /// > - number of seconds since Jan 1, 1970 00:00:00 GMT.
     /// > - name - The name of the variable.
     /// > - value - The value of the variable.
-    pub fn to_netscape_str(&self) -> String {
+    pub fn to_netscape(&self) -> String {
         let include_subdomain = if self.include_subdomain {
             "TRUE"
         } else {
@@ -115,7 +139,7 @@ impl Cookie {
     }
 
     /// Creates a [`Cookie`] from a Netscape cookie formatted string.
-    pub fn from_netscape_str(s: &str) -> Result<Self, ParseCookieError> {
+    pub fn from_netscape(s: &str) -> Result<Self, ParseCookieError> {
         let mut tokens = CookieAttributes::new(s);
         let (http_only, domain) = if let Some(v) = tokens.next() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
@@ -223,7 +247,7 @@ impl Cookie {
 
 impl fmt::Display for Cookie {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let repr = self.to_netscape_str();
+        let repr = self.to_netscape();
         write!(f, "{repr}")
     }
 }
@@ -309,7 +333,7 @@ mod tests {
     #[test]
     pub fn parse_cookie_from_str() {
         assert_eq!(
-            Cookie::from_netscape_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA").unwrap(),
+            Cookie::from_netscape("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA").unwrap(),
             Cookie {
                 domain: "httpbin.org".to_string(),
                 include_subdomain: false,
@@ -322,7 +346,7 @@ mod tests {
             }
         );
         assert_eq!(
-            Cookie::from_netscape_str("localhost\tFALSE\t/\tFALSE\t1\tcookie2\t").unwrap(),
+            Cookie::from_netscape("localhost\tFALSE\t/\tFALSE\t1\tcookie2\t").unwrap(),
             Cookie {
                 domain: "localhost".to_string(),
                 include_subdomain: false,
@@ -336,7 +360,7 @@ mod tests {
         );
 
         assert_eq!(
-            Cookie::from_netscape_str("localhost FALSE / FALSE 1 cookie3 value3").unwrap(),
+            Cookie::from_netscape("localhost FALSE / FALSE 1 cookie3 value3").unwrap(),
             Cookie {
                 domain: "localhost".to_string(),
                 include_subdomain: false,
@@ -350,7 +374,7 @@ mod tests {
         );
 
         assert_eq!(
-            Cookie::from_netscape_str("#HttpOnly_localhost FALSE / FALSE 1 cookie3 a b c").unwrap(),
+            Cookie::from_netscape("#HttpOnly_localhost FALSE / FALSE 1 cookie3 a b c").unwrap(),
             Cookie {
                 domain: "localhost".to_string(),
                 include_subdomain: false,
@@ -364,7 +388,7 @@ mod tests {
         );
 
         assert_eq!(
-            Cookie::from_netscape_str("xxx").err().unwrap(),
+            Cookie::from_netscape("xxx").err().unwrap(),
             ParseCookieError
         );
     }
@@ -427,6 +451,9 @@ mod tests {
                 "#HttpOnly_example.com\t\t   FALSE\t\t  \t/\tFALSE\t1\tcookie2\tfoo bar baz",
             )
             .unwrap();
+        assert_eq!(cookie_store.len(), 2);
+        assert!(!cookie_store.is_empty());
+
         let cookies = cookie_store.into_vec();
 
         assert_eq!(cookies.len(), 2);
@@ -456,5 +483,19 @@ mod tests {
                 http_only: true,
             }
         );
+    }
+
+    #[test]
+    fn test_cookie_store_to_netscapoe() {
+        let mut cookie_store = CookieStore::new();
+        cookie_store
+            .add_cookie("localhost  TRUE    /   FALSE   0   cookie1 valueA")
+            .unwrap();
+        cookie_store
+            .add_cookie(
+                "#HttpOnly_example.com\t\t   FALSE\t\t  \t/\tFALSE\t1\tcookie2\tfoo bar baz",
+            )
+            .unwrap();
+        assert_eq!(cookie_store.to_netscape(), "localhost\tTRUE\t/\tFALSE\t0\tcookie1\tvalueA\n#HttpOnly_example.com\tFALSE\t/\tFALSE\t1\tcookie2\tfoo bar baz\n");
     }
 }
