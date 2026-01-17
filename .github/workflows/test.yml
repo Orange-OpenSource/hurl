@@ -34,7 +34,6 @@ jobs:
               curl \
                   --silent \
                   --ipv4 \
-                  --max-time 0.5 \
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
@@ -47,7 +46,6 @@ jobs:
           for count in {1..1000} ; do
               curl \
                   --silent \
-                  --max-time 0.5 \
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
