@@ -32,26 +32,6 @@ jobs:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
-          echo "::group::Infos"
-          curl --version
-          uname -a
-          cat /etc/os-release
-          pacman -Q linux
-          cat /proc/cmdline
-          sysctl -a
-          lscpu
-          numactl --hardware
-          grep -E 'vmx|svm' /proc/cpuinfo
-          ip route show
-          ip rule show
-          resolvectl status
-          sysctl net.ipv4.udp_mem
-          sysctl net.ipv4.udp_rmem_min
-          sysctl net.ipv4.udp_wmem_min
-          sysctl net.core.rmem_max
-          sysctl net.core.wmem_max
-          echo "::endgroup::"
-          echo "::group::Test"
           for ipv in 4 6 ; do
               echo "========== ipv${ipv}"
               for count in {1..1000} ; do
@@ -60,4 +40,3 @@ jobs:
               done > /tmp/log
           done
           grep exit_code /tmp/log | sort | uniq -c
-          echo "::endgroup::"
