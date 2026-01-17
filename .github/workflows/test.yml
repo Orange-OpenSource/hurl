@@ -51,7 +51,7 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "ipv6 exit_code=${exit_code}"
-          done > /tmp/log
+          done >> /tmp/log
           for count in {1..1000} ; do
               curl \
                   --silent \
@@ -60,7 +60,7 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "ipvauto exit_code=${exit_code}"
-          done > /tmp/log
+          done >> /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
 
           
