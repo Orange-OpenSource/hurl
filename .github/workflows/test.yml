@@ -36,6 +36,7 @@ jobs:
               echo "========== ipv${ipv}"
               for count in {1..1000} ; do
                   curl \
+                      --silent \
                       --ipv${ipv} \
                       --trace-time \
                       --trace-ascii curl.trace \
@@ -47,7 +48,4 @@ jobs:
                   cat curl.trace
               done > /tmp/log
           done
-          grep exit_code /tmp/log | sort | uniq -c
-          echo "=============================="
-          echo "=============================="
-          cat /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
