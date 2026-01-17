@@ -26,16 +26,16 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: Build, Test units and Integration tests
+    - name: Archlinux
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
           for c in {1..1000} ; do
-              (curl --silent --http3 --head https://google.com || true )
+              (curl --silent --http3 --head https://google.com && exit_code=0 || exit_code=1 )
+              echo "exit_code=$exit_code"
           done | tee /tmp/log | grep -c 301
-          cat /tmp/log
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: ${{ always() }}
