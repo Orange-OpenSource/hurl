@@ -30,7 +30,7 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: ipv4
       run: |
-          for count in {1..10} ; do
+          for count in {1..1000} ; do
               curl \
                   --silent \
                   --ipv4 \
@@ -39,12 +39,12 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "exit_code=${exit_code}"
-              sleep 60
+              sleep 1
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
       run: |
-          for count in {1..10} ; do
+          for count in {1..1000} ; do
               curl \
                   --silent \
                   --max-time 0.5 \
@@ -52,6 +52,6 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "exit_code=${exit_code}"
-              sleep 60
+              sleep 1
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
