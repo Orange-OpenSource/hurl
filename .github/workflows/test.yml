@@ -36,16 +36,12 @@ jobs:
               curl \
                   --silent \
                   --ipv4 \
-                  --trace-time \
-                  --trace-ascii curl.trace \
-                  --max-time 1 \
+                  --max-time 0.5 \
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "ipv4 / exit_code=${exit_code}"
-              cat curl.trace
+              echo "exit_code=${exit_code}"
           done > /tmp/log
-          cat /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipv6
       uses: addnab/docker-run-action@v3
@@ -57,16 +53,12 @@ jobs:
               curl \
                   --silent \
                   --ipv6 \
-                  --trace-time \
-                  --trace-ascii curl.trace \
-                  --max-time 1 \
+                  --max-time 0.5 \
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "ipv6 / exit_code=${exit_code}"
-              cat curl.trace
+              echo "exit_code=${exit_code}"
           done > /tmp/log
-          cat /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
       uses: addnab/docker-run-action@v3
@@ -77,14 +69,10 @@ jobs:
           for count in {1..1000} ; do
               curl \
                   --silent \
-                  --trace-time \
-                  --trace-ascii curl.trace \
-                  --max-time 1 \
+                  --max-time 0.5 \
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "ipvauto / exit_code=${exit_code}"
-              cat curl.trace
+              echo "exit_code=${exit_code}"
           done > /tmp/log
-          cat /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
