@@ -30,7 +30,7 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: ipv4
       run: |
-          for count in {1..2000} ; do
+          for count in {1..500} ; do
               curl \
                   --silent \
                   --ipv4 \
@@ -41,22 +41,9 @@ jobs:
               echo "exit_code=${exit_code}"
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
-    - name: ipv6
-      run: |
-          for count in {1..2000} ; do
-              curl \
-                  --silent \
-                  --ipv6 \
-                  --max-time 0.5 \
-                  --http3 \
-                  --head \
-                  https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
-          done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
       run: |
-          for count in {1..2000} ; do
+          for count in {1..500} ; do
               curl \
                   --silent \
                   --max-time 0.5 \
