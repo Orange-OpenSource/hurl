@@ -32,7 +32,7 @@ jobs:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --ipv4 \
@@ -49,7 +49,7 @@ jobs:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --ipv6 \
@@ -66,7 +66,7 @@ jobs:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --max-time 0.5 \
@@ -89,7 +89,7 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: ipv4
       run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --ipv4 \
@@ -102,7 +102,7 @@ jobs:
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipv6
       run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --ipv6 \
@@ -115,7 +115,7 @@ jobs:
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
       run: |
-          for count in {1..1000} ; do
+          for count in {1..2000} ; do
               curl \
                   --silent \
                   --max-time 0.5 \
