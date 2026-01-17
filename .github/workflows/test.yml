@@ -26,7 +26,7 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: ipv4
+    - name: Tests
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
@@ -40,15 +40,8 @@ jobs:
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
+              echo "ipv4 exit_code=${exit_code}"
           done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
-    - name: ipv6
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
           for count in {1..1000} ; do
               curl \
                   --silent \
@@ -57,15 +50,8 @@ jobs:
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
+              echo "ipv6 exit_code=${exit_code}"
           done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
-    - name: ipvauto
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
           for count in {1..1000} ; do
               curl \
                   --silent \
@@ -73,6 +59,8 @@ jobs:
                   --http3 \
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
+              echo "ipvauto exit_code=${exit_code}"
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
+
+          
