@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-docker-archlinux-x64-native:
+  test-docker-archlinux-x64-500:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
@@ -39,6 +39,7 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "exit_code=${exit_code}"
+              sleep 0.5
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
@@ -51,5 +52,120 @@ jobs:
                   --head \
                   https://google.com && exit_code=0 || exit_code=1
               echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+
+  test-docker-archlinux-x64-1000:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - name: ipv4
+      run: |
+          for count in {1..1000} ; do
+              curl \
+                  --silent \
+                  --ipv4 \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+    - name: ipvauto
+      run: |
+          for count in {1..1000} ; do
+              curl \
+                  --silent \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+
+  test-docker-archlinux-x64-2000:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - name: ipv4
+      run: |
+          for count in {1..2000} ; do
+              curl \
+                  --silent \
+                  --ipv4 \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+    - name: ipvauto
+      run: |
+          for count in {1..2000} ; do
+              curl \
+                  --silent \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+
+  test-docker-archlinux-x64-5000:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - name: ipv4
+      run: |
+          for count in {1..5000} ; do
+              curl \
+                  --silent \
+                  --ipv4 \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
+          done > /tmp/log
+          grep "exit_code=" /tmp/log | sort | uniq -c
+    - name: ipvauto
+      run: |
+          for count in {1..5000} ; do
+              curl \
+                  --silent \
+                  --max-time 0.5 \
+                  --http3 \
+                  --head \
+                  https://google.com && exit_code=0 || exit_code=1
+              echo "exit_code=${exit_code}"
+              sleep 0.5
           done > /tmp/log
           grep "exit_code=" /tmp/log | sort | uniq -c
