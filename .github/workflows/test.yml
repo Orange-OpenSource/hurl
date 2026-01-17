@@ -18,65 +18,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-docker-archlinux-x64-addnab:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6.0.1
-      with:
-        persist-credentials: false
-        ref: ${{ inputs.branch }}
-    - name: ipv4 addnab
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          for count in {1..2000} ; do
-              curl \
-                  --silent \
-                  --ipv4 \
-                  --max-time 0.5 \
-                  --http3 \
-                  --head \
-                  https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
-          done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
-    - name: ipv6 addnab
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          for count in {1..2000} ; do
-              curl \
-                  --silent \
-                  --ipv6 \
-                  --max-time 0.5 \
-                  --http3 \
-                  --head \
-                  https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
-          done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
-    - name: ipvauto addnab
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          for count in {1..2000} ; do
-              curl \
-                  --silent \
-                  --max-time 0.5 \
-                  --http3 \
-                  --head \
-                  https://google.com && exit_code=0 || exit_code=1
-              echo "exit_code=${exit_code}"
-          done > /tmp/log
-          grep "exit_code=" /tmp/log | sort | uniq -c
-
   test-docker-archlinux-x64-native:
     runs-on: ubuntu-latest
     container:
@@ -89,7 +30,7 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: ipv4
       run: |
-          for count in {1..2000} ; do
+          for count in {1..1000} ; do
               curl \
                   --silent \
                   --ipv4 \
@@ -102,7 +43,7 @@ jobs:
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipv6
       run: |
-          for count in {1..2000} ; do
+          for count in {1..1000} ; do
               curl \
                   --silent \
                   --ipv6 \
@@ -115,7 +56,7 @@ jobs:
           grep "exit_code=" /tmp/log | sort | uniq -c
     - name: ipvauto
       run: |
-          for count in {1..2000} ; do
+          for count in {1..1000} ; do
               curl \
                   --silent \
                   --max-time 0.5 \
