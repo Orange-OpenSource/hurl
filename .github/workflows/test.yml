@@ -1,6 +1,8 @@
 name: test
 
 on:
+  pull_request:
+  workflow_dispatch:
   workflow_call:
     inputs:
       branch:
@@ -8,6 +10,12 @@ on:
         default: "master"
         required: true
         type: string
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   test-docker-archlinux-x64:
@@ -28,7 +36,6 @@ jobs:
           curl --version
           uname -a
           cat /etc/os-release
-          lsb_release -a 2>/dev/null
           pacman -Q linux
           cat /proc/cmdline
           sysctl -a
@@ -44,7 +51,6 @@ jobs:
           sysctl net.core.rmem_max
           sysctl net.core.wmem_max
           echo "::endgroup::"
-          
           echo "::group::Test"
           for ipv in 4 6 ; do
               echo "========== ipv${ipv}"
@@ -55,10 +61,3 @@ jobs:
           done
           grep exit_code /tmp/log | sort | uniq -c
           echo "::endgroup::"
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
-      if: ${{ always() }}
-      with:
-        name: tests-archlinux-x64-artifacts
-        path: |
-          ./**/*.log
