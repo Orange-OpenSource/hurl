@@ -83,6 +83,9 @@ jobs:
         python3 -m pip install requests --quiet
         bin/check/rust_version.py --token ${GITHUB_TOKEN} 7
 
+    - name: Check semver
+      uses: obi1kenobi/cargo-semver-checks-action@v2
+
     - name: Generated
       if: always()
       run: bin/check/generated.sh
