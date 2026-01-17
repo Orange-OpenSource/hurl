@@ -35,8 +35,19 @@ jobs:
           for ipv in 4 6 ; do
               echo "========== ipv${ipv}"
               for count in {1..1000} ; do
-                  curl -${ipv} --silent --max-time 1 --http3 --head https://google.com && exit_code=0 || exit_code=1
-                  echo "exit_code=$exit_code"
+                  curl \
+                      --ipv4${ipv} \
+                      --trace-time \
+                      --trace-ascii curl.trace \
+                      --max-time 1 \
+                      --http3 \
+                      --head \
+                      https://google.com && exit_code=0 || exit_code=1
+                  echo "==== ${ipv} / exit_code=${exit_code} ===="
+                  cat curl.trace
               done > /tmp/log
           done
           grep exit_code /tmp/log | sort | uniq -c
+          echo "=============================="
+          echo "=============================="
+          cat /tmp/log
