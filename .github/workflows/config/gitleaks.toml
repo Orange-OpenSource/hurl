@@ -1,8 +1,12 @@
-title = "gitleaks config"
+title = "Gitleaks config"
+
+[extend]
+# useDefault will extend the base configuration with the default gitleaks config:
+# https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true
 
 [allowlist]
 description = "global allow lists"
 paths = [
     '''integration'''
 ]
-

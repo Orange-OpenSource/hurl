@@ -20,7 +20,7 @@ function usage(){
     echo
     echo "  --github-token <github token access> #mandatory"
     echo "      specify github user token"
-    echo "        : example: --github-token ghp_kJvDuaalZidk3nB1uYtgsqMrkQ5Hkh76jh2o"
+    echo "        : example: --github-token ghp_xxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
 function consume_args(){

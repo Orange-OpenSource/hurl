@@ -39,7 +39,7 @@ jobs:
       if: always()
       run: bin/check/ad_hoc.sh
 
-    - name: Git leaks
+    - name: Gitleaks
       if: always()
       uses: addnab/docker-run-action@v3
       with:
