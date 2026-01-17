@@ -36,7 +36,7 @@ jobs:
               echo "========== ipv${ipv}"
               for count in {1..1000} ; do
                   curl \
-                      --ipv4${ipv} \
+                      --ipv${ipv} \
                       --trace-time \
                       --trace-ascii curl.trace \
                       --max-time 1 \
