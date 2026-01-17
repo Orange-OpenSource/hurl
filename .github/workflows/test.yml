@@ -1,8 +1,6 @@
 name: test
 
 on:
-  pull_request:
-  workflow_dispatch:
   workflow_call:
     inputs:
       branch:
@@ -10,12 +8,6 @@ on:
         default: "master"
         required: true
         type: string
-
-permissions: {}
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
-  cancel-in-progress: true
 
 jobs:
   test-docker-archlinux-x64:
@@ -32,10 +24,37 @@ jobs:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
-          for c in {1..1000} ; do
-              (curl --silent --http3 --head https://google.com && exit_code=0 || exit_code=1 )
-              echo "exit_code=$exit_code"
-          done | tee /tmp/log | grep -c 301
+          echo "::group::Infos"
+          curl --version
+          uname -a
+          cat /etc/os-release
+          lsb_release -a 2>/dev/null
+          pacman -Q linux
+          cat /proc/cmdline
+          sysctl -a
+          lscpu
+          numactl --hardware
+          grep -E 'vmx|svm' /proc/cpuinfo
+          ip route show
+          ip rule show
+          resolvectl status
+          sysctl net.ipv4.udp_mem
+          sysctl net.ipv4.udp_rmem_min
+          sysctl net.ipv4.udp_wmem_min
+          sysctl net.core.rmem_max
+          sysctl net.core.wmem_max
+          echo "::endgroup::"
+          
+          echo "::group::Test"
+          for ipv in 4 6 ; do
+              echo "========== ipv${ipv}"
+              for count in {1..1000} ; do
+                  curl -${ipv} --silent --max-time 1 --http3 --head https://google.com && exit_code=0 || exit_code=1
+                  echo "exit_code=$exit_code"
+              done > /tmp/log
+          done
+          grep exit_code /tmp/log | sort | uniq -c
+          echo "::endgroup::"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: ${{ always() }}
