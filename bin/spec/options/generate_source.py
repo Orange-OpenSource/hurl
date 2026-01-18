@@ -55,6 +55,8 @@ def generate_source_option(option: Option) -> str:
     s += f'\n        .long("{option.long}")'
     if option.short is not None:
         s += f"\n        .short('{option.short}')"
+    if option.alias is not None:
+        s += f'\n        .alias("{option.alias}")'
     if option.value is not None:
         s += f'\n        .value_name("{option.value}")'
     if option.value_parser is not None:

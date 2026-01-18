@@ -15,6 +15,7 @@ class Option:
     help: Optional[str] = None
     help_heading: Optional[str] = None
     conflict: Optional[str] = None
+    alias: Optional[str] = None
     append: bool = False
     cli_only: bool = False
     deprecated: bool = False
@@ -37,6 +38,8 @@ class Option:
             s += "\nhelp_heading: " + self.help_heading
         if self.conflict is not None:
             s += "\nconflict: " + " ".join(self.conflict)
+        if self.alias is not None:
+            s += "\nalias: " + self.alias
         if self.append:
             s += "\nmulti: append"
         if self.cli_only:
@@ -60,6 +63,7 @@ class Option:
         help = None
         help_heading = None
         conflict = None
+        alias = None
         append = False
         cli_only = False
         deprecated = False
@@ -94,6 +98,8 @@ class Option:
                     help_heading = v
                 elif key == "conflict":
                     conflict = [a.strip() for a in v.split(" ")]
+                elif key == "alias":
+                    alias = v
                 elif key == "multi":
                     if v == "append":
                         append = True
@@ -143,6 +149,7 @@ class Option:
             help=help,
             help_heading=help_heading,
             conflict=conflict,
+            alias=alias,
             append=append,
             cli_only=cli_only,
             deprecated=deprecated,
