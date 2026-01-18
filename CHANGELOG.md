@@ -1,15 +1,27 @@
-[7.2.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.2.0)
+[8.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.0)
 ========================================================================================================================
 
 Thanks to
+[@eirayuki](https://github.com/eirayuki),
+[@aageneralov](https://github.com/aageneralov),
+[@mateusz834](https://github.com/mateusz834),
+[@msterin](https://github.com/msterin),
+[@lillem4n](https://github.com/lillem4n),
 [@jwadolowski](https://github.com/jwadolowski),
 [@ashishajr](https://github.com/ashishajr),
 [@spiffytech](https://github.com/spiffytech),
 [@rajiv](https://github.com/rajiv),
 
+Breaking Changes:
+
+* Use CookieStore in HurlResult (crate compatibility) [#4697](https://github.com/Orange-OpenSource/hurl/issues/4697)
+* Using new JSONPath module implementing RFC 9535 [#4270](https://github.com/Orange-OpenSource/hurl/issues/4270)
+
+
 Enhancements:
 
 * Add `rawbytes` query [#4250](https://github.com/Orange-OpenSource/hurl/issues/4250)
+* Using new JSONPath module implementing RFC 9535 [#4270](https://github.com/Orange-OpenSource/hurl/issues/4270)
 * Add --verbosity option (globally and per request) [#4613](https://github.com/Orange-OpenSource/hurl/issues/4613)
 * Add Subject Alt Name (SAN) attribute for certificate assertions [#4617](https://github.com/Orange-OpenSource/hurl/issues/4617)
 
@@ -17,6 +29,7 @@ Enhancements:
 Bugs Fixed:
 
 * Fix truncating existing output file when response is tiny [#4576](https://github.com/Orange-OpenSource/hurl/issues/4576)
+
 
 
 [7.1.0 (2025-11-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#7.1.0)
