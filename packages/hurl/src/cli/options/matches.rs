@@ -362,7 +362,7 @@ pub fn no_cookie_store(arg_matches: &ArgMatches) -> bool {
 }
 
 pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "noproxy")
+    get::<String>(arg_matches, "no_proxy")
 }
 
 pub fn ntlm(arg_matches: &ArgMatches) -> bool {

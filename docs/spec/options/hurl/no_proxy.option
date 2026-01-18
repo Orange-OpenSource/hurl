@@ -1,8 +1,9 @@
-name: noproxy
-long: noproxy
+name: no_proxy
+long: no-proxy
 value: HOST(S)
 help: List of hosts which do not use proxy
 help_heading: HTTP options
+alias: noproxy
 ---
 Comma-separated list of hosts which do not use a proxy.
 

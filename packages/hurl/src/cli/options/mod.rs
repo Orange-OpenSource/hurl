@@ -228,7 +228,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::max_time())
         .arg(commands::negotiate())
         .arg(commands::no_cookie_store())
-        .arg(commands::noproxy())
+        .arg(commands::no_proxy())
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
         .arg(commands::pinned_pub_key())

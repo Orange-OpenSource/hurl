@@ -60,7 +60,7 @@ _hurl() {
     '--no-cookie-store[Do not use cookie store between requests]' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--no-pretty[Do not prettify response output]' \
-    '--noproxy[List of hosts which do not use proxy]: :' \
+    '--no-proxy[List of hosts which do not use proxy]: :' \
     '--ntlm[Tell Hurl to use NTLM authentication]' \
     '(-o --output)'{-o,--output}'[Write to FILE instead of stdout]: :_files' \
     '--parallel[Run files in parallel (default in test mode)]' \

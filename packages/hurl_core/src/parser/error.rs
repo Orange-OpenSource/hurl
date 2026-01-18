@@ -182,7 +182,7 @@ impl DisplaySourceError for ParseError {
                     "netrc",
                     "netrc-file",
                     "netrc-optional",
-                    "noproxy",
+                    "no-proxy",
                     "ntlm",
                     "output",
                     "path-as-is",

@@ -408,7 +408,7 @@ standard output is a terminal.
 
 This is a cli-only option.
 
-### --noproxy <HOST(S)> {#noproxy}
+### --no-proxy <HOST(S)> {#no-proxy}
 
 Comma-separated list of hosts which do not use a proxy.
 

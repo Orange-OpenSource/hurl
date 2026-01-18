@@ -442,9 +442,10 @@ pub fn no_pretty() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
-pub fn noproxy() -> clap::Arg {
-    clap::Arg::new("noproxy")
-        .long("noproxy")
+pub fn no_proxy() -> clap::Arg {
+    clap::Arg::new("no_proxy")
+        .long("no-proxy")
+        .alias("noproxy")
         .value_name("HOST(S)")
         .help("List of hosts which do not use proxy")
         .help_heading("HTTP options")
