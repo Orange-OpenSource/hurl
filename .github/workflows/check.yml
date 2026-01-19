@@ -84,7 +84,7 @@ jobs:
         bin/check/rust_version.py --token ${GITHUB_TOKEN} 7
 
     - name: Check semver
-      uses: obi1kenobi/cargo-semver-checks-action@v2
+      uses: obi1kenobi/cargo-semver-checks-action@v2.8
 
     - name: Generated
       if: always()
