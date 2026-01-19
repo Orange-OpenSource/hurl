@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
-
 concurrency: auto-close-inactive-pr-${{ github.ref }}
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
     name: auto-close-inactive-pr
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-autoscale
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
@@ -22,4 +21,3 @@ jobs:
           persist-credentials: false
       - name: Auto close inactive PR
         run: .github/workflows/bin/auto-close-inactive-pr.sh --github-project-path "${REPO}" --github-token "${GITHUB_TOKEN}" --max-days-of-inactivity 15
-
