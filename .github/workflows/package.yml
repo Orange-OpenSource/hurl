@@ -22,7 +22,7 @@ env:
 
 jobs:
   package-generic-linux-x64:
-    runs-on: ubuntu-22.04
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -43,7 +43,7 @@ jobs:
         which python3
         python3 --version
         pip --version
-    - name : Environment
+    - name: Environment
       run: bin/environment.sh
     - name: Install rust
       run: bin/install_rust.sh
@@ -67,7 +67,7 @@ jobs:
 
   test-generic-linux-on-docker-ubuntu-x64:
     needs: package-generic-linux-x64
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -121,7 +121,7 @@ jobs:
 
   test-generic-linux-on-docker-debian-x64:
     needs: package-generic-linux-x64
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -173,7 +173,7 @@ jobs:
 
   test-generic-linux-on-docker-archlinux-x64:
     needs: package-generic-linux-x64
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -190,14 +190,14 @@ jobs:
       with:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-# Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
-# Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
-#
-# > Binary compatibility is restricted to versions 2.14 or newer. On ELF systems, the soname was bumped from
-# > libxml2.so.2 to libxml2.so.16.
-#
-# We downgrade when testing the Hurl generic package, not when we're building the Hurl package on Arch Linux as the soname
-# problem arise only with the generic package.
+        # Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
+        # Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
+        #
+        # > Binary compatibility is restricted to versions 2.14 or newer. On ELF systems, the soname was bumped from
+        # > libxml2.so.2 to libxml2.so.16.
+        #
+        # We downgrade when testing the Hurl generic package, not when we're building the Hurl package on Arch Linux as the soname
+        # problem arise only with the generic package.
         run: |
           set -e
           echo "::group::Install system prerequisites"
@@ -236,7 +236,7 @@ jobs:
 
   test-generic-linux-on-docker-fedora-x64:
     needs: package-generic-linux-x64
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -290,7 +290,7 @@ jobs:
           ./**/*.log
 
   test-dockerfile-x64:
-   runs-on: ubuntu-latest
+   runs-on: tenki-standard-medium-4c-8g
    steps:
    - name: Checkout repository
      uses: actions/checkout@v6.0.1
@@ -362,7 +362,7 @@ jobs:
          ./**/*.log
 
   package-generic-linux-aarch64:
-    runs-on: ubuntu-22.04-arm
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -383,7 +383,7 @@ jobs:
         which python3
         python3 --version
         pip --version
-    - name : Environment
+    - name: Environment
       run: bin/environment.sh
     - name: Install rust
       run: bin/install_rust.sh
@@ -414,7 +414,7 @@ jobs:
         path: target/upload/*
 
   package-deb-x64:
-    runs-on: ubuntu-22.04
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -466,7 +466,7 @@ jobs:
         path: target/upload/*
 
   package-deb-aarch64:
-    runs-on: ubuntu-22.04-arm
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -519,7 +519,7 @@ jobs:
 
   package-macos-x64:
     timeout-minutes: 60
-    runs-on: macos-15-intel
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -570,7 +570,7 @@ jobs:
 
   package-macos-aarch64:
     timeout-minutes: 60
-    runs-on: macos-15
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -620,7 +620,7 @@ jobs:
         path: target/upload/*
 
   package-windows-x64:
-    runs-on: windows-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
     - name: Set git to use LF
       run: |
@@ -685,7 +685,7 @@ jobs:
       - package-macos-aarch64
       - package-windows-x64
     name: package-anatomy
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
