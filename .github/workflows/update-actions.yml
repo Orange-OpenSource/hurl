@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: "0 4 * * 1"
   workflow_dispatch:
-
 concurrency: update-actions-${{ github.ref }}
 
 jobs:
@@ -15,7 +14,7 @@ jobs:
       REPO: ${{ github.repository }}
       BOT_UPDATE_BRANCH_NAME: "bot/update-actions"
     name: update-actions
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
