@@ -20,10 +20,10 @@ jobs:
       PR_COMMENT: ${{ github.event.comment.body }}
     outputs:
       base_ref: ${{ steps.init-all-internal-env-vars.outputs.base_ref }}
-      new_version_master_snapshot_version:  ${{ steps.check-github-release.outputs.new_version_master_snapshot_version }}
+      new_version_master_snapshot_version: ${{ steps.check-github-release.outputs.new_version_master_snapshot_version }}
       is_a_github_release_pr: ${{ steps.check-github-release.outputs.is_a_github_release_pr }}
     name: accept-pull-request
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-autoscale
     steps:
 
       - name: Check user permission
