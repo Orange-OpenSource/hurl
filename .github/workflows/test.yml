@@ -23,7 +23,7 @@ env:
 jobs:
   test-macos-aarch64:
     timeout-minutes: 60
-    runs-on: getmac
+    runs-on: tenki-standard-autoscale
     strategy:
       matrix:
         rust: [stable]
