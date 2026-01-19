@@ -33,11 +33,18 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
+    - name: Install homebrew
+      run: |
+        export HOMEBREW_PREFIX="$HOME/homebrew"
+        export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+        export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
+        export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+        mkdir -p "$HOMEBREW_PREFIX"
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash -s -- --prefix="$HOMEBREW_PREFIX"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+        echo "$HOME/homebrew/bin" >> $GITHUB_PATH
     - name: Install Prerequisites
       run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-        eval "$(/opt/homebrew/bin/brew shellenv)"
         bin/install_prerequisites_macos.sh
         echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Activate python3 venv
