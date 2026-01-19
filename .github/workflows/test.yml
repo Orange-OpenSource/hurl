@@ -23,7 +23,7 @@ env:
 jobs:
   test-macos-aarch64:
     timeout-minutes: 60
-    runs-on: tenki-standard-autoscale
+    runs-on: tenki-standard-medium-4c-8g
     strategy:
       matrix:
         rust: [stable]
@@ -35,6 +35,9 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
         bin/install_prerequisites_macos.sh
         echo "PATH=$PATH" >> $GITHUB_ENV
     - name: Activate python3 venv
