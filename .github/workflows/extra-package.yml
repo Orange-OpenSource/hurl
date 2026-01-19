@@ -24,7 +24,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
     name: Check-release
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
@@ -48,7 +48,7 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
       CHOCOLATEY_TOKEN: ${{ secrets.LEPAPAREIL_CHOCOLATEY_TOKEN }}
     name: Push to chocolatey
-    runs-on: windows-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
@@ -66,12 +66,12 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
       WINGET_TOKEN: ${{ secrets.LEPAPAREIL_WINGET_TOKEN }}
     name: Push to winget
-    runs-on: windows-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
         with:
-          persist-credentials: true 
+          persist-credentials: true
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
       - name: Push to winget
