@@ -35,7 +35,7 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: |
-        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
         bin/install_prerequisites_macos.sh
