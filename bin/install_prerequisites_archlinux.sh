@@ -6,7 +6,6 @@ pacman -Syu --noconfirm \
     bash \
     sudo \
     gcc \
-    expect \
     openssl \
     python3 \
     icu \

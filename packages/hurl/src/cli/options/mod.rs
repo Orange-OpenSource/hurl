@@ -39,11 +39,9 @@ use hurl::runner::Output;
 use hurl::util::logger;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder};
 use hurl::util::path::ContextDir;
-use hurl_core::ast::Entry;
 use hurl_core::input::{Input, InputKind};
 use hurl_core::types::{BytesPerSec, Count};
 
-use crate::cli;
 pub use crate::cli::options::context::RunContext;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
@@ -76,7 +74,6 @@ pub struct CliOptions {
     pub include: bool,
     pub input_files: Vec<Input>,
     pub insecure: bool,
-    pub interactive: bool,
     pub ip_resolve: Option<IpResolve>,
     pub jobs: Option<usize>,
     pub json_report_dir: Option<PathBuf>,
@@ -258,7 +255,6 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::delay())
         .arg(commands::from_entry())
         .arg(commands::ignore_asserts())
-        .arg(commands::interactive())
         .arg(commands::jobs())
         .arg(commands::parallel())
         .arg(commands::repeat())
@@ -340,7 +336,6 @@ fn parse_matches(
     let include = matches::include(arg_matches);
     let input_files = matches::input_files(arg_matches, context)?;
     let insecure = matches::insecure(arg_matches);
-    let interactive = matches::interactive(arg_matches);
     let ip_resolve = matches::ip_resolve(arg_matches);
     let jobs = matches::jobs(arg_matches);
     let json_report_dir = matches::json_report_dir(arg_matches)?;
@@ -416,7 +411,6 @@ fn parse_matches(
         include,
         input_files,
         insecure,
-        interactive,
         ip_resolve,
         json_report_dir,
         junit_file,
@@ -516,16 +510,6 @@ impl CliOptions {
         let output = self.output.clone();
         let path_as_is = self.path_as_is;
         let pinned_pub_key = self.pinned_pub_key.clone();
-        let post_entry = if self.interactive {
-            Some(cli::interactive::post_entry as fn() -> bool)
-        } else {
-            None
-        };
-        let pre_entry = if self.interactive {
-            Some(cli::interactive::pre_entry as fn(&Entry) -> bool)
-        } else {
-            None
-        };
         let proxy = self.proxy.clone();
         let resolves = self.resolves.clone();
         let retry = self.retry;
@@ -574,8 +558,6 @@ impl CliOptions {
             .output(output)
             .path_as_is(path_as_is)
             .pinned_pub_key(pinned_pub_key)
-            .post_entry(post_entry)
-            .pre_entry(pre_entry)
             .proxy(proxy)
             .resolves(&resolves)
             .retry(retry)

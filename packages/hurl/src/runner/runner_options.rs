@@ -17,7 +17,6 @@
  */
 use std::time::Duration;
 
-use hurl_core::ast::Entry;
 use hurl_core::types::{BytesPerSec, Count};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
@@ -61,8 +60,6 @@ pub struct RunnerOptionsBuilder {
     output: Option<Output>,
     path_as_is: bool,
     pinned_pub_key: Option<String>,
-    post_entry: Option<fn() -> bool>,
-    pre_entry: Option<fn(&Entry) -> bool>,
     proxy: Option<String>,
     repeat: Option<Count>,
     resolves: Vec<String>,
@@ -115,8 +112,6 @@ impl Default for RunnerOptionsBuilder {
             output: None,
             path_as_is: false,
             pinned_pub_key: None,
-            post_entry: None,
-            pre_entry: None,
             proxy: None,
             repeat: None,
             resolves: vec![],
@@ -378,22 +373,6 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets function to be executed after each entry execution.
-    ///
-    /// If the function returns true, the run is stopped.
-    pub fn post_entry(&mut self, post_entry: Option<fn() -> bool>) -> &mut Self {
-        self.post_entry = post_entry;
-        self
-    }
-
-    /// Sets function to be executed before each entry execution.
-    ///
-    /// If the function returns true, the run is stopped.
-    pub fn pre_entry(&mut self, pre_entry: Option<fn(&Entry) -> bool>) -> &mut Self {
-        self.pre_entry = pre_entry;
-        self
-    }
-
     /// Sets the specified proxy to be used.
     pub fn proxy(&mut self, proxy: Option<String>) -> &mut Self {
         self.proxy = proxy;
@@ -513,8 +492,6 @@ impl RunnerOptionsBuilder {
             output: self.output.clone(),
             path_as_is: self.path_as_is,
             pinned_pub_key: self.pinned_pub_key.clone(),
-            post_entry: self.post_entry,
-            pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
             repeat: self.repeat,
             resolves: self.resolves.clone(),
@@ -536,7 +513,7 @@ impl RunnerOptionsBuilder {
 ///
 /// Most options are used to configure the HTTP client used for running requests, while other
 /// are used to configure asserts settings, output etc....
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct RunnerOptions {
     /// Allow reusing internal connections.
     pub(crate) allow_reuse: bool,
@@ -606,10 +583,6 @@ pub struct RunnerOptions {
     pub(crate) path_as_is: bool,
     /// Sets the pinned public key.
     pub(crate) pinned_pub_key: Option<String>,
-    /// Sets function to be executed before each entry execution.
-    pub(crate) post_entry: Option<fn() -> bool>,
-    /// Sets function to be executed after each entry execution.
-    pub(crate) pre_entry: Option<fn(&Entry) -> bool>,
     /// Sets the specified proxy to be used.
     pub(crate) proxy: Option<String>,
     /// Set the number of repetition for a given entry.
@@ -641,117 +614,6 @@ pub struct RunnerOptions {
 impl Default for RunnerOptions {
     fn default() -> Self {
         RunnerOptionsBuilder::default().build()
-    }
-}
-
-// FIXME: Remove this manual implementation in favour of a derive
-// when we have removed the `post_entry` and `pre_entry` fields,
-// which for the time being had to be left out of a derived comparison
-// due to the `function pointer comparisons do not produce meaningful results` error.
-// See https://github.com/Orange-OpenSource/hurl/issues/3763 and https://github.com/Orange-OpenSource/hurl/pull/4232.
-impl PartialEq for RunnerOptions {
-    fn eq(&self, other: &Self) -> bool {
-        let Self {
-            allow_reuse,
-            aws_sigv4,
-            cacert_file,
-            client_cert_file,
-            client_key_file,
-            compressed,
-            connect_timeout,
-            connects_to,
-            delay,
-            context_dir,
-            continue_on_error,
-            cookie_input_file,
-            digest,
-            follow_location,
-            follow_location_trusted,
-            from_entry,
-            headers,
-            http_version,
-            ignore_asserts,
-            ip_resolve,
-            insecure,
-            max_filesize,
-            max_recv_speed,
-            max_redirect,
-            max_send_speed,
-            negotiate,
-            netrc,
-            netrc_file,
-            netrc_optional,
-            no_proxy,
-            ntlm,
-            output,
-            path_as_is,
-            pinned_pub_key,
-            proxy,
-            repeat,
-            resolves,
-            retry,
-            retry_interval,
-            skip,
-            ssl_no_revoke,
-            timeout,
-            to_entry,
-            unix_socket,
-            user,
-            user_agent,
-            use_cookie_store,
-            // These fields are excluded from comparison due to the
-            // `function pointer comparisons do not produce meaningful results` error.
-            pre_entry: _,
-            post_entry: _,
-        } = self;
-
-        allow_reuse == &other.allow_reuse
-            && aws_sigv4 == &other.aws_sigv4
-            && cacert_file == &other.cacert_file
-            && client_cert_file == &other.client_cert_file
-            && client_key_file == &other.client_key_file
-            && compressed == &other.compressed
-            && connect_timeout == &other.connect_timeout
-            && connects_to == &other.connects_to
-            && delay == &other.delay
-            && context_dir == &other.context_dir
-            && continue_on_error == &other.continue_on_error
-            && cookie_input_file == &other.cookie_input_file
-            && digest == &other.digest
-            && follow_location == &other.follow_location
-            && follow_location_trusted == &other.follow_location_trusted
-            && from_entry == &other.from_entry
-            && headers == &other.headers
-            && http_version == &other.http_version
-            && ignore_asserts == &other.ignore_asserts
-            && ip_resolve == &other.ip_resolve
-            && insecure == &other.insecure
-            && max_filesize == &other.max_filesize
-            && max_recv_speed == &other.max_recv_speed
-            && max_redirect == &other.max_redirect
-            && max_send_speed == &other.max_send_speed
-            && negotiate == &other.negotiate
-            && netrc == &other.netrc
-            && netrc_file == &other.netrc_file
-            && netrc_optional == &other.netrc_optional
-            && no_proxy == &other.no_proxy
-            && ntlm == &other.ntlm
-            && output == &other.output
-            && path_as_is == &other.path_as_is
-            && pinned_pub_key == &other.pinned_pub_key
-            && proxy == &other.proxy
-            && repeat == &other.repeat
-            && resolves == &other.resolves
-            && retry == &other.retry
-            && retry_interval == &other.retry_interval
-            && skip == &other.skip
-            && ssl_no_revoke == &other.ssl_no_revoke
-            && timeout == &other.timeout
-            && to_entry == &other.to_entry
-            && unix_socket == &other.unix_socket
-            && user == &other.user
-            && user_agent == &other.user_agent
-            && use_cookie_store == &other.use_cookie_store
     }
 }
 

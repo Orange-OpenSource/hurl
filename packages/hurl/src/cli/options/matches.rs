@@ -270,10 +270,6 @@ pub fn insecure(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "insecure")
 }
 
-pub fn interactive(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "interactive")
-}
-
 pub fn ip_resolve(arg_matches: &ArgMatches) -> Option<IpResolve> {
     if has_flag(arg_matches, "ipv6") {
         Some(IpResolve::IpV6)

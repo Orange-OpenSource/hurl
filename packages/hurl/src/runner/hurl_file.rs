@@ -176,13 +176,6 @@ pub fn run_entries(
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
 
-    // Warn deprecations
-    if runner_options.pre_entry.is_some() {
-        logger.warning(
-            "--interactive mode is now deprecated, it will be removed in next Hurl versions",
-        );
-    }
-
     if entries
         .iter()
         .any(|e| e.use_multiline_string_body_with_attributes())
@@ -204,13 +197,6 @@ pub fn run_entries(
             break;
         }
         let entry = &entries[current.to_zero_based()];
-
-        if let Some(pre_entry) = runner_options.pre_entry {
-            let exit = pre_entry(entry);
-            if exit {
-                break;
-            }
-        }
 
         // We compute the new logger verbosity for this entry, before entering into the `run`
         // function because entry options can modify the logger verbosity and we want the preamble
@@ -299,12 +285,6 @@ pub fn run_entries(
 
         entries_result.extend(results);
 
-        if let Some(post_entry) = runner_options.post_entry {
-            let exit = post_entry();
-            if exit {
-                break;
-            }
-        }
         if !runner_options.continue_on_error && has_error {
             break;
         }

@@ -114,8 +114,6 @@ fn simple_sample() {
         .insecure(false)
         .max_redirect(Count::Finite(10))
         .no_proxy(None)
-        .post_entry(None)
-        .pre_entry(None)
         .proxy(None)
         .retry(None)
         .retry_interval(Duration::from_secs(1))

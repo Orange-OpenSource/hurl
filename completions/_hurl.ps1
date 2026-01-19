@@ -48,7 +48,6 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--ignore-asserts', 'ignore-asserts', [CompletionResultType]::ParameterName, 'Ignore asserts defined in the Hurl file')
             [CompletionResult]::new('--include', 'include', [CompletionResultType]::ParameterName, 'Include the HTTP headers in the output')
             [CompletionResult]::new('--insecure', 'insecure', [CompletionResultType]::ParameterName, 'Allow insecure SSL connections')
-            [CompletionResult]::new('--interactive', 'interactive', [CompletionResultType]::ParameterName, 'Turn on interactive mode')
             [CompletionResult]::new('--ipv4', 'ipv4', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6')
             [CompletionResult]::new('--ipv6', 'ipv6', [CompletionResultType]::ParameterName, 'Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4')
             [CompletionResult]::new('--jobs', 'jobs', [CompletionResultType]::ParameterName, 'Maximum number of parallel jobs, 0 to disable parallel execution')

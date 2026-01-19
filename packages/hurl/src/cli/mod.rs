@@ -16,7 +16,6 @@
  *
  */
 mod error;
-mod interactive;
 mod logger;
 pub(crate) mod options;
 mod summary;

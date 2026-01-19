@@ -196,7 +196,6 @@ pub fn from_entry() -> clap::Arg {
         .value_parser(clap::value_parser!(u32).range(1..))
         .help("Execute Hurl file from ENTRY_NUMBER (starting at 1)")
         .help_heading("Run options")
-        .conflicts_with("interactive")
         .num_args(1)
 }
 
@@ -278,16 +277,6 @@ pub fn insecure() -> clap::Arg {
         .help("Allow insecure SSL connections")
         .help_heading("HTTP options")
         .action(clap::ArgAction::SetTrue)
-}
-
-pub fn interactive() -> clap::Arg {
-    clap::Arg::new("interactive")
-        .long("interactive")
-        .help("Turn on interactive mode")
-        .help_heading("Run options")
-        .conflicts_with("to_entry")
-        .action(clap::ArgAction::SetTrue)
-        .hide(true)
 }
 
 pub fn ipv4() -> clap::Arg {
@@ -641,7 +630,6 @@ pub fn to_entry() -> clap::Arg {
         .value_parser(clap::value_parser!(u32).range(1..))
         .help("Execute Hurl file to ENTRY_NUMBER (starting at 1)")
         .help_heading("Run options")
-        .conflicts_with("interactive")
         .num_args(1)
 }
 

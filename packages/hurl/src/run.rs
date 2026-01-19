@@ -120,9 +120,8 @@ fn print_output(
     stdout: &mut Stdout,
     append: bool,
 ) -> Result<(), CliError> {
-    let output_last_body = hurl_result.success
-        && !options.interactive
-        && matches!(options.output_type, cli::OutputType::ResponseBody);
+    let output_last_body =
+        hurl_result.success && matches!(options.output_type, cli::OutputType::ResponseBody);
     if output_last_body {
         let result = output::write_last_body(
             hurl_result,

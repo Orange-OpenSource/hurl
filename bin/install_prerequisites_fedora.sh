@@ -5,7 +5,6 @@ echo "----- install prerequisite packages -----"
 yum install -y \
     bash \
     sudo \
-    expect \
     which \
     procps \
     gcc \
