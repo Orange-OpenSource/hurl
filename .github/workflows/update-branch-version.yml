@@ -46,7 +46,7 @@ jobs:
     outputs:
       pr_number: ${{ steps.create-new-version-pr.outputs.pr_number }}
     name: update-branch-version
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
@@ -128,4 +128,3 @@ jobs:
             echo "  - ❌ A problem occurs when attempting to create new pull request."
             exit 1
           fi
-
