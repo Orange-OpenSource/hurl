@@ -21,7 +21,7 @@ jobs:
       release_version: ${{ steps.set-release-version.outputs.release_version }}
       release_branch: ${{ steps.set-release-branch.outputs.release_branch }}
     name: set-context
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Check trigger branch
         run: |
@@ -52,7 +52,7 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
     name: clean-release
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
@@ -169,7 +169,7 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
     name: update-release-branch
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout repository
         if: github.ref_name == 'master'
@@ -294,7 +294,7 @@ jobs:
       - update-release-branch
       - package-release
     name: deliver-github-release
-    runs-on: ubuntu-latest
+    runs-on: tenki-standard-medium-4c-8g
     steps:
       - name: Checkout new release branch
         uses: actions/checkout@v6.0.1
@@ -348,7 +348,6 @@ jobs:
         with:
           name: release-sha256-csv
           path: release-${{ needs.set-context.outputs.release_version }}.sha256.csv
-
 
       - name: Deliver release
         run: |
