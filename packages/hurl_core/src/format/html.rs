@@ -374,9 +374,7 @@ mod tests {
             }],
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });
-        let attributes = vec![];
         let multiline_string = MultilineString {
-            attributes,
             space: Whitespace {
                 value: String::new(),
                 source_info: SourceInfo {

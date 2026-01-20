@@ -36,7 +36,6 @@ pub struct KeyValue {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MultilineString {
-    pub attributes: Vec<MultilineStringAttribute>,
     pub space: Whitespace,
     pub newline: Whitespace,
     pub kind: MultilineStringKind,
@@ -48,6 +47,7 @@ impl fmt::Display for MultilineString {
             MultilineStringKind::Text(value)
             | MultilineStringKind::Json(value)
             | MultilineStringKind::Xml(value) => write!(f, "{value}"),
+            MultilineStringKind::Raw(value) => write!(f, "{value}"),
             MultilineStringKind::GraphQl(value) => write!(f, "{value}"),
         }
     }
@@ -56,18 +56,8 @@ impl fmt::Display for MultilineString {
 impl ToSource for MultilineString {
     fn to_source(&self) -> SourceString {
         let mut source = SourceString::new();
-        let att = self
-            .attributes
-            .iter()
-            .map(|att| att.identifier())
-            .collect::<Vec<_>>()
-            .join(",");
         source.push_str("```");
         source.push_str(self.lang());
-        if !self.lang().is_empty() && self.has_attributes() {
-            source.push(',');
-        }
-        source.push_str(&att);
         source.push_str(self.space.as_str());
         source.push_str(self.newline.as_str());
         source.push_str(self.kind.to_source().as_str());
@@ -82,6 +72,7 @@ impl MultilineString {
             MultilineStringKind::Text(_) => "",
             MultilineStringKind::Json(_) => "json",
             MultilineStringKind::Xml(_) => "xml",
+            MultilineStringKind::Raw(_) => "raw",
             MultilineStringKind::GraphQl(_) => "graphql",
         }
     }
@@ -91,13 +82,9 @@ impl MultilineString {
             MultilineStringKind::Text(text)
             | MultilineStringKind::Json(text)
             | MultilineStringKind::Xml(text) => text.clone(),
+            MultilineStringKind::Raw(text) => text.clone(),
             MultilineStringKind::GraphQl(text) => text.value.clone(),
         }
-    }
-
-    /// Returns true if this multiline string has `escape` or `novariable` attributes.
-    pub fn has_attributes(&self) -> bool {
-        !self.attributes.is_empty()
     }
 }
 
@@ -107,6 +94,7 @@ pub enum MultilineStringKind {
     Text(Template),
     Json(Template),
     Xml(Template),
+    Raw(Template),
     GraphQl(GraphQl),
 }
 
@@ -116,22 +104,8 @@ impl ToSource for MultilineStringKind {
             MultilineStringKind::Text(value)
             | MultilineStringKind::Json(value)
             | MultilineStringKind::Xml(value) => value.to_source(),
+            MultilineStringKind::Raw(value) => value.to_source(),
             MultilineStringKind::GraphQl(value) => value.to_source(),
-        }
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum MultilineStringAttribute {
-    Escape,
-    NoVariable,
-}
-
-impl MultilineStringAttribute {
-    pub fn identifier(&self) -> &'static str {
-        match self {
-            MultilineStringAttribute::Escape => "escape",
-            MultilineStringAttribute::NoVariable => "novariable",
         }
     }
 }

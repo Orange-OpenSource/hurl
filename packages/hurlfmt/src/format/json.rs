@@ -193,6 +193,10 @@ impl ToJson for Bytes {
                         ..
                     } => "text",
                     MultilineString {
+                        kind: MultilineStringKind::Raw(_),
+                        ..
+                    } => "raw",
+                    MultilineString {
                         kind: MultilineStringKind::Json(_),
                         ..
                     } => "json",

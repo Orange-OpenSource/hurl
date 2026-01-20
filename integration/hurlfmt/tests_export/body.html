@@ -38,25 +38,15 @@
 <span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
 <span class="multiline">```
 Hello\tWord
-A beautiful \u{2708}
-A template {{ var }}
-A template {{     var   }}
-```</span>
-</span></span><span class="entry"><span class="request">
-<span class="comment"># escape novariable are attributes of multi-linestring</span>
-<span class="comment"># going to be deprecated</span>
-<span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
-<span class="multiline">```escape
-Hello\tWord
-A beautiful \u{2708}
+A beautiful ✈
 A template {{ var }}
 A template {{     var   }}
 ```</span>
 </span></span><span class="entry"><span class="request">
 <span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span>
-<span class="multiline">```escape,novariable
+<span class="multiline">```raw
 Hello\tWord
-A beautiful \u{2708}
+A beautiful ✈
 A template {{ var }}
 A template {{     var   }}
 ```</span>

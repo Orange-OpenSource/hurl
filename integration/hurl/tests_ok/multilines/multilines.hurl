@@ -146,3 +146,36 @@ body == ```graphql
   }
 }
 ```
+
+
+# All multiline strings evaluate variables. To disable variables evaluation, one can use `raw` language hint.
+POST http://localhost:8000/multilines/plain-text
+[Options]
+variable: var=line2
+```
+line1
+{{var}}
+line3
+```
+HTTP 200
+[Asserts]
+```
+line1
+line2
+line3
+```
+
+
+POST http://localhost:8000/multilines/raw
+```raw
+line1
+{{var}}
+line3
+```
+HTTP 200
+[Asserts]
+```raw
+line1
+{{var}}
+line3
+```

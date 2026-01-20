@@ -50,3 +50,11 @@ def multilines_graphql():
     body_in = request.data.decode("utf-8")
     assert expected_body == body_in
     return expected_body
+
+
+@app.route("/multilines/raw", methods=["POST"])
+def multilines_raw():
+    expected_body = "line1\n{{var}}\nline3\n"
+    body_in = request.data.decode("utf-8")
+    assert expected_body == body_in
+    return expected_body

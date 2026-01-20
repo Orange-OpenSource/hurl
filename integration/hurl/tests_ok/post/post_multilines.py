@@ -9,13 +9,20 @@ def post_multilines():
     return ""
 
 
+@app.route("/post-multilines-raw", methods=["POST"])
+def post_multilines_raw():
+    s = request.data.decode("utf-8")
+    assert s == "name,age\nbob,{{bob_age}}\nbill,22\n"
+    return ""
+
+
 @app.route("/post-multilines-json", methods=["POST"])
 def post_multilines_json():
     s = request.data.decode("utf-8")
     assert (
         s
         == """{
-    "g_clef": "𝄞"
+    "g_clef": "\\u{1D11E}"
 }
 """
     )

@@ -176,15 +176,6 @@ pub fn run_entries(
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
 
-    if entries
-        .iter()
-        .any(|e| e.use_multiline_string_body_with_attributes())
-    {
-        logger.warning(
-            "multilines string attributes are now deprecated, they will be removed in next Hurl versions",
-        );
-    }
-
     log_run_info(entries, runner_options, &variables, logger);
 
     // Main loop processing each entry.

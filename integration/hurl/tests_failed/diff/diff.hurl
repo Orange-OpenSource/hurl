@@ -237,9 +237,9 @@ HTTP 200
 
 GET http://localhost:8000/diff/change/unicode
 HTTP 200
-```escape
+```
 {
-  "g_clef": "\u{1D11E}"
+  "g_clef": "𝄞"
 }
 ```
 

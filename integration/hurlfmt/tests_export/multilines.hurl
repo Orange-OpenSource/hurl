@@ -7,7 +7,7 @@ POST http://localhost:8000/multilines/plain-text
 line1
 line2
 line3
-A beautiful \u{2708}
+A beautiful ✈
 ```
 HTTP 200
 # Different ways of testing body response:
@@ -18,25 +18,14 @@ body == ```
 line1
 line2
 line3
-A beautiful \u{2708}
+A beautiful ✈
 ```
 # Or we can just test the body (implicit assert):
 ```
 line1
 line2
 line3
-A beautiful \u{2708}
-```
-
-# escape attributes are going to be deprecated
-POST http://localhost:8000/multilines/plain-text
-HTTP 200
-[Asserts]
-body == ```escape
-line1
-line2
-line3
-A beautiful \u{2708}
+A beautiful ✈
 ```
 
 
@@ -159,4 +148,30 @@ body == ```graphql
     }
   }
 }
+```
+
+# All multilines evaluates variables except raw multilines
+POST http://localhost:8000/multilines/plain-text
+```raw
+line1
+line2
+line3
+A beautiful {{machine}}
+```
+HTTP 200
+# Different ways of testing body response:
+# with explicit asserts:
+[Asserts]
+body == ```raw
+line1
+line2
+line3
+A beautiful {{machine}}
+```
+# Or we can just test the body (implicit assert):
+```raw
+line1
+line2
+line3
+A beautiful {{machine}}
 ```

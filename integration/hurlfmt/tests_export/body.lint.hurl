@@ -38,25 +38,15 @@ POST http://localhost:8000/xml
 POST http://localhost:8000/multiline-string
 ```
 Hello\tWord
-A beautiful \u{2708}
-A template {{ var }}
-A template {{     var   }}
-```
-
-# escape novariable are attributes of multi-linestring
-# going to be deprecated
-POST http://localhost:8000/multiline-string
-```escape
-Hello\tWord
-A beautiful \u{2708}
+A beautiful ✈
 A template {{ var }}
 A template {{     var   }}
 ```
 
 POST http://localhost:8000/multiline-string
-```escape,novariable
+```raw
 Hello\tWord
-A beautiful \u{2708}
+A beautiful ✈
 A template {{ var }}
 A template {{     var   }}
 ```

@@ -7,7 +7,7 @@
 line1
 line2
 line3
-A beautiful \u{2708}
+A beautiful ✈
 ```</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="comment"># Different ways of testing body response:</span>
@@ -18,25 +18,14 @@ A beautiful \u{2708}
 line1
 line2
 line3
-A beautiful \u{2708}
+A beautiful ✈
 ```</span>
 <span class="comment"># Or we can just test the body (implicit assert):</span>
 <span class="multiline">```
 line1
 line2
 line3
-A beautiful \u{2708}
-```</span>
-</span></span><span class="entry"><span class="request">
-<span class="comment"># escape attributes are going to be deprecated</span>
-<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span>
-</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
-<span class="section-header">[Asserts]</span>
-<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```escape
-line1
-line2
-line3
-A beautiful \u{2708}
+A beautiful ✈
 ```</span>
 </span></span><span class="entry"><span class="request">
 
@@ -159,5 +148,31 @@ A beautiful \u{2708}
     }
   }
 }
+```</span>
+</span></span><span class="entry"><span class="request">
+<span class="comment"># All multilines evaluates variables except raw multilines</span>
+<span class="method">POST</span> <span class="url">http://localhost:8000/multilines/plain-text</span>
+<span class="multiline">```raw
+line1
+line2
+line3
+A beautiful {{machine}}
+```</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="comment"># Different ways of testing body response:</span>
+<span class="comment"># with explicit asserts:</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline">```raw
+line1
+line2
+line3
+A beautiful {{machine}}
+```</span>
+<span class="comment"># Or we can just test the body (implicit assert):</span>
+<span class="multiline">```raw
+line1
+line2
+line3
+A beautiful {{machine}}
 ```</span>
 </span></span></code></pre>

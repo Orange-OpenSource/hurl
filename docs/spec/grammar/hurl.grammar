@@ -459,7 +459,7 @@ oneline-string-escaped-char: "\\" ("`" | "#" | "\\" | "b" | "f" | "u" unicode-ch
 
 
 multiline-string:
-  "```" multiline-string-type? ("," multiline-string-attribute)* lt
+  "```" multiline-string-type? lt
   (multiline-string-content | placeholder)* lt
   "```"
 
@@ -469,10 +469,7 @@ multiline-string-type:
   | "json"
   | "xml"
   | "graphql"
-
-multiline-string-attribute:
-    "escape"
-  | "novariable"
+  | "raw"
 
 multiline-string-content: (multiline-string-text | multiline-string-escaped-char)*
 

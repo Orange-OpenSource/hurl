@@ -385,7 +385,6 @@ mod tests {
                     source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
                 value: Bytes::MultilineString(MultilineString {
-                    attributes: vec![],
                     space: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),

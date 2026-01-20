@@ -47,7 +47,7 @@ pub enum ParseErrorKind {
     JsonPathExpr,
     Method { name: String },
     Multiline,
-    MultilineAttribute(String),
+    MultilineLanguageHint(String),
     OddNumberOfHexDigits,
     Predicate,
     PredicateValue,
@@ -110,7 +110,7 @@ impl DisplaySourceError for ParseError {
             ParseErrorKind::JsonPathExpr => "Parsing JSONPath expression".to_string(),
             ParseErrorKind::Method { .. } => "Parsing method".to_string(),
             ParseErrorKind::Multiline => "Parsing multiline".to_string(),
-            ParseErrorKind::MultilineAttribute(..) => "Parsing multiline".to_string(),
+            ParseErrorKind::MultilineLanguageHint(..) => "Parsing multiline".to_string(),
             ParseErrorKind::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
             ParseErrorKind::Predicate => "Parsing predicate".to_string(),
             ParseErrorKind::PredicateValue => "Parsing predicate value".to_string(),
@@ -223,7 +223,7 @@ impl DisplaySourceError for ParseError {
                 format!("the HTTP method <{name}> is not valid. {did_you_mean}")
             }
             ParseErrorKind::Multiline => "the multiline is not valid".to_string(),
-            ParseErrorKind::MultilineAttribute(name) => format!("Invalid attribute {name}"),
+            ParseErrorKind::MultilineLanguageHint(name) => format!("Invalid language hint {name}"),
             ParseErrorKind::OddNumberOfHexDigits => {
                 "expecting an even number of hex digits".to_string()
             }

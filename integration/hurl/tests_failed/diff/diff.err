@@ -1,4 +1,3 @@
-warning: multilines string attributes are now deprecated, they will be removed in next Hurl versions
 error: Assert body value
    --> tests_failed/diff/diff.hurl:6:1
     |
@@ -72,7 +71,7 @@ error: Assert body value
     |
     | GET http://localhost:8000/diff/change/unicode
     | ...
-242 |   "g_clef": "\u{1D11E}"
+242 |   "g_clef": "𝄞"
     |   -  "g_clef": "𝄞"
     |   +  "f_clef": "𝄢"
     |
