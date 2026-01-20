@@ -1,7 +1,8 @@
-[8.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.0)
+@[8.0.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.0)
 ========================================================================================================================
 
 Thanks to
+[@backtozero](https://github.com/backtozero),
 [@eirayuki](https://github.com/eirayuki),
 [@aageneralov](https://github.com/aageneralov),
 [@mateusz834](https://github.com/mateusz834),
@@ -15,11 +16,14 @@ Thanks to
 Breaking Changes:
 
 * Use CookieStore in HurlResult (crate compatibility) [#4697](https://github.com/Orange-OpenSource/hurl/issues/4697)
+* Delete deprecated --interactive option [#4712](https://github.com/Orange-OpenSource/hurl/issues/4712)
 * Using new JSONPath module implementing RFC 9535 [#4270](https://github.com/Orange-OpenSource/hurl/issues/4270)
 
 
 Enhancements:
 
+* Add --no-cookie-store option to deactivate cookie storage for one file. [#2168](https://github.com/Orange-OpenSource/hurl/issues/2168)
+* Rename --noproxy to --no-proxy with backward compatible alias [#4709](https://github.com/Orange-OpenSource/hurl/issues/4709)
 * Add `rawbytes` query [#4250](https://github.com/Orange-OpenSource/hurl/issues/4250)
 * Using new JSONPath module implementing RFC 9535 [#4270](https://github.com/Orange-OpenSource/hurl/issues/4270)
 * Add --verbosity option (globally and per request) [#4613](https://github.com/Orange-OpenSource/hurl/issues/4613)
