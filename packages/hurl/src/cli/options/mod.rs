@@ -297,91 +297,112 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         return Err(CliOptionsError::NoInput(help));
     }
 
-    let opts = parse_matches(&arg_matches, context)?;
-    if opts.input_files.is_empty() {
+    let options = CliOptions::default();
+    // TODO: let options = parse_config_file(arg_matches, options)?;
+    let options = parse_matches(&arg_matches, context, options)?;
+    if options.input_files.is_empty() {
         return Err(CliOptionsError::Error(
             "No input files provided".to_string(),
         ));
     }
 
-    Ok(opts)
+    Ok(options)
 }
 
+/// Parse command line arguments from `arg_matches`
+/// given a run `context` and `default_options`.
 fn parse_matches(
     arg_matches: &ArgMatches,
     context: &RunContext,
+    default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
-    let aws_sigv4 = matches::aws_sigv4(arg_matches);
-    let cacert_file = matches::cacert_file(arg_matches)?;
-    let client_cert_file = matches::client_cert_file(arg_matches)?;
-    let client_key_file = matches::client_key_file(arg_matches)?;
-    let color = matches::color(arg_matches, context);
-    let compressed = matches::compressed(arg_matches);
-    let connect_timeout = matches::connect_timeout(arg_matches)?;
-    let connects_to = matches::connects_to(arg_matches);
-    let continue_on_error = matches::continue_on_error(arg_matches);
-    let cookie_input_file = matches::cookie_input_file(arg_matches);
-    let cookie_output_file = matches::cookie_output_file(arg_matches);
-    let curl_file = matches::curl_file(arg_matches);
-    let delay = matches::delay(arg_matches)?;
-    let digest = matches::digest(arg_matches);
-    let error_format = matches::error_format(arg_matches);
-    let file_root = matches::file_root(arg_matches);
-    let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
-    let from_entry = matches::from_entry(arg_matches);
-    let headers = matches::headers(arg_matches);
-    let html_dir = matches::html_dir(arg_matches)?;
-    let http_version = matches::http_version(arg_matches);
-    let ignore_asserts = matches::ignore_asserts(arg_matches);
-    let include = matches::include(arg_matches);
+    let aws_sigv4 = matches::aws_sigv4(arg_matches, default_options.aws_sigv4);
+    let cacert_file = matches::cacert_file(arg_matches, default_options.cacert_file)?;
+    let client_cert_file =
+        matches::client_cert_file(arg_matches, default_options.client_cert_file)?;
+    let client_key_file = matches::client_key_file(arg_matches, default_options.client_key_file)?;
+    let color = matches::color(arg_matches, context, default_options.color);
+    let compressed = matches::compressed(arg_matches, default_options.compressed);
+    let connect_timeout = matches::connect_timeout(arg_matches, default_options.connect_timeout)?;
+    let connects_to = matches::connects_to(arg_matches, default_options.connects_to);
+    let continue_on_error =
+        matches::continue_on_error(arg_matches, default_options.continue_on_error);
+    let cookie_input_file =
+        matches::cookie_input_file(arg_matches, default_options.cookie_input_file);
+    let cookie_output_file =
+        matches::cookie_output_file(arg_matches, default_options.cookie_output_file);
+    let curl_file = matches::curl_file(arg_matches, default_options.curl_file);
+    let delay = matches::delay(arg_matches, default_options.delay)?;
+    let digest = matches::digest(arg_matches, default_options.digest);
+    let error_format = matches::error_format(arg_matches, default_options.error_format);
+    let file_root = matches::file_root(arg_matches, default_options.file_root);
+    let (follow_location, follow_location_trusted) = matches::follow_location(
+        arg_matches,
+        (
+            default_options.follow_location,
+            default_options.follow_location_trusted,
+        ),
+    );
+    let from_entry = matches::from_entry(arg_matches, default_options.from_entry);
+    let headers = matches::headers(arg_matches, default_options.headers);
+    let html_dir = matches::html_dir(arg_matches, default_options.html_dir)?;
+    let http_version = matches::http_version(arg_matches, default_options.http_version);
+    let ignore_asserts = matches::ignore_asserts(arg_matches, default_options.ignore_asserts);
+    let include = matches::include(arg_matches, default_options.include);
     let input_files = matches::input_files(arg_matches, context)?;
-    let insecure = matches::insecure(arg_matches);
-    let ip_resolve = matches::ip_resolve(arg_matches);
-    let jobs = matches::jobs(arg_matches);
-    let json_report_dir = matches::json_report_dir(arg_matches)?;
-    let junit_file = matches::junit_file(arg_matches);
-    let limit_rate = matches::limit_rate(arg_matches);
-    let max_filesize = matches::max_filesize(arg_matches);
-    let max_redirect = matches::max_redirect(arg_matches);
-    let negotiate = matches::negotiate(arg_matches);
-    let netrc = matches::netrc(arg_matches);
-    let netrc_file = matches::netrc_file(arg_matches)?;
-    let netrc_optional = matches::netrc_optional(arg_matches);
-    let no_cookie_store = matches::no_cookie_store(arg_matches);
-    let no_proxy = matches::no_proxy(arg_matches);
-    let ntlm = matches::ntlm(arg_matches);
-    let parallel = matches::parallel(arg_matches);
-    let path_as_is = matches::path_as_is(arg_matches);
-    let pinned_pub_key = matches::pinned_pub_key(arg_matches);
-    let progress_bar = matches::progress_bar(arg_matches, context);
-    let pretty = matches::pretty(arg_matches, context);
-    let proxy = matches::proxy(arg_matches);
-    let output = matches::output(arg_matches);
-    let output_type = matches::output_type(arg_matches);
-    let repeat = matches::repeat(arg_matches);
-    let resolves = matches::resolves(arg_matches);
-    let retry = matches::retry(arg_matches);
-    let retry_interval = matches::retry_interval(arg_matches)?;
-    let secrets = matches::secret(arg_matches, context)?;
-    let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
-    let tap_file = matches::tap_file(arg_matches);
-    let test = matches::test(arg_matches);
-    let timeout = matches::timeout(arg_matches)?;
-    let to_entry = matches::to_entry(arg_matches);
-    let unix_socket = matches::unix_socket(arg_matches);
-    let user = matches::user(arg_matches);
-    let user_agent = matches::user_agent(arg_matches);
-    let variables = matches::variables(arg_matches, context)?;
+    let insecure = matches::insecure(arg_matches, default_options.insecure);
+    let ip_resolve = matches::ip_resolve(arg_matches, default_options.ip_resolve);
+    let jobs = matches::jobs(arg_matches, default_options.jobs);
+    let json_report_dir = matches::json_report_dir(arg_matches, default_options.json_report_dir)?;
+    let junit_file = matches::junit_file(arg_matches, default_options.junit_file);
+    let limit_rate = matches::limit_rate(arg_matches, default_options.limit_rate);
+    let max_filesize = matches::max_filesize(arg_matches, default_options.max_filesize);
+    let max_redirect = matches::max_redirect(arg_matches, default_options.max_redirect);
+    let negotiate = matches::negotiate(arg_matches, default_options.negotiate);
+    let netrc = matches::netrc(arg_matches, default_options.netrc);
+    let netrc_file = matches::netrc_file(arg_matches, default_options.netrc_file)?;
+    let netrc_optional = matches::netrc_optional(arg_matches, default_options.netrc_optional);
+    let no_cookie_store = matches::no_cookie_store(arg_matches, default_options.no_cookie_store);
+    let no_proxy = matches::no_proxy(arg_matches, default_options.no_proxy);
+    let ntlm = matches::ntlm(arg_matches, default_options.ntlm);
+    let parallel = matches::parallel(arg_matches, default_options.parallel);
+    let path_as_is = matches::path_as_is(arg_matches, default_options.path_as_is);
+    let pinned_pub_key = matches::pinned_pub_key(arg_matches, default_options.pinned_pub_key);
+    let progress_bar = matches::progress_bar(arg_matches, context, default_options.progress_bar);
+    let pretty = matches::pretty(arg_matches, context, default_options.pretty);
+    let proxy = matches::proxy(arg_matches, default_options.proxy);
+    let output = matches::output(arg_matches, default_options.output);
+    let output_type = matches::output_type(arg_matches, default_options.output_type);
+    let repeat = matches::repeat(arg_matches, default_options.repeat);
+    let resolves = matches::resolves(arg_matches, default_options.resolves);
+    let retry = matches::retry(arg_matches, default_options.retry);
+    let retry_interval = matches::retry_interval(arg_matches, default_options.retry_interval)?;
+    let secrets = matches::secret(arg_matches, context, default_options.secrets)?;
+    let ssl_no_revoke = matches::ssl_no_revoke(arg_matches, default_options.ssl_no_revoke);
+    let tap_file = matches::tap_file(arg_matches, default_options.tap_file);
+    let test = matches::test(arg_matches, default_options.test);
+    let timeout = matches::timeout(arg_matches, default_options.timeout)?;
+    let to_entry = matches::to_entry(arg_matches, default_options.to_entry);
+    let unix_socket = matches::unix_socket(arg_matches, default_options.unix_socket);
+    let user = matches::user(arg_matches, default_options.user);
+    let user_agent = matches::user_agent(arg_matches, default_options.user_agent);
+    let variables = matches::variables(arg_matches, context, default_options.variables)?;
 
-    let verbose = matches::verbose(arg_matches);
-    let very_verbose = matches::very_verbose(arg_matches);
+    let verbose = matches::verbose(
+        arg_matches,
+        default_options.verbosity == Some(Verbosity::Verbose),
+    );
+    let very_verbose = matches::very_verbose(
+        arg_matches,
+        default_options.verbosity == Some(Verbosity::Debug),
+    );
     // --verbose and --very-verbose flags are prioritized over --verbosity enum.
     let verbosity = if verbose {
         Some(Verbosity::Verbose)
     } else if very_verbose {
         Some(Verbosity::Debug)
     } else {
-        matches::verbosity(arg_matches)
+        matches::verbosity(arg_matches, default_options.verbosity)
     };
 
     Ok(CliOptions {
@@ -459,6 +480,76 @@ pub enum OutputType {
     Json,
     /// Nothing is outputted on standard output when a Hurl file run is completed.
     NoOutput,
+}
+
+impl Default for CliOptions {
+    fn default() -> Self {
+        CliOptions {
+            aws_sigv4: None,
+            cacert_file: None,
+            client_cert_file: None,
+            client_key_file: None,
+            color: false,
+            compressed: false,
+            connect_timeout: Duration::from_secs(300),
+            connects_to: Vec::new(),
+            continue_on_error: false,
+            cookie_input_file: None,
+            cookie_output_file: None,
+            curl_file: None,
+            delay: Duration::from_millis(0),
+            digest: false,
+            error_format: ErrorFormat::Short,
+            file_root: None,
+            follow_location: false,
+            follow_location_trusted: false,
+            from_entry: None,
+            headers: Vec::new(),
+            html_dir: None,
+            http_version: None,
+            ignore_asserts: false,
+            include: false,
+            input_files: Vec::new(),
+            insecure: false,
+            ip_resolve: None,
+            jobs: None,
+            json_report_dir: None,
+            junit_file: None,
+            limit_rate: None,
+            max_filesize: None,
+            max_redirect: Count::Finite(50),
+            negotiate: false,
+            netrc: false,
+            netrc_file: None,
+            netrc_optional: false,
+            no_cookie_store: false,
+            no_proxy: None,
+            ntlm: false,
+            output: None,
+            output_type: OutputType::ResponseBody,
+            parallel: false,
+            path_as_is: false,
+            pinned_pub_key: None,
+            pretty: PrettyMode::None,
+            progress_bar: false,
+            proxy: None,
+            repeat: None,
+            resolves: Vec::new(),
+            retry: None,
+            retry_interval: Duration::from_millis(1000),
+            secrets: HashMap::new(),
+            ssl_no_revoke: false,
+            tap_file: None,
+            test: false,
+            timeout: Duration::from_secs(300),
+            to_entry: None,
+            unix_socket: None,
+            user: None,
+            user_agent: None,
+            variables: HashMap::new(),
+            verbosity: None,
+        }
+    }
 }
 
 impl CliOptions {

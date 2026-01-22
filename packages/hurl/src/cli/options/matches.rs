@@ -32,9 +32,12 @@ use super::variables_file::VariablesFile;
 use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};
 use super::{OutputType, Verbosity};
 
-pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
+pub fn cacert_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<String>,
+) -> Result<Option<String>, CliOptionsError> {
     match get_string(arg_matches, "cacert_file") {
-        None => Ok(None),
+        None => Ok(default_value),
         Some(filename) => {
             let path = Path::new(&filename);
             if path.exists() {
@@ -49,13 +52,16 @@ pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOption
     }
 }
 
-pub fn aws_sigv4(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "aws_sigv4")
+pub fn aws_sigv4(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "aws_sigv4").or(default_value)
 }
 
-pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
+pub fn client_cert_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<String>,
+) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "client_cert_file") {
-        None => Ok(None),
+        None => Ok(default_value),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
@@ -67,9 +73,12 @@ pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliO
     }
 }
 
-pub fn client_key_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
+pub fn client_key_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<String>,
+) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "client_key_file") {
-        None => Ok(None),
+        None => Ok(default_value),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
@@ -84,83 +93,130 @@ pub fn client_key_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOp
 /// Returns true if Hurl output uses ANSI code and false otherwise.
 ///
 /// If it has no flags, we use the run `context` to determine if we use color or not.
-pub fn color(arg_matches: &ArgMatches, context: &RunContext) -> bool {
+pub fn color(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
     if has_flag(arg_matches, "color") {
         return true;
     }
     if has_flag(arg_matches, "no_color") {
         return false;
     }
-    context.is_with_color()
-}
-
-pub fn compressed(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "compressed")
-}
-
-pub fn connect_timeout(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
-    let s = get::<String>(arg_matches, "connect_timeout").unwrap_or("300".to_string());
-    get_duration(&s, DurationUnit::Second)
-}
-
-pub fn connects_to(arg_matches: &ArgMatches) -> Vec<String> {
-    get_strings(arg_matches, "connect_to").unwrap_or_default()
-}
-
-pub fn continue_on_error(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "continue_on_error")
-}
-
-pub fn cookie_input_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "cookies_input_file")
-}
-
-pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
-    get::<String>(arg_matches, "cookies_output_file").map(PathBuf::from)
-}
-
-pub fn curl_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
-    get::<String>(arg_matches, "curl").map(PathBuf::from)
-}
-
-pub fn delay(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
-    let s = get::<String>(arg_matches, "delay").unwrap_or("0".to_string());
-    get_duration(&s, DurationUnit::MilliSecond)
-}
-
-pub fn digest(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "digest")
-}
-
-pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
-    let error_format = get::<String>(arg_matches, "error_format").unwrap_or("short".to_string());
-    match error_format.as_str() {
-        "long" => ErrorFormat::Long,
-        "short" => ErrorFormat::Short,
-        _ => ErrorFormat::Short,
+    if context.is_with_color() {
+        context.is_with_color()
+    } else {
+        default_value
     }
 }
 
-pub fn file_root(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "file_root")
+pub fn compressed(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "compressed") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn follow_location(arg_matches: &ArgMatches) -> (bool, bool) {
+pub fn connect_timeout(
+    arg_matches: &ArgMatches,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match get::<String>(arg_matches, "connect_timeout") {
+        Some(s) => get_duration(&s, DurationUnit::Second),
+        None => Ok(default_value),
+    }
+}
+
+pub fn connects_to(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
+    get_strings(arg_matches, "connect_to").unwrap_or(default_value)
+}
+
+pub fn continue_on_error(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "continue_on_error") {
+        true
+    } else {
+        default_value
+    }
+}
+
+pub fn cookie_input_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<String>,
+) -> Option<String> {
+    get::<String>(arg_matches, "cookies_input_file").or(default_value)
+}
+
+pub fn cookie_output_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<PathBuf>,
+) -> Option<PathBuf> {
+    get::<String>(arg_matches, "cookies_output_file")
+        .map(PathBuf::from)
+        .or(default_value)
+}
+
+pub fn curl_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {
+    get::<String>(arg_matches, "curl")
+        .map(PathBuf::from)
+        .or(default_value)
+}
+
+pub fn delay(
+    arg_matches: &ArgMatches,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match get::<String>(arg_matches, "delay") {
+        Some(s) => get_duration(&s, DurationUnit::MilliSecond),
+        None => Ok(default_value),
+    }
+}
+
+pub fn digest(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "digest") {
+        true
+    } else {
+        default_value
+    }
+}
+
+pub fn error_format(arg_matches: &ArgMatches, default_value: ErrorFormat) -> ErrorFormat {
+    match get::<String>(arg_matches, "error_format") {
+        Some(error_format) => match error_format.as_str() {
+            "long" => ErrorFormat::Long,
+            "short" => ErrorFormat::Short,
+            _ => ErrorFormat::Short,
+        },
+        None => default_value,
+    }
+}
+
+pub fn file_root(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "file_root").or(default_value)
+}
+
+pub fn follow_location(arg_matches: &ArgMatches, default_value: (bool, bool)) -> (bool, bool) {
     let follow_location = has_flag(arg_matches, "follow_location")
         || has_flag(arg_matches, "follow_location_trusted");
     let follow_location_trusted = has_flag(arg_matches, "follow_location_trusted");
-    (follow_location, follow_location_trusted)
+    if follow_location || follow_location_trusted {
+        (follow_location, follow_location_trusted)
+    } else {
+        default_value
+    }
 }
 
-pub fn from_entry(arg_matches: &ArgMatches) -> Option<usize> {
-    get::<u32>(arg_matches, "from_entry").map(|x| x as usize)
+pub fn from_entry(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<usize> {
+    get::<u32>(arg_matches, "from_entry")
+        .map(|x| x as usize)
+        .or(default_value)
 }
 
-pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
-    get_strings(arg_matches, "header").unwrap_or_default()
+pub fn headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
+    get_strings(arg_matches, "header").unwrap_or(default_value)
 }
 
-pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsError> {
+pub fn html_dir(
+    arg_matches: &ArgMatches,
+    default_value: Option<PathBuf>,
+) -> Result<Option<PathBuf>, CliOptionsError> {
     if let Some(dir) = get::<String>(arg_matches, "report_html") {
         let path = Path::new(&dir);
         if !path.exists() {
@@ -180,11 +236,14 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsE
             )))
         }
     } else {
-        Ok(None)
+        Ok(default_value)
     }
 }
 
-pub fn http_version(arg_matches: &ArgMatches) -> Option<HttpVersion> {
+pub fn http_version(
+    arg_matches: &ArgMatches,
+    default_value: Option<HttpVersion>,
+) -> Option<HttpVersion> {
     if has_flag(arg_matches, "http3") {
         Some(HttpVersion::V3)
     } else if has_flag(arg_matches, "http2") {
@@ -194,16 +253,24 @@ pub fn http_version(arg_matches: &ArgMatches) -> Option<HttpVersion> {
     } else if has_flag(arg_matches, "http10") {
         Some(HttpVersion::V10)
     } else {
-        None
+        default_value
     }
 }
 
-pub fn ignore_asserts(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "ignore_asserts")
+pub fn ignore_asserts(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "ignore_asserts") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn include(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "include")
+pub fn include(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "include") {
+        true
+    } else {
+        default_value
+    }
 }
 
 /// Returns true if we have at least one input files.
@@ -266,44 +333,61 @@ fn walks_hurl_files(dir: &Path, files: &mut Vec<Input>) -> Result<(), CliOptions
     Ok(())
 }
 
-pub fn insecure(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "insecure")
+pub fn insecure(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "insecure") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn ip_resolve(arg_matches: &ArgMatches) -> Option<IpResolve> {
+pub fn ip_resolve(arg_matches: &ArgMatches, default_value: Option<IpResolve>) -> Option<IpResolve> {
     if has_flag(arg_matches, "ipv6") {
         Some(IpResolve::IpV6)
     } else if has_flag(arg_matches, "ipv4") {
         Some(IpResolve::IpV4)
     } else {
-        None
+        default_value
     }
 }
 
-pub fn junit_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
-    get::<String>(arg_matches, "report_junit").map(PathBuf::from)
+pub fn junit_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {
+    get::<String>(arg_matches, "report_junit")
+        .map(PathBuf::from)
+        .or(default_value)
 }
 
-pub fn limit_rate(arg_matches: &ArgMatches) -> Option<BytesPerSec> {
-    get::<u64>(arg_matches, "limit_rate").map(BytesPerSec)
+pub fn limit_rate(
+    arg_matches: &ArgMatches,
+    default_value: Option<BytesPerSec>,
+) -> Option<BytesPerSec> {
+    get::<u64>(arg_matches, "limit_rate")
+        .map(BytesPerSec)
+        .or(default_value)
 }
 
-pub fn max_filesize(arg_matches: &ArgMatches) -> Option<u64> {
-    get::<u64>(arg_matches, "max_filesize")
+pub fn max_filesize(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<u64> {
+    get::<u64>(arg_matches, "max_filesize").or(default_value)
 }
 
-pub fn max_redirect(arg_matches: &ArgMatches) -> Count {
-    match get::<i32>(arg_matches, "max_redirects").unwrap_or(50) {
-        -1 => Count::Infinite,
-        m => Count::Finite(m as usize),
+pub fn max_redirect(arg_matches: &ArgMatches, default_value: Count) -> Count {
+    match get::<i32>(arg_matches, "max_redirects") {
+        Some(-1) => Count::Infinite,
+        Some(m) => Count::Finite(m as usize),
+        None => default_value,
     }
 }
 
-pub fn jobs(arg_matches: &ArgMatches) -> Option<usize> {
-    get::<u32>(arg_matches, "jobs").map(|m| m as usize)
+pub fn jobs(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<usize> {
+    get::<u32>(arg_matches, "jobs")
+        .map(|m| m as usize)
+        .or(default_value)
 }
 
-pub fn json_report_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliOptionsError> {
+pub fn json_report_dir(
+    arg_matches: &ArgMatches,
+    default_value: Option<PathBuf>,
+) -> Result<Option<PathBuf>, CliOptionsError> {
     if let Some(dir) = get::<String>(arg_matches, "report_json") {
         let path = Path::new(&dir);
         if !path.exists() {
@@ -323,21 +407,32 @@ pub fn json_report_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, CliO
             )))
         }
     } else {
-        Ok(None)
+        Ok(default_value)
     }
 }
 
-pub fn negotiate(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "negotiate")
+pub fn negotiate(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "negotiate") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn netrc(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "netrc")
+pub fn netrc(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "netrc") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn netrc_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptionsError> {
+pub fn netrc_file(
+    arg_matches: &ArgMatches,
+    default_value: Option<String>,
+) -> Result<Option<String>, CliOptionsError> {
     match get::<String>(arg_matches, "netrc_file") {
-        None => Ok(None),
+        None => Ok(default_value),
         Some(filename) => {
             if !Path::new(&filename).is_file() {
                 let message = format!("File {filename} does not exist");
@@ -349,49 +444,75 @@ pub fn netrc_file(arg_matches: &ArgMatches) -> Result<Option<String>, CliOptions
     }
 }
 
-pub fn netrc_optional(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "netrc_optional")
-}
-
-pub fn no_cookie_store(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "no_cookie_store")
-}
-
-pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "no_proxy")
-}
-
-pub fn ntlm(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "ntlm")
-}
-
-pub fn output(arg_matches: &ArgMatches) -> Option<Output> {
-    get::<String>(arg_matches, "output").map(|filename| Output::new(&filename))
-}
-
-pub fn output_type(arg_matches: &ArgMatches) -> OutputType {
-    if has_flag(arg_matches, "json") {
-        OutputType::Json
-    } else if has_flag(arg_matches, "no_output") || test(arg_matches) {
-        OutputType::NoOutput
+pub fn netrc_optional(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "netrc_optional") {
+        true
     } else {
-        OutputType::ResponseBody
+        default_value
     }
 }
 
-pub fn parallel(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "parallel") || has_flag(arg_matches, "test")
+pub fn no_cookie_store(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "no_cookie_store") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "path_as_is")
+pub fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "no_proxy").or(default_value)
 }
 
-pub fn pinned_pub_key(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "pinned_pub_key")
+pub fn ntlm(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "ntlm") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> PrettyMode {
+pub fn output(arg_matches: &ArgMatches, default_value: Option<Output>) -> Option<Output> {
+    get::<String>(arg_matches, "output")
+        .map(|filename| Output::new(&filename))
+        .or(default_value)
+}
+
+pub fn output_type(arg_matches: &ArgMatches, default_value: OutputType) -> OutputType {
+    if has_flag(arg_matches, "json") {
+        OutputType::Json
+    } else if has_flag(arg_matches, "no_output") || test(arg_matches, false) {
+        OutputType::NoOutput
+    } else {
+        default_value
+    }
+}
+
+pub fn parallel(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "parallel") || has_flag(arg_matches, "test") {
+        true
+    } else {
+        default_value
+    }
+}
+
+pub fn path_as_is(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "path_as_is") {
+        true
+    } else {
+        default_value
+    }
+}
+
+pub fn pinned_pub_key(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "pinned_pub_key").or(default_value)
+}
+
+pub fn pretty(
+    arg_matches: &ArgMatches,
+    context: &RunContext,
+    default_value: PrettyMode,
+) -> PrettyMode {
     if has_flag(arg_matches, "pretty") {
         return PrettyMode::Force;
     }
@@ -401,56 +522,66 @@ pub fn pretty(arg_matches: &ArgMatches, context: &RunContext) -> PrettyMode {
     if context.is_stdout_term() {
         PrettyMode::Automatic
     } else {
-        PrettyMode::None
+        default_value
     }
 }
 
-pub fn progress_bar(arg_matches: &ArgMatches, context: &RunContext) -> bool {
+pub fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
     // The test progress bar is displayed only for in test mode, for interactive TTYs.
     // It can be forced by `--progress-bar` option.
-    if !test(arg_matches) {
-        return false;
+    if !test(arg_matches, false) {
+        return default_value;
     }
     if has_flag(arg_matches, "progress_bar") {
         return true;
     }
-    context.is_stderr_term() && !context.is_ci()
+    if context.is_stderr_term() && !context.is_ci() {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "proxy")
+pub fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "proxy").or(default_value)
 }
 
-pub fn repeat(arg_matches: &ArgMatches) -> Option<Count> {
+pub fn repeat(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
     match get::<i32>(arg_matches, "repeat") {
         Some(-1) => Some(Count::Infinite),
         Some(n) => Some(Count::Finite(n as usize)),
-        None => None,
+        None => default_value,
     }
 }
 
-pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
-    get_strings(arg_matches, "resolve").unwrap_or_default()
+pub fn resolves(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
+    get_strings(arg_matches, "resolve").unwrap_or(default_value)
 }
 
-pub fn retry(arg_matches: &ArgMatches) -> Option<Count> {
+pub fn retry(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
     match get::<i32>(arg_matches, "retry") {
         Some(-1) => Some(Count::Infinite),
         Some(r) => Some(Count::Finite(r as usize)),
-        None => None,
+        None => default_value,
     }
 }
 
-pub fn retry_interval(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
-    let s = get::<String>(arg_matches, "retry_interval").unwrap_or("1000".to_string());
-    get_duration(&s, DurationUnit::MilliSecond)
+pub fn retry_interval(
+    arg_matches: &ArgMatches,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match get::<String>(arg_matches, "retry_interval") {
+        Some(s) => get_duration(&s, DurationUnit::MilliSecond),
+        None => Ok(default_value),
+    }
 }
 
 pub fn secret(
     matches: &ArgMatches,
     context: &RunContext,
+    default_value: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, CliOptionsError> {
-    let mut all_secrets = HashMap::new();
+    let mut all_secrets = default_value;
 
     // Secrets are always parsed as string.
     let type_kind = TypeKind::String;
@@ -503,45 +634,63 @@ fn add_secret(
     Ok(())
 }
 
-pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "ssl_no_revoke")
+pub fn ssl_no_revoke(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "ssl_no_revoke") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn tap_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
-    get::<String>(arg_matches, "report_tap").map(PathBuf::from)
+pub fn tap_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {
+    get::<String>(arg_matches, "report_tap")
+        .map(PathBuf::from)
+        .or(default_value)
 }
 
-pub fn test(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "test")
+pub fn test(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "test") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn timeout(arg_matches: &ArgMatches) -> Result<Duration, CliOptionsError> {
-    let s = get::<String>(arg_matches, "max_time").unwrap_or("300".to_string());
-    get_duration(&s, DurationUnit::Second)
+pub fn timeout(
+    arg_matches: &ArgMatches,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match get::<String>(arg_matches, "max_time") {
+        Some(s) => get_duration(&s, DurationUnit::Second),
+        None => Ok(default_value),
+    }
 }
 
-pub fn to_entry(arg_matches: &ArgMatches) -> Option<usize> {
-    get::<u32>(arg_matches, "to_entry").map(|x| x as usize)
+pub fn to_entry(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<usize> {
+    get::<u32>(arg_matches, "to_entry")
+        .map(|x| x as usize)
+        .or(default_value)
 }
 
-pub fn unix_socket(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "unix_socket")
+pub fn unix_socket(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "unix_socket").or(default_value)
 }
 
-pub fn user(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "user")
+pub fn user(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "user").or(default_value)
 }
 
-pub fn user_agent(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "user_agent")
+pub fn user_agent(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "user_agent").or(default_value)
 }
 
 /// Returns a map of variables from the command line options `matches`.
 pub fn variables(
     matches: &ArgMatches,
     context: &RunContext,
+    default_value: HashMap<String, Value>,
 ) -> Result<HashMap<String, Value>, CliOptionsError> {
-    let mut variables = HashMap::new();
+    let mut variables = default_value;
 
     // Variables are typed, based on their values.
     let type_kind = TypeKind::Inferred;
@@ -581,22 +730,32 @@ pub fn variables(
     Ok(variables)
 }
 
-pub fn verbosity(arg_matches: &ArgMatches) -> Option<Verbosity> {
-    let verbosity = get::<String>(arg_matches, "verbosity");
-    verbosity.map(|value| match value.as_str() {
-        "brief" => Verbosity::Brief,
-        "verbose" => Verbosity::Verbose,
-        "debug" => Verbosity::Debug,
-        _ => unreachable!(),
-    })
+pub fn verbosity(arg_matches: &ArgMatches, default_value: Option<Verbosity>) -> Option<Verbosity> {
+    match get::<String>(arg_matches, "verbosity") {
+        Some(value) => Some(match value.as_str() {
+            "brief" => Verbosity::Brief,
+            "verbose" => Verbosity::Verbose,
+            "debug" => Verbosity::Debug,
+            _ => unreachable!(),
+        }),
+        None => default_value,
+    }
 }
 
-pub fn verbose(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "verbose")
+pub fn verbose(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "verbose") {
+        true
+    } else {
+        default_value
+    }
 }
 
-pub fn very_verbose(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "very_verbose")
+pub fn very_verbose(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "very_verbose") {
+        true
+    } else {
+        default_value
+    }
 }
 
 /// Returns a list of path names from the command line options `matches`.
