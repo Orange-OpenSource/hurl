@@ -1,0 +1,26 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/config-file
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/config-file'
+*
+> GET /config-file HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/8.0.0-SNAPSHOT
+>
+* Response: (received <<<\d+>>> bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 5
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*>>>
+< Server: Flask Server
+< Via: waitress
+<
+*

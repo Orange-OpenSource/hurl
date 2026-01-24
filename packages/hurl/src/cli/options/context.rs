@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::path::{Path, PathBuf};
 
 /// Represents the context in which is executed Hurl: the env variables, whether standard
 /// input is a terminal or not (when pipe or redirected to a file for instance), whether standard
@@ -34,6 +35,8 @@ pub struct RunContext {
     stdout_term: bool,
     /// Is standard error a terminal or not?
     stderr_term: bool,
+    /// Path to the config file if any.
+    config_file: Option<PathBuf>,
 }
 
 const LEGACY_VARIABLE_PREFIX: &str = "HURL_";
@@ -64,6 +67,7 @@ impl RunContext {
         } else {
             stdout_term
         };
+        let config_file = get_config_file(&env_vars);
 
         RunContext {
             with_color,
@@ -72,6 +76,7 @@ impl RunContext {
             stdin_term,
             stdout_term,
             stderr_term,
+            config_file,
         }
     }
 
@@ -148,6 +153,29 @@ impl RunContext {
     /// Checks if standard error is a terminal.
     pub fn is_stderr_term(&self) -> bool {
         self.stderr_term
+    }
+
+    /// Returns the config file path if any.
+    pub fn config_file_path(&self) -> Option<&PathBuf> {
+        self.config_file.as_ref()
+    }
+}
+
+/// Get config file path if any
+/// In order of precedence
+/// 1. from `XDG_CONFIG_HOME/hurl/config` if `XDG_CONFIG_HOME` is set
+/// 2. from `$HOME/.config/hurl/config` if $HOME is set
+fn get_config_file(env_vars: &HashMap<String, String>) -> Option<PathBuf> {
+    get_config_dir(env_vars).map(|config_dir| config_dir.join("hurl").join("config"))
+}
+
+fn get_config_dir(env_vars: &HashMap<String, String>) -> Option<PathBuf> {
+    if let Some(config_dir) = env_vars.get("XDG_CONFIG_HOME") {
+        Some(Path::new(config_dir).to_path_buf())
+    } else {
+        env_vars
+            .get("HOME")
+            .map(|home_dir| Path::new(home_dir).join("config").to_path_buf())
     }
 }
 

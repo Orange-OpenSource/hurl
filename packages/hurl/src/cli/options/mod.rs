@@ -16,6 +16,7 @@
  *
  */
 mod commands;
+mod config_file;
 mod context;
 mod duration;
 mod error;
@@ -31,7 +32,6 @@ use std::time::Duration;
 use clap::builder::styling::{AnsiColor, Effects};
 use clap::builder::Styles;
 use clap::ArgMatches;
-pub use error::CliOptionsError;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
 use hurl::pretty::PrettyMode;
@@ -44,6 +44,7 @@ use hurl_core::types::{BytesPerSec, Count};
 
 pub use crate::cli::options::context::RunContext;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
+pub use error::CliOptionsError;
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -298,7 +299,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     }
 
     let options = CliOptions::default();
-    // TODO: let options = parse_config_file(arg_matches, options)?;
+    let options = config_file::parse_config_file(context, options)?;
     let options = parse_matches(&arg_matches, context, options)?;
     if options.input_files.is_empty() {
         return Err(CliOptionsError::Error(
