@@ -28,6 +28,8 @@ use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
+pub use crate::cli::options::context::RunContext;
+use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 use clap::builder::styling::{AnsiColor, Effects};
 use clap::builder::Styles;
 use clap::ArgMatches;
@@ -40,10 +42,10 @@ use hurl::util::logger;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder};
 use hurl::util::path::ContextDir;
 use hurl_core::input::{Input, InputKind};
+//use hurl_core::reader;
+use hurl_core::parser::primitives::try_literal;
+use hurl_core::reader::Reader;
 use hurl_core::types::{BytesPerSec, Count};
-
-pub use crate::cli::options::context::RunContext;
-use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -298,7 +300,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     }
 
     let options = CliOptions::default();
-    // TODO: let options = parse_config_file(arg_matches, options)?;
+    let options = parse_config_file(context, options)?;
     let options = parse_matches(&arg_matches, context, options)?;
     if options.input_files.is_empty() {
         return Err(CliOptionsError::Error(
@@ -309,6 +311,65 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     Ok(options)
 }
 
+/// Parse options config file $HOME/.config/hurl/config if it exists
+/// Uses HOME environment variable from the run context
+fn parse_config_file(
+    context: &RunContext,
+    default_options: CliOptions,
+) -> Result<CliOptions, CliOptionsError> {
+    if let Some(config_file_path) = get_config_file_path(context) {
+        if config_file_path.exists() {
+            eprintln!("Using config file: {}", config_file_path.display());
+            let content = std::fs::read_to_string(&config_file_path).map_err(|e| {
+                CliOptionsError::Error(format!(
+                    "Failed to read config file {}: {}",
+                    config_file_path.display(),
+                    e
+                ))
+            })?;
+            return parse_config(&content, default_options);
+        }
+    }
+    // }
+    Ok(default_options)
+}
+
+/// Parse config `content` using `default_options`
+///
+/// For the time-being only support the verbose option
+/// TODO: Implement all the command-line options
+///
+fn parse_config(content: &str, default_options: CliOptions) -> Result<CliOptions, CliOptionsError> {
+    let mut options = default_options;
+    let mut reader = Reader::new(content);
+    //reader.skip_whitespace();
+
+    if try_literal("verbose", &mut reader).is_ok() {
+        eprintln!("Config file: setting verbose option");
+        options.verbosity = Some(Verbosity::Verbose);
+    } else {
+        return Err(CliOptionsError::Error(format!(
+            "Unknown config option at position {:?}",
+            reader.cursor().pos
+        )));
+    }
+
+    Ok(options)
+}
+
+fn get_config_file_path(_context: &RunContext) -> Option<PathBuf> {
+    let home = Some("/home/fab");
+    if let Some(home_dir) = home {
+        //context.var_env_vars().get("HOME") {
+        let config_file_path = Path::new(home_dir)
+            .join(".config")
+            .join("hurl")
+            .join("config");
+        Some(config_file_path)
+    } else {
+        None
+    }
+}
 /// Parse command line arguments from `arg_matches`
 /// given a run `context` and `default_options`.
 fn parse_matches(

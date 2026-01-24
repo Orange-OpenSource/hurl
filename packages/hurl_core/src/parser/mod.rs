@@ -50,7 +50,7 @@ mod parsers;
 mod placeholder;
 mod predicate;
 mod predicate_value;
-mod primitives;
+pub mod primitives;
 mod query;
 mod sections;
 mod string;
