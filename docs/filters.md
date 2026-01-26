@@ -66,11 +66,11 @@ jsonpath "$.books" count == 12
 | [base64UrlSafeDecode](#base64urlsafedecode) | Decodes a Base64 encoded string into bytes (using [Base64 URL safe encoding]).                                                         | string           | bytes  |
 | [base64UrlSafeEncode](#base64urlsafeencode) | Encodes bytes into Base64 encoded string (using [Base64 URL safe encoding]).                                                           | bytes            | string |
 | [count](#count)                             | Counts the number of items in a collection.                                                                                            | collection       | number |
+| [dateFormat](#dateformat)                   | Formats a date to a string given [a specification format].                                                                             | date             | string |
 | [daysAfterNow](#daysafternow)               | Returns the number of days between now and a date in the future.                                                                       | date             | number |
 | [daysBeforeNow](#daysbeforenow)             | Returns the number of days between now and a date in the past.                                                                         | date             | number |
 | [decode](#decode)                           | Decodes bytes to string using encoding.                                                                                                | bytes            | string |
 | [first](#first)                             | Returns the first element from a collection.                                                                                           | collection       | any    |
-| [dateFormat](#dateFormat)                   | Formats a date to a string given [a specification format].                                                                             | date             | string |
 | [htmlEscape](#htmlescape)                   | Converts the characters `&`, `<` and `>` to HTML-safe sequence.                                                                        | string           | string |
 | [htmlUnescape](#htmlunescape)               | Converts all named and numeric character references (e.g. `&gt;`, `&#62;`, `&#x3e;`) to the corresponding Unicode characters.          | string           | string |
 | [jsonpath](#jsonpath)                       | Evaluates a [JSONPath] expression.                                                                                                     | string           | any    |
@@ -148,6 +148,19 @@ HTTP 200
 jsonpath "$.books" count == 12
 ```
 
+### dateFormat
+
+*Formerly known as `format`, which is deprecated and will be removed in a future major version.*
+
+Formats a date to a string given [a specification format].
+
+```hurl
+GET https://example.org
+HTTP 200
+[Asserts]
+cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+```
+
 ### daysAfterNow
 
 Returns the number of days between now and a date in the future.
@@ -194,19 +207,6 @@ GET https://example.org
 HTTP 200
 [Asserts]
 jsonpath "$.books" first == "Dune"
-```
-
-### dateFormat
-
-*Formerly known as `format`, which is deprecated and will be removed in a future major version.*
-
-Formats a date to a string given [a specification format].
-
-```hurl
-GET https://example.org
-HTTP 200
-[Asserts]
-cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 ```
 
 ### htmlEscape
@@ -477,5 +477,5 @@ bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Base64 encoded string]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
 [Base64 URL safe encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-5
-[Encoding labels]: https://encoding.spec.whatwg.org/]https://encoding.spec.whatwg.org/#concept-encoding-get
+[Encoding Standard]: https://encoding.spec.whatwg.org/]https://encoding.spec.whatwg.org/#concept-encoding-get
 

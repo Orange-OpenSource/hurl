@@ -453,18 +453,6 @@ POST https://example.org/api/cats
 }
 ```
 
-Escapes are not processed (and particularly [Hurl Unicode literals] are not supported): `\n` is two consecutive 
-chars (`\` followed by a `n`), not a single newline char:
-
-```hurl
-# Create a new catty thing with JSON body:
-POST https://example.org/api/cats
-{
-    "text1": "\n is two chars \ and n",
-    "text2": "\u{1D11E} is nine chars"
-}
-```
-
 
 When using JSON request body, the content type `application/json` is automatically set.
 
@@ -519,8 +507,6 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
   </soap:Body>
 </soap:Envelope>
 ~~~
-
-Like JSON body, escapes are not processed (`\n` is two consecutive `\` followed by a `n`).
 
 XML request body can be seen as syntactic sugar of [multiline string body] with `xml` identifier:
 
@@ -633,8 +619,8 @@ Multiline string body can be [templatized with variables]:
 ~~~hurl
 POST https://example.org/models
 [Options]
-var1: lemon
-var2: yellow
+variable: var1=lemon
+variable: var2=yellow
 ```
 Fruit,Color
 {{var1}},{{var2}}
