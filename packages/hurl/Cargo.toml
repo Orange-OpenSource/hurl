@@ -39,7 +39,7 @@ sha2 = "0.10.9"
 url = "2.5.8"
 xml-rs = { version = "0.8.28" }
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
-uuid = { version = "1.19.0", features = ["v4" , "fast-rng"] }
+uuid = { version = "1.20.0", features = ["v4" , "fast-rng"] }
 similar = "2.7.0"
 terminal_size = "0.4.3"
 
@@ -47,7 +47,7 @@ terminal_size = "0.4.3"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.53"
+cc = "1.2.54"
 
 [lints]
 workspace = true
