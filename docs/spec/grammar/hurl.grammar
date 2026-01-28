@@ -564,7 +564,6 @@ filter:
   | count-filter
   | days-after-now-filter
   | days-before-now-filter
-  | decode-filter
   | first-filter
   | date-format-filter
   | html-escape-filter
@@ -576,6 +575,7 @@ filter:
   | regex-filter
   | replace-filter
   | replace-regex-filter
+  | string-decode-filter
   | split-filter
   | to-date-filter
   | to-float-filter
@@ -603,9 +603,7 @@ days-after-now-filter: "daysAfterNow"
 
 days-before-now-filter: "daysBeforeNow"
 
-decode-filter: "decode"
-
-first-filter: "first" 
+first-filter: "first"
 
 date-format-filter: "dateFormat" sp quoted-string
 
@@ -628,6 +626,8 @@ replace-filter: "replace" sp quoted-string sp quoted-string
 replace-regex-filter: "replaceRegex" sp (quoted-string | regex) sp quoted-string
 
 split-filter: "split" sp quoted-string
+
+string-decode-filter: "stringDecode" sp quoted-string
 
 to-date-filter: "toDate" sp quoted-string
 
