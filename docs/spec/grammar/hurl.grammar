@@ -561,10 +561,11 @@ filter:
   | base64-encode-filter
   | base64-url-safe-decode-filter
   | base64-url-safe-encode-filter
+  | charset-decode-filter
+  | charset-encode-filter
   | count-filter
   | days-after-now-filter
   | days-before-now-filter
-  | decode-filter
   | first-filter
   | date-format-filter
   | html-escape-filter
@@ -597,15 +598,17 @@ base64-url-safe-decode-filter: "base64UrlSafeDecode"
 
 base64-url-safe-encode-filter: "base64UrlSafeEncode"
 
+charset-decode-filter: "charsetDecode" sp quoted-string
+
+charset-encode-filter: "charsetEncode" sp quoted-string
+
 count-filter: "count"
 
 days-after-now-filter: "daysAfterNow"
 
 days-before-now-filter: "daysBeforeNow"
 
-decode-filter: "decode"
-
-first-filter: "first" 
+first-filter: "first"
 
 date-format-filter: "dateFormat" sp quoted-string
 

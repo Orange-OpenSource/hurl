@@ -69,7 +69,8 @@ jsonpath "$.books" count == 12
 | [dateFormat](#dateformat)                   | Formats a date to a string given [a specification format].                                                                             | date             | string |
 | [daysAfterNow](#daysafternow)               | Returns the number of days between now and a date in the future.                                                                       | date             | number |
 | [daysBeforeNow](#daysbeforenow)             | Returns the number of days between now and a date in the past.                                                                         | date             | number |
-| [decode](#decode)                           | Decodes bytes to string using encoding.                                                                                                | bytes            | string |
+| [charsetDecode](#charsetdecode)             | Decodes bytes to string using a charset encoding.                                                                                      | bytes            | string |
+| [charsetEncode](#charsetencode)             | Encodes string to bytes using a charset encoding.                                                                                      | bytes            | string |
 | [first](#first)                             | Returns the first element from a collection.                                                                                           | collection       | any    |
 | [htmlEscape](#htmlescape)                   | Converts the characters `&`, `<` and `>` to HTML-safe sequence.                                                                        | string           | string |
 | [htmlUnescape](#htmlunescape)               | Converts all named and numeric character references (e.g. `&gt;`, `&#62;`, `&#x3e;`) to the corresponding Unicode characters.          | string           | string |
@@ -137,6 +138,37 @@ HTTP 200
 bytes base64UrlSafeEncode == "PDw_Pz8-Pg"
 ```
 
+### charsetDecode
+
+Decodes bytes to string using a charset encoding. Encoding labels are defined in [Encoding Standard].
+
+```hurl
+# The 'Content-Type' HTTP response header does not precise the charset 'gb2312'
+# so body must be decoded explicitly by Hurl before processing any text based assert
+GET https://example.org/hello_china
+HTTP 200
+[Asserts]
+header "Content-Type" == "text/html"
+# Content-Type has no encoding clue, we must decode ourselves the body response.
+bytes charsetDecode "gb2312" xpath "string(//body)" == "你好世界"
+```
+
+When the encoding is UTF-8 (i.e. `charsetDecode "utf-8"`), [an `utf8Decode` filter] can be used instead. 
+
+
+### charsetEncode
+
+Encodes string to bytes using a charset encoding. Encoding labels are defined in [Encoding Standard].
+
+```hurl
+GET https://example.org/hello_china
+HTTP 200
+[Asserts]
+body charsetEncode "gb2312" toHex = "48656C6C6F776F726C64"
+```
+
+When the encoding is UTF-8 (i.e. `charsetEncode "utf-8"`), [an `utf8Encode` filter] can be used instead.
+
 ### count
 
 Counts the number of items in a collection.
@@ -181,21 +213,6 @@ GET https://example.org
 HTTP 200
 [Asserts]
 certificate "Start-Date" daysBeforeNow < 100
-```
-
-### decode
-
-Decodes bytes to string using encoding. Encoding labels are defined in [Encoding Standard].
-
-```hurl
-# The 'Content-Type' HTTP response header does not precise the charset 'gb2312'
-# so body must be decoded explicitly by Hurl before processing any text based assert
-GET https://example.org/hello_china
-HTTP 200
-[Asserts]
-header "Content-Type" == "text/html"
-# Content-Type has no encoding clue, we must decode ourselves the body response.
-bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 ```
 
 ### first
@@ -478,4 +495,5 @@ bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 [Base64 encoded string]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
 [Base64 URL safe encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-5
 [Encoding Standard]: https://encoding.spec.whatwg.org/#concept-encoding-get
-
+[an `utf8Decode` filter]: /docs/filters.md#utf8decode
+[an `utf8Encode` filter]: /docs/filters.md#utf8encode
