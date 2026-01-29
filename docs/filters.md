@@ -477,5 +477,5 @@ bytes decode "gb2312" xpath "string(//body)" == "你好世界"
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Base64 encoded string]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
 [Base64 URL safe encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-5
-[Encoding Standard]: https://encoding.spec.whatwg.org/]https://encoding.spec.whatwg.org/#concept-encoding-get
+[Encoding Standard]: https://encoding.spec.whatwg.org/#concept-encoding-get
 
