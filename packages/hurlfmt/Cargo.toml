@@ -12,7 +12,7 @@ rust-version = "1.93.0"
 
 [dependencies]
 base64 = "0.22.1"
-clap = { version = "4.5.55", features = ["cargo", "wrap_help"] }
+clap = { version = "4.5.56", features = ["cargo", "wrap_help"] }
 hurl_core = { version = "8.0.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.12.2"
 
