@@ -47,7 +47,7 @@ terminal_size = "0.4.3"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.54"
+cc = "1.2.55"
 
 [lints]
 workspace = true
