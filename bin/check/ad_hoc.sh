@@ -79,7 +79,6 @@ tmp_sh="/tmp/sh"
 tmp_ps1="/tmp/ps1"
 tmp_diff="/tmp/diff"
 touch "${tmp_sh}" "${tmp_ps1}" "${tmp_diff}"
-command -v icdiff >/dev/null 2>&1 || sudo apt-get install -qq -y icdiff > /dev/null 2>&1
 if tput cols >/dev/null 2>&1 ; then
     nb_cols="$(tput cols)"
 else
