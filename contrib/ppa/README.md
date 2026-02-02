@@ -96,8 +96,7 @@ cp -r ../hurl-ppa/contrib/ppa/debian .
 ## Minimize repo
 
 ```
-rm -fr .circleci \
-       .github \
+rm -fr .github \
        .git \
        rustfmt.toml \
        ruff.toml \
