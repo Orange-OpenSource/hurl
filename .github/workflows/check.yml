@@ -51,15 +51,15 @@ jobs:
       run: bin/check/install_prerequisites.sh
 
     - name: Shellcheck
-      if: always()
+      if: success() || failure()
       run: bin/check/shellcheck.sh
 
     - name: Check ad hoc
-      if: always()
+      if: success() || failure()
       run: bin/check/ad_hoc.sh
 
     - name: Gitleaks
-      if: always()
+      if: success() || failure()
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/zricethezav/gitleaks:latest
@@ -67,68 +67,68 @@ jobs:
         run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
 
     - name: Hadolint
-      if: always()
+      if: success() || failure()
       run: bin/check/hadolint.sh ./contrib/docker/Dockerfile
 
     - name: Zizmor
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: always()
+      if: success() || failure()
       run: bin/check/zizmor.sh --github-token ${GITHUB_TOKEN} .github/workflows/*.yml
 
     - name: Check Rust version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: always()
+      if: success() || failure()
       run: bin/check/rust_version.py --token ${GITHUB_TOKEN} 7
 
     - name: Semver
-      if: always()
+      if: success() || failure()
       run: bin/check/semver.sh
 
     - name: Generated
-      if: always()
+      if: success() || failure()
       run: bin/check/generated.sh
 
     - name: Rustfmt
-      if: always()
+      if: success() || failure()
       run: bin/check/rustfmt.sh
 
     - name: Clippy
-      if: always()
+      if: success() || failure()
       run: bin/check/clippy.sh
 
     - name: Ruff
-      if: always()
+      if: success() || failure()
       run: bin/check/ruff.sh
 
     - name: Check XML/HTML files
-      if: always()
+      if: success() || failure()
       run: bin/check/xmllint.sh
 
     - name: Hurlfmt
-      if: always()
+      if: success() || failure()
       run: |
         bin/release/release.sh
         export PATH=target/release:$PATH
         bin/check/hurlfmt.sh
 
     - name: Check crates licence
-      if: always()
+      if: success() || failure()
       run: python3 bin/check/license.py
 
     - name: Check hurl crate API changes
-      if: always()
+      if: success() || failure()
       run: bin/check/compatibility.sh
 
     - name: Check doc generation
-      if: always()
+      if: success() || failure()
       run: bin/check/doc.sh
 
     - name: Check Valgrind
-      if: always()
+      if: success() || failure()
       run: bin/check/valgrind.sh
 
     - name: Check completion files
-      if: always()
+      if: success() || failure()
       run: bin/check/completion.sh
