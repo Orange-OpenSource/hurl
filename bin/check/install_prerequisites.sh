@@ -25,5 +25,5 @@ echo "# Install Rust toolchain..."
 bin/install_rust.sh
 
 echo "# Install hadolint..."
-wget --quiet --output-document /usr/local/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64"
+wget --quiet --output-document /usr/local/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v2.14.0/hadolint-Linux-x86_64"
 chmod +x /usr/local/bin/hadolint
