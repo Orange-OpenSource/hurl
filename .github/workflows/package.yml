@@ -38,8 +38,9 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -50,7 +51,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -378,8 +379,9 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -390,7 +392,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -430,8 +432,9 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -442,7 +445,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -454,7 +457,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_deb_package.sh
-        echo "PATH=/tmp/hurl-deb-package/usr/bin:$PATH" >> "${GITHUB_ENV}"
+        echo "/tmp/hurl-deb-package/usr/bin" >> "${GITHUB_PATH}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -482,8 +485,9 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -494,7 +498,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -506,7 +510,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_deb_package.sh
-        echo "PATH=/tmp/hurl-deb-package/usr/bin:$PATH" >> "${GITHUB_ENV}"
+        echo "/tmp/hurl-deb-package/usr/bin" >> "${GITHUB_PATH}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -527,14 +531,13 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: |
-        bin/install_prerequisites_macos.sh
-        echo "PATH=$PATH" >> $GITHUB_ENV
+      run: bin/install_prerequisites_macos.sh
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -545,7 +548,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -557,7 +560,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh
-        echo "PATH=/tmp/hurl-generic-macos/bin:$PATH" >> "${GITHUB_ENV}"
+        echo "/tmp/hurl-generic-macos/bin" >> "${GITHUB_PATH}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -578,14 +581,13 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
-      run: |
-        bin/install_prerequisites_macos.sh
-        echo "PATH=$PATH" >> $GITHUB_ENV
+      run: bin/install_prerequisites_macos.sh
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        export PATH="/tmp/hurl-python3-venv/bin:$PATH"
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
         which python3
         python3 --version
         pip --version
@@ -596,7 +598,7 @@ jobs:
     - name: Build
       run: |
         bin/release/release.sh
-        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+        echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -608,7 +610,7 @@ jobs:
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh
-        echo "PATH=/tmp/hurl-generic-macos/bin:$PATH" >> "${GITHUB_ENV}"
+        echo "/tmp/hurl-generic-macos/bin" >> "${GITHUB_PATH}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
