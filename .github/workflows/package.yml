@@ -69,6 +69,8 @@ jobs:
   test-generic-linux-on-docker-ubuntu-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -80,38 +82,27 @@ jobs:
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-    - name: Install package and tests integ
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ubuntu:22.04
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-        run: |
-          set -e
-          echo "::group::Install Prerequisites"
-            bin/install_prerequisites_ubuntu.sh
-          echo "::endgroup::"
-          echo "::group::Install python 3.11"
-            bin/install_pythonx_for_ubuntu.sh 11
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-          echo "::endgroup::"
-          echo "::group::Install Rust"
-            bin/install_rust.sh
-            . "$HOME/.cargo/env"
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Install generic linux package"
-            bin/release/install_generic_linux_package.sh
-            export PATH="/tmp/hurl-generic-linux/bin:$PATH"
-          echo "::endgroup::"
-          echo "::group::Install tests integ prerequisistes"
-            bin/test/test_prerequisites.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test_integ.sh
-          echo "::endgroup::"
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install python 3.11
+      run: |
+        bin/install_pythonx_for_ubuntu.sh 11
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Install Rust
+      run: |
+        bin/install_rust.sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install generic linux package
+      run: |
+        bin/release/install_generic_linux_package.sh
+        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+    - name: Install tests integ prerequisites
+      run: bin/test/test_prerequisites.sh
+    - name: Tests
+      run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: success() || failure()
@@ -123,6 +114,8 @@ jobs:
   test-generic-linux-on-docker-debian-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
+    container:
+      image: debian
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -134,36 +127,27 @@ jobs:
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-    - name: Install package and tests integ
-      uses: addnab/docker-run-action@v3
-      with:
-        image: debian
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-        run: |
-          set -e
-          echo "::group::Install system prerequisites"
-            bin/install_prerequisites_debian.sh
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Install generic linux package"
-            bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
-          echo "::endgroup::"
-          echo "::group::Install tests prerequisites"
-            bin/test/test_prerequisites.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test_integ.sh
-          echo "::endgroup::"
+    - name: Install system prerequisites
+      run: bin/install_prerequisites_debian.sh
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install generic linux package
+      run: |
+        bin/release/install_generic_linux_package.sh
+        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+    - name: Install tests prerequisites
+      run: bin/test/test_prerequisites.sh
+    - name: Tests
+      run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: success() || failure()
@@ -172,9 +156,19 @@ jobs:
         path: |
           ./**/*.log
 
+  # Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
+  # Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
+  #
+  # > Binary compatibility is restricted to versions 2.14 or newer. On ELF systems, the soname was bumped from
+  # > libxml2.so.2 to libxml2.so.16.
+  #
+  # We downgrade when testing the Hurl generic package, not when we're building the Hurl package on Arch Linux as the soname
+  # problem arise only with the generic package.
   test-generic-linux-on-docker-archlinux-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
+    container:
+      image: archlinux
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -186,47 +180,29 @@ jobs:
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-    - name: Install package and tests integ
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-# Revert to libxml 2.13.8 that has a soname libxml2.so.2 required by our Ubuntu Hurl build (using `libxml2-legacy` package).
-# Starting from libxml 2.14, <https://gitlab.gnome.org/GNOME/libxml2/-/releases/v2.14.0>:
-#
-# > Binary compatibility is restricted to versions 2.14 or newer. On ELF systems, the soname was bumped from
-# > libxml2.so.2 to libxml2.so.16.
-#
-# We downgrade when testing the Hurl generic package, not when we're building the Hurl package on Arch Linux as the soname
-# problem arise only with the generic package.
-        run: |
-          set -e
-          echo "::group::Install system prerequisites"
-            bin/install_prerequisites_archlinux.sh
-          echo "::endgroup::"
-          echo "::group::Downgrade libxml2"
-          pacman --sync --noconfirm libxml2-legacy
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Install generic linux package"
-            bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
-          echo "::endgroup::"
-          echo "::group::Install tests prerequisites"
-            bin/test/test_prerequisites.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test_integ.sh
-          echo "::endgroup::"
+    - name: Install system prerequisites
+      run: bin/install_prerequisites_archlinux.sh
+    - name: Downgrade libxml2
+      run: pacman --sync --noconfirm libxml2-legacy
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install generic linux package
+      run: |
+        bin/release/install_generic_linux_package.sh
+        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+    - name: Install tests prerequisites
+      run: bin/test/test_prerequisites.sh
+    - name: Tests
+      run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: success() || failure()
@@ -238,6 +214,8 @@ jobs:
   test-generic-linux-on-docker-fedora-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
+    container:
+      image: fedora
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
@@ -249,39 +227,29 @@ jobs:
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-    - name: Install package and tests integ
-      uses: addnab/docker-run-action@v3
-      with:
-        image: fedora
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
-        run: |
-          set -e
-          echo "::group::Disable PAM for sudo with root and no tty"
-            bin/disable_pam_for_sudo.sh
-          echo "::endgroup::"
-          echo "::group::Install system prerequisites"
-            bin/install_prerequisites_fedora.sh
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Install generic linux package"
-            bin/release/install_generic_linux_package.sh
-          export PATH="/tmp/hurl-generic-linux/bin:$PATH"
-          echo "::group::Install tests prerequisites"
-          echo "::endgroup::"
-            bin/test/test_prerequisites.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test_integ.sh
-          echo "::endgroup::"
+    - name: Disable PAM for sudo
+      run: bin/disable_pam_for_sudo.sh
+    - name: Install system prerequisites
+      run: bin/install_prerequisites_fedora.sh
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install generic linux package
+      run: |
+        bin/release/install_generic_linux_package.sh
+        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+    - name: Install tests prerequisites
+      run: bin/test/test_prerequisites.sh
+    - name: Tests
+      run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: success() || failure()
@@ -291,76 +259,81 @@ jobs:
           ./**/*.log
 
   test-dockerfile-x64:
-   runs-on: ubuntu-latest
-   steps:
-   - name: Checkout repository
-     uses: actions/checkout@v6.0.1
-     with:
-       persist-credentials: false
-       ref: ${{ inputs.branch }}
-   - name: Set up Docker Buildx
-     uses: docker/setup-buildx-action@v3.12.0
-   - name: Build docker images
-     run: |
-         echo "::group::Docker build prerequisites"
-           sudo docker buildx create --name mybuilder
-           sudo docker buildx use mybuilder
-           sudo docker buildx inspect --bootstrap
-           sudo docker buildx ls
-         echo "::endgroup::"
-         echo "::group::Build docker hurl"
-           docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
-           docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
-           sudo docker buildx build \
-             --progress=plain \
-             --file contrib/docker/Dockerfile \
-             --platform linux/amd64 \
-             --build-arg docker_build_date="${docker_build_date}" \
-             --build-arg docker_build_tag="${docker_build_tag}" \
-             --tag local/hurl:amd64 \
-             --load .
-           sudo docker inspect local/hurl:amd64
-           sudo docker run --rm local/hurl:amd64 --version
-         echo "::endgroup::"
-   - name: Integration tests
-     uses: addnab/docker-run-action@v3
-     with:
-       image: local/hurl:amd64
-       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/amd64
-       run: |
-         echo "::group::Install system prerequisites"
-           set -e
-           cat /etc/os-release
-           apk add sudo bash curl python3 py3-pip
-         echo "::endgroup::"
-         echo "::group::Install alpine prerequisites"
-           bash bin/install_prerequisites_alpine.sh
-         echo "::endgroup::"
-         echo "::group::Install tests prerequisites"
-           bash bin/activate_python3_venv.sh
-           export PATH=/tmp/hurl-python3-venv/bin:$PATH
-           which python3
-           python3 --version
-           pip --version
-           bash bin/test/test_prerequisites.sh
-         echo "::endgroup::"
-         echo "::group::Environment"
-           bash bin/environment.sh
-         echo "::endgroup::"
-         echo "::group::Integration tests"
-           bash bin/test/test_integ.sh
-         echo "::endgroup::"
-   - name: Find artifacts
-     run: |
-       pwd
-       find . -name "*.log"
-   - name: Archive production artifacts
-     uses: actions/upload-artifact@v6.0.0
-     if: success() || failure()
-     with:
-       name: test-docker-amd64-package-artifacts
-       path: |
-         ./**/*.log
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3.12.0
+    - name: Build docker images
+      run: |
+          sudo docker buildx create --name mybuilder
+          sudo docker buildx use mybuilder
+          sudo docker buildx inspect --bootstrap
+          sudo docker buildx ls
+          docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
+          docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
+          sudo docker buildx build \
+            --progress=plain \
+            --file contrib/docker/Dockerfile \
+            --platform linux/amd64 \
+            --build-arg docker_build_date="${docker_build_date}" \
+            --build-arg docker_build_tag="${docker_build_tag}" \
+            --tag local/hurl:amd64 \
+            --load .
+          sudo docker inspect local/hurl:amd64
+          sudo docker run --rm local/hurl:amd64 --version
+    - name: Integration tests
+      env:
+        CARGO_TERM_COLOR: always
+      run: |
+          set -e
+          cat /etc/os-release
+          sudo docker run --rm \
+            --volume ${{ github.workspace }}:/work \
+            --workdir /work \
+            --privileged \
+            --env CARGO_TERM_COLOR=always \
+            --entrypoint sh \
+            --platform=linux/amd64 \
+            local/hurl:amd64 \
+            -c '
+              set -e
+    
+              apk add sudo bash curl python3 py3-pip
+    
+    
+              bash bin/install_prerequisites_alpine.sh
+    
+    
+              bash bin/activate_python3_venv.sh
+              export PATH=/tmp/hurl-python3-venv/bin:$PATH
+              which python3
+              python3 --version
+              pip --version
+              bash bin/test/test_prerequisites.sh
+    
+    
+              bash bin/environment.sh
+    
+    
+              bash bin/test/test_integ.sh
+    
+            '
+    - name: Find artifacts
+      run: |
+        pwd
+        find . -name "*.log"
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v6.0.0
+      if: success() || failure()
+      with:
+        name: test-docker-amd64-package-artifacts
+        path: |
+          ./**/*.log
 
   package-generic-linux-aarch64:
     runs-on: ubuntu-22.04-arm
