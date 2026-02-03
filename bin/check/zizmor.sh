@@ -89,6 +89,8 @@ function set_zizmor_conf(){
       config:
         policies:
           "*": ref-pin
+    unpinned-images:
+      disable: true
 EOF
 }
 

@@ -174,38 +174,32 @@ jobs:
 
   test-docker-archlinux-x64:
     runs-on: ubuntu-latest
+    container:
+      image: archlinux
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: Build, Test units and Integration tests
-      uses: addnab/docker-run-action@v3
-      with:
-        image: archlinux
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          set -e
-          echo "::group::Install Prerequisites"
-            bin/install_prerequisites_archlinux.sh
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Install Rust"
-            bin/install_rust.sh
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test.sh
-          echo "::endgroup::"
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_archlinux.sh
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Install Rust
+      run: bin/install_rust.sh
+    - name: Environment
+      run: bin/environment.sh
+    - name: Tests
+      run: |
+        bin/test/test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: ${{ always() }}
@@ -216,41 +210,33 @@ jobs:
 
   test-docker-fedora-x64:
     runs-on: ubuntu-latest
+    container:
+      image: fedora
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: Build, Test units and Integration tests
-      uses: addnab/docker-run-action@v3
-      with:
-        image: fedora
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          set -e
-          echo "::group::Disable PAM for sudo with root and no tty"
-            bin/disable_pam_for_sudo.sh
-          echo "::endgroup::"          
-          echo "::group::Install Prerequisites"
-            bin/install_prerequisites_fedora.sh
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Install Rust"
-            bin/install_rust.sh
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test.sh
-          echo "::endgroup::"
+    - name: Disable PAM for sudo
+      run: bin/disable_pam_for_sudo.sh
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_fedora.sh
+    - name: Activate python3 venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Install Rust
+      run: bin/install_rust.sh
+    - name: Environment
+      run: bin/environment.sh
+    - name: Tests
+      run: bin/test/test.sh
     - name: Find artifacts
       run: |
         pwd
@@ -265,40 +251,44 @@ jobs:
 
   test-docker-alpine-x64:
     runs-on: ubuntu-latest
+    container:
+      image: alpine
+    defaults:
+      run:
+        shell: sh
     steps:
+    - name: Install bash and git
+      run: |
+        apk update --quiet
+        apk add --quiet bash git
     - name: Checkout repository
       uses: actions/checkout@v6.0.1
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: Build, Test units and Integration tests
-      uses: addnab/docker-run-action@v3
-      with:
-        image: alpine
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: |
-          set -e
-          apk update --quiet
-          apk add --quiet bash
-          echo "::group::Install Prerequisites"
-            bin/install_prerequisites_alpine.sh
-          echo "::endgroup::"
-          echo "::group::Activate python3 venv"
-            bin/activate_python3_venv.sh
-            export PATH=/tmp/hurl-python3-venv/bin:$PATH
-            which python3
-            python3 --version
-            pip --version
-          echo "::endgroup::"
-          echo "::group::Install Rust"
-            bin/install_rust.sh
-          echo "::endgroup::"
-          echo "::group::Environment"
-            bin/environment.sh
-          echo "::endgroup::"
-          echo "::group::Tests"
-            bin/test/test.sh
-          echo "::endgroup::"
+    - name: Install Prerequisites
+      shell: bash
+      run: bin/install_prerequisites_alpine.sh
+    - name: Activate python3 venv
+      shell: bash
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+    - name: Python infos
+      shell: bash
+      run: |
+        which python3
+        python3 --version
+        pip --version
+    - name: Install Rust
+      shell: bash
+      run: bin/install_rust.sh
+    - name: Environment
+      shell: bash
+      run: bin/environment.sh
+    - name: Tests
+      shell: bash
+      run: bin/test/test.sh
     - name: Find artifacts
       run: |
         pwd
@@ -339,8 +329,7 @@ jobs:
     - name: Environment
       run: bin/environment.sh
     - name: Test Prerequisites
-      run: |
-        bin/test/test_prerequisites.sh
+      run: bin/test/test_prerequisites.sh
     - name: Tests units
       run: |
         bin/test/test_unit.sh
@@ -386,8 +375,7 @@ jobs:
     - name: Environment
       run: bin/environment.sh
     - name: Test Prerequisites
-      run: |
-        bin/test/test_prerequisites.sh
+      run: bin/test/test_prerequisites.sh
     - name: Tests units
       run: |
         bin/test/test_unit.sh
@@ -432,8 +420,7 @@ jobs:
       with:
         python-version: '3.11'
     - name: Environment
-      run: |
-        .\bin\activate_python3_venv.ps1
+      run: .\bin\activate_python3_venv.ps1
     - name: Build and test
       run: |
         .\bin\activate_python3_venv.ps1
