@@ -22,7 +22,7 @@ use crate::runner::template::eval_template;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
 /// Decode bytes `value` to string using an `encoding`.
-pub fn eval_decode(
+pub fn eval_charset_decode(
     value: &Value,
     encoding: &Template,
     variables: &VariableSet,

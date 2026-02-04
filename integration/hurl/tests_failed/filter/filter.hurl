@@ -20,7 +20,7 @@ jsonpath "$.list" nth 5 == 3
 jsonpath "$.id" toDate "%a, %d %b %Y %H:%M:%S GMT" == "unused"
 jsonpath "$.id" daysAfterNow == 1
 jsonpath "$.id" daysBeforeNow == 1
-jsonpath "$.id" decode "utf-8" == "help"
+jsonpath "$.id" charsetDecode "utf-8" == "help"
 jsonpath "$.id" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 jsonpath "$.number" htmlEscape == "a &gt; b"
 jsonpath "$.number" htmlUnescape == "a > b"

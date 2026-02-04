@@ -73,8 +73,8 @@ error: Filter error
     |
     | GET http://localhost:8000/runner_errors
     | ...
- 46 | md5 decode "utf-8" == "café"
-    |     ^^^^^^^^^^^^^^ value can not be decoded with <utf-8> encoding
+ 46 | md5 charsetDecode "utf-8" == "café"
+    |     ^^^^^^^^^^^^^^^^^^^^^ value can not be decoded with <utf-8> encoding
     |
 
 error: Filter error
@@ -82,8 +82,8 @@ error: Filter error
     |
     | GET http://localhost:8000/runner_errors
     | ...
- 52 | bytes decode "toto" == "café"
-    |       ^^^^^^^^^^^^^ <toto> encoding is not supported
+ 52 | bytes charsetDecode "toto" == "café"
+    |       ^^^^^^^^^^^^^^^^^^^^ <toto> encoding is not supported
     |
 
 error: Filter error

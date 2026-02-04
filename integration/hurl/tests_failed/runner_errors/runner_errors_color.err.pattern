@@ -73,8 +73,8 @@
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m 46 |[0m md5 decode "utf-8" == "café"
-[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^ value can not be decoded with <utf-8> encoding[0m
+[1;34m 46 |[0m md5 charsetDecode "utf-8" == "café"
+[1;34m    |[0m[1;31m     ^^^^^^^^^^^^^^^^^^^^^ value can not be decoded with <utf-8> encoding[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
@@ -82,8 +82,8 @@
 [1;34m    |[0m
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
-[1;34m 52 |[0m bytes decode "toto" == "café"
-[1;34m    |[0m[1;31m       ^^^^^^^^^^^^^ <toto> encoding is not supported[0m
+[1;34m 52 |[0m bytes charsetDecode "toto" == "café"
+[1;34m    |[0m[1;31m       ^^^^^^^^^^^^^^^^^^^^ <toto> encoding is not supported[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m

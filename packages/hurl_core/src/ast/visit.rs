@@ -421,6 +421,10 @@ pub fn walk_filter<V: Visitor>(visitor: &mut V, filter: &Filter) {
         FilterValue::Base64Encode => {}
         FilterValue::Base64UrlSafeDecode => {}
         FilterValue::Base64UrlSafeEncode => {}
+        FilterValue::CharsetDecode { space0, encoding } => {
+            visitor.visit_whitespace(space0);
+            visitor.visit_template(encoding);
+        }
         FilterValue::Count => {}
         FilterValue::DaysAfterNow => {}
         FilterValue::DaysBeforeNow => {}

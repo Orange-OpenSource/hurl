@@ -175,8 +175,8 @@ error: Filter error
    |
    | GET http://localhost:8000/error-filter
    | ...
-23 | jsonpath "$.id" decode "utf-8" == "help"
-   |                 ^^^^^^^^^^^^^^ invalid filter input: string
+23 | jsonpath "$.id" charsetDecode "utf-8" == "help"
+   |                 ^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string
    |
 
 error: Filter error

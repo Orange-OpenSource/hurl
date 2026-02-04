@@ -249,6 +249,10 @@ impl Lint for FilterValue {
         let mut s = String::new();
         s.push_str(self.identifier());
         match self {
+            FilterValue::CharsetDecode { encoding, .. } => {
+                s.push(' ');
+                s.push_str(&encoding.lint());
+            }
             FilterValue::Decode { encoding, .. } => {
                 s.push(' ');
                 s.push_str(&encoding.lint());

@@ -278,6 +278,10 @@ pub enum FilterValue {
     Base64Encode,
     Base64UrlSafeDecode,
     Base64UrlSafeEncode,
+    CharsetDecode {
+        space0: Whitespace,
+        encoding: Template,
+    },
     Count,
     DaysAfterNow,
     DaysBeforeNow,
@@ -356,6 +360,7 @@ impl FilterValue {
             FilterValue::Base64Encode => "base64Encode",
             FilterValue::Base64UrlSafeDecode => "base64UrlSafeDecode",
             FilterValue::Base64UrlSafeEncode => "base64UrlSafeEncode",
+            FilterValue::CharsetDecode { .. } => "charsetDecode",
             FilterValue::Count => "count",
             FilterValue::DaysAfterNow => "daysAfterNow",
             FilterValue::DaysBeforeNow => "daysBeforeNow",

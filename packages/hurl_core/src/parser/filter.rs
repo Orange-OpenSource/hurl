@@ -57,6 +57,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             base64_encode_filter,
             base64_url_safe_decode_filter,
             base64_url_safe_encode_filter,
+            charset_decode_filter,
             count_filter,
             days_after_now_filter,
             days_before_now_filter,
@@ -139,6 +140,13 @@ fn days_after_now_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn days_before_now_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("daysBeforeNow", reader)?;
     Ok(FilterValue::DaysBeforeNow)
+}
+
+fn charset_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("charsetDecode", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let encoding = quoted_template(reader)?;
+    Ok(FilterValue::CharsetDecode { space0, encoding })
 }
 
 fn decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

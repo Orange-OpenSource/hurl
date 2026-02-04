@@ -1,5 +1,4 @@
 GET http://localhost:8000/dummy
-
 HTTP 200
 [Captures]
 count: jsonpath "$.books" count
@@ -8,10 +7,11 @@ jsonpath "$.data" base64Decode == hex,48656c6c6f;                               
 bytes base64Encode == "SGVsbG8="                                                            # base64Encode
 jsonpath "$.data" base64UrlSafeDecode == hex,48656c6c6f;                                    # base64UrlSafeDecode
 bytes base64UrlSafeEncode == "SGVsbG8"                                                      # base64UrlSafeEncode
+bytes charsetDecode "iso-8859-1" == "café"                                                  # charsetDecode
+bytes decode "iso-8859-1" == "café"                                                         # decode (deprecated)
 jsonpath "$.books" count == 12                                                              # count
 certificate "Expire-Date" daysAfterNow > 15                                                 # daysAfterNow
 certificate "Start-Date" daysBeforeNow < 100                                                # daysBeforeNow
-bytes decode "iso-8859-1" == "café"                                                         # decode
 jsonpath "$.books" first jsonpath "$.name" == "Les Misérables"                              # first
 cookie "LSID[Expires]" dateFormat "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"    # dateFormat
 cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"        # format
@@ -34,4 +34,4 @@ jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D
 jsonpath "$.url" urlQueryParam "token" == "XYZ"                                             # urlQueryParam
 jsonpath "$.utf8_bytes" base64Decode utf8Decode == "Hello World"                            # utf8Decode
 jsonpath "$.message" utf8Encode toHex == "48656c6c6f20426f6221"                             # utf8Encode
-bytes decode "iso-8859-1" xpath "string(//p)" == "Hello"                                    # xpath
+bytes charsetDecode "iso-8859-1" xpath "string(//p)" == "Hello"                             # xpath

@@ -82,7 +82,7 @@ hurl --ipv4 --parallel --test `
   tests_failed/assert_xpath/assert_xpath.hurl `
   tests_failed/file/file_read_access.hurl `
   tests_failed/filter/filter.hurl `
-  tests_failed/filter/filter_decode.hurl `
+  tests_failed/filter/filter_charset_decode.hurl `
   tests_failed/filter/filter_in_capture.hurl `
   tests_failed/hello_gb2312/hello_gb2312_failed.hurl `
   tests_failed/http_connection/http_connection.hurl `
