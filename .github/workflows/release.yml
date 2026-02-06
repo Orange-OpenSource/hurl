@@ -219,6 +219,10 @@ jobs:
             done
           done
 
+      - name: Cargo update
+        run: |
+          ./bin/update_crates.sh
+
       - name: Update installation doc
         run: |
           old_version=$(grep -E "^\\$ VERSION=" docs/installation.md | head -1 | cut --delimiter "=" --field 2)
