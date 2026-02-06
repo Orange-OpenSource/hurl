@@ -22,7 +22,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.2"
 chrono = { version = "0.4.43", default-features = false, features = ["clock"] }
-clap = { version = "4.5.56", features = ["string", "wrap_help"] }
+clap = { version = "4.5.57", features = ["string", "wrap_help"] }
 curl = "0.4.49"
 curl-sys = "0.4.85"
 encoding_rs = "0.8.35"
@@ -32,7 +32,7 @@ libflate = "2.2.1"
 libxml = "0.3.8"
 md5 = "0.7.0"
 percent-encoding = "2.3.2"
-regex = "1.12.2"
+regex = "1.12.3"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.149", features = ["arbitrary_precision"] }
 sha2 = "0.10.9"
