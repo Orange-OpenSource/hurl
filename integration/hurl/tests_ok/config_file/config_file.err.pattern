@@ -12,7 +12,7 @@
 > GET /config-file HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/8.0.0-SNAPSHOT
+> User-Agent: hurl/<<<.*>>>
 >
 * Response: (received <<<\d+>>> bytes in <<<\d+>>> ms)
 *
