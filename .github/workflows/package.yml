@@ -38,7 +38,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -88,17 +88,17 @@ jobs:
       run: |
         bin/install_pythonx_for_ubuntu.sh 11
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Install Rust
       run: |
         bin/install_rust.sh
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        echo "$HOME/.cargo/bin" >> "${GITHUB_PATH}"
     - name: Environment
       run: bin/environment.sh
     - name: Install generic linux package
       run: |
         bin/release/install_generic_linux_package.sh
-        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-generic-linux/bin" >> "${GITHUB_PATH}"
     - name: Install tests integ prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests
@@ -132,7 +132,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -143,7 +143,7 @@ jobs:
     - name: Install generic linux package
       run: |
         bin/release/install_generic_linux_package.sh
-        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-generic-linux/bin" >> "${GITHUB_PATH}"
     - name: Install tests prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests
@@ -187,7 +187,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -198,7 +198,7 @@ jobs:
     - name: Install generic linux package
       run: |
         bin/release/install_generic_linux_package.sh
-        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-generic-linux/bin" >> "${GITHUB_PATH}"
     - name: Install tests prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests
@@ -234,7 +234,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -245,7 +245,7 @@ jobs:
     - name: Install generic linux package
       run: |
         bin/release/install_generic_linux_package.sh
-        echo "/tmp/hurl-generic-linux/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-generic-linux/bin" >> "${GITHUB_PATH}"
     - name: Install tests prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests
@@ -293,7 +293,7 @@ jobs:
           set -e
           cat /etc/os-release
           sudo docker run --rm \
-            --volume ${{ github.workspace }}:/work \
+            --volume "${{ github.workspace }}:/work" \
             --workdir /work \
             --privileged \
             --env CARGO_TERM_COLOR=always \
@@ -352,7 +352,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -405,7 +405,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -458,7 +458,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -508,7 +508,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -558,7 +558,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3

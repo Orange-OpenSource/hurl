@@ -4,7 +4,7 @@ set -Eeuo pipefail
 function init_colors(){
     color_red=$(echo -ne "\033[1;31m")
     color_green=$(echo -ne "\033[1;32m")
-    #color_yellow=$(echo -ne "\033[1;33m")
+    color_yellow=$(echo -ne "\033[1;33m")
     color_cyan=$(echo -ne "\033[1;36m")
     color_reset=$(echo -ne "\033[0m")
 }
@@ -36,11 +36,11 @@ function shellcheck_gitflow(){
         echo "${color_cyan}  ======================================================================="
         echo "${color_cyan}  |${color_reset}"
         file=$(basename "${yaml}")
-	#if [ "${file}" == "accept-pull-request.yml" ] || [ "${file}" == "release.yml" ] ; then
-        #    echo "${color_cyan}  |${color_yellow} Disabled for now because output vars have to be rewrited from scratch"
-	#    echo "${color_cyan}  |${color_reset}"
-        #    continue
-        #fi
+	if [ "${file}" == "accept-pull-request.yml" ] || [ "${file}" == "release.yml" ] ; then
+            echo "${color_cyan}  |${color_yellow} Disabled for now because output vars have to be rewrited from scratch"
+	    echo "${color_cyan}  |${color_reset}"
+            continue
+        fi
         tmp="/tmp/${file}"
 	yq '.jobs[] | select(.["runs-on"] | test("windows") | not).steps[] | select(.run != null) | .run' "${yaml}" \
 	    | sed -E 's/\$\{\{[[:space:]]*/\${/g' \
