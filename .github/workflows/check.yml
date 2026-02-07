@@ -25,6 +25,31 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
 
+    - name: Checkout repository
+      uses: actions/checkout@v6.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+
+    - name: Install Python 3.12
+      uses: actions/setup-python@v6.2.0
+      with:
+        python-version: '3.12'
+
+    - name: Setup Python venv
+      run: |
+        bin/activate_python3_venv.sh
+        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+
+    - name: Python infos
+      run: |
+        which python3
+        python3 --version
+        python3 -m pip --version
+
+    - name: Install prerequisites
+      run: bin/check/install_prerequisites.sh
+
     - name: Zizmor
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
