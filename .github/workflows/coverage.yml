@@ -6,6 +6,8 @@ on:
       - master
   workflow_dispatch:
 
+permissions: {}
+
 env:
   RUSTFLAGS: "-C instrument-coverage"
 
@@ -61,8 +63,8 @@ jobs:
       uses: peaceiris/actions-gh-pages@v4.0.0
       with:
         personal_token: ${{ secrets.HURL_BOT_TOKEN }}
-        user_name: 'hurl-bot'
-        user_email: 'bot@hurl.dev'
+        user_name: 'lepapareil'
+        user_email: 'filipe.pinto@orange.com'
         publish_branch: github-pages
         publish_dir: target/coverage
         destination_dir: coverage
