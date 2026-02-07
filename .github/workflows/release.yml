@@ -199,6 +199,7 @@ jobs:
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Check CHANGELOG
         run: |
