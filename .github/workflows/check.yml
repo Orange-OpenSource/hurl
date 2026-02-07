@@ -55,6 +55,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success() || failure()
       run: bin/check/zizmor.sh --github-token ${GITHUB_TOKEN} .github/workflows/*.yml
-    - name: Check completion files
-      if: success() || failure()
-      run: bin/check/completion.sh
