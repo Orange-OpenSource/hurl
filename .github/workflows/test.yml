@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -81,7 +81,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -135,7 +135,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -178,7 +178,7 @@ jobs:
       image: archlinux
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -214,7 +214,7 @@ jobs:
       image: fedora
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -262,7 +262,7 @@ jobs:
         apk update --quiet
         apk add --quiet bash git
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -309,7 +309,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -355,7 +355,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -401,7 +401,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -442,7 +442,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
