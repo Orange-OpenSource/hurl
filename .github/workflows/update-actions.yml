@@ -5,6 +5,8 @@ on:
     - cron: "0 4 * * 1"
   workflow_dispatch:
 
+permissions: {}
+
 concurrency: update-actions-${{ github.ref }}
 
 jobs:
