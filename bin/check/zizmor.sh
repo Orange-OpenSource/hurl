@@ -83,7 +83,6 @@ function set_zizmor_conf(){
         - extra-package.yml
         - release.yml
         - update-branch-version.yml
-        - update-crates.yml
     unpinned-uses:
       config:
         policies:
