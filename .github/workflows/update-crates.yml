@@ -24,6 +24,7 @@ jobs:
         with:
           persist-credentials: true
           ref: master
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Crates update
         run: |
