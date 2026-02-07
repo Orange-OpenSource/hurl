@@ -54,8 +54,8 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
-        git_committer_name: "hurl-bot"
-        git_committer_email: "bot@hurl.dev"
+        git_committer_name: "lepapareil"
+        git_committer_email: "filipe.pinto@orange.com"
         git_user_signingkey: true
         git_commit_gpgsign: true
 
