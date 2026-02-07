@@ -94,7 +94,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Environment
@@ -115,9 +115,9 @@ jobs:
         current_dir="${PWD}"
         tmp_dir=/tmp/hurl-tmp
         bin/test/convert_hurl_to_crlf.sh --dest-dir "${tmp_dir}"
-        cd "${tmp_dir}"
+        cd "${tmp_dir}" || exit 1
         bin/test/test_integ.sh || true
-        cd "${current_dir}"
+        cd "${current_dir}" || exit 1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v6.0.0
       if: ${{ always() }}
@@ -148,7 +148,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Environment
@@ -187,7 +187,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -225,7 +225,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -273,7 +273,7 @@ jobs:
       shell: bash
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       shell: bash
       run: |
@@ -318,7 +318,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -364,7 +364,7 @@ jobs:
     - name: Activate python3 venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
     - name: Python infos
       run: |
         which python3
@@ -466,7 +466,7 @@ jobs:
           wsl_workspace="/mnt/$(echo "${win_workspace}" | tr -d ':'  | tr '\\' '/' | tr '[:upper:]' '[:lower:]')"
           linux_workspace="/tmp/hurl"
           cp -frp "${wsl_workspace}" "${linux_workspace}"
-          cd "${linux_workspace}"
+          cd "${linux_workspace}" || exit 1
           pwd
           ls
         echo "::endgroup::"
