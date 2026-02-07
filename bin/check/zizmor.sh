@@ -79,7 +79,6 @@ function set_zizmor_conf(){
       ignore:
         - accept-pull-request.yml
         - auto-close-inactive-pr.yml
-        - coverage.yml
         - extra-package.yml
         - release.yml
     unpinned-uses:

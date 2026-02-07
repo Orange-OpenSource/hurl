@@ -6,6 +6,8 @@ on:
       - master
   workflow_dispatch:
 
+permissions: {}
+
 env:
   RUSTFLAGS: "-C instrument-coverage"
 
