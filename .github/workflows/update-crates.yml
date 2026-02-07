@@ -102,7 +102,6 @@ jobs:
       - name: Create new pull request
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           gh pr create --fill --base master --head "${BOT_UPDATE_BRANCH_NAME}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCH_NAME}" --state "open" --json number --jq .[].number)
