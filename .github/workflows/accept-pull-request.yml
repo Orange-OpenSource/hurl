@@ -5,6 +5,8 @@ on:
     types:
       - created
 
+permissions: {}
+
 concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
@@ -25,6 +27,14 @@ jobs:
     name: accept-pull-request
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          persist-credentials: true
+          ref: ${{ env.BASE_REF }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
+          fetch-depth: 0
 
       - name: Check user permission
         run: |
@@ -65,14 +75,6 @@ jobs:
           echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"
           echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
           echo "base_ref=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_OUTPUT}"
-
-      - name: Checkout repository
-        uses: actions/checkout@v6.0.2
-        with:
-          persist-credentials: true
-          ref: ${{ env.BASE_REF }}
-          token: ${{ secrets.HURL_BOT_TOKEN }}
-          fetch-depth: 0
 
       - name: Notify user
         run: |
