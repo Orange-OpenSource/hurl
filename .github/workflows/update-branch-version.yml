@@ -33,6 +33,8 @@ on:
         description: "Create PR number"
         value: ${{ jobs.update-branch-version.outputs.pr_number }}
 
+permissions: {}
+
 concurrency: update-branch-version
 
 jobs:
@@ -53,6 +55,7 @@ jobs:
         with:
           persist-credentials: true
           ref: ${{ inputs.branch }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Init bot branch name
         run: |
