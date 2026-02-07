@@ -39,7 +39,7 @@ jobs:
     - name: Setup Python venv
       run: |
         bin/activate_python3_venv.sh
-        echo "/tmp/hurl-python3-venv/bin" >> $GITHUB_PATH
+        echo "/tmp/hurl-python3-venv/bin" >> "${GITHUB_PATH}"
 
     - name: Python infos
       run: |
@@ -74,13 +74,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success() || failure()
-      run: bin/check/zizmor.sh --github-token ${GITHUB_TOKEN} .github/workflows/*.yml
+      run: bin/check/zizmor.sh --github-token "${GITHUB_TOKEN}" .github/workflows/*.yml
 
     - name: Check Rust version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success() || failure()
-      run: bin/check/rust_version.py --token ${GITHUB_TOKEN} 7
+      run: bin/check/rust_version.py --token "${GITHUB_TOKEN}" 7
 
     - name: Semver
       if: success() || failure()
