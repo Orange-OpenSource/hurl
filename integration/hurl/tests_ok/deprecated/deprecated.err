@@ -1,1 +1,3 @@
 warning: <includes> predicate is now deprecated in favor of <contains> predicate
+warning: <decode> filter in captures is now deprecated in favor of <charsetDecode> filter
+warning: <decode> filter in asserts is now deprecated in favor of <charsetDecode> filter
