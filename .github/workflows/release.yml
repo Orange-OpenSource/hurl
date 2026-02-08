@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
           token: ${{ secrets.HURL_BOT_TOKEN }}
@@ -176,7 +176,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: github.ref_name == 'master'
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
           token: ${{ secrets.HURL_BOT_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
           fi
 
       - name: Checkout new release branch
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
@@ -306,7 +306,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout new release branch
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
@@ -358,7 +358,6 @@ jobs:
         with:
           name: release-sha256-csv
           path: release-${{ needs.set-context.outputs.release_version }}.sha256.csv
-
 
       - name: Deliver release
         run: |
