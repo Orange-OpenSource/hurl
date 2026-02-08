@@ -259,8 +259,8 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
-          git_committer_name: "hurl-bot"
-          git_committer_email: "bot@hurl.dev"
+          git_committer_name: ${{ secrets.HURL_BOT_USER }}
+          git_committer_email: ${{ secrets.HURL_BOT_EMAIL }}
           git_user_signingkey: true
           git_commit_gpgsign: true
 
@@ -327,8 +327,8 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
-          git_committer_name: "hurl-bot"
-          git_committer_email: "bot@hurl.dev"
+          git_committer_name: ${{ secrets.HURL_BOT_USER }}
+          git_committer_email: ${{ secrets.HURL_BOT_EMAIL }}
           git_user_signingkey: true
           git_commit_gpgsign: true
 
