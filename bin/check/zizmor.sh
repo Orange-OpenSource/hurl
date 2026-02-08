@@ -98,11 +98,6 @@ set_zizmor_conf "${conf}"
 error_count=0
 
 for file in "${files[@]}" ; do
-    # disable release.yml for now because output vars have to be rewrited from scratch"
-    if [[ "${file}" =~ release.yml ]] ; then
-        echo "${color_yellow}$file is disabled for now because output vars have to be rewrited from scratch${color_reset}"
-        continue
-    fi
     # disable accept-pull-request.yml for now because input vars have to be rewrited from scratch"
     if [[ "${file}" =~ accept-pull-request.yml ]] ; then
         echo "${color_yellow}$file is disabled for now because input vars have to be rewrited from scratch${color_reset}"
