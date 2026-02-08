@@ -299,4 +299,4 @@ jobs:
           else
             comment="✅ Pull request merged with fast forward by \`${COMMENT_USER_LOGIN}\`."
           fi
-          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed 's/+/-/g' ${{ env.NEW_COMMITS_FILE }})"
+          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` branch into \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` branch:<br>$(echo ; sed 's/+/-/g' ${NEW_COMMITS_FILE})"
