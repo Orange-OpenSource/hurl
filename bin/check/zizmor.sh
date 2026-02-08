@@ -80,7 +80,6 @@ function set_zizmor_conf(){
         - accept-pull-request.yml
         - auto-close-inactive-pr.yml
         - extra-package.yml
-        - release.yml
     unpinned-uses:
       config:
         policies:
