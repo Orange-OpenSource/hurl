@@ -157,11 +157,11 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         id: check-github-release
         run: |
-          if [[ $(echo ${HEAD_REF} | grep -Ec '^release/') -eq 0 ]] ; then
+          if [[ $(echo "${HEAD_REF}" | grep -Ec '^release/') -eq 0 ]] ; then
             echo "  - ✅ Pull request is not about a pending GitHub release."
           else
             echo "is_a_github_release_pr=true" | tee -a "${GITHUB_OUTPUT}"
-            tag_version="$(echo ${HEAD_REF} | cut --delimiter '/' --field 2)"
+            tag_version="$(echo "${HEAD_REF}" | cut --delimiter '/' --field 2)"
             major=$(echo "${tag_version}" | cut --delimiter "." --field 1)
             minor=$(echo "${tag_version}" | cut --delimiter "." --field 2)
             new_minor="$((minor + 1))"
@@ -170,7 +170,7 @@ jobs:
             echo "new_version_master_snapshot_version=${new_version_master_snapshot_version}" | tee -a "${GITHUB_OUTPUT}"
             gh_result=$(gh api repos/"${OWNER}"/"${REPO}"/releases/tags/"${tag_version}" | tr ":" "=" | tr -d '"' | tr -d " ")
             echo "gh_result=${gh_result}"
-            if [ $(echo "${gh_result}" | grep -Ec "message=NotFound|prerelease=true") -eq 0 ] ; then
+            if [[ $(echo "${gh_result}" | grep -Ec "message=NotFound|prerelease=true") -eq 0 ]] ; then
               comment="✅ GitHub release ${tag_version}  is published."
               echo "  - ${comment}"
             else
@@ -184,7 +184,7 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/rebase' }}
         run: |
           git log --oneline --cherry "${HEAD_TYPE}/${HEAD_REF}...origin/${BASE_REF}" > "${REMAINING_COMMITS_FILE}" && exit_code=0 || exit_code=1
-          if [ ${exit_code} -eq 1 ] ; then
+          if [[ ${exit_code} -eq 1 ]] ; then
             comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
@@ -203,7 +203,7 @@ jobs:
             git pull
             git rebase "origin/${BASE_REF}" && exit_code=0 || exit_code=1
             git log --oneline -n 20
-            if [ ${exit_code} -eq 1 ] ; then
+            if [[ ${exit_code} -eq 1 ]] ; then
               comment="❌ Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
@@ -214,8 +214,8 @@ jobs:
             else
               git push --force && exit_code=0 || exit_code=1
             fi
-            if [ ${exit_code} -eq 0 ] ; then
-              comment="🔨 Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` succeeds, \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` now embeds these commits:<br>$(echo ; sed "s/+/  -/g" ${REMAINING_COMMITS_FILE})"
+            if [[ ${exit_code} -eq 0 ]] ; then
+              comment="🔨 Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` succeeds, \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` now embeds these commits:<br>$(echo ; sed "s/+/  -/g" "${REMAINING_COMMITS_FILE}")"
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               if [ "${ORDER}" == "/accept" ] || [ "${ORDER}" == "/accept --force" ] ; then
@@ -224,7 +224,7 @@ jobs:
                   sleep 15
               fi
             else
-              comment="❌ Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` fails on `git push --force`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+              comment="❌ Auto rebase from \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` fails on \`git push --force\`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
             fi
@@ -235,7 +235,7 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' }}
         run: |
           gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
-          if [ "${exit_code}" -eq 0 ] ; then
+          if [[ "${exit_code}" -eq 0 ]] ; then
             echo "  - ✅ Pull request checks are successful."
           else
             comment="❌ Some checks are still failing, please fix them before trying to merge this pull request."
@@ -249,17 +249,17 @@ jobs:
         run: |
           git pull
           git log --oneline --cherry "${HEAD_TYPE}/${HEAD_REF}...origin/${BASE_REF}" > "${REMAINING_COMMITS_FILE}" && exit_code=0 || exit_code=1
-          if [ ${exit_code} -eq 1 ] ; then
+          if [[ ${exit_code} -eq 1 ]] ; then
             comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
           fi
           diff_count=$(grep -c ^+ "${REMAINING_COMMITS_FILE}" || true)
-          if [ ${diff_count} -eq 0 ] ; then
+          if [[ ${diff_count} -eq 0 ]] ; then
             echo "  - ✅ ${HEAD_REPO_FULL_NAME}/${HEAD_REF} is already rebased from ${BASE_REPO_FULL_NAME}/${BASE_REF}."
           else
-            comment="❌ New commits have been pushed to \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${REMAINING_COMMITS_FILE})"
+            comment="❌ New commits have been pushed to \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" "${REMAINING_COMMITS_FILE}")"
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
             exit 1
@@ -274,7 +274,7 @@ jobs:
         if: ${{ github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' }}
         run: |
           git merge "${HEAD_TYPE}/${HEAD_REF}" --ff-only && exit_code=0 || exit_code=1
-          if [ ${exit_code} -eq 0 ] ; then
+          if [[ ${exit_code} -eq 0 ]] ; then
             echo "  - ✅ Merge fast forward succeeds."
           else
             comment="❌ Merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
@@ -283,7 +283,7 @@ jobs:
             exit 1
           fi
           git push && exit_code=0 || exit_code=1
-          if [ ${exit_code} -eq 0 ] ; then
+          if [[ ${exit_code} -eq 0 ]] ; then
             echo "  - ✅ Push merge fast forward succeeds."
           else
             comment="❌ Push merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
@@ -299,4 +299,5 @@ jobs:
           else
             comment="✅ Pull request merged with fast forward by \`${COMMENT_USER_LOGIN}\`."
           fi
-          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` branch into \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` branch:<br>$(echo ; sed 's/+/-/g' ${NEW_COMMITS_FILE})"
+          gh pr comment "${PR_NUMBER}" --body "${comment}.<br><br>\# List of commits merged from \`${HEAD_REPO_FULL_NAME}/${HEAD_REF}\` branch into \`${BASE_REPO_FULL_NAME}/${BASE_REF}\` branch:<br>$(echo ; sed 's/+/-/g' "${NEW_COMMITS_FILE}")"
+

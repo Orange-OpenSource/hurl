@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Check trigger branch
         run: |
-          if [ $(echo "${GITHUB_BRANCH_NAME}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
+          if [[ $(echo "${GITHUB_BRANCH_NAME}" | grep -Ec "^master$|^release/") -eq 1 ]] ; then
             echo "  - ✅ The branch triggering this workflow is ${GITHUB_BRANCH_NAME}."
           else
             echo "  - ❌ The branch triggering this workflow is ${GITHUB_BRANCH_NAME} instead of master or release/[0-9].[0-9].[0-9]."
@@ -37,15 +37,15 @@ jobs:
       - name: Set release version
         id: set-release-version
         run: |
-          echo "release_version=${SET_RELEASE_VERSION}" | tee -a $GITHUB_OUTPUT
+          echo "release_version=${SET_RELEASE_VERSION}" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Set release branch
         id: set-release-branch
         run: |
-          if [ $(echo "${GITHUB_BRANCH_NAME}" | grep -c "^release/") -eq 1 ] ; then
-            echo "release_branch=${GITHUB_BRANCH_NAME}" | tee -a $GITHUB_OUTPUT
+          if [[ $(echo "${GITHUB_BRANCH_NAME}" | grep -c "^release/") -eq 1 ]] ; then
+            echo "release_branch=${GITHUB_BRANCH_NAME}" | tee -a "${GITHUB_OUTPUT}"
           else
-            echo "release_branch=release/${SET_RELEASE_VERSION}" | tee -a $GITHUB_OUTPUT
+            echo "release_branch=release/${SET_RELEASE_VERSION}" | tee -a "${GITHUB_OUTPUT}"
           fi
 
   clean-release:
@@ -70,12 +70,12 @@ jobs:
           actual_pr_number=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${RELEASE_BRANCH}" --state "open" --json number --jq .[].number)
           actual_pr_number=${actual_pr_number:-0}
           echo "actual_pr_number=${actual_pr_number}" | tee -a "${GITHUB_OUTPUT}"
-          if [ ${actual_pr_number} -eq 0 ] ; then
+          if [[ ${actual_pr_number} -eq 0 ]] ; then
             echo "  - ✅ There is no pull request."
-            echo "release_pr_exists=false" | tee -a $GITHUB_OUTPUT
+            echo "release_pr_exists=false" | tee -a "${GITHUB_OUTPUT}"
           else
             echo "  - ✅ Actual pull request number is ${actual_pr_number}."
-            echo "release_pr_exists=true" | tee -a $GITHUB_OUTPUT
+            echo "release_pr_exists=true" | tee -a "${GITHUB_OUTPUT}"
           fi
 
       - name: Close actual pull request
@@ -85,7 +85,7 @@ jobs:
         run: |
           comment="  - ✅ Pull request n°${ACTUAL_PR_NUMBER} closed before opening new one."
           gh pr close "${ACTUAL_PR_NUMBER}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
-          if [ ${gh_exit_code} -eq 0 ] ; then
+          if [[ ${gh_exit_code} -eq 0 ]] ; then
             echo "  - ${comment}"
           else
             comment="  - ❌ A problem occurs when attempting to close PR n°${ACTUAL_PR_NUMBER}."
@@ -98,21 +98,22 @@ jobs:
         id: check-github-release-existence
         run: |
           gh release list || true
+          # shellcheck disable=SC2001
           escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           github_release_exists=$(gh release list | (grep -c "${escaped_version}" || true))
-          if [ ${github_release_exists} -eq 0 ] ; then
+          if [[ ${github_release_exists} -eq 0 ]] ; then
             echo "  - ✅ GitHub release  ${RELEASE_VERSION} does not exist."
-            echo "github_release_exists=false" | tee -a $GITHUB_OUTPUT
+            echo "github_release_exists=false" | tee -a "${GITHUB_OUTPUT}"
           else
             echo "  - ✅ GitHub release  ${RELEASE_VERSION} already exists on remote."
-            echo "github_release_exists=true" | tee -a $GITHUB_OUTPUT
+            echo "github_release_exists=true" | tee -a "${GITHUB_OUTPUT}"
           fi
 
       - name: Delete GitHub release
         if: steps.check-github-release-existence.outputs.github_release_exists == 'true'
         run: |
           gh release delete "${RELEASE_VERSION}" --yes && gh_exit_code=0 || gh_exit_code=$?
-          if [ ${gh_exit_code} -eq 0 ] ; then
+          if [[ ${gh_exit_code} -eq 0 ]] ; then
             echo "  - ✅  ${RELEASE_VERSION} GitHub release deleted."
           else
             echo "  - ❌ A problem occurs when attempting to delete  ${RELEASE_VERSION} GitHub release."
@@ -122,21 +123,22 @@ jobs:
       - name: Check tag existence
         id: check-tag-existence
         run: |
+          # shellcheck disable=SC2001
           escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           tag_exists=$(git ls-remote --tags | (grep -c "${escaped_version}" || true))
-          if [ ${tag_exists} -eq 0 ] ; then
+          if [[ ${tag_exists} -eq 0 ]] ; then
             echo "  - ✅ The origin/${RELEASE_VERSION} tag does not exists on remote."
-            echo "release_tag_exists=false" | tee -a $GITHUB_OUTPUT
+            echo "release_tag_exists=false" | tee -a "${GITHUB_OUTPUT}"
           else
             echo "  - ✅ The origin/${RELEASE_VERSION} tag already exists on remote."
-            echo "release_tag_exists=true" | tee -a $GITHUB_OUTPUT
+            echo "release_tag_exists=true" | tee -a "${GITHUB_OUTPUT}"
           fi
 
       - name: Delete release tag
         if: steps.check-tag-existence.outputs.release_tag_exists == 'true'
         run: |
           git push origin --delete "${RELEASE_VERSION}" && git_exit_code=0 || git_exit_code=$?
-          if [ ${git_exit_code} -eq 0 ] ; then
+          if [[ ${git_exit_code} -eq 0 ]] ; then
             echo "  - ✅ ${RELEASE_VERSION} tag deleted."
           else
             echo "  - ❌ A problem occurs when attempting to delete ${RELEASE_VERSION} tag."
@@ -147,21 +149,22 @@ jobs:
         id: check-release-branch-existence
         if: github.ref_name == 'master'
         run: |
+          # shellcheck disable=SC2001
           escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           branch_exists=$(git ls-remote | (grep -c "${escaped_version}" || true))
-          if [ ${branch_exists} -eq 0 ] ; then
+          if [[ ${branch_exists} -eq 0 ]] ; then
             echo "  - ✅ The origin/${RELEASE_BRANCH} branch does not exists on remote."
-            echo "release_branch_exists=false" | tee -a $GITHUB_OUTPUT
+            echo "release_branch_exists=false" | tee -a "${GITHUB_OUTPUT}"
           else
             echo "  - ✅ The origin/${RELEASE_BRANCH} branch already exists on remote."
-            echo "release_branch_exists=true" | tee -a $GITHUB_OUTPUT
+            echo "release_branch_exists=true" | tee -a "${GITHUB_OUTPUT}"
           fi
 
       - name: Delete release branch
         if: github.ref_name == 'master' && steps.check-release-branch-existence.outputs.release_branch_exists == 'true'
         run: |
           git push origin --delete "${RELEASE_BRANCH}" && git_exit_code=0 || git_exit_code=$?
-          if [ ${git_exit_code} -eq 0 ] ; then
+          if [[ ${git_exit_code} -eq 0 ]] ; then
             echo "  - ✅ ${RELEASE_BRANCH} branch deleted."
           else
             echo "  - ❌ A problem occurs when attempting to delete ${RELEASE_BRANCH} branch."
@@ -193,7 +196,7 @@ jobs:
         run: |
           git checkout -b "${RELEASE_BRANCH}"
           git push origin "${RELEASE_BRANCH}" && git_exit_code=0 || git_exit_code=$?
-          if [ ${git_exit_code} -eq 0 ] ; then
+          if [[ ${git_exit_code} -eq 0 ]] ; then
             echo "  - ✅ ${RELEASE_BRANCH} branch created."
           else
             echo "  - ❌ A problem occurs when attempting to create ${RELEASE_BRANCH} branch."
@@ -222,7 +225,7 @@ jobs:
             echo "  > package version for ${cargo_toml}"
             echo "      $(grep "^version =" "${cargo_toml}")"
             for dep_package in ${hurl_packages} ; do
-              if [  $(grep -c "^${dep_package} =" "${cargo_toml}") -gt 0 ] ; then
+              if [[  $(grep -c "^${dep_package} =" "${cargo_toml}") -gt 0 ]] ; then
                 sed -i "s/^${dep_package} = { version .*/${dep_package} = { version = \"${RELEASE_VERSION}\", path = \"..\/${dep_package}\" }/" "${cargo_toml}"
                 echo "  > ${dep_package} dep package version for ${cargo_toml}"
                 echo "      $(grep "^${dep_package} =" "${cargo_toml}")"
@@ -267,7 +270,7 @@ jobs:
           if [ "${diff}" == "true" ] ; then
             git commit -am "Create ${RELEASE_VERSION} release"
             git push && git_exit_code=0 || git_exit_code=$?
-            if [ ${git_exit_code} -eq 0 ] ; then
+            if [[ ${git_exit_code} -eq 0 ]] ; then
               echo "  - ✅ commits pushed to ${RELEASE_BRANCH}."
             else
               echo "  - ❌ A problem occurs when attempting to push create release commits to ${RELEASE_BRANCH} branch."
@@ -338,7 +341,7 @@ jobs:
           git tag -a "${RELEASE_VERSION}" -m "Release ${RELEASE_VERSION}"
           git tag -n
           git push --tags && git_exit_code=0 || git_exit_code=$?
-          if [ ${git_exit_code} -eq 0 ] ; then
+          if [[ ${git_exit_code} -eq 0 ]] ; then
             echo "  - ✅ ${RELEASE_VERSION} tag created."
             git fetch
           else
@@ -358,7 +361,8 @@ jobs:
             artifacts/release-windows-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-pc-windows-msvc-installer.exe \
             artifacts/release-windows-x64-artifacts/hurl-"${RELEASE_VERSION}"-x86_64-pc-windows-msvc.zip
             echo "file,sha256" > release-"${RELEASE_VERSION}".sha256.csv
-            find ./artifacts -name "*sha256" | xargs -I FILE sh -c 'echo "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/releases/download/${RELEASE_VERSION}/$(basename FILE),$(cat FILE)"' >> release-"${RELEASE_VERSION}".sha256.csv
+            # shellcheck disable=SC2016
+            find ./artifacts -name "*sha256" -print0 | xargs -0 -I FILE sh -c 'echo "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/releases/download/${RELEASE_VERSION}/$(basename FILE),$(cat FILE)"' >> release-"${RELEASE_VERSION}".sha256.csv
 
       - name: Archive sha256 artifacts
         uses: actions/upload-artifact@v6.0.0
@@ -371,7 +375,7 @@ jobs:
         run: |
           echo "::group::Extract CHANGELOG"
             ls -l CHANGELOG.md
-            cat CHANGELOG.md | python3 bin/release/changelog_extract.py "${RELEASE_VERSION}" > release_changelog.md
+            < CHANGELOG.md python3 bin/release/changelog_extract.py "${RELEASE_VERSION}" > release_changelog.md
             ls -l release_changelog.md
             cat release_changelog.md
           echo "::endgroup::"
@@ -407,7 +411,7 @@ jobs:
                 "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc-installer.exe.sha256" \
                 "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc.zip" \
                 "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc.zip.sha256" && gh_exit_code=0 || gh_exit_code=$?
-            if [ ${gh_exit_code} -eq 0 ] ; then
+            if [[ ${gh_exit_code} -eq 0 ]] ; then
               echo "  - ✅ GitHub release ${RELEASE_VERSION} created."
             else
                echo "  - ❌ A problem occurs when attempting to create GitHub release ${RELEASE_VERSION}."
@@ -433,7 +437,7 @@ jobs:
             --body-file file-body.txt \
             --base master \
             --label bot && gh_exit_code=0 || gh_exit_code=$?
-          if [ ${gh_exit_code} -eq 0 ] ; then
+          if [[ ${gh_exit_code} -eq 0 ]] ; then
             new_pr_number=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${RELEASE_BRANCH}" --state "open" --json number --jq .[].number)
             echo "  - ✅ Creation of pull request n°${new_pr_number} succeeds."
           else
