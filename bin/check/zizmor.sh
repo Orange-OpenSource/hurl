@@ -75,10 +75,6 @@ function set_zizmor_conf(){
     conf="/tmp/conf"
     cat <<- "EOF" > "${conf}"
   rules:
-    excessive-permissions:
-      ignore:
-        - auto-close-inactive-pr.yml
-        - extra-package.yml
     unpinned-uses:
       config:
         policies:
