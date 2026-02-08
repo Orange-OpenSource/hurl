@@ -303,6 +303,7 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       RELEASE_VERSION: ${{ needs.set-context.outputs.release_version }}
+      RELEASE_BRANCH: ${{ needs.set-context.outputs.release_branch }}
     needs:
       - set-context
       - clean-release
