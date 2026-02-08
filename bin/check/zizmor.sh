@@ -5,7 +5,6 @@ set -Eeuo pipefail
 function init_terminal_colors(){
     color_red=$(echo -ne "\033[1;31m")
     color_green=$(echo -ne "\033[1;32m")
-    color_yellow=$(echo -ne "\033[1;33m")
     color_reset=$(echo -ne "\033[0m")
 }
 
@@ -77,7 +76,6 @@ function set_zizmor_conf(){
   rules:
     excessive-permissions:
       ignore:
-        - accept-pull-request.yml
         - auto-close-inactive-pr.yml
         - extra-package.yml
     unpinned-uses:
@@ -98,11 +96,6 @@ set_zizmor_conf "${conf}"
 error_count=0
 
 for file in "${files[@]}" ; do
-    # disable accept-pull-request.yml for now because input vars have to be rewrited from scratch"
-    if [[ "${file}" =~ accept-pull-request.yml ]] ; then
-        echo "${color_yellow}$file is disabled for now because input vars have to be rewrited from scratch${color_reset}"
-        continue
-    fi
     tmpfile="/tmp/$(basename "${file}")"
     (sed "s/❌//g" "${file}" 2>/dev/null || true) | \
         (sed "s/✅//g" "${file}" 2>/dev/null || true) | \
