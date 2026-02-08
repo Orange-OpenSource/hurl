@@ -72,7 +72,8 @@ function consume_args(){
 }
 
 function set_zizmor_conf(){
-    cat <<- "EOF" > "$1"
+    conf="/tmp/conf"
+    cat <<- "EOF" > "${conf}"
   rules:
     excessive-permissions:
       ignore:
@@ -87,26 +88,23 @@ function set_zizmor_conf(){
 EOF
 }
 
+function exec_zizmor(){
+    for file in "${files[@]}" ; do
+        tmpfile="/tmp/$(basename "${file}")"
+        < "${file}" sed 's/[^\x00-\x7F]//g' > "${tmpfile}"
+    done
+    conf="/tmp/conf"
+    zizmor --no-progress --config "${conf}" --gh-token "${github_token}" "${files[@]}" && error_count=0 || error_count=$?
+    if [[ $error_count -gt 0 ]] ; then
+        echo "${color_red}There are problems with github workflows${color_reset}"
+        exit 1
+    else
+        echo "${color_green}No problem with github workflows${color_reset}"
+    fi
+}
+
 # main
 init_terminal_colors
 consume_args "$@"
-zizmor --version
-conf="/tmp/conf"
-set_zizmor_conf "${conf}"
-error_count=0
-
-for file in "${files[@]}" ; do
-    tmpfile="/tmp/$(basename "${file}")"
-    (sed "s/❌//g" "${file}" 2>/dev/null || true) | \
-        (sed "s/✅//g" "${file}" 2>/dev/null || true) | \
-            (sed "s/🔨//g" "${file}" 2>/dev/null || true) | \
-                (sed "s/🕗//g" "${file}" 2>/dev/null || true) > "${tmpfile}"
-    echo "> ${file} (tmp file: ${tmpfile}):"
-    zizmor --no-progress --config "${conf}" --gh-token "${github_token}" "${tmpfile}" || error_count=$((error_count+1))
-done
-if [[ $error_count -gt 0 ]] ; then
-    echo "${color_red}There are problems with github workflows${color_reset}"
-    exit 1
-else
-    echo "${color_green}No problem with github workflows${color_reset}"
-fi
+set_zizmor_conf
+exec_zizmor
