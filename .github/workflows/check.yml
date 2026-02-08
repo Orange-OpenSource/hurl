@@ -50,6 +50,10 @@ jobs:
     - name: Install prerequisites
       run: bin/check/install_prerequisites.sh
 
+    - name: Shellcheck
+      if: success() || failure()
+      run: bin/check/shellcheck.sh
+
     - name: Zizmor
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
