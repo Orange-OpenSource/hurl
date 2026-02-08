@@ -8,6 +8,8 @@ on:
         required: true
         type: string
 
+permissions: {}
+
 concurrency: release
 
 jobs:
@@ -58,6 +60,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Check release pull request existence
         id: check-release-pull-request-existence
@@ -176,6 +179,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           persist-credentials: true
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Create release branch
         if: github.ref_name == 'master'
@@ -195,6 +199,7 @@ jobs:
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Check CHANGELOG
         run: |
@@ -305,6 +310,7 @@ jobs:
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Init git bot context
         uses: crazy-max/ghaction-import-gpg@v6.3.0
