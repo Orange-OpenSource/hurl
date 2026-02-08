@@ -16,6 +16,8 @@ on:
         type: boolean
         default: false
 
+permissions: {}
+
 concurrency: extra-package
 
 jobs:
@@ -32,6 +34,7 @@ jobs:
           persist-credentials: true
           fetch-depth: 1
           ref: ${{ github.event.inputs.set-release-version }}
+          token: ${{ secrets.HURL_BOT_TOKEN }}
       - name: Check if branch is a published release
         run: |
           if gh release list --exclude-drafts --exclude-pre-releases | grep -E "^${RELEASE_VERSION}" ; then
