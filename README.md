@@ -9,7 +9,7 @@
 [![Crates.io](https://img.shields.io/crates/v/hurl.svg)](https://crates.io/crates/hurl)
 [![documentation](https://img.shields.io/badge/-documentation-ff0288)](https://hurl.dev)
 
-# What's Hurl ?
+# What's Hurl     ?
 
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
