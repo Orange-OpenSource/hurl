@@ -53,6 +53,8 @@ jobs:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+      RELEASE_BRANCH: ${{ needs.set-context.outputs.release_branch }}
+      RELEASE_VERSION: ${{ needs.set-context.outputs.release_version }}
     name: clean-release
     runs-on: ubuntu-latest
     steps:
@@ -65,7 +67,7 @@ jobs:
       - name: Check release pull request existence
         id: check-release-pull-request-existence
         run: |
-          actual_pr_number=$(gh pr list --repo "${{ github.repository }}" --head "${{ needs.set-context.outputs.release_branch }}" --state "open" --json number --jq .[].number)
+          actual_pr_number=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${RELEASE_BRANCH}" --state "open" --json number --jq .[].number)
           actual_pr_number=${actual_pr_number:-0}
           echo "actual_pr_number=${actual_pr_number}" | tee -a "${GITHUB_OUTPUT}"
           if [ ${actual_pr_number} -eq 0 ] ; then
@@ -78,14 +80,16 @@ jobs:
 
       - name: Close actual pull request
         if: steps.check-release-pull-request-existence.outputs.release_pr_exists == 'true'
+        env:
+          ACTUAL_PR_NUMBER: ${{ steps.check-release-pull-request-existence.outputs.actual_pr_number }}
         run: |
-          comment="  - ✅ Pull request n°${{ steps.check-release-pull-request-existence.outputs.actual_pr_number }} closed before opening new one."
-          gh pr close "${{ steps.check-release-pull-request-existence.outputs.actual_pr_number }}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
+          comment="  - ✅ Pull request n°${ACTUAL_PR_NUMBER} closed before opening new one."
+          gh pr close "${ACTUAL_PR_NUMBER}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             echo "  - ${comment}"
           else
-            comment="  - ❌ A problem occurs when attempting to close PR n°${{ steps.check-release-pull-request-existence.outputs.actual_pr_number }}."
-            gh pr comment "${{ steps.check-release-pull-request-existence.outputs.actual_pr_number }}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+            comment="  - ❌ A problem occurs when attempting to close PR n°${ACTUAL_PR_NUMBER}."
+            gh pr comment "${ACTUAL_PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             exit 1
           fi
@@ -94,48 +98,48 @@ jobs:
         id: check-github-release-existence
         run: |
           gh release list || true
-          escaped_version=$(echo "${{ needs.set-context.outputs.release_version }}" | sed "s#\.#\\\.#g")
+          escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           github_release_exists=$(gh release list | (grep -c "${escaped_version}" || true))
           if [ ${github_release_exists} -eq 0 ] ; then
-            echo "  - ✅ GitHub release  ${{ needs.set-context.outputs.release_version }} does not exist."
+            echo "  - ✅ GitHub release  ${RELEASE_VERSION} does not exist."
             echo "github_release_exists=false" | tee -a $GITHUB_OUTPUT
           else
-            echo "  - ✅ GitHub release  ${{ needs.set-context.outputs.release_version }} already exists on remote."
+            echo "  - ✅ GitHub release  ${RELEASE_VERSION} already exists on remote."
             echo "github_release_exists=true" | tee -a $GITHUB_OUTPUT
           fi
 
       - name: Delete GitHub release
         if: steps.check-github-release-existence.outputs.github_release_exists == 'true'
         run: |
-          gh release delete  ${{ needs.set-context.outputs.release_version }} --yes && gh_exit_code=0 || gh_exit_code=$?
+          gh release delete "${RELEASE_VERSION}" --yes && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
-            echo "  - ✅  ${{ needs.set-context.outputs.release_version }} GitHub release deleted."
+            echo "  - ✅  ${RELEASE_VERSION} GitHub release deleted."
           else
-            echo "  - ❌ A problem occurs when attempting to delete  ${{ needs.set-context.outputs.release_version }} GitHub release."
+            echo "  - ❌ A problem occurs when attempting to delete  ${RELEASE_VERSION} GitHub release."
             exit 1
           fi
 
       - name: Check tag existence
         id: check-tag-existence
         run: |
-          escaped_version=$(echo "${{ needs.set-context.outputs.release_version }}" | sed "s#\.#\\\.#g")
+          escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           tag_exists=$(git ls-remote --tags | (grep -c "${escaped_version}" || true))
           if [ ${tag_exists} -eq 0 ] ; then
-            echo "  - ✅ The origin/${{ needs.set-context.outputs.release_version }} tag does not exists on remote."
+            echo "  - ✅ The origin/${RELEASE_VERSION} tag does not exists on remote."
             echo "release_tag_exists=false" | tee -a $GITHUB_OUTPUT
           else
-            echo "  - ✅ The origin/${{ needs.set-context.outputs.release_version }} tag already exists on remote."
+            echo "  - ✅ The origin/${RELEASE_VERSION} tag already exists on remote."
             echo "release_tag_exists=true" | tee -a $GITHUB_OUTPUT
           fi
 
       - name: Delete release tag
         if: steps.check-tag-existence.outputs.release_tag_exists == 'true'
         run: |
-          git push origin --delete ${{ needs.set-context.outputs.release_version }} && git_exit_code=0 || git_exit_code=$?
+          git push origin --delete "${RELEASE_VERSION}" && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ ${{ needs.set-context.outputs.release_version }} tag deleted."
+            echo "  - ✅ ${RELEASE_VERSION} tag deleted."
           else
-            echo "  - ❌ A problem occurs when attempting to delete ${{ needs.set-context.outputs.release_version }} tag."
+            echo "  - ❌ A problem occurs when attempting to delete ${RELEASE_VERSION} tag."
             exit 1
           fi
 
@@ -143,24 +147,24 @@ jobs:
         id: check-release-branch-existence
         if: github.ref_name == 'master'
         run: |
-          escaped_version=$(echo "${{ needs.set-context.outputs.release_version }}" | sed "s#\.#\\\.#g")
+          escaped_version=$(echo "${RELEASE_VERSION}" | sed "s#\.#\\\.#g")
           branch_exists=$(git ls-remote | (grep -c "${escaped_version}" || true))
           if [ ${branch_exists} -eq 0 ] ; then
-            echo "  - ✅ The origin/${{ needs.set-context.outputs.release_branch }} branch does not exists on remote."
+            echo "  - ✅ The origin/${RELEASE_BRANCH} branch does not exists on remote."
             echo "release_branch_exists=false" | tee -a $GITHUB_OUTPUT
           else
-            echo "  - ✅ The origin/${{ needs.set-context.outputs.release_branch }} branch already exists on remote."
+            echo "  - ✅ The origin/${RELEASE_BRANCH} branch already exists on remote."
             echo "release_branch_exists=true" | tee -a $GITHUB_OUTPUT
           fi
 
       - name: Delete release branch
         if: github.ref_name == 'master' && steps.check-release-branch-existence.outputs.release_branch_exists == 'true'
         run: |
-          git push origin --delete ${{ needs.set-context.outputs.release_branch }} && git_exit_code=0 || git_exit_code=$?
+          git push origin --delete "${RELEASE_BRANCH}" && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ ${{ needs.set-context.outputs.release_branch }} branch deleted."
+            echo "  - ✅ ${RELEASE_BRANCH} branch deleted."
           else
-            echo "  - ❌ A problem occurs when attempting to delete ${{ needs.set-context.outputs.release_branch }} branch."
+            echo "  - ❌ A problem occurs when attempting to delete ${RELEASE_BRANCH} branch."
             exit 1
           fi
 
@@ -171,6 +175,8 @@ jobs:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+      RELEASE_BRANCH: ${{ needs.set-context.outputs.release_branch }}
+      RELEASE_VERSION: ${{ needs.set-context.outputs.release_version }}
     name: update-release-branch
     runs-on: ubuntu-latest
     steps:
@@ -185,12 +191,12 @@ jobs:
         if: github.ref_name == 'master'
         id: create-release-branch
         run: |
-          git checkout -b "${{ needs.set-context.outputs.release_branch }}"
-          git push origin "${{ needs.set-context.outputs.release_branch }}" && git_exit_code=0 || git_exit_code=$?
+          git checkout -b "${RELEASE_BRANCH}"
+          git push origin "${RELEASE_BRANCH}" && git_exit_code=0 || git_exit_code=$?
           if [ ${git_exit_code} -eq 0 ] ; then
-            echo "  - ✅ ${{ needs.set-context.outputs.release_branch }} branch created."
+            echo "  - ✅ ${RELEASE_BRANCH} branch created."
           else
-            echo "  - ❌ A problem occurs when attempting to create ${{ needs.set-context.outputs.release_branch }} branch."
+            echo "  - ❌ A problem occurs when attempting to create ${RELEASE_BRANCH} branch."
             exit 1
           fi
 
@@ -211,13 +217,13 @@ jobs:
           hurl_packages="hurl_core hurl hurlfmt"
           for package in ${hurl_packages} ; do
             cargo_toml="packages/${package}/Cargo.toml"
-            sed -i "s/^version.*/version = \"${{ needs.set-context.outputs.release_version }}\"/" "${cargo_toml}"
+            sed -i "s/^version.*/version = \"${RELEASE_VERSION}\"/" "${cargo_toml}"
             echo "----------------------------"
             echo "  > package version for ${cargo_toml}"
             echo "      $(grep "^version =" "${cargo_toml}")"
             for dep_package in ${hurl_packages} ; do
               if [  $(grep -c "^${dep_package} =" "${cargo_toml}") -gt 0 ] ; then
-                sed -i "s/^${dep_package} = { version .*/${dep_package} = { version = \"${{ needs.set-context.outputs.release_version }}\", path = \"..\/${dep_package}\" }/" "${cargo_toml}"
+                sed -i "s/^${dep_package} = { version .*/${dep_package} = { version = \"${RELEASE_VERSION}\", path = \"..\/${dep_package}\" }/" "${cargo_toml}"
                 echo "  > ${dep_package} dep package version for ${cargo_toml}"
                 echo "      $(grep "^${dep_package} =" "${cargo_toml}")"
               fi
@@ -231,7 +237,7 @@ jobs:
       - name: Update installation doc
         run: |
           old_version=$(grep -E "^\\$ VERSION=" docs/installation.md | head -1 | cut --delimiter "=" --field 2)
-          sed -i "s/${old_version}/${{ needs.set-context.outputs.release_version }}/g" docs/installation.md
+          sed -i "s/${old_version}/${RELEASE_VERSION}/g" docs/installation.md
 
       - name: Update man
         run: |
@@ -259,12 +265,12 @@ jobs:
         run: |
           git diff --exit-code && diff=false || diff=true
           if [ "${diff}" == "true" ] ; then
-            git commit -am "Create ${{ needs.set-context.outputs.release_version }} release"
+            git commit -am "Create ${RELEASE_VERSION} release"
             git push && git_exit_code=0 || git_exit_code=$?
             if [ ${git_exit_code} -eq 0 ] ; then
-              echo "  - ✅ commits pushed to ${{ needs.set-context.outputs.release_branch }}."
+              echo "  - ✅ commits pushed to ${RELEASE_BRANCH}."
             else
-              echo "  - ❌ A problem occurs when attempting to push create release commits to ${{ needs.set-context.outputs.release_branch }} branch."
+              echo "  - ❌ A problem occurs when attempting to push create release commits to ${RELEASE_BRANCH} branch."
               exit 1
             fi
           else
@@ -297,6 +303,7 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       RELEASE_VERSION: ${{ needs.set-context.outputs.release_version }}
+      RELEASE_BRANCH: ${{ needs.set-context.outputs.release_branch }}
     needs:
       - set-context
       - clean-release
@@ -364,7 +371,7 @@ jobs:
         run: |
           echo "::group::Extract CHANGELOG"
             ls -l CHANGELOG.md
-            cat CHANGELOG.md | python3 bin/release/changelog_extract.py ${{ needs.set-context.outputs.release_version }} > release_changelog.md
+            cat CHANGELOG.md | python3 bin/release/changelog_extract.py "${RELEASE_VERSION}" > release_changelog.md
             ls -l release_changelog.md
             cat release_changelog.md
           echo "::endgroup::"
@@ -379,31 +386,31 @@ jobs:
                 artifacts/release-windows-x64-artifacts/*
           echo "::endgroup::"
           echo "::group::Deliver Release"
-            gh release create ${{ needs.set-context.outputs.release_version }} \
-                --target ${{ needs.set-context.outputs.release_branch }} \
+            gh release create "${RELEASE_VERSION}" \
+                --target "${RELEASE_BRANCH}" \
                 --notes-file release_changelog.md \
-                --title ${{ needs.set-context.outputs.release_version }} \
+                --title "${RELEASE_VERSION}" \
                 --draft \
-                artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb \
-                artifacts/release-deb-x64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_amd64.deb.sha256 \
-                artifacts/release-deb-aarch64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_arm64.deb \
-                artifacts/release-deb-aarch64-artifacts/hurl_${{ needs.set-context.outputs.release_version }}_arm64.deb.sha256 \
-                artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz \
-                artifacts/release-generic-linux-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-unknown-linux-gnu.tar.gz.sha256 \
-                artifacts/release-generic-linux-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-unknown-linux-gnu.tar.gz \
-                artifacts/release-generic-linux-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-unknown-linux-gnu.tar.gz.sha256 \
-                artifacts/release-macos-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-apple-darwin.tar.gz \
-                artifacts/release-macos-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-apple-darwin.tar.gz.sha256 \
-                artifacts/release-macos-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-apple-darwin.tar.gz \
-                artifacts/release-macos-aarch64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-aarch64-apple-darwin.tar.gz.sha256 \
-                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc-installer.exe \
-                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc-installer.exe.sha256 \
-                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc.zip \
-                artifacts/release-windows-x64-artifacts/hurl-${{ needs.set-context.outputs.release_version }}-x86_64-pc-windows-msvc.zip.sha256 && gh_exit_code=0 || gh_exit_code=$?
+                "artifacts/release-deb-x64-artifacts/hurl_${RELEASE_VERSION}_amd64.deb" \
+                "artifacts/release-deb-x64-artifacts/hurl_${RELEASE_VERSION}_amd64.deb.sha256" \
+                "artifacts/release-deb-aarch64-artifacts/hurl_${RELEASE_VERSION}_arm64.deb" \
+                "artifacts/release-deb-aarch64-artifacts/hurl_${RELEASE_VERSION}_arm64.deb.sha256" \
+                "artifacts/release-generic-linux-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+                "artifacts/release-generic-linux-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-unknown-linux-gnu.tar.gz.sha256" \
+                "artifacts/release-generic-linux-aarch64-artifacts/hurl-${RELEASE_VERSION}-aarch64-unknown-linux-gnu.tar.gz" \
+                "artifacts/release-generic-linux-aarch64-artifacts/hurl-${RELEASE_VERSION}-aarch64-unknown-linux-gnu.tar.gz.sha256" \
+                "artifacts/release-macos-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-apple-darwin.tar.gz" \
+                "artifacts/release-macos-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-apple-darwin.tar.gz.sha256" \
+                "artifacts/release-macos-aarch64-artifacts/hurl-${RELEASE_VERSION}-aarch64-apple-darwin.tar.gz" \
+                "artifacts/release-macos-aarch64-artifacts/hurl-${RELEASE_VERSION}-aarch64-apple-darwin.tar.gz.sha256" \
+                "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc-installer.exe" \
+                "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc-installer.exe.sha256" \
+                "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc.zip" \
+                "artifacts/release-windows-x64-artifacts/hurl-${RELEASE_VERSION}-x86_64-pc-windows-msvc.zip.sha256" && gh_exit_code=0 || gh_exit_code=$?
             if [ ${gh_exit_code} -eq 0 ] ; then
-              echo "  - ✅ GitHub release ${{ needs.set-context.outputs.release_version }} created."
+              echo "  - ✅ GitHub release ${RELEASE_VERSION} created."
             else
-               echo "  - ❌ A problem occurs when attempting to create GitHub release ${{ needs.set-context.outputs.release_version }}."
+               echo "  - ❌ A problem occurs when attempting to create GitHub release ${RELEASE_VERSION}."
                exit 1
             fi
           echo "::endgroup::"
@@ -411,9 +418,9 @@ jobs:
       - name: Check sha256 for published packages
         run: |
           .github/workflows/bin/check_release_assets_sha.sh \
-              --release ${{ needs.set-context.outputs.release_version }} \
-              --github-repo "${{ github.repository }}" \
-              --github-token $GITHUB_TOKEN
+              --release "${RELEASE_VERSION}" \
+              --github-repo "${GITHUB_REPOSITORY}" \
+              --github-token "${GITHUB_TOKEN}"
 
       - name: Create new pull request
         run: |
@@ -422,12 +429,12 @@ jobs:
           echo "- Please use \`/accept\` as usual then run the \`update-branch-version\` github workflow if you want to automatically update master branch to next SNAPSHOT version"
           } > file-body.txt
           gh pr create \
-            --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into master" \
+            --title "Merge GitHub ${RELEASE_BRANCH} into master" \
             --body-file file-body.txt \
             --base master \
             --label bot && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
-            new_pr_number=$(gh pr list --repo "${{ github.repository }}" --head "${{ needs.set-context.outputs.release_branch }}" --state "open" --json number --jq .[].number)
+            new_pr_number=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${RELEASE_BRANCH}" --state "open" --json number --jq .[].number)
             echo "  - ✅ Creation of pull request n°${new_pr_number} succeeds."
           else
             echo "  - ❌ A problem occurs when attempting to create new pull request."
