@@ -117,7 +117,7 @@ $ python3 ../test_script.py tests_ok/hello.sh
 ```shell
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/include.hurl --include --verbose
+hurl --include --verbose tests_ok/include.hurl
 ```
 
 `include.ps1`:
