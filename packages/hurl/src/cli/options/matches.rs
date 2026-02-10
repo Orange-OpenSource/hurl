@@ -27,6 +27,7 @@ use hurl_core::input::Input;
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use super::context::RunContext;
+use super::secret;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
 use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};
@@ -578,19 +579,12 @@ pub fn retry_interval(
 
 pub fn secret(
     matches: &ArgMatches,
-    context: &RunContext,
     default_value: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut all_secrets = default_value;
 
     // Secrets are always parsed as string.
     let type_kind = TypeKind::String;
-
-    // Insert environment secrets `HURL_SECRET_foo`
-    for (env_name, env_value) in context.secret_env_vars() {
-        let value = variables::parse_value(env_value, type_kind)?;
-        add_secret(&mut all_secrets, env_name.to_string(), value)?;
-    }
 
     // Add secrets from files:
     if let Some(filenames) = get_strings(matches, "secrets_file") {
@@ -599,7 +593,7 @@ pub fn secret(
             let vars = VariablesFile::open(filename, type_kind)?;
             for var in vars {
                 let (name, value) = var?;
-                add_secret(&mut all_secrets, name, value)?;
+                secret::add_secret(&mut all_secrets, name, value)?;
             }
         }
     }
@@ -608,30 +602,10 @@ pub fn secret(
     if let Some(secrets) = get_strings(matches, "secret") {
         for s in secrets {
             let (name, value) = variables::parse(&s, type_kind)?;
-            add_secret(&mut all_secrets, name, value)?;
+            secret::add_secret(&mut all_secrets, name, value)?;
         }
     }
     Ok(all_secrets)
-}
-
-/// Add a secret with `name` and `value` to the `secrets` hash map.
-fn add_secret(
-    secrets: &mut HashMap<String, String>,
-    name: String,
-    value: Value,
-) -> Result<(), CliOptionsError> {
-    // We check that there is no existing secrets
-    if secrets.contains_key(&name) {
-        return Err(CliOptionsError::Error(format!(
-            "secret '{}' can't be reassigned",
-            &name
-        )));
-    }
-    // Secrets can only be string.
-    if let Value::String(value) = value {
-        secrets.insert(name.to_string(), value);
-    }
-    Ok(())
 }
 
 pub fn ssl_no_revoke(arg_matches: &ArgMatches, default_value: bool) -> bool {
@@ -687,7 +661,6 @@ pub fn user_agent(arg_matches: &ArgMatches, default_value: Option<String>) -> Op
 /// Returns a map of variables from the command line options `matches`.
 pub fn variables(
     matches: &ArgMatches,
-    context: &RunContext,
     default_value: HashMap<String, Value>,
 ) -> Result<HashMap<String, Value>, CliOptionsError> {
     let mut variables = default_value;
@@ -695,19 +668,7 @@ pub fn variables(
     // Variables are typed, based on their values.
     let type_kind = TypeKind::Inferred;
 
-    // Insert environment variables `HURL_VARIABLE_foo`
-    for (env_name, env_value) in context.var_env_vars() {
-        let value = variables::parse_value(env_value, type_kind)?;
-        variables.insert(env_name.to_string(), value);
-    }
-
-    // Insert legacy environment variables `HURL_foo`
-    for (env_name, env_value) in context.legacy_var_env_vars() {
-        let value = variables::parse_value(env_value, type_kind)?;
-        variables.insert(env_name.to_string(), value);
-    }
-
-    // Then add variables from files:
+    // Add variables from files:
     if let Some(filenames) = get_strings(matches, "variables_file") {
         for f in &filenames {
             let filename = Path::new(f);
@@ -719,7 +680,7 @@ pub fn variables(
         }
     }
 
-    // Finally, add single variables from command line.
+    // Add single variables from command line.
     if let Some(input) = get_strings(matches, "variable") {
         for s in input {
             let (name, value) = variables::parse(&s, type_kind)?;

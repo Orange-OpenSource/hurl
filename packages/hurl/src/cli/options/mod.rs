@@ -19,13 +19,14 @@ mod commands;
 mod config_file;
 mod context;
 mod duration;
+mod env;
 mod error;
 mod matches;
+mod secret;
 mod variables;
 mod variables_file;
 
 use std::collections::HashMap;
-use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -281,7 +282,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional());
 
-    let arg_matches = command.try_get_matches_from_mut(env::args_os());
+    let arg_matches = command.try_get_matches_from_mut(std::env::args_os());
     let arg_matches = match arg_matches {
         Ok(args) => args,
         Err(error) => return Err(CliOptionsError::from_clap(error, context.is_with_color())),
@@ -300,7 +301,8 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
 
     let options = CliOptions::default();
     let options = config_file::parse_config_file(context, options)?;
-    let options = parse_matches(&arg_matches, context, options)?;
+    let options = env::parse_env_vars(context, options)?;
+    let options = parse_cli_args(&arg_matches, context, options)?;
     if options.input_files.is_empty() {
         return Err(CliOptionsError::Error(
             "No input files provided".to_string(),
@@ -312,7 +314,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
 
 /// Parse command line arguments from `arg_matches`
 /// given a run `context` and `default_options`.
-fn parse_matches(
+fn parse_cli_args(
     arg_matches: &ArgMatches,
     context: &RunContext,
     default_options: CliOptions,
@@ -378,7 +380,7 @@ fn parse_matches(
     let resolves = matches::resolves(arg_matches, default_options.resolves);
     let retry = matches::retry(arg_matches, default_options.retry);
     let retry_interval = matches::retry_interval(arg_matches, default_options.retry_interval)?;
-    let secrets = matches::secret(arg_matches, context, default_options.secrets)?;
+    let secrets = matches::secret(arg_matches, default_options.secrets)?;
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches, default_options.ssl_no_revoke);
     let tap_file = matches::tap_file(arg_matches, default_options.tap_file);
     let test = matches::test(arg_matches, default_options.test);
@@ -387,7 +389,7 @@ fn parse_matches(
     let unix_socket = matches::unix_socket(arg_matches, default_options.unix_socket);
     let user = matches::user(arg_matches, default_options.user);
     let user_agent = matches::user_agent(arg_matches, default_options.user_agent);
-    let variables = matches::variables(arg_matches, context, default_options.variables)?;
+    let variables = matches::variables(arg_matches, default_options.variables)?;
 
     let verbose = matches::verbose(
         arg_matches,
