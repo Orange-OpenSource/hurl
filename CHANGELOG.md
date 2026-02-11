@@ -22,6 +22,7 @@ Breaking Changes:
 
 Enhancements:
 
+* Add raw multiline strings and remove deprecated multiline attributes [#1733](https://github.com/Orange-OpenSource/hurl/issues/1733)
 * Add --no-cookie-store option to deactivate cookie storage for one file. [#2168](https://github.com/Orange-OpenSource/hurl/issues/2168)
 * Rename --noproxy to --no-proxy with backward compatible alias [#4709](https://github.com/Orange-OpenSource/hurl/issues/4709)
 * Add `rawbytes` query [#4250](https://github.com/Orange-OpenSource/hurl/issues/4250)
@@ -33,6 +34,11 @@ Enhancements:
 Bugs Fixed:
 
 * Fix truncating existing output file when response is tiny [#4576](https://github.com/Orange-OpenSource/hurl/issues/4576)
+
+
+Deprecations:
+
+* 4732 add stringdecode filter and make decode deprecated [#4732](https://github.com/Orange-OpenSource/hurl/issues/4732)
 
 
 
