@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::cli::options::CliOptions;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -23,12 +24,8 @@ use std::path::{Path, PathBuf};
 /// error is a terminal or not, whether Hurl is executed in a CI/CD environment, whether users has
 /// disallowed ANSI code color etc...
 pub struct RunContext {
-    /// Are we allowed to ise ANSI escaoe codes or not.
-    with_color: bool,
     /// All the environment variables.
     env_vars: HashMap<String, String>,
-    /// Whether we're running in a Continuous Integration environment or not.
-    ci: bool,
     /// Is standard input a terminal or not?
     stdin_term: bool,
     /// Is standard output a terminal or not?
@@ -52,27 +49,10 @@ impl RunContext {
         stdout_term: bool,
         stderr_term: bool,
     ) -> Self {
-        // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
-        let ci = env_vars.contains_key("CI") || env_vars.contains_key("TF_BUILD");
-
-        // According to the NO_COLOR spec, any presence of the variable should disable color, but to
-        // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
-        // least not empty.
-        let with_color = if let Some(v) = env_vars.get("NO_COLOR") {
-            if !v.is_empty() {
-                false
-            } else {
-                stdout_term
-            }
-        } else {
-            stdout_term
-        };
         let config_file = get_config_file(&env_vars);
 
         RunContext {
-            with_color,
             env_vars,
-            ci,
             stdin_term,
             stdout_term,
             stderr_term,
@@ -80,9 +60,27 @@ impl RunContext {
         }
     }
 
-    /// Returns `true` if ANSI escape codes are authorized, `false` otherwise.
-    pub fn is_with_color(&self) -> bool {
-        self.with_color
+    /// Returns `true` if ANSI escape codes are enabled, `false` otherwise.
+    pub fn use_color_env_var(&self) -> Option<bool> {
+        // According to the NO_COLOR spec, any presence of the variable should disable color, but to
+        // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
+        // least not empty.
+        if let Some(v) = self.env_vars.get("NO_COLOR") {
+            if !v.is_empty() {
+                Some(false)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+
+    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
+    /// `false` otherwise.
+    pub fn is_ci_env_var(&self) -> bool {
+        // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
+        self.env_vars.contains_key("CI") || self.env_vars.contains_key("TF_BUILD")
     }
 
     /// Returns the map of Hurl variables injected by environment variables.
@@ -134,12 +132,6 @@ impl RunContext {
             .collect()
     }
 
-    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
-    /// `false` otherwise.
-    pub fn is_ci(&self) -> bool {
-        self.ci
-    }
-
     /// Checks if standard input is a terminal.
     pub fn is_stdin_term(&self) -> bool {
         self.stdin_term
@@ -179,13 +171,23 @@ fn get_config_dir(env_vars: &HashMap<String, String>) -> Option<PathBuf> {
     }
 }
 
+/// Take a [`CliOptions`] and apply modification from runtime context.
+///
+/// This method configures the options with values that are inferred from the runtime context
+/// such as: do we use color or not etc...
+pub fn init_options(context: &RunContext, default_options: CliOptions) -> CliOptions {
+    let mut options = default_options;
+    options.color = context.is_stdout_term();
+    options
+}
+
 #[cfg(test)]
 mod tests {
     use crate::cli::options::context::RunContext;
     use std::collections::HashMap;
 
     #[test]
-    fn context_is_colored() {
+    fn context_has_no_env_var_color() {
         let stdin_term = true;
         let stdout_term = true;
         let stderr_term = true;
@@ -193,11 +195,11 @@ mod tests {
         let env_vars = HashMap::from([("A".to_string(), "B".to_string())]);
 
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-        assert!(ctx.is_with_color());
+        assert!(ctx.use_color_env_var().is_none());
     }
 
     #[test]
-    fn context_respect_no_color() {
+    fn context_has_env_var_color() {
         let stdin_term = true;
         let stdout_term = true;
         let stderr_term = true;
@@ -205,7 +207,7 @@ mod tests {
         let env_vars = HashMap::from([("NO_COLOR".to_string(), "1".to_string())]);
 
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-        assert!(!ctx.is_with_color());
+        assert_eq!(ctx.use_color_env_var(), Some(false));
     }
 
     #[test]

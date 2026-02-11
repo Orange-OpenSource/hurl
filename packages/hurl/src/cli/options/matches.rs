@@ -92,20 +92,14 @@ pub fn client_key_file(
 }
 
 /// Returns true if Hurl output uses ANSI code and false otherwise.
-///
-/// If it has no flags, we use the run `context` to determine if we use color or not.
-pub fn color(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
+pub fn color(arg_matches: &ArgMatches, default_value: bool) -> bool {
     if has_flag(arg_matches, "color") {
         return true;
     }
     if has_flag(arg_matches, "no_color") {
         return false;
     }
-    if context.is_with_color() {
-        context.is_with_color()
-    } else {
-        default_value
-    }
+    default_value
 }
 
 pub fn compressed(arg_matches: &ArgMatches, default_value: bool) -> bool {
@@ -536,7 +530,7 @@ pub fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_valu
     if has_flag(arg_matches, "progress_bar") {
         return true;
     }
-    if context.is_stderr_term() && !context.is_ci() {
+    if context.is_stderr_term() && !context.is_ci_env_var() {
         true
     } else {
         default_value
