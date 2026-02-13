@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-use crate::CliOptions;
-use crate::CliOptionsError;
-use crate::RunContext;
-use crate::Verbosity;
 use hurl_core::reader::Pos;
 use hurl_core::reader::Reader;
+use std::path::Path;
+
+use super::{CliOptions, CliOptionsError, Verbosity};
 
 #[derive(Debug)]
 struct ConfigFileError {
@@ -46,14 +45,12 @@ impl std::fmt::Display for ConfigFileError {
     }
 }
 
-/// Parse options
-/// from config file if it is defined in `context`
-/// using `default_options`
+/// Parse options from config file `config_file_path`, using `default_options` for default values.
 pub fn parse_config_file(
-    context: &RunContext,
+    config_file_path: Option<&Path>,
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
-    if let Some(config_file_path) = context.config_file_path() {
+    if let Some(config_file_path) = config_file_path {
         if config_file_path.exists() {
             let content = std::fs::read_to_string(config_file_path).map_err(|e| {
                 CliOptionsError::Error(format!(

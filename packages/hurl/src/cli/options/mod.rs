@@ -22,7 +22,6 @@ mod context;
 mod duration;
 mod env;
 mod error;
-mod matches;
 mod secret;
 mod variables;
 mod variables_file;
@@ -190,7 +189,7 @@ fn get_version() -> String {
 pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     let options = CliOptions::default();
     let options = context::init_options(context, options);
-    let options = config_file::parse_config_file(context, options)?;
+    let options = config_file::parse_config_file(context.config_file_path(), options)?;
     let options = env::parse_env_vars(context, options)?;
     let options = args::parse_cli_args(context, options)?;
     Ok(options)

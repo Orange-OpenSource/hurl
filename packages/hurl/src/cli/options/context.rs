@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::cli::options::CliOptions;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+
+use super::CliOptions;
 
 /// Represents the context in which is executed Hurl: the env variables, whether standard
 /// input is a terminal or not (when pipe or redirected to a file for instance), whether standard
@@ -148,8 +149,8 @@ impl RunContext {
     }
 
     /// Returns the config file path if any.
-    pub fn config_file_path(&self) -> Option<&PathBuf> {
-        self.config_file.as_ref()
+    pub fn config_file_path(&self) -> Option<&Path> {
+        self.config_file.as_deref()
     }
 }
 
