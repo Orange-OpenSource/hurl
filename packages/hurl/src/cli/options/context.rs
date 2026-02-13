@@ -61,7 +61,8 @@ impl RunContext {
         }
     }
 
-    /// Returns `true` if ANSI escape codes are enabled, `false` otherwise.
+    /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
+    /// codes are explicitly disabled, `None` otherwise. .
     pub fn use_color_env_var(&self) -> Option<bool> {
         // According to the NO_COLOR spec, any presence of the variable should disable color, but to
         // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at

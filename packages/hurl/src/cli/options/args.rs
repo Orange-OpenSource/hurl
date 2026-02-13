@@ -792,19 +792,14 @@ fn pretty(arg_matches: &ArgMatches, context: &RunContext, default_value: PrettyM
 }
 
 fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
-    // The test progress bar is displayed only for in test mode, for interactive TTYs.
-    // It can be forced by `--progress-bar` option.
-    if !test(arg_matches, false) {
-        return default_value;
-    }
     if has_flag(arg_matches, "progress_bar") {
         return true;
     }
-    if context.is_stderr_term() && !context.is_ci_env_var() {
-        true
-    } else {
-        default_value
+    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
+    if has_flag(arg_matches, "test") && context.is_stderr_term() && !context.is_ci_env_var() {
+        return true;
     }
+    default_value
 }
 
 fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
