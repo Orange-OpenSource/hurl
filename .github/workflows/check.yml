@@ -60,11 +60,11 @@ jobs:
 
     - name: Gitleaks
       if: success() || failure()
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/zricethezav/gitleaks:latest
-        options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged --env CARGO_TERM_COLOR=always
-        run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
+      run: |
+        git config --global --add safe.directory /github/workspace
+        docker run --rm \
+          -v "$PWD":/github/workspace \
+          -w /github/workspace ghcr.io/zricethezav/gitleaks:latest detect --verbose --config .github/workflows/config/gitleaks.toml
 
     - name: Hadolint
       if: success() || failure()
@@ -117,7 +117,7 @@ jobs:
       if: success() || failure()
       run: python3 bin/check/license.py
 
-    - name: Check hurl crate API changes
+    - name: Check Hurl crate API changes
       if: success() || failure()
       run: bin/check/compatibility.sh
 
