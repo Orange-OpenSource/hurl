@@ -9,6 +9,8 @@ import subprocess
 import sys
 import time
 
+from term import PseudoTerm
+
 
 def decode_string(encoded: bytes) -> str:
     """Decodes bytes to string from inferring encoding."""
@@ -33,7 +35,8 @@ def test(script_file: str):
     else:
         cmd = [script_file]
     start_time = time.time()
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    term = PseudoTerm(row=24, col=100)
+    result = term.run(cmd)
     execution_time = round(time.time() - start_time, 4)
     print(f"{' '.join(cmd)} (Duration: {execution_time} seconds)")
 
