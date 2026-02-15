@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl --continue-on-error tests_failed/filter/filter.hurl
+hurl --no-color --continue-on-error tests_failed/filter/filter.hurl

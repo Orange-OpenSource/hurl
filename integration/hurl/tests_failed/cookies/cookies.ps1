@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl tests_failed/cookies/cookies.hurl
+hurl --no-color tests_failed/cookies/cookies.hurl

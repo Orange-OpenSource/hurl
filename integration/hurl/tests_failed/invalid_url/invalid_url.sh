@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_failed/invalid_url/invalid_url.hurl
+hurl --no-color tests_failed/invalid_url/invalid_url.hurl

@@ -9,4 +9,4 @@ if [[ $exit_code -eq 0 ]] ; then
 fi
 set -Eeuo pipefail
 
-hurl --http3 tests_failed/http_version_not_supported/http_version_not_supported.hurl
+hurl --no-color --http3 tests_failed/http_version_not_supported/http_version_not_supported.hurl

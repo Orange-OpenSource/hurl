@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurlfmt tests_ok/format.hurl
+hurlfmt --no-color tests_ok/format.hurl

@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_failed/invalid_xml/invalid_xml.hurl
+hurl --no-color tests_failed/invalid_xml/invalid_xml.hurl

@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_ok/verbosity/verbosity_option.hurl
+hurl --no-color tests_ok/verbosity/verbosity_option.hurl

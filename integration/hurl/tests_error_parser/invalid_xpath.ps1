@@ -1,3 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_error_parser/invalid_xpath.hurl
+
+hurl --no-color tests_error_parser/invalid_xpath.hurl

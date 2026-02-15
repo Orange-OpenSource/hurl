@@ -6,7 +6,8 @@ rm -rf build/assert_secret
 # We want to check leaks and do not stop at the first error
 set +euo pipefail
 
-hurl --secret name1=Alice \
+hurl --no-color \
+    --secret name1=Alice \
     --secret name2=Bob \
     --error-format long \
     --report-html build/assert_secret/report-html \

@@ -5,7 +5,8 @@ if (Test-Path -Path build/secret) {
     Remove-Item -Recurse build/secret
 }
 
-hurl --very-verbose `
+hurl --no-color `
+    --very-verbose `
     --secret a=secret1 `
     --secret b=secret2 `
     --secret c=12345678 `

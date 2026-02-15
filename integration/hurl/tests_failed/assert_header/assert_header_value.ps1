@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl tests_failed/assert_header/assert_header_value.hurl
+hurl --no-color tests_failed/assert_header/assert_header_value.hurl

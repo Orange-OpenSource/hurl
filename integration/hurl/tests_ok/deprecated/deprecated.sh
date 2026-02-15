@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_ok/deprecated/deprecated.hurl
+hurl --no-color tests_ok/deprecated/deprecated.hurl

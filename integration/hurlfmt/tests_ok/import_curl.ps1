@@ -1,4 +1,4 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurlfmt --in curl tests_ok/import_curl.in
+hurlfmt --no-color --in curl tests_ok/import_curl.in

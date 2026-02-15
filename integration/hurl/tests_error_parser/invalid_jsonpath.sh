@@ -1,3 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_error_parser/invalid_jsonpath.hurl
+
+hurl --no-color tests_error_parser/invalid_jsonpath.hurl

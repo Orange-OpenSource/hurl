@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_failed/http_connection/http_connection.hurl
+hurl --no-color tests_failed/http_connection/http_connection.hurl

@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl tests_failed/filter/filter_in_capture.hurl
+hurl --no-color tests_failed/filter/filter_in_capture.hurl

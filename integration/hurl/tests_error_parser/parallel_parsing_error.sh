@@ -1,7 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl --parallel --color \
+hurl --parallel \
   tests_error_parser/parallel_parsing_error_a.hurl \
   tests_error_parser/parallel_parsing_error_b.hurl \
   tests_error_parser/parallel_parsing_error_c.hurl \
