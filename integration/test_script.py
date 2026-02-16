@@ -6,7 +6,7 @@ This script run an integrations script and asserts it against exepcted exit code
 
 Examples:
     $ python3 test_script.py foo.sh
-    $ python3 test_script.py --use-pty foo.sh
+    $ python3 test_script.py --pty foo.sh
 
 """
 
@@ -33,13 +33,13 @@ def decode_string(encoded: bytes) -> str:
         return encoded.decode("utf-8")
 
 
-def test(script_file: str, use_tty: bool):
+def test(script_file: str, tty: bool):
     """Runs a script, exit the process if there is an error.
 
     Arguments:
     script_file -- the script file to run
-    use_tty -- true if we're using a real tty, false to use a pseudo tty. We can use
-                pseudo terminal when we need to simulate what happens when command ar run agasint a terminal
+    tty -- true if we're using a real tty, false to use a pseudo tty. We can use
+                pseudo terminal when we need to simulate what happens when command ar run against a terminal
                 and not piped.
 
     """
@@ -50,7 +50,7 @@ def test(script_file: str, use_tty: bool):
     start_time = time.time()
 
     result: subprocess.CompletedProcess
-    if use_tty:
+    if tty:
         term = Term()
         result = term.run(cmd=cmd)
     else:
@@ -330,10 +330,10 @@ def show_invisibles(text: str) -> str:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=str, nargs="+", metavar="FILE")
-    parser.add_argument("--use-pty", action="store_true")
+    parser.add_argument("--pty", action="store_true")
     args = parser.parse_args()
     for script_file in args.file:
-        test(script_file=script_file, use_tty=not args.use_pty)
+        test(script_file=script_file, tty=not args.pty)
 
 
 if __name__ == "__main__":

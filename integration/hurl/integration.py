@@ -24,14 +24,14 @@ def main():
         + get_files("tests_ssl/*." + extension)
     )
     for f in sorted(script_files):
-        test_script.test(script_file=f, use_tty=True)
+        test_script.test(script_file=f, tty=True)
 
     # Some tests need a "terminal" env, contrary to previous tests where standard output and error output are captured.
     # These tests use a PTY only available on *Nix platform (Windows WSL included, but not "standard" Windows).
     if not is_windows:
         script_files = get_files("tests_pty/**/*.sh")
         for f in sorted(script_files):
-            test_script.test(script_file=f, use_tty=False)
+            test_script.test(script_file=f, tty=False)
 
     print("Test integration hurl ok!")
 
