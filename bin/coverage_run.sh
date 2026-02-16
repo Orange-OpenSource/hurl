@@ -19,6 +19,7 @@ grcov target/profile \
     --source-dir . \
     --output-types html \
     --branch \
+    --ignore 'target/debug/build/clang-sys-*' \
     --ignore-not-existing \
     --excl-line "^ *\}$" \
     --output-path target/coverage
