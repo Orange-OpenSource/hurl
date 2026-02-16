@@ -1,6 +1,6 @@
 Hurl, run and test HTTP requests with plain text
 
-Usage: hurl<<<(\.exe)?>>> [OPTIONS] [FILES]...
+Usage: hurl [OPTIONS] [FILES]...
 
 Arguments:
   [FILES]...  Set the input file to use
