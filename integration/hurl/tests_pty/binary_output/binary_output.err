@@ -1,0 +1,6 @@
+error: Binary Error
+  --> tests_pty/binary_output/binary_output.hurl:1:1
+   |
+ 1 | GET http://localhost:8000/binary_output
+   | ^ Binary output can mess up your terminal. Use "--output -" to tell Hurl to output it to your terminal anyway, or consider "--output" to save to a file.
+   |
