@@ -13,7 +13,8 @@ def get_files(glob_expr: str) -> list[str]:
 
 def main():
     # Run test scripts
-    extension = "ps1" if platform.system() == "Windows" else "sh"
+    is_windows = platform.system() == "Windows"
+    extension = "ps1" if is_windows else "sh"
     script_files = (
         get_files("tests_ok/**/*." + extension)
         + get_files("tests_ok_not_linted/*." + extension)
@@ -23,7 +24,14 @@ def main():
         + get_files("tests_ssl/*." + extension)
     )
     for f in sorted(script_files):
-        test_script.test(f)
+        test_script.test(script_file=f, use_tty=True)
+
+    # Some tests need a "terminal" env, contrary to previous tests where standard output and error output are captured.
+    # These tests use a PTY only available on *Nix platform (Windows WSL included, but not "standard" Windows).
+    if not is_windows:
+        script_files = get_files("tests_pty/**/*.sh")
+        for f in sorted(script_files):
+            test_script.test(script_file=f, use_tty=False)
 
     print("Test integration hurl ok!")
 

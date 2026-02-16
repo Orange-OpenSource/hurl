@@ -29,7 +29,7 @@ def main():
         "tests_failed/*." + extension
     )
     for f in sorted(script_files):
-        test_script.test(f)
+        test_script.test(script_file=f, use_tty=True)
 
     print("Test integration hurlfmt ok!")
 

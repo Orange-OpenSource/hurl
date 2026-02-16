@@ -60,6 +60,8 @@ raised by the test is a runtime error.
 - [`hurl/tests_error_parser`]: every test is not a syntactically correct Hurl file. We test here the parsing error message.
 - [`hurl/tests_ssl`]: tests SSL features (server, client certificates and test files)
 - [`hurl/tests_unix_socket`]: tests Unix Socket (server and test files)
+- [`hurl/tests_pty`]: tests that need a "terminal" env, contrary to other tests where standard output and error output 
+are captured. These tests use a PTY only available on *Nix platform (Windows WSL included, but not "standard" Windows).
 
 
 Integration tests to test `hurlfmt` binary are grouped in `integration/hurlfmt` directory:

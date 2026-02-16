@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
-# Test script file.
-#
+"""Test integration scripts.
+
+This script run an integrations script and asserts it against exepcted exit code, standard output and
+ standard error.
+
+Examples:
+    $ python3 test_script.py foo.sh
+    $ python3 test_script.py --use-pty foo.sh
+
+"""
+
 import argparse
 import codecs
 import os
@@ -8,6 +17,8 @@ import re
 import subprocess
 import sys
 import time
+
+from term import PseudoTerm, Term
 
 
 def decode_string(encoded: bytes) -> str:
@@ -22,18 +33,29 @@ def decode_string(encoded: bytes) -> str:
         return encoded.decode("utf-8")
 
 
-def test(script_file: str):
+def test(script_file: str, use_tty: bool):
     """Runs a script, exit the process if there is an error.
 
     Arguments:
     script_file -- the script file to run
+    use_tty -- true if we're using a real tty, false to use a pseudo tty. We can use
+                pseudo terminal when we need to simulate what happens when command ar run agasint a terminal
+                and not piped.
+
     """
     if script_file.endswith("ps1"):
         cmd = ["pwsh", "-Command", script_file, ";", "exit $LASTEXITCODE"]
     else:
         cmd = [script_file]
     start_time = time.time()
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    result: subprocess.CompletedProcess
+    if use_tty:
+        term = Term()
+        result = term.run(cmd=cmd)
+    else:
+        term = PseudoTerm(row=24, col=100)
+        result = term.run(cmd=cmd)
     execution_time = round(time.time() - start_time, 4)
     print(f"{' '.join(cmd)} (Duration: {execution_time} seconds)")
 
@@ -308,9 +330,10 @@ def show_invisibles(text: str) -> str:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=str, nargs="+", metavar="FILE")
+    parser.add_argument("--use-pty", action="store_true")
     args = parser.parse_args()
     for script_file in args.file:
-        test(script_file=script_file)
+        test(script_file=script_file, use_tty=not args.use_pty)
 
 
 if __name__ == "__main__":

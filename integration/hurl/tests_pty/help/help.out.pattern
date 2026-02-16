@@ -1,0 +1,139 @@
+Hurl, run and test HTTP requests with plain text
+
+Usage: hurl<<<(\.exe)?>>> [OPTIONS] [FILES]...
+
+Arguments:
+  [FILES]...  Set the input file to use
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+HTTP options:
+      --aws-sigv4 <PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]>
+          Use AWS V4 signature authentication in the transfer
+      --cacert <FILE>
+          CA certificate to verify peer against (PEM format)
+  -E, --cert <CERTIFICATE[:PASSWORD]>
+          Client certificate file and password
+      --compressed
+          Request compressed response (using deflate or gzip)
+      --connect-timeout <SECONDS>
+          Maximum time allowed for connection [default: 300]
+      --connect-to <HOST1:PORT1:HOST2:PORT2>
+          For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead
+      --digest
+          Tell Hurl to use HTTP Digest authentication
+  -H, --header <HEADER>
+          Pass custom header(s) to server
+  -0, --http1.0
+          Tell Hurl to use HTTP version 1.0
+      --http1.1
+          Tell Hurl to use HTTP version 1.1
+      --http2
+          Tell Hurl to use HTTP version 2
+      --http3
+          Tell Hurl to use HTTP version 3
+  -k, --insecure
+          Allow insecure SSL connections
+  -4, --ipv4
+          Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try
+          IPv6
+  -6, --ipv6
+          Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
+          IPv4
+      --key <KEY>
+          Private key file name
+      --limit-rate <SPEED>
+          Specify the maximum transfer rate in bytes/second, for both downloads and uploads
+  -L, --location
+          Follow redirects
+      --location-trusted
+          Follow redirects but allows sending the name + password to all hosts that the site may
+          redirect to
+      --max-filesize <BYTES>
+          Specify the maximum size in bytes of a file to download
+      --max-redirs <NUM>
+          Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]
+  -m, --max-time <SECONDS>
+          Maximum time allowed for the transfer [default: 300]
+      --negotiate
+          Tell Hurl to use Negotiate (SPNEGO) authentication
+      --no-cookie-store
+          Do not use cookie store between requests
+      --no-proxy <HOST(S)>
+          List of hosts which do not use proxy
+      --ntlm
+          Tell Hurl to use NTLM authentication
+      --path-as-is
+          Tell Hurl to not handle sequences of /../ or /./ in the given URL path
+      --pinnedpubkey <HASHES>
+          Public key to verify peer against
+  -x, --proxy <[PROTOCOL://]HOST[:PORT]>
+          Use proxy on given PROTOCOL/HOST/PORT
+      --resolve <HOST:PORT:ADDR>
+          Provide a custom address for a specific HOST and PORT pair
+      --ssl-no-revoke
+          (Windows) Tell Hurl to disable certificate revocation checks
+      --unix-socket <PATH>
+          (HTTP) Connect through this Unix domain socket, instead of using the network
+  -u, --user <USER:PASSWORD>
+          Add basic Authentication header to each request
+  -A, --user-agent <NAME>
+          Specify the User-Agent string to send to the HTTP server
+
+Output options:
+      --color                  Colorize output
+      --curl <FILE>            Export each request to a list of curl commands
+      --error-format <FORMAT>  Control the format of error messages [default: short] [possible
+                               values: short, long]
+  -i, --include                Include the HTTP headers in the output
+      --json                   Output each Hurl file result to JSON
+      --no-color               Do not colorize output
+      --no-output              Suppress output. By default, Hurl outputs the body of the last
+                               response
+      --no-pretty              Do not prettify response output
+  -o, --output <FILE>          Write to FILE instead of stdout
+      --pretty                 Prettify JSON response output
+      --progress-bar           Display a progress bar in test mode
+  -v, --verbose                Turn on verbose (alias to --verbosity verbose)
+      --very-verbose           Turn on very verbose output, including HTTP response and libcurl logs
+                               (alias to --verbosity debug)
+      --verbosity <LEVEL>      Set verbosity level for debug log [possible values: brief, verbose,
+                               debug]
+
+Run options:
+      --continue-on-error              Continue executing requests even if an error occurs
+      --delay <MILLISECONDS>           Sets delay before each request (aka sleep) [default: 0]
+      --from-entry <ENTRY_NUMBER>      Execute Hurl file from ENTRY_NUMBER (starting at 1)
+      --ignore-asserts                 Ignore asserts defined in the Hurl file
+      --jobs <NUM>                     Maximum number of parallel jobs, 0 to disable parallel
+                                       execution
+      --parallel                       Run files in parallel (default in test mode)
+      --repeat <NUM>                   Repeat the input files sequence NUM times, -1 for infinite
+                                       loop
+      --retry <NUM>                    Maximum number of retries, 0 for no retries, -1 for unlimited
+                                       retries
+      --retry-interval <MILLISECONDS>  Interval in milliseconds before a retry [default: 1000]
+      --secret <NAME=VALUE>            Define a variable which value is secret
+      --secrets-file <FILE>            Define a secrets file in which you define your secrets
+      --test                           Activate test mode (use parallel execution)
+      --to-entry <ENTRY_NUMBER>        Execute Hurl file to ENTRY_NUMBER (starting at 1)
+      --variable <NAME=VALUE>          Define a variable
+      --variables-file <FILE>          Define a properties file in which you define your variables
+
+Report options:
+      --report-html <DIR>    Generate HTML report to DIR
+      --report-json <DIR>    Generate JSON report to DIR
+      --report-junit <FILE>  Write a JUnit XML report to FILE
+      --report-tap <FILE>    Write a TAP report to FILE
+
+Other options:
+  -b, --cookie <FILE>      Read cookies from FILE
+  -c, --cookie-jar <FILE>  Write cookies to FILE after running the session
+      --file-root <DIR>    Set root directory to import files [default: input file directory]
+      --glob <GLOB>        Specify input files that match the given GLOB. Multiple glob flags may be
+                           used
+  -n, --netrc              Must read .netrc for username and password
+      --netrc-file <FILE>  Specify FILE for .netrc
+      --netrc-optional     Use either .netrc or the URL
