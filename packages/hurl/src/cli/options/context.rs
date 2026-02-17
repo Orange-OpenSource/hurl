@@ -39,9 +39,13 @@ pub struct RunContext {
     config_file: Option<PathBuf>,
 }
 
-const LEGACY_VARIABLE_PREFIX: &str = "HURL_";
-const VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
-const SECRET_PREFIX: &str = "HURL_SECRET_";
+/// All the supported Hurl env vars.
+const LEGACY_HURL_VARIABLE_PREFIX: &str = "HURL_";
+const HURL_PREFIX: &str = "HURL_";
+const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
+const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
+const HURL_COLOR: &str = "HURL_COLOR";
+const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -75,8 +79,10 @@ impl RunContext {
             } else {
                 None
             }
+        } else if let Some(v) = self.get_env_var_bool(HURL_NO_COLOR) {
+            Some(!v)
         } else {
-            None
+            self.get_env_var_bool(HURL_COLOR)
         }
     }
 
@@ -95,7 +101,7 @@ impl RunContext {
         self.env_vars
             .iter()
             .filter_map(|(name, value)| {
-                name.strip_prefix(VARIABLE_PREFIX)
+                name.strip_prefix(HURL_VARIABLE_PREFIX)
                     .filter(|n| !n.is_empty())
                     .map(|stripped| (stripped, value.as_str()))
             })
@@ -109,12 +115,9 @@ impl RunContext {
     pub fn legacy_var_env_vars(&self) -> HashMap<&str, &str> {
         self.env_vars
             .iter()
+            .filter(|(name, _)| !is_hurl_option(name))
             .filter_map(|(name, value)| {
-                name.strip_prefix(LEGACY_VARIABLE_PREFIX)
-                    // Not a new variable
-                    .filter(|_| !name.starts_with(VARIABLE_PREFIX))
-                    // Not a secret
-                    .filter(|_| !name.starts_with(SECRET_PREFIX))
+                name.strip_prefix(LEGACY_HURL_VARIABLE_PREFIX)
                     .filter(|n| !n.is_empty())
                     .map(|stripped| (stripped, value.as_str()))
             })
@@ -129,7 +132,7 @@ impl RunContext {
         self.env_vars
             .iter()
             .filter_map(|(name, value)| {
-                name.strip_prefix(SECRET_PREFIX)
+                name.strip_prefix(HURL_SECRET_PREFIX)
                     .filter(|n| !n.is_empty())
                     .map(|stripped| (stripped, value.as_str()))
             })
@@ -155,6 +158,26 @@ impl RunContext {
     pub fn config_file_path(&self) -> Option<&Path> {
         self.config_file.as_deref()
     }
+
+    fn get_env_var_bool(&self, name: &'static str) -> Option<bool> {
+        self.env_vars
+            .get(name)
+            .map(|s| s.as_str())
+            .map(|v| v.to_ascii_lowercase())
+            .and_then(|v| match v.as_str() {
+                "1" | "true" => Some(true),
+                "0" | "false" => Some(false),
+                _ => None,
+            })
+    }
+}
+
+fn is_hurl_option(name: &str) -> bool {
+    name.starts_with(HURL_PREFIX)
+        && (name.starts_with(HURL_VARIABLE_PREFIX)
+            || name.starts_with(HURL_SECRET_PREFIX)
+            || name == HURL_COLOR
+            || name == HURL_NO_COLOR)
 }
 
 /// Get config file path if any
@@ -203,7 +226,6 @@ mod tests {
         let stderr_term = true;
 
         let env_vars = HashMap::from([("A".to_string(), "B".to_string())]);
-
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
         assert!(ctx.use_color_env_var().is_none());
     }
@@ -214,10 +236,38 @@ mod tests {
         let stdout_term = true;
         let stderr_term = true;
 
-        let env_vars = HashMap::from([("NO_COLOR".to_string(), "1".to_string())]);
+        let data = [
+            ("NO_COLOR", "0", Some(false)),
+            ("NO_COLOR", "1", Some(false)),
+            ("NO_COLOR", "true", Some(false)),
+            ("NO_COLOR", "TRUE", Some(false)),
+            ("NO_COLOR", "false", Some(false)),
+            ("NO_COLOR", "FALSE", Some(false)),
+            ("HURL_NO_COLOR", "0", Some(true)),
+            ("HURL_NO_COLOR", "1", Some(false)),
+            ("HURL_NO_COLOR", "true", Some(false)),
+            ("HURL_NO_COLOR", "TRUE", Some(false)),
+            ("HURL_NO_COLOR", "false", Some(true)),
+            ("HURL_NO_COLOR", "FALSE", Some(true)),
+            ("HURL_COLOR", "0", Some(false)),
+            ("HURL_COLOR", "1", Some(true)),
+            ("HURL_COLOR", "true", Some(true)),
+            ("HURL_COLOR", "TRUE", Some(true)),
+            ("HURL_COLOR", "false", Some(false)),
+            ("HURL_COLOR", "FALSE", Some(false)),
+        ];
 
-        let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-        assert_eq!(ctx.use_color_env_var(), Some(false));
+        for (name, value, expected) in data {
+            let env_vars = HashMap::from([(name.to_string(), value.to_string())]);
+            let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
+            assert_eq!(
+                ctx.use_color_env_var(),
+                expected,
+                "test env var {}={}",
+                name,
+                value
+            );
+        }
     }
 
     #[test]
@@ -255,6 +305,8 @@ mod tests {
             ("HURL_VARIABLE".to_string(), "1234".to_string()),
             ("HURL_VARIABLE_".to_string(), "abcd".to_string()),
             ("HURL_VARIABLE_FOO".to_string(), "def".to_string()),
+            ("HURL_COLOR".to_string(), "1".to_string()),
+            ("HURL_NO_COLOR".to_string(), "1".to_string()),
         ]);
 
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
@@ -279,6 +331,8 @@ mod tests {
             ("BAR".to_string(), "yyy".to_string()),
             ("BAZ".to_string(), "yyy".to_string()),
             ("HURL_VARIABLE_bar".to_string(), "def".to_string()),
+            ("HURL_COLOR".to_string(), "1".to_string()),
+            ("HURL_NO_COLOR".to_string(), "1".to_string()),
             ("HURL_foo".to_string(), "true".to_string()),
             ("HURL_id".to_string(), "1234".to_string()),
             ("BAZ".to_string(), "yyy".to_string()),

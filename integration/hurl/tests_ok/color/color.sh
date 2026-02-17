@@ -1,4 +1,4 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-hurl --color --verbose tests_ok/color/color.hurl
+hurl --color --include tests_ok/color/color.hurl
