@@ -18,6 +18,8 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
+use hurl::pretty::PrettyMode;
+
 use super::CliOptions;
 
 /// Represents the context in which is executed Hurl: the env variables, whether standard
@@ -180,6 +182,11 @@ fn get_config_dir(env_vars: &HashMap<String, String>) -> Option<PathBuf> {
 pub fn init_options(context: &RunContext, default_options: CliOptions) -> CliOptions {
     let mut options = default_options;
     options.color = context.is_stdout_term();
+    options.pretty = if context.is_stdout_term() {
+        PrettyMode::Automatic
+    } else {
+        PrettyMode::None
+    };
     options
 }
 

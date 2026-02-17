@@ -216,7 +216,7 @@ fn parse_arg_matches(
     let path_as_is = path_as_is(arg_matches, default_options.path_as_is);
     let pinned_pub_key = pinned_pub_key(arg_matches, default_options.pinned_pub_key);
     let progress_bar = progress_bar(arg_matches, context, default_options.progress_bar);
-    let pretty = pretty(arg_matches, context, default_options.pretty);
+    let pretty = pretty(arg_matches, default_options.pretty);
     let proxy = proxy(arg_matches, default_options.proxy);
     let output = output(arg_matches, default_options.output);
     let output_type = output_type(arg_matches, default_options.output_type);
@@ -777,18 +777,14 @@ fn pinned_pub_key(arg_matches: &ArgMatches, default_value: Option<String>) -> Op
     get::<String>(arg_matches, "pinned_pub_key").or(default_value)
 }
 
-fn pretty(arg_matches: &ArgMatches, context: &RunContext, default_value: PrettyMode) -> PrettyMode {
+fn pretty(arg_matches: &ArgMatches, default_value: PrettyMode) -> PrettyMode {
     if has_flag(arg_matches, "pretty") {
         return PrettyMode::Force;
     }
     if has_flag(arg_matches, "no_pretty") {
         return PrettyMode::None;
     }
-    if context.is_stdout_term() {
-        PrettyMode::Automatic
-    } else {
-        default_value
-    }
+    default_value
 }
 
 fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
