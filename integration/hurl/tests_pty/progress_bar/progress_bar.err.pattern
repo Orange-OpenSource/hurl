@@ -1,56 +1,56 @@
 Executed files: 0/3 (0%)
-[>                       ] 1/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[>                       ] 1/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[==>                     ] 2/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[==>                     ] 2/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[====>                   ] 3/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[====>                   ] 3/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[=======>                ] 4/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[=======>                ] 4/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[=========>              ] 5/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[=========>              ] 5/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[============>           ] 6/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[============>           ] 6/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[==============>         ] 7/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[==============>         ] 7/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[================>       ] 8/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[================>       ] 8/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[===================>    ] 9/10  Running tests_ok/progress_bar/progress_bar_a.hurl
+[===================>    ] 9/10  Running tests_pty/progress_bar/progress_bar_a.hurl
 [1A[K[1A[KExecuted files: 0/3 (0%)
-[=====================>  ] 10/10 Running tests_ok/progress_bar/progress_bar_a.hurl
-[1A[K[1A[KSuccess tests_ok/progress_bar/progress_bar_a.hurl (10 request(s) in <<<\d+>>> ms)
+[=====================>  ] 10/10 Running tests_pty/progress_bar/progress_bar_a.hurl
+[1A[K[1A[KSuccess tests_pty/progress_bar/progress_bar_a.hurl (10 request(s) in <<<\d+>>> ms)
 Executed files: 1/3 (33%)
-[>                       ] 1/6 Running tests_ok/progress_bar/progress_bar_b.hurl
+[>                       ] 1/6 Running tests_pty/progress_bar/progress_bar_b.hurl
 [1A[K[1A[KExecuted files: 1/3 (33%)
-[====>                   ] 2/6 Running tests_ok/progress_bar/progress_bar_b.hurl
+[====>                   ] 2/6 Running tests_pty/progress_bar/progress_bar_b.hurl
 [1A[K[1A[KExecuted files: 1/3 (33%)
-[========>               ] 3/6 Running tests_ok/progress_bar/progress_bar_b.hurl
+[========>               ] 3/6 Running tests_pty/progress_bar/progress_bar_b.hurl
 [1A[K[1A[KExecuted files: 1/3 (33%)
-[============>           ] 4/6 Running tests_ok/progress_bar/progress_bar_b.hurl
+[============>           ] 4/6 Running tests_pty/progress_bar/progress_bar_b.hurl
 [1A[K[1A[KExecuted files: 1/3 (33%)
-[================>       ] 5/6 Running tests_ok/progress_bar/progress_bar_b.hurl
+[================>       ] 5/6 Running tests_pty/progress_bar/progress_bar_b.hurl
 [1A[K[1A[KExecuted files: 1/3 (33%)
-[====================>   ] 6/6 Running tests_ok/progress_bar/progress_bar_b.hurl
-[1A[K[1A[KSuccess tests_ok/progress_bar/progress_bar_b.hurl (6 request(s) in <<<\d+>>> ms)
+[====================>   ] 6/6 Running tests_pty/progress_bar/progress_bar_b.hurl
+[1A[K[1A[KSuccess tests_pty/progress_bar/progress_bar_b.hurl (6 request(s) in <<<\d+>>> ms)
 Executed files: 2/3 (66%)
-[>                       ] 1/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
+[>                       ] 1/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
 [1A[K[1A[K[1A[KExecuted files: 2/3 (66%)
-[====>                   ] 2/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
+[====>                   ] 2/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
 [1A[K[1A[K[1A[KExecuted files: 2/3 (66%)
-[========>               ] 3/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
+[========>               ] 3/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
 [1A[K[1A[K[1A[KExecuted files: 2/3 (66%)
-[============>           ] 4/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
+[============>           ] 4/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
 [1A[K[1A[K[1A[KExecuted files: 2/3 (66%)
-[================>       ] 5/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
+[================>       ] 5/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
 [1A[K[1A[K[1A[KExecuted files: 2/3 (66%)
-[====================>   ] 6/6 Running tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_lo
-ng_long_name.hurl
-[1A[K[1A[K[1A[KSuccess tests_ok/progress_bar/progress_bar_c_with_a_very_long_long_long_long_name.hurl (6 request(s) in <<<\d+>>> ms)
+[====================>   ] 6/6 Running tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_l
+ong_long_name.hurl
+[1A[K[1A[K[1A[KSuccess tests_pty/progress_bar/progress_bar_c_with_a_very_long_long_long_long_name.hurl (6 request(s) in <<<\d+>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    3
 Executed requests: 22 (<<<.*>>>/s)
