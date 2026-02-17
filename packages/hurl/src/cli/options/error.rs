@@ -29,13 +29,13 @@ pub enum CliOptionsError {
 
 impl CliOptionsError {
     /// Converts a clap error to an instance of [`CliOptionsError`].
-    pub fn from_clap(error: clap::Error, allow_color: bool) -> Self {
+    pub fn from_clap(error: clap::Error, allow_color_stdout: bool) -> Self {
         match error.kind() {
             clap::error::ErrorKind::DisplayVersion => {
                 CliOptionsError::DisplayVersion(error.to_string())
             }
             clap::error::ErrorKind::DisplayHelp => {
-                let help = if allow_color {
+                let help = if allow_color_stdout {
                     error.render().ansi().to_string()
                 } else {
                     error.to_string()

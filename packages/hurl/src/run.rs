@@ -126,19 +126,20 @@ fn print_output(
         let result = output::write_last_body(
             hurl_result,
             options.include,
-            options.color,
+            options.color_stdout,
             options.pretty,
             options.output.as_ref(),
             stdout,
             append,
         );
         if let Err(e) = result {
-            return Err(CliError::OutputWrite(e.render(
+            let message = e.render(
                 &filename.to_string(),
                 content,
                 None,
-                OutputFormat::Terminal(options.color),
-            )));
+                OutputFormat::Terminal(options.color_stderr),
+            );
+            return Err(CliError::OutputWrite(message));
         }
     }
     if matches!(options.output_type, cli::OutputType::Json) {
@@ -186,7 +187,7 @@ pub fn run_par(
     let output_type =
         options
             .output_type
-            .to_output_type(options.include, options.color, options.pretty);
+            .to_output_type(options.include, options.color_stdout, options.pretty);
     let max_width = terminal_size::terminal_size().map(|(w, _)| w.0 as usize);
     let jobs = files
         .iter()
@@ -204,7 +205,7 @@ pub fn run_par(
         options.repeat.unwrap_or(Count::Finite(1)),
         options.test,
         options.progress_bar,
-        options.color,
+        options.color_stderr,
         max_width,
     );
     let results = runner.run(&jobs)?;

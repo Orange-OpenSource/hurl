@@ -116,7 +116,7 @@ impl ParallelRunner {
         repeat: Count,
         test: bool,
         progress_bar: bool,
-        color: bool,
+        color_stderr: bool,
         max_width: Option<usize>,
     ) -> Self {
         // Worker are running on theirs own thread, while parallel runner is running in the main
@@ -137,7 +137,7 @@ impl ParallelRunner {
             .collect::<Vec<_>>();
 
         let mode = Mode::new(test, progress_bar);
-        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color, max_width);
+        let progress = ParProgress::new(MAX_RUNNING_DISPLAYED, mode, color_stderr, max_width);
 
         ParallelRunner {
             workers,

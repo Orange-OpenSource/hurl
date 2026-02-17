@@ -85,7 +85,7 @@ fn main() -> ExitCode {
     // We'll use a more advanced logger for rich error report when running Hurl files.
     let verbose =
         opts.verbosity == Some(Verbosity::Verbose) || opts.verbosity == Some(Verbosity::Debug);
-    let base_logger = BaseLogger::new(opts.color, verbose);
+    let base_logger = BaseLogger::new(opts.color_stderr, verbose);
     let current_dir = match env::current_dir() {
         Ok(c) => c,
         Err(err) => {

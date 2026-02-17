@@ -51,7 +51,8 @@ pub struct CliOptions {
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
-    pub color: bool,
+    pub color_stdout: bool,
+    pub color_stderr: bool,
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
@@ -212,7 +213,8 @@ impl Default for CliOptions {
             cacert_file: None,
             client_cert_file: None,
             client_key_file: None,
-            color: false,
+            color_stdout: false,
+            color_stderr: false,
             compressed: false,
             connect_timeout: Duration::from_secs(300),
             connects_to: Vec::new(),
@@ -394,7 +396,7 @@ impl CliOptions {
             Verbosity::Debug => logger::Verbosity::VeryVerbose,
         });
         LoggerOptionsBuilder::new()
-            .color(self.color)
+            .color(self.color_stderr)
             .error_format(self.error_format.into())
             .verbosity(verbosity)
             .build()

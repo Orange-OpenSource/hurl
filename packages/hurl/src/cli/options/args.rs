@@ -137,13 +137,18 @@ pub fn parse_cli_args(
     let arg_matches = command.try_get_matches_from_mut(std::env::args_os());
     let arg_matches = match arg_matches {
         Ok(args) => args,
-        Err(error) => return Err(CliOptionsError::from_clap(error, default_options.color)),
+        Err(error) => {
+            return Err(CliOptionsError::from_clap(
+                error,
+                default_options.color_stdout,
+            ))
+        }
     };
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
     if !has_input_files(&arg_matches, context) {
-        let help = if default_options.color {
+        let help = if default_options.color_stdout {
             command.render_help().ansi().to_string()
         } else {
             command.render_help().to_string()
@@ -171,7 +176,8 @@ fn parse_arg_matches(
     let cacert_file = cacert_file(arg_matches, default_options.cacert_file)?;
     let client_cert_file = client_cert_file(arg_matches, default_options.client_cert_file)?;
     let client_key_file = client_key_file(arg_matches, default_options.client_key_file)?;
-    let color = color(arg_matches, default_options.color);
+    let color_stdout = color(arg_matches, default_options.color_stdout);
+    let color_stderr = color(arg_matches, default_options.color_stderr);
     let compressed = compressed(arg_matches, default_options.compressed);
     let connect_timeout = connect_timeout(arg_matches, default_options.connect_timeout)?;
     let connects_to = connects_to(arg_matches, default_options.connects_to);
@@ -257,7 +263,8 @@ fn parse_arg_matches(
         cacert_file,
         client_cert_file,
         client_key_file,
-        color,
+        color_stdout,
+        color_stderr,
         compressed,
         connect_timeout,
         connects_to,

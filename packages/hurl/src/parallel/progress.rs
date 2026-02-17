@@ -58,10 +58,14 @@ impl ParProgress {
     pub fn new(
         max_running_displayed: usize,
         mode: Mode,
-        color: bool,
+        color_stderr: bool,
         max_width: Option<usize>,
     ) -> Self {
-        let format = if color { Format::Ansi } else { Format::Plain };
+        let format = if color_stderr {
+            Format::Ansi
+        } else {
+            Format::Plain
+        };
         ParProgress {
             max_running_displayed,
             mode,

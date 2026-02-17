@@ -130,14 +130,15 @@ mod tests {
     fn test_parse_config() {
         let content = "# ignore\n\n--verbose\n";
         let options = parse_config(content, CliOptions::default()).unwrap();
-        assert!(!options.color);
+        assert!(!options.color_stdout);
+        assert!(!options.color_stderr);
         assert_eq!(options.verbosity, Some(Verbosity::Verbose));
     }
 
     #[test]
     fn test_parse_option() {
         let mut reader = Reader::new("\n\n--verbose\n");
-        let mut options = super::CliOptions::default();
+        let mut options = CliOptions::default();
         assert_eq!(reader.cursor().pos, Pos::new(1, 1));
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.verbosity, Some(Verbosity::Verbose));
@@ -147,7 +148,7 @@ mod tests {
     #[test]
     fn test_parse_no_option() {
         let mut reader = Reader::new("# ignore\n\n");
-        let mut options = super::CliOptions::default();
+        let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(reader.cursor().pos, Pos::new(3, 1));
     }
@@ -155,13 +156,13 @@ mod tests {
     #[test]
     fn test_parse_invalid_option() {
         let mut reader = Reader::new("--xxx");
-        let mut options = super::CliOptions::default();
+        let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
         assert_eq!(err.message, "Unknown option <--xxx>");
 
         let mut reader = Reader::new("--verbosexxx");
-        let mut options = super::CliOptions::default();
+        let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
         assert_eq!(err.message, "Unknown option <--verbosexxx>");

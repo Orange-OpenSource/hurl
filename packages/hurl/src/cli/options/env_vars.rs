@@ -31,7 +31,8 @@ pub fn parse_env_vars(
     options.variables = parse_variables(context, options.variables)?;
     options.secrets = parse_secrets(context, options.secrets)?;
     if let Some(color) = context.use_color_env_var() {
-        options.color = color;
+        options.color_stdout = color;
+        options.color_stderr = color;
     }
     Ok(options)
 }
