@@ -51,7 +51,7 @@ def build_installation_md(text: str) -> MarkdownDoc:
     return parse_markdown(text=text)
 
 
-def replace(text: str, dest: str) -> str:
+def replace(text: str, dest: str, version: str) -> str:
     # Do some replacements
 
     # Replace canonical links to hurl.dev links:
@@ -138,21 +138,20 @@ def replace(text: str, dest: str) -> str:
 </picture>
 """,
         ),
-        # TODO: extract version from Cargo.toml
         (
-            "[HTML]: /docs/standalone/hurl-6.1.0.html",
-            "[HTML]: /docs/standalone/hurl-6.1.0.html",
-            "[HTML]: https://hurl.dev/assets/docs/hurl-6.1.0.html.gz",
+            f"[HTML]: /docs/standalone/hurl-{version}.html",
+            f"[HTML]: /docs/standalone/hurl-{version}.html",
+            f"[HTML]: https://hurl.dev/assets/docs/hurl-{version}.html.gz",
         ),
         (
-            "[PDF]: /docs/standalone/hurl-6.1.0.pdf",
-            "[PDF]: /docs/standalone/hurl-6.1.0.pdf",
-            "[PDF]: https://hurl.dev/assets/docs/hurl-6.1.0.pdf.gz",
+            f"[PDF]: /docs/standalone/hurl-{version}.pdf",
+            f"[PDF]: /docs/standalone/hurl-{version}.pdf",
+            f"[PDF]: https://hurl.dev/assets/docs/hurl-{version}.pdf.gz",
         ),
         (
-            "[Markdown]: https://hurl.dev/docs/standalone/hurl-6.1.0.html",
-            "[Markdown]: /docs/standalone/hurl-6.1.0.md",
-            "[Markdown]: https://hurl.dev/assets/docs/hurl-6.1.0.md.gz",
+            f"[Markdown]: https://hurl.dev/docs/standalone/hurl-{version}.html",
+            f"[Markdown]: /docs/standalone/hurl-{version}.md",
+            f"[Markdown]: https://hurl.dev/assets/docs/hurl-{version}.md.gz",
         ),
     ]
     for old, new_for_github, new_for_crates in snippets:
@@ -195,7 +194,9 @@ def main(dest: str) -> int:
     readme_md.extend(toc_md)
     readme_md.extend(body_md)
     readme = readme_md.to_text()
-    readme = replace(text=readme, dest=dest)
+    # TODO: extract version here
+    version = "7.1.0"
+    readme = replace(text=readme, dest=dest, version=version)
 
     print(readme)
     return os.EX_OK

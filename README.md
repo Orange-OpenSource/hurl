@@ -1768,9 +1768,9 @@ Please follow the [contrib on Windows section].
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
-[HTML]: /docs/standalone/hurl-7.0.0.html
-[PDF]: /docs/standalone/hurl-7.0.0.pdf
-[Markdown]: https://hurl.dev/docs/standalone/hurl-7.0.0.html
+[HTML]: /docs/standalone/hurl-7.1.0.html
+[PDF]: /docs/standalone/hurl-7.1.0.pdf
+[Markdown]: /docs/standalone/hurl-7.1.0.md
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
 [XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
