@@ -1,0 +1,180 @@
+[1;39m{[0m
+  [1;34m"store"[0m[1;39m:[0m [1;39m{[0m
+    [1;34m"book"[0m[1;39m:[0m [1;39m[[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mtrue[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sayings of the Century"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m8.95[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m[1;39m,[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mfalse[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sword of Honour"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m12.99[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m
+    [1;39m][0m
+  [1;39m}[0m
+[1;39m}[0m
+{
+  "store": {
+    "book": [
+      {
+        "published": true,
+        "title": "Sayings of the Century",
+        "price": 8.95,
+        "ratings": [],
+        "notes": {}
+      },
+      {
+        "published": false,
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "ratings": [],
+        "notes": {}
+      }
+    ]
+  }
+}
+[1;39m{[0m
+  [1;34m"store"[0m[1;39m:[0m [1;39m{[0m
+    [1;34m"book"[0m[1;39m:[0m [1;39m[[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mtrue[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sayings of the Century"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m8.95[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m[1;39m,[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mfalse[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sword of Honour"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m12.99[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m
+    [1;39m][0m
+  [1;39m}[0m
+[1;39m}[0m
+{
+  "store": {
+    "book": [
+      {
+        "published": true,
+        "title": "Sayings of the Century",
+        "price": 8.95,
+        "ratings": [],
+        "notes": {}
+      },
+      {
+        "published": false,
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "ratings": [],
+        "notes": {}
+      }
+    ]
+  }
+}
+{
+  "store": {
+    "book": [
+      {
+        "published": true,
+        "title": "Sayings of the Century",
+        "price": 8.95,
+        "ratings": [],
+        "notes": {}
+      },
+      {
+        "published": false,
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "ratings": [],
+        "notes": {}
+      }
+    ]
+  }
+}
+[1;39m{[0m
+  [1;34m"store"[0m[1;39m:[0m [1;39m{[0m
+    [1;34m"book"[0m[1;39m:[0m [1;39m[[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mtrue[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sayings of the Century"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m8.95[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m[1;39m,[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mfalse[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sword of Honour"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m12.99[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m
+    [1;39m][0m
+  [1;39m}[0m
+[1;39m}[0m
+{
+  "store": {
+    "book": [
+      {
+        "published": true,
+        "title": "Sayings of the Century",
+        "price": 8.95,
+        "ratings": [],
+        "notes": {}
+      },
+      {
+        "published": false,
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "ratings": [],
+        "notes": {}
+      }
+    ]
+  }
+}
+[1;39m{[0m
+  [1;34m"store"[0m[1;39m:[0m [1;39m{[0m
+    [1;34m"book"[0m[1;39m:[0m [1;39m[[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mtrue[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sayings of the Century"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m8.95[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m[1;39m,[0m
+      [1;39m{[0m
+        [1;34m"published"[0m[1;39m:[0m [0;33mfalse[0m[1;39m,[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Sword of Honour"[0m[1;39m,[0m
+        [1;34m"price"[0m[1;39m:[0m [0;36m12.99[0m[1;39m,[0m
+        [1;34m"ratings"[0m[1;39m:[0m [1;39m[][0m[1;39m,[0m
+        [1;34m"notes"[0m[1;39m:[0m [1;39m{}[0m
+      [1;39m}[0m
+    [1;39m][0m
+  [1;39m}[0m
+[1;39m}[0m
+{
+  "store": {
+    "book": [
+      {
+        "published": true,
+        "title": "Sayings of the Century",
+        "price": 8.95,
+        "ratings": [],
+        "notes": {}
+      },
+      {
+        "published": false,
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "ratings": [],
+        "notes": {}
+      }
+    ]
+  }
+}
