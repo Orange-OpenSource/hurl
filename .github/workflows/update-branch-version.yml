@@ -86,7 +86,7 @@ jobs:
       - name: Update man
         run: |
           for package in hurl hurlfmt ; do
-            python3 bin/release/gen_manpage.py "docs/manual/${package}.md" > "docs/manual/${package}.1"
+            python3 bin/docs/build_man.py "docs/manual/${package}.md" > "docs/manual/${package}.1"
           done
 
       - name: Update general docs

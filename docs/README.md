@@ -63,8 +63,8 @@ docs/*.md => packages/hurl/README.md
 
 ```bash
 $ cd ..
-$ python3 bin/release/gen_manpage.py docs/manual/hurl.md > docs/manual/hurl.1
-$ python3 bin/release/gen_manpage.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
+$ python3 bin/docs/build_man.py docs/manual/hurl.md > docs/manual/hurl.1
+$ python3 bin/docs/build_man.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
 $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
 $ python3 bin/docs/build_readme.py github > README.md
 $ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
