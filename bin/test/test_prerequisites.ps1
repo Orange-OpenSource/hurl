@@ -14,10 +14,15 @@ if ($LASTEXITCODE) { Throw }
 cd $project_root_path\integration\hurl
 New-Item -ItemType Directory -Force -Path build
 
-python server.py 2>&1 > build\server.log &
+python server.py --host 127.0.0.1 --port 8000 2>&1 > build\server.log &
 if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8000) {write-host -foregroundcolor Green "server is up"} else {write-host -foregroundcolor Red "server is down" ; cat build\server.log ; exit 1}
+
+python server.py --host "::1" --port 8004 2>&1 > build\server-ipv6.log &
+if ($LASTEXITCODE) { Throw }
+sleep 5
+if (netstat -ano | Select-String LISTENING | Select-string "\[::1\]:8004") {write-host -foregroundcolor Green "server ipv6 is up"} else {write-host -foregroundcolor Red "server ipv6 is down" ; cat build\server-ipv6.log ; exit 1}
 
 python tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false 2>&1 > build\server-ssl-selfsigned.log &
 if ($LASTEXITCODE) { Throw }

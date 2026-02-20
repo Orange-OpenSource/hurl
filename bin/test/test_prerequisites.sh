@@ -8,7 +8,8 @@ color_reset=$(echo -ne "\033[0m")
 function check_listen_port(){
     # vars
     label="${1:-}"
-    port="${2:-}"
+    host="${2:-}"
+    port="${3:-}"
 
     # usage
     if [ -z "${label}" ] || [ -z "${port}" ] ; then
@@ -17,7 +18,7 @@ function check_listen_port(){
     fi
 
     for count in $(seq 30) ; do
-        if nc -zv 127.0.0.1 "${port}" ; then
+        if nc -zv "${host}" "${port}" ; then
             exit_message="${color_green}$(date) - ${label} listening${color_reset} on ${port}"
             exit_code=0
             break
@@ -74,20 +75,23 @@ cd integration/hurl
 mkdir -p build
 
 echo -e "\n------------------ Starting server.py"
-python3 server.py > build/server.log 2>&1 &
-check_listen_port "server.py" 8000 || cat_and_exit_err build/server.log
+python3 server.py --host 127.0.0.1 --port 8000 > build/server.log 2>&1 &
+check_listen_port "server.py" 127.0.0.1 8000 || cat_and_exit_err build/server.log
+
+python3 server.py --host "::1" --port 8004 > build/server-ipv6.log 2>&1 &
+check_listen_port "server.py" "::1" 8004 || cat_and_exit_err build/server-ipv6.log
 
 echo -e "\n------------------ Starting tests_ssl/ssl_server.py (Self-signed certificate)"
 python3 tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false > build/server-ssl-selfsigned.log 2>&1 &
-check_listen_port "tests_ssl/ssl_server.py" 8001 || cat_and_exit_err build/server-ssl-selfsigned.log
+check_listen_port "tests_ssl/ssl_server.py" 127.0.0.1 8001 || cat_and_exit_err build/server-ssl-selfsigned.log
 
 echo -e "\n------------------ Starting tests_ssl/ssl_server.py (Signed by CA)"
 python3 tests_ssl/ssl_server.py 8002 tests_ssl/certs/server/cert.pem false > build/server-ssl-signedbyca.log 2>&1 &
-check_listen_port "tests_ssl/ssl_server.py" 8002 || cat_and_exit_err build/server-ssl-signedbyca.log
+check_listen_port "tests_ssl/ssl_server.py" 127.0.0.1 8002 || cat_and_exit_err build/server-ssl-signedbyca.log
 
 echo -e "\n------------------ Starting ssl/ssl_server.py (Self-signed certificate + Client certificate authentication)"
 python3 tests_ssl/ssl_server.py 8003 tests_ssl/certs/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 &
-check_listen_port "tests_ssl/ssl_server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
+check_listen_port "tests_ssl/ssl_server.py" 127.0.0.1 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
 echo -e "\n------------------ Starting tests_unix_socket/unix_socket_server.py"
 python3 tests_unix_socket/unix_socket_server.py > build/server-unix-socket.log 2>&1 &
@@ -101,5 +105,5 @@ if [ -f /var/run/squid.pid ] ; then
 fi
 squid_conf="cache deny all\ncache_log /dev/null\naccess_log /dev/null\nhttp_access allow all\nhttp_port 127.0.0.1:3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
 (echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee build/proxy.log 2>&1) &
-check_listen_port "squid" 3128 || cat_and_exit_err build/proxy.log
+check_listen_port "squid" 127.0.0.1 3128 || cat_and_exit_err build/proxy.log
 
