@@ -4,5 +4,6 @@ help: Do not colorize output
 help_heading: Output options
 conflict: color
 cli_only: true
+env_var: HURL_NO_COLOR NO_COLOR
 ---
 Do not colorize output.

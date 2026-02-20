@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -20,6 +20,7 @@ class Option:
     cli_only: bool = False
     deprecated: bool = False
     experimental: bool = False
+    env_vars: list[str] = field(default_factory=list)
 
     def __str__(self):
         s = "name: " + self.name
@@ -48,6 +49,8 @@ class Option:
             s += "\ndeprecated: true"
         if self.experimental:
             s += "\nexperimental: true"
+        if len(self.env_vars) > 0:
+            s += "\nenv_var: " + " ".join(self.env_vars)
         s += "\n---"
         s += "\n" + self.description
         return s
@@ -70,6 +73,7 @@ class Option:
         description = ""
         experimental = False
         in_description = False
+        env_vars = []
 
         for line in s.split("\n"):
             if line.startswith("---"):
@@ -130,6 +134,8 @@ class Option:
                         raise Exception(
                             f"{name}: Expected true or false for experimental attribute"
                         )
+                elif key == "env_var":
+                    env_vars = [a.strip() for a in v.split(" ")]
                 else:
                     raise Exception(f"{name}: Invalid attribute " + key)
 
@@ -155,6 +161,7 @@ class Option:
             deprecated=deprecated,
             experimental=experimental,
             description=description.strip(),
+            env_vars=env_vars,
         )
 
     @staticmethod

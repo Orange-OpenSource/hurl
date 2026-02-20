@@ -4,5 +4,6 @@ help: Colorize output
 help_heading: Output options
 conflict: no_color
 cli_only: true
+env_var: HURL_COLOR
 ---
 Colorize debug output (the HTTP response output is not colorized).

@@ -1,4 +1,4 @@
-.TH hurl 1 "18 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "20 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -148,6 +148,8 @@ See also \fI--key\fP.
 .IP "--color "
 
 Colorize debug output (the HTTP response output is not colorized).
+
+Environment variables: HURL_COLOR
 
 This is a cli-only option.
 
@@ -368,6 +370,8 @@ See also \fI--netrc-file\fP.
 
 Do not colorize output.
 
+Environment variables: HURL_NO_COLOR, NO_COLOR
+
 This is a cli-only option.
 
 .IP "--no-cookie-store "
@@ -437,6 +441,8 @@ This is a cli-only option.
 
 Use the specified proxy.
 
+Environment variables: http_proxy, https_proxy, all_proxy
+
 .IP "--repeat <NUM> "
 
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
@@ -492,6 +498,8 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
 
+Environment variables: HURL_SECRET_name
+
 This is a cli-only option.
 
 .IP "--secrets-file <FILE> "
@@ -545,6 +553,8 @@ This is a cli-only option.
 
 Define variable (name/value) to be used in Hurl templates.
 
+Environment variables: HURL_VARIABLE_name
+
 .IP "--variables-file <FILE> "
 
 Set properties file in which your define your variables.
@@ -592,40 +602,6 @@ Usage help. This lists all current command line options with a short description
 .IP "-V, --version "
 
 Prints version information
-
-.SH ENVIRONMENT
-
-Environment variables can only be specified in lowercase.
-
-Using an environment variable to set the proxy has the same effect as using the \fI-x, --proxy\fP option.
-
-.IP "http_proxy [PROTOCOL://]<HOST>[:PORT]"
-
-Sets the proxy server to use for HTTP.
-
-.IP "https_proxy [PROTOCOL://]<HOST>[:PORT]"
-
-Sets the proxy server to use for HTTPS.
-
-.IP "all_proxy [PROTOCOL://]<HOST>[:PORT]"
-
-Sets the proxy server to use if no protocol-specific proxy is set.
-
-.IP "no_proxy <comma-separated list of hosts>"
-
-List of host names that shouldn't go through any proxy.
-
-.IP "HURL_VARIABLE_name value"
-
-Define variable (name/value) to be used in Hurl templates. This is similar to \fI--variable\fP and \fI--variables-file\fP options.
-
-.IP "HURL_SECRET_name value"
-
-Define secret (name/value) to be used in Hurl templates. This is similar to \fI--secret\fP and \fI--secrets-file\fP options.
-
-.IP "NO_COLOR"
-
-When set to a non-empty string, do not colorize output (see \fI--no-color\fP option).
 
 .SH EXIT CODES
 

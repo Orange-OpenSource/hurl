@@ -27,6 +27,9 @@ def generate_man_option(option: Option) -> str:
     s += " {#%s}" % option.long.replace(".", "")
     s += "\n\n"
     s += option.description
+    if len(option.env_vars) > 0:
+        s += "\n\n"
+        s += "Environment variables: " + ", ".join(option.env_vars)
     if option.cli_only:
         s += "\n\n"
         s += "This is a cli-only option."

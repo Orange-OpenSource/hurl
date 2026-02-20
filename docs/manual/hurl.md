@@ -168,6 +168,8 @@ See also [`--key`](#key).
 
 Colorize debug output (the HTTP response output is not colorized).
 
+Environment variables: HURL_COLOR
+
 This is a cli-only option.
 
 ### --compressed {#compressed}
@@ -387,6 +389,8 @@ See also [`--netrc-file`](#netrc-file).
 
 Do not colorize output.
 
+Environment variables: HURL_NO_COLOR, NO_COLOR
+
 This is a cli-only option.
 
 ### --no-cookie-store {#no-cookie-store}
@@ -456,6 +460,8 @@ This is a cli-only option.
 
 Use the specified proxy.
 
+Environment variables: http_proxy, https_proxy, all_proxy
+
 ### --repeat <NUM> {#repeat}
 
 Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
@@ -511,6 +517,8 @@ You can specify time units in the retry interval expression. Set Hurl to use a r
 
 Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
 
+Environment variables: HURL_SECRET_name
+
 This is a cli-only option.
 
 ### --secrets-file <FILE> {#secrets-file}
@@ -564,6 +572,8 @@ This is a cli-only option.
 
 Define variable (name/value) to be used in Hurl templates.
 
+Environment variables: HURL_VARIABLE_name
+
 ### --variables-file <FILE> {#variables-file}
 
 Set properties file in which your define your variables.
@@ -611,40 +621,6 @@ Usage help. This lists all current command line options with a short description
 ### -V, --version {#version}
 
 Prints version information
-
-## ENVIRONMENT
-
-Environment variables can only be specified in lowercase.
-
-Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
-
-### http_proxy [PROTOCOL://]<HOST>[:PORT]
-
-Sets the proxy server to use for HTTP.
-
-### https_proxy [PROTOCOL://]<HOST>[:PORT]
-
-Sets the proxy server to use for HTTPS.
-
-### all_proxy [PROTOCOL://]<HOST>[:PORT]
-
-Sets the proxy server to use if no protocol-specific proxy is set.
-
-### no_proxy <comma-separated list of hosts>
-
-List of host names that shouldn't go through any proxy.
-
-### HURL_VARIABLE_name value
-
-Define variable (name/value) to be used in Hurl templates. This is similar to [`--variable`](#variable) and [`--variables-file`](#variables-file) options.
-
-### HURL_SECRET_name value
-
-Define secret (name/value) to be used in Hurl templates. This is similar to [`--secret`](#secret) and [`--secrets-file`](#secrets-file) options.
-
-### NO_COLOR
-
-When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).
 
 ## EXIT CODES
 

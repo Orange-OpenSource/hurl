@@ -4,5 +4,6 @@ short: x
 value: [PROTOCOL://]HOST[:PORT]
 help: Use proxy on given PROTOCOL/HOST/PORT
 help_heading: HTTP options
+env_var: http_proxy https_proxy all_proxy
 ---
 Use the specified proxy.

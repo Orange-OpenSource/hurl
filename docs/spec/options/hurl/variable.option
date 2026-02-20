@@ -4,5 +4,6 @@ value: NAME=VALUE
 help: Define a variable
 help_heading: Run options
 multi: append
+env_var: HURL_VARIABLE_name
 ---
 Define variable (name/value) to be used in Hurl templates.

@@ -104,9 +104,6 @@ def main():
     options_h2 = man.find_first(
         lambda it: isinstance(it, Header) and it.title == "Options"
     )
-    environment_h2 = man.find_first(
-        lambda it: isinstance(it, Header) and it.title == "Environment"
-    )
     exit_codes_h2 = man.find_first(
         lambda it: isinstance(it, Header) and it.title == "Exit Codes"
     )
@@ -115,14 +112,8 @@ def main():
     first_option_h3 = man.find_first(
         lambda it: isinstance(it, Header) and it.level == 3, start=options_h2
     )
-    options = man.slice(first_option_h3, environment_h2)
+    options = man.slice(first_option_h3, exit_codes_h2)
     process_table(doc=man, nodes=options, col_name="Option")
-
-    first_env_h3 = man.find_first(
-        lambda it: isinstance(it, Header) and it.level == 3, start=environment_h2
-    )
-    envs = man.slice(first_env_h3, exit_codes_h2)
-    process_table(doc=man, nodes=envs, col_name="Variable")
 
     first_exit_h3 = man.find_first(
         lambda it: isinstance(it, Header) and it.level == 3, start=exit_codes_h2
