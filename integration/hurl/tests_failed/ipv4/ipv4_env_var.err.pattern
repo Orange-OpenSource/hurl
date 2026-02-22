@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_failed/ipv4/ipv4.hurl:1:5
+   |
+ 1 | GET http://[::1]:8004/hello/ipv4
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (<<<(6|7)>>>) <<<.*>>>
+   |
+
