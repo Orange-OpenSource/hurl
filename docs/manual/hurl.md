@@ -2,11 +2,11 @@
 
 hurl - run and test HTTP requests.
 
-
 ## SYNOPSIS
 
-**hurl** [options] [FILE...]
+**hurl** [OPTIONS] [FILES...]
 
+**hurl** --test [OPTIONS] [FILES...]
 
 ## DESCRIPTION
 
@@ -166,7 +166,9 @@ See also [`--key`](#key).
 
 ### --color {#color}
 
-Colorize debug output (the HTTP response output is not colorized).
+Colorize standard output and standard error.
+
+By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.
 
 Environment variables: HURL_COLOR
 
@@ -387,7 +389,7 @@ See also [`--netrc-file`](#netrc-file).
 
 ### --no-color {#no-color}
 
-Do not colorize output.
+Do not colorize standard output nor standard error.
 
 Environment variables: HURL_NO_COLOR, NO_COLOR
 

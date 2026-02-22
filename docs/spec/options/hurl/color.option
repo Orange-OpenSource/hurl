@@ -6,4 +6,6 @@ conflict: no_color
 cli_only: true
 env_var: HURL_COLOR
 ---
-Colorize debug output (the HTTP response output is not colorized).
+Colorize standard output and standard error.
+
+By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.

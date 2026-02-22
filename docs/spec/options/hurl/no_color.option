@@ -6,4 +6,4 @@ conflict: color
 cli_only: true
 env_var: HURL_NO_COLOR NO_COLOR
 ---
-Do not colorize output.
+Do not colorize standard output nor standard error.

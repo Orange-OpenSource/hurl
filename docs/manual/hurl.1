@@ -1,14 +1,15 @@
-.TH hurl 1 "20 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "22 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
 
-
 .SH SYNOPSIS
 
 .B hurl
-[options] [FILE...]
+[OPTIONS] [FILES...]
 
+.B hurl
+--test [OPTIONS] [FILES...]
 
 .SH DESCRIPTION
 
@@ -147,7 +148,9 @@ See also \fI--key\fP.
 
 .IP "--color "
 
-Colorize debug output (the HTTP response output is not colorized).
+Colorize standard output and standard error.
+
+By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.
 
 Environment variables: HURL_COLOR
 
@@ -368,7 +371,7 @@ See also \fI--netrc-file\fP.
 
 .IP "--no-color "
 
-Do not colorize output.
+Do not colorize standard output nor standard error.
 
 Environment variables: HURL_NO_COLOR, NO_COLOR
 
