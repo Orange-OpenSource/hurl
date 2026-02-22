@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl::runner::Value;
 
 use super::variables::TypeKind;
-use super::{secret, variables, CliOptions, CliOptionsError, RunContext};
+use super::{secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext};
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -33,6 +33,20 @@ pub fn parse_env_vars(
     if let Some(color) = context.use_color_env_var() {
         options.color_stdout = color;
         options.color_stderr = color;
+    }
+    if let Some(ipv4) = context.ipv4_env_var() {
+        if ipv4 {
+            options.ip_resolve = Some(IpResolve::IpV4);
+        } else {
+            options.ip_resolve = Some(IpResolve::IpV6);
+        }
+    }
+    if let Some(ipv6) = context.ipv6_env_var() {
+        if ipv6 {
+            options.ip_resolve = Some(IpResolve::IpV6);
+        } else {
+            options.ip_resolve = Some(IpResolve::IpV4);
+        }
     }
     Ok(options)
 }

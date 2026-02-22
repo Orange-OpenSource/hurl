@@ -46,6 +46,8 @@ const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 const HURL_COLOR: &str = "HURL_COLOR";
 const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+const HURL_IPV4: &str = "HURL_IPV4";
+const HURL_IPV6: &str = "HURL_IPV6";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -84,6 +86,16 @@ impl RunContext {
         } else {
             self.get_env_var_bool(HURL_COLOR)
         }
+    }
+
+    /// Returns the env var for IPv4 resolution.
+    pub fn ipv4_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_IPV4)
+    }
+
+    /// Returns the env var for IPv6 resolution.
+    pub fn ipv6_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_IPV6)
     }
 
     /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
@@ -177,7 +189,9 @@ fn is_hurl_option(name: &str) -> bool {
         && (name.starts_with(HURL_VARIABLE_PREFIX)
             || name.starts_with(HURL_SECRET_PREFIX)
             || name == HURL_COLOR
-            || name == HURL_NO_COLOR)
+            || name == HURL_NO_COLOR
+            || name == HURL_IPV4
+            || name == HURL_IPV6)
 }
 
 /// Get config file path if any
