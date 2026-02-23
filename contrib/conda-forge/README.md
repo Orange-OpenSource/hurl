@@ -1,7 +1,11 @@
 # Hurl on conda-forge
 
-Public package web page: <https://anaconda.org/conda-forge/hurl>
+## Useful Links
 
-Git repo package (feedstock in conda-forge terminology): <https://github.com/conda-forge/hurl-feedstock>
+- Public package web page: <https://anaconda.org/conda-forge/hurl>
+- Git repo package (feedstock in conda-forge terminology): <https://github.com/conda-forge/hurl-feedstock>
+- Help & community channel: <https://conda-forge.zulipchat.com>
 
-Update to the feedstock can be make via forking the repo and PR.
+## How to Publish a New Hurl Version 
+
+Update to the feedstock can be made via forking the repo <https://github.com/conda-forge/hurl-feedstock> and PR.
