@@ -1,0 +1,361 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/verbosity
+* X-Foo: 12345678
+*
+* Request can be run with the following curl command:
+* curl --header 'X-Foo: 12345678' 'http://localhost:8000/verbosity'
+*
+> GET /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X-Foo: 12345678
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Captures:
+* date: <<<.*?>>>
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* PUT http://localhost:8000/verbosity?id=bar
+*
+* Request can be run with the following curl command:
+* curl --request PUT 'http://localhost:8000/verbosity?id=bar'
+*
+> PUT /verbosity?id=bar HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 153 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 405 METHOD NOT ALLOWED
+< Allow: <<<.*>>>
+< Content-Length: 153
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/verbosity
+*
+* Request can be run with the following curl command:
+* curl --header 'Content-Type: application/json' --data '{}' 'http://localhost:8000/verbosity'
+*
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 2
+>
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/verbosity
+* X-Foo: 12345678
+*
+* Request can be run with the following curl command:
+* curl --header 'X-Foo: 12345678' 'http://localhost:8000/verbosity'
+*
+** Host localhost:8000 was resolved.
+** IPv6: ::1
+** IPv4: 127.0.0.1
+**   Trying [::1]:8000...
+** connect to ::1 port 8000 from ::1 port 51728 failed: Connection refused
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000
+> GET /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X-Foo: 12345678
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Connection #0 to host localhost left intact
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Response body:
+* Lorem ipsum dolor sit amet...
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+* Captures:
+* date: <<<.*?>>>
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* PUT http://localhost:8000/verbosity?id=bar
+*
+* Request can be run with the following curl command:
+* curl --request PUT 'http://localhost:8000/verbosity?id=bar'
+*
+** Found bundle for host: 0x600003a50c90 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
+> PUT /verbosity?id=bar HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Request body:
+*
+** Request completely sent off
+** Connection #0 to host localhost left intact
+* Response: (received 153 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 405 METHOD NOT ALLOWED
+< Allow: <<<.*>>>
+< Content-Length: 153
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Response body:
+* <!doctype html>
+* <html lang=en>
+* <title>405 Method Not Allowed</title>
+* <h1>Method Not Allowed</h1>
+* <p>The method is not allowed for the requested URL.</p>
+*
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/verbosity
+*
+* Request can be run with the following curl command:
+* curl --header 'Content-Type: application/json' --data '{}' 'http://localhost:8000/verbosity'
+*
+** Found bundle for host: 0x600003a50c90 [serially]
+** Can not multiplex, even if we wanted to
+** Re-using existing connection with host localhost
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 2
+>
+* Request body:
+* {}
+** upload completely sent off: 2 bytes
+** Connection #0 to host localhost left intact
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Response body:
+* Lorem ipsum dolor sit amet...
+*
+* Timings:
+* begin: <<<.*?>>>
+* end: <<<.*?>>>
+* namelookup: <<<\d+>>> µs
+* connect: <<<\d+>>> µs
+* app_connect: <<<\d+>>> µs
+* pre_transfer: <<<\d+>>> µs
+* start_transfer: <<<\d+>>> µs
+* total: <<<\d+>>> µs
+*
+> GET /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X-Foo: 12345678
+> User-Agent: hurl/<<<.*?>>>
+>
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+> PUT /verbosity?id=bar HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+< HTTP/1.1 405 METHOD NOT ALLOWED
+< Allow: <<<.*>>>
+< Content-Length: 153
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 2
+>
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/verbosity
+* X-Foo: 12345678
+*
+* Request can be run with the following curl command:
+* curl --header 'X-Foo: 12345678' 'http://localhost:8000/verbosity'
+*
+> GET /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> X-Foo: 12345678
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Captures:
+* date: <<<.*?>>>
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* PUT http://localhost:8000/verbosity?id=bar
+*
+* Request can be run with the following curl command:
+* curl --request PUT 'http://localhost:8000/verbosity?id=bar'
+*
+> PUT /verbosity?id=bar HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/<<<.*?>>>
+>
+* Response: (received 153 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 405 METHOD NOT ALLOWED
+< Allow: <<<.*>>>
+< Content-Length: 153
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/verbosity
+*
+* Request can be run with the following curl command:
+* curl --header 'Content-Type: application/json' --data '{}' 'http://localhost:8000/verbosity'
+*
+> POST /verbosity HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Content-Type: application/json
+> User-Agent: hurl/<<<.*?>>>
+> Content-Length: 2
+>
+* Response: (received 29 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 29
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
