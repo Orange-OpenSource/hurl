@@ -3,6 +3,7 @@ long: verbose
 short: v
 help: Turn on verbose (alias to --verbosity verbose)
 help_heading: Output options
+env_var: HURL_VERBOSE
 ---
 Turn on verbose output on standard error stream.
 Useful for debugging.

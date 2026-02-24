@@ -601,6 +601,8 @@ A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.
 
+Environment variables: HURL_VERBOSE
+
 ### --verbosity <LEVEL> {#verbosity}
 
 Set the verbosity level for debug logs on standard error stream.
@@ -614,11 +616,15 @@ If you only want HTTP headers in the output, [`-i, --include`](#include) might b
 [`-v, --verbose`](#verbose) is an alias for `--verbosity verbose`
 [`--very-verbose`](#very-verbose) is an alias for `--verbosity debug`
 
+Environment variables: HURL_VERBOSITY
+
 ### --very-verbose {#very-verbose}
 
 Turn on more verbose output on standard error stream.
 
 In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.
+
+Environment variables: HURL_VERY_VERBOSE
 
 ### -h, --help {#help}
 

@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
 use hurl::runner::Value;
+use std::collections::HashMap;
+use std::str::FromStr;
 
 use super::variables::TypeKind;
-use super::{secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext};
+use super::{secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext, Verbosity};
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -48,6 +48,15 @@ pub fn parse_env_vars(
             options.ip_resolve = Some(IpResolve::IpV4);
         }
     }
+    if let Some(true) = context.verbose_env_var() {
+        options.verbosity = Some(Verbosity::Verbose);
+    } else if let Some(true) = context.very_verbose_env_var() {
+        options.verbosity = Some(Verbosity::Debug);
+    } else if let Some(verbosity) = context.verbosity_env_var() {
+        let verbosity = Verbosity::from_str(verbosity)?;
+        options.verbosity = Some(verbosity);
+    }
+
     Ok(options)
 }
 

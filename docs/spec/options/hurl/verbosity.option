@@ -4,6 +4,7 @@ value: LEVEL
 value_parser: ["brief", "verbose", "debug"]
 help: Set verbosity level for debug log
 help_heading: Output options
+env_var: HURL_VERBOSITY
 ---
 Set the verbosity level for debug logs on standard error stream.
 Useful for debugging.

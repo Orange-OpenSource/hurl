@@ -1,4 +1,4 @@
-.TH hurl 1 "22 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "24 Feb 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -583,6 +583,8 @@ A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, \fI-i, --include\fP might be the option you're looking for.
 
+Environment variables: HURL_VERBOSE
+
 .IP "--verbosity <LEVEL> "
 
 Set the verbosity level for debug logs on standard error stream.
@@ -596,11 +598,15 @@ If you only want HTTP headers in the output, \fI-i, --include\fP might be the op
 \fI-v, --verbose\fP is an alias for `--verbosity verbose`
 \fI--very-verbose\fP is an alias for `--verbosity debug`
 
+Environment variables: HURL_VERBOSITY
+
 .IP "--very-verbose "
 
 Turn on more verbose output on standard error stream.
 
 In contrast to  \fI--verbose\fP option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.
+
+Environment variables: HURL_VERY_VERBOSE
 
 .IP "-h, --help "
 

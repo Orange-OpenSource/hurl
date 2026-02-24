@@ -18,6 +18,7 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::str::FromStr;
 use std::time::Duration;
 
 use clap::builder::styling::{AnsiColor, Effects};
@@ -952,12 +953,7 @@ fn variables(
 
 fn verbosity(arg_matches: &ArgMatches, default_value: Option<Verbosity>) -> Option<Verbosity> {
     match get::<String>(arg_matches, "verbosity") {
-        Some(value) => Some(match value.as_str() {
-            "brief" => Verbosity::Brief,
-            "verbose" => Verbosity::Verbose,
-            "debug" => Verbosity::Debug,
-            _ => unreachable!(),
-        }),
+        Some(value) => Verbosity::from_str(&value).ok(),
         None => default_value,
     }
 }

@@ -48,6 +48,9 @@ const HURL_COLOR: &str = "HURL_COLOR";
 const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 const HURL_IPV4: &str = "HURL_IPV4";
 const HURL_IPV6: &str = "HURL_IPV6";
+const HURL_VERBOSE: &str = "HURL_VERBOSE";
+const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
+const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -96,6 +99,18 @@ impl RunContext {
     /// Returns the env var for IPv6 resolution.
     pub fn ipv6_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_IPV6)
+    }
+
+    pub fn verbose_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_VERBOSE)
+    }
+
+    pub fn very_verbose_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_VERY_VERBOSE)
+    }
+
+    pub fn verbosity_env_var(&self) -> Option<&str> {
+        self.env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
     }
 
     /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
@@ -191,7 +206,10 @@ fn is_hurl_option(name: &str) -> bool {
             || name == HURL_COLOR
             || name == HURL_NO_COLOR
             || name == HURL_IPV4
-            || name == HURL_IPV6)
+            || name == HURL_IPV6
+            || name == HURL_VERBOSE
+            || name == HURL_VERY_VERBOSE
+            || name == HURL_VERBOSITY)
 }
 
 /// Get config file path if any

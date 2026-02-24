@@ -28,6 +28,7 @@ mod variables_file;
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::str::FromStr;
 use std::time::Duration;
 
 use hurl::http;
@@ -119,6 +120,24 @@ pub enum Verbosity {
     Brief,
     Verbose,
     Debug,
+}
+
+impl FromStr for Verbosity {
+    type Err = CliOptionsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "brief" => Ok(Verbosity::Brief),
+            "verbose" => Ok(Verbosity::Verbose),
+            "debug" => Ok(Verbosity::Debug),
+            _ => {
+                let message = format!(
+                    "invalid value '{s}' for verbosity [possible values: brief, verbose, debug]"
+                );
+                Err(CliOptionsError::Error(message))
+            }
+        }
+    }
 }
 
 /// Error format: long or rich.
