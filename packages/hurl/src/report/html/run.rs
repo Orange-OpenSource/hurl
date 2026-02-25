@@ -153,7 +153,16 @@ fn get_call_html(
         if let Some(subject_alt_name) = certificate.subject_alt_name() {
             values.push(("Subject Alt Name", subject_alt_name.as_str()));
         }
-
+        let pem_display;
+        if let Some(pem) = certificate.value() {
+            // Truncate PEM for display: show first 50 chars + "..." + last 50 chars
+            if pem.len() > 100 {
+                pem_display = format!("{}...{}", &pem[..50], &pem[pem.len() - 50..]);
+            } else {
+                pem_display = pem.to_string();
+            }
+            values.push(("Value", &pem_display));
+        }
         let table = new_table("Certificate", &values);
         text.push_str(&table);
     }

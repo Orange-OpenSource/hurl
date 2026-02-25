@@ -227,9 +227,11 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
         Ok(CertificateAttributeName::SerialNumber)
     } else if try_literal(r#"Subject-Alt-Name""#, reader).is_ok() {
         Ok(CertificateAttributeName::SubjectAltName)
+    } else if try_literal(r#"Value""#, reader).is_ok() {
+        Ok(CertificateAttributeName::Value)
     } else {
         let value =
-            "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date>, <Serial-Number>, or <Subject-Alt-Name>".to_string();
+            "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date>, <Serial-Number>, <Subject-Alt-Name> or <Value>".to_string();
         let kind = ParseErrorKind::Expecting { value };
         let cur = reader.cursor();
         Err(ParseError::new(cur.pos, false, kind))

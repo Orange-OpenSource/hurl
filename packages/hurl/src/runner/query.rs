@@ -404,6 +404,9 @@ fn eval_query_certificate(
             CertificateAttributeName::SubjectAltName => certificate
                 .subject_alt_name()
                 .map(|it| Value::String(it.clone())),
+            CertificateAttributeName::Value => {
+                certificate.value().map(|it| Value::String(it.to_string()))
+            }
         };
         Ok(value)
     } else {
@@ -1524,6 +1527,7 @@ pub mod tests {
             expire_date,
             serial_number,
             subject_alt_name,
+            None,
         );
         assert_eq!(
             eval_query_certificate(

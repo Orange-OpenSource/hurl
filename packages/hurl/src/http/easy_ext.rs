@@ -39,6 +39,20 @@ const CURLINFO_CONN_ID: CURLINFO = CURLINFO_OFF_T + 64;
 #[derive(Clone)]
 pub struct CertInfo {
     pub data: Vec<String>,
+    pub value: Option<Pem>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Pem(String);
+
+impl Pem {
+    pub fn new(value: String) -> Self {
+        Self(value)
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
 /// Returns the information of the first certificate in the certificates chain.
@@ -57,10 +71,21 @@ pub fn cert_info(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         }
         let slist = *((*certinfo).certinfo.offset(0));
         let data = to_list(slist);
-        Ok(Some(CertInfo { data }))
+        let value = extract_pem_from_certinfo(&data);
+
+        Ok(Some(CertInfo { data, value }))
     }
 }
-
+/// Extracts PEM certificate value from certificate info data.
+fn extract_pem_from_certinfo(data: &[String]) -> Option<Pem> {
+    for line in data {
+        let trimmed = line.trim();
+        if let Some(value) = trimmed.strip_prefix("Cert:") {
+            return Some(Pem::new(value.to_string()));
+        }
+    }
+    None
+}
 /// Returns the connection identifier use by this libcurl handle.
 pub fn conn_id(easy: &Easy) -> Result<i64, Error> {
     unsafe {
