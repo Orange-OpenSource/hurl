@@ -1,3 +1,4 @@
+use hurl_core::reader::CharPos;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2026 Orange
@@ -83,19 +84,14 @@ fn parse_config(content: &str, default_options: CliOptions) -> Result<CliOptions
     Ok(options)
 }
 
-/// Parse and process a single option from config file
-/// Empty lines or lines starting with `#` are ignored
-///
-/// For the time-being only support the verbose option
-/// TODO: Implement all the command-line options
-fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
-    // Skip space, empty lines and comments
+fn skip_whitespace_and_comments(reader: &mut Reader) {
     loop {
         reader.read_while(|c: char| c.is_whitespace());
         if reader.is_eof() {
-            return Ok(());
+            break;
         }
         if reader.peek() == Some('#') {
+            // Skip comment line
             reader.read_while(|c: char| c != '\n');
             if reader.peek() == Some('\n') {
                 reader.read(); // consume newline
@@ -104,18 +100,66 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             break;
         }
     }
+}
+/// Parse and process a single option from config file
+/// Empty lines or lines starting with `#` are ignored
+fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
+    skip_whitespace_and_comments(reader);
+    if reader.is_eof() {
+        return Ok(());
+    }
 
-    // Parse option
     let save = reader.cursor();
-    let option = reader.read_while(|c| c.is_alphabetic() || c == '-');
-    if option == "--verbose" {
-        options.verbosity = Some(Verbosity::Verbose);
-        Ok(())
-    } else {
-        Err(ConfigFileError::new(
+    if reader.read_n(CharPos(2)) != "--" {
+        return Err(ConfigFileError::new(
             save.pos,
-            &format!("Unknown option <{}>", option),
-        ))
+            "Expecting an option starting with --",
+        ));
+    }
+
+    let option_name = reader.read_while(|c: char| c.is_alphanumeric() || c == '-' || c == '_');
+    match option_name.as_str() {
+        "verbose" => {
+            skip_whitespace_and_comments(reader);
+            if reader.peek() == Some('=') {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --verbose does not take a value",
+                ));
+            }
+            options.verbosity = Some(Verbosity::Verbose);
+            Ok(())
+        }
+        "header" => {
+            skip_whitespace_and_comments(reader);
+            let header_value = if reader.peek() == Some('=') {
+                reader.read(); // consume '='
+                reader.read_while(|c| c != '\n').trim().to_string()
+            } else {
+                if reader.is_eof() {
+                    return Err(ConfigFileError::new(
+                        save.pos,
+                        "Option --header requires a value",
+                    ));
+                }
+
+                reader.read_while(|c| c != '\n').trim().to_string()
+            };
+            if header_value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --header requires a value",
+                ));
+            }
+            options.headers.push(header_value);
+
+            Ok(())
+        }
+
+        _ => Err(ConfigFileError::new(
+            save.pos,
+            &format!("Unknown option <--{}>", option_name),
+        )),
     }
 }
 
@@ -136,13 +180,13 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_option() {
+    fn test_parse_option_flag() {
         let mut reader = Reader::new("\n\n--verbose\n");
         let mut options = CliOptions::default();
         assert_eq!(reader.cursor().pos, Pos::new(1, 1));
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.verbosity, Some(Verbosity::Verbose));
-        assert_eq!(reader.cursor().pos, Pos::new(3, 10));
+        assert_eq!(reader.cursor().pos, Pos::new(4, 1));
     }
 
     #[test]
@@ -154,7 +198,37 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_invalid_option() {
+    fn test_parse_option_with_value() {
+        let mut reader = Reader::new("--header=header1:value1\n--verbose\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.headers, vec!["header1:value1"]);
+        assert_eq!(reader.cursor().pos, Pos::new(1, 24));
+
+        let mut reader = Reader::new("--header\nheader2:value2\n--verbose\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.headers, vec!["header2:value2"]);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 15));
+
+        let mut reader = Reader::new("--header\n--test:1\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.headers, vec!["--test:1"]);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 9));
+    }
+
+    #[test]
+    fn test_parse_option_error() {
+        let mut reader = Reader::new("verbose\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.message, "Expecting an option starting with --");
+    }
+
+    #[test]
+    fn test_parse_option_error_unknown() {
         let mut reader = Reader::new("--xxx");
         let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
@@ -166,5 +240,23 @@ mod tests {
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
         assert_eq!(err.message, "Unknown option <--verbosexxx>");
+    }
+
+    #[test]
+    fn test_parse_option_error_missing_value() {
+        let mut reader = Reader::new("--header\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.message, "Option --header requires a value");
+    }
+
+    #[test]
+    fn test_parse_option_error_flag_with_value() {
+        let mut reader = Reader::new("--verbose=1\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.message, "Option --verbose does not take a value");
     }
 }
