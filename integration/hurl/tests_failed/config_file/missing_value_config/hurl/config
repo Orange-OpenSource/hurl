@@ -1,0 +1,3 @@
+# The header option should have a value, this should cause an error
+--header
+

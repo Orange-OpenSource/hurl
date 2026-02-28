@@ -1,0 +1,2 @@
+# the verbose option should not take a value, this should cause an error
+--verbose=1
