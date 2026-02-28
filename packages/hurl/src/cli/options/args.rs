@@ -490,7 +490,11 @@ fn from_entry(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<
 }
 
 fn headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
-    get_strings(arg_matches, "header").unwrap_or(default_value)
+    let mut all_headers = default_value;
+    if let Some(cli_headers) = get_strings(arg_matches, "header") {
+        all_headers.extend(cli_headers);
+    }
+    all_headers
 }
 
 fn html_dir(
