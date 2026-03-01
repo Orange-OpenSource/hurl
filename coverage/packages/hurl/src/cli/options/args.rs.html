@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="636 / 690">92.17 %</abbr></p>
+                <abbr title="629 / 681">92.36 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="84 / 84">100 %</abbr></p>
+                <abbr title="83 / 83">100 %</abbr></p>
         </div>
     </div>
 
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::{commands, get_version, secret, CliOptions};</pre>
+                <pre class="has-background-white py-0 px-2">use super::{commands, duration, get_version, secret, CliOptions};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -613,7 +613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::{duration, variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};</pre>
+                <pre class="has-background-white py-0 px-2">use super::{variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6629,7 +6629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; get_duration(&amp;s, DurationUnit::Second),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; duration::duration_from_str(&amp;s, DurationUnit::Second),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7189,7 +7189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; get_duration(&amp;s, DurationUnit::MilliSecond),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; duration::duration_from_str(&amp;s, DurationUnit::MilliSecond),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13509,7 +13509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; get_duration(&amp;s, DurationUnit::MilliSecond),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; duration::duration_from_str(&amp;s, DurationUnit::MilliSecond),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14469,7 +14469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; get_duration(&amp;s, DurationUnit::Second),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Some(s) =&gt; duration::duration_from_str(&amp;s, DurationUnit::Second),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16551,220 +16551,12 @@
                  role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1033"
-                role="cell">
-                <a href="#1033">1033</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1034"
-                role="cell">
-                <a href="#1034">1034</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Get duration from input string `s` and `default_unit`</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1035"
-                role="cell">
-                <a href="#1035">1035</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn get_duration(s: &amp;str, default_unit: DurationUnit) -&gt; Result&lt;Duration, CliOptionsError&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1036"
-                role="cell">
-                <a href="#1036">1036</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let duration = duration::parse(s).map_err(CliOptionsError::Error)?;</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1037"
-                role="cell">
-                <a href="#1037">1037</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let unit = duration.unit.unwrap_or(default_unit);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1038"
-                role="cell">
-                <a href="#1038">1038</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let millis = match unit {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1039"
-                role="cell">
-                <a href="#1039">1039</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        DurationUnit::MilliSecond =&gt; duration.value.as_u64(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1040"
-                role="cell">
-                <a href="#1040">1040</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        DurationUnit::Second =&gt; duration.value.as_u64() * 1000,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1041"
-                role="cell">
-                <a href="#1041">1041</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        DurationUnit::Minute =&gt; duration.value.as_u64() * 1000 * 60,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1042"
-                role="cell">
-                <a href="#1042">1042</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        DurationUnit::Hour =&gt; duration.value.as_u64() * 1000 * 60 * 60,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1043"
-                role="cell">
-                <a href="#1043">1043</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    };</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1044"
-                role="cell">
-                <a href="#1044">1044</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="27">
-                27
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    Ok(Duration::from_millis(millis))</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1045"
-                role="cell">
-                <a href="#1045">1045</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
-            </div>
         </div></div>
 </div>
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-03-01 15:55</p>
+                    <p class="heading">Date: 2026-03-01 17:37</p>
                 </div>
             
         </footer>
