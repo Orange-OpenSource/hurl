@@ -31,19 +31,25 @@ pub fn eval_to_float(
         Value::String(v) => match v.parse::<f64>() {
             Ok(f) => Ok(Some(Value::Number(Number::Float(f)))),
             _ => {
-                let kind = RunnerErrorKind::FilterInvalidInput(value.repr());
+                let kind = RunnerErrorKind::FilterInvalidInput {
+                    actual: value.repr(),
+                    expected: "float string".to_string(),
+                };
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
         Value::Number(Number::BigInteger(_)) => {
-            let kind = RunnerErrorKind::FilterInvalidInput(format!(
-                "{} is too big to be cast as a float",
-                value.repr()
-            ));
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: format!("{} is too big to be cast as a float", value.repr()),
+                expected: "castable number".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.repr(),
+                expected: "integer, float, or string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -128,14 +134,20 @@ mod tests {
         .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput("string <3x.1415>".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "string <3x.1415>".to_string(),
+                expected: "float string".to_string()
+            }
         );
         let err = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput("boolean <true>".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "boolean <true>".to_string(),
+                expected: "integer, float, or string".to_string()
+            }
         );
     }
 }

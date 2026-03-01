@@ -34,7 +34,10 @@ pub fn eval_jsonpath(
             Err(_) => {
                 return Err(RunnerError::new(
                     source_info,
-                    RunnerErrorKind::FilterInvalidInput("value is not a valid JSON".to_string()),
+                    RunnerErrorKind::FilterInvalidInput {
+                        actual: "value is not a valid JSON".to_string(),
+                        expected: "valid JSON string".to_string(),
+                    },
                     false,
                 ));
             }
@@ -52,7 +55,10 @@ pub fn eval_jsonpath(
         //     }
         // },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "string".to_string(),
+            };
             return Err(RunnerError::new(source_info, kind, assert));
         }
     };

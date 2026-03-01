@@ -29,12 +29,18 @@ pub fn eval_first(
         Value::List(values) => match values.first().cloned() {
             Some(first_value) => Ok(Some(first_value)),
             None => {
-                let kind = RunnerErrorKind::FilterInvalidInput("list is empty".to_string());
+                let kind = RunnerErrorKind::FilterInvalidInput {
+                    actual: "list is empty".to_string(),
+                    expected: "non-empty list".to_string(),
+                };
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "list".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -86,7 +92,10 @@ mod tests {
 
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("list is empty".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "list is empty".to_string(),
+                expected: "non-empty list".to_string()
+            }
         );
     }
 
@@ -100,7 +109,10 @@ mod tests {
 
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("boolean".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "boolean".to_string(),
+                expected: "list".to_string()
+            }
         );
     }
 }

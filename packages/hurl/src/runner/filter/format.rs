@@ -45,7 +45,10 @@ pub fn eval_date_format(
             }
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "date".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -111,7 +114,10 @@ mod tests {
         );
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("string".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "string".to_string(),
+                expected: "date".to_string()
+            }
         );
     }
 

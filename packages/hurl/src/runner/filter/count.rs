@@ -30,7 +30,10 @@ pub fn eval_count(
         Value::Bytes(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Nodeset(size) => Ok(Some(Value::Number(Number::Integer(*size as i64)))),
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "list, bytes, or nodeset".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -78,7 +81,10 @@ mod tests {
         );
         assert_eq!(
             error.kind,
-            RunnerErrorKind::FilterInvalidInput("boolean".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "boolean".to_string(),
+                expected: "list, bytes, or nodeset".to_string()
+            }
         );
     }
 }

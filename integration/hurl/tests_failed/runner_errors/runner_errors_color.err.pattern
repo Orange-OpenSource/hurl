@@ -92,7 +92,9 @@
 [1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
 [1;34m    |[0m[90m ...[0m
 [1;34m 58 |[0m body toInt == 1
-[1;34m    |[0m[1;31m      ^^^^^ invalid filter input: string <Hello World!>[0m
+[1;34m    |[0m[1;31m      ^^^^^ invalid filter input:[0m
+[1;34m    |[0m[1;31m               actual: string <Hello World!>[0m
+[1;34m    |[0m[1;31m               expected: integer string[0m
 [1;34m    |[0m
 
 [1;31merror[0m: [1mFilter error[0m
