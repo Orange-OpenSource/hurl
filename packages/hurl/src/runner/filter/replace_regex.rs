@@ -38,7 +38,10 @@ pub fn eval_replace_regex(
             Ok(Some(Value::String(s)))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.repr(),
+                expected: "string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

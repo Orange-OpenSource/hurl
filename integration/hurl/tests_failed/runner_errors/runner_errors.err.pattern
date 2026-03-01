@@ -92,7 +92,9 @@ error: Filter error
     | GET http://localhost:8000/runner_errors
     | ...
  58 | body toInt == 1
-    |      ^^^^^ invalid filter input: string <Hello World!>
+    |      ^^^^^ invalid filter input:
+    |               actual: string <Hello World!>
+    |               expected: integer string
     |
 
 error: Filter error
