@@ -6,6 +6,7 @@ from flask import request
 def add_header():
     assert request.headers.get("header-b") == "baz"
     assert request.headers.get("header-c") == "qux"
+    assert request.headers.get("header-d") == "quux"
     return ""
 
 
@@ -14,6 +15,7 @@ def add_header_with_aggregation():
     assert request.headers.get("header-a") == "foo"
     assert request.headers.get("header-b") == "baz"
     assert request.headers.get("header-c") == "qux"
+    assert request.headers.get("header-d") == "quux"
     return ""
 
 
