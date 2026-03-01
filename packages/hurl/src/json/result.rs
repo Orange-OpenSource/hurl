@@ -201,6 +201,8 @@ struct CertificateJson {
     serial_number: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     subject_alt_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    value: Option<String>,
 }
 
 impl HurlResultJson {
@@ -456,6 +458,7 @@ impl CertificateJson {
             expire_date: c.expire_date().map(|d| d.to_string()),
             serial_number: c.serial_number().cloned(),
             subject_alt_name: c.subject_alt_name().cloned(),
+            value: c.value().map(|s| s.to_string()),
         }
     }
 }

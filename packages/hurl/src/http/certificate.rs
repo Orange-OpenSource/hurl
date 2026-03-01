@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 
-use super::easy_ext::CertInfo;
+use super::easy_ext::{CertInfo, Pem};
 
 /// Represents an SSL/TLS certificate.
 ///
@@ -35,6 +35,7 @@ pub struct Certificate {
     expire_date: Option<DateTime<Utc>>,
     serial_number: Option<String>,
     subject_alt_name: Option<String>,
+    value: Option<Pem>,
 }
 
 impl Certificate {
@@ -46,6 +47,7 @@ impl Certificate {
         expire_date: Option<DateTime<Utc>>,
         serial_number: Option<String>,
         subject_alt_name: Option<String>,
+        value: Option<Pem>,
     ) -> Self {
         Self {
             subject,
@@ -54,6 +56,7 @@ impl Certificate {
             expire_date,
             serial_number,
             subject_alt_name,
+            value,
         }
     }
 
@@ -86,6 +89,11 @@ impl Certificate {
     pub fn subject_alt_name(&self) -> Option<&String> {
         self.subject_alt_name.as_ref()
     }
+
+    /// Returns the value attribute.
+    pub fn value(&self) -> Option<&str> {
+        self.value.as_ref().map(|pem| pem.as_str())
+    }
 }
 
 impl TryFrom<CertInfo> for Certificate {
@@ -104,6 +112,7 @@ impl TryFrom<CertInfo> for Certificate {
         let expire_date = parse_expire_date(&attributes);
         let serial_number = parse_serial_number(&attributes);
         let subject_alt_name = parse_subject_alt_name(&attributes);
+        let value = cert_info.value.clone();
         Ok(Certificate {
             subject,
             issuer,
@@ -111,6 +120,7 @@ impl TryFrom<CertInfo> for Certificate {
             expire_date,
             serial_number,
             subject_alt_name,
+            value,
         })
     }
 }
@@ -316,7 +326,8 @@ mod tests {
                     "Expire date:Oct 30 08:29:52 2025 GMT".to_string(),
                     "x509v3 subject alternative name:DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1"
                         .to_string(),
-                ]
+                ],
+                value: None,
             })
             .unwrap(),
             Certificate {
@@ -331,7 +342,8 @@ mod tests {
                     .with_timezone(&Utc)),
                 serial_number: Some("1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
                     .to_string()),
-                subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string())
+                subject_alt_name: Some("DNS:localhost, IP address:127.0.0.1, IP address:0:0:0:0:0:0:0:1".to_string()),
+                value: None,
             }
         );
     }
