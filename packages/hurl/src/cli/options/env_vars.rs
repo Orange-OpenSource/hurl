@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
+use super::variables::TypeKind;
+use super::{
+    duration, secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext, Verbosity,
+};
 use hurl::runner::Value;
+use hurl_core::types::DurationUnit;
 use std::collections::HashMap;
 use std::str::FromStr;
-
-use super::variables::TypeKind;
-use super::{secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext, Verbosity};
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -56,7 +58,9 @@ pub fn parse_env_vars(
         let verbosity = Verbosity::from_str(verbosity)?;
         options.verbosity = Some(verbosity);
     }
-
+    if let Some(timeout) = context.max_time_env_var() {
+        options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
+    }
     Ok(options)
 }
 

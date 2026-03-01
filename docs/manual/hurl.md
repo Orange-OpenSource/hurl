@@ -369,6 +369,8 @@ You can specify time units in the maximum time expression. Set Hurl to use a max
 
 See also [`--connect-timeout`](#connect-timeout).
 
+Environment variables: HURL_MAX_TIME
+
 ### --negotiate {#negotiate}
 
 Tell Hurl to use Negotiate (SPNEGO) authentication.

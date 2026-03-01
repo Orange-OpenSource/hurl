@@ -51,6 +51,7 @@ const HURL_IPV6: &str = "HURL_IPV6";
 const HURL_VERBOSE: &str = "HURL_VERBOSE";
 const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
 const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
+const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -111,6 +112,10 @@ impl RunContext {
 
     pub fn verbosity_env_var(&self) -> Option<&str> {
         self.env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
+    }
+
+    pub fn max_time_env_var(&self) -> Option<&str> {
+        self.env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
     }
 
     /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
@@ -209,7 +214,8 @@ fn is_hurl_option(name: &str) -> bool {
             || name == HURL_IPV6
             || name == HURL_VERBOSE
             || name == HURL_VERY_VERBOSE
-            || name == HURL_VERBOSITY)
+            || name == HURL_VERBOSITY
+            || name == HURL_MAX_TIME)
 }
 
 /// Get config file path if any
