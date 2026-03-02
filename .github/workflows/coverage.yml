@@ -70,7 +70,7 @@ jobs:
         destination_dir: coverage
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: ${{ always() }}
       with:
         name: coverage

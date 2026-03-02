@@ -61,7 +61,7 @@ jobs:
         bin/release/man.sh
         bin/release/create_tarball.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -78,7 +78,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v7.0.0
+      uses: actions/download-artifact@v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -104,7 +104,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-ubuntu-x64-artifacts
@@ -123,7 +123,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v7.0.0
+      uses: actions/download-artifact@v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -149,7 +149,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
@@ -176,7 +176,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v7.0.0
+      uses: actions/download-artifact@v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -204,7 +204,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
@@ -223,7 +223,7 @@ jobs:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v7.0.0
+      uses: actions/download-artifact@v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -251,7 +251,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
@@ -328,7 +328,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       if: success() || failure()
       with:
         name: test-docker-amd64-package-artifacts
@@ -383,7 +383,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-generic-linux-aarch64-artifacts
         path: target/upload/*
@@ -436,7 +436,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -489,7 +489,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-deb-aarch64-artifacts
         path: target/upload/*
@@ -539,7 +539,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -589,7 +589,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-macos-aarch64-artifacts
         path: target/upload/*
@@ -643,7 +643,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: release-windows-x64-artifacts
         path: |
@@ -667,7 +667,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@v7.0.0
+      - uses: actions/download-artifact@v8.0.0
         with:
           path: artifacts
       - name: Prerequisites
