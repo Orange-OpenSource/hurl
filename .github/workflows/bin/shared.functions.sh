@@ -113,6 +113,28 @@ function github_get_latest_release(){
     fi
 }
 
+function github_get_tag_hash(){
+    if [[ $# -ne 2 ]] ; then
+        log_error "internal function ${FUNCNAME[0]}" "please provide two parameters, ${FUNCNAME[0]} \$github_project_path \$github_project_tag"
+        return 1
+    else
+        project_path=$1
+	project_tag=$2
+	if ! latest=$(gh api "repos/$project_path/commits/$project_tag" --jq '.sha' 2>&1) ; then
+            log_error "${FUNCNAME[0]}" "$(head -1 <<< "${latest}")"
+            return 1
+        else
+            if [[ -z $latest ]] ; then
+                log_error "tag hash" "$project_path does not have hash for the tag $project_tag, please check this repo"
+                exit 1
+            else
+                echo "$latest"
+                return 0
+            fi
+        fi
+    fi
+}
+
 function github_get_release_changelog(){
     if [[ $# -ne 2 ]] ; then
         log_error "internal function ${FUNCNAME[0]}" "please provide one parameter, ${FUNCNAME[0]} \${project_path} \$tag"

@@ -25,14 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -48,7 +48,7 @@ jobs:
         bin/release/release.sh
         echo "${PWD}/target/release" >> "${GITHUB_PATH}"
     - name: Archive artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-bench-artifacts
@@ -59,14 +59,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -81,14 +81,14 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -119,7 +119,7 @@ jobs:
         bin/test/test_integ.sh || true
         cd "${current_dir}" || exit 1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-ubuntu-latest-${{ matrix.rust }}-artifacts
@@ -135,14 +135,14 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -163,7 +163,7 @@ jobs:
     - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-ubuntu-22.04-${{ matrix.rust }}-artifacts
@@ -178,7 +178,7 @@ jobs:
       image: archlinux
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -201,7 +201,7 @@ jobs:
       run: |
         bin/test/test.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-archlinux-x64-artifacts
@@ -214,7 +214,7 @@ jobs:
       image: fedora
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -242,7 +242,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-fedora-x64-artifacts
@@ -262,7 +262,7 @@ jobs:
         apk update --quiet
         apk add --quiet bash git
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -294,7 +294,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-alpine-x64-artifacts
@@ -309,7 +309,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -340,7 +340,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-macos-x64-${{ matrix.rust }}-artifacts
@@ -355,7 +355,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -386,7 +386,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-macos-aarch64-${{ matrix.rust }}-artifacts
@@ -401,7 +401,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -409,14 +409,14 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v5.0.3
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 #v5.0.3
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-test-windows-x64
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -427,7 +427,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_unit.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
@@ -442,12 +442,12 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Setup wsl Ubuntu
-      uses: Vampire/setup-wsl@v6.0.0
+      uses: Vampire/setup-wsl@6a8db447be7ed35f2f499c02c6e60ff77ef11278 #v6.0.0
       with:
         distribution: Ubuntu-22.04
         wsl-version: 2
@@ -497,7 +497,7 @@ jobs:
           bin/test/test_integ.sh
         echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: ${{ always() }}
       with:
         name: tests-win64-wsl2-artifacts

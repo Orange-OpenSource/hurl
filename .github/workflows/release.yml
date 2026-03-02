@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           persist-credentials: true
           token: ${{ secrets.HURL_BOT_TOKEN }}
@@ -185,7 +185,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: github.ref_name == 'master'
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           persist-credentials: true
           token: ${{ secrets.HURL_BOT_TOKEN }}
@@ -204,7 +204,7 @@ jobs:
           fi
 
       - name: Checkout new release branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
@@ -255,7 +255,7 @@ jobs:
           python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 
       - name: Init git bot context
-        uses: crazy-max/ghaction-import-gpg@v6.3.0
+        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd #v7.0.0
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
@@ -281,7 +281,7 @@ jobs:
           fi
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
         if: ${{ always() }}
         with:
           name: release-changelog
@@ -316,14 +316,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout new release branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           persist-credentials: true
           ref: ${{ needs.set-context.outputs.release_branch }}
           token: ${{ secrets.HURL_BOT_TOKEN }}
 
       - name: Init git bot context
-        uses: crazy-max/ghaction-import-gpg@v6.3.0
+        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd #v7.0.0
         with:
           gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
@@ -332,7 +332,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - uses: actions/download-artifact@v8.0.0
+      - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
         with:
           path: artifacts
 
@@ -365,7 +365,7 @@ jobs:
             find ./artifacts -name "*sha256" -print0 | xargs -0 -I FILE sh -c 'echo "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/releases/download/${RELEASE_VERSION}/$(basename FILE),$(cat FILE)"' >> release-"${RELEASE_VERSION}".sha256.csv
 
       - name: Archive sha256 artifacts
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
         with:
           name: release-sha256-csv
           path: release-${{ needs.set-context.outputs.release_version }}.sha256.csv

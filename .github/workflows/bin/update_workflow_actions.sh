@@ -75,13 +75,12 @@ function consume_args(){
 }
 
 function get_uses_action_list(){
-    grep --recursive --no-filename "uses: " "$script_dir"/../* | \
-        grep @ | \
-            grep --invert-match "#" | \
-                cut --delimiter ':' --field 2- | \
-                    tr -d ' \r\t' | \
-                        sort -u | \
-                            tr '@' ' '
+    grep --recursive --no-filename "uses: " "$script_dir"/../* \
+    | grep @ \
+    | cut --delimiter ':' --field 2- \
+    | tr -d ' \r\t' \
+    | sort -u \
+    | tr '@#' ' '
 }
 
 function prerequisites(){
@@ -99,22 +98,23 @@ consume_args "$@"
 
 echo -e "\n--------------------------------------------------------"
 echo "### Check actions"
-while read -r action version; do
-    update_files=$(grep --recursive --files-with-matches "$action@$version" "$script_dir"/../* | tr -d ' ' | sort -u | xargs realpath)
+while read -r action hash version ; do
+    update_files=$(grep --recursive --files-with-matches "$action@$hash" "$script_dir"/../* | tr -d ' ' | sort -u | xargs realpath)
     latest=$(github_get_latest_release "$action")
     latest_tag=$(echo "$latest" | cut -c1-)
-    if [[ "$version" == "$latest" ]] ; then
-        echo -e "\n- $action@$version ${color_green}newest${color_reset}"
+    latest_hash=$(github_get_tag_hash "$action" "$latest_tag")
+    if [[ "${version}" == "$latest_tag" ]] ; then
+        echo -e "\n- $action#$version ${color_green}newest${color_reset}"
         continue
     else
         if [ "$dry" == "true" ] ; then
-            echo -e "\n- $action@$version ${color_red}please update to max stable version ${latest}${color_reset}"
+            echo -e "\n- $action#$version ${color_red}please update to max stable version ${latest} using hash ${latest_hash}${color_reset}"
         else
-            echo -en "\n- $action@$version "
+            echo -en "\n- $action#$version "
             while read -r file ; do
-                sed -i "s#$action@$version#$action@$latest#g" "$file" || true
-                if grep -E "$action@$version$|$action@$version " "$file" ; then
-                    echo "${color_red} fails to update to ${latest}${color_reset}"
+                sed -i "s:$action@$hash #$version:$action@$latest_hash #$latest:g" "$file" || true
+                if grep -E "$action@$hash #${version}" "$file" ; then
+                    echo "${color_red} fails to update to ${latest} with hash $hash${color_reset}"
                     echo "  - ${color_red} please check write permissions on $file" 
                     exit 1
                 fi

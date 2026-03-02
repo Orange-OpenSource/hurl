@@ -75,10 +75,6 @@ function set_zizmor_conf(){
     conf="/tmp/conf"
     cat <<- "EOF" > "${conf}"
   rules:
-    unpinned-uses:
-      config:
-        policies:
-          "*": ref-pin
     unpinned-images:
       disable: true
 EOF

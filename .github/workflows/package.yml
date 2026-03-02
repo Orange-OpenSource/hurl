@@ -25,14 +25,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -61,7 +61,7 @@ jobs:
         bin/release/man.sh
         bin/release/create_tarball.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -73,12 +73,12 @@ jobs:
       image: ubuntu:22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v8.0.0
+      uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -104,7 +104,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-ubuntu-x64-artifacts
@@ -118,12 +118,12 @@ jobs:
       image: debian
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v8.0.0
+      uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -149,7 +149,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
@@ -171,12 +171,12 @@ jobs:
       image: archlinux
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v8.0.0
+      uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -204,7 +204,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
@@ -218,12 +218,12 @@ jobs:
       image: fedora
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v8.0.0
+      uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -251,7 +251,7 @@ jobs:
     - name: Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: success() || failure()
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
@@ -262,12 +262,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3.12.0
+      uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f #v3.12.0
     - name: Build docker images
       run: |
           sudo docker buildx create --name mybuilder
@@ -328,7 +328,7 @@ jobs:
         pwd
         find . -name "*.log"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       if: success() || failure()
       with:
         name: test-docker-amd64-package-artifacts
@@ -339,14 +339,14 @@ jobs:
     runs-on: ubuntu-22.04-arm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -383,7 +383,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-generic-linux-aarch64-artifacts
         path: target/upload/*
@@ -392,14 +392,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -436,7 +436,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -445,14 +445,14 @@ jobs:
     runs-on: ubuntu-22.04-arm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Activate python3 venv
@@ -489,7 +489,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-deb-aarch64-artifacts
         path: target/upload/*
@@ -499,7 +499,7 @@ jobs:
     runs-on: macos-15-intel
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -539,7 +539,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -549,7 +549,7 @@ jobs:
     runs-on: macos-15
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -589,7 +589,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-macos-aarch64-artifacts
         path: target/upload/*
@@ -602,7 +602,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
@@ -610,14 +610,14 @@ jobs:
       run: |
         .\bin\install_rust.ps1
     - name: Manage vcpkg cache
-      uses: actions/cache@v5.0.3
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 #v5.0.3
       with:
         path: C:\vcpkg
         key: ${{ runner.os }}-release-windows-x64
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
       with:
         python-version: '3.11'
     - name: Environment
@@ -643,7 +643,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v7.0.0
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
       with:
         name: release-windows-x64-artifacts
         path: |
@@ -663,11 +663,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           persist-credentials: false
           ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@v8.0.0
+      - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 #v8.0.0
         with:
           path: artifacts
       - name: Prerequisites
