@@ -470,8 +470,7 @@ This is a cli-only option.
 
 #### --jobs <NUM> {#jobs}
 
-Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
-current amount of CPUs.
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs.
 
 See also [`--parallel`](#parallel).
 

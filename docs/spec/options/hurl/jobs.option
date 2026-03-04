@@ -6,7 +6,6 @@ help: Maximum number of parallel jobs, 0 to disable parallel execution
 help_heading: Run options
 cli_only: true
 ---
-Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
-current amount of CPUs.
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs.
 
 See also [`--parallel`](#parallel).
