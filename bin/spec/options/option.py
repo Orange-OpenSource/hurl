@@ -4,6 +4,12 @@ from typing import Optional
 
 
 @dataclass
+class OptionGroup:
+    name: Optional[str]
+    options: list[str] = field(default_factory=list)
+
+
+@dataclass
 class Option:
     name: str
     long: str

@@ -50,8 +50,11 @@ def process_code_block(s: str) -> str:
 
 
 def convert_md(s) -> str:
-    p = re.compile(r"^###\s+(.*)")
+    p = re.compile(r"^####\s+(.*)")
     s = p.sub('.IP "\\1"', s)
+
+    p = re.compile(r"^###\s+(.*)")
+    s = p.sub('.SS "\\1"', s)
 
     p = re.compile(r"^##")
     s = p.sub(".SH", s)

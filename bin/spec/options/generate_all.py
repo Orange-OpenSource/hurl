@@ -33,19 +33,15 @@ def generate_source_file(option_files: List[str], output_file: str):
 
 def update_man(option_files: List[str], output_file):
     sys.stderr.write("Update " + output_file + "\n")
-    options = sorted(
-        [Option.parse_file(option_file) for option_file in option_files],
-        key=lambda option: option.long,
-    )
     current_man = open(output_file).read()
     result = re.search(
-        r"## OPTIONS[^#]*(###.*)### -h, --help", current_man, re.MULTILINE | re.DOTALL
+        r"## OPTIONS[^#]*(###.*)#### -h, --help", current_man, re.MULTILINE | re.DOTALL
     )
     if result is None:
         raise Exception("Options can not been found in current man " + output_file)
 
     existing_options_str = result.group(1)
-    new_options_str = generate_man.generate_man(options)
+    new_options_str = generate_man.generate_man(filenames=option_files)
     new_man = current_man.replace(existing_options_str, new_options_str)
     open(output_file, "w").write(new_man)
 
