@@ -50,6 +50,12 @@ jobs:
     - name: Install prerequisites
       run: bin/check/install_prerequisites.sh
 
+    - name: Semver
+      if: success() || failure()
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: bin/check/semver.sh --install-dependencies
+
     - name: Shellcheck
       if: success() || failure()
       run: bin/check/shellcheck.sh
@@ -81,10 +87,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success() || failure()
       run: bin/check/rust_version.py --token "${GITHUB_TOKEN}" 7
-
-    - name: Semver
-      if: success() || failure()
-      run: bin/check/semver.sh
 
     - name: Generated
       if: success() || failure()

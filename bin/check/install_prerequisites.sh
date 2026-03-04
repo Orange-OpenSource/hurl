@@ -7,8 +7,7 @@ python3 -m pip install \
     zizmor \
     requests
 
-echo "# Install Rust packages..."
-cargo install cargo-semver-checks --locked
+echo "# Install valgrind"
 # cargo-valgrind 2.4.0 lacks suppression files for Rust 1.93 (see https://github.com/Orange-OpenSource/hurl/issues/4738)
 cargo install --git https://github.com/jfrimmel/cargo-valgrind cargo-valgrind
 
