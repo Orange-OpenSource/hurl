@@ -61,6 +61,10 @@ pub fn parse_env_vars(
     if let Some(timeout) = context.max_time_env_var() {
         options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
     }
+    if let Some(timeout) = context.connect_timeout_env_var() {
+        options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
+    }
+
     Ok(options)
 }
 

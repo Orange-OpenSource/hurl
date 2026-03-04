@@ -45,6 +45,7 @@ const HURL_PREFIX: &str = "HURL_";
 const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 const HURL_COLOR: &str = "HURL_COLOR";
+const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 const HURL_IPV4: &str = "HURL_IPV4";
 const HURL_IPV6: &str = "HURL_IPV6";
@@ -71,6 +72,11 @@ impl RunContext {
             stderr_term,
             config_file,
         }
+    }
+
+    /// Returns the env var for connect timeout duration.
+    pub fn connect_timeout_env_var(&self) -> Option<&str> {
+        self.env_vars.get(HURL_CONNECT_TIMEOUT).map(|v| v.as_str())
     }
 
     /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
@@ -114,6 +120,7 @@ impl RunContext {
         self.env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
     }
 
+    /// Returns the env var for max time duration.
     pub fn max_time_env_var(&self) -> Option<&str> {
         self.env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
     }
@@ -209,13 +216,14 @@ fn is_hurl_option(name: &str) -> bool {
         && (name.starts_with(HURL_VARIABLE_PREFIX)
             || name.starts_with(HURL_SECRET_PREFIX)
             || name == HURL_COLOR
-            || name == HURL_NO_COLOR
+            || name == HURL_CONNECT_TIMEOUT
             || name == HURL_IPV4
             || name == HURL_IPV6
+            || name == HURL_MAX_TIME
+            || name == HURL_NO_COLOR
             || name == HURL_VERBOSE
-            || name == HURL_VERY_VERBOSE
             || name == HURL_VERBOSITY
-            || name == HURL_MAX_TIME)
+            || name == HURL_VERY_VERBOSE)
 }
 
 /// Get config file path if any

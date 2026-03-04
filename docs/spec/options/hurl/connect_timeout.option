@@ -4,6 +4,7 @@ value: SECONDS
 value_default: 300
 help: Maximum time allowed for connection
 help_heading: HTTP options
+env_var: HURL_CONNECT_TIMEOUT
 ---
 Maximum time in seconds that you allow Hurl's connection to take.
 
