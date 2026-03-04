@@ -61,7 +61,7 @@ Fruit: Raspberry
 ## OPTIONS
 
 
-### --check {#check}
+#### --check {#check}
 
 Run in check mode. Exits with 0 if input is formatted correctly, 1 otherwise.
 
@@ -69,46 +69,46 @@ This can not be used with [--output](#output).
 
 This option is not stable yet.
 
-### --color {#color}
+#### --color {#color}
 
 Colorize Output.
 
 This can not be used [--in-place](#inplace).
 
-### --in <FORMAT> {#in}
+#### --in <FORMAT> {#in}
 
 Specify input format: hurl or curl.
 
-### --in-place {#in-place}
+#### --in-place {#in-place}
 
 Modify file in place.
 
 This can be used only with text output.
 
-### --no-color {#no-color}
+#### --no-color {#no-color}
 
 Do not colorize output.
 
-### --out <FORMAT> {#out}
+#### --out <FORMAT> {#out}
 
 Specify output format: hurl, json or html.
 
-### -o, --output <FILE> {#output}
+#### -o, --output <FILE> {#output}
 
 Write output to FILE instead of stdout.
 
-### --standalone {#standalone}
+#### --standalone {#standalone}
 
 Output full html file with css instead of html fragment (default).
 
 This can be used only with html output.
 
-### -h, --help {#help}
+#### -h, --help {#help}
 
 Usage help.
 
 
-### -V, --version {#version}
+#### -V, --version {#version}
 
 Prints version information
 

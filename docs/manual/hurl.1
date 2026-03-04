@@ -1,4 +1,4 @@
-.TH hurl 1 "02 Mar 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "04 Mar 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -60,7 +60,7 @@ It consists of one or several HTTP requests
     GET http://example.org/endpoint2
 
 
-.IP "Capturing values"
+.SS "Capturing values"
 
 A value from an HTTP response can be-reused for successive HTTP requests.
 
@@ -78,7 +78,7 @@ A typical example occurs with CSRF tokens.
 
 More information on captures can be found here \fIhttps://hurl.dev/docs/capturing-response.html\fP
 
-.IP "Asserts"
+.SS "Asserts"
 
 The HTTP response defined in the Hurl file are used to make asserts. Responses are optional.
 
@@ -127,6 +127,8 @@ will follow redirection for each entry in `foo.hurl`. You can also define an opt
 
 will follow a redirection only for the second entry.
 
+.SS "HTTP options"
+
 .IP "--aws-sigv4 <PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]> "
 
 Generate an `Authorization` header with an AWS SigV4 signature.
@@ -146,16 +148,6 @@ Client certificate file and password.
 
 See also \fI--key\fP.
 
-.IP "--color "
-
-Colorize standard output and standard error.
-
-By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.
-
-Environment variables: HURL_COLOR
-
-This is a cli-only option.
-
 .IP "--compressed "
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
@@ -174,77 +166,9 @@ For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. Thi
 
 See also \fI--resolve\fP.
 
-.IP "--continue-on-error "
-
-Continue executing requests to the end of the Hurl file even when an assert error occurs.
-By default, Hurl exits after an assert error in the HTTP response.
-
-Note that this option does not affect the behavior with multiple input Hurl files.
-
-All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
-
-This is a cli-only option.
-
-.IP "-b, --cookie <FILE> "
-
-Read cookies from FILE (using the Netscape cookie file format).
-
-Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
-
-This is a cli-only option.
-
-.IP "-c, --cookie-jar <FILE> "
-
-Write cookies to FILE after running the session.
-The file will be written using the Netscape cookie file format.
-
-Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
-
-This is a cli-only option.
-
-.IP "--curl <FILE> "
-
-Export each request to a list of curl commands.
-
-This is a cli-only option.
-
-.IP "--delay <MILLISECONDS> "
-
-Sets delay before each request (aka sleep). The delay is not applied to requests that have been retried because of \fI--retry\fP. See \fI--retry-interval\fP to space retried requests.
-
-You can specify time units in the delay expression. Set Hurl to use a delay of 2 seconds with `--delay 2s` or set it to 500 milliseconds with `--delay 500ms`. Supported time units: ms, s, m, h. No spaces allowed.
-
 .IP "--digest "
 
 Tell Hurl to use HTTP Digest authentication
-
-.IP "--error-format <FORMAT> "
-
-Control the format of error message (short by default or long)
-
-This is a cli-only option.
-
-.IP "--file-root <DIR> "
-
-Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
-When it is not explicitly defined, files are relative to the Hurl file's directory.
-
-This is a cli-only option.
-
-.IP "--from-entry <ENTRY_NUMBER> "
-
-Execute Hurl file from ENTRY_NUMBER (starting at 1).
-
-This is a cli-only option.
-
-.IP "--glob <GLOB> "
-
-Specify input files that match the given glob pattern.
-
-Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
-However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
-
-This is a cli-only option.
 
 .IP "-H, --header <HEADER> "
 
@@ -270,18 +194,6 @@ For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Up
 
 Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
 
-.IP "--ignore-asserts "
-
-Ignore all asserts defined in the Hurl file.
-
-This is a cli-only option.
-
-.IP "-i, --include "
-
-Include the HTTP headers in the output
-
-This is a cli-only option.
-
 .IP "-k, --insecure "
 
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
@@ -297,21 +209,6 @@ Environment variables: HURL_IPV4
 This option tells Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4.
 
 Environment variables: HURL_IPV6
-
-.IP "--jobs <NUM> "
-
-Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
-current amount of CPUs.
-
-See also \fI--parallel\fP.
-
-This is a cli-only option.
-
-.IP "--json "
-
-Output each Hurl file result to JSON. The format is very closed to HAR format.
-
-This is a cli-only option.
 
 .IP "--key <KEY> "
 
@@ -357,48 +254,9 @@ Environment variables: HURL_MAX_TIME
 
 Tell Hurl to use Negotiate (SPNEGO) authentication.
 
-.IP "-n, --netrc "
-
-Scan the .netrc file in the user's home directory for the username and password.
-
-See also \fI--netrc-file\fP and \fI--netrc-optional\fP.
-
-.IP "--netrc-file <FILE> "
-
-Like \fI--netrc\fP, but provide the path to the netrc file.
-
-See also \fI--netrc-optional\fP.
-
-.IP "--netrc-optional "
-
-Similar to \fI--netrc\fP, but make the .netrc usage optional.
-
-See also \fI--netrc-file\fP.
-
-.IP "--no-color "
-
-Do not colorize standard output nor standard error.
-
-Environment variables: HURL_NO_COLOR, NO_COLOR
-
-This is a cli-only option.
-
 .IP "--no-cookie-store "
 
 Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.
-
-This is a cli-only option.
-
-.IP "--no-output "
-
-Suppress output. By default, Hurl outputs the body of the last response.
-
-This is a cli-only option.
-
-.IP "--no-pretty "
-
-Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
-standard output is a terminal.
 
 This is a cli-only option.
 
@@ -412,20 +270,6 @@ Override value from Environment variable no_proxy.
 
 Tell Hurl to use NTLM authentication
 
-.IP "-o, --output <FILE> "
-
-Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.
-
-.IP "--parallel "
-
-Run files in parallel.
-
-Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in \fI--test\fP mode.
-
-See also \fI--jobs\fP.
-
-This is a cli-only option.
-
 .IP "--path-as-is "
 
 Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.
@@ -434,113 +278,19 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.
 
-.IP "--pretty "
-
-Prettify response output for supported content type (JSON only for the moment). By default, JSON response is prettified if standard output is a terminal, and colorized, see\fI--no-color\fP to format without color.
-
-This is a cli-only option.
-
-.IP "--progress-bar "
-
-Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
-
-This is a cli-only option.
-
 .IP "-x, --proxy <[PROTOCOL://]HOST[:PORT]> "
 
 Use the specified proxy.
 
 Environment variables: http_proxy, https_proxy, all_proxy
 
-.IP "--repeat <NUM> "
-
-Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
-times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
-
-.IP "--report-html <DIR> "
-
-Generate HTML report in DIR.
-
-If the HTML report already exists, it will be updated with the new test results.
-
-This is a cli-only option.
-
-.IP "--report-json <DIR> "
-
-Generate JSON report in DIR.
-
-If the JSON report already exists, it will be updated with the new test results.
-
-This is a cli-only option.
-
-.IP "--report-junit <FILE> "
-
-Generate JUnit File.
-
-If the FILE report already exists, it will be updated with the new test results.
-
-This is a cli-only option.
-
-.IP "--report-tap <FILE> "
-
-Generate TAP report.
-
-If the FILE report already exists, it will be updated with the new test results.
-
-This is a cli-only option.
-
 .IP "--resolve <HOST:PORT:ADDR> "
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
 
-.IP "--retry <NUM> "
-
-Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
-
-.IP "--retry-interval <MILLISECONDS> "
-
-Duration in milliseconds between each retry. Default is 1000 ms.
-
-You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
-
-.IP "--secret <NAME=VALUE> "
-
-Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
-
-Environment variables: HURL_SECRET_name
-
-This is a cli-only option.
-
-.IP "--secrets-file <FILE> "
-
-Define a secrets file in which you define your secrets
-
-Each secret is defined as name=value exactly as with \fI--secret\fP option.
-
-Note that defining a secret twice produces an error.
-
-This is a cli-only option.
-
 .IP "--ssl-no-revoke "
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
-
-This is a cli-only option.
-
-.IP "--test "
-
-Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
-
-In test mode, files are executed in parallel. To run test in a sequential way use `--job 1`.
-
-See also \fI--jobs\fP.
-
-This is a cli-only option.
-
-.IP "--to-entry <ENTRY_NUMBER> "
-
-Execute Hurl file to ENTRY_NUMBER (starting at 1).
-Ignore the remaining of the file. It is useful for debugging a session.
 
 This is a cli-only option.
 
@@ -558,19 +308,76 @@ Specify the User-Agent string to send to the HTTP server.
 
 This is a cli-only option.
 
-.IP "--variable <NAME=VALUE> "
+.SS "Output options"
 
-Define variable (name/value) to be used in Hurl templates.
+.IP "--color "
 
-Environment variables: HURL_VARIABLE_name
+Colorize standard output and standard error.
 
-.IP "--variables-file <FILE> "
+By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.
 
-Set properties file in which your define your variables.
+Environment variables: HURL_COLOR
 
-Each variable is defined as name=value exactly as with \fI--variable\fP option.
+This is a cli-only option.
 
-Note that defining a variable twice produces an error.
+.IP "--curl <FILE> "
+
+Export each request to a list of curl commands.
+
+This is a cli-only option.
+
+.IP "--error-format <FORMAT> "
+
+Control the format of error message (short by default or long)
+
+This is a cli-only option.
+
+.IP "-i, --include "
+
+Include the HTTP headers in the output
+
+This is a cli-only option.
+
+.IP "--json "
+
+Output each Hurl file result to JSON. The format is very closed to HAR format.
+
+This is a cli-only option.
+
+.IP "--no-color "
+
+Do not colorize standard output nor standard error.
+
+Environment variables: HURL_NO_COLOR, NO_COLOR
+
+This is a cli-only option.
+
+.IP "--no-output "
+
+Suppress output. By default, Hurl outputs the body of the last response.
+
+This is a cli-only option.
+
+.IP "--no-pretty "
+
+Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
+standard output is a terminal.
+
+This is a cli-only option.
+
+.IP "-o, --output <FILE> "
+
+Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections.
+
+.IP "--pretty "
+
+Prettify response output for supported content type (JSON only for the moment). By default, JSON response is prettified if standard output is a terminal, and colorized, see\fI--no-color\fP to format without color.
+
+This is a cli-only option.
+
+.IP "--progress-bar "
+
+Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
 
 This is a cli-only option.
 
@@ -610,6 +417,209 @@ In contrast to  \fI--verbose\fP option, this option outputs the full HTTP body r
 
 Environment variables: HURL_VERY_VERBOSE
 
+.SS "Run options"
+
+.IP "--continue-on-error "
+
+Continue executing requests to the end of the Hurl file even when an assert error occurs.
+By default, Hurl exits after an assert error in the HTTP response.
+
+Note that this option does not affect the behavior with multiple input Hurl files.
+
+All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
+
+This is a cli-only option.
+
+.IP "--delay <MILLISECONDS> "
+
+Sets delay before each request (aka sleep). The delay is not applied to requests that have been retried because of \fI--retry\fP. See \fI--retry-interval\fP to space retried requests.
+
+You can specify time units in the delay expression. Set Hurl to use a delay of 2 seconds with `--delay 2s` or set it to 500 milliseconds with `--delay 500ms`. Supported time units: ms, s, m, h. No spaces allowed.
+
+.IP "--from-entry <ENTRY_NUMBER> "
+
+Execute Hurl file from ENTRY_NUMBER (starting at 1).
+
+This is a cli-only option.
+
+.IP "--ignore-asserts "
+
+Ignore all asserts defined in the Hurl file.
+
+This is a cli-only option.
+
+.IP "--jobs <NUM> "
+
+Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the
+current amount of CPUs.
+
+See also \fI--parallel\fP.
+
+This is a cli-only option.
+
+.IP "--parallel "
+
+Run files in parallel.
+
+Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in \fI--test\fP mode.
+
+See also \fI--jobs\fP.
+
+This is a cli-only option.
+
+.IP "--repeat <NUM> "
+
+Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two
+times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
+
+.IP "--retry <NUM> "
+
+Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
+
+.IP "--retry-interval <MILLISECONDS> "
+
+Duration in milliseconds between each retry. Default is 1000 ms.
+
+You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
+
+.IP "--secret <NAME=VALUE> "
+
+Define secret value to be redacted from logs and report. When defined, secrets can be used as variable everywhere variables are used.
+
+Environment variables: HURL_SECRET_name
+
+This is a cli-only option.
+
+.IP "--secrets-file <FILE> "
+
+Define a secrets file in which you define your secrets
+
+Each secret is defined as name=value exactly as with \fI--secret\fP option.
+
+Note that defining a secret twice produces an error.
+
+This is a cli-only option.
+
+.IP "--test "
+
+Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
+
+In test mode, files are executed in parallel. To run test in a sequential way use `--job 1`.
+
+See also \fI--jobs\fP.
+
+This is a cli-only option.
+
+.IP "--to-entry <ENTRY_NUMBER> "
+
+Execute Hurl file to ENTRY_NUMBER (starting at 1).
+Ignore the remaining of the file. It is useful for debugging a session.
+
+This is a cli-only option.
+
+.IP "--variable <NAME=VALUE> "
+
+Define variable (name/value) to be used in Hurl templates.
+
+Environment variables: HURL_VARIABLE_name
+
+.IP "--variables-file <FILE> "
+
+Set properties file in which your define your variables.
+
+Each variable is defined as name=value exactly as with \fI--variable\fP option.
+
+Note that defining a variable twice produces an error.
+
+This is a cli-only option.
+
+.SS "Report options"
+
+.IP "--report-html <DIR> "
+
+Generate HTML report in DIR.
+
+If the HTML report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
+.IP "--report-json <DIR> "
+
+Generate JSON report in DIR.
+
+If the JSON report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
+.IP "--report-junit <FILE> "
+
+Generate JUnit File.
+
+If the FILE report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
+.IP "--report-tap <FILE> "
+
+Generate TAP report.
+
+If the FILE report already exists, it will be updated with the new test results.
+
+This is a cli-only option.
+
+.SS "Other options"
+
+.IP "-b, --cookie <FILE> "
+
+Read cookies from FILE (using the Netscape cookie file format).
+
+Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
+
+.IP "-c, --cookie-jar <FILE> "
+
+Write cookies to FILE after running the session.
+The file will be written using the Netscape cookie file format.
+
+Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
+
+This is a cli-only option.
+
+.IP "--file-root <DIR> "
+
+Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
+When it is not explicitly defined, files are relative to the Hurl file's directory.
+
+This is a cli-only option.
+
+.IP "--glob <GLOB> "
+
+Specify input files that match the given glob pattern.
+
+Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
+However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
+
+This is a cli-only option.
+
+.IP "-n, --netrc "
+
+Scan the .netrc file in the user's home directory for the username and password.
+
+See also \fI--netrc-file\fP and \fI--netrc-optional\fP.
+
+.IP "--netrc-file <FILE> "
+
+Like \fI--netrc\fP, but provide the path to the netrc file.
+
+See also \fI--netrc-optional\fP.
+
+.IP "--netrc-optional "
+
+Similar to \fI--netrc\fP, but make the .netrc usage optional.
+
+See also \fI--netrc-file\fP.
+
 .IP "-h, --help "
 
 Usage help. This lists all current command line options with a short description.
@@ -620,23 +630,23 @@ Prints version information
 
 .SH EXIT CODES
 
-.IP "0"
+.SS "0"
 
 Success.
 
-.IP "1"
+.SS "1"
 
 Failed to parse command-line options.
 
-.IP "2"
+.SS "2"
 
 Input File Parsing Error.
 
-.IP "3"
+.SS "3"
 
 Runtime error (such as failure to connect to host).
 
-.IP "4"
+.SS "4"
 
 Assert Error.
 
