@@ -31,12 +31,18 @@ pub fn eval_to_int(
         Value::String(v) => match v.parse::<i64>() {
             Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
             _ => {
-                let kind = RunnerErrorKind::FilterInvalidInput(value.repr());
+                let kind = RunnerErrorKind::FilterInvalidInput {
+                    actual: value.repr(),
+                    expected: "integer string".to_string(),
+                };
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.repr());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.repr(),
+                expected: "integer, float, or string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -109,14 +115,20 @@ mod tests {
         .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput("string <123x>".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "string <123x>".to_string(),
+                expected: "integer string".to_string()
+            }
         );
         let err = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput("boolean <true>".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "boolean <true>".to_string(),
+                expected: "integer, float, or string".to_string()
+            }
         );
     }
 }

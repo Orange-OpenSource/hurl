@@ -30,10 +30,10 @@ pub fn eval_to_string(
     match value.render() {
         Some(value) => Ok(Some(Value::String(value))),
         None => {
-            let kind = RunnerErrorKind::FilterInvalidInput(format!(
-                "{} can not be converted to a string",
-                value.repr()
-            ));
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: value.repr(),
+                expected: "a renderable value".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -79,9 +79,10 @@ mod tests {
             .unwrap();
         assert_eq!(
             err.kind,
-            RunnerErrorKind::FilterInvalidInput(
-                "list <[]> can not be converted to a string".to_string()
-            )
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "list <[]>".to_string(),
+                expected: "a renderable value".to_string()
+            }
         );
     }
 }
