@@ -29,6 +29,10 @@ use super::CliOptions;
 pub struct RunContext {
     /// All the environment variables.
     env_vars: HashMap<String, String>,
+
+    /// The environment variables that have `HURL_` prefix (and that could be used by Hurl)
+    hurl_env_vars: HashMap<String, String>,
+
     /// Is standard input a terminal or not?
     stdin_term: bool,
     /// Is standard output a terminal or not?
@@ -64,9 +68,15 @@ impl RunContext {
         stderr_term: bool,
     ) -> Self {
         let config_file = get_config_file(&env_vars);
+        let hurl_env_vars = env_vars
+            .iter()
+            .filter(|(k, _v)| k.starts_with(HURL_PREFIX))
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect::<HashMap<_, _>>();
 
         RunContext {
             env_vars,
+            hurl_env_vars,
             stdin_term,
             stdout_term,
             stderr_term,
@@ -76,7 +86,9 @@ impl RunContext {
 
     /// Returns the env var for connect timeout duration.
     pub fn connect_timeout_env_var(&self) -> Option<&str> {
-        self.env_vars.get(HURL_CONNECT_TIMEOUT).map(|v| v.as_str())
+        self.hurl_env_vars
+            .get(HURL_CONNECT_TIMEOUT)
+            .map(|v| v.as_str())
     }
 
     /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
@@ -117,12 +129,12 @@ impl RunContext {
     }
 
     pub fn verbosity_env_var(&self) -> Option<&str> {
-        self.env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
+        self.hurl_env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
     }
 
     /// Returns the env var for max time duration.
     pub fn max_time_env_var(&self) -> Option<&str> {
-        self.env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
+        self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
     }
 
     /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
@@ -137,7 +149,7 @@ impl RunContext {
     /// Environment variables are prefixed with `HURL_VARIABLE_` and returned values have their name
     /// stripped of this prefix.
     pub fn var_env_vars(&self) -> HashMap<&str, &str> {
-        self.env_vars
+        self.hurl_env_vars
             .iter()
             .filter_map(|(name, value)| {
                 name.strip_prefix(HURL_VARIABLE_PREFIX)
@@ -152,7 +164,7 @@ impl RunContext {
     /// Environment variables are prefixed with `HURL_` and returned values have their name
     /// stripped of this prefix.
     pub fn legacy_var_env_vars(&self) -> HashMap<&str, &str> {
-        self.env_vars
+        self.hurl_env_vars
             .iter()
             .filter(|(name, _)| !is_hurl_option(name))
             .filter_map(|(name, value)| {
@@ -168,7 +180,7 @@ impl RunContext {
     /// Environment variables are prefixed with `HURL_SECRET_` and returned values have their name
     /// stripped of this prefix.
     pub fn secret_env_vars(&self) -> HashMap<&str, &str> {
-        self.env_vars
+        self.hurl_env_vars
             .iter()
             .filter_map(|(name, value)| {
                 name.strip_prefix(HURL_SECRET_PREFIX)
@@ -199,7 +211,7 @@ impl RunContext {
     }
 
     fn get_env_var_bool(&self, name: &'static str) -> Option<bool> {
-        self.env_vars
+        self.hurl_env_vars
             .get(name)
             .map(|s| s.as_str())
             .map(|v| v.to_ascii_lowercase())
