@@ -79,7 +79,7 @@ def process_table(
         paragraphs = doc.slice(first_p, next_node)
         paragraphs_contents = [p.content for p in paragraphs if p.content]
         description = "".join(paragraphs_contents)
-        description = description.replace("\n", "<br>")
+        description = description.replace("\n", "<br>").replace("|", "&#124;")
 
         table += f"| {name} | {description} |\n"
 

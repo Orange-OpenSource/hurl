@@ -196,6 +196,8 @@ Add an extra header to include in information sent. Can be used several times in
 
 Do not add newlines or carriage returns.
 
+Environment variables: HURL_HEADER='name1:value1|name2:value2' (headers are separated by |)
+
 #### -0, --http1.0 {#http10}
 
 Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.
@@ -302,7 +304,7 @@ When negotiating a TLS or SSL connection, the server sends a certificate indicat
 
 Use the specified proxy.
 
-Environment variables: http_proxy, https_proxy, all_proxy
+Environment variables: http_proxy https_proxy all_proxy
 
 #### --resolve <HOST:PORT:ADDR> {#resolve}
 
@@ -369,7 +371,7 @@ This is a cli-only option.
 
 Do not colorize standard output nor standard error.
 
-Environment variables: HURL_NO_COLOR, NO_COLOR
+Environment variables: HURL_NO_COLOR NO_COLOR
 
 This is a cli-only option.
 

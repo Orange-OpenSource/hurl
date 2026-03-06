@@ -46,13 +46,15 @@ pub struct RunContext {
 /// All the supported Hurl env vars.
 const LEGACY_HURL_VARIABLE_PREFIX: &str = "HURL_";
 const HURL_PREFIX: &str = "HURL_";
-const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
+
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 const HURL_COLOR: &str = "HURL_COLOR";
 const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+const HURL_HEADER: &str = "HURL_HEADER";
 const HURL_IPV4: &str = "HURL_IPV4";
 const HURL_IPV6: &str = "HURL_IPV6";
+const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
 const HURL_VERBOSE: &str = "HURL_VERBOSE";
 const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
 const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
@@ -108,6 +110,14 @@ impl RunContext {
         } else {
             self.get_env_var_bool(HURL_COLOR)
         }
+    }
+
+    /// Returns the map of Hurl headers injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_VARIABLE_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn header_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_HEADER).map(|v| v.as_str())
     }
 
     /// Returns the env var for IPv4 resolution.
@@ -229,6 +239,7 @@ fn is_hurl_option(name: &str) -> bool {
             || name.starts_with(HURL_SECRET_PREFIX)
             || name == HURL_COLOR
             || name == HURL_CONNECT_TIMEOUT
+            || name == HURL_HEADER
             || name == HURL_IPV4
             || name == HURL_IPV6
             || name == HURL_MAX_TIME

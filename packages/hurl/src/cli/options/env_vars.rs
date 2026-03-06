@@ -64,7 +64,10 @@ pub fn parse_env_vars(
     if let Some(timeout) = context.connect_timeout_env_var() {
         options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
     }
-
+    if let Some(header) = context.header_env_var() {
+        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
+        options.headers.extend(headers);
+    }
     Ok(options)
 }
 

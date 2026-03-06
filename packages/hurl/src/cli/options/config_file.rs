@@ -1,4 +1,3 @@
-use hurl_core::reader::CharPos;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2026 Orange
@@ -16,9 +15,9 @@ use hurl_core::reader::CharPos;
  * limitations under the License.
  *
  */
-use hurl_core::reader::Pos;
-use hurl_core::reader::Reader;
 use std::path::Path;
+
+use hurl_core::reader::{CharPos, Pos, Reader};
 
 use super::{CliOptions, CliOptionsError, Verbosity};
 
