@@ -29,11 +29,13 @@ use hurl::report;
 pub enum CliError {
     /// An error has occurred during reading of an input.
     InputRead(String),
+    /// A command-line option is not valid.
+    InvalidOption(String),
     /// The input is not a valid Hurl file.
     Parsing,
     /// An error has occurred during writing of an output.
     OutputWrite(String),
-    /// A generic i/O error has happened.
+    /// A generic I/O error has happened.
     GenericIO(String),
 }
 
@@ -57,6 +59,7 @@ impl fmt::Display for CliError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             CliError::InputRead(message) => write!(f, "{message}"),
+            CliError::InvalidOption(message) => write!(f, "{message}"),
             CliError::Parsing => Ok(()),
             CliError::OutputWrite(message) => write!(f, "{message}"),
             CliError::GenericIO(message) => write!(f, "{message}"),

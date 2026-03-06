@@ -99,6 +99,11 @@ pub enum RunnerErrorKind {
     InvalidJson {
         value: String,
     },
+    InvalidOptionValue {
+        name: String,
+        value: String,
+        message: String,
+    },
     InvalidRegex,
     InvalidUrl {
         url: String,
@@ -156,6 +161,7 @@ impl DisplaySourceError for RunnerError {
             RunnerErrorKind::FilterMissingInput => "Filter error".to_string(),
             RunnerErrorKind::Http(http_error) => http_error.description(),
             RunnerErrorKind::InvalidJson { .. } => "Invalid JSON".to_string(),
+            RunnerErrorKind::InvalidOptionValue { .. } => "Invalid option value".to_string(),
             RunnerErrorKind::InvalidRegex => "Invalid regex".to_string(),
             RunnerErrorKind::InvalidUrl { .. } => "Invalid URL".to_string(),
             RunnerErrorKind::InvalidXPathEval => "Invalid XPath expression".to_string(),
@@ -279,6 +285,16 @@ impl DisplaySourceError for RunnerError {
                 let message = error::add_carets(message, self.source_info, content);
                 color_red_multiline_string(&message)
             }
+            RunnerErrorKind::InvalidOptionValue {
+                name,
+                value,
+                message,
+            } => {
+                let message = &format!("invalid {name} option value <{value}>: {message}");
+                let message = error::add_carets(message, self.source_info, content);
+                color_red_multiline_string(&message)
+            }
+
             RunnerErrorKind::InvalidRegex => {
                 let message = "regex expression is not valid";
                 let message = error::add_carets(message, self.source_info, content);

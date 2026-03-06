@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
-    OptionKind, Placeholder, VariableDefinition, VariableValue, VerbosityOption,
+    OptionKind, Placeholder, Template, VariableDefinition, VariableValue, VerbosityOption,
 };
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
@@ -96,11 +96,8 @@ pub fn get_entry_options(
                 entry_options.digest = value;
             }
             OptionKind::Header(header) => {
-                let header = eval_template(header, variables)?;
-                let header = Header::parse(&header);
-                if let Some(header) = header {
-                    entry_options.headers.push(header);
-                }
+                let header = eval_header_option(header, variables)?;
+                entry_options.headers.push(header);
             }
             // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
             // through a flag. In an `[Options]` section, the signification of such a flag is:
@@ -338,6 +335,21 @@ pub fn get_entry_verbosity(
         }
     }
     Ok(verbosity)
+}
+
+/// Evaluate a template into a [`Header`], given a set of variables.
+fn eval_header_option(header: &Template, variables: &VariableSet) -> Result<Header, RunnerError> {
+    let source_info = header.source_info;
+    let header = eval_template(header, variables)?;
+    Header::parse(&header).ok_or({
+        let message = "missing `:`".to_string();
+        let kind = RunnerErrorKind::InvalidOptionValue {
+            name: "header".to_string(),
+            value: header,
+            message,
+        };
+        RunnerError::new(source_info, kind, false)
+    })
 }
 
 /// Evaluates a boolean option, using a set of `variables`.

@@ -116,6 +116,10 @@ fn main() -> ExitCode {
         // result. The false assertions "errors" are displayed in these functions and are not considered
         // as program errors.
         Ok(r) => r,
+        Err(CliError::InvalidOption(msg)) => {
+            base_logger.error(&msg);
+            return ExitCode::from(EXIT_ERROR_COMMANDLINE);
+        }
         // So, we're dealing here with I/O errors: input reading, parsing etc...
         // We consider input read as "parsing" and don't have a specific exit code for the moment.
         Err(CliError::InputRead(msg)) | Err(CliError::GenericIO(msg)) => {

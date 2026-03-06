@@ -62,7 +62,7 @@ pub fn run_seq(
         options.secrets.iter().for_each(|(name, value)| {
             variables.insert_secret(name.clone(), value.clone());
         });
-        let runner_options = options.to_runner_options(&filename, current_dir);
+        let runner_options = options.to_runner_options(&filename, current_dir)?;
         let logger_options = options.to_logger_options();
 
         // Run our Hurl file now, we can only fail if there is a parsing error.
@@ -193,11 +193,17 @@ pub fn run_par(
         .iter()
         .enumerate()
         .map(|(seq, input)| {
-            let runner_options = options.to_runner_options(input, current_dir);
+            let runner_options = options.to_runner_options(input, current_dir)?;
             let logger_options = options.to_logger_options();
-            Job::new(input, seq, &runner_options, &variables, &logger_options)
+            Ok(Job::new(
+                input,
+                seq,
+                &runner_options,
+                &variables,
+                &logger_options,
+            ))
         })
-        .collect::<Vec<_>>();
+        .collect::<Result<Vec<Job>, CliError>>()?;
 
     let mut runner = ParallelRunner::new(
         workers_count,

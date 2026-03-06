@@ -265,3 +265,12 @@ error: Decompression error
     | ^^^^^ compression unknown is not supported
     |
 
+error: Invalid option value
+   --> tests_failed/runner_errors/runner_errors.hurl:176:9
+    |
+    | GET http://localhost:8000/runner_errors
+    | ...
+176 | header: aaa
+    |         ^^^ invalid header option value <aaa>: missing `:`
+    |
+

@@ -169,3 +169,8 @@ GET http://localhost:8000/runner_errors/unsupported-content-encoding
 HTTP 200
 [Asserts]
 bytes count == 10
+
+# Invalid option value
+GET http://localhost:8000/runner_errors
+[Options]
+header: aaa

@@ -265,3 +265,12 @@
 [1;34m    |[0m[1;31m ^^^^^ compression unknown is not supported[0m
 [1;34m    |[0m
 
+[1;31merror[0m: [1mInvalid option value[0m
+   [1;34m-->[0m tests_failed/runner_errors/runner_errors.hurl:176:9
+[1;34m    |[0m
+[1;34m    |[0m [90mGET http://localhost:8000/runner_errors[0m
+[1;34m    |[0m[90m ...[0m
+[1;34m176 |[0m header: aaa
+[1;34m    |[0m[1;31m         ^^^ invalid header option value <aaa>: missing `:`[0m
+[1;34m    |[0m
+

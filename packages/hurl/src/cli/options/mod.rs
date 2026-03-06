@@ -42,6 +42,7 @@ use hurl_core::input::{Input, InputKind};
 use hurl_core::types::{BytesPerSec, Count};
 
 pub use crate::cli::options::context::RunContext;
+use crate::cli::CliError;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
 
@@ -298,7 +299,11 @@ impl Default for CliOptions {
 
 impl CliOptions {
     /// Converts this instance of [`CliOptions`] to an instance of [`RunnerOptions`]
-    pub fn to_runner_options(&self, filename: &Input, current_dir: &Path) -> RunnerOptions {
+    pub fn to_runner_options(
+        &self,
+        filename: &Input,
+        current_dir: &Path,
+    ) -> Result<RunnerOptions, CliError> {
         let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();
         let client_cert_file = self.client_cert_file.clone();
@@ -327,12 +332,15 @@ impl CliOptions {
         // while the second one is used to send an empty header.
         // See <https://github.com/Orange-OpenSource/hurl/issues/3536>
         let mut headers = HeaderVec::new();
-        self.headers.iter().for_each(|header| {
-            let header = Header::parse(header);
-            if let Some(header) = header {
-                headers.push(header);
+        for header in self.headers.iter() {
+            match Header::parse(header) {
+                Some(header) => headers.push(header),
+                None => {
+                    let msg = format!("Invalid header <{header}>, missing `:`");
+                    return Err(CliError::InvalidOption(msg));
+                }
             }
-        });
+        }
 
         let http_version = match self.http_version {
             Some(version) => version.into(),
@@ -371,7 +379,7 @@ impl CliOptions {
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
 
-        RunnerOptionsBuilder::new()
+        Ok(RunnerOptionsBuilder::new()
             .aws_sigv4(aws_sigv4)
             .cacert_file(cacert_file)
             .client_cert_file(client_cert_file)
@@ -416,7 +424,7 @@ impl CliOptions {
             .use_cookie_store(use_cookie_store)
             .user(user)
             .user_agent(user_agent)
-            .build()
+            .build())
     }
 
     /// Converts this instance of [`ClipOptions`] to an instance of [`LoggerOptions`]
