@@ -36,6 +36,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Reject invalid header value on command line option [#4843](https://github.com/Orange-OpenSource/hurl/issues/4843)
 * Fix truncating existing output file when response is tiny [#4576](https://github.com/Orange-OpenSource/hurl/issues/4576)
 
 
