@@ -233,9 +233,10 @@ jobs:
             done
           done
 
+      # TODO: pourquoi on fait un update crate ici ? Quand on décide de faire une release, on devrait figer les crates
       - name: Cargo update
         run: |
-          ./bin/update_crates.sh
+          python3 bin/update_crates.py packages/hurl packages/hurlfmt packages/hurl_core
 
       - name: Update installation doc
         run: |

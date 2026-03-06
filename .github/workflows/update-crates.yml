@@ -25,12 +25,11 @@ jobs:
           persist-credentials: true
           ref: master
           token: ${{ secrets.HURL_BOT_TOKEN }}
-
       - name: Crates update
         run: |
           UPDATE_CRATES_OUTPUT="/tmp/update.output"
           echo "UPDATE_CRATES_OUTPUT=${UPDATE_CRATES_OUTPUT}" | tee -a "${GITHUB_ENV}"
-          bin/update_crates.sh > "${UPDATE_CRATES_OUTPUT}" 2>&1 && crates_update_exit_code=0 || crates_update_exit_code=$?
+          python3 bin/update_crates.py packages/hurl packages/hurlfmt packages/hurl_core > "${UPDATE_CRATES_OUTPUT}" 2>&1 && crates_update_exit_code=0 || crates_update_exit_code=$?
           cat "${UPDATE_CRATES_OUTPUT}"
           if [[ ${crates_update_exit_code} -eq 0 ]] ; then
             UPDATED_CRATES_COUNT=$(grep -cE "updated to" "${UPDATE_CRATES_OUTPUT}" || true)
