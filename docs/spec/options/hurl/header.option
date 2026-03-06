@@ -1,11 +1,11 @@
 name: header
 long: header
 short: H
-value: HEADER
+value: NAME:VALUE
 help: Pass custom header(s) to server
 help_heading: HTTP options
 multi: append
 ---
-Add an extra header to include in information sent. Can be used several times in a command
+Add an extra header to include in information sent. Can be used several times in a command.
 
-Do not add newlines or carriage returns
+Do not add newlines or carriage returns.

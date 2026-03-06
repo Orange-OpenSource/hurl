@@ -67,14 +67,10 @@ impl CurlCmd {
         let mut params = method_params(request_spec, options.follow_location);
         args.append(&mut params);
 
-        let options_headers = options
-            .headers
-            .iter()
-            .map(|h| h.as_str())
-            .collect::<Vec<&str>>();
-        let headers = &request_spec.headers.with_raw_headers(&options_headers);
+        let mut headers = request_spec.headers.clone();
+        headers.extend(&options.headers);
         let mut params = headers_params(
-            headers,
+            &headers,
             request_spec.implicit_content_type.as_deref(),
             &request_spec.body,
         );
@@ -671,6 +667,10 @@ mod tests {
 
         let context_dir = ContextDir::default();
         let cookie_store = CookieStore::new();
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Test-Header-1", "content-1"));
+        headers.push(Header::new("Test-Header-2", "content-2"));
+        headers.push(Header::new("Test-Header-Empty", ""));
         let options = ClientOptions {
             allow_reuse: true,
             aws_sigv4: None,
@@ -684,11 +684,7 @@ mod tests {
             digest: false,
             follow_location: true,
             follow_location_trusted: false,
-            headers: vec![
-                "Test-Header-1: content-1".to_string(),
-                "Test-Header-2: content-2".to_string(),
-                "Test-Header-Empty:".to_string(),
-            ],
+            headers,
             http_version: RequestedHttpVersion::Http10,
             insecure: true,
             ip_resolve: IpResolve::IpV6,

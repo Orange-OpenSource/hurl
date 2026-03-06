@@ -32,7 +32,7 @@ use std::str::FromStr;
 use std::time::Duration;
 
 use hurl::http;
-use hurl::http::RequestedHttpVersion;
+use hurl::http::{Header, HeaderVec, RequestedHttpVersion};
 use hurl::pretty::PrettyMode;
 use hurl::runner::Output;
 use hurl::util::logger;
@@ -321,7 +321,19 @@ impl CliOptions {
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
         let from_entry = self.from_entry;
-        let headers = &self.headers;
+
+        // TODO: do we want to manage the headers with no content? There are two type of no-content
+        // headers: `foo:` and `foo;`. The first one can be used to remove libcurl headers (`Host:`)
+        // while the second one is used to send an empty header.
+        // See <https://github.com/Orange-OpenSource/hurl/issues/3536>
+        let mut headers = HeaderVec::new();
+        self.headers.iter().for_each(|header| {
+            let header = Header::parse(header);
+            if let Some(header) = header {
+                headers.push(header);
+            }
+        });
+
         let http_version = match self.http_version {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),

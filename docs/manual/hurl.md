@@ -190,11 +190,11 @@ See also [`--resolve`](#resolve).
 
 Tell Hurl to use HTTP Digest authentication
 
-#### -H, --header <HEADER> {#header}
+#### -H, --header <NAME:VALUE> {#header}
 
-Add an extra header to include in information sent. Can be used several times in a command
+Add an extra header to include in information sent. Can be used several times in a command.
 
-Do not add newlines or carriage returns
+Do not add newlines or carriage returns.
 
 #### -0, --http1.0 {#http10}
 

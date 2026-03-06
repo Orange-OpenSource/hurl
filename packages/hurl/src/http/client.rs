@@ -506,18 +506,11 @@ impl Client {
         self.set_multipart(&request_spec.multipart)?;
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
-        // TODO: do we want to manage the headers with no content? There are two type of no-content
-        // headers: `foo:` and `foo;`. The first one can be used to remove libcurl headers (`Host:`)
-        // while the second one is used to send an empty header.
-        // See <https://github.com/Orange-OpenSource/hurl/issues/3536>
-        let options_headers = options
-            .headers
-            .iter()
-            .map(|h| h.as_str())
-            .collect::<Vec<&str>>();
-        let headers = &request_spec.headers.with_raw_headers(&options_headers);
+
+        let mut headers = request_spec.headers.clone();
+        headers.extend(&options.headers);
         self.set_headers(
-            headers,
+            &headers,
             request_spec.implicit_content_type.as_deref(),
             options,
         )?;

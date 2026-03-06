@@ -19,7 +19,7 @@ use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
 
-use crate::http::{IpResolve, RequestedHttpVersion};
+use crate::http::{HeaderVec, IpResolve, RequestedHttpVersion};
 use crate::util::path::ContextDir;
 
 use super::output::Output;
@@ -42,7 +42,7 @@ pub struct RunnerOptionsBuilder {
     follow_location: bool,
     follow_location_trusted: bool,
     from_entry: Option<usize>,
-    headers: Vec<String>,
+    headers: HeaderVec,
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
@@ -94,7 +94,7 @@ impl Default for RunnerOptionsBuilder {
             follow_location: false,
             follow_location_trusted: false,
             from_entry: None,
-            headers: vec![],
+            headers: HeaderVec::new(),
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
@@ -258,8 +258,8 @@ impl RunnerOptionsBuilder {
     }
 
     /// Sets additional headers (overrides if a header already exists).
-    pub fn headers(&mut self, header: &[String]) -> &mut Self {
-        self.headers = header.to_vec();
+    pub fn headers(&mut self, headers: HeaderVec) -> &mut Self {
+        self.headers = headers;
         self
     }
 
@@ -549,7 +549,7 @@ pub struct RunnerOptions {
     /// Executes Hurl file from from_entry (starting at 1), ignores the beginning of the file.
     pub(crate) from_entry: Option<usize>,
     /// Sets additional headers (overrides if a header already exists).
-    pub(crate) headers: Vec<String>,
+    pub(crate) headers: HeaderVec,
     /// Set requested HTTP version (can be different of the effective HTTP version).
     pub(crate) http_version: RequestedHttpVersion,
     /// Ignores all asserts defined in the Hurl file.

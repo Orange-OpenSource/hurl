@@ -147,6 +147,12 @@ impl<'a> IntoIterator for &'a HeaderVec {
     }
 }
 
+impl<'a> Extend<&'a Header> for HeaderVec {
+    fn extend<T: IntoIterator<Item = &'a Header>>(&mut self, iter: T) {
+        self.headers.extend(iter.into_iter().cloned());
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::http::header::HeaderVec;

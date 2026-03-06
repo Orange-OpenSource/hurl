@@ -21,7 +21,7 @@ use hurl_core::ast::{
 };
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
-use crate::http::{IpResolve, RequestedHttpVersion};
+use crate::http::{Header, IpResolve, RequestedHttpVersion};
 use crate::util::logger::{Logger, Verbosity};
 
 use super::error::{RunnerError, RunnerErrorKind};
@@ -95,9 +95,12 @@ pub fn get_entry_options(
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.digest = value;
             }
-            OptionKind::Header(value) => {
-                let value = eval_template(value, variables)?;
-                entry_options.headers.push(value);
+            OptionKind::Header(header) => {
+                let header = eval_template(header, variables)?;
+                let header = Header::parse(&header);
+                if let Some(header) = header {
+                    entry_options.headers.push(header);
+                }
             }
             // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
             // through a flag. In an `[Options]` section, the signification of such a flag is:
