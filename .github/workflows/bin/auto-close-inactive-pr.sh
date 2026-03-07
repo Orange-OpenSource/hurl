@@ -84,7 +84,7 @@ function consume_args(){
             else
                 log_error "option $1" "can not be null"
                 usage >&2
-                return1
+                return 1
             fi
             ;;
         *)
