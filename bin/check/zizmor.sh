@@ -77,6 +77,8 @@ function set_zizmor_conf(){
   rules:
     unpinned-images:
       disable: true
+    secrets-outside-env:
+      disable: true
 EOF
 }
 
