@@ -66,6 +66,14 @@ pub fn parse_env_vars(
     }
     if let Some(header) = context.header_env_var() {
         let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
+        for h in &headers {
+            if !h.contains(':') {
+                let msg = format!(
+                    "Invalid header <{h}> in HURL_HEADER environment variable, missing `:`"
+                );
+                return Err(CliOptionsError::Error(msg));
+            }
+        }
         options.headers.extend(headers);
     }
     Ok(options)
