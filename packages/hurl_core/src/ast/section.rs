@@ -49,6 +49,7 @@ impl Section {
             SectionValue::Captures(_) => "Captures",
             SectionValue::MultipartFormData(_, true) => "Multipart",
             SectionValue::MultipartFormData(_, false) => "MultipartFormData",
+            SectionValue::Prints(_) => "Print",
             SectionValue::Options(_) => "Options",
         }
     }
@@ -64,6 +65,7 @@ pub enum SectionValue {
     Cookies(Vec<Cookie>),
     Captures(Vec<Capture>),
     Asserts(Vec<Assert>),
+    Prints(Vec<Print>),
     Options(Vec<EntryOption>),
 }
 
@@ -116,6 +118,14 @@ pub struct Capture {
     pub filters: Vec<(Whitespace, Filter)>,
     pub space3: Whitespace,
     pub redacted: bool,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Print {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub value: Template,
     pub line_terminator0: LineTerminator,
 }
 

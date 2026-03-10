@@ -20,7 +20,7 @@ use hurl_core::ast::{
     CookiePath, CountOption, Duration, DurationOption, Entry, EntryOption, File, FilenameParam,
     FilenameValue, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator,
     Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder,
-    Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,
+    Predicate, PredicateFuncValue, PredicateValue, Print, Query, QueryValue, Regex, RegexValue, Request,
     Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
     VerbosityOption, VersionValue, I64, U64,
 };
@@ -129,6 +129,18 @@ impl Lint for Capture {
             s.push(' ');
             s.push_str("redact");
         }
+        s.push_str(&lint_lt(&self.line_terminator0, true));
+        s
+    }
+}
+
+impl Lint for Print {
+    fn lint(&self) -> String {
+        let mut s = String::new();
+        self.line_terminators
+            .iter()
+            .for_each(|lt| s.push_str(&lint_lt(lt, false)));
+        s.push_str(&self.value.lint());
         s.push_str(&lint_lt(&self.line_terminator0, true));
         s
     }
@@ -737,6 +749,9 @@ impl Lint for Response {
         if let Some(section) = get_asserts_section(self) {
             s.push_str(&section.lint());
         }
+        if let Some(section) = get_prints_section(self) {
+            s.push_str(&section.lint());
+        }
         if let Some(body) = &self.body {
             s.push_str(&body.lint());
         }
@@ -784,6 +799,9 @@ impl Lint for SectionValue {
             }
             SectionValue::Asserts(asserts) => {
                 asserts.iter().for_each(|a| s.push_str(&a.lint()));
+            }
+            SectionValue::Prints(prints) => {
+                prints.iter().for_each(|p| s.push_str(&p.lint()));
             }
             SectionValue::Options(options) => {
                 options.iter().for_each(|o| s.push_str(&o.lint()));
@@ -842,6 +860,15 @@ impl Lint for VerbosityOption {
 fn get_asserts_section(response: &Response) -> Option<&Section> {
     for s in &response.sections {
         if let SectionValue::Asserts(_) = s.value {
+            return Some(s);
+        }
+    }
+    None
+}
+
+fn get_prints_section(response: &Response) -> Option<&Section> {
+    for s in &response.sections {
+        if let SectionValue::Prints(_) = s.value {
             return Some(s);
         }
     }

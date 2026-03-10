@@ -52,6 +52,7 @@ request-section:
 response-section:
     captures-section
   | asserts-section
+  | print-section
 
 query-string-params-section:
   lt*
@@ -82,6 +83,11 @@ asserts-section:
   lt*
   "[Asserts]" lt
   assert*
+
+print-section:
+  lt*
+  "[Print]" lt
+  value-string*
 
 basic-auth-section:
   lt*

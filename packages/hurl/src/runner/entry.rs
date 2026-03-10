@@ -29,6 +29,7 @@ use super::cache::BodyCache;
 use super::error::{RunnerError, RunnerErrorKind};
 use super::request;
 use super::response;
+use super::template;
 use super::result::{AssertResult, CaptureResult, EntryResult};
 use super::runner_options::RunnerOptions;
 use super::variable::VariableSet;
@@ -196,6 +197,29 @@ pub fn run(
     logger.set_secrets(variables.secrets());
 
     log_captures(&captures, logger);
+
+    // Evaluate and output [Print] section
+    if let Some(response_spec) = &entry.response {
+        for print in response_spec.prints() {
+            match template::eval_template(&print.value, variables) {
+                Ok(message) => logger.info(&message),
+                Err(e) => {
+                    return EntryResult {
+                        entry_index,
+                        source_info,
+                        calls,
+                        captures,
+                        asserts,
+                        errors: vec![e],
+                        transfer_duration,
+                        compressed,
+                        curl_cmd,
+                    };
+                }
+            }
+        }
+    }
+
     logger.debug("");
 
     // Compute asserts

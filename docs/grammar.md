@@ -41,7 +41,8 @@ Short description:
 <span class="grammar-symbol">|</span><a href="#cookies-section">cookies-section</a><br>
 <span class="grammar-symbol">|</span><a href="#options-section">options-section</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="response-section">response-section</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#captures-section">captures-section</a><br>
-<span class="grammar-symbol">|</span><a href="#asserts-section">asserts-section</a></div></div>
+<span class="grammar-symbol">|</span><a href="#asserts-section">asserts-section</a><br>
+<span class="grammar-symbol">|</span><a href="#print-section">print-section</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="query-string-params-section">query-string-params-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
 <span class="grammar-symbol">(</span><span class="grammar-literal">[QueryStringParams]</span><span class="grammar-symbol">|</span><span class="grammar-literal">[Query]</span><span class="grammar-symbol">)</span>&nbsp;<a href="#lt">lt</a><br>
 <a href="#key-value">key-value</a><span class="grammar-symbol">*</span></div></div>
@@ -60,6 +61,9 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="asserts-section">asserts-section</span><span class="grammar-usedby">(used by <a href="#response-section">response-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
 <span class="grammar-literal">[Asserts]</span>&nbsp;<a href="#lt">lt</a><br>
 <a href="#assert">assert</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="print-section">print-section</span><span class="grammar-usedby">(used by <a href="#response-section">response-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[Print]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#value-string">value-string</a><span class="grammar-symbol">*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="basic-auth-section">basic-auth-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
 <span class="grammar-literal">[BasicAuth]</span>&nbsp;<a href="#lt">lt</a><br>
 <a href="#key-value">key-value</a><span class="grammar-symbol">*</span></div></div>

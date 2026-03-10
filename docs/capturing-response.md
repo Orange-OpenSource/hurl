@@ -452,6 +452,59 @@ HTTP 200
 pass: header "token" redact
 ```
 
+## Print
+
+The `[Print]` section allows you to output messages during test execution. Print messages are evaluated after captures,
+so you can use captured variables in your print messages. Messages are output to stderr.
+
+```hurl
+GET https://example.org/api/user/1
+HTTP 200
+[Captures]
+user_id: jsonpath "$.id"
+name: jsonpath "$.name"
+[Print]
+Got user {{name}} with id {{user_id}}
+```
+
+The `[Print]` section supports [templates], so any variable (captured or injected) can be used:
+
+```hurl
+# First, login and capture a token
+POST https://example.org/api/login
+{
+    "username": "test",
+    "password": "1234"
+}
+HTTP 200
+[Captures]
+token: jsonpath "$.token"
+[Print]
+Authentication token: {{token}}
+
+# Then use the token
+GET https://example.org/api/protected
+Authorization: Bearer {{token}}
+HTTP 200
+[Print]
+Protected resource accessed successfully
+```
+
+Multiple lines can be used in a single `[Print]` section:
+
+```hurl
+GET https://example.org/api/status
+HTTP 200
+[Captures]
+status: jsonpath "$.status"
+version: jsonpath "$.version"
+[Print]
+Status: {{status}}
+Version: {{version}}
+Health check passed
+```
+
+[templates]: /docs/templates.md
 [CSRF tokens]: https://en.wikipedia.org/wiki/Cross-site_request_forgery
 [injected into the session]: /docs/templates.md#injecting-variables
 [`Set-Cookie`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie

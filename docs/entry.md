@@ -5,7 +5,7 @@
 A Hurl file is a list of entries, each entry being a mandatory [request], optionally followed by a [response].
 
 Responses are not mandatory, a Hurl file consisting only of requests is perfectly valid. To sum up, responses can be used
-to [capture values] to perform subsequent requests, or [add asserts to HTTP responses].
+to [capture values] to perform subsequent requests, [add asserts to HTTP responses], or [print messages] for debugging.
 
 ## Example
 
@@ -236,6 +236,7 @@ For complete reference, below is a diagram for the executed entries.
 [response]: /docs/response.md
 [capture values]: /docs/capturing-response.md
 [add asserts to HTTP responses]: /docs/asserting-response.md
+[print messages]: /docs/capturing-response.md#print
 [`--location`]: /docs/manual.md#location
 [`--location` option]: /docs/manual.md#location
 [`--location-trusted`]: /docs/manual.md#location-trusted

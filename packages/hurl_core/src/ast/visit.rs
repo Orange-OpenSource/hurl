@@ -25,8 +25,8 @@ use crate::ast::{
     Duration, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter,
     FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method,
     MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
-    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
+    PredicateFuncValue, PredicateValue, Print, Query, QueryValue, Regex, RegexValue, Request,
+    Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
     VerbosityOption, VersionValue, Whitespace, U64,
 };
 use crate::types::{Count, DurationUnit, SourceString, ToSource};
@@ -161,6 +161,10 @@ pub trait Visitor: Sized {
     fn visit_number(&mut self, number: &Number) {}
 
     fn visit_placeholder(&mut self, placeholder: &Placeholder) {}
+
+    fn visit_print(&mut self, print: &Print) {
+        walk_print(self, print);
+    }
 
     fn visit_predicate(&mut self, predicate: &Predicate) {
         walk_predicate(self, predicate);
@@ -643,6 +647,15 @@ pub fn walk_query<V: Visitor>(visitor: &mut V, query: &Query) {
     }
 }
 
+pub fn walk_print<V: Visitor>(visitor: &mut V, print: &Print) {
+    print.line_terminators.iter().for_each(|lt| {
+        visitor.visit_lt(lt);
+    });
+    visitor.visit_whitespace(&print.space0);
+    visitor.visit_template(&print.value);
+    visitor.visit_lt(&print.line_terminator0);
+}
+
 pub fn walk_predicate<V: Visitor>(visitor: &mut V, pred: &Predicate) {
     if pred.not {
         visitor.visit_not("not");
@@ -783,6 +796,7 @@ pub fn walk_section_value<V: Visitor>(visitor: &mut V, section_value: &SectionVa
         SectionValue::BasicAuth(Some(auth)) => visitor.visit_kv(auth),
         SectionValue::BasicAuth(_) => {}
         SectionValue::Captures(captures) => captures.iter().for_each(|c| visitor.visit_capture(c)),
+        SectionValue::Prints(prints) => prints.iter().for_each(|p| visitor.visit_print(p)),
         SectionValue::Cookies(cookies) => cookies.iter().for_each(|c| visitor.visit_cookie(c)),
         SectionValue::FormParams(params, _) => params.iter().for_each(|p| visitor.visit_kv(p)),
         SectionValue::MultipartFormData(params, _) => params.iter().for_each(|p| match p {
@@ -820,7 +834,7 @@ pub fn walk_verbosity_option<V: Visitor>(visitor: &mut V, value: &VerbosityOptio
 #[cfg(test)]
 mod tests {
     use crate::ast::visit::Visitor;
-    use crate::ast::Assert;
+    use crate::ast::{Assert, Print};
     use crate::parser;
 
     #[test]
@@ -855,5 +869,32 @@ header "Location" not exists
         let file = parser::parse_hurl_file(content).unwrap();
         walker.visit_hurl_file(&file);
         assert_eq!(walker.count, 7);
+    }
+
+    #[test]
+    fn test_walk_print() {
+        struct PrintWalker {
+            count: usize,
+        }
+
+        impl Visitor for PrintWalker {
+            fn visit_print(&mut self, _print: &Print) {
+                self.count += 1;
+            }
+        }
+
+        let mut walker = PrintWalker { count: 0 };
+        let content = r#"
+GET https://foo.com
+HTTP 200
+[Captures]
+name: jsonpath "$.name"
+[Print]
+name is {{name}}
+request completed
+"#;
+        let file = parser::parse_hurl_file(content).unwrap();
+        walker.visit_hurl_file(&file);
+        assert_eq!(walker.count, 2);
     }
 }

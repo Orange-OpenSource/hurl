@@ -16,8 +16,8 @@
  *
  */
 use crate::ast::{
-    Assert, Capture, Cookie, FilenameParam, FilenameValue, MultipartParam, Section, SectionValue,
-    SourceInfo, Whitespace,
+    Assert, Capture, Cookie, FilenameParam, FilenameValue, MultipartParam, Print, Section,
+    SectionValue, SourceInfo, Whitespace,
 };
 use crate::combinator::{optional, recover, zero_or_more};
 use crate::parser::filter::filters;
@@ -87,6 +87,7 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
     let value = match name.as_str() {
         "Captures" => section_value_captures(reader)?,
         "Asserts" => section_value_asserts(reader)?,
+        "Print" => section_value_prints(reader)?,
         _ => {
             let kind = ParseErrorKind::ResponseSectionName { name: name.clone() };
             let pos = Pos::new(start.pos.line, start.pos.column + 1);
@@ -156,9 +157,35 @@ fn section_value_asserts(reader: &mut Reader) -> ParseResult<SectionValue> {
     Ok(SectionValue::Asserts(asserts))
 }
 
+fn section_value_prints(reader: &mut Reader) -> ParseResult<SectionValue> {
+    let items = zero_or_more(print, reader)?;
+    Ok(SectionValue::Prints(items))
+}
+
 fn section_value_options(reader: &mut Reader) -> ParseResult<SectionValue> {
     let options = zero_or_more(option::parse, reader)?;
     Ok(SectionValue::Options(options))
+}
+
+fn print(reader: &mut Reader) -> ParseResult<Print> {
+    let start = reader.cursor();
+    let space0 = zero_or_more_spaces(reader)?;
+    let value = unquoted_template(reader)?;
+    // If the template is empty, we've hit a blank line, comment, or end of section.
+    // Restore the reader and return a recoverable error to stop zero_or_more.
+    if value.elements.is_empty() {
+        reader.seek(start);
+        return Err(ParseError::new(start.pos, true, ParseErrorKind::Expecting {
+            value: "print value".to_string(),
+        }));
+    }
+    let line_terminator0 = line_terminator(reader)?;
+    Ok(Print {
+        line_terminators: vec![],
+        space0,
+        value,
+        line_terminator0,
+    })
 }
 
 fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {
@@ -976,5 +1003,61 @@ mod tests {
             }
         );
         assert_eq!(reader.cursor().pos, Pos { line: 2, column: 1 });
+    }
+
+    #[test]
+    fn test_print_section() {
+        let mut reader = Reader::new("[Print]\nstatus is {{status}}\n");
+        let section = response_section(&mut reader).unwrap();
+        assert_eq!(section.identifier(), "Print");
+        match &section.value {
+            SectionValue::Prints(prints) => {
+                assert_eq!(prints.len(), 1);
+                assert_eq!(prints[0].value.to_string(), "status is {{status}}");
+            }
+            _ => panic!("Expected Prints section"),
+        }
+    }
+
+    #[test]
+    fn test_print_section_multiple_lines() {
+        let mut reader = Reader::new("[Print]\nid is {{id}}\nrequest ok\n");
+        let section = response_section(&mut reader).unwrap();
+        match &section.value {
+            SectionValue::Prints(prints) => {
+                assert_eq!(prints.len(), 2);
+                assert_eq!(prints[0].value.to_string(), "id is {{id}}");
+                assert_eq!(prints[1].value.to_string(), "request ok");
+            }
+            _ => panic!("Expected Prints section"),
+        }
+    }
+
+    #[test]
+    fn test_print_section_empty() {
+        let mut reader = Reader::new("[Print]\n");
+        let section = response_section(&mut reader).unwrap();
+        match &section.value {
+            SectionValue::Prints(prints) => {
+                assert_eq!(prints.len(), 0);
+            }
+            _ => panic!("Expected Prints section"),
+        }
+    }
+
+    #[test]
+    fn test_print_section_stops_at_blank_line() {
+        // Ensure the print parser doesn't consume lines after a blank line
+        let mut reader = Reader::new("[Print]\nstatus is {{status}}\n\nPOST https://example.com\n");
+        let section = response_section(&mut reader).unwrap();
+        match &section.value {
+            SectionValue::Prints(prints) => {
+                assert_eq!(prints.len(), 1);
+                assert_eq!(prints[0].value.to_string(), "status is {{status}}");
+            }
+            _ => panic!("Expected Prints section"),
+        }
+        // The reader should have stopped before the blank line
+        assert_eq!(reader.cursor().pos.line, 3);
     }
 }

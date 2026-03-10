@@ -131,6 +131,7 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
         SectionValue::Cookies(cookies) => {
             SectionValue::Cookies(cookies.iter().map(lint_cookie).collect())
         }
+        SectionValue::Prints(prints) => SectionValue::Prints(prints.clone()),
         SectionValue::Options(options) => {
             SectionValue::Options(options.iter().map(lint_entry_option).collect())
         }
@@ -149,6 +150,7 @@ fn section_value_index(section_value: SectionValue) -> u32 {
         // Response sections
         SectionValue::Captures(_) => 0,
         SectionValue::Asserts(_) => 1,
+        SectionValue::Prints(_) => 2,
     }
 }
 

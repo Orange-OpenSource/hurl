@@ -243,8 +243,8 @@ impl DisplaySourceError for ParseError {
                 "this is not a valid section for a response".to_string()
             }
             ParseErrorKind::ResponseSectionName { name } => {
-                let valid_values = ["Captures", "Asserts"];
-                let default = "Valid values are Captures or Asserts";
+                let valid_values = ["Captures", "Asserts", "Print"];
+                let default = "Valid values are Captures, Asserts or Print";
                 let did_your_mean = did_you_mean(&valid_values, name.as_str(), default);
                 format!("the section is not valid. {did_your_mean}")
             }

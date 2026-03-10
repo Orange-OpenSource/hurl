@@ -23,7 +23,9 @@ use super::option::EntryOption;
 use super::primitive::{
     Bytes, KeyValue, LineTerminator, Placeholder, SourceInfo, Template, Whitespace, I64,
 };
-use super::section::{Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue};
+use super::section::{
+    Assert, Capture, Cookie, MultipartParam, Print, RegexValue, Section, SectionValue,
+};
 
 /// Represents Hurl AST root node.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -163,6 +165,16 @@ impl Response {
         for section in self.sections.iter() {
             if let SectionValue::Asserts(asserts) = &section.value {
                 return asserts;
+            }
+        }
+        &[]
+    }
+
+    /// Returns the prints list of this spec response.
+    pub fn prints(&self) -> &[Print] {
+        for section in self.sections.iter() {
+            if let SectionValue::Prints(prints) = &section.value {
+                return prints;
             }
         }
         &[]

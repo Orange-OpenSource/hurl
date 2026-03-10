@@ -6,9 +6,9 @@ Responses can be used to capture values to perform subsequent requests, or add a
 requests are optional, a Hurl file can just consist of a sequence of [requests].
 
 A response describes the expected HTTP response, with mandatory [version and status], followed by optional [headers],
-[captures], [asserts] and [body]. Assertions in the expected HTTP response describe values of the received HTTP response.
+[captures], [asserts], [prints] and [body]. Assertions in the expected HTTP response describe values of the received HTTP response.
 Captures capture values from the received HTTP response and populate a set of named variables that can be used
-in the following entries.
+in the following entries. Prints output messages to stderr, useful for debugging and logging during test execution.
 
 ## Example
 
@@ -38,6 +38,9 @@ xpath "//li" count == 18
         <div class="hurl-part-2">
             [Asserts]<br>...
         </div>
+        <div class="hurl-part-2">
+            [Print]<br>...
+        </div>
         <div class="hurl-part-3">
             {<br>
             &nbsp;&nbsp;"type": "FOO",<br>
@@ -59,7 +62,7 @@ xpath "//li" count == 18
             <br>
         </div>
         <div class="hurl-request-explanation-part-2">
-            <a href="/docs/capturing-response.html">Captures</a> and <a href="/docs/asserting-response.html#asserts">asserts</a> (optional sections, unordered)
+            <a href="/docs/capturing-response.html">Captures</a>, <a href="/docs/asserting-response.html#asserts">asserts</a> and <a href="/docs/capturing-response.html#print">prints</a> (optional sections, unordered)
         </div>
         <div class="hurl-request-explanation-part-2">
           <br>
@@ -77,7 +80,8 @@ xpath "//li" count == 18
 
 ## Capture and Assertion
 
-With the response section, one can optionally [capture value from headers, body], or [add assert on status code, body or headers].
+With the response section, one can optionally [capture value from headers, body], [add assert on status code, body or headers],
+or [print messages][prints] with template variables for debugging.
 
 ### Body compression
 
@@ -120,6 +124,7 @@ All timings are in microsecond.
 [headers]: /docs/asserting-response.md#headers
 [captures]: /docs/capturing-response.md#captures
 [asserts]: /docs/asserting-response.md#asserts
+[prints]: /docs/capturing-response.md#print
 [body]: /docs/asserting-response.md#body
 [capture value from headers, body]: /docs/capturing-response.md
 [add assert on status code, body or headers]: /docs/asserting-response.md
