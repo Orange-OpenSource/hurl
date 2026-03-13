@@ -30,6 +30,7 @@ class Crate:
 
     name: str
     version: str
+    latest_version: str | None
     repository: str | None
     owner_repo: str | None
     updated_at: datetime | None
@@ -37,6 +38,7 @@ class Crate:
     def __init__(self, name: str, version: str):
         self.name = name
         self.version = version
+        self.latest_version = None
         self.repository = None
         self.owner_repo = None
         self.updated_at = None
@@ -44,24 +46,12 @@ class Crate:
     def __str__(self):
         return f"Crate name={self.name} version={self.version}"
 
-    def get_last_version(self) -> str | None:
-        """Returns the last version for this crate."""
-        ret = subprocess.run(
-            ["cargo", "info", self.name], check=True, capture_output=True, text=True
-        )
-        match = re.search(
-            r"^version: ([0-9]+\.[0-9]+\.[0-9]+).*", ret.stdout, re.MULTILINE
-        )
-        if not match:
-            return None
-        last_version = match.group(1)
-        return last_version
-
     def fetch_info(self) -> bool:
         """Update crate's repository and owner repo from <crates.io>"""
         self.repository = None
         self.owner_repo = None
         self.updated_at = None
+        self.latest_version = None
         crate_url = f"https://crates.io/api/v1/crates/{self.name}"
         crate_object = req.get(url=crate_url)
         if crate_object.status_code != 200:
@@ -69,6 +59,7 @@ class Crate:
         crate = crate_object.json()["crate"]
         self.repository = crate["repository"]
         self.updated_at = dt.datetime.fromisoformat(crate["updated_at"])
+        self.latest_version = crate["max_stable_version"]
         if self.repository and self.repository.startswith("https://github.com/"):
             self.owner_repo = self.repository.removeprefix("https://github.com/")
         return True
@@ -191,20 +182,22 @@ class LocalCrate:
             for i, item in enumerate(node):
                 self.collect_dependencies(node=item)
 
-    def update_dependency(self, crate: Crate, actual_version: str, last_version: str):
+    def update_dependency(self, crate: Crate, actual_version: str, latest_version: str):
         """Update the dependency of this crate in its toml file."""
         toml = self.toml_file.read_text()
-        name = re.escape(crate.name)
+        name = crate.name
+        escaped_name = re.escape(name)
+        escaped_actual_version = re.escape(actual_version)
         toml = re.sub(
-            rf'^{name}.*=.*{{.*version.*=.*"{actual_version}"',
-            f'{name} = {{ version = "{last_version}"',
+            rf'^{escaped_name}.*=.*{{.*version.*=.*"{escaped_actual_version}"',
+            f'{name} = {{ version = "{latest_version}"',
             toml,
             count=0,
             flags=re.MULTILINE,
         )
         toml = re.sub(
-            rf'^{name}.*=.*"{actual_version}"',
-            f'{name} = "{last_version}"',
+            rf'^{escaped_name}.*=.*"{escaped_actual_version}"',
+            f'{name} = "{latest_version}"',
             toml,
             count=0,
             flags=re.MULTILINE,
@@ -225,45 +218,46 @@ def print_release_note(crate: Crate, version: str, token: str):
     print(f"\n{note}")
 
 
-def update_local_crates(local_crates: list[LocalCrate], cooldown_days: int, check: bool, token: str | None):
+def update_local_crates(
+    local_crates: list[LocalCrate], cooldown_days: int, check: bool, token: str | None
+):
     """Updates a list of local crates and returns the number of update crates"""
-    now = datetime.now(dt.timezone.utc)
+    # now = datetime.now(dt.timezone.utc)
     updated_count = 0
 
-    # Update Cargo.toml
+    # Update direct dependencies if any major, minor, update changes (this can bring some breaking changes)
     for local_crate in local_crates:
         print("\n--------------------------------------------------------")
         print(f"### Crates updates for *{local_crate.toml_file}*\n")
 
         for dep in local_crate.dependencies:
+            ret = dep.fetch_info()
+            if not ret:
+                print(f"- {dep.name} {Color.RED}error fetching info{Color.RESET}")
+                continue
             actual_version = dep.version
-            last_version = dep.get_last_version()
-            if last_version == actual_version:
+            latest_version = dep.latest_version
+            if latest_version == actual_version:
                 print(f"- {dep.name} {actual_version} {Color.GREEN}newest{Color.RESET}")
                 continue
 
-            ret = dep.fetch_info()
-            if not ret:
-                print(
-                    f"- {dep.name} {actual_version} {Color.RED}error fetching info{Color.RESET}"
-                )
-                continue
-
-            # Check cooldown
-            if abs(now - dep.updated_at) < dt.timedelta(days=cooldown_days):
-                print(
-                    f"- {dep.name} {actual_version} {Color.YELLOW}update {last_version} too recent{Color.RESET}"
-                )
-                continue
+            # TODO: Check cooldown
+            # If we add a cooldow, we must update the lock with cargo generate-lockfile which take a --publish-time
+            # <https://doc.rust-lang.org/cargo/commands/cargo-generate-lockfile.html>
+            # if abs(now - dep.updated_at) < dt.timedelta(days=cooldown_days):
+            #     print(
+            #         f"- {dep.name} {actual_version} {Color.YELLOW}update {latest_version} too recent{Color.RESET}"
+            #     )
+            #     continue
 
             local_crate.update_dependency(
-                crate=dep, actual_version=actual_version, last_version=last_version
+                crate=dep, actual_version=actual_version, latest_version=latest_version
             )
             print(
-                f"- {dep.name} {actual_version} {Color.BLUE}updated to {last_version}{Color.RESET}"
+                f"- {dep.name} {actual_version} {Color.BLUE}updated to {latest_version}{Color.RESET}"
             )
             updated_count += 1
-            print_release_note(crate=dep, version=last_version, token=token)
+            print_release_note(crate=dep, version=latest_version, token=token)
 
     if check:
         if updated_count > 0:
@@ -272,7 +266,7 @@ def update_local_crates(local_crates: list[LocalCrate], cooldown_days: int, chec
             )
         sys.exit(updated_count)
 
-    # Update Cargo.lock
+    # Update all dependencies (direct and transitives) if only minor, update changes.
     lock = CargoLock(lock_file=Path("Cargo.lock"))
     updated_lock = lock.update()
 
