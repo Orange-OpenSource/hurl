@@ -15,14 +15,17 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
+use std::str::FromStr;
+
 use super::variables::TypeKind;
 use super::{
-    duration, secret, variables, CliOptions, CliOptionsError, IpResolve, RunContext, Verbosity,
+    context::HURL_CONNECT_TIMEOUT, context::HURL_ERROR_FORMAT, context::HURL_HEADER,
+    context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
+    CliOptionsError, ErrorFormat, IpResolve, RunContext, Verbosity,
 };
 use hurl::runner::Value;
 use hurl_core::types::DurationUnit;
-use std::collections::HashMap;
-use std::str::FromStr;
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -30,11 +33,28 @@ pub fn parse_env_vars(
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
     let mut options = default_options;
-    options.variables = parse_variables(context, options.variables)?;
-    options.secrets = parse_secrets(context, options.secrets)?;
     if let Some(color) = context.use_color_env_var() {
         options.color_stdout = color;
         options.color_stderr = color;
+    }
+    if let Some(timeout) = context.connect_timeout_env_var() {
+        options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)
+            .map_err(|e| with_env_var(e, HURL_CONNECT_TIMEOUT))?;
+    }
+    if let Some(error_format) = context.error_format_env_var() {
+        let error_format =
+            ErrorFormat::from_str(error_format).map_err(|e| with_env_var(e, HURL_ERROR_FORMAT))?;
+        options.error_format = error_format;
+    }
+    if let Some(header) = context.header_env_var() {
+        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
+        for h in &headers {
+            if !h.contains(':') {
+                let msg = "Invalid header <{h}> missing `:`".to_string();
+                return Err(with_env_var(CliOptionsError::Error(msg), HURL_HEADER));
+            }
+        }
+        options.headers.extend(headers);
     }
     if let Some(ipv4) = context.ipv4_env_var() {
         if ipv4 {
@@ -50,31 +70,20 @@ pub fn parse_env_vars(
             options.ip_resolve = Some(IpResolve::IpV4);
         }
     }
+    options.variables = parse_variables(context, options.variables)?;
+    options.secrets = parse_secrets(context, options.secrets)?;
     if let Some(true) = context.verbose_env_var() {
         options.verbosity = Some(Verbosity::Verbose);
     } else if let Some(true) = context.very_verbose_env_var() {
         options.verbosity = Some(Verbosity::Debug);
     } else if let Some(verbosity) = context.verbosity_env_var() {
-        let verbosity = Verbosity::from_str(verbosity)?;
+        let verbosity =
+            Verbosity::from_str(verbosity).map_err(|e| with_env_var(e, HURL_VERBOSITY))?;
         options.verbosity = Some(verbosity);
     }
     if let Some(timeout) = context.max_time_env_var() {
-        options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
-    }
-    if let Some(timeout) = context.connect_timeout_env_var() {
-        options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)?;
-    }
-    if let Some(header) = context.header_env_var() {
-        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
-        for h in &headers {
-            if !h.contains(':') {
-                let msg = format!(
-                    "Invalid header <{h}> in HURL_HEADER environment variable, missing `:`"
-                );
-                return Err(CliOptionsError::Error(msg));
-            }
-        }
-        options.headers.extend(headers);
+        options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)
+            .map_err(|e| with_env_var(e, HURL_MAX_TIME))?;
     }
     Ok(options)
 }
@@ -126,6 +135,19 @@ fn parse_secrets(
         secret::add_secret(&mut secrets, env_name.to_string(), value)?;
     }
     Ok(secrets)
+}
+
+fn with_env_var(error: CliOptionsError, env: &'static str) -> CliOptionsError {
+    match error {
+        CliOptionsError::DisplayHelp(_) => error,
+        CliOptionsError::DisplayVersion(_) => error,
+        CliOptionsError::NoInput(_) => error,
+        CliOptionsError::Error(message) => {
+            let message = format!("{message} ({env} environment variable)");
+            CliOptionsError::Error(message)
+        }
+        CliOptionsError::InvalidInputFile(_) => error,
+    }
 }
 
 #[cfg(test)]

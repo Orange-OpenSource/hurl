@@ -188,7 +188,7 @@ fn parse_arg_matches(
     let curl_file = curl_file(arg_matches, default_options.curl_file);
     let delay = delay(arg_matches, default_options.delay)?;
     let digest = digest(arg_matches, default_options.digest);
-    let error_format = error_format(arg_matches, default_options.error_format);
+    let error_format = error_format(arg_matches, default_options.error_format)?;
     let file_root = file_root(arg_matches, default_options.file_root);
     let (follow_location, follow_location_trusted) = follow_location(
         arg_matches,
@@ -457,14 +457,13 @@ fn digest(arg_matches: &ArgMatches, default_value: bool) -> bool {
     }
 }
 
-fn error_format(arg_matches: &ArgMatches, default_value: ErrorFormat) -> ErrorFormat {
+fn error_format(
+    arg_matches: &ArgMatches,
+    default_value: ErrorFormat,
+) -> Result<ErrorFormat, CliOptionsError> {
     match get::<String>(arg_matches, "error_format") {
-        Some(error_format) => match error_format.as_str() {
-            "long" => ErrorFormat::Long,
-            "short" => ErrorFormat::Short,
-            _ => ErrorFormat::Short,
-        },
-        None => default_value,
+        Some(value) => ErrorFormat::from_str(&value),
+        None => Ok(default_value),
     }
 }
 

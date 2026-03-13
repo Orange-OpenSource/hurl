@@ -133,7 +133,7 @@ impl FromStr for Verbosity {
             "debug" => Ok(Verbosity::Debug),
             _ => {
                 let message = format!(
-                    "invalid value '{s}' for verbosity [possible values: brief, verbose, debug]"
+                    "Invalid value '{s}' for verbosity [possible values: brief, verbose, debug]"
                 );
                 Err(CliOptionsError::Error(message))
             }
@@ -146,6 +146,22 @@ impl FromStr for Verbosity {
 pub enum ErrorFormat {
     Short,
     Long,
+}
+
+impl FromStr for ErrorFormat {
+    type Err = CliOptionsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "long" => Ok(ErrorFormat::Long),
+            "short" => Ok(ErrorFormat::Short),
+            _ => {
+                let message =
+                    format!("Invalid value '{s}' for error-format [possible values: long, short]");
+                Err(CliOptionsError::Error(message))
+            }
+        }
+    }
 }
 
 impl From<ErrorFormat> for logger::ErrorFormat {

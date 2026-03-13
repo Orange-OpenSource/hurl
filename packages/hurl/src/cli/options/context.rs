@@ -48,17 +48,18 @@ const LEGACY_HURL_VARIABLE_PREFIX: &str = "HURL_";
 const HURL_PREFIX: &str = "HURL_";
 
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
-const HURL_COLOR: &str = "HURL_COLOR";
-const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
-const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
-const HURL_HEADER: &str = "HURL_HEADER";
-const HURL_IPV4: &str = "HURL_IPV4";
-const HURL_IPV6: &str = "HURL_IPV6";
-const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
-const HURL_VERBOSE: &str = "HURL_VERBOSE";
-const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
-const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
-const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
+pub const HURL_COLOR: &str = "HURL_COLOR";
+pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
+pub const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
+pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+pub const HURL_HEADER: &str = "HURL_HEADER";
+pub const HURL_IPV4: &str = "HURL_IPV4";
+pub const HURL_IPV6: &str = "HURL_IPV6";
+pub const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
+pub const HURL_VERBOSE: &str = "HURL_VERBOSE";
+pub const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
+pub const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
+pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -86,6 +87,26 @@ impl RunContext {
         }
     }
 
+    /// Returns the config file path if any.
+    pub fn config_file_path(&self) -> Option<&Path> {
+        self.config_file.as_deref()
+    }
+
+    /// Checks if standard input is a terminal.
+    pub fn is_stdin_term(&self) -> bool {
+        self.stdin_term
+    }
+
+    /// Checks if standard output is a terminal.
+    pub fn is_stdout_term(&self) -> bool {
+        self.stdout_term
+    }
+
+    /// Checks if standard error is a terminal.
+    pub fn is_stderr_term(&self) -> bool {
+        self.stderr_term
+    }
+
     /// Returns the env var for connect timeout duration.
     pub fn connect_timeout_env_var(&self) -> Option<&str> {
         self.hurl_env_vars
@@ -93,23 +114,11 @@ impl RunContext {
             .map(|v| v.as_str())
     }
 
-    /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
-    /// codes are explicitly disabled, `None` otherwise. .
-    pub fn use_color_env_var(&self) -> Option<bool> {
-        // According to the NO_COLOR spec, any presence of the variable should disable color, but to
-        // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
-        // least not empty.
-        if let Some(v) = self.env_vars.get("NO_COLOR") {
-            if !v.is_empty() {
-                Some(false)
-            } else {
-                None
-            }
-        } else if let Some(v) = self.get_env_var_bool(HURL_NO_COLOR) {
-            Some(!v)
-        } else {
-            self.get_env_var_bool(HURL_COLOR)
-        }
+    /// Returns the env var for error format.
+    pub fn error_format_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_ERROR_FORMAT)
+            .map(|v| v.as_str())
     }
 
     /// Returns the map of Hurl headers injected by environment variables.
@@ -130,16 +139,11 @@ impl RunContext {
         self.get_env_var_bool(HURL_IPV6)
     }
 
-    pub fn verbose_env_var(&self) -> Option<bool> {
-        self.get_env_var_bool(HURL_VERBOSE)
-    }
-
-    pub fn very_verbose_env_var(&self) -> Option<bool> {
-        self.get_env_var_bool(HURL_VERY_VERBOSE)
-    }
-
-    pub fn verbosity_env_var(&self) -> Option<&str> {
-        self.hurl_env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
+    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
+    /// `false` otherwise.
+    pub fn is_ci_env_var(&self) -> bool {
+        // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
+        self.env_vars.contains_key("CI") || self.env_vars.contains_key("TF_BUILD")
     }
 
     /// Returns the env var for max time duration.
@@ -147,11 +151,38 @@ impl RunContext {
         self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
     }
 
-    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
-    /// `false` otherwise.
-    pub fn is_ci_env_var(&self) -> bool {
-        // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
-        self.env_vars.contains_key("CI") || self.env_vars.contains_key("TF_BUILD")
+    /// Returns the map of Hurl secrets injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_SECRET_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn secret_env_vars(&self) -> HashMap<&str, &str> {
+        self.hurl_env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(HURL_SECRET_PREFIX)
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
+    }
+
+    /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
+    /// codes are explicitly disabled, `None` otherwise. .
+    pub fn use_color_env_var(&self) -> Option<bool> {
+        // According to the NO_COLOR spec, any presence of the variable should disable color, but to
+        // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
+        // least not empty.
+        if let Some(v) = self.env_vars.get("NO_COLOR") {
+            if !v.is_empty() {
+                Some(false)
+            } else {
+                None
+            }
+        } else if let Some(v) = self.get_env_var_bool(HURL_NO_COLOR) {
+            Some(!v)
+        } else {
+            self.get_env_var_bool(HURL_COLOR)
+        }
     }
 
     /// Returns the map of Hurl variables injected by environment variables.
@@ -185,39 +216,15 @@ impl RunContext {
             .collect()
     }
 
-    /// Returns the map of Hurl secrets injected by environment variables.
-    ///
-    /// Environment variables are prefixed with `HURL_SECRET_` and returned values have their name
-    /// stripped of this prefix.
-    pub fn secret_env_vars(&self) -> HashMap<&str, &str> {
-        self.hurl_env_vars
-            .iter()
-            .filter_map(|(name, value)| {
-                name.strip_prefix(HURL_SECRET_PREFIX)
-                    .filter(|n| !n.is_empty())
-                    .map(|stripped| (stripped, value.as_str()))
-            })
-            .collect()
+    pub fn verbose_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_VERBOSE)
+    }
+    pub fn verbosity_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
     }
 
-    /// Checks if standard input is a terminal.
-    pub fn is_stdin_term(&self) -> bool {
-        self.stdin_term
-    }
-
-    /// Checks if standard output is a terminal.
-    pub fn is_stdout_term(&self) -> bool {
-        self.stdout_term
-    }
-
-    /// Checks if standard error is a terminal.
-    pub fn is_stderr_term(&self) -> bool {
-        self.stderr_term
-    }
-
-    /// Returns the config file path if any.
-    pub fn config_file_path(&self) -> Option<&Path> {
-        self.config_file.as_deref()
+    pub fn very_verbose_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_VERY_VERBOSE)
     }
 
     fn get_env_var_bool(&self, name: &'static str) -> Option<bool> {
@@ -239,6 +246,7 @@ fn is_hurl_option(name: &str) -> bool {
             || name.starts_with(HURL_SECRET_PREFIX)
             || name == HURL_COLOR
             || name == HURL_CONNECT_TIMEOUT
+            || name == HURL_ERROR_FORMAT
             || name == HURL_HEADER
             || name == HURL_IPV4
             || name == HURL_IPV6
