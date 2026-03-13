@@ -40,6 +40,9 @@ class Crate:
         self.owner_repo = None
         self.updated_at = None
 
+    def __str__(self):
+        return f"Crate name={self.name} version={self.version}"
+
     def get_last_version(self) -> str | None:
         """Returns the last version for this crate."""
         ret = subprocess.run(
@@ -167,13 +170,26 @@ class LocalCrate:
         self.dependencies = []
         with open(self.toml_file, "rb") as f:
             data = tomllib.load(f)
-            for dependency, version in data["dependencies"].items():
-                if isinstance(version, dict):
-                    # Ignore local dependencies
-                    if version.get("path"):
-                        continue
-                    version = version["version"]
-                self.dependencies.append(Crate(name=dependency, version=version))
+            self.collect_dependencies(node=data)
+            print(self.dependencies)
+
+    def collect_dependencies(self, node):
+        """Walk the toml metadata and collect dependencies"""
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key not in {"dependencies", "build-dependencies"}:
+                    self.collect_dependencies(node=value)
+                    continue
+                for dependency, version in value.items():
+                    if isinstance(version, dict):
+                        # Ignore local dependencies
+                        if version.get("path"):
+                            continue
+                        version = version["version"]
+                    self.dependencies.append(Crate(name=dependency, version=version))
+        elif isinstance(node, list):
+            for i, item in enumerate(node):
+                self.collect_dependencies(node=item)
 
     def update_dependency(self, crate: Crate, actual_version: str, last_version: str):
         """Update the dependency of this crate in its toml file."""
