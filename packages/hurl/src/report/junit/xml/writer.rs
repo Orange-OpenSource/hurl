@@ -54,6 +54,7 @@ impl From<Error> for WriterError {
             | Error::LastElementNameNotAvailable
             | Error::EndElementNameIsNotEqualToLastStartElementName
             | Error::EndElementNameIsNotSpecified => WriterError::GenericError(value.to_string()),
+            _ => WriterError::GenericError(value.to_string()),
         }
     }
 }

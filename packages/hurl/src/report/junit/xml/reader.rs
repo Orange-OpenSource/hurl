@@ -42,6 +42,7 @@ impl XmlDocument {
         let mut root: Option<Element> = None;
         loop {
             match reader.next() {
+                Ok(XmlEvent::Doctype { .. }) => {}
                 Ok(XmlEvent::StartDocument { .. }) => initialized = true,
                 Ok(XmlEvent::EndDocument) => {
                     if !initialized {
@@ -88,6 +89,9 @@ impl Element {
 
         loop {
             match reader.next() {
+                Ok(XmlEvent::Doctype { .. }) => {
+                    return Err(InvalidXml("Invalid doc type".to_string()))
+                }
                 Ok(XmlEvent::StartDocument { .. }) => {
                     return Err(InvalidXml("Invalid start of document".to_string()))
                 }
