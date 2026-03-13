@@ -350,8 +350,9 @@ This is a cli-only option.
 
 #### --error-format <FORMAT> {#error-format}
 
-Control the format of error message (short by default or long).  When using long,
-the response body is logged when there are errors.
+Control the format of error message (short by default or long).  When using long, the response body is logged when there are errors.
+
+Environment variables: HURL_ERROR_FORMAT
 
 This is a cli-only option.
 

@@ -6,6 +6,6 @@ value_parser: ["short", "long"]
 help: Control the format of error messages
 help_heading: Output options
 cli_only: true
+env_var: HURL_ERROR_FORMAT
 ---
-Control the format of error message (short by default or long).  When using long,
-the response body is logged when there are errors.
+Control the format of error message (short by default or long).  When using long, the response body is logged when there are errors.
