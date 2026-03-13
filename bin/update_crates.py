@@ -3,6 +3,7 @@ import argparse
 import datetime as dt
 import re
 import subprocess
+import sys
 import textwrap
 from dataclasses import dataclass
 from datetime import datetime
@@ -171,7 +172,6 @@ class LocalCrate:
         with open(self.toml_file, "rb") as f:
             data = tomllib.load(f)
             self.collect_dependencies(node=data)
-            print(self.dependencies)
 
     def collect_dependencies(self, node):
         """Walk the toml metadata and collect dependencies"""
@@ -225,11 +225,10 @@ def print_release_note(crate: Crate, version: str, token: str):
     print(f"\n{note}")
 
 
-def update_local_crates(
-    local_crates: list[LocalCrate], cooldown_days: int, token: str | None
-):
+def update_local_crates(local_crates: list[LocalCrate], cooldown_days: int, check: bool, token: str | None):
     """Updates a list of local crates and returns the number of update crates"""
     now = datetime.now(dt.timezone.utc)
+    updated_count = 0
 
     # Update Cargo.toml
     for local_crate in local_crates:
@@ -263,7 +262,15 @@ def update_local_crates(
             print(
                 f"- {dep.name} {actual_version} {Color.BLUE}updated to {last_version}{Color.RESET}"
             )
+            updated_count += 1
             print_release_note(crate=dep, version=last_version, token=token)
+
+    if check:
+        if updated_count > 0:
+            print(
+                f"{Color.YELLOW}...Consider re-executing update_crates.py without --check option to automatically update {updated_count} old crates{Color.RESET}"
+            )
+        sys.exit(updated_count)
 
     # Update Cargo.lock
     lock = CargoLock(lock_file=Path("Cargo.lock"))
@@ -303,10 +310,16 @@ def main():
     parser.add_argument("crates", nargs="+", help="crate local path to update")
     parser.add_argument("--token", help="GitHub authentication token")
     parser.add_argument("--cooldown", type=int, default=4)
+    parser.add_argument(
+        "--check", action="store_true", help="check if there are dependencies to update"
+    )
     args = parser.parse_args()
     crates = [LocalCrate(toml_file=Path(c) / "Cargo.toml") for c in args.crates]
     update_local_crates(
-        local_crates=crates, cooldown_days=args.cooldown, token=args.token
+        local_crates=crates,
+        cooldown_days=args.cooldown,
+        check=args.check,
+        token=args.token,
     )
 
 
