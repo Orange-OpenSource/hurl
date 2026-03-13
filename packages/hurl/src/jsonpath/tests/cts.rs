@@ -281,6 +281,7 @@ fn load_testcases() -> Vec<TestCase> {
     testcases
 }
 
+#[allow(clippy::result_large_err)]
 #[test]
 fn run() {
     let testcases = load_testcases();
