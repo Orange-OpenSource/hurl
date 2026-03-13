@@ -22,15 +22,15 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.2"
 chrono = { version = "0.4.44", default-features = false, features = ["clock"] }
-clap = { version = "4.5.60", features = ["string", "wrap_help"] }
+clap = { version = "4.6.0", features = ["string", "wrap_help"] }
 curl = "0.4.49"
-curl-sys = "0.4.85"
+curl-sys = "0.4.85+curl-8.18.0"
 encoding_rs = "0.8.35"
 glob = "0.3.3"
 hurl_core = { version = "8.0.0-SNAPSHOT", path = "../hurl_core" }
 libflate = "2.2.1"
 libxml = "0.3.8"
-md5 = "0.7.0"
+md5 = "0.8.0"
 percent-encoding = "2.3.2"
 regex = "1.12.3"
 serde = { version = "1.0.228", features = ["derive"] }
