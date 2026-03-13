@@ -50,6 +50,7 @@ const HURL_PREFIX: &str = "HURL_";
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 pub const HURL_COLOR: &str = "HURL_COLOR";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
+pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
 pub const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_HEADER: &str = "HURL_HEADER";
@@ -114,6 +115,10 @@ impl RunContext {
             .map(|v| v.as_str())
     }
 
+    /// Retunrs the env var for continue on error.
+    pub fn continue_on_error_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_CONTINUE_ON_ERROR)
+    }
     /// Returns the env var for error format.
     pub fn error_format_env_var(&self) -> Option<&str> {
         self.hurl_env_vars
@@ -246,6 +251,7 @@ fn is_hurl_option(name: &str) -> bool {
             || name.starts_with(HURL_SECRET_PREFIX)
             || name == HURL_COLOR
             || name == HURL_CONNECT_TIMEOUT
+            || name == HURL_CONTINUE_ON_ERROR
             || name == HURL_ERROR_FORMAT
             || name == HURL_HEADER
             || name == HURL_IPV4

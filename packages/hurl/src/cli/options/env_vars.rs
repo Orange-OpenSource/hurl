@@ -41,6 +41,9 @@ pub fn parse_env_vars(
         options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)
             .map_err(|e| with_env_var(e, HURL_CONNECT_TIMEOUT))?;
     }
+    if let Some(continue_on_error) = context.continue_on_error_env_var() {
+        options.continue_on_error = continue_on_error;
+    }
     if let Some(error_format) = context.error_format_env_var() {
         let error_format =
             ErrorFormat::from_str(error_format).map_err(|e| with_env_var(e, HURL_ERROR_FORMAT))?;
