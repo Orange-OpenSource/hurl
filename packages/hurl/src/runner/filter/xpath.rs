@@ -35,14 +35,20 @@ pub fn eval_xpath(
             let Ok(doc) = Document::parse(xml, Format::Html) else {
                 return Err(RunnerError::new(
                     source_info,
-                    RunnerErrorKind::FilterInvalidInput("value is not a valid XML".to_string()),
+                    RunnerErrorKind::FilterInvalidInput {
+                        actual: "value is not a valid XML".to_string(),
+                        expected: "valid XML string".to_string(),
+                    },
                     false,
                 ));
             };
             eval_xpath_doc(&doc, expr, variables)
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -132,7 +138,10 @@ mod tests {
 
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("value is not a valid XML".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "value is not a valid XML".to_string(),
+                expected: "valid XML string".to_string()
+            }
         );
     }
 
@@ -150,7 +159,10 @@ mod tests {
 
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("bytes".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "bytes".to_string(),
+                expected: "string".to_string()
+            }
         );
     }
 }

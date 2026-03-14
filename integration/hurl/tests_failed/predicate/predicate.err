@@ -212,7 +212,9 @@ error: Filter error
    | GET http://localhost:8000/predicate/error/type
    | ...
 24 | jsonpath "$.message" count == 1
-   |                      ^^^^^ invalid filter input: string
+   |                      ^^^^^ invalid filter input:
+   |                               actual: string
+   |                               expected: list, bytes, or nodeset
    |
 
 error: Assert failure

@@ -33,7 +33,10 @@ pub fn eval_html_unescape(
             Ok(Some(Value::String(decoded)))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

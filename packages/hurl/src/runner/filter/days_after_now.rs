@@ -32,7 +32,10 @@ pub fn eval_days_after_now(
             Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "date".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }

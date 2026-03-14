@@ -28,7 +28,10 @@ pub fn eval_location(
     if let Value::HttpResponse(resp) = value {
         Ok(resp.location().map(|loc| Value::String(loc.raw())))
     } else {
-        let kind = RunnerErrorKind::FilterInvalidInput(value.kind().to_string());
+        let kind = RunnerErrorKind::FilterInvalidInput {
+            actual: value.kind().to_string(),
+            expected: "string".to_string(),
+        };
         Err(RunnerError::new(source_info, kind, assert))
     }
 }

@@ -31,12 +31,18 @@ pub fn eval_base64_decode(
         Value::String(value) => match BASE64_STANDARD.decode(value) {
             Ok(decoded) => Ok(Some(Value::Bytes(decoded))),
             Err(_) => {
-                let kind = RunnerErrorKind::FilterInvalidInput("string is not base64".to_string());
+                let kind = RunnerErrorKind::FilterInvalidInput {
+                    actual: "string is not base64".to_string(),
+                    expected: "base64".to_string(),
+                };
                 Err(RunnerError::new(source_info, kind, assert))
             }
         },
         v => {
-            let kind = RunnerErrorKind::FilterInvalidInput(v.kind().to_string());
+            let kind = RunnerErrorKind::FilterInvalidInput {
+                actual: v.kind().to_string(),
+                expected: "string".to_string(),
+            };
             Err(RunnerError::new(source_info, kind, assert))
         }
     }
@@ -85,7 +91,10 @@ mod tests {
         );
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("string is not base64".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "string is not base64".to_string(),
+                expected: "base64".to_string()
+            }
         );
     }
 
@@ -105,7 +114,10 @@ mod tests {
         );
         assert_eq!(
             ret.unwrap_err().kind,
-            RunnerErrorKind::FilterInvalidInput("bytes".to_string())
+            RunnerErrorKind::FilterInvalidInput {
+                actual: "bytes".to_string(),
+                expected: "string".to_string()
+            }
         );
     }
 }
