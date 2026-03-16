@@ -72,6 +72,11 @@ body jsonpath "$.store.book[0].category" == "reference"                    # `js
 #jsonpath "$.store.book" nth 2 jsonpath "$.isbn" == "0-553-21311-3"         #
 jsonpath "$.store.bicycle.price" == 19.95
 #jsonpath "$.store" jsonpath "$.bicycle" jsonpath "$.price" == 19.95        #
+jsonpath "$..book[?length(@.title) > 10]" count == 3                       # filter all books with the length of the title is more than 10 charaacters
+jsonpath "$..book[?count(@.isbn) == 1]" count == 2                         # filter all books with an isbn number
+jsonpath "$..book[?match(@.title,'^Sword.*')].title" == "Sword of Honour"  # filter all books with a title starting with "Sword"
+jsonpath "$..book[?search(@.author,'Mel')].author" == "Herman Melville"    # filter all books with an author containing "Mel"
+jsonpath "$..book[?value(@.published) == true].title" == "Moby Dick"       # filter all books published
 
 {
   "store": {
