@@ -232,3 +232,36 @@ fn test_empty_nodelist() {
     assert!(eval(&store_value(), "$[0]").is_empty());
     assert!(eval(&store_value(), "$.book[*].not_exist").is_empty());
 }
+
+#[test]
+fn test_scalar_array_element_comparison() {
+    // Test case for RFC 9535: Scalar array element comparison with @
+    // Filter expression using @ alone to compare scalar array elements
+    let data = json!([
+        "efba2bf3-e6e8-4a93-948e-7b83b3ddc375",
+        "8f34e5ec-d698-4f17-a70a-28e944ee0075"
+    ]);
+
+    // Test @ alone in filter expression (without parentheses)
+    let result = eval(&data, r#"$[?@ != "8f34e5ec-d698-4f17-a70a-28e944ee0075"]"#);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0], "efba2bf3-e6e8-4a93-948e-7b83b3ddc375");
+
+    // Test @ with parentheses
+    let result2 = eval(
+        &data,
+        r#"$[?(@ != "8f34e5ec-d698-4f17-a70a-28e944ee0075")]"#,
+    );
+    assert_eq!(result2.len(), 1);
+    assert_eq!(result2[0], "efba2bf3-e6e8-4a93-948e-7b83b3ddc375");
+
+    // Test @ with == operator
+    let result3 = eval(&data, r#"$[?@ == "efba2bf3-e6e8-4a93-948e-7b83b3ddc375"]"#);
+    assert_eq!(result3.len(), 1);
+    assert_eq!(result3[0], "efba2bf3-e6e8-4a93-948e-7b83b3ddc375");
+
+    // Test with integer array and numeric comparison
+    let numbers = json!([1, 2, 3, 4, 5]);
+    let result4 = eval(&numbers, "$[?@ > 3]");
+    assert_eq!(result4, vec![json!(4), json!(5)]);
+}
