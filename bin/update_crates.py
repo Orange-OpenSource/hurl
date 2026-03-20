@@ -218,6 +218,15 @@ def print_release_note(crate: Crate, version: str, token: str):
     print(f"\n{note}")
 
 
+def semver(version: str) -> bool:
+    """Returns a semver string without metadata part"""
+    index = version.find("+")
+    if index != -1:
+        return version[:index]
+    else:
+        return version
+
+
 def update_local_crates(
     local_crates: list[LocalCrate], cooldown_days: int, check: bool, token: str | None
 ):
@@ -237,7 +246,7 @@ def update_local_crates(
                 continue
             actual_version = dep.version
             latest_version = dep.latest_version
-            if latest_version == actual_version:
+            if semver(latest_version) == semver(actual_version):
                 print(f"- {dep.name} {actual_version} {Color.GREEN}newest{Color.RESET}")
                 continue
 
