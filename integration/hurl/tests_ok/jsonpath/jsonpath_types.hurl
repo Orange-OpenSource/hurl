@@ -16,14 +16,14 @@ jsonpath "$[?@.value == 'hello'].name" == "hello"
 jsonpath "$[?@.value == \"hello\"].name" == "hello"
 jsonpath "$[?@.value == \"'\"].name" == "single_quote"
 jsonpath "$[?@.value == '\"'].name" == "double_quote"
-# jsonpath "$[?@.value == '\t'].name"  == "tab"            TODO
-#jsonpath "$[?@.value == '\\'].name"  == "backslash"       TODO
+jsonpath "$[?@.value == '\\t'].name" == "tab"
+jsonpath "$[?@.value == '\\\\'].name" == "backslash"
 jsonpath "$[?@.value == '🔥'].name" == "fire"
-# jsonpath "$[?@.value == '\u0001\uF525'].name"  == "fire" TODO
 jsonpath "$[?@.value == '\u{1F525}'].name" == "fire"
+jsonpath "$[?@.value == '\\uD83D\\uDD25'].name" == "fire"
 jsonpath "$[?@.value == '✈'].name" == "plane"
-#jsonpath "$[?@.value == '\u2708'].name"  == "plane"       TODO
 jsonpath "$[?@.value == '\u{2708}'].name" == "plane"
+jsonpath "$[?@.value == '\\u2708'].name" == "plane"
 
 # Passing different types to function param is syntactically correct
 jsonpath "$[?match(@.name, null)]" not exists
