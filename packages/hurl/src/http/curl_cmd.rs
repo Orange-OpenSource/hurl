@@ -219,7 +219,7 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
         .map(|(name, value)| format!("{name}={value}"))
         .collect::<Vec<String>>()
         .join("; ");
-    args.push(format!("'{value}'"));
+    args.push(encode_shell_string(&value));
     args
 }
 
@@ -1089,5 +1089,35 @@ mod tests {
         assert!(!escape_mode("\\"));
         assert!(escape_mode("'"));
         assert!(escape_mode("\n"));
+    }
+
+    #[test]
+    fn cookie_with_single_quote() {
+        let request = RequestSpec {
+            method: Method("GET".to_string()),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
+            cookies: vec![crate::http::RequestCookie {
+                name: "cookie1".to_string(),
+                value: "value'with'quotes".to_string(),
+            }],
+            ..Default::default()
+        };
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+        let output = None;
+
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
+        assert_eq!(
+            cmd.to_string(),
+            "curl --cookie $'cookie1=value\\'with\\'quotes' 'http://localhost:8000/hello'"
+        );
     }
 }
