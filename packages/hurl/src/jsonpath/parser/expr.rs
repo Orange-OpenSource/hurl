@@ -131,7 +131,7 @@ mod tests {
 
     use crate::jsonpath::ast::comparison::{Comparable, ComparisonExpr, ComparisonOp};
     use crate::jsonpath::ast::expr::{AndExpr, LogicalExpr, TestExpr, TestExprKind};
-    use crate::jsonpath::ast::function::argument::ValueTypeArgument;
+    use crate::jsonpath::ast::function::argument::{RegexValueTypeArgument, ValueTypeArgument};
     use crate::jsonpath::ast::function::functions::LogicalTypeFunction;
     use crate::jsonpath::ast::literal::{Literal, Number};
     use crate::jsonpath::ast::query::{AbsoluteQuery, Query, RelativeQuery};
@@ -141,6 +141,7 @@ mod tests {
         RelativeSingularQuery, SingularQuery, SingularQuerySegment,
     };
     use hurl_core::reader::Reader;
+    use regex::Regex;
 
     #[test]
     fn test_parse_logical_or_expr() {
@@ -300,7 +301,7 @@ mod tests {
                             NameSelector::new("a".to_string())
                         )])
                     )),
-                    ValueTypeArgument::Literal(Literal::String("a.*".to_string()))
+                    RegexValueTypeArgument::Literal(Regex::new("a.*").unwrap())
                 )))
             )
         );

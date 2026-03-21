@@ -61,7 +61,7 @@ pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<Logi
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
-        let argument2 = argument::value_type(reader)?;
+        let argument2 = argument::regex_value_type(reader)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Match(argument1, argument2)))
@@ -72,7 +72,7 @@ pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<Logi
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
-        let argument2 = argument::value_type(reader)?;
+        let argument2 = argument::regex_value_type(reader)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Search(argument1, argument2)))
@@ -85,7 +85,9 @@ pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<Logi
 mod tests {
 
     use super::*;
-    use crate::jsonpath::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
+    use crate::jsonpath::ast::function::argument::{
+        NodesTypeArgument, RegexValueTypeArgument, ValueTypeArgument,
+    };
     use crate::jsonpath::ast::literal::Literal;
     use crate::jsonpath::ast::query::{AbsoluteQuery, Query, RelativeQuery};
     use crate::jsonpath::ast::segment::{ChildSegment, DescendantSegment, Segment};
@@ -95,7 +97,7 @@ mod tests {
     };
     use crate::jsonpath::parser::{ParseError, ParseErrorKind};
     use hurl_core::reader::{CharPos, Pos};
-    //use serde_json::json;
+    use regex::Regex;
 
     #[test]
     pub fn test_length_function() {
@@ -175,7 +177,7 @@ mod tests {
                         NameSelector::new("date".to_string())
                     )])
                 )),
-                ValueTypeArgument::Literal(Literal::String("1974-05-01".to_string()))
+                RegexValueTypeArgument::Literal(Regex::new("1974-05-01").unwrap())
             )
         );
         assert_eq!(reader.cursor().index, CharPos(27));
@@ -192,7 +194,7 @@ mod tests {
                         NameSelector::new("author".to_string())
                     )])
                 )),
-                ValueTypeArgument::Literal(Literal::String("[BR]ob".to_string()))
+                RegexValueTypeArgument::Literal(Regex::new("[BR]ob").unwrap())
             )
         );
         assert_eq!(reader.cursor().index, CharPos(26));

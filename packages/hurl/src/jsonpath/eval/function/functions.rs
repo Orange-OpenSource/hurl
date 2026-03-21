@@ -70,8 +70,8 @@ impl LogicalTypeFunction {
                 } else {
                     return false;
                 };
-                let p = if let Some(Value::String(value)) = pattern {
-                    value
+                let p = if let Some(p) = pattern {
+                    p
                 } else {
                     return false;
                 };
@@ -93,14 +93,8 @@ impl LogicalTypeFunction {
                 } else {
                     return false;
                 };
-                let p = if let Some(Value::String(value)) = pattern {
-                    value
-                } else {
-                    return false;
-                };
-
-                if let Ok(regex) = Regex::new(&p) {
-                    regex.is_match(&s)
+                if let Some(p) = pattern {
+                    p.is_match(&s)
                 } else {
                     false
                 }
@@ -122,7 +116,9 @@ pub fn length(value: &serde_json::Value) -> Option<usize> {
 mod tests {
 
     use super::*;
-    use crate::jsonpath::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
+    use crate::jsonpath::ast::function::argument::{
+        NodesTypeArgument, RegexValueTypeArgument, ValueTypeArgument,
+    };
     use crate::jsonpath::ast::literal::{Literal, Number};
     use crate::jsonpath::ast::query::{Query, RelativeQuery};
     use crate::jsonpath::ast::segment::{ChildSegment, DescendantSegment, Segment};
@@ -202,8 +198,7 @@ mod tests {
                 "date".to_string(),
             ))]),
         ));
-        let pattern_argument =
-            ValueTypeArgument::Literal(Literal::String("1974-05-..".to_string()));
+        let pattern_argument = RegexValueTypeArgument::Literal(Regex::new("1974-05-..").unwrap());
         let match_function = LogicalTypeFunction::Match(string_argument, pattern_argument);
 
         assert!(match_function.eval(&json!({"date": "1974-05-01"}), &json!({})));
@@ -216,7 +211,7 @@ mod tests {
             ValueTypeArgument::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                 vec![],
             ))),
-            ValueTypeArgument::Literal(Literal::String(".".to_string())),
+            RegexValueTypeArgument::Literal(Regex::new(".").unwrap()),
         );
         assert!(match_function.eval(&json!("a"), &json!({})));
         assert!(match_function.eval(&json!("\r"), &json!({}))); // JavaScript is the exception, not the rule
@@ -231,7 +226,7 @@ mod tests {
             ValueTypeArgument::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                 vec![],
             ))),
-            ValueTypeArgument::Literal(Literal::String("a[.b]c".to_string())),
+            RegexValueTypeArgument::Literal(Regex::new("a[.b]c").unwrap()),
         );
         assert!(match_function.eval(&json!("a.c"), &json!({})));
         assert!(match_function.eval(&json!("abc"), &json!({})));
@@ -246,7 +241,7 @@ mod tests {
                 "author".to_string(),
             ))]),
         ));
-        let pattern_argument = ValueTypeArgument::Literal(Literal::String("[BR]ob".to_string()));
+        let pattern_argument = RegexValueTypeArgument::Literal(Regex::new("[BR]ob").unwrap());
         let search_function = LogicalTypeFunction::Search(string_argument, pattern_argument);
 
         assert!(search_function.eval(&json!({"author": "Bob Dylan"}), &json!({})));

@@ -16,13 +16,13 @@
  *
  */
 
-use super::argument::{NodesTypeArgument, ValueTypeArgument};
+use super::argument::{NodesTypeArgument, RegexValueTypeArgument, ValueTypeArgument};
 
 /// Functions returning a LogicalType
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LogicalTypeFunction {
-    Match(ValueTypeArgument, ValueTypeArgument),
-    Search(ValueTypeArgument, ValueTypeArgument),
+    Match(ValueTypeArgument, RegexValueTypeArgument),
+    Search(ValueTypeArgument, RegexValueTypeArgument),
 }
 
 /// Functions returning a ValueType

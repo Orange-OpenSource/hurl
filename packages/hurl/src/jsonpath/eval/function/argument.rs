@@ -16,8 +16,12 @@
  *
  */
 
-use crate::jsonpath::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
+use crate::jsonpath::ast::function::argument::{
+    NodesTypeArgument, RegexValueTypeArgument, ValueTypeArgument,
+};
 use crate::jsonpath::ast::function::{NodesType, ValueType};
+use regex::Regex;
+use serde_json::Value;
 
 impl ValueTypeArgument {
     pub fn eval(
@@ -33,6 +37,35 @@ impl ValueTypeArgument {
                 value_type_function.eval(current_value, root_value)
             }
             ValueTypeArgument::Literal(value) => Some(value.eval()),
+        }
+    }
+}
+
+impl RegexValueTypeArgument {
+    pub fn eval(
+        &self,
+        current_value: &serde_json::Value,
+        root_value: &serde_json::Value,
+    ) -> Option<Regex> {
+        match self {
+            RegexValueTypeArgument::SingularQuery(filter_query) => {
+                if let Some(serde_json::Value::String(s)) =
+                    filter_query.eval(current_value, root_value)
+                {
+                    Regex::new(&s).ok()
+                } else {
+                    None
+                }
+            }
+            RegexValueTypeArgument::Function(value_type_function) => {
+                if let Some(Value::String(s)) = value_type_function.eval(current_value, root_value)
+                {
+                    Regex::new(&s).ok()
+                } else {
+                    None
+                }
+            }
+            RegexValueTypeArgument::Literal(value) => Some(value.clone()),
         }
     }
 }

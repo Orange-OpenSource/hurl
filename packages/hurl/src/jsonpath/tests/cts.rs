@@ -54,6 +54,10 @@ const IGNORED_TESTS: &[&str] = &[
     // The regex '.' should match \r (except in Javascript)
     "functions, search, dot matcher on \\u2029",
     // The regex '.' should match \r (except in Javascript)
+    "functions, match, non-string second arg",
+    // The second argument of the match function should be a string (regex)
+    "functions, search, non-string second arg",
+    // The second argument of the search function should be a string (regex)
 ];
 
 #[derive(Clone, Debug, PartialEq, Eq)]

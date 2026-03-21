@@ -22,6 +22,7 @@ use crate::jsonpath::ast::expr::LogicalExpr;
 use crate::jsonpath::ast::literal::Literal;
 use crate::jsonpath::ast::query::Query;
 use crate::jsonpath::ast::singular_query::SingularQuery;
+use regex::Regex;
 
 /// Arguments with ValueType
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -30,6 +31,26 @@ pub enum ValueTypeArgument {
     SingularQuery(SingularQuery),
     Function(Box<ValueTypeFunction>),
 }
+
+/// Arguments with ValueType that should be a regex
+#[derive(Clone, Debug)]
+pub enum RegexValueTypeArgument {
+    Literal(Regex),
+    SingularQuery(SingularQuery),
+    Function(Box<ValueTypeFunction>),
+}
+
+impl PartialEq for RegexValueTypeArgument {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Literal(l0), Self::Literal(r0)) => l0.to_string() == r0.to_string(),
+            (Self::SingularQuery(l0), Self::SingularQuery(r0)) => l0 == r0,
+            (Self::Function(l0), Self::Function(r0)) => l0 == r0,
+            _ => false,
+        }
+    }
+}
+impl Eq for RegexValueTypeArgument {}
 
 /// Arguments with LogicalType
 #[allow(dead_code)]

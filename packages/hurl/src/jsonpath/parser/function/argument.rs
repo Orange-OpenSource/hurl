@@ -16,13 +16,17 @@
  *
  */
 
-use crate::jsonpath::ast::function::argument::{NodesTypeArgument, ValueTypeArgument};
+use crate::jsonpath::ast::function::argument::{
+    NodesTypeArgument, RegexValueTypeArgument, ValueTypeArgument,
+};
 use crate::jsonpath::parser::function::functions;
 use crate::jsonpath::parser::literal;
+use crate::jsonpath::parser::literal::string::try_parse as try_string;
 use crate::jsonpath::parser::query::try_filter_query;
 use crate::jsonpath::parser::singular_query;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
+use regex::Regex;
 
 /// Parse an argument with ValueType
 pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
@@ -37,6 +41,39 @@ pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
             reader.cursor().pos,
             ParseErrorKind::Expecting("a ValueType argument".to_string()),
         ))
+    }
+}
+
+/// Parse an argument with regex ValueType
+pub fn regex_value_type(reader: &mut Reader) -> ParseResult<RegexValueTypeArgument> {
+    if let Some(v) = try_regex(reader)? {
+        Ok(RegexValueTypeArgument::Literal(v))
+    } else if let Some(query) = singular_query::try_parse(reader)? {
+        Ok(RegexValueTypeArgument::SingularQuery(query))
+    } else if let Some(function) = functions::try_value_type_function(reader)? {
+        Ok(RegexValueTypeArgument::Function(Box::new(function)))
+    } else {
+        Err(ParseError::new(
+            reader.cursor().pos,
+            ParseErrorKind::Expecting("a RegexValueType argument".to_string()),
+        ))
+    }
+}
+
+/// Try to parse a regex
+///
+fn try_regex(reader: &mut Reader) -> ParseResult<Option<Regex>> {
+    let saved_position = reader.cursor().pos;
+    if let Some(s) = try_string(reader)? {
+        match Regex::new(&s) {
+            Ok(regex) => Ok(Some(regex)),
+            Err(_) => Err(ParseError::new(
+                saved_position,
+                ParseErrorKind::Expecting("a valid regex".to_string()),
+            )),
+        }
+    } else {
+        Ok(None)
     }
 }
 
@@ -60,7 +97,7 @@ mod tests {
     use crate::jsonpath::ast::query::{Query, RelativeQuery};
     use crate::jsonpath::ast::segment::{ChildSegment, Segment};
     use crate::jsonpath::ast::selector::{NameSelector, Selector, WildcardSelector};
-    use hurl_core::reader::CharPos;
+    use hurl_core::reader::{CharPos, Pos};
 
     #[test]
     pub fn test_value_type() {
@@ -70,6 +107,33 @@ mod tests {
             ValueTypeArgument::Literal(Literal::Number(Number::Integer(42)))
         );
         assert_eq!(reader.cursor().index, CharPos(2));
+    }
+
+    #[test]
+    pub fn test_regex_value_type() {
+        let mut reader = Reader::new("42");
+        assert_eq!(
+            regex_value_type(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("a RegexValueType argument".to_string())
+            )
+        );
+
+        let mut reader = Reader::new("[]");
+        assert_eq!(
+            regex_value_type(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("a RegexValueType argument".to_string())
+            )
+        );
+
+        let mut reader = Reader::new("\"[Bb]ob\"");
+        assert_eq!(
+            regex_value_type(&mut reader).unwrap(),
+            RegexValueTypeArgument::Literal(Regex::new("[Bb]ob").unwrap())
+        );
     }
 
     #[test]
@@ -87,5 +151,26 @@ mod tests {
             ])))
         );
         assert_eq!(reader.cursor().index, CharPos(10));
+    }
+
+    #[test]
+    pub fn test_try_regex() {
+        let mut reader = Reader::new("1");
+        assert!(try_regex(&mut reader).unwrap().is_none());
+
+        let mut reader = Reader::new("'[]'");
+        assert_eq!(
+            try_regex(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("a valid regex".to_string())
+            )
+        );
+
+        let mut reader = Reader::new("'[Bb]ob'");
+        assert_eq!(
+            try_regex(&mut reader).unwrap().unwrap().to_string(),
+            Regex::new("[Bb]ob").unwrap().to_string()
+        );
     }
 }
