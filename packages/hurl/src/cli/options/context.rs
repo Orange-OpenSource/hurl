@@ -50,6 +50,7 @@ const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 pub const HURL_COLOR: &str = "HURL_COLOR";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
+pub const HURL_DELAY: &str = "HURL_DELAY";
 pub const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_HEADER: &str = "HURL_HEADER";
@@ -118,6 +119,12 @@ impl RunContext {
     pub fn continue_on_error_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_CONTINUE_ON_ERROR)
     }
+
+    /// Returns the env var for connect timeout duration.
+    pub fn delay_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_DELAY).map(|v| v.as_str())
+    }
+
     /// Returns the env var for error format.
     pub fn error_format_env_var(&self) -> Option<&str> {
         self.hurl_env_vars

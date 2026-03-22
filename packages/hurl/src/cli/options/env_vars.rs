@@ -24,6 +24,7 @@ use super::{
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
     CliOptionsError, ErrorFormat, IpResolve, RunContext, Verbosity,
 };
+use crate::cli::options::context::HURL_DELAY;
 use hurl::runner::Value;
 use hurl_core::types::DurationUnit;
 
@@ -43,6 +44,10 @@ pub fn parse_env_vars(
     }
     if let Some(continue_on_error) = context.continue_on_error_env_var() {
         options.continue_on_error = continue_on_error;
+    }
+    if let Some(delay) = context.delay_env_var() {
+        options.delay = duration::duration_from_str(delay, DurationUnit::MilliSecond)
+            .map_err(|e| with_env_var(e, HURL_DELAY))?;
     }
     if let Some(error_format) = context.error_format_env_var() {
         let error_format =

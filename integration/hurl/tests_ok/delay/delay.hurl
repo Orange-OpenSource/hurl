@@ -14,7 +14,7 @@ HTTP 200
 
 
 # This request must reach the server at least 1000ms after the previous request
-# We artificially trigger retry to test that the delay is NOT add for each retry.
+# We artificially trigger retry to test that the delay is NOT added for each retry.
 GET http://localhost:8000/delay-and-retry
 [Options]
 retry: 10

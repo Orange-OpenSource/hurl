@@ -4,6 +4,7 @@ value: MILLISECONDS
 value_default: 0
 help: Sets delay before each request (aka sleep)
 help_heading: Run options
+env_var: HURL_DELAY
 ---
 Sets delay before each request (aka sleep). The delay is not applied to requests that have been retried because of [`--retry`](#retry). See [`--retry-interval`](#retry-interval) to space retried requests.
 
