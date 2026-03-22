@@ -110,12 +110,6 @@ fn parse_variables(
         variables.insert(env_name.to_string(), value);
     }
 
-    // Insert legacy environment variables `HURL_foo`
-    for (env_name, env_value) in context.legacy_var_env_vars() {
-        let value = variables::parse_value(env_value, type_kind)?;
-        variables.insert(env_name.to_string(), value);
-    }
-
     Ok(variables)
 }
 
@@ -183,7 +177,7 @@ mod tests {
         let ctx = RunContext::new(env_vars_override, stdin_term, stdout_term, stderr_term);
 
         let updated_options = parse_env_vars(&ctx, options).unwrap();
-        assert_eq!(updated_options.variables.len(), 4);
+        assert_eq!(updated_options.variables.len(), 3);
         assert_eq!(
             updated_options.variables["foo"],
             Value::Number(Number::Integer(48))
@@ -195,10 +189,6 @@ mod tests {
         assert_eq!(
             updated_options.variables["bar"],
             Value::String("BAR".to_string())
-        );
-        assert_eq!(
-            updated_options.variables["baz"],
-            Value::String("abcd".to_string())
         );
     }
 

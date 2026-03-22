@@ -44,10 +44,9 @@ pub struct RunContext {
 }
 
 /// All the supported Hurl env vars.
-const LEGACY_HURL_VARIABLE_PREFIX: &str = "HURL_";
 const HURL_PREFIX: &str = "HURL_";
-
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
+
 pub const HURL_COLOR: &str = "HURL_COLOR";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
@@ -205,22 +204,6 @@ impl RunContext {
             .collect()
     }
 
-    /// Returns the map of legacy Hurl variables injected by environment variables.
-    ///
-    /// Environment variables are prefixed with `HURL_` and returned values have their name
-    /// stripped of this prefix.
-    pub fn legacy_var_env_vars(&self) -> HashMap<&str, &str> {
-        self.hurl_env_vars
-            .iter()
-            .filter(|(name, _)| !is_hurl_option(name))
-            .filter_map(|(name, value)| {
-                name.strip_prefix(LEGACY_HURL_VARIABLE_PREFIX)
-                    .filter(|n| !n.is_empty())
-                    .map(|stripped| (stripped, value.as_str()))
-            })
-            .collect()
-    }
-
     pub fn verbose_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_VERBOSE)
     }
@@ -243,24 +226,6 @@ impl RunContext {
                 _ => None,
             })
     }
-}
-
-fn is_hurl_option(name: &str) -> bool {
-    name.starts_with(HURL_PREFIX)
-        && (name.starts_with(HURL_VARIABLE_PREFIX)
-            || name.starts_with(HURL_SECRET_PREFIX)
-            || name == HURL_COLOR
-            || name == HURL_CONNECT_TIMEOUT
-            || name == HURL_CONTINUE_ON_ERROR
-            || name == HURL_ERROR_FORMAT
-            || name == HURL_HEADER
-            || name == HURL_IPV4
-            || name == HURL_IPV6
-            || name == HURL_MAX_TIME
-            || name == HURL_NO_COLOR
-            || name == HURL_VERBOSE
-            || name == HURL_VERBOSITY
-            || name == HURL_VERY_VERBOSE)
 }
 
 /// Get config file path if any
@@ -368,7 +333,6 @@ mod tests {
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
 
         assert!(ctx.var_env_vars().is_empty());
-        assert!(ctx.legacy_var_env_vars().is_empty());
         assert!(ctx.secret_env_vars().is_empty());
     }
 
@@ -398,65 +362,6 @@ mod tests {
         assert_eq!(ctx.var_env_vars()["foo"], "true");
         assert_eq!(ctx.var_env_vars()["id"], "1234");
         assert_eq!(ctx.var_env_vars()["FOO"], "def");
-        assert_eq!(ctx.legacy_var_env_vars().len(), 1);
-        assert_eq!(ctx.legacy_var_env_vars()["VARIABLE"], "1234");
         assert!(ctx.secret_env_vars().is_empty());
-    }
-
-    #[test]
-    fn legacy_variables_from_env() {
-        let stdin_term = true;
-        let stdout_term = true;
-        let stderr_term = true;
-
-        let env_vars = HashMap::from([
-            ("FOO".to_string(), "xxx".to_string()),
-            ("BAR".to_string(), "yyy".to_string()),
-            ("BAZ".to_string(), "yyy".to_string()),
-            ("HURL_VARIABLE_bar".to_string(), "def".to_string()),
-            ("HURL_COLOR".to_string(), "1".to_string()),
-            ("HURL_NO_COLOR".to_string(), "1".to_string()),
-            ("HURL_foo".to_string(), "true".to_string()),
-            ("HURL_id".to_string(), "1234".to_string()),
-            ("BAZ".to_string(), "yyy".to_string()),
-            ("HURL_".to_string(), "1234".to_string()),
-            ("HURL_".to_string(), "abcd".to_string()),
-            ("HURL_FOO".to_string(), "def".to_string()),
-        ]);
-
-        let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-
-        assert_eq!(ctx.var_env_vars().len(), 1);
-        assert_eq!(ctx.var_env_vars()["bar"], "def");
-        assert_eq!(ctx.legacy_var_env_vars().len(), 3);
-        assert_eq!(ctx.legacy_var_env_vars()["foo"], "true");
-        assert_eq!(ctx.legacy_var_env_vars()["id"], "1234");
-        assert_eq!(ctx.legacy_var_env_vars()["FOO"], "def");
-        assert!(ctx.secret_env_vars().is_empty());
-    }
-
-    #[test]
-    fn legacy_secrets_from_env() {
-        let stdin_term = true;
-        let stdout_term = true;
-        let stderr_term = true;
-
-        let env_vars = HashMap::from([
-            ("FOO".to_string(), "xxx".to_string()),
-            ("HURL_SECRET".to_string(), "48".to_string()),
-            ("HURL_SECRET_".to_string(), "48".to_string()),
-            ("HURL_SECRET_abcd".to_string(), "1234".to_string()),
-            ("HURL_SECRET_ABCD".to_string(), "5678".to_string()),
-            ("BAR".to_string(), "bar".to_string()),
-        ]);
-
-        let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-
-        assert!(ctx.var_env_vars().is_empty());
-        assert_eq!(ctx.legacy_var_env_vars().len(), 1);
-        assert_eq!(ctx.legacy_var_env_vars()["SECRET"], "48");
-        assert_eq!(ctx.secret_env_vars().len(), 2);
-        assert_eq!(ctx.secret_env_vars()["abcd"], "1234");
-        assert_eq!(ctx.secret_env_vars()["ABCD"], "5678");
     }
 }
