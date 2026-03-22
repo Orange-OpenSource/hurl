@@ -23,8 +23,6 @@ jsonpath "$.items[?match(@.name, $.pattern)].name" == "car"
 jsonpath "$.items[?match(@.unknow, '^ca.*')]" not exists           # field not found
 jsonpath "$.items[?match(@.name, $.unknown)]" not exists           # pattern not found
 jsonpath "$.items[?match(@.name, $.two)].name" not exists          # regex should be defined as a string
-jsonpath "$.items[?match(@.name, '[]')].name" not exists           # invalid regex
-jsonpath "$.items[?match(@.name, 1)].name" not exists              # invalid type for regex
 
 # search function
 jsonpath "$.items[?search(@.name, 'ca')].name" == "car"
@@ -32,8 +30,6 @@ jsonpath "$.items[?search(@.name, $.string)].name" == "car"
 jsonpath "$.items[?search(@.unknown, 'ca')]" not exists            # field not found
 jsonpath "$.items[?search(@.name, $.unknown)]" not exists          # pattern not found
 jsonpath "$.items[?search(@.name, $.two)]" not exists              # regex should be defined as a string
-jsonpath "$.items[?search(@.name, '[]')]" not exists               # invalid regex
-jsonpath "$.items[?search(@.name, 1)]" not exists                  # invalid type for regex
 
 # value function
 jsonpath "$.items[?value(@.heavy) == true]" count == 2

@@ -25,13 +25,6 @@ jsonpath "$[?@.value == '✈'].name" == "plane"
 jsonpath "$[?@.value == '\u{2708}'].name" == "plane"
 jsonpath "$[?@.value == '\\u2708'].name" == "plane"
 
-# Passing different types to function param is syntactically correct
-jsonpath "$[?match(@.name, null)]" not exists
-jsonpath "$[?match(@.name, true)]" not exists
-jsonpath "$[?match(@.name, false)]" not exists
-jsonpath "$[?match(@.name, 42)]" not exists
-jsonpath "$[?match(@.name, 'hello')]" exists
-
 [       
   { "name": "null", "value": null },
   { "name": "true", "value": true },

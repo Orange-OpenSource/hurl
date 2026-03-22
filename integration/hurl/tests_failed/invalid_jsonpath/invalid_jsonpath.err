@@ -52,3 +52,39 @@ error: Invalid JSONPath
    |          ^^^^ JSONPath expression '$.' is not valid
    |
 
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:12:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+12 | jsonpath "$.items[?match(@.name, '[]')].name" not exists
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$.items[?match(@.name, '[]')].name' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:13:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+13 | jsonpath "$.items[?search(@.name, '[]')]" not exists
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$.items[?search(@.name, '[]')]' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:15:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+15 | jsonpath "$.items[?match(@.name, 1)].name" not exists
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$.items[?match(@.name, 1)].name' is not valid
+   |
+
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:16:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+16 | jsonpath "$.items[?search(@.name, 1)]" not exists
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$.items[?search(@.name, 1)]' is not valid
+   |
+
