@@ -18,6 +18,7 @@ Breaking Changes:
 
 * Use CookieStore in HurlResult (crate compatibility) [#4697](https://github.com/Orange-OpenSource/hurl/issues/4697)
 * Delete deprecated --interactive option [#4712](https://github.com/Orange-OpenSource/hurl/issues/4712)
+* Replace legacy env var variable configuration HURL_foo by HURL_VARIABLE_foo [#4882](https://github.com/Orange-OpenSource/hurl/issues/4882)
 * Using new JSONPath module implementing RFC 9535 [#4270](https://github.com/Orange-OpenSource/hurl/issues/4270)
 
 
