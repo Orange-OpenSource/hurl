@@ -202,9 +202,13 @@ Environment variables: HURL_HEADER='name1:value1|name2:value2' (headers are sepa
 
 Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.
 
+Environment variables: HURL_HTTP10
+
 #### --http1.1 {#http11}
 
 Tells Hurl to use HTTP version 1.1.
+
+Environment variables: HURL_HTTP11
 
 #### --http2 {#http2}
 
@@ -212,9 +216,13 @@ Tells Hurl to use HTTP version 2.
 For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.
 For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.
 
+Environment variables: HURL_HTTP2
+
 #### --http3 {#http3}
 
-Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
+Tells Hurl to try HTTP version 3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
+
+Environment variables: HURL_HTTP3
 
 #### -k, --insecure {#insecure}
 

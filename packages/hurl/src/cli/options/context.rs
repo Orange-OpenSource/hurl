@@ -54,6 +54,10 @@ pub const HURL_DELAY: &str = "HURL_DELAY";
 pub const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_HEADER: &str = "HURL_HEADER";
+pub const HURL_HTTP10: &str = "HURL_HTTP10";
+pub const HURL_HTTP11: &str = "HURL_HTTP11";
+pub const HURL_HTTP2: &str = "HURL_HTTP2";
+pub const HURL_HTTP3: &str = "HURL_HTTP3";
 pub const HURL_IPV4: &str = "HURL_IPV4";
 pub const HURL_IPV6: &str = "HURL_IPV6";
 pub const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
@@ -120,7 +124,7 @@ impl RunContext {
         self.get_env_var_bool(HURL_CONTINUE_ON_ERROR)
     }
 
-    /// Returns the env var for connect timeout duration.
+    /// Returns the env var for delay duration.
     pub fn delay_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_DELAY).map(|v| v.as_str())
     }
@@ -138,6 +142,26 @@ impl RunContext {
     /// stripped of this prefix.
     pub fn header_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_HEADER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for using HTTP/1.0.
+    pub fn http10_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_HTTP10)
+    }
+
+    /// Returns the env var for using HTTP/1.1.
+    pub fn http11_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_HTTP11)
+    }
+
+    /// Returns the env var for using HTTP/2.
+    pub fn http2_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_HTTP2)
+    }
+
+    /// Returns the env var for using HTTP/3.
+    pub fn http3_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_HTTP3)
     }
 
     /// Returns the env var for IPv4 resolution.

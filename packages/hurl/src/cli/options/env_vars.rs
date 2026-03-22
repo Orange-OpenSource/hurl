@@ -22,7 +22,7 @@ use super::variables::TypeKind;
 use super::{
     context::HURL_CONNECT_TIMEOUT, context::HURL_ERROR_FORMAT, context::HURL_HEADER,
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
-    CliOptionsError, ErrorFormat, IpResolve, RunContext, Verbosity,
+    CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
 };
 use crate::cli::options::context::HURL_DELAY;
 use hurl::runner::Value;
@@ -63,6 +63,30 @@ pub fn parse_env_vars(
             }
         }
         options.headers.extend(headers);
+    }
+    if let Some(http3) = context.http3_env_var() {
+        if http3 {
+            options.http_version = Some(HttpVersion::V3);
+        } else {
+            options.http_version = Some(HttpVersion::V2);
+        }
+    }
+    if let Some(http2) = context.http2_env_var() {
+        if http2 {
+            options.http_version = Some(HttpVersion::V2);
+        } else {
+            options.http_version = Some(HttpVersion::V11);
+        }
+    }
+    if let Some(http11) = context.http11_env_var() {
+        if http11 {
+            options.http_version = Some(HttpVersion::V11);
+        } else {
+            options.http_version = Some(HttpVersion::V10);
+        }
+    }
+    if let Some(true) = context.http10_env_var() {
+        options.http_version = Some(HttpVersion::V10);
     }
     if let Some(ipv4) = context.ipv4_env_var() {
         if ipv4 {
