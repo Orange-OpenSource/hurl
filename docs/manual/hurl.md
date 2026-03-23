@@ -228,6 +228,8 @@ Environment variables: HURL_HTTP3
 
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
+Environment variables: HURL_INSECURE
+
 #### -4, --ipv4 {#ipv4}
 
 This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.

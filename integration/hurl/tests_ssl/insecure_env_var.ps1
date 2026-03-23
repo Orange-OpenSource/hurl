@@ -1,4 +1,5 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-hurl --insecure tests_ssl/insecure.hurl
+$env:HURL_INSECURE = '1'
+hurl tests_ssl/insecure.hurl
