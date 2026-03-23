@@ -3,5 +3,6 @@ long: ignore-asserts
 help: Ignore asserts defined in the Hurl file
 help_heading: Run options
 cli_only: true
+env_var: HURL_IGNORE_ASSERTS
 ---
 Ignore all asserts defined in the Hurl file.

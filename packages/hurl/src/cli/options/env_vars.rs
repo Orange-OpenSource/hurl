@@ -95,6 +95,9 @@ pub fn parse_env_vars(
             options.ip_resolve = Some(IpResolve::IpV6);
         }
     }
+    if let Some(ignore_asserts) = context.ignore_asserts_env_var() {
+        options.ignore_asserts = ignore_asserts;
+    }
     if let Some(ipv6) = context.ipv6_env_var() {
         if ipv6 {
             options.ip_resolve = Some(IpResolve::IpV6);

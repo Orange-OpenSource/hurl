@@ -481,6 +481,8 @@ This is a cli-only option.
 
 Ignore all asserts defined in the Hurl file.
 
+Environment variables: HURL_IGNORE_ASSERTS
+
 This is a cli-only option.
 
 #### --jobs <NUM> {#jobs}
