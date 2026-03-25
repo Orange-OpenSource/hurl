@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::num::ParseIntError;
 use std::str::FromStr;
 
 use super::variables::TypeKind;
@@ -24,9 +25,9 @@ use super::{
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
     CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
 };
-use crate::cli::options::context::HURL_DELAY;
+use crate::cli::options::context::{HURL_DELAY, HURL_LIMIT_RATE};
 use hurl::runner::Value;
-use hurl_core::types::DurationUnit;
+use hurl_core::types::{BytesPerSec, DurationUnit};
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -108,6 +109,12 @@ pub fn parse_env_vars(
             options.ip_resolve = Some(IpResolve::IpV4);
         }
     }
+    if let Some(limit_rate) = context.limit_rate_env_var() {
+        let limit_rate = limit_rate
+            .parse::<u64>()
+            .map_err(|e| from_parse_err(e, HURL_LIMIT_RATE))?;
+        options.limit_rate = Some(BytesPerSec(limit_rate));
+    }
     options.variables = parse_variables(context, options.variables)?;
     options.secrets = parse_secrets(context, options.secrets)?;
     if let Some(true) = context.verbose_env_var() {
@@ -167,6 +174,11 @@ fn parse_secrets(
         secret::add_secret(&mut secrets, env_name.to_string(), value)?;
     }
     Ok(secrets)
+}
+
+fn from_parse_err(error: ParseIntError, env: &'static str) -> CliOptionsError {
+    let message = format!("{} ({env} environment variable)", error);
+    CliOptionsError::Error(message)
 }
 
 fn with_env_var(error: CliOptionsError, env: &'static str) -> CliOptionsError {
