@@ -109,7 +109,7 @@ pub fn parse_cli_args(
         .arg(commands::continue_on_error())
         .arg(commands::delay())
         .arg(commands::from_entry())
-        .arg(commands::ignore_asserts())
+        .arg(commands::no_assert())
         .arg(commands::jobs())
         .arg(commands::parallel())
         .arg(commands::repeat())
@@ -201,7 +201,7 @@ fn parse_arg_matches(
     let headers = headers(arg_matches, default_options.headers);
     let html_dir = html_dir(arg_matches, default_options.html_dir)?;
     let http_version = http_version(arg_matches, default_options.http_version);
-    let ignore_asserts = ignore_asserts(arg_matches, default_options.ignore_asserts);
+    let no_assert = no_assert(arg_matches, default_options.no_assert);
     let include = include(arg_matches, default_options.include);
     let input_files = input_files(arg_matches, context)?;
     let insecure = insecure(arg_matches, default_options.insecure);
@@ -283,7 +283,7 @@ fn parse_arg_matches(
         headers,
         html_dir,
         http_version,
-        ignore_asserts,
+        no_assert,
         include,
         input_files,
         insecure,
@@ -540,8 +540,8 @@ fn http_version(
     }
 }
 
-fn ignore_asserts(arg_matches: &ArgMatches, default_value: bool) -> bool {
-    if has_flag(arg_matches, "ignore_asserts") {
+fn no_assert(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "no_assert") {
         true
     } else {
         default_value

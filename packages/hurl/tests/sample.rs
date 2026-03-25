@@ -110,7 +110,7 @@ fn simple_sample() {
         .cookie_input_file(None)
         .fail_fast(false)
         .follow_location(false)
-        .ignore_asserts(false)
+        .no_assert(false)
         .insecure(false)
         .max_redirect(Count::Finite(10))
         .no_proxy(None)

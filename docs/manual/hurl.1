@@ -1,4 +1,4 @@
-.TH hurl 1 "23 Mar 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "25 Mar 2026" "hurl 8.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -461,19 +461,19 @@ Execute Hurl file from ENTRY_NUMBER (starting at 1).
 
 This is a cli-only option.
 
-.IP "--ignore-asserts "
-
-Ignore all asserts defined in the Hurl file.
-
-Environment variables: HURL_IGNORE_ASSERTS
-
-This is a cli-only option.
-
 .IP "--jobs <NUM> "
 
 Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs.
 
 See also \fI--parallel\fP.
+
+This is a cli-only option.
+
+.IP "--no-assert "
+
+Ignore all asserts defined in the Hurl file.
+
+Environment variables: HURL_NO_ASSERT
 
 This is a cli-only option.
 

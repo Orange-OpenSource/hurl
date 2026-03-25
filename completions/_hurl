@@ -40,7 +40,6 @@ _hurl() {
     '--http1.1[Tell Hurl to use HTTP version 1.1]' \
     '--http2[Tell Hurl to use HTTP version 2]' \
     '--http3[Tell Hurl to use HTTP version 3]' \
-    '--ignore-asserts[Ignore asserts defined in the Hurl file]' \
     '(-i --include)'{-i,--include}'[Include the HTTP headers in the output]' \
     '(-k --insecure)'{-k,--insecure}'[Allow insecure SSL connections]' \
     '(-4 --ipv4)'{-4,--ipv4}'[Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6]' \
@@ -55,6 +54,7 @@ _hurl() {
     '(-n --netrc)'{-n,--netrc}'[Must read .netrc for username and password]' \
     '--netrc-file[Specify FILE for .netrc]: :_files' \
     '--netrc-optional[Use either .netrc or the URL]' \
+    '--no-assert[Ignore asserts defined in the Hurl file]' \
     '--no-color[Do not colorize output]' \
     '--no-cookie-store[Do not use cookie store between requests]' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \

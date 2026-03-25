@@ -44,7 +44,7 @@ pub struct RunnerOptionsBuilder {
     from_entry: Option<usize>,
     headers: HeaderVec,
     http_version: RequestedHttpVersion,
-    ignore_asserts: bool,
+    no_assert: bool,
     insecure: bool,
     ip_resolve: IpResolve,
     max_filesize: Option<u64>,
@@ -96,7 +96,7 @@ impl Default for RunnerOptionsBuilder {
             from_entry: None,
             headers: HeaderVec::new(),
             http_version: RequestedHttpVersion::default(),
-            ignore_asserts: false,
+            no_assert: false,
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
@@ -270,8 +270,8 @@ impl RunnerOptionsBuilder {
     }
 
     /// Ignores all asserts defined in the Hurl file.
-    pub fn ignore_asserts(&mut self, ignore_asserts: bool) -> &mut Self {
-        self.ignore_asserts = ignore_asserts;
+    pub fn no_assert(&mut self, no_assert: bool) -> &mut Self {
+        self.no_assert = no_assert;
         self
     }
 
@@ -476,7 +476,7 @@ impl RunnerOptionsBuilder {
             from_entry: self.from_entry,
             headers: self.headers.clone(),
             http_version: self.http_version,
-            ignore_asserts: self.ignore_asserts,
+            no_assert: self.no_assert,
             insecure: self.insecure,
             ip_resolve: self.ip_resolve,
             max_filesize: self.max_filesize,
@@ -553,7 +553,7 @@ pub struct RunnerOptions {
     /// Set requested HTTP version (can be different of the effective HTTP version).
     pub(crate) http_version: RequestedHttpVersion,
     /// Ignores all asserts defined in the Hurl file.
-    pub(crate) ignore_asserts: bool,
+    pub(crate) no_assert: bool,
     /// Set IP version.
     pub(crate) ip_resolve: IpResolve,
     /// Allows Hurl to perform “insecure” SSL connections and transfers.

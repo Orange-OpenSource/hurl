@@ -146,7 +146,7 @@ pub fn run(
     let mut cache = BodyCache::new();
     let mut asserts = vec![];
 
-    if !runner_options.ignore_asserts {
+    if !runner_options.no_assert {
         if let Some(response_spec) = &entry.response {
             let mut status_asserts =
                 response::eval_version_status_asserts(response_spec, http_response);
@@ -199,7 +199,7 @@ pub fn run(
     logger.debug("");
 
     // Compute asserts
-    if !runner_options.ignore_asserts {
+    if !runner_options.no_assert {
         if let Some(response_spec) = &entry.response {
             warn_deprecated(response_spec, logger);
             let mut other_asserts = response::eval_asserts(

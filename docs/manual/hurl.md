@@ -479,19 +479,19 @@ Execute Hurl file from ENTRY_NUMBER (starting at 1).
 
 This is a cli-only option.
 
-#### --ignore-asserts {#ignore-asserts}
-
-Ignore all asserts defined in the Hurl file.
-
-Environment variables: HURL_IGNORE_ASSERTS
-
-This is a cli-only option.
-
 #### --jobs <NUM> {#jobs}
 
 Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs.
 
 See also [`--parallel`](#parallel).
+
+This is a cli-only option.
+
+#### --no-assert {#no-assert}
+
+Ignore all asserts defined in the Hurl file.
+
+Environment variables: HURL_NO_ASSERT
 
 This is a cli-only option.
 

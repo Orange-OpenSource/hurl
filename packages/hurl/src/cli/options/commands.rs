@@ -253,14 +253,6 @@ pub fn http3() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
-pub fn ignore_asserts() -> clap::Arg {
-    clap::Arg::new("ignore_asserts")
-        .long("ignore-asserts")
-        .help("Ignore asserts defined in the Hurl file")
-        .help_heading("Run options")
-        .action(clap::ArgAction::SetTrue)
-}
-
 pub fn include() -> clap::Arg {
     clap::Arg::new("include")
         .long("include")
@@ -392,6 +384,14 @@ pub fn netrc_optional() -> clap::Arg {
         .help("Use either .netrc or the URL")
         .help_heading("Other options")
         .conflicts_with("netrc")
+        .action(clap::ArgAction::SetTrue)
+}
+
+pub fn no_assert() -> clap::Arg {
+    clap::Arg::new("no_assert")
+        .long("no-assert")
+        .help("Ignore asserts defined in the Hurl file")
+        .help_heading("Run options")
         .action(clap::ArgAction::SetTrue)
 }
 

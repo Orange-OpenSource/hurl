@@ -58,7 +58,7 @@ pub const HURL_HTTP10: &str = "HURL_HTTP10";
 pub const HURL_HTTP11: &str = "HURL_HTTP11";
 pub const HURL_HTTP2: &str = "HURL_HTTP2";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
-pub const HURL_IGNORE_ASSERTS: &str = "HURL_IGNORE_ASSERTS";
+pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_INSECURE: &str = "HURL_INSECURE";
 pub const HURL_IPV4: &str = "HURL_IPV4";
 pub const HURL_IPV6: &str = "HURL_IPV6";
@@ -167,8 +167,8 @@ impl RunContext {
     }
 
     /// Returns the env var for ignoring asserts.
-    pub fn ignore_asserts_env_var(&self) -> Option<bool> {
-        self.get_env_var_bool(HURL_IGNORE_ASSERTS)
+    pub fn no_assert_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_ASSERT)
     }
 
     /// Returns the env var for allowing insecure transfers.

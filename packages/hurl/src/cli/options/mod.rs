@@ -72,7 +72,7 @@ pub struct CliOptions {
     pub headers: Vec<String>,
     pub html_dir: Option<PathBuf>,
     pub http_version: Option<HttpVersion>,
-    pub ignore_asserts: bool,
+    pub no_assert: bool,
     pub include: bool,
     pub input_files: Vec<Input>,
     pub insecure: bool,
@@ -268,7 +268,7 @@ impl Default for CliOptions {
             headers: Vec::new(),
             html_dir: None,
             http_version: None,
-            ignore_asserts: false,
+            no_assert: false,
             include: false,
             input_files: Vec::new(),
             insecure: false,
@@ -362,7 +362,7 @@ impl CliOptions {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),
         };
-        let ignore_asserts = self.ignore_asserts;
+        let no_assert = self.no_assert;
         let insecure = self.insecure;
         let ip_resolve = match self.ip_resolve {
             Some(ip) => ip.into(),
@@ -413,7 +413,7 @@ impl CliOptions {
             .from_entry(from_entry)
             .headers(headers)
             .http_version(http_version)
-            .ignore_asserts(ignore_asserts)
+            .no_assert(no_assert)
             .insecure(insecure)
             .ip_resolve(ip_resolve)
             .max_filesize(max_filesize)
