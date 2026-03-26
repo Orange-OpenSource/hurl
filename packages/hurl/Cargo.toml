@@ -35,7 +35,7 @@ percent-encoding = "2.3.2"
 regex = "1.12.3"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.149", features = ["arbitrary_precision"] }
-sha2 = "0.10.9"
+sha2 = "0.11.0"
 url = "2.5.8"
 xml = "1.2.1"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
