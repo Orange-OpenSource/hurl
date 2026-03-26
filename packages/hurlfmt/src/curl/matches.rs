@@ -20,22 +20,21 @@ use clap::ArgMatches;
 use super::HurlOption;
 
 pub fn body(arg_matches: &ArgMatches) -> Option<String> {
-    match get_string(arg_matches, "data") {
-        None => None,
-        Some(v) => {
-            if let Some(filename) = v.strip_prefix('@') {
-                Some(format!("file, {filename};"))
-            } else {
-                Some(format!("```\n{v}\n```"))
-            }
-        }
+    if let Some(v) = get_string(arg_matches, "data_raw") {
+        return Some(format!("```\n{v}\n```"));
+    }
+    let v = get_string(arg_matches, "data")?;
+    if let Some(filename) = v.strip_prefix('@') {
+        Some(format!("file, {filename};"))
+    } else {
+        Some(format!("```\n{v}\n```"))
     }
 }
 
 pub fn method(arg_matches: &ArgMatches) -> String {
     match get_string(arg_matches, "method") {
         None => {
-            if arg_matches.contains_id("data") {
+            if has_arg(arg_matches, "data_raw") || has_arg(arg_matches, "data") {
                 "POST".to_string()
             } else {
                 "GET".to_string()
@@ -65,7 +64,9 @@ pub fn cookies(arg_matches: &ArgMatches) -> Vec<String> {
 pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
     let mut headers = get_strings(arg_matches, "headers").unwrap_or_default();
     if !has_content_type(&headers) {
-        if let Some(data) = get_string(arg_matches, "data") {
+        if has_arg(arg_matches, "data_raw") {
+            headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
+        } else if let Some(data) = get_string(arg_matches, "data") {
             if !data.starts_with('@') {
                 headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
             }
@@ -117,6 +118,10 @@ fn has_content_type(headers: &Vec<String>) -> bool {
         }
     }
     false
+}
+
+fn has_arg(matches: &ArgMatches, name: &str) -> bool {
+    matches.get_one::<String>(name).is_some()
 }
 
 fn has_flag(matches: &ArgMatches, name: &str) -> bool {

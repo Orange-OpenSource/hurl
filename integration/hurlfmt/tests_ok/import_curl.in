@@ -13,4 +13,6 @@ curl --verbose https://localhost:8001/hello
 curl --ntlm https://localhost:8001/hello
 curl --negotiate https://localhost:8001/hello
 curl --header 'Empty-Header;' http://localhost:8000/hello
+curl --data-raw '@data.txt' http://localhost:8000/post-raw
+curl --header 'Content-Type: application/json' --data-raw '{"name":"Bob"}' http://localhost:8000/post-raw-json
 

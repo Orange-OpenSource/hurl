@@ -58,6 +58,15 @@ pub fn data() -> clap::Arg {
         .long("data")
         .short('d')
         .value_name("data")
+        .overrides_with("data_raw")
+        .num_args(1)
+}
+
+pub fn data_raw() -> clap::Arg {
+    clap::Arg::new("data_raw")
+        .long("data-raw")
+        .value_name("data")
+        .overrides_with("data")
         .num_args(1)
 }
 

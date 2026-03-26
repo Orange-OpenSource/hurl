@@ -70,3 +70,15 @@ negotiate: true
 GET http://localhost:8000/hello
 Empty-Header:
 
+POST http://localhost:8000/post-raw
+Content-Type: application/x-www-form-urlencoded
+```
+@data.txt
+```
+
+POST http://localhost:8000/post-raw-json
+Content-Type: application/json
+```
+{"name":"Bob"}
+```
+
