@@ -68,6 +68,7 @@ pub const HURL_MAX_REDIRS: &str = "HURL_MAX_REDIRS";
 pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 pub const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
 pub const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
@@ -234,6 +235,11 @@ impl RunContext {
     /// Returns the env var for the User-Agent string.
     pub fn user_agent_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_USER_AGENT).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for suppressing output.
+    pub fn no_output_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_OUTPUT)
     }
 
     /// Returns the env var for ignoring asserts.

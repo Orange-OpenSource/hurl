@@ -23,7 +23,7 @@ use super::variables::TypeKind;
 use super::{
     context::HURL_CONNECT_TIMEOUT, context::HURL_ERROR_FORMAT, context::HURL_HEADER,
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
-    CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
+    CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, RunContext, Verbosity,
 };
 use crate::cli::options::context::{
     HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE, HURL_MAX_REDIRS,
@@ -100,6 +100,9 @@ pub fn parse_env_vars(
     }
     if let Some(no_assert) = context.no_assert_env_var() {
         options.no_assert = no_assert;
+    }
+    if let Some(true) = context.no_output_env_var() {
+        options.output_type = OutputType::NoOutput;
     }
     if let Some(follow_location) = context.follow_location_env_var() {
         options.follow_location = follow_location;

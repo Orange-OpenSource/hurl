@@ -402,6 +402,8 @@ This is a cli-only option.
 
 Suppress output. By default, Hurl outputs the body of the last response.
 
+Environment variables: HURL_NO_OUTPUT
+
 This is a cli-only option.
 
 #### --no-pretty {#no-pretty}
