@@ -257,6 +257,8 @@ Environment variables: HURL_LIMIT_RATE
 
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
 
+Environment variables: HURL_LOCATION
+
 #### --location-trusted {#location-trusted}
 
 Like [`-L, --location`](#location), but allows sending the name + password to all hosts that the site may redirect to.

@@ -3,5 +3,6 @@ long: location
 short: L
 help: Follow redirects
 help_heading: HTTP options
+env_var: HURL_LOCATION
 ---
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option

@@ -99,6 +99,9 @@ pub fn parse_env_vars(
     if let Some(no_assert) = context.no_assert_env_var() {
         options.no_assert = no_assert;
     }
+    if let Some(follow_location) = context.follow_location_env_var() {
+        options.follow_location = follow_location;
+    }
     if let Some(insecure) = context.insecure_env_var() {
         options.insecure = insecure;
     }
