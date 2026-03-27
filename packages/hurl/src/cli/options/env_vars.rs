@@ -25,7 +25,7 @@ use super::{
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
     CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
 };
-use crate::cli::options::context::{HURL_DELAY, HURL_LIMIT_RATE};
+use crate::cli::options::context::{HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE};
 use hurl::runner::Value;
 use hurl_core::types::{BytesPerSec, DurationUnit};
 
@@ -108,6 +108,12 @@ pub fn parse_env_vars(
         } else {
             options.ip_resolve = Some(IpResolve::IpV4);
         }
+    }
+    if let Some(jobs) = context.jobs_env_var() {
+        let jobs = jobs
+            .parse::<u32>()
+            .map_err(|e| from_parse_err(e, HURL_JOBS))?;
+        options.jobs = Some(jobs as usize);
     }
     if let Some(limit_rate) = context.limit_rate_env_var() {
         let limit_rate = limit_rate

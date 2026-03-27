@@ -487,6 +487,8 @@ Maximum number of parallel jobs in parallel mode. Default value corresponds (in 
 
 See also [`--parallel`](#parallel).
 
+Environment variables: HURL_JOBS
+
 This is a cli-only option.
 
 #### --no-assert {#no-assert}

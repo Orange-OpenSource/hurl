@@ -58,6 +58,7 @@ pub const HURL_HTTP10: &str = "HURL_HTTP10";
 pub const HURL_HTTP11: &str = "HURL_HTTP11";
 pub const HURL_HTTP2: &str = "HURL_HTTP2";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
+pub const HURL_JOBS: &str = "HURL_JOBS";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_INSECURE: &str = "HURL_INSECURE";
@@ -186,6 +187,11 @@ impl RunContext {
     pub fn is_ci_env_var(&self) -> bool {
         // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
         self.env_vars.contains_key("CI") || self.env_vars.contains_key("TF_BUILD")
+    }
+
+    /// Returns the env var for maximum number of parallel jobs.
+    pub fn jobs_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_JOBS).map(|v| v.as_str())
     }
 
     /// Returns the env var for transfer rate limit rating.

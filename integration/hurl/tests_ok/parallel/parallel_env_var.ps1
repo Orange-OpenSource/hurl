@@ -1,0 +1,22 @@
+Set-StrictMode -Version latest
+$ErrorActionPreference = 'Stop'
+
+# We run 4 Hurl files in parallel, each one has a ~5s duration.
+# On usual hardware, this should be executed in ~5s.
+
+$Start = [DateTimeOffset]::Now.ToUnixTimeSeconds()
+
+$env:HURL_JOBS = '4'
+hurl --parallel --verbose --variable name=Bob `
+  tests_ok/parallel/parallel.hurl `
+  tests_ok/parallel/parallel.hurl `
+  tests_ok/parallel/parallel.hurl `
+  tests_ok/parallel/parallel.hurl
+
+$End = [DateTimeOffset]::Now.ToUnixTimeSeconds()
+
+$Duration = $End - $Start
+if ($Duration -gt 6) {
+    Write-Host "Parallel execution duration failed ${Duration}s (limit 6s)"
+    exit 1
+}
