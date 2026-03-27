@@ -63,7 +63,7 @@ fn main() {
         .continue_on_error(false)
         .delay(Duration::from_millis(0))
         .follow_location(false)
-        .no_assert(false)
+        .ignore_asserts(false)
         .insecure(false)
         .max_redirect(Count::Infinite)
         .no_proxy(None)
