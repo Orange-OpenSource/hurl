@@ -64,6 +64,7 @@ pub const HURL_HTTP2: &str = "HURL_HTTP2";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
 pub const HURL_MAX_FILESIZE: &str = "HURL_MAX_FILESIZE";
+pub const HURL_MAX_REDIRS: &str = "HURL_MAX_REDIRS";
 pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
@@ -218,6 +219,11 @@ impl RunContext {
         self.hurl_env_vars
             .get(HURL_MAX_FILESIZE)
             .map(|v| v.as_str())
+    }
+
+    /// Returns the env var for maximum number of redirects.
+    pub fn max_redirs_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_MAX_REDIRS).map(|v| v.as_str())
     }
 
     /// Returns the env var for max time duration.

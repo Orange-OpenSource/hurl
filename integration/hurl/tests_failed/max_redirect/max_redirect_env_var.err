@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_failed/max_redirect/max_redirect.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/redirect/7
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ too many redirect
+   |
+

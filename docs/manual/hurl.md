@@ -280,6 +280,8 @@ Set maximum number of redirection-followings allowed
 
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
+Environment variables: HURL_MAX_REDIRS
+
 #### -m, --max-time <SECONDS> {#max-time}
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.

@@ -25,9 +25,11 @@ use super::{
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
     CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
 };
-use crate::cli::options::context::{HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE};
+use crate::cli::options::context::{
+    HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE, HURL_MAX_REDIRS,
+};
 use hurl::runner::Value;
-use hurl_core::types::{BytesPerSec, DurationUnit};
+use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
@@ -135,6 +137,15 @@ pub fn parse_env_vars(
             .parse::<u64>()
             .map_err(|e| from_parse_err(e, HURL_MAX_FILESIZE))?;
         options.max_filesize = Some(max_filesize);
+    }
+    if let Some(max_redirs) = context.max_redirs_env_var() {
+        let max_redirs = max_redirs
+            .parse::<i32>()
+            .map_err(|e| from_parse_err(e, HURL_MAX_REDIRS))?;
+        options.max_redirect = match max_redirs {
+            -1 => Count::Infinite,
+            n => Count::Finite(n as usize),
+        };
     }
     if let Some(user_agent) = context.user_agent_env_var() {
         options.user_agent = Some(user_agent.to_string());
