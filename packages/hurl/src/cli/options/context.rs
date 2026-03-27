@@ -45,33 +45,34 @@ pub struct RunContext {
 
 /// All the supported Hurl env vars.
 const HURL_PREFIX: &str = "HURL_";
-const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 
 pub const HURL_COLOR: &str = "HURL_COLOR";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
 pub const HURL_DELAY: &str = "HURL_DELAY";
 pub const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
-pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+pub const HURL_FOLLOW_LOCATION: &str = "HURL_LOCATION";
+pub const HURL_FOLLOW_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
+pub const HURL_INSECURE: &str = "HURL_INSECURE";
+pub const HURL_IPV4: &str = "HURL_IPV4";
+pub const HURL_IPV6: &str = "HURL_IPV6";
+pub const HURL_JOBS: &str = "HURL_JOBS";
 pub const HURL_HEADER: &str = "HURL_HEADER";
 pub const HURL_HTTP10: &str = "HURL_HTTP10";
 pub const HURL_HTTP11: &str = "HURL_HTTP11";
 pub const HURL_HTTP2: &str = "HURL_HTTP2";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
-pub const HURL_FOLLOW_LOCATION: &str = "HURL_LOCATION";
-pub const HURL_FOLLOW_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
-pub const HURL_JOBS: &str = "HURL_JOBS";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
 pub const HURL_MAX_FILESIZE: &str = "HURL_MAX_FILESIZE";
+pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
-pub const HURL_INSECURE: &str = "HURL_INSECURE";
-pub const HURL_IPV4: &str = "HURL_IPV4";
-pub const HURL_IPV6: &str = "HURL_IPV6";
+pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+pub const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
+pub const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
 pub const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
 pub const HURL_VERBOSE: &str = "HURL_VERBOSE";
-pub const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
 pub const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
-pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
+pub const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
 
 impl RunContext {
     /// Creates a new context. The environment is captured and will be seen as non-mutable for the
@@ -222,6 +223,11 @@ impl RunContext {
     /// Returns the env var for max time duration.
     pub fn max_time_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for the User-Agent string.
+    pub fn user_agent_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_USER_AGENT).map(|v| v.as_str())
     }
 
     /// Returns the env var for ignoring asserts.

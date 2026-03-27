@@ -346,6 +346,8 @@ Add basic Authentication header to each request.
 
 Specify the User-Agent string to send to the HTTP server.
 
+Environment variables: HURL_USER_AGENT
+
 This is a cli-only option.
 
 ### Output options

@@ -136,6 +136,9 @@ pub fn parse_env_vars(
             .map_err(|e| from_parse_err(e, HURL_MAX_FILESIZE))?;
         options.max_filesize = Some(max_filesize);
     }
+    if let Some(user_agent) = context.user_agent_env_var() {
+        options.user_agent = Some(user_agent.to_string());
+    }
     options.variables = parse_variables(context, options.variables)?;
     options.secrets = parse_secrets(context, options.secrets)?;
     if let Some(true) = context.verbose_env_var() {
