@@ -652,8 +652,7 @@ fn max_filesize(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<
 
 fn max_redirect(arg_matches: &ArgMatches, default_value: Count) -> Count {
     match get::<i32>(arg_matches, "max_redirects") {
-        Some(-1) => Count::Infinite,
-        Some(m) => Count::Finite(m as usize),
+        Some(m) => Count::from(m),
         None => default_value,
     }
 }
@@ -815,8 +814,7 @@ fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<Stri
 
 fn repeat(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
     match get::<i32>(arg_matches, "repeat") {
-        Some(-1) => Some(Count::Infinite),
-        Some(n) => Some(Count::Finite(n as usize)),
+        Some(n) => Some(Count::from(n)),
         None => default_value,
     }
 }
@@ -827,8 +825,7 @@ fn resolves(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String>
 
 fn retry(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
     match get::<i32>(arg_matches, "retry") {
-        Some(-1) => Some(Count::Infinite),
-        Some(r) => Some(Count::Finite(r as usize)),
+        Some(r) => Some(Count::from(r)),
         None => default_value,
     }
 }

@@ -142,10 +142,7 @@ pub fn parse_env_vars(
         let max_redirs = max_redirs
             .parse::<i32>()
             .map_err(|e| from_parse_err(e, HURL_MAX_REDIRS))?;
-        options.max_redirect = match max_redirs {
-            -1 => Count::Infinite,
-            n => Count::Finite(n as usize),
-        };
+        options.max_redirect = Count::from(max_redirs);
     }
     if let Some(user_agent) = context.user_agent_env_var() {
         options.user_agent = Some(user_agent.to_string());

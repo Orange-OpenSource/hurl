@@ -32,6 +32,15 @@ pub enum Count {
     Infinite,
 }
 
+impl From<i32> for Count {
+    fn from(value: i32) -> Self {
+        match value {
+            -1 => Count::Infinite,
+            n => Count::Finite(n as usize),
+        }
+    }
+}
+
 impl fmt::Display for Count {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
