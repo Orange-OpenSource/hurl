@@ -25,7 +25,7 @@ use super::{
     context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
     CliOptionsError, ErrorFormat, HttpVersion, IpResolve, RunContext, Verbosity,
 };
-use crate::cli::options::context::{HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE};
+use crate::cli::options::context::{HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE};
 use hurl::runner::Value;
 use hurl_core::types::{BytesPerSec, DurationUnit};
 
@@ -129,6 +129,12 @@ pub fn parse_env_vars(
             .parse::<u64>()
             .map_err(|e| from_parse_err(e, HURL_LIMIT_RATE))?;
         options.limit_rate = Some(BytesPerSec(limit_rate));
+    }
+    if let Some(max_filesize) = context.max_filesize_env_var() {
+        let max_filesize = max_filesize
+            .parse::<u64>()
+            .map_err(|e| from_parse_err(e, HURL_MAX_FILESIZE))?;
+        options.max_filesize = Some(max_filesize);
     }
     options.variables = parse_variables(context, options.variables)?;
     options.secrets = parse_secrets(context, options.secrets)?;

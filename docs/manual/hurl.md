@@ -270,6 +270,8 @@ Environment variables: HURL_LOCATION_TRUSTED
 
 Specify the maximum size in bytes of a file to download. If the file requested is larger than this value, the transfer does not start.
 
+Environment variables: HURL_MAX_FILESIZE
+
 This is a cli-only option.
 
 #### --max-redirs <NUM> {#max-redirs}

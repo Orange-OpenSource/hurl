@@ -5,5 +5,6 @@ value_parser: clap::value_parser!(u64)
 help: Specify the maximum size in bytes of a file to download
 help_heading: HTTP options
 cli_only: true
+env_var: HURL_MAX_FILESIZE
 ---
 Specify the maximum size in bytes of a file to download. If the file requested is larger than this value, the transfer does not start.

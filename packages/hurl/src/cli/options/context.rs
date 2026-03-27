@@ -62,6 +62,7 @@ pub const HURL_FOLLOW_LOCATION: &str = "HURL_LOCATION";
 pub const HURL_FOLLOW_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
 pub const HURL_JOBS: &str = "HURL_JOBS";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
+pub const HURL_MAX_FILESIZE: &str = "HURL_MAX_FILESIZE";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_INSECURE: &str = "HURL_INSECURE";
 pub const HURL_IPV4: &str = "HURL_IPV4";
@@ -209,6 +210,13 @@ impl RunContext {
     /// Returns the env var for transfer rate limit rating.
     pub fn limit_rate_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_LIMIT_RATE).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for maximum file size to download.
+    pub fn max_filesize_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_MAX_FILESIZE)
+            .map(|v| v.as_str())
     }
 
     /// Returns the env var for max time duration.
