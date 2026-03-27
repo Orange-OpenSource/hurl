@@ -246,6 +246,8 @@ Environment variables: HURL_LOCATION
 Like \fI-L, --location\fP, but allows sending the name + password to all hosts that the site may redirect to.
 This may or may not introduce a security breach if the site redirects you to a site to which you send your authentication info (which is plaintext in the case of HTTP Basic authentication).
 
+Environment variables: HURL_LOCATION_TRUSTED
+
 .IP "--max-filesize <BYTES> "
 
 Specify the maximum size in bytes of a file to download. If the file requested is larger than this value, the transfer does not start.

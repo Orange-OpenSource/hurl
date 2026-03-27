@@ -102,6 +102,12 @@ pub fn parse_env_vars(
     if let Some(follow_location) = context.follow_location_env_var() {
         options.follow_location = follow_location;
     }
+    if let Some(follow_location_trusted) = context.follow_location_trusted_env_var() {
+        options.follow_location_trusted = follow_location_trusted;
+        if follow_location_trusted {
+            options.follow_location = true;
+        }
+    }
     if let Some(insecure) = context.insecure_env_var() {
         options.insecure = insecure;
     }

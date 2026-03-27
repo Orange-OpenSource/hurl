@@ -59,6 +59,7 @@ pub const HURL_HTTP11: &str = "HURL_HTTP11";
 pub const HURL_HTTP2: &str = "HURL_HTTP2";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
 pub const HURL_FOLLOW_LOCATION: &str = "HURL_LOCATION";
+pub const HURL_FOLLOW_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
 pub const HURL_JOBS: &str = "HURL_JOBS";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
@@ -172,6 +173,11 @@ impl RunContext {
     /// Returns the env var for following redirects.
     pub fn follow_location_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_FOLLOW_LOCATION)
+    }
+
+    /// Returns the env var for following redirects with trusted location.
+    pub fn follow_location_trusted_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_FOLLOW_LOCATION_TRUSTED)
     }
 
     /// Returns the env var for allowing insecure transfers.
