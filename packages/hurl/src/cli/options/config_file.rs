@@ -20,6 +20,7 @@ use std::path::Path;
 use hurl_core::reader::{CharPos, Pos, Reader};
 
 use super::{CliOptions, CliOptionsError, Verbosity};
+use hurl_core::types::Count;
 
 #[derive(Debug)]
 struct ConfigFileError {
@@ -154,6 +155,34 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
 
             Ok(())
         }
+        "max-redirs" => {
+            skip_whitespace_and_comments(reader);
+            let value = if reader.peek() == Some('=') {
+                reader.read(); // consume '='
+                reader.read_while(|c| c != '\n').trim().to_string()
+            } else {
+                if reader.is_eof() {
+                    return Err(ConfigFileError::new(
+                        save.pos,
+                        "Option --max_redirs requires a value",
+                    ));
+                }
+
+                reader.read_while(|c| c != '\n').trim().to_string()
+            };
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --max_redirs requires a value",
+                ));
+            }
+            let max_redirs = value.parse::<i32>().map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --max_redirs requires a integer value")
+            })?;
+            options.max_redirect = Count::from(max_redirs);
+
+            Ok(())
+        }
 
         _ => Err(ConfigFileError::new(
             save.pos,
@@ -257,5 +286,11 @@ mod tests {
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
         assert_eq!(err.message, "Option --verbose does not take a value");
+
+        let mut reader = Reader::new("--max-redirs=a\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.message, "Option --max_redirs requires a integer value");
     }
 }
