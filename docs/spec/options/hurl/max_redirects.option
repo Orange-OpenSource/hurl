@@ -6,6 +6,7 @@ value_parser: clap::value_parser!(i32).range(-1..)
 help: Maximum number of redirects allowed, -1 for unlimited redirects
 help_heading: HTTP options
 allow_negative_numbers: true
+config_file: true
 env_var: HURL_MAX_REDIRS
 ---
 Set maximum number of redirection-followings allowed

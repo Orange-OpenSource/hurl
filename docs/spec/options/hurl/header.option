@@ -5,6 +5,7 @@ value: NAME:VALUE
 help: Pass custom header(s) to server
 help_heading: HTTP options
 multi: append
+config_file: true
 env_var: HURL_HEADER='name1:value1|name2:value2' (headers are separated by |)
 ---
 Add an extra header to include in information sent. Can be used several times in a command.

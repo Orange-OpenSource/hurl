@@ -27,6 +27,7 @@ class Option:
     allow_negative_numbers: bool = False
     deprecated: bool = False
     experimental: bool = False
+    config_file: bool = False
     env_var: Optional[str] = None
 
     def __str__(self):
@@ -58,6 +59,8 @@ class Option:
             s += "\ndeprecated: true"
         if self.experimental:
             s += "\nexperimental: true"
+        if self.config_file:
+            s += "\nconfig_file: true"
         if self.env_var:
             s += "\nenv_var: " + self.env_var
         s += "\n---"
@@ -83,6 +86,7 @@ class Option:
         description = ""
         experimental = False
         in_description = False
+        config_file = False
         env_var = None
 
         for line in s.split("\n"):
@@ -153,6 +157,15 @@ class Option:
                         raise Exception(
                             f"{name}: Expected true or false for experimental attribute"
                         )
+                elif key == "config_file":
+                    if v == "true":
+                        config_file = True
+                    elif v == "false":
+                        config_file = False
+                    else:
+                        raise Exception(
+                            f"{name}: Expected true or false for config_file attribute"
+                        )
                 elif key == "env_var":
                     env_var = v.strip()
                 else:
@@ -181,6 +194,7 @@ class Option:
             deprecated=deprecated,
             experimental=experimental,
             description=description.strip(),
+            config_file=config_file,
             env_var=env_var,
         )
 
