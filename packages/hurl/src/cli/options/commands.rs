@@ -333,10 +333,10 @@ pub fn max_redirects() -> clap::Arg {
         .long("max-redirs")
         .value_name("NUM")
         .value_parser(clap::value_parser!(i32).range(-1..))
-        .allow_hyphen_values(true)
         .help("Maximum number of redirects allowed, -1 for unlimited redirects [default: 50]")
         .help_heading("HTTP options")
         .num_args(1)
+        .allow_negative_numbers(true)
 }
 
 pub fn max_time() -> clap::Arg {
@@ -515,10 +515,10 @@ pub fn repeat() -> clap::Arg {
         .long("repeat")
         .value_name("NUM")
         .value_parser(clap::value_parser!(i32).range(-1..))
-        .allow_hyphen_values(true)
         .help("Repeat the input files sequence NUM times, -1 for infinite loop")
         .help_heading("Run options")
         .num_args(1)
+        .allow_negative_numbers(true)
 }
 
 pub fn report_html() -> clap::Arg {
@@ -572,10 +572,10 @@ pub fn retry() -> clap::Arg {
         .long("retry")
         .value_name("NUM")
         .value_parser(clap::value_parser!(i32).range(-1..))
-        .allow_hyphen_values(true)
         .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
         .help_heading("Run options")
         .num_args(1)
+        .allow_negative_numbers(true)
 }
 
 pub fn retry_interval() -> clap::Arg {

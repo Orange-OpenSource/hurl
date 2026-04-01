@@ -61,8 +61,6 @@ def generate_source_option(option: Option) -> str:
         s += f'\n        .value_name("{option.value}")'
     if option.value_parser is not None:
         s += f"\n        .value_parser({option.value_parser})"
-        if "-1" in option.value_parser:
-            s += "\n        .allow_hyphen_values(true)"
     help = option.help
     if option.value_default is not None:
         help += " [default: " + option.value_default + "]"
@@ -78,6 +76,8 @@ def generate_source_option(option: Option) -> str:
         s += "\n        .action(clap::ArgAction::SetTrue)"
     if option.append:
         s += "\n        .action(clap::ArgAction::Append)"
+    if option.allow_negative_numbers:
+        s += "\n        .allow_negative_numbers(true)"
     if option.deprecated or option.experimental:
         s += "\n        .hide(true)"
     s += "\n}"
