@@ -211,7 +211,7 @@ fn parse_arg_matches(
     let junit_file = junit_file(arg_matches, default_options.junit_file);
     let limit_rate = limit_rate(arg_matches, default_options.limit_rate);
     let max_filesize = max_filesize(arg_matches, default_options.max_filesize);
-    let max_redirect = max_redirect(arg_matches, default_options.max_redirect);
+    let max_redirect = max_redirect(arg_matches, default_options.max_redirect)?;
     let negotiate = negotiate(arg_matches, default_options.negotiate);
     let netrc = netrc(arg_matches, default_options.netrc);
     let netrc_file = netrc_file(arg_matches, default_options.netrc_file)?;
@@ -227,9 +227,9 @@ fn parse_arg_matches(
     let proxy = proxy(arg_matches, default_options.proxy);
     let output = output(arg_matches, default_options.output);
     let output_type = output_type(arg_matches, default_options.output_type);
-    let repeat = repeat(arg_matches, default_options.repeat);
+    let repeat = repeat(arg_matches, default_options.repeat)?;
     let resolves = resolves(arg_matches, default_options.resolves);
-    let retry = retry(arg_matches, default_options.retry);
+    let retry = retry(arg_matches, default_options.retry)?;
     let retry_interval = retry_interval(arg_matches, default_options.retry_interval)?;
     let secrets = secret(arg_matches, default_options.secrets)?;
     let ssl_no_revoke = ssl_no_revoke(arg_matches, default_options.ssl_no_revoke);
@@ -634,29 +634,6 @@ fn ip_resolve(arg_matches: &ArgMatches, default_value: Option<IpResolve>) -> Opt
     }
 }
 
-fn junit_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {
-    get::<String>(arg_matches, "report_junit")
-        .map(PathBuf::from)
-        .or(default_value)
-}
-
-fn limit_rate(arg_matches: &ArgMatches, default_value: Option<BytesPerSec>) -> Option<BytesPerSec> {
-    get::<u64>(arg_matches, "limit_rate")
-        .map(BytesPerSec)
-        .or(default_value)
-}
-
-fn max_filesize(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<u64> {
-    get::<u64>(arg_matches, "max_filesize").or(default_value)
-}
-
-fn max_redirect(arg_matches: &ArgMatches, default_value: Count) -> Count {
-    match get::<i32>(arg_matches, "max_redirects") {
-        Some(m) => Count::from(m),
-        None => default_value,
-    }
-}
-
 fn jobs(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<usize> {
     get::<u32>(arg_matches, "jobs")
         .map(|m| m as usize)
@@ -687,6 +664,32 @@ fn json_report_dir(
         }
     } else {
         Ok(default_value)
+    }
+}
+
+fn junit_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {
+    get::<String>(arg_matches, "report_junit")
+        .map(PathBuf::from)
+        .or(default_value)
+}
+
+fn limit_rate(arg_matches: &ArgMatches, default_value: Option<BytesPerSec>) -> Option<BytesPerSec> {
+    get::<u64>(arg_matches, "limit_rate")
+        .map(BytesPerSec)
+        .or(default_value)
+}
+
+fn max_filesize(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<u64> {
+    get::<u64>(arg_matches, "max_filesize").or(default_value)
+}
+
+fn max_redirect(arg_matches: &ArgMatches, default_value: Count) -> Result<Count, CliOptionsError> {
+    match get::<i32>(arg_matches, "max_redirects") {
+        Some(m) => Count::try_from(m).map_err(|error| {
+            let message = format!("invalid value '{m}' for '--max-redirs <NUM>' ({error})");
+            CliOptionsError::Error(message)
+        }),
+        None => Ok(default_value),
     }
 }
 
@@ -812,10 +815,19 @@ fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<Stri
     get::<String>(arg_matches, "proxy").or(default_value)
 }
 
-fn repeat(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
+fn repeat(
+    arg_matches: &ArgMatches,
+    default_value: Option<Count>,
+) -> Result<Option<Count>, CliOptionsError> {
     match get::<i32>(arg_matches, "repeat") {
-        Some(n) => Some(Count::from(n)),
-        None => default_value,
+        Some(n) => match Count::try_from(n) {
+            Ok(n) => Ok(Some(n)),
+            Err(error) => {
+                let message = format!("invalid value '{n}' for '--repeat <NUM>' ({error})");
+                Err(CliOptionsError::Error(message))
+            }
+        },
+        None => Ok(default_value),
     }
 }
 
@@ -823,10 +835,19 @@ fn resolves(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String>
     get_strings(arg_matches, "resolve").unwrap_or(default_value)
 }
 
-fn retry(arg_matches: &ArgMatches, default_value: Option<Count>) -> Option<Count> {
+fn retry(
+    arg_matches: &ArgMatches,
+    default_value: Option<Count>,
+) -> Result<Option<Count>, CliOptionsError> {
     match get::<i32>(arg_matches, "retry") {
-        Some(r) => Some(Count::from(r)),
-        None => default_value,
+        Some(r) => match Count::try_from(r) {
+            Ok(r) => Ok(Some(r)),
+            Err(error) => {
+                let message = format!("invalid value '{r}' for '--retry <NUM>' ({error})");
+                Err(CliOptionsError::Error(message))
+            }
+        },
+        None => Ok(default_value),
     }
 }
 

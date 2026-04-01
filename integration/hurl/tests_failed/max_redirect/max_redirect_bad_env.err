@@ -1,0 +1,1 @@
+error: -5 is not in -1..=2147483647 (HURL_MAX_REDIRS environment variable)

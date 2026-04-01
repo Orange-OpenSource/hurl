@@ -16,7 +16,7 @@
  *
  */
 use std::collections::HashMap;
-use std::num::ParseIntError;
+use std::fmt;
 use std::str::FromStr;
 
 use super::variables::TypeKind;
@@ -43,18 +43,18 @@ pub fn parse_env_vars(
     }
     if let Some(timeout) = context.connect_timeout_env_var() {
         options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)
-            .map_err(|e| with_env_var(e, HURL_CONNECT_TIMEOUT))?;
+            .map_err(|e| err_from_cli_err(e, HURL_CONNECT_TIMEOUT))?;
     }
     if let Some(continue_on_error) = context.continue_on_error_env_var() {
         options.continue_on_error = continue_on_error;
     }
     if let Some(delay) = context.delay_env_var() {
         options.delay = duration::duration_from_str(delay, DurationUnit::MilliSecond)
-            .map_err(|e| with_env_var(e, HURL_DELAY))?;
+            .map_err(|e| err_from_cli_err(e, HURL_DELAY))?;
     }
     if let Some(error_format) = context.error_format_env_var() {
-        let error_format =
-            ErrorFormat::from_str(error_format).map_err(|e| with_env_var(e, HURL_ERROR_FORMAT))?;
+        let error_format = ErrorFormat::from_str(error_format)
+            .map_err(|e| err_from_cli_err(e, HURL_ERROR_FORMAT))?;
         options.error_format = error_format;
     }
     if let Some(header) = context.header_env_var() {
@@ -62,7 +62,7 @@ pub fn parse_env_vars(
         for h in &headers {
             if !h.contains(':') {
                 let msg = "Invalid header <{h}> missing `:`".to_string();
-                return Err(with_env_var(CliOptionsError::Error(msg), HURL_HEADER));
+                return Err(err_from_cli_err(CliOptionsError::Error(msg), HURL_HEADER));
             }
         }
         options.headers.extend(headers);
@@ -124,28 +124,27 @@ pub fn parse_env_vars(
         }
     }
     if let Some(jobs) = context.jobs_env_var() {
-        let jobs = jobs
-            .parse::<u32>()
-            .map_err(|e| from_parse_err(e, HURL_JOBS))?;
+        let jobs = jobs.parse::<u32>().map_err(|e| err_from(e, HURL_JOBS))?;
         options.jobs = Some(jobs as usize);
     }
     if let Some(limit_rate) = context.limit_rate_env_var() {
         let limit_rate = limit_rate
             .parse::<u64>()
-            .map_err(|e| from_parse_err(e, HURL_LIMIT_RATE))?;
+            .map_err(|e| err_from(e, HURL_LIMIT_RATE))?;
         options.limit_rate = Some(BytesPerSec(limit_rate));
     }
     if let Some(max_filesize) = context.max_filesize_env_var() {
         let max_filesize = max_filesize
             .parse::<u64>()
-            .map_err(|e| from_parse_err(e, HURL_MAX_FILESIZE))?;
+            .map_err(|e| err_from(e, HURL_MAX_FILESIZE))?;
         options.max_filesize = Some(max_filesize);
     }
     if let Some(max_redirs) = context.max_redirs_env_var() {
         let max_redirs = max_redirs
             .parse::<i32>()
-            .map_err(|e| from_parse_err(e, HURL_MAX_REDIRS))?;
-        options.max_redirect = Count::from(max_redirs);
+            .map_err(|e| err_from(e, HURL_MAX_REDIRS))?;
+        options.max_redirect =
+            Count::try_from(max_redirs).map_err(|e| err_from(&e, HURL_MAX_REDIRS))?;
     }
     if let Some(user_agent) = context.user_agent_env_var() {
         options.user_agent = Some(user_agent.to_string());
@@ -158,12 +157,12 @@ pub fn parse_env_vars(
         options.verbosity = Some(Verbosity::Debug);
     } else if let Some(verbosity) = context.verbosity_env_var() {
         let verbosity =
-            Verbosity::from_str(verbosity).map_err(|e| with_env_var(e, HURL_VERBOSITY))?;
+            Verbosity::from_str(verbosity).map_err(|e| err_from_cli_err(e, HURL_VERBOSITY))?;
         options.verbosity = Some(verbosity);
     }
     if let Some(timeout) = context.max_time_env_var() {
         options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)
-            .map_err(|e| with_env_var(e, HURL_MAX_TIME))?;
+            .map_err(|e| err_from_cli_err(e, HURL_MAX_TIME))?;
     }
     Ok(options)
 }
@@ -211,12 +210,12 @@ fn parse_secrets(
     Ok(secrets)
 }
 
-fn from_parse_err(error: ParseIntError, env: &'static str) -> CliOptionsError {
-    let message = format!("{} ({env} environment variable)", error);
+fn err_from<E: fmt::Display>(error: E, env: &'static str) -> CliOptionsError {
+    let message = format!("{error} ({env} environment variable)");
     CliOptionsError::Error(message)
 }
 
-fn with_env_var(error: CliOptionsError, env: &'static str) -> CliOptionsError {
+fn err_from_cli_err(error: CliOptionsError, env: &'static str) -> CliOptionsError {
     match error {
         CliOptionsError::DisplayHelp(_) => error,
         CliOptionsError::DisplayVersion(_) => error,

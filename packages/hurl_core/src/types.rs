@@ -32,11 +32,14 @@ pub enum Count {
     Infinite,
 }
 
-impl From<i32> for Count {
-    fn from(value: i32) -> Self {
+impl TryFrom<i32> for Count {
+    type Error = String;
+
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
         match value {
-            -1 => Count::Infinite,
-            n => Count::Finite(n as usize),
+            n if n < -1 => Err(format!("{n} is not in -1..={}", i32::MAX)),
+            -1 => Ok(Count::Infinite),
+            n => Ok(Count::Finite(n as usize)),
         }
     }
 }

@@ -164,7 +164,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                 if reader.is_eof() {
                     return Err(ConfigFileError::new(
                         save.pos,
-                        "Option --max_redirs requires a value",
+                        "Option --max-redirs requires a value",
                     ));
                 }
 
@@ -173,13 +173,18 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             if value.is_empty() {
                 return Err(ConfigFileError::new(
                     save.pos,
-                    "Option --max_redirs requires a value",
+                    "Option --max-redirs requires a value",
                 ));
             }
             let max_redirs = value.parse::<i32>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --max_redirs requires a integer value")
+                ConfigFileError::new(save.pos, "Option --max-redirs requires an integer value")
             })?;
-            options.max_redirect = Count::from(max_redirs);
+            options.max_redirect = Count::try_from(max_redirs).map_err(|_| {
+                ConfigFileError::new(
+                    save.pos,
+                    "Option --max-redirs requires an integer value >= -1",
+                )
+            })?;
 
             Ok(())
         }
@@ -291,6 +296,6 @@ mod tests {
         let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 1));
-        assert_eq!(err.message, "Option --max_redirs requires a integer value");
+        assert_eq!(err.message, "Option --max-redirs requires an integer value");
     }
 }
