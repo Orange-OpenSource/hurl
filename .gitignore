@@ -10,3 +10,7 @@ target/
 build/
 node_modules/
 **/npm/bin/
+
+# LLM assisted tools
+.claude/
+.copilot/
