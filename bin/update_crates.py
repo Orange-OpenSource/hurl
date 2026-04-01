@@ -260,10 +260,12 @@ def update_local_crates(
             #     continue
 
             local_crate.update_dependency(
-                crate=dep, actual_version=actual_version, latest_version=latest_version
+                crate=dep,
+                actual_version=actual_version,
+                latest_version=semver(latest_version),
             )
             print(
-                f"- {dep.name} {actual_version} {Color.BLUE}updated to {latest_version}{Color.RESET}"
+                f"- {dep.name} {actual_version} {Color.BLUE}updated to {semver(latest_version)}{Color.RESET}"
             )
             updated_count += 1
             print_release_note(crate=dep, version=latest_version, token=token)
