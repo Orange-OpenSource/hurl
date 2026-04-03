@@ -1,0 +1,1 @@
+error: <<<.*>>>config:1:1: Option --max-redirs requires an integer value >= -1
