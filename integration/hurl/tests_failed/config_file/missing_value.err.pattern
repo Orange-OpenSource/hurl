@@ -1,1 +1,1 @@
-error: <<<.*>>>config:2:1: Option --header requires a value
+error: <<<.*>>>config:2:9: Option --header requires a value

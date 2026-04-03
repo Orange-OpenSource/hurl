@@ -109,7 +109,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         return Ok(());
     }
 
-    let save = reader.cursor();
+    let mut save = reader.cursor();
     if reader.read_n(CharPos(2)) != "--" {
         return Err(ConfigFileError::new(
             save.pos,
@@ -131,9 +131,12 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             Ok(())
         }
         "header" => {
+            save = reader.cursor();
             skip_whitespace_and_comments(reader);
+
             let header_value = if reader.peek() == Some('=') {
                 reader.read(); // consume '='
+                save = reader.cursor();
                 reader.read_while(|c| c != '\n').trim().to_string()
             } else {
                 if reader.is_eof() {
@@ -142,7 +145,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                         "Option --header requires a value",
                     ));
                 }
-
+                save = reader.cursor();
                 reader.read_while(|c| c != '\n').trim().to_string()
             };
             if header_value.is_empty() {
@@ -156,9 +159,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             Ok(())
         }
         "max-redirs" => {
+            save = reader.cursor();
             skip_whitespace_and_comments(reader);
             let value = if reader.peek() == Some('=') {
                 reader.read(); // consume '='
+                save = reader.cursor();
                 reader.read_while(|c| c != '\n').trim().to_string()
             } else {
                 if reader.is_eof() {
@@ -167,7 +172,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                         "Option --max-redirs requires a value",
                     ));
                 }
-
+                save = reader.cursor();
                 reader.read_while(|c| c != '\n').trim().to_string()
             };
             if value.is_empty() {
@@ -280,7 +285,7 @@ mod tests {
         let mut reader = Reader::new("--header\n");
         let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
-        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.pos, Pos::new(1, 9));
         assert_eq!(err.message, "Option --header requires a value");
     }
 
@@ -295,7 +300,7 @@ mod tests {
         let mut reader = Reader::new("--max-redirs=a\n");
         let mut options = CliOptions::default();
         let err = parse_option(&mut reader, &mut options).unwrap_err();
-        assert_eq!(err.pos, Pos::new(1, 1));
+        assert_eq!(err.pos, Pos::new(1, 14));
         assert_eq!(err.message, "Option --max-redirs requires an integer value");
     }
 }
