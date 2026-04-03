@@ -193,7 +193,61 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
 
             Ok(())
         }
+        "user-agent" => {
+            save = reader.cursor();
+            skip_whitespace_and_comments(reader);
+            let value = if reader.peek() == Some('=') {
+                reader.read(); // consume '='
+                save = reader.cursor();
+                if let Some('"') = reader.peek() {
+                    reader.read(); // consume opening quote
+                    let value = reader.read_while(|c| c != '"');
+                    if reader.peek() == Some('"') {
+                        reader.read(); // consume closing quote
+                        value.trim().to_string()
+                    } else {
+                        return Err(ConfigFileError::new(
+                            save.pos,
+                            "Option --user-agent value is missing closing quote",
+                        ));
+                    }
+                } else {
+                    reader.read_while(|c| c != '\n').trim().to_string()
+                }
+            } else {
+                if reader.is_eof() {
+                    return Err(ConfigFileError::new(
+                        save.pos,
+                        "Option --user-agent requires a value",
+                    ));
+                }
+                save = reader.cursor();
+                if let Some('"') = reader.peek() {
+                    reader.read(); // consume opening quote
+                    let value = reader.read_while(|c| c != '"');
+                    if reader.peek() == Some('"') {
+                        reader.read(); // consume closing quote
+                        value.trim().to_string()
+                    } else {
+                        return Err(ConfigFileError::new(
+                            save.pos,
+                            "Option --user-agent value is missing closing quote",
+                        ));
+                    }
+                } else {
+                    reader.read_while(|c| c != '\n').trim().to_string()
+                }
+            };
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --user-agent requires a value",
+                ));
+            }
+            options.user_agent = Some(value);
 
+            Ok(())
+        }
         _ => Err(ConfigFileError::new(
             save.pos,
             &format!("Unknown option <--{}>", option_name),
@@ -254,6 +308,15 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.headers, vec!["--test:1"]);
         assert_eq!(reader.cursor().pos, Pos::new(2, 9));
+    }
+
+    #[test]
+    fn test_parse_option_with_value_with_quotes() {
+        let mut reader = Reader::new("--user-agent=\"Mozilla/5.0 A\"");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.user_agent.unwrap(), "Mozilla/5.0 A".to_string());
+        assert_eq!(reader.cursor().pos, Pos::new(1, 29));
     }
 
     #[test]

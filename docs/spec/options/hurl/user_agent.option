@@ -5,6 +5,7 @@ value: NAME
 help: Specify the User-Agent string to send to the HTTP server
 help_heading: HTTP options
 cli_only: true
+config_file: true
 env_var: HURL_USER_AGENT
 ---
 Specify the User-Agent string to send to the HTTP server.
