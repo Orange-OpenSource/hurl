@@ -1,0 +1,27 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/sse
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/sse'
+*
+> GET /sse HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/8.0.0-SNAPSHOT
+>
+* Response: (received 74 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Connection: close
+< Content-Type: text/event-stream
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Transfer-Encoding: chunked
+< Via: waitress
+<
+*

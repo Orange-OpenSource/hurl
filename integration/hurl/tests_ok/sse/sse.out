@@ -1,0 +1,6 @@
+data: Hello world
+
+data: This is another message
+
+data: {"key": "value"}
+
