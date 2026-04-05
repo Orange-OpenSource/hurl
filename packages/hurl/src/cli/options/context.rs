@@ -262,22 +262,26 @@ impl RunContext {
             .collect()
     }
 
-    /// Returns `Some(true)` if ANSI escape codes are explicitly enabled, `Some(false)` if ANSI escape
-    /// codes are explicitly disabled, `None` otherwise. .
-    pub fn use_color_env_var(&self) -> Option<bool> {
-        // According to the NO_COLOR spec, any presence of the variable should disable color, but to
-        // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
-        // least not empty.
+    /// Returns `Some(true)` if color is set through env, `Some(false)` if color is disable through env,
+    /// `None` otherwise.
+    pub fn color_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_COLOR)
+    }
+
+    /// Returns `Some(true)` if no color is set through env, `Some(false)` if no color is disable through env,
+    /// `None` otherwise.
+    pub fn no_color_env_var(&self) -> Option<bool> {
         if let Some(v) = self.env_vars.get("NO_COLOR") {
+            // According to the NO_COLOR spec, any presence of the variable should disable color, but to
+            // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
+            // least not empty.
             if !v.is_empty() {
-                Some(false)
+                Some(true)
             } else {
                 None
             }
-        } else if let Some(v) = self.get_env_var_bool(HURL_NO_COLOR) {
-            Some(!v)
         } else {
-            self.get_env_var_bool(HURL_COLOR)
+            self.get_env_var_bool(HURL_NO_COLOR)
         }
     }
 
@@ -367,28 +371,16 @@ mod tests {
 
         let env_vars = HashMap::from([("A".to_string(), "B".to_string())]);
         let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
-        assert!(ctx.use_color_env_var().is_none());
+        assert!(ctx.color_env_var().is_none());
     }
 
     #[test]
-    fn context_has_env_var_color() {
+    fn context_has_color_env_var() {
         let stdin_term = true;
         let stdout_term = true;
         let stderr_term = true;
 
         let data = [
-            ("NO_COLOR", "0", Some(false)),
-            ("NO_COLOR", "1", Some(false)),
-            ("NO_COLOR", "true", Some(false)),
-            ("NO_COLOR", "TRUE", Some(false)),
-            ("NO_COLOR", "false", Some(false)),
-            ("NO_COLOR", "FALSE", Some(false)),
-            ("HURL_NO_COLOR", "0", Some(true)),
-            ("HURL_NO_COLOR", "1", Some(false)),
-            ("HURL_NO_COLOR", "true", Some(false)),
-            ("HURL_NO_COLOR", "TRUE", Some(false)),
-            ("HURL_NO_COLOR", "false", Some(true)),
-            ("HURL_NO_COLOR", "FALSE", Some(true)),
             ("HURL_COLOR", "0", Some(false)),
             ("HURL_COLOR", "1", Some(true)),
             ("HURL_COLOR", "true", Some(true)),
@@ -401,7 +393,41 @@ mod tests {
             let env_vars = HashMap::from([(name.to_string(), value.to_string())]);
             let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
             assert_eq!(
-                ctx.use_color_env_var(),
+                ctx.color_env_var(),
+                expected,
+                "test env var {}={}",
+                name,
+                value
+            );
+        }
+    }
+
+    #[test]
+    fn context_has_no_color_env_var() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        let data = [
+            ("NO_COLOR", "0", Some(true)),
+            ("NO_COLOR", "1", Some(true)),
+            ("NO_COLOR", "true", Some(true)),
+            ("NO_COLOR", "TRUE", Some(true)),
+            ("NO_COLOR", "false", Some(true)),
+            ("NO_COLOR", "FALSE", Some(true)),
+            ("HURL_NO_COLOR", "0", Some(false)),
+            ("HURL_NO_COLOR", "1", Some(true)),
+            ("HURL_NO_COLOR", "true", Some(true)),
+            ("HURL_NO_COLOR", "TRUE", Some(true)),
+            ("HURL_NO_COLOR", "false", Some(false)),
+            ("HURL_NO_COLOR", "FALSE", Some(false)),
+        ];
+
+        for (name, value, expected) in data {
+            let env_vars = HashMap::from([(name.to_string(), value.to_string())]);
+            let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
+            assert_eq!(
+                ctx.no_color_env_var(),
                 expected,
                 "test env var {}={}",
                 name,

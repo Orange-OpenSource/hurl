@@ -15,163 +15,322 @@
  * limitations under the License.
  *
  */
+use hurl::runner::Value;
+use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
+use std::time::Duration;
 
+use super::context::{
+    HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
+    HURL_FOLLOW_LOCATION_TRUSTED, HURL_HEADER, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE,
+    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_VERBOSITY,
+};
 use super::variables::TypeKind;
 use super::{
-    context::HURL_CONNECT_TIMEOUT, context::HURL_ERROR_FORMAT, context::HURL_HEADER,
-    context::HURL_MAX_TIME, context::HURL_VERBOSITY, duration, secret, variables, CliOptions,
-    CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, RunContext, Verbosity,
+    duration, secret, variables, CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve,
+    OutputType, RunContext, Verbosity,
 };
-use crate::cli::options::context::{
-    HURL_DELAY, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE, HURL_MAX_REDIRS,
-};
-use hurl::runner::Value;
-use hurl_core::types::{BytesPerSec, Count, DurationUnit};
+
+fn color(context: &RunContext, default_value: bool) -> bool {
+    if let Some(no_color) = context.no_color_env_var() {
+        return !no_color;
+    }
+    if let Some(color) = context.color_env_var() {
+        return color;
+    }
+    default_value
+}
+
+fn connect_timeout(
+    context: &RunContext,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match context.connect_timeout_env_var() {
+        Some(timeout) => duration::duration_from_str(timeout, DurationUnit::Second)
+            .map_err(|e| err_from_cli_err(e, HURL_CONNECT_TIMEOUT)),
+        None => Ok(default_value),
+    }
+}
+
+fn continue_on_error(context: &RunContext, default_value: bool) -> bool {
+    context.continue_on_error_env_var().unwrap_or(default_value)
+}
+
+fn delay(context: &RunContext, default_value: Duration) -> Result<Duration, CliOptionsError> {
+    match context.delay_env_var() {
+        Some(delay) => duration::duration_from_str(delay, DurationUnit::MilliSecond)
+            .map_err(|e| err_from_cli_err(e, HURL_DELAY)),
+        None => Ok(default_value),
+    }
+}
+
+fn error_format(
+    context: &RunContext,
+    default_value: ErrorFormat,
+) -> Result<ErrorFormat, CliOptionsError> {
+    match context.error_format_env_var() {
+        Some(error_format) => {
+            ErrorFormat::from_str(error_format).map_err(|e| err_from_cli_err(e, HURL_ERROR_FORMAT))
+        }
+        None => Ok(default_value),
+    }
+}
+
+fn headers(
+    context: &RunContext,
+    default_value: Vec<String>,
+) -> Result<Vec<String>, CliOptionsError> {
+    let mut all_headers = default_value;
+    if let Some(header) = context.header_env_var() {
+        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
+        for h in &headers {
+            if !h.contains(':') {
+                let msg = format!("Invalid header <{h}> missing `:`");
+                return Err(err_from_cli_err(CliOptionsError::Error(msg), HURL_HEADER));
+            }
+        }
+        all_headers.extend(headers);
+    }
+    Ok(all_headers)
+}
+
+fn http_version(context: &RunContext, default_value: Option<HttpVersion>) -> Option<HttpVersion> {
+    if let Some(http3) = context.http3_env_var() {
+        if http3 {
+            Some(HttpVersion::V3)
+        } else {
+            Some(HttpVersion::V2)
+        }
+    } else if let Some(http2) = context.http2_env_var() {
+        if http2 {
+            Some(HttpVersion::V2)
+        } else {
+            Some(HttpVersion::V11)
+        }
+    } else if let Some(http11) = context.http11_env_var() {
+        if http11 {
+            Some(HttpVersion::V11)
+        } else {
+            Some(HttpVersion::V10)
+        }
+    } else if let Some(true) = context.http10_env_var() {
+        Some(HttpVersion::V10)
+    } else {
+        default_value
+    }
+}
+
+fn ip_resolve(context: &RunContext, default_value: Option<IpResolve>) -> Option<IpResolve> {
+    if let Some(ipv6) = context.ipv6_env_var() {
+        if ipv6 {
+            Some(IpResolve::IpV6)
+        } else {
+            Some(IpResolve::IpV4)
+        }
+    } else if let Some(ipv4) = context.ipv4_env_var() {
+        if ipv4 {
+            Some(IpResolve::IpV4)
+        } else {
+            Some(IpResolve::IpV6)
+        }
+    } else {
+        default_value
+    }
+}
+
+fn no_assert(context: &RunContext, default_value: bool) -> bool {
+    context.no_assert_env_var().unwrap_or(default_value)
+}
+
+fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
+    if let Some(v) = context.no_output_env_var() {
+        match v {
+            true => OutputType::NoOutput,
+            false => OutputType::ResponseBody,
+        }
+    } else {
+        default_value
+    }
+}
+
+fn follow_location(context: &RunContext, default_value: bool) -> Result<bool, CliOptionsError> {
+    let value = match (
+        context.follow_location_env_var(),
+        context.follow_location_trusted_env_var(),
+    ) {
+        (Some(true), _) => true,
+        (Some(false), Some(true)) => {
+            let error = format!(
+                "Invalid environment variables configuration {} {}",
+                HURL_FOLLOW_LOCATION, HURL_FOLLOW_LOCATION_TRUSTED
+            );
+            return Err(CliOptionsError::Error(error));
+        }
+        (Some(false), _) => false,
+        (None, Some(true)) => true,
+        (None, _) => default_value,
+    };
+    Ok(value)
+}
+
+fn follow_location_trusted(context: &RunContext, default_value: bool) -> bool {
+    context
+        .follow_location_trusted_env_var()
+        .unwrap_or(default_value)
+}
+
+fn insecure(context: &RunContext, default_value: bool) -> bool {
+    context.insecure_env_var().unwrap_or(default_value)
+}
+
+fn jobs(
+    context: &RunContext,
+    default_value: Option<usize>,
+) -> Result<Option<usize>, CliOptionsError> {
+    match context.jobs_env_var() {
+        Some(jobs) => jobs
+            .parse::<usize>()
+            .map(Some)
+            .map_err(|e| err_from(e, HURL_JOBS)),
+        None => Ok(default_value),
+    }
+}
+
+fn limit_rate(
+    context: &RunContext,
+    default_value: Option<BytesPerSec>,
+) -> Result<Option<BytesPerSec>, CliOptionsError> {
+    match context.limit_rate_env_var() {
+        Some(limit_rate) => limit_rate
+            .parse::<u64>()
+            .map(BytesPerSec)
+            .map(Some)
+            .map_err(|e| err_from(e, HURL_LIMIT_RATE)),
+        None => Ok(default_value),
+    }
+}
+
+fn max_filesize(
+    context: &RunContext,
+    default_value: Option<u64>,
+) -> Result<Option<u64>, CliOptionsError> {
+    match context.max_filesize_env_var() {
+        Some(max_filesize) => max_filesize
+            .parse::<u64>()
+            .map(Some)
+            .map_err(|e| err_from(e, HURL_MAX_FILESIZE)),
+        None => Ok(default_value),
+    }
+}
+
+fn max_redirect(context: &RunContext, default_value: Count) -> Result<Count, CliOptionsError> {
+    match context.max_redirs_env_var() {
+        Some(max_redirs) => max_redirs
+            .parse::<i32>()
+            .map_err(|e| err_from(e, HURL_MAX_REDIRS))
+            .and_then(|n| Count::try_from(n).map_err(|e| err_from(&e, HURL_MAX_REDIRS))),
+        None => Ok(default_value),
+    }
+}
+
+fn timeout(context: &RunContext, default_value: Duration) -> Result<Duration, CliOptionsError> {
+    match context.max_time_env_var() {
+        Some(max_time) => duration::duration_from_str(max_time, DurationUnit::Second)
+            .map_err(|e| err_from_cli_err(e, HURL_MAX_TIME)),
+        None => Ok(default_value),
+    }
+}
+
+fn user_agent(context: &RunContext, default_value: Option<String>) -> Option<String> {
+    context
+        .user_agent_env_var()
+        .map(|s| s.to_string())
+        .or(default_value)
+}
+
+fn verbosity(
+    context: &RunContext,
+    default_value: Option<Verbosity>,
+) -> Result<Option<Verbosity>, CliOptionsError> {
+    let verbosity = if let Some(true) = context.verbose_env_var() {
+        Some(Verbosity::Verbose)
+    } else if let Some(true) = context.very_verbose_env_var() {
+        Some(Verbosity::Debug)
+    } else if let Some(verbosity) = context.verbosity_env_var() {
+        let verbosity =
+            Verbosity::from_str(verbosity).map_err(|e| err_from_cli_err(e, HURL_VERBOSITY))?;
+        Some(verbosity)
+    } else {
+        default_value
+    };
+    Ok(verbosity)
+}
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
     context: &RunContext,
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
-    let mut options = default_options;
-    if let Some(color) = context.use_color_env_var() {
-        options.color_stdout = color;
-        options.color_stderr = color;
-    }
-    if let Some(timeout) = context.connect_timeout_env_var() {
-        options.connect_timeout = duration::duration_from_str(timeout, DurationUnit::Second)
-            .map_err(|e| err_from_cli_err(e, HURL_CONNECT_TIMEOUT))?;
-    }
-    if let Some(continue_on_error) = context.continue_on_error_env_var() {
-        options.continue_on_error = continue_on_error;
-    }
-    if let Some(delay) = context.delay_env_var() {
-        options.delay = duration::duration_from_str(delay, DurationUnit::MilliSecond)
-            .map_err(|e| err_from_cli_err(e, HURL_DELAY))?;
-    }
-    if let Some(error_format) = context.error_format_env_var() {
-        let error_format = ErrorFormat::from_str(error_format)
-            .map_err(|e| err_from_cli_err(e, HURL_ERROR_FORMAT))?;
-        options.error_format = error_format;
-    }
-    if let Some(header) = context.header_env_var() {
-        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
-        for h in &headers {
-            if !h.contains(':') {
-                let msg = "Invalid header <{h}> missing `:`".to_string();
-                return Err(err_from_cli_err(CliOptionsError::Error(msg), HURL_HEADER));
-            }
-        }
-        options.headers.extend(headers);
-    }
-    if let Some(http3) = context.http3_env_var() {
-        if http3 {
-            options.http_version = Some(HttpVersion::V3);
-        } else {
-            options.http_version = Some(HttpVersion::V2);
-        }
-    }
-    if let Some(http2) = context.http2_env_var() {
-        if http2 {
-            options.http_version = Some(HttpVersion::V2);
-        } else {
-            options.http_version = Some(HttpVersion::V11);
-        }
-    }
-    if let Some(http11) = context.http11_env_var() {
-        if http11 {
-            options.http_version = Some(HttpVersion::V11);
-        } else {
-            options.http_version = Some(HttpVersion::V10);
-        }
-    }
-    if let Some(true) = context.http10_env_var() {
-        options.http_version = Some(HttpVersion::V10);
-    }
-    if let Some(ipv4) = context.ipv4_env_var() {
-        if ipv4 {
-            options.ip_resolve = Some(IpResolve::IpV4);
-        } else {
-            options.ip_resolve = Some(IpResolve::IpV6);
-        }
-    }
-    if let Some(no_assert) = context.no_assert_env_var() {
-        options.no_assert = no_assert;
-    }
-    if let Some(true) = context.no_output_env_var() {
-        options.output_type = OutputType::NoOutput;
-    }
-    if let Some(follow_location) = context.follow_location_env_var() {
-        options.follow_location = follow_location;
-    }
-    if let Some(follow_location_trusted) = context.follow_location_trusted_env_var() {
-        options.follow_location_trusted = follow_location_trusted;
-        if follow_location_trusted {
-            options.follow_location = true;
-        }
-    }
-    if let Some(insecure) = context.insecure_env_var() {
-        options.insecure = insecure;
-    }
-    if let Some(ipv6) = context.ipv6_env_var() {
-        if ipv6 {
-            options.ip_resolve = Some(IpResolve::IpV6);
-        } else {
-            options.ip_resolve = Some(IpResolve::IpV4);
-        }
-    }
-    if let Some(jobs) = context.jobs_env_var() {
-        let jobs = jobs.parse::<u32>().map_err(|e| err_from(e, HURL_JOBS))?;
-        options.jobs = Some(jobs as usize);
-    }
-    if let Some(limit_rate) = context.limit_rate_env_var() {
-        let limit_rate = limit_rate
-            .parse::<u64>()
-            .map_err(|e| err_from(e, HURL_LIMIT_RATE))?;
-        options.limit_rate = Some(BytesPerSec(limit_rate));
-    }
-    if let Some(max_filesize) = context.max_filesize_env_var() {
-        let max_filesize = max_filesize
-            .parse::<u64>()
-            .map_err(|e| err_from(e, HURL_MAX_FILESIZE))?;
-        options.max_filesize = Some(max_filesize);
-    }
-    if let Some(max_redirs) = context.max_redirs_env_var() {
-        let max_redirs = max_redirs
-            .parse::<i32>()
-            .map_err(|e| err_from(e, HURL_MAX_REDIRS))?;
-        options.max_redirect =
-            Count::try_from(max_redirs).map_err(|e| err_from(&e, HURL_MAX_REDIRS))?;
-    }
-    if let Some(user_agent) = context.user_agent_env_var() {
-        options.user_agent = Some(user_agent.to_string());
-    }
-    options.variables = parse_variables(context, options.variables)?;
-    options.secrets = parse_secrets(context, options.secrets)?;
-    if let Some(true) = context.verbose_env_var() {
-        options.verbosity = Some(Verbosity::Verbose);
-    } else if let Some(true) = context.very_verbose_env_var() {
-        options.verbosity = Some(Verbosity::Debug);
-    } else if let Some(verbosity) = context.verbosity_env_var() {
-        let verbosity =
-            Verbosity::from_str(verbosity).map_err(|e| err_from_cli_err(e, HURL_VERBOSITY))?;
-        options.verbosity = Some(verbosity);
-    }
-    if let Some(timeout) = context.max_time_env_var() {
-        options.timeout = duration::duration_from_str(timeout, DurationUnit::Second)
-            .map_err(|e| err_from_cli_err(e, HURL_MAX_TIME))?;
-    }
-    Ok(options)
+    let color_stdout = color(context, default_options.color_stdout);
+    let color_stderr = color(context, default_options.color_stderr);
+    let connect_timeout = connect_timeout(context, default_options.connect_timeout)?;
+    let continue_on_error = continue_on_error(context, default_options.continue_on_error);
+    let delay = delay(context, default_options.delay)?;
+    let error_format = error_format(context, default_options.error_format)?;
+    let headers = headers(context, default_options.headers)?;
+    let http_version = http_version(context, default_options.http_version);
+    let ip_resolve = ip_resolve(context, default_options.ip_resolve);
+    let no_assert = no_assert(context, default_options.no_assert);
+    let output_type = output_type(context, default_options.output_type);
+    let follow_location = follow_location(context, default_options.follow_location)?;
+    let follow_location_trusted =
+        follow_location_trusted(context, default_options.follow_location_trusted);
+    let insecure = insecure(context, default_options.insecure);
+    let jobs = jobs(context, default_options.jobs)?;
+    let limit_rate = limit_rate(context, default_options.limit_rate)?;
+    let max_filesize = max_filesize(context, default_options.max_filesize)?;
+    let max_redirect = max_redirect(context, default_options.max_redirect)?;
+    let secrets = secrets(context, default_options.secrets)?;
+    let timeout = timeout(context, default_options.timeout)?;
+    let user_agent = user_agent(context, default_options.user_agent);
+    let variables = variables(context, default_options.variables)?;
+    let verbosity = verbosity(context, default_options.verbosity)?;
+
+    Ok(CliOptions {
+        color_stdout,
+        color_stderr,
+        connect_timeout,
+        continue_on_error,
+        delay,
+        error_format,
+        headers,
+        http_version,
+        follow_location,
+        follow_location_trusted,
+        insecure,
+        ip_resolve,
+        jobs,
+        limit_rate,
+        max_filesize,
+        max_redirect,
+        no_assert,
+        output_type,
+        secrets,
+        timeout,
+        user_agent,
+        variables,
+        verbosity,
+        ..default_options
+    })
 }
 
 /// Parses Hurl variables configured in environment variables, given a set of existing variables
 /// `default_variables`.
 ///
-/// Variables can be set with `HURL_VARIABLE_foo` and `HURL_foo` (legacy syntax).
-fn parse_variables(
+/// Variables can be set with `HURL_VARIABLE_foo`.
+fn variables(
     context: &RunContext,
     default_variables: HashMap<String, Value>,
 ) -> Result<HashMap<String, Value>, CliOptionsError> {
@@ -193,7 +352,7 @@ fn parse_variables(
 /// `default_secrets`.
 ///
 /// Secrets can be set with `HURL_SECRET_foo`.
-fn parse_secrets(
+fn secrets(
     context: &RunContext,
     default_secrets: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, CliOptionsError> {

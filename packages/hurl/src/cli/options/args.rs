@@ -190,13 +190,9 @@ fn parse_arg_matches(
     let digest = digest(arg_matches, default_options.digest);
     let error_format = error_format(arg_matches, default_options.error_format)?;
     let file_root = file_root(arg_matches, default_options.file_root);
-    let (follow_location, follow_location_trusted) = follow_location(
-        arg_matches,
-        (
-            default_options.follow_location,
-            default_options.follow_location_trusted,
-        ),
-    );
+    let follow_location = follow_location(arg_matches, default_options.follow_location);
+    let follow_location_trusted =
+        follow_location_trusted(arg_matches, default_options.follow_location_trusted);
     let from_entry = from_entry(arg_matches, default_options.from_entry);
     let headers = headers(arg_matches, default_options.headers);
     let html_dir = html_dir(arg_matches, default_options.html_dir)?;
@@ -241,23 +237,7 @@ fn parse_arg_matches(
     let user = user(arg_matches, default_options.user);
     let user_agent = user_agent(arg_matches, default_options.user_agent);
     let variables = variables(arg_matches, default_options.variables)?;
-
-    let verbose = verbose(
-        arg_matches,
-        default_options.verbosity == Some(Verbosity::Verbose),
-    );
-    let very_verbose = very_verbose(
-        arg_matches,
-        default_options.verbosity == Some(Verbosity::Debug),
-    );
-    // --verbose and --very-verbose flags are prioritized over --verbosity enum.
-    let verbosity = if verbose {
-        Some(Verbosity::Verbose)
-    } else if very_verbose {
-        Some(Verbosity::Debug)
-    } else {
-        verbosity(arg_matches, default_options.verbosity)
-    };
+    let verbosity = verbosity(arg_matches, default_options.verbosity);
 
     Ok(CliOptions {
         aws_sigv4,
@@ -387,11 +367,11 @@ fn client_key_file(
 
 /// Returns true if Hurl output uses ANSI code and false otherwise.
 fn color(arg_matches: &ArgMatches, default_value: bool) -> bool {
-    if has_flag(arg_matches, "color") {
-        return true;
-    }
     if has_flag(arg_matches, "no_color") {
         return false;
+    }
+    if has_flag(arg_matches, "color") {
+        return true;
     }
     default_value
 }
@@ -471,12 +451,18 @@ fn file_root(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<
     get::<String>(arg_matches, "file_root").or(default_value)
 }
 
-fn follow_location(arg_matches: &ArgMatches, default_value: (bool, bool)) -> (bool, bool) {
-    let follow_location = has_flag(arg_matches, "follow_location")
-        || has_flag(arg_matches, "follow_location_trusted");
-    let follow_location_trusted = has_flag(arg_matches, "follow_location_trusted");
-    if follow_location || follow_location_trusted {
-        (follow_location, follow_location_trusted)
+fn follow_location(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "follow_location") || has_flag(arg_matches, "follow_location_trusted")
+    {
+        true
+    } else {
+        default_value
+    }
+}
+
+fn follow_location_trusted(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "follow_location_trusted") {
+        true
     } else {
         default_value
     }
@@ -973,25 +959,15 @@ fn variables(
 }
 
 fn verbosity(arg_matches: &ArgMatches, default_value: Option<Verbosity>) -> Option<Verbosity> {
-    match get::<String>(arg_matches, "verbosity") {
-        Some(value) => Verbosity::from_str(&value).ok(),
-        None => default_value,
-    }
-}
-
-fn verbose(arg_matches: &ArgMatches, default_value: bool) -> bool {
     if has_flag(arg_matches, "verbose") {
-        true
+        Some(Verbosity::Verbose)
+    } else if has_flag(arg_matches, "very_verbose") {
+        Some(Verbosity::Debug)
     } else {
-        default_value
-    }
-}
-
-fn very_verbose(arg_matches: &ArgMatches, default_value: bool) -> bool {
-    if has_flag(arg_matches, "very_verbose") {
-        true
-    } else {
-        default_value
+        match get::<String>(arg_matches, "verbosity") {
+            Some(value) => Verbosity::from_str(&value).ok(),
+            None => default_value,
+        }
     }
 }
 
