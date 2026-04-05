@@ -106,7 +106,7 @@ Run options:
       --continue-on-error              Continue executing requests even if an error occurs
       --delay <MILLISECONDS>           Sets delay before each request (aka sleep) [default: 0]
       --from-entry <ENTRY_NUMBER>      Execute Hurl file from ENTRY_NUMBER (starting at 1)
-      --jobs <NUM>                     Maximum number of parallel jobs, 0 to disable parallel
+      --jobs <NUM>                     Maximum number of parallel jobs, 1 to disable parallel
                                        execution
       --no-assert                      Ignore asserts defined in the Hurl file
       --parallel                       Run files in parallel (default in test mode)

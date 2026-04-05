@@ -294,7 +294,7 @@ pub fn jobs() -> clap::Arg {
         .long("jobs")
         .value_name("NUM")
         .value_parser(clap::value_parser!(u32).range(1..))
-        .help("Maximum number of parallel jobs, 0 to disable parallel execution")
+        .help("Maximum number of parallel jobs, 1 to disable parallel execution")
         .help_heading("Run options")
         .num_args(1)
 }
