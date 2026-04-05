@@ -21,7 +21,7 @@ use hurl_core::ast::{
 };
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
-use crate::http::{Header, IpResolve, RequestedHttpVersion};
+use crate::http::{CredentialForwarding, FollowLocation, Header, IpResolve, RequestedHttpVersion};
 use crate::util::logger::{Logger, Verbosity};
 
 use super::error::{RunnerError, RunnerErrorKind};
@@ -167,14 +167,19 @@ pub fn get_entry_options(
             }
             OptionKind::FollowLocation(value) => {
                 let value = eval_boolean_option(value, variables)?;
-                entry_options.follow_location = value;
+                if value {
+                    entry_options.follow_location =
+                        FollowLocation::Follow(CredentialForwarding::OnlyInitialHost);
+                } else {
+                    entry_options.follow_location = FollowLocation::No;
+                }
             }
             OptionKind::FollowLocationTrusted(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 if value {
-                    entry_options.follow_location = true;
+                    entry_options.follow_location =
+                        FollowLocation::Follow(CredentialForwarding::AllHosts);
                 }
-                entry_options.follow_location_trusted = value;
             }
             OptionKind::Insecure(value) => {
                 let value = eval_boolean_option(value, variables)?;

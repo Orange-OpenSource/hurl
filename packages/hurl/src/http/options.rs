@@ -20,7 +20,7 @@ use std::time::Duration;
 use hurl_core::types::{BytesPerSec, Count};
 
 use super::header::HeaderVec;
-use super::request::{IpResolve, RequestedHttpVersion};
+use super::request::{FollowLocation, IpResolve, RequestedHttpVersion};
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
@@ -38,8 +38,7 @@ pub struct ClientOptions {
     pub connects_to: Vec<String>,
     pub cookie_input_file: Option<String>,
     pub digest: bool,
-    pub follow_location: bool,
-    pub follow_location_trusted: bool,
+    pub follow_location: FollowLocation,
     pub headers: HeaderVec,
     pub http_version: RequestedHttpVersion,
     pub insecure: bool,
@@ -88,8 +87,7 @@ impl Default for ClientOptions {
             connects_to: vec![],
             cookie_input_file: None,
             digest: false,
-            follow_location: false,
-            follow_location_trusted: false,
+            follow_location: FollowLocation::default(),
             headers: HeaderVec::new(),
             http_version: RequestedHttpVersion::default(),
             insecure: false,

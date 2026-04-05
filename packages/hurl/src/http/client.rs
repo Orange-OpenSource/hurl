@@ -41,7 +41,9 @@ use super::header::{
 use super::ip::IpAddr;
 use super::options::{ClientOptions, Verbosity};
 use super::param::Param;
-use super::request::{IpResolve, Request, RequestedHttpVersion};
+use super::request::{
+    CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion,
+};
 use super::request_cookie::RequestCookie;
 use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 use super::response::{HttpVersion, Response};
@@ -100,7 +102,7 @@ impl Client {
         loop {
             let call = self.execute(&request_spec, &options, logger)?;
             // If we don't follow redirection, we can early exit here.
-            if !options.follow_location {
+            if matches!(options.follow_location, FollowLocation::No) {
                 calls.push(call);
                 break;
             }
@@ -135,7 +137,7 @@ impl Client {
             if should_strip_credentials_on_redirect(
                 original_url,
                 &redirect_url,
-                options.follow_location_trusted,
+                options.follow_location,
             ) {
                 headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 headers.retain(|h| !h.name_eq(COOKIE));
@@ -860,9 +862,12 @@ impl Client {
 fn should_strip_credentials_on_redirect(
     original_url: &Url,
     redirect_url: &Url,
-    follow_location_trusted: bool,
+    follow_location: FollowLocation,
 ) -> bool {
-    if follow_location_trusted {
+    if matches!(
+        follow_location,
+        FollowLocation::Follow(CredentialForwarding::AllHosts)
+    ) {
         return false;
     }
     // Different origin != strip credentials
@@ -1108,48 +1113,48 @@ mod tests {
         let url3 = Url::from_str("https://example.com").unwrap();
         let url4 = Url::from_str("http://other.com").unwrap();
 
-        let follow_location_trusted = false;
+        let follow_location = FollowLocation::Follow(CredentialForwarding::OnlyInitialHost);
         assert!(should_strip_credentials_on_redirect(
             &url1,
             &url2,
-            follow_location_trusted
+            follow_location
         ));
         assert!(should_strip_credentials_on_redirect(
             &url1,
             &url3,
-            follow_location_trusted
+            follow_location
         ));
         assert!(should_strip_credentials_on_redirect(
             &url1,
             &url4,
-            follow_location_trusted
+            follow_location
         ));
         assert!(should_strip_credentials_on_redirect(
             &url1,
             &url3,
-            follow_location_trusted
+            follow_location
         ));
 
-        let follow_location_trusted = true;
+        let follow_location = FollowLocation::Follow(CredentialForwarding::AllHosts);
         assert!(!should_strip_credentials_on_redirect(
             &url1,
             &url2,
-            follow_location_trusted
+            follow_location
         ));
         assert!(!should_strip_credentials_on_redirect(
             &url1,
             &url3,
-            follow_location_trusted
+            follow_location
         ));
         assert!(!should_strip_credentials_on_redirect(
             &url1,
             &url4,
-            follow_location_trusted
+            follow_location
         ));
         assert!(!should_strip_credentials_on_redirect(
             &url1,
             &url3,
-            follow_location_trusted
+            follow_location
         ));
     }
 

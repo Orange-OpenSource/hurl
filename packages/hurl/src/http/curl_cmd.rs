@@ -28,7 +28,7 @@ use super::cookie_store::CookieStore;
 use super::header::{Header, HeaderVec, CONTENT_TYPE};
 use super::options::ClientOptions;
 use super::param::Param;
-use super::request::{IpResolve, RequestedHttpVersion};
+use super::request::{CredentialForwarding, FollowLocation, IpResolve, RequestedHttpVersion};
 use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 
 /// Represents a curl command, with arguments.
@@ -93,7 +93,7 @@ impl CurlCmd {
 }
 
 /// Returns the curl args corresponding to the HTTP method, from a request spec.
-fn method_params(request_spec: &RequestSpec, follow_location: bool) -> Vec<String> {
+fn method_params(request_spec: &RequestSpec, follow_location: FollowLocation) -> Vec<String> {
     let has_body = !request_spec.multipart.is_empty()
         || !request_spec.form.is_empty()
         || !request_spec.body.bytes().is_empty();
@@ -294,7 +294,7 @@ fn encode_bytes(bytes: &[u8]) -> String {
 
 impl Method {
     /// Returns the curl args for HTTP method, given the request has a body or not.
-    fn curl_args(&self, has_body: bool, follow_location: bool) -> Vec<String> {
+    fn curl_args(&self, has_body: bool, follow_location: FollowLocation) -> Vec<String> {
         match self.0.as_str() {
             "GET" => {
                 if has_body {
@@ -317,7 +317,7 @@ impl Method {
                 // method of the redirection steps.
                 if has_body {
                     vec![]
-                } else if follow_location {
+                } else if matches!(follow_location, FollowLocation::Follow(_)) {
                     vec!["--data".to_string(), "''".to_string()]
                 } else {
                     vec!["--request".to_string(), "POST".to_string()]
@@ -442,10 +442,14 @@ impl ClientOptions {
             IpResolve::IpV4 => arguments.push("--ipv4".to_string()),
             IpResolve::IpV6 => arguments.push("--ipv6".to_string()),
         }
-        if self.follow_location_trusted {
-            arguments.push("--location-trusted".to_string());
-        } else if self.follow_location {
-            arguments.push("--location".to_string());
+        match self.follow_location {
+            FollowLocation::Follow(CredentialForwarding::OnlyInitialHost) => {
+                arguments.push("--location".to_string());
+            }
+            FollowLocation::Follow(CredentialForwarding::AllHosts) => {
+                arguments.push("--location-trusted".to_string());
+            }
+            FollowLocation::No => {}
         }
         if let Some(max_filesize) = self.max_filesize {
             arguments.push("--max-filesize".to_string());
@@ -682,8 +686,7 @@ mod tests {
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
             cookie_input_file: Some("cookie_file".to_string()),
             digest: false,
-            follow_location: true,
-            follow_location_trusted: false,
+            follow_location: FollowLocation::Follow(CredentialForwarding::OnlyInitialHost),
             headers,
             http_version: RequestedHttpVersion::Http10,
             insecure: true,

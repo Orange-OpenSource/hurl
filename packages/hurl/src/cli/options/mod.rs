@@ -32,7 +32,7 @@ use std::str::FromStr;
 use std::time::Duration;
 
 use hurl::http;
-use hurl::http::{Header, HeaderVec, RequestedHttpVersion};
+use hurl::http::{CredentialForwarding, FollowLocation, Header, HeaderVec, RequestedHttpVersion};
 use hurl::pretty::PrettyMode;
 use hurl::runner::Output;
 use hurl::util::logger;
@@ -341,6 +341,11 @@ impl CliOptions {
         let digest = self.digest;
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
+        let follow_location = match (follow_location, follow_location_trusted) {
+            (true, true) => FollowLocation::Follow(CredentialForwarding::AllHosts),
+            (true, false) => FollowLocation::Follow(CredentialForwarding::OnlyInitialHost),
+            (false, _) => FollowLocation::No,
+        };
         let from_entry = self.from_entry;
 
         // TODO: do we want to manage the headers with no content? There are two type of no-content
@@ -409,7 +414,6 @@ impl CliOptions {
             .context_dir(&context_dir)
             .cookie_input_file(cookie_input_file)
             .follow_location(follow_location)
-            .follow_location_trusted(follow_location_trusted)
             .from_entry(from_entry)
             .headers(headers)
             .http_version(http_version)

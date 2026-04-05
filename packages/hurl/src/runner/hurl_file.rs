@@ -25,7 +25,7 @@ use hurl_core::input::Input;
 use hurl_core::parser;
 use hurl_core::types::{Count, Index};
 
-use crate::http::{Call, Client};
+use crate::http::{Call, Client, CredentialForwarding, FollowLocation};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
@@ -51,6 +51,7 @@ use super::variable::VariableSet;
 ///
 /// ```
 /// use std::collections::HashMap;
+/// use hurl::http::{CredentialForwarding, FollowLocation};
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, VariableSet};
 /// use hurl::util::logger::{LoggerOptionsBuilder, Verbosity};
@@ -66,7 +67,7 @@ use super::variable::VariableSet;
 ///
 /// // Define runner and logger options
 /// let runner_opts = RunnerOptionsBuilder::new()
-///     .follow_location(true)
+///     .follow_location(FollowLocation::Follow(CredentialForwarding::AllHosts))
 ///     .build();
 /// let logger_opts = LoggerOptionsBuilder::new()
 ///     .verbosity(Some(Verbosity::Verbose))
@@ -471,7 +472,15 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
     }
 
     if options.follow_location != default_options.follow_location {
-        non_default_options.push(("follow redirect", options.follow_location.to_string()));
+        match options.follow_location {
+            FollowLocation::No => {}
+            FollowLocation::Follow(CredentialForwarding::OnlyInitialHost) => {
+                non_default_options.push(("follow redirect", "true".to_string()));
+            }
+            FollowLocation::Follow(CredentialForwarding::AllHosts) => {
+                non_default_options.push(("follow redirect", "true (trusted)".to_string()));
+            }
+        }
     }
 
     if options.insecure != default_options.insecure {

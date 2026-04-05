@@ -18,7 +18,7 @@
 use std::str::FromStr;
 use std::time::Duration;
 
-use hurl::http::{Call, HttpVersion, Request, Response, Url};
+use hurl::http::{Call, FollowLocation, HttpVersion, Request, Response, Url};
 use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder, VariableSet};
 use hurl::util::logger::LoggerOptionsBuilder;
@@ -109,7 +109,7 @@ fn simple_sample() {
         .context_dir(&ContextDir::default())
         .cookie_input_file(None)
         .fail_fast(false)
-        .follow_location(false)
+        .follow_location(FollowLocation::No)
         .no_assert(false)
         .insecure(false)
         .max_redirect(Count::Finite(10))

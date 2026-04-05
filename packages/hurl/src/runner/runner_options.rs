@@ -19,7 +19,7 @@ use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
 
-use crate::http::{HeaderVec, IpResolve, RequestedHttpVersion};
+use crate::http::{FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion};
 use crate::util::path::ContextDir;
 
 use super::output::Output;
@@ -39,8 +39,7 @@ pub struct RunnerOptionsBuilder {
     cookie_input_file: Option<String>,
     delay: Duration,
     digest: bool,
-    follow_location: bool,
-    follow_location_trusted: bool,
+    follow_location: FollowLocation,
     from_entry: Option<usize>,
     headers: HeaderVec,
     http_version: RequestedHttpVersion,
@@ -91,8 +90,7 @@ impl Default for RunnerOptionsBuilder {
             cookie_input_file: None,
             delay: Duration::from_millis(0),
             digest: false,
-            follow_location: false,
-            follow_location_trusted: false,
+            follow_location: FollowLocation::default(),
             from_entry: None,
             headers: HeaderVec::new(),
             http_version: RequestedHttpVersion::default(),
@@ -238,16 +236,8 @@ impl RunnerOptionsBuilder {
     /// Sets follow redirect.
     ///
     /// To limit the amount of redirects to follow use [`Self::max_redirect`].
-    pub fn follow_location(&mut self, follow_location: bool) -> &mut Self {
+    pub fn follow_location(&mut self, follow_location: FollowLocation) -> &mut Self {
         self.follow_location = follow_location;
-        self
-    }
-
-    /// Sets follow redirect with trust.
-    ///
-    /// To limit the amount of redirects to follow use [`Self::max_redirect`].
-    pub fn follow_location_trusted(&mut self, follow_location_trusted: bool) -> &mut Self {
-        self.follow_location_trusted = follow_location_trusted;
         self
     }
 
@@ -472,7 +462,6 @@ impl RunnerOptionsBuilder {
             cookie_input_file: self.cookie_input_file.clone(),
             digest: self.digest,
             follow_location: self.follow_location,
-            follow_location_trusted: self.follow_location_trusted,
             from_entry: self.from_entry,
             headers: self.headers.clone(),
             http_version: self.http_version,
@@ -543,9 +532,7 @@ pub struct RunnerOptions {
     /// Enables HTTP Digest authentication.
     pub(crate) digest: bool,
     /// Sets follow redirect.
-    pub(crate) follow_location: bool,
-    /// Sets follow redirect with trust.
-    pub(crate) follow_location_trusted: bool,
+    pub(crate) follow_location: FollowLocation,
     /// Executes Hurl file from from_entry (starting at 1), ignores the beginning of the file.
     pub(crate) from_entry: Option<usize>,
     /// Sets additional headers (overrides if a header already exists).

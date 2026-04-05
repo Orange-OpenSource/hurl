@@ -257,7 +257,6 @@ impl ClientOptions {
             cookie_input_file: runner_options.cookie_input_file.clone(),
             digest: runner_options.digest,
             follow_location: runner_options.follow_location,
-            follow_location_trusted: runner_options.follow_location_trusted,
             headers: runner_options.headers.clone(),
             http_version: runner_options.http_version,
             ip_resolve: runner_options.ip_resolve,

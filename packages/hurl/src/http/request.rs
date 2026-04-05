@@ -71,6 +71,26 @@ pub enum IpResolve {
     IpV6,
 }
 
+/// Do the HTTP client follow redirection, or not?
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
+pub enum FollowLocation {
+    /// No redirection is followed
+    #[default]
+    No,
+    /// Redirection is followed, credentials are passed only to the initial host, or all hosts
+    /// depending on the credential forwarding mode.
+    Follow(CredentialForwarding),
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
+pub enum CredentialForwarding {
+    /// Credentials are only forwarded to the initial host
+    #[default]
+    OnlyInitialHost,
+    /// Credentials are forwarded to all hosts involved in the redirection
+    AllHosts,
+}
+
 impl Request {
     /// Creates a new request.
     pub fn new(method: &str, url: Url, headers: HeaderVec, body: Vec<u8>) -> Self {
