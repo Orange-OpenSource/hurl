@@ -23,8 +23,8 @@ use crate::ast::{
 use crate::combinator::{optional, zero_or_more};
 use crate::parser::bytes::bytes;
 use crate::parser::primitives::{
-    eof, key_value, line_terminator, one_or_more_spaces, optional_line_terminators, try_literal,
-    zero_or_more_spaces,
+    eof, header_key_value, line_terminator, one_or_more_spaces, optional_line_terminators,
+    try_literal, zero_or_more_spaces,
 };
 use crate::parser::sections::{request_sections, response_sections};
 use crate::parser::string::unquoted_template;
@@ -58,7 +58,7 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let space1 = one_or_more_spaces(reader)?;
     let url = unquoted_template(reader)?;
     let line_terminator0 = line_terminator(reader)?;
-    let headers = zero_or_more(key_value, reader)?;
+    let headers = zero_or_more(header_key_value, reader)?;
     let sections = request_sections(reader)?;
     let body = optional(body, reader)?;
     let source_info = SourceInfo::new(start.pos, reader.cursor().pos);
@@ -87,7 +87,7 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
     let space1 = one_or_more_spaces(reader)?;
     let status = status(reader)?;
     let line_terminator0 = line_terminator(reader)?;
-    let headers = zero_or_more(key_value, reader)?;
+    let headers = zero_or_more(header_key_value, reader)?;
     let sections = response_sections(reader)?;
     let body = optional(body, reader)?;
     let source_info = SourceInfo::new(start.pos, reader.cursor().pos);

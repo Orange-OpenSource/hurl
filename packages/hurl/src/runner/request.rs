@@ -21,7 +21,9 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::Body as AstBody;
 use hurl_core::ast::Method as AstMethod;
-use hurl_core::ast::{Bytes, MultilineString, MultilineStringKind, Request, Template};
+use hurl_core::ast::{
+    Bytes, KeyValueSeparator, MultilineString, MultilineStringKind, Request, Template,
+};
 
 use crate::http::{
     Body, Header, HeaderVec, Method, Param, RequestCookie, RequestSpec, Url, UrlError,
@@ -46,11 +48,18 @@ pub fn eval_request(
 
     // Headers
     let mut headers = HeaderVec::new();
+    let mut unset_headers = vec![];
     for header in &request.headers {
         let name = template::eval_template(&header.key, variables)?;
-        let value = template::eval_template(&header.value, variables)?;
-        let header = Header::new(&name, &value);
-        headers.push(header);
+        // Colon with empty value = unset directive (remove header)
+        // Semicolon = empty-value header
+        if header.separator == KeyValueSeparator::Colon && header.value.is_empty() {
+            unset_headers.push(name);
+        } else {
+            let value = template::eval_template(&header.value, variables)?;
+            let header = Header::new(&name, &value);
+            headers.push(header);
+        }
     }
 
     // Basic auth
@@ -141,6 +150,7 @@ pub fn eval_request(
         method,
         url,
         headers,
+        unset_headers,
         querystring,
         form,
         multipart,
@@ -203,8 +213,8 @@ fn eval_method(method: &AstMethod) -> Method {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        Comment, Expr, ExprKind, KeyValue, LineTerminator, Placeholder, Section, SectionValue,
-        SourceInfo, TemplateElement, Variable, Whitespace,
+        Comment, Expr, ExprKind, KeyValue, KeyValueSeparator, LineTerminator, Placeholder, Section,
+        SectionValue, SourceInfo, TemplateElement, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
@@ -272,6 +282,7 @@ mod tests {
             space0: whitespace(),
             key,
             space1: whitespace(),
+            separator: KeyValueSeparator::Colon,
             space2: whitespace(),
             value,
             line_terminator0: line_terminator,

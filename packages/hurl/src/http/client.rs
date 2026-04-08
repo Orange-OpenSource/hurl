@@ -163,6 +163,7 @@ impl Client {
                 method: redirect_method,
                 url: redirect_url,
                 headers,
+                unset_headers: request_spec.unset_headers,
                 querystring: vec![],
                 form,
                 multipart,
@@ -509,8 +510,13 @@ impl Client {
 
         let mut headers = request_spec.headers.clone();
         headers.extend(&options.headers);
+        // Remove headers that are marked for unsetting
+        for name in &request_spec.unset_headers {
+            headers.retain(|h| !h.name_eq(name));
+        }
         self.set_headers(
             &headers,
+            &request_spec.unset_headers,
             request_spec.implicit_content_type.as_deref(),
             options,
         )?;
@@ -566,10 +572,16 @@ impl Client {
     fn set_headers(
         &mut self,
         headers: &HeaderVec,
+        unset_headers: &[String],
         implicit_content_type: Option<&str>,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
         let mut list = headers.to_curl_headers()?;
+
+        // Send unset directives to libcurl to also clear any default headers.
+        for name in unset_headers {
+            list.append(&format!("{name}:"))?;
+        }
 
         // If request has no `Content-Type` header, we set it if the content type has been set
         // implicitly on this request.

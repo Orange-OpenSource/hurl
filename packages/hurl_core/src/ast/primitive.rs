@@ -23,12 +23,22 @@ use crate::types::{SourceString, ToSource};
 
 use super::json::JsonValue;
 
+/// Separator used in a key-value pair.
+/// Colon is the default separator for key-value pairs.
+/// Semicolon is used for headers with empty values (httpie-style).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum KeyValueSeparator {
+    Colon,
+    Semicolon,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct KeyValue {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub key: Template,
     pub space1: Whitespace,
+    pub separator: KeyValueSeparator,
     pub space2: Whitespace,
     pub value: Template,
     pub line_terminator0: LineTerminator,

@@ -49,5 +49,5 @@ HTTP 200
 Beverage: cafe  # TBC send utf8
 
 GET http://localhost:8000/empty-headers
-Empty-Header:
+Empty-Header;
 HTTP 200

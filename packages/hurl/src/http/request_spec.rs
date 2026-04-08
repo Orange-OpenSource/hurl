@@ -29,6 +29,9 @@ pub struct RequestSpec {
     pub method: Method,
     pub url: Url,
     pub headers: HeaderVec,
+    /// Header names to unset (remove from request, including CLI-level headers).
+    /// Populated when a header is specified as `Name:` (colon, no value) in the .hurl file.
+    pub unset_headers: Vec<String>,
     pub querystring: Vec<Param>,
     pub form: Vec<Param>,
     pub multipart: Vec<MultipartParam>,
@@ -47,6 +50,7 @@ impl Default for RequestSpec {
             method: Method("GET".to_string()),
             url: Url::default(),
             headers: HeaderVec::new(),
+            unset_headers: vec![],
             querystring: vec![],
             form: vec![],
             multipart: vec![],

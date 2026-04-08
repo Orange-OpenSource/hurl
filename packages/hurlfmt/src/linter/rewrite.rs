@@ -18,11 +18,11 @@
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CookiePath, CountOption, Duration, DurationOption, Entry, EntryOption, File, FilenameParam,
-    FilenameValue, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator,
-    Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder,
-    Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,
-    Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VerbosityOption, VersionValue, I64, U64,
+    FilenameValue, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue,
+    KeyValueSeparator, LineTerminator, Method, MultilineString, MultipartParam, NaturalOption,
+    Number, OptionKind, Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query,
+    QueryValue, Regex, RegexValue, Request, Response, Section, SectionValue, StatusValue, Template,
+    VariableDefinition, VariableValue, VerbosityOption, VersionValue, I64, U64,
 };
 use hurl_core::types::{Count, DurationUnit, ToSource};
 
@@ -385,7 +385,10 @@ impl Lint for KeyValue {
             .iter()
             .for_each(|lt| s.push_str(&lint_lt(lt, false)));
         s.push_str(&self.key.lint());
-        s.push(':');
+        match self.separator {
+            KeyValueSeparator::Colon => s.push(':'),
+            KeyValueSeparator::Semicolon => s.push(';'),
+        }
         if !self.value.is_empty() {
             s.push(' ');
             s.push_str(&self.value.lint());

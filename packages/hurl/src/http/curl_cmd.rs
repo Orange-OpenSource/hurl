@@ -69,8 +69,13 @@ impl CurlCmd {
 
         let mut headers = request_spec.headers.clone();
         headers.extend(&options.headers);
+        // Remove headers that are marked for unsetting
+        for name in &request_spec.unset_headers {
+            headers.retain(|h| !h.name_eq(name));
+        }
         let mut params = headers_params(
             &headers,
+            &request_spec.unset_headers,
             request_spec.implicit_content_type.as_deref(),
             &request_spec.body,
         );
@@ -104,6 +109,7 @@ fn method_params(request_spec: &RequestSpec, follow_location: bool) -> Vec<Strin
 /// an optional implicit content type, and the request body.
 fn headers_params(
     headers: &HeaderVec,
+    unset_headers: &[String],
     implicit_content_type: Option<&str>,
     body: &Body,
 ) -> Vec<String> {
@@ -111,6 +117,12 @@ fn headers_params(
 
     for header in headers.iter() {
         args.append(&mut header.curl_args());
+    }
+
+    // Add unset directives as `Name:` to remove headers from curl
+    for name in unset_headers {
+        args.push("--header".to_string());
+        args.push(encode_shell_string(&format!("{name}:")));
     }
 
     let has_explicit_content_type = headers.contains_key(CONTENT_TYPE);

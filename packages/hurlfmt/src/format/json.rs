@@ -739,8 +739,8 @@ impl ToJson for NaturalOption {
 #[cfg(test)]
 pub mod tests {
     use hurl_core::ast::{
-        LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
-        TemplateElement, Version, Whitespace, I64,
+        KeyValueSeparator, LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status,
+        Template, TemplateElement, Version, Whitespace, I64,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
@@ -791,6 +791,7 @@ pub mod tests {
                         SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
                     ),
                     space1: whitespace(),
+                    separator: KeyValueSeparator::Colon,
                     space2: whitespace(),
                     value: Template::new(
                         None,

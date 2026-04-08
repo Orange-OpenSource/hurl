@@ -68,7 +68,7 @@ GET https://localhost:8001/hello
 negotiate: true
 
 GET http://localhost:8000/hello
-Empty-Header:
+Empty-Header;
 
 POST http://localhost:8000/post-raw
 Content-Type: application/x-www-form-urlencoded

@@ -16,7 +16,8 @@
  *
  */
 use crate::ast::{
-    Base64, Comment, File, Hex, KeyValue, LineTerminator, Regex, SourceInfo, Whitespace,
+    Base64, Comment, File, Hex, KeyValue, KeyValueSeparator, LineTerminator, Regex, SourceInfo,
+    Template, Whitespace,
 };
 use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
@@ -204,6 +205,57 @@ pub fn key_value(reader: &mut Reader) -> ParseResult<KeyValue> {
         space0,
         key,
         space1,
+        separator: KeyValueSeparator::Colon,
+        space2,
+        value,
+        line_terminator0,
+    })
+}
+
+/// Parses a header key-value, supporting both colon and semicolon separators.
+/// - `Name: value` → normal header
+/// - `Name:` → unset header directive (removes this header)
+/// - `Name;` → header with empty value
+pub fn header_key_value(reader: &mut Reader) -> ParseResult<KeyValue> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let key = recover(key_string::parse, reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+
+    // Try semicolon separator (empty-value header)
+    let save = reader.cursor();
+    if literal(";", reader).is_ok() {
+        let pos = reader.cursor().pos;
+        let space2 = Whitespace {
+            value: String::new(),
+            source_info: SourceInfo::new(pos, pos),
+        };
+        let value = Template::new(None, vec![], SourceInfo::new(pos, pos));
+        let line_terminator0 = line_terminator(reader)?;
+        return Ok(KeyValue {
+            line_terminators,
+            space0,
+            key,
+            space1,
+            separator: KeyValueSeparator::Semicolon,
+            space2,
+            value,
+            line_terminator0,
+        });
+    }
+    reader.seek(save);
+
+    // Colon separator (normal or unset header)
+    recover(|reader1| literal(":", reader1), reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = unquoted_template(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+    Ok(KeyValue {
+        line_terminators,
+        space0,
+        key,
+        space1,
+        separator: KeyValueSeparator::Colon,
         space2,
         value,
         line_terminator0,
@@ -607,6 +659,7 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
                 },
+                separator: KeyValueSeparator::Colon,
                 space2: Whitespace {
                     value: " ".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
@@ -696,6 +749,7 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
                 },
+                separator: KeyValueSeparator::Colon,
                 space2: Whitespace {
                     value: " ".to_string(),
                     source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),

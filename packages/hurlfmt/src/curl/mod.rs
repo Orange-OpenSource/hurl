@@ -108,7 +108,7 @@ fn format(
     let mut s = format!("{method} {url}");
     for header in headers {
         if let Some(stripped) = header.strip_suffix(";") {
-            s.push_str(format!("\n{stripped}:").as_str());
+            s.push_str(format!("\n{stripped};").as_str());
         } else {
             s.push_str(format!("\n{header}").as_str());
         }
@@ -230,7 +230,7 @@ Test: '
     #[test]
     fn test_empty_headers() {
         let hurl_str = r#"GET http://localhost:8000/empty-headers
-Empty-Header:
+Empty-Header;
 "#;
         assert_eq!(
             parse_line("curl http://localhost:8000/empty-headers -H 'Empty-Header;'").unwrap(),

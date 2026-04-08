@@ -23,11 +23,11 @@
 use crate::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
     Duration, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter,
-    FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method,
-    MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
-    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VerbosityOption, VersionValue, Whitespace, U64,
+    FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, KeyValueSeparator,
+    LineTerminator, Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind,
+    Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex,
+    RegexValue, Request, Response, Section, SectionValue, StatusValue, Template,
+    VariableDefinition, VariableValue, VerbosityOption, VersionValue, Whitespace, U64,
 };
 use crate::types::{Count, DurationUnit, SourceString, ToSource};
 
@@ -570,7 +570,10 @@ pub fn walk_kv<V: Visitor>(visitor: &mut V, kv: &KeyValue) {
     visitor.visit_whitespace(&kv.space0);
     visitor.visit_template(&kv.key);
     visitor.visit_whitespace(&kv.space1);
-    visitor.visit_literal(":");
+    match kv.separator {
+        KeyValueSeparator::Colon => visitor.visit_literal(":"),
+        KeyValueSeparator::Semicolon => visitor.visit_literal(";"),
+    }
     visitor.visit_whitespace(&kv.space2);
     visitor.visit_template(&kv.value);
     visitor.visit_lt(&kv.line_terminator0);

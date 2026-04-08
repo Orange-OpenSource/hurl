@@ -326,8 +326,8 @@ fn assert(reader: &mut Reader) -> ParseResult<Assert> {
 mod tests {
     use super::*;
     use crate::ast::{
-        KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
-        PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
+        KeyValue, KeyValueSeparator, LineTerminator, Number, Predicate, PredicateFunc,
+        PredicateFuncValue, PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
     };
     use crate::reader::CharPos;
     use crate::types::ToSource;
@@ -922,6 +922,7 @@ mod tests {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 5), Pos::new(2, 5))
                     },
+                    separator: KeyValueSeparator::Colon,
                     space2: Whitespace {
                         value: String::new(),
                         source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 6))

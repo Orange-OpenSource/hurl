@@ -18,7 +18,8 @@
 use hurl_core::ast::{
     Assert, Base64, Body, Bytes, Capture, Comment, Cookie, CookieAttribute, CookieAttributeName,
     CookiePath, DurationOption, Entry, EntryOption, File, FilenameParam, Filter, FilterValue,
-    GraphQl, Hex, HurlFile, KeyValue, LineTerminator, MultilineString, MultilineStringAttribute,
+    GraphQl, Hex, HurlFile, KeyValue, KeyValueSeparator, LineTerminator, MultilineString,
+    MultilineStringAttribute,
     MultilineStringKind, MultipartParam, OptionKind, Predicate, PredicateFunc, PredicateFuncValue,
     PredicateValue, Query, QueryValue, RegexValue, Request, Response, Section, SectionValue,
     SourceInfo, Template, VariableDefinition, Whitespace,
@@ -508,6 +509,7 @@ fn lint_key_value(key_value: &KeyValue) -> KeyValue {
         space0: empty_whitespace(),
         key: key_value.key.clone(),
         space1: empty_whitespace(),
+        separator: key_value.separator,
         space2: if key_value.value.elements.is_empty() {
             empty_whitespace()
         } else {
