@@ -510,7 +510,7 @@ impl Client {
 
         let mut headers = request_spec.headers.clone();
         headers.extend(&options.headers);
-        // Remove headers that are marked for unsetting
+        // Apply unset directives: remove matching headers from the merged list
         for name in &request_spec.unset_headers {
             headers.retain(|h| !h.name_eq(name));
         }

@@ -69,7 +69,7 @@ impl CurlCmd {
 
         let mut headers = request_spec.headers.clone();
         headers.extend(&options.headers);
-        // Remove headers that are marked for unsetting
+        // Strip headers that match an unset directive before generating curl args
         for name in &request_spec.unset_headers {
             headers.retain(|h| !h.name_eq(name));
         }

@@ -794,6 +794,62 @@ mod tests {
     }
 
     #[test]
+    fn test_header_key_value_semicolon() {
+        let mut reader = Reader::new("Empty-Header;\n");
+        let kv = header_key_value(&mut reader).unwrap();
+        assert_eq!(kv.separator, KeyValueSeparator::Semicolon);
+        assert!(kv.value.elements.is_empty());
+        assert_eq!(
+            kv.key,
+            Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "Empty-Header".to_string(),
+                    source: "Empty-Header".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
+            ),
+        );
+    }
+
+    #[test]
+    fn test_header_key_value_colon_empty() {
+        let mut reader = Reader::new("Authorization:\n");
+        let kv = header_key_value(&mut reader).unwrap();
+        assert_eq!(kv.separator, KeyValueSeparator::Colon);
+        assert!(kv.value.elements.is_empty());
+        assert_eq!(
+            kv.key,
+            Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "Authorization".to_string(),
+                    source: "Authorization".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
+            ),
+        );
+    }
+
+    #[test]
+    fn test_header_key_value_colon_with_value() {
+        let mut reader = Reader::new("Content-Type: application/json\n");
+        let kv = header_key_value(&mut reader).unwrap();
+        assert_eq!(kv.separator, KeyValueSeparator::Colon);
+        assert_eq!(
+            kv.value,
+            Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "application/json".to_string(),
+                    source: "application/json".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 15), Pos::new(1, 31)),
+            ),
+        );
+    }
+
+    #[test]
     fn test_boolean() {
         let mut reader = Reader::new("true");
         assert!(boolean(&mut reader).unwrap());

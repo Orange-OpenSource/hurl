@@ -312,6 +312,9 @@ fn log_request(
     for header in &request.headers {
         logger.debug(&header.to_string());
     }
+    for name in &request.unset_headers {
+        logger.debug(&format!("{name}: (unset)"));
+    }
     if !request.querystring.is_empty() {
         logger.debug("[Query]");
         for param in &request.querystring {

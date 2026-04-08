@@ -25,7 +25,7 @@ use super::json::JsonValue;
 
 /// Separator used in a key-value pair.
 /// Colon is the default separator for key-value pairs.
-/// Semicolon is used for headers with empty values (httpie-style).
+/// Semicolon is used for headers with empty values (curl-style `Header;`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum KeyValueSeparator {
     Colon,
