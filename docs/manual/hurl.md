@@ -170,6 +170,8 @@ See also [`--key`](#key).
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
 
+Environment variables: HURL_COMPRESSED
+
 #### --connect-timeout <SECONDS> {#connect-timeout}
 
 Maximum time in seconds that you allow Hurl's connection to take.

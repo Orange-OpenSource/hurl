@@ -47,6 +47,7 @@ pub struct RunContext {
 const HURL_PREFIX: &str = "HURL_";
 
 pub const HURL_COLOR: &str = "HURL_COLOR";
+pub const HURL_COMPRESSED: &str = "HURL_COMPRESSED";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
 pub const HURL_DELAY: &str = "HURL_DELAY";
@@ -121,6 +122,11 @@ impl RunContext {
     /// Checks if standard error is a terminal.
     pub fn is_stderr_term(&self) -> bool {
         self.stderr_term
+    }
+
+    /// Returns the env var for compressed response.
+    pub fn compressed_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_COMPRESSED)
     }
 
     /// Returns the env var for connect timeout duration.

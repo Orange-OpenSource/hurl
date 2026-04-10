@@ -34,6 +34,10 @@ use super::{
     OutputType, RunContext, Verbosity,
 };
 
+fn compressed(context: &RunContext, default_value: bool) -> bool {
+    context.compressed_env_var().unwrap_or(default_value)
+}
+
 fn color(context: &RunContext, default_value: bool) -> bool {
     if let Some(no_color) = context.no_color_env_var() {
         return !no_color;
@@ -295,6 +299,7 @@ pub fn parse_env_vars(
 ) -> Result<CliOptions, CliOptionsError> {
     let color_stdout = color(context, default_options.color_stdout);
     let color_stderr = color(context, default_options.color_stderr);
+    let compressed = compressed(context, default_options.compressed);
     let connect_timeout = connect_timeout(context, default_options.connect_timeout)?;
     let continue_on_error = continue_on_error(context, default_options.continue_on_error);
     let delay = delay(context, default_options.delay)?;
@@ -324,6 +329,7 @@ pub fn parse_env_vars(
     Ok(CliOptions {
         color_stdout,
         color_stderr,
+        compressed,
         connect_timeout,
         continue_on_error,
         delay,
