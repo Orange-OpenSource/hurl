@@ -4,5 +4,6 @@ help: Do not use cookie store between requests
 help_heading: HTTP options
 conflict: cookies_input_file
 cli_only: true
+env_var: HURL_NO_COOKIE_STORE
 ---
 Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.

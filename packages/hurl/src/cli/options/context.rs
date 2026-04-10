@@ -69,6 +69,7 @@ pub const HURL_MAX_REDIRS: &str = "HURL_MAX_REDIRS";
 pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+pub const HURL_NO_COOKIE_STORE: &str = "HURL_NO_COOKIE_STORE";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
 pub const HURL_PRETTY: &str = "HURL_PRETTY";
@@ -256,6 +257,11 @@ impl RunContext {
     /// Returns the env var for ignoring asserts.
     pub fn no_assert_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_NO_ASSERT)
+    }
+
+    /// Returns the env var for disabling cookie store.
+    pub fn no_cookie_store_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_COOKIE_STORE)
     }
 
     /// Returns the env var for disabling pretty output.

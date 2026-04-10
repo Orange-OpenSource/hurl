@@ -230,6 +230,10 @@ fn no_assert(context: &RunContext, default_value: bool) -> bool {
     context.no_assert_env_var().unwrap_or(default_value)
 }
 
+fn no_cookie_store(context: &RunContext, default_value: bool) -> bool {
+    context.no_cookie_store_env_var().unwrap_or(default_value)
+}
+
 fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
     match (context.no_output_env_var(), context.test_env_var()) {
         (Some(true), _) => OutputType::NoOutput,
@@ -285,8 +289,10 @@ fn retry_interval(
     default_value: Duration,
 ) -> Result<Duration, CliOptionsError> {
     match context.retry_interval_env_var() {
-        Some(retry_interval) => duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
-            .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL)),
+        Some(retry_interval) => {
+            duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
+                .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL))
+        }
         None => Ok(default_value),
     }
 }
@@ -344,6 +350,7 @@ pub fn parse_env_vars(
     let http_version = http_version(context, default_options.http_version);
     let ip_resolve = ip_resolve(context, default_options.ip_resolve);
     let no_assert = no_assert(context, default_options.no_assert);
+    let no_cookie_store = no_cookie_store(context, default_options.no_cookie_store);
     let output_type = output_type(context, default_options.output_type);
     let follow_location = follow_location(context, default_options.follow_location)?;
     let follow_location_trusted =
@@ -384,6 +391,7 @@ pub fn parse_env_vars(
         max_filesize,
         max_redirect,
         no_assert,
+        no_cookie_store,
         output_type,
         parallel,
         pretty,
