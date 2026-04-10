@@ -70,6 +70,7 @@ pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
+pub const HURL_TEST: &str = "HURL_TEST";
 pub const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
 pub const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
 pub const HURL_VERBOSE: &str = "HURL_VERBOSE";
@@ -283,6 +284,12 @@ impl RunContext {
         } else {
             self.get_env_var_bool(HURL_NO_COLOR)
         }
+    }
+
+    /// Returns `Some(true)` if test mode is set through env, `Some(false)` if test mode is disable through env,
+    /// `None` otherwise.
+    pub fn test_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_TEST)
     }
 
     /// Returns the map of Hurl variables injected by environment variables.

@@ -562,6 +562,8 @@ In test mode, files are executed in parallel. To run test in a sequential way us
 
 See also [`--jobs`](#jobs).
 
+Environment variables: HURL_TEST
+
 This is a cli-only option.
 
 #### --to-entry <ENTRY_NUMBER> {#to-entry}

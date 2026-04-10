@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-use hurl::runner::Value;
-use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 use std::time::Duration;
+
+use hurl::runner::Value;
+use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use super::context::{
     HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
@@ -78,6 +79,32 @@ fn error_format(
     }
 }
 
+fn follow_location(context: &RunContext, default_value: bool) -> Result<bool, CliOptionsError> {
+    let value = match (
+        context.follow_location_env_var(),
+        context.follow_location_trusted_env_var(),
+    ) {
+        (Some(true), _) => true,
+        (Some(false), Some(true)) => {
+            let error = format!(
+                "Invalid environment variables configuration {} {}",
+                HURL_FOLLOW_LOCATION, HURL_FOLLOW_LOCATION_TRUSTED
+            );
+            return Err(CliOptionsError::Error(error));
+        }
+        (Some(false), _) => false,
+        (None, Some(true)) => true,
+        (None, _) => default_value,
+    };
+    Ok(value)
+}
+
+fn follow_location_trusted(context: &RunContext, default_value: bool) -> bool {
+    context
+        .follow_location_trusted_env_var()
+        .unwrap_or(default_value)
+}
+
 fn headers(
     context: &RunContext,
     default_value: Vec<String>,
@@ -122,6 +149,10 @@ fn http_version(context: &RunContext, default_value: Option<HttpVersion>) -> Opt
     }
 }
 
+fn insecure(context: &RunContext, default_value: bool) -> bool {
+    context.insecure_env_var().unwrap_or(default_value)
+}
+
 fn ip_resolve(context: &RunContext, default_value: Option<IpResolve>) -> Option<IpResolve> {
     if let Some(ipv6) = context.ipv6_env_var() {
         if ipv6 {
@@ -138,51 +169,6 @@ fn ip_resolve(context: &RunContext, default_value: Option<IpResolve>) -> Option<
     } else {
         default_value
     }
-}
-
-fn no_assert(context: &RunContext, default_value: bool) -> bool {
-    context.no_assert_env_var().unwrap_or(default_value)
-}
-
-fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
-    if let Some(v) = context.no_output_env_var() {
-        match v {
-            true => OutputType::NoOutput,
-            false => OutputType::ResponseBody,
-        }
-    } else {
-        default_value
-    }
-}
-
-fn follow_location(context: &RunContext, default_value: bool) -> Result<bool, CliOptionsError> {
-    let value = match (
-        context.follow_location_env_var(),
-        context.follow_location_trusted_env_var(),
-    ) {
-        (Some(true), _) => true,
-        (Some(false), Some(true)) => {
-            let error = format!(
-                "Invalid environment variables configuration {} {}",
-                HURL_FOLLOW_LOCATION, HURL_FOLLOW_LOCATION_TRUSTED
-            );
-            return Err(CliOptionsError::Error(error));
-        }
-        (Some(false), _) => false,
-        (None, Some(true)) => true,
-        (None, _) => default_value,
-    };
-    Ok(value)
-}
-
-fn follow_location_trusted(context: &RunContext, default_value: bool) -> bool {
-    context
-        .follow_location_trusted_env_var()
-        .unwrap_or(default_value)
-}
-
-fn insecure(context: &RunContext, default_value: bool) -> bool {
-    context.insecure_env_var().unwrap_or(default_value)
 }
 
 fn jobs(
@@ -233,6 +219,40 @@ fn max_redirect(context: &RunContext, default_value: Count) -> Result<Count, Cli
             .and_then(|n| Count::try_from(n).map_err(|e| err_from(&e, HURL_MAX_REDIRS))),
         None => Ok(default_value),
     }
+}
+
+fn no_assert(context: &RunContext, default_value: bool) -> bool {
+    context.no_assert_env_var().unwrap_or(default_value)
+}
+
+fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
+    match (context.no_output_env_var(), context.test_env_var()) {
+        (Some(true), _) => OutputType::NoOutput,
+        (_, Some(true)) => OutputType::NoOutput,
+        _ => default_value,
+    }
+}
+
+fn parallel(context: &RunContext, default_value: bool) -> bool {
+    if let Some(true) = context.test_env_var() {
+        true
+    } else {
+        default_value
+    }
+}
+
+fn progress_bar(context: &RunContext, default_value: bool) -> bool {
+    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
+    if let Some(true) = context.test_env_var() {
+        if context.is_stderr_term() && !context.is_ci_env_var() {
+            return true;
+        }
+    }
+    default_value
+}
+
+fn test(context: &RunContext, default_value: bool) -> bool {
+    context.test_env_var().unwrap_or(default_value)
 }
 
 fn timeout(context: &RunContext, default_value: Duration) -> Result<Duration, CliOptionsError> {
@@ -292,11 +312,14 @@ pub fn parse_env_vars(
     let limit_rate = limit_rate(context, default_options.limit_rate)?;
     let max_filesize = max_filesize(context, default_options.max_filesize)?;
     let max_redirect = max_redirect(context, default_options.max_redirect)?;
+    let parallel = parallel(context, default_options.parallel);
+    let progress_bar = progress_bar(context, default_options.progress_bar);
     let secrets = secrets(context, default_options.secrets)?;
     let timeout = timeout(context, default_options.timeout)?;
     let user_agent = user_agent(context, default_options.user_agent);
     let variables = variables(context, default_options.variables)?;
     let verbosity = verbosity(context, default_options.verbosity)?;
+    let test = test(context, default_options.test);
 
     Ok(CliOptions {
         color_stdout,
@@ -317,7 +340,10 @@ pub fn parse_env_vars(
         max_redirect,
         no_assert,
         output_type,
+        parallel,
+        progress_bar,
         secrets,
+        test,
         timeout,
         user_agent,
         variables,
