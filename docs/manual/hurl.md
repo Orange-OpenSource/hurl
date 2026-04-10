@@ -413,6 +413,8 @@ This is a cli-only option.
 Do not prettify response output for supported content type (JSON only for the moment). By default, output is prettified if
 standard output is a terminal.
 
+Environment variables: HURL_NO_PRETTY
+
 This is a cli-only option.
 
 #### -o, --output <FILE> {#output}
@@ -422,6 +424,8 @@ Write output to FILE instead of stdout. Use '-' for stdout in [Options] sections
 #### --pretty {#pretty}
 
 Prettify response output for supported content type (JSON only for the moment). By default, JSON response is prettified if standard output is a terminal, and colorized, see[`--no-color`](#no-color) to format without color.
+
+Environment variables: HURL_PRETTY
 
 This is a cli-only option.
 

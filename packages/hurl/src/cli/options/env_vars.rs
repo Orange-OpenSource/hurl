@@ -20,6 +20,7 @@ use std::fmt;
 use std::str::FromStr;
 use std::time::Duration;
 
+use hurl::pretty::PrettyMode;
 use hurl::runner::Value;
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
@@ -245,6 +246,16 @@ fn parallel(context: &RunContext, default_value: bool) -> bool {
     }
 }
 
+fn pretty(context: &RunContext, default_value: PrettyMode) -> PrettyMode {
+    if let Some(true) = context.pretty_env_var() {
+        return PrettyMode::Force;
+    }
+    if let Some(true) = context.no_pretty_env_var() {
+        return PrettyMode::None;
+    }
+    default_value
+}
+
 fn progress_bar(context: &RunContext, default_value: bool) -> bool {
     // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
     if let Some(true) = context.test_env_var() {
@@ -318,6 +329,7 @@ pub fn parse_env_vars(
     let max_filesize = max_filesize(context, default_options.max_filesize)?;
     let max_redirect = max_redirect(context, default_options.max_redirect)?;
     let parallel = parallel(context, default_options.parallel);
+    let pretty = pretty(context, default_options.pretty);
     let progress_bar = progress_bar(context, default_options.progress_bar);
     let secrets = secrets(context, default_options.secrets)?;
     let timeout = timeout(context, default_options.timeout)?;
@@ -347,6 +359,7 @@ pub fn parse_env_vars(
         no_assert,
         output_type,
         parallel,
+        pretty,
         progress_bar,
         secrets,
         test,

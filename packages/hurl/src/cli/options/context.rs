@@ -70,6 +70,8 @@ pub const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
 pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
+pub const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
+pub const HURL_PRETTY: &str = "HURL_PRETTY";
 pub const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 pub const HURL_TEST: &str = "HURL_TEST";
 pub const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
@@ -252,6 +254,16 @@ impl RunContext {
     /// Returns the env var for ignoring asserts.
     pub fn no_assert_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_NO_ASSERT)
+    }
+
+    /// Returns the env var for disabling pretty output.
+    pub fn no_pretty_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_PRETTY)
+    }
+
+    /// Returns the env var for enabling pretty output.
+    pub fn pretty_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_PRETTY)
     }
 
     /// Returns the map of Hurl secrets injected by environment variables.
