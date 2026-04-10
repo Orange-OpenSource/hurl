@@ -536,11 +536,15 @@ times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.
 
 Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
 
+Environment variables: HURL_RETRY
+
 #### --retry-interval <MILLISECONDS> {#retry-interval}
 
 Duration in milliseconds between each retry. Default is 1000 ms.
 
 You can specify time units in the retry interval expression. Set Hurl to use a retry interval of 2 seconds with `--retry-interval 2s` or set it to 500 milliseconds with `--retry-interval 500ms`. No spaces allowed.
+
+Environment variables: HURL_RETRY_INTERVAL
 
 #### --secret <NAME=VALUE> {#secret}
 

@@ -5,5 +5,6 @@ value_parser: clap::value_parser!(i32)
 help: Maximum number of retries, 0 for no retries, -1 for unlimited retries
 help_heading: Run options
 allow_negative_numbers: true
+env_var: HURL_RETRY
 ---
 Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).

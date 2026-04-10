@@ -27,7 +27,7 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::{
     HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
     HURL_FOLLOW_LOCATION_TRUSTED, HURL_HEADER, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE,
-    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_VERBOSITY,
+    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_RETRY, HURL_RETRY_INTERVAL, HURL_VERBOSITY,
 };
 use super::variables::TypeKind;
 use super::{
@@ -266,6 +266,33 @@ fn progress_bar(context: &RunContext, default_value: bool) -> bool {
     default_value
 }
 
+fn retry(
+    context: &RunContext,
+    default_value: Option<Count>,
+) -> Result<Option<Count>, CliOptionsError> {
+    match context.retry_env_var() {
+        Some(retry) => retry
+            .parse::<i32>()
+            .map_err(|e| err_from(e, HURL_RETRY))
+            .and_then(|n| Count::try_from(n).map_err(|e| err_from(&e, HURL_RETRY)))
+            .map(Some),
+        None => Ok(default_value),
+    }
+}
+
+fn retry_interval(
+    context: &RunContext,
+    default_value: Duration,
+) -> Result<Duration, CliOptionsError> {
+    match context.retry_interval_env_var() {
+        Some(retry_interval) => {
+            duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
+                .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL))
+        }
+        None => Ok(default_value),
+    }
+}
+
 fn test(context: &RunContext, default_value: bool) -> bool {
     context.test_env_var().unwrap_or(default_value)
 }
@@ -331,6 +358,8 @@ pub fn parse_env_vars(
     let parallel = parallel(context, default_options.parallel);
     let pretty = pretty(context, default_options.pretty);
     let progress_bar = progress_bar(context, default_options.progress_bar);
+    let retry = retry(context, default_options.retry)?;
+    let retry_interval = retry_interval(context, default_options.retry_interval)?;
     let secrets = secrets(context, default_options.secrets)?;
     let timeout = timeout(context, default_options.timeout)?;
     let user_agent = user_agent(context, default_options.user_agent);
@@ -361,6 +390,8 @@ pub fn parse_env_vars(
         parallel,
         pretty,
         progress_bar,
+        retry,
+        retry_interval,
         secrets,
         test,
         timeout,

@@ -72,6 +72,8 @@ pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
 pub const HURL_PRETTY: &str = "HURL_PRETTY";
+pub const HURL_RETRY: &str = "HURL_RETRY";
+pub const HURL_RETRY_INTERVAL: &str = "HURL_RETRY_INTERVAL";
 pub const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 pub const HURL_TEST: &str = "HURL_TEST";
 pub const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
@@ -264,6 +266,18 @@ impl RunContext {
     /// Returns the env var for enabling pretty output.
     pub fn pretty_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_PRETTY)
+    }
+
+    /// Returns the env var for retry count.
+    pub fn retry_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_RETRY).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for retry interval duration.
+    pub fn retry_interval_env_var(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_RETRY_INTERVAL)
+            .map(|v| v.as_str())
     }
 
     /// Returns the map of Hurl secrets injected by environment variables.
