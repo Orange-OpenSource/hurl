@@ -285,10 +285,8 @@ fn retry_interval(
     default_value: Duration,
 ) -> Result<Duration, CliOptionsError> {
     match context.retry_interval_env_var() {
-        Some(retry_interval) => {
-            duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
-                .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL))
-        }
+        Some(retry_interval) => duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
+            .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL)),
         None => Ok(default_value),
     }
 }
