@@ -310,7 +310,7 @@ This is a cli-only option.
 
 Comma-separated list of hosts which do not use a proxy.
 
-Override value from Environment variable no_proxy.
+Environment variables: no_proxy
 
 #### --ntlm {#ntlm}
 

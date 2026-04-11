@@ -4,7 +4,6 @@ value: HOST(S)
 help: List of hosts which do not use proxy
 help_heading: HTTP options
 alias: noproxy
+env_var: no_proxy
 ---
 Comma-separated list of hosts which do not use a proxy.
-
-Override value from Environment variable no_proxy.
