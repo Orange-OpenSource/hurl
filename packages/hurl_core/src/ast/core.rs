@@ -21,7 +21,7 @@ use crate::types::{SourceString, ToSource};
 
 use super::option::EntryOption;
 use super::primitive::{
-    Bytes, KeyValue, LineTerminator, Placeholder, SourceInfo, Template, Whitespace, I64,
+    Bytes, I64, KeyValue, LineTerminator, Placeholder, SourceInfo, Template, Whitespace,
 };
 use super::section::{Assert, Capture, Cookie, MultipartParam, RegexValue, Section, SectionValue};
 

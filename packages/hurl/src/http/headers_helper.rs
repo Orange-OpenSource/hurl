@@ -18,7 +18,7 @@
 use encoding_rs::Encoding;
 
 use super::error::HttpError;
-use super::header::{HeaderVec, CONTENT_ENCODING, CONTENT_TYPE};
+use super::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderVec};
 use super::mimetype;
 use super::response_decoding::ContentEncoding;
 

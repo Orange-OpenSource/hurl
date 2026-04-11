@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
+use base64::prelude::BASE64_STANDARD;
 use hurl_core::ast::SourceInfo;
 
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
@@ -48,8 +48,8 @@ mod tests {
     use hurl_core::reader::Pos;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use crate::runner::filter::eval::eval_filter;
 
     #[test]
     fn eval_filter_base64_decode_ok() {

@@ -46,11 +46,12 @@ impl Selector {
 
 impl NameSelector {
     pub fn eval(&self, current_value: &serde_json::Value) -> Option<serde_json::Value> {
-        if let serde_json::Value::Object(key_values) = current_value {
-            if let Some(value) = key_values.get(self.value()) {
-                return Some(value.clone());
-            }
+        if let serde_json::Value::Object(key_values) = current_value
+            && let Some(value) = key_values.get(self.value())
+        {
+            return Some(value.clone());
         }
+
         None
     }
 }
@@ -177,11 +178,7 @@ fn filter(
 }
 
 fn normalize_index(i: i64, len: i64) -> i64 {
-    if i >= 0 {
-        i
-    } else {
-        len + i
-    }
+    if i >= 0 { i } else { len + i }
 }
 
 #[cfg(test)]
@@ -265,9 +262,11 @@ mod tests {
     fn test_array_slice_selector() {
         let current_value = json!(["a", "b", "c", "d", "e", "f", "g"]);
 
-        assert!(ArraySliceSelector::new(Some(1), Some(3), 0)
-            .eval(&current_value)
-            .is_empty(),);
+        assert!(
+            ArraySliceSelector::new(Some(1), Some(3), 0)
+                .eval(&current_value)
+                .is_empty(),
+        );
 
         let array_selector = ArraySliceSelector::new(Some(1), Some(3), 1);
         assert_eq!(array_selector.get_start(7), 1);

@@ -192,7 +192,7 @@ fn parse_cache_xml<'cache>(
                 query_source_info,
                 RunnerErrorKind::Http(e),
                 false,
-            ))
+            ));
         }
     };
     let format = if response.is_html() {
@@ -245,7 +245,7 @@ fn parse_cache_json<'cache>(
                 query_source_info,
                 RunnerErrorKind::Http(e),
                 false,
-            ))
+            ));
         }
     };
     let json = match serde_json::from_str(&text) {
@@ -279,7 +279,7 @@ fn eval_query_regex(
                 query_source_info,
                 RunnerErrorKind::Http(inner),
                 false,
-            ))
+            ));
         }
     };
     let re = match regex {
@@ -292,7 +292,7 @@ fn eval_query_regex(
                         t.source_info,
                         RunnerErrorKind::InvalidRegex,
                         false,
-                    ))
+                    ));
                 }
             }
         }
@@ -1505,14 +1505,16 @@ pub mod tests {
 
     #[test]
     fn test_query_certificate() {
-        assert!(eval_query_certificate(
-            &Response {
-                ..default_response()
-            },
-            CertificateAttributeName::Subject
-        )
-        .unwrap()
-        .is_none());
+        assert!(
+            eval_query_certificate(
+                &Response {
+                    ..default_response()
+                },
+                CertificateAttributeName::Subject
+            )
+            .unwrap()
+            .is_none()
+        );
 
         let subject = Some("A=B, C=D".to_string());
         let issuer = Some(String::new());

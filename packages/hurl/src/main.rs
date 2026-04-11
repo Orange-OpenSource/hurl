@@ -19,8 +19,8 @@ mod cli;
 mod run;
 
 use std::collections::HashSet;
-use std::io::prelude::*;
 use std::io::IsTerminal;
+use std::io::prelude::*;
 use std::path::Path;
 use std::process::ExitCode;
 use std::time::Instant;

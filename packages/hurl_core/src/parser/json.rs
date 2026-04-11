@@ -17,10 +17,10 @@
  */
 use super::placeholder;
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
-use crate::combinator::{choice, non_recover, ParseError as ParseErrorTrait};
+use crate::combinator::{ParseError as ParseErrorTrait, choice, non_recover};
 use crate::parser::primitives::{boolean, hex_digit, literal, try_literal};
 use crate::parser::template::EncodedString;
-use crate::parser::{templatize, JsonErrorVariant, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{JsonErrorVariant, ParseError, ParseErrorKind, ParseResult, templatize};
 use crate::reader::{Pos, Reader};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
@@ -40,11 +40,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
 
 /// Helper for parse, but already knowing that we are inside a JSON body.
 fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
-    if let Some(c) = reader.peek() {
-        if c == ',' {
-            let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
-            return Err(ParseError::new(reader.cursor().pos, false, kind));
-        }
+    if let Some(c) = reader.peek()
+        && c == ','
+    {
+        let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
+        return Err(ParseError::new(reader.cursor().pos, false, kind));
     }
     match parse(reader) {
         Ok(r) => Ok(r),

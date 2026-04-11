@@ -117,7 +117,7 @@ impl Output {
                             &filename,
                             &e.to_string(),
                             source_info,
-                        ))
+                        ));
                     }
                 };
                 match file.write_all(bytes) {

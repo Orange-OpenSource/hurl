@@ -17,8 +17,8 @@
  */
 use std::str::FromStr;
 
-use base64::engine::general_purpose;
 use base64::Engine;
+use base64::engine::general_purpose;
 
 use crate::runner::{Number, Value};
 use crate::util::redacted::Redact;

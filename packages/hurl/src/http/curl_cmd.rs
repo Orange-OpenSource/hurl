@@ -25,7 +25,7 @@ use crate::runner::Output;
 use crate::util::path::ContextDir;
 
 use super::cookie_store::CookieStore;
-use super::header::{Header, HeaderVec, CONTENT_TYPE};
+use super::header::{CONTENT_TYPE, Header, HeaderVec};
 use super::options::ClientOptions;
 use super::param::Param;
 use super::request::{CredentialForwarding, FollowLocation, IpResolve, RequestedHttpVersion};

@@ -26,7 +26,7 @@ pub use self::cookie_store::{Cookie, CookieStore};
 pub use self::curl_cmd::CurlCmd;
 pub(crate) use self::error::HttpError;
 pub use self::header::{
-    Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, USER_AGENT,
+    ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, Header, HeaderVec, USER_AGENT,
 };
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub(crate) use self::param::Param;

@@ -42,8 +42,8 @@ mod tests {
     use hurl_core::reader::Pos;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use crate::runner::filter::eval::eval_filter;
 
     #[test]
     fn eval_filter_count() {

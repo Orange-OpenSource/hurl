@@ -43,11 +43,7 @@ impl TestExpr {
                 logical_type_function.eval(current_value, root_value)
             }
         };
-        if self.not() {
-            !value
-        } else {
-            value
-        }
+        if self.not() { !value } else { value }
     }
 }
 

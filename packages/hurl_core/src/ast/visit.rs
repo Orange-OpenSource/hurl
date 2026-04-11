@@ -26,8 +26,8 @@ use crate::ast::{
     FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method,
     MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
     PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VerbosityOption, VersionValue, Whitespace, U64,
+    Section, SectionValue, StatusValue, Template, U64, VariableDefinition, VariableValue,
+    VerbosityOption, VersionValue, Whitespace,
 };
 use crate::types::{Count, DurationUnit, SourceString, ToSource};
 
@@ -819,8 +819,8 @@ pub fn walk_verbosity_option<V: Visitor>(visitor: &mut V, value: &VerbosityOptio
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::visit::Visitor;
     use crate::ast::Assert;
+    use crate::ast::visit::Visitor;
     use crate::parser;
 
     #[test]

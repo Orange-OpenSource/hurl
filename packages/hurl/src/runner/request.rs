@@ -17,15 +17,15 @@
  */
 use std::str::FromStr;
 
-use base64::engine::general_purpose;
 use base64::Engine;
+use base64::engine::general_purpose;
 use hurl_core::ast::Body as AstBody;
 use hurl_core::ast::Method as AstMethod;
 use hurl_core::ast::{Bytes, MultilineString, MultilineStringKind, Request, Template};
 
 use crate::http::{
-    Body, Header, HeaderVec, Method, Param, RequestCookie, RequestSpec, Url, UrlError,
-    AUTHORIZATION,
+    AUTHORIZATION, Body, Header, HeaderVec, Method, Param, RequestCookie, RequestSpec, Url,
+    UrlError,
 };
 use crate::util::path::ContextDir;
 
@@ -171,12 +171,12 @@ fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, Run
 /// Returns the string used to set a new cookie in the cookie store.
 pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
     for line_terminator in request.line_terminators.iter() {
-        if let Some(s) = &line_terminator.comment {
-            if s.value.contains("@cookie_storage_set:") {
-                let index = "#@cookie_storage_set:".to_string().len();
-                let value = &s.value[index..s.value.len()].to_string().trim().to_string();
-                return Some(value.to_string());
-            }
+        if let Some(s) = &line_terminator.comment
+            && s.value.contains("@cookie_storage_set:")
+        {
+            let index = "#@cookie_storage_set:".to_string().len();
+            let value = &s.value[index..s.value.len()].to_string().trim().to_string();
+            return Some(value.to_string());
         }
     }
     None
@@ -187,10 +187,10 @@ pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
 /// Returns `true` if the cookie storage should be cleared, `false` otherwise.
 pub fn get_cmd_cookie_storage_clear(request: &Request) -> bool {
     for line_terminator in request.line_terminators.iter() {
-        if let Some(s) = &line_terminator.comment {
-            if s.value.contains("@cookie_storage_clear") {
-                return true;
-            }
+        if let Some(s) = &line_terminator.comment
+            && s.value.contains("@cookie_storage_clear")
+        {
+            return true;
         }
     }
     false

@@ -21,20 +21,20 @@ use std::time::Duration;
 use chrono::{DateTime, Utc};
 
 use crate::http::Call;
+use crate::report::html::Testcase;
 use crate::report::html::timeline::nice::NiceScale;
 use crate::report::html::timeline::svg::Attribute::{
-    Class, Fill, Filter, FloodOpacity, FontFamily, FontSize, FontWeight, Height, Href, Id, Opacity,
-    StdDeviation, Stroke, StrokeWidth, TextDecoration, ViewBox, Width, DX, DY, X, Y,
+    Class, DX, DY, Fill, Filter, FloodOpacity, FontFamily, FontSize, FontWeight, Height, Href, Id,
+    Opacity, StdDeviation, Stroke, StrokeWidth, TextDecoration, ViewBox, Width, X, Y,
 };
-use crate::report::html::timeline::svg::{new_a, Element};
+use crate::report::html::timeline::svg::{Element, new_a};
 use crate::report::html::timeline::unit::{
     Byte, Interval, Microsecond, Millisecond, Pixel, Px, Scale, Second, TimeUnit,
 };
 use crate::report::html::timeline::util::{
     new_failure_icon, new_retry_icon, new_stripes, new_success_icon, trunc_str,
 };
-use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT, CALL_INSET};
-use crate::report::html::Testcase;
+use crate::report::html::timeline::{CALL_HEIGHT, CALL_INSET, CallContext, CallContextKind, svg};
 use crate::util::redacted::Redact;
 
 /// Returns the start and end date for these entries.

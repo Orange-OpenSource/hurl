@@ -68,11 +68,11 @@ impl StyledString {
 
     fn push_token(&mut self, token: Token) {
         // Concatenate content to last token if it has the same style
-        if let Some(last) = self.tokens.last_mut() {
-            if last.style == token.style {
-                last.content.push_str(&token.content);
-                return;
-            }
+        if let Some(last) = self.tokens.last_mut()
+            && last.style == token.style
+        {
+            last.content.push_str(&token.content);
+            return;
         }
         self.tokens.push(token);
     }

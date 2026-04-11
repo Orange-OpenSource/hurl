@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Float, Number, I64, U64};
+use crate::ast::{Float, I64, Number, U64};
 use crate::parser::primitives::try_literal;
 use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;

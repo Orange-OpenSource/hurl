@@ -295,10 +295,10 @@ fn build_progress(
             progress.push("\n");
 
             // We wrap the progress string with new lines if necessary
-            if let Some(max_width) = max_width {
-                if progress.len() >= max_width {
-                    progress = progress.wrap(max_width);
-                }
+            if let Some(max_width) = max_width
+                && progress.len() >= max_width
+            {
+                progress = progress.wrap(max_width);
             }
 
             let progress = progress.to_string(format);
@@ -330,7 +330,7 @@ fn progress_bar(current: Index, last: Index) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::{mpsc, Arc, Mutex};
+    use std::sync::{Arc, Mutex, mpsc};
 
     use crate::parallel::job::Job;
     use crate::parallel::progress::{build_progress, progress_bar};

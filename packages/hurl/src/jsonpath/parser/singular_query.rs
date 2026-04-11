@@ -20,11 +20,11 @@ use crate::jsonpath::ast::selector::{IndexSelector, NameSelector};
 use crate::jsonpath::ast::singular_query::{
     AbsoluteSingularQuery, RelativeSingularQuery, SingularQuery, SingularQuerySegment,
 };
+use crate::jsonpath::parser::ParseResult;
 use crate::jsonpath::parser::literal::number::try_integer;
 use crate::jsonpath::parser::primitives::match_str;
 use crate::jsonpath::parser::primitives::{expect_str, skip_whitespace};
 use crate::jsonpath::parser::selectors::try_name_selector;
-use crate::jsonpath::parser::ParseResult;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 

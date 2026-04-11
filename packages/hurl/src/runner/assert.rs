@@ -206,8 +206,8 @@ pub mod tests {
     use std::path::Path;
 
     use hurl_core::ast::{
-        Filter, FilterValue, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
-        PredicateValue, SourceInfo, Whitespace, I64,
+        Filter, FilterValue, I64, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
+        PredicateValue, SourceInfo, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;

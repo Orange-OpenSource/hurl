@@ -18,8 +18,8 @@
 
 use super::argument;
 use crate::jsonpath::ast::function::functions::{LogicalTypeFunction, ValueTypeFunction};
-use crate::jsonpath::parser::primitives::{expect_str, match_str, skip_whitespace};
 use crate::jsonpath::parser::ParseResult;
+use crate::jsonpath::parser::primitives::{expect_str, match_str, skip_whitespace};
 use hurl_core::reader::Reader;
 
 /// Try to parse a function return a ValueType

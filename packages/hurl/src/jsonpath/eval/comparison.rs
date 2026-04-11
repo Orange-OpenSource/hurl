@@ -139,228 +139,284 @@ mod tests {
           "arr": [2, 3]
         });
         // Empty nodelists
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("absent1")),
-            Comparable::SingularQuery(name_query("absent2")),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("absent1")),
+                Comparable::SingularQuery(name_query("absent2")),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // == implies <=
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("absent1")),
-            Comparable::SingularQuery(name_query("absent2")),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("absent1")),
+                Comparable::SingularQuery(name_query("absent2")),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Empty nodelist
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("absent")),
-            Comparable::Literal(Literal::String("g".to_string())),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("absent")),
+                Comparable::Literal(Literal::String("g".to_string())),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Empty nodelists
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("absent1")),
-            Comparable::SingularQuery(name_query("absent2")),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("absent1")),
+                Comparable::SingularQuery(name_query("absent2")),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Empty nodelist
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("absent")),
-            Comparable::Literal(Literal::String("g".to_string())),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("absent")),
+                Comparable::Literal(Literal::String("g".to_string())),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Numeric comparison
-        assert!(ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::Literal(Literal::Number(Number::Integer(2))),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::Literal(Literal::Number(Number::Integer(2))),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Numeric comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::Literal(Literal::Number(Number::Integer(2))),
-            ComparisonOp::Greater
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::Literal(Literal::Number(Number::Integer(2))),
+                ComparisonOp::Greater
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Type mismatch
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(13))),
-            Comparable::Literal(Literal::String("13".to_string())),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(13))),
+                Comparable::Literal(Literal::String("13".to_string())),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // String comparison
-        assert!(ComparisonExpr::new(
-            Comparable::Literal(Literal::String("a".to_string())),
-            Comparable::Literal(Literal::String("b".to_string())),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::Literal(Literal::String("a".to_string())),
+                Comparable::Literal(Literal::String("b".to_string())),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // String comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::String("a".to_string())),
-            Comparable::Literal(Literal::String("b".to_string())),
-            ComparisonOp::Greater
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::String("a".to_string())),
+                Comparable::Literal(Literal::String("b".to_string())),
+                ComparisonOp::Greater
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Type mismatch
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Type mismatch
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Object comparison
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("obj")),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("obj")),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Object comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("obj")),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("obj")),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Array comparison
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("arr")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("arr")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Array comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("arr")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("arr")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Type mismatch
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::Literal(Literal::Number(Number::Integer(17))),
-            ComparisonOp::Equal
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::Literal(Literal::Number(Number::Integer(17))),
+                ComparisonOp::Equal
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Type mismatch
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::Literal(Literal::Number(Number::Integer(17))),
-            ComparisonOp::NotEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::Literal(Literal::Number(Number::Integer(17))),
+                ComparisonOp::NotEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Objects and arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Objects and arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::Less
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::Less
+            )
+            .eval(current_value, &root_value)
+        );
 
         // == implies <=
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("obj")),
-            Comparable::SingularQuery(name_query("obj")),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("obj")),
+                Comparable::SingularQuery(name_query("obj")),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // == implies <=
-        assert!(ComparisonExpr::new(
-            Comparable::SingularQuery(name_query("arr")),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::SingularQuery(name_query("arr")),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::GreaterOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::GreaterOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::Greater
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::Greater
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Arrays do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Number(Number::Integer(1))),
-            Comparable::SingularQuery(name_query("arr")),
-            ComparisonOp::Less
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Number(Number::Integer(1))),
+                Comparable::SingularQuery(name_query("arr")),
+                ComparisonOp::Less
+            )
+            .eval(current_value, &root_value)
+        );
 
         // == implies <=
-        assert!(ComparisonExpr::new(
-            Comparable::Literal(Literal::Bool(true)),
-            Comparable::Literal(Literal::Bool(true)),
-            ComparisonOp::LessOrEqual
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            ComparisonExpr::new(
+                Comparable::Literal(Literal::Bool(true)),
+                Comparable::Literal(Literal::Bool(true)),
+                ComparisonOp::LessOrEqual
+            )
+            .eval(current_value, &root_value)
+        );
 
         // Booleans do not offer < comparison
-        assert!(!ComparisonExpr::new(
-            Comparable::Literal(Literal::Bool(true)),
-            Comparable::Literal(Literal::Bool(true)),
-            ComparisonOp::Greater
-        )
-        .eval(current_value, &root_value));
+        assert!(
+            !ComparisonExpr::new(
+                Comparable::Literal(Literal::Bool(true)),
+                Comparable::Literal(Literal::Bool(true)),
+                ComparisonOp::Greater
+            )
+            .eval(current_value, &root_value)
+        );
     }
 
     #[test]

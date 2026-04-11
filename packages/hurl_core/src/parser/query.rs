@@ -16,7 +16,7 @@
  *
  */
 use crate::ast::{CertificateAttributeName, Query, QueryValue, RegexValue, SourceInfo};
-use crate::combinator::{choice, ParseError as ParseErrorTrait};
+use crate::combinator::{ParseError as ParseErrorTrait, choice};
 use crate::parser::cookiepath::cookiepath;
 use crate::parser::primitives::{literal, one_or_more_spaces, regex, try_literal};
 use crate::parser::string::{quoted_oneline_string, quoted_template};
@@ -355,7 +355,9 @@ mod tests {
             },
         );
 
-        let mut reader = Reader::new("xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"");
+        let mut reader = Reader::new(
+            "xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"",
+        );
         assert_eq!(xpath_query(&mut reader).unwrap(), QueryValue::Xpath {
             space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)) },
             expr: Template::new(

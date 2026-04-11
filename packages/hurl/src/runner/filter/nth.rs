@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::{IntegerValue, Placeholder, SourceInfo};
 
-use crate::runner::{expr, Number, RunnerError, RunnerErrorKind, Value, VariableSet};
+use crate::runner::{Number, RunnerError, RunnerErrorKind, Value, VariableSet, expr};
 
 /// Returns the element from a collection `value` at a zero-based index.
 pub fn eval_nth(
@@ -78,7 +78,7 @@ fn eval_integer_value(n: &IntegerValue, variables: &VariableSet) -> Result<i64, 
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Filter, FilterValue, IntegerValue, SourceInfo, Whitespace, I64};
+    use hurl_core::ast::{Filter, FilterValue, I64, IntegerValue, SourceInfo, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 

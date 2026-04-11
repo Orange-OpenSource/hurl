@@ -314,11 +314,7 @@ impl RunContext {
             // According to the NO_COLOR spec, any presence of the variable should disable color, but to
             // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
             // least not empty.
-            if !v.is_empty() {
-                Some(true)
-            } else {
-                None
-            }
+            if !v.is_empty() { Some(true) } else { None }
         } else {
             self.get_env_var_bool(HURL_NO_COLOR)
         }

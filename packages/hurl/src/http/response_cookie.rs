@@ -134,12 +134,11 @@ impl ResponseCookie {
     /// Converts a cookie attribute value named `name` into an integer.
     fn attr_as_i64(&self, name: &str) -> Option<i64> {
         for attr in &self.attributes {
-            if attr.name.to_lowercase() == name.to_lowercase() {
-                if let Some(v) = &attr.value {
-                    if let Ok(v2) = v.as_str().parse::<i64>() {
-                        return Some(v2);
-                    }
-                }
+            if attr.name.to_lowercase() == name.to_lowercase()
+                && let Some(v) = &attr.value
+                && let Ok(v2) = v.as_str().parse::<i64>()
+            {
+                return Some(v2);
             }
         }
         None

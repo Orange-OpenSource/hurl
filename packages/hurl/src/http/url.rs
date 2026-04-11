@@ -213,7 +213,7 @@ impl From<UrlError> for HttpError {
 mod tests {
     use std::str::FromStr;
 
-    use super::{try_scheme, Url, UrlError};
+    use super::{Url, UrlError, try_scheme};
     use crate::http::Param;
 
     #[test]
@@ -224,7 +224,7 @@ mod tests {
             "http://localhost:8000/cookies",
             "http://localhost",
             "https://localhost:8000",
-            "http://localhost:8000/path-as-is/../resource"
+            "http://localhost:8000/path-as-is/../resource",
         ];
         for url in urls {
             assert!(Url::from_str(url).is_ok());

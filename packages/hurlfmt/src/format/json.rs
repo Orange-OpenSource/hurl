@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use base64::engine::general_purpose;
 use base64::Engine;
+use base64::engine::general_purpose;
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CountOption, Duration, DurationOption, Entry, EntryOption, File, FilenameParam, Filter,
@@ -739,8 +739,8 @@ impl ToJson for NaturalOption {
 #[cfg(test)]
 pub mod tests {
     use hurl_core::ast::{
-        LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
-        TemplateElement, Version, Whitespace, I64,
+        I64, LineTerminator, Method, Number, PredicateFunc, SourceInfo, Status, Template,
+        TemplateElement, Version, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;

@@ -496,6 +496,9 @@ mod tests {
                 "#HttpOnly_example.com\t\t   FALSE\t\t  \t/\tFALSE\t1\tcookie2\tfoo bar baz",
             )
             .unwrap();
-        assert_eq!(cookie_store.to_netscape(), "localhost\tTRUE\t/\tFALSE\t0\tcookie1\tvalueA\n#HttpOnly_example.com\tFALSE\t/\tFALSE\t1\tcookie2\tfoo bar baz\n");
+        assert_eq!(
+            cookie_store.to_netscape(),
+            "localhost\tTRUE\t/\tFALSE\t0\tcookie1\tvalueA\n#HttpOnly_example.com\tFALSE\t/\tFALSE\t1\tcookie2\tfoo bar baz\n"
+        );
     }
 }

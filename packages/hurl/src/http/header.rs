@@ -155,8 +155,8 @@ impl<'a> Extend<&'a Header> for HeaderVec {
 
 #[cfg(test)]
 mod tests {
-    use crate::http::header::HeaderVec;
     use crate::http::Header;
+    use crate::http::header::HeaderVec;
 
     #[test]
     fn test_simple_header_map() {

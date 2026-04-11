@@ -19,11 +19,11 @@
 use crate::jsonpath::ast::comparison::Comparable;
 use crate::jsonpath::ast::comparison::ComparisonExpr;
 use crate::jsonpath::ast::comparison::ComparisonOp;
+use crate::jsonpath::parser::ParseResult;
 use crate::jsonpath::parser::function::functions::try_value_type_function;
 use crate::jsonpath::parser::literal;
 use crate::jsonpath::parser::primitives::{match_str, skip_whitespace};
 use crate::jsonpath::parser::singular_query::try_parse as try_singular_query;
-use crate::jsonpath::parser::ParseResult;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind};
 
 use hurl_core::reader::Reader;

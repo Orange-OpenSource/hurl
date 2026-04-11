@@ -19,8 +19,8 @@
 use regex::Regex;
 use serde_json::Value;
 
-use crate::jsonpath::ast::function::functions::{LogicalTypeFunction, ValueTypeFunction};
 use crate::jsonpath::ast::function::LogicalType;
+use crate::jsonpath::ast::function::functions::{LogicalTypeFunction, ValueTypeFunction};
 
 impl ValueTypeFunction {
     pub fn eval(

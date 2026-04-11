@@ -21,8 +21,8 @@ use std::process;
 
 use hurl_core::input::{Input, InputKind};
 use hurl_core::text;
-use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::cli::Logger;
+use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
 use hurlfmt::command::check::CheckError;
 use hurlfmt::command::export::ExportError;
 use hurlfmt::command::format::FormatError;

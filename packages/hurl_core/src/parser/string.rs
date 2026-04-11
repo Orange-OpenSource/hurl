@@ -18,7 +18,7 @@
 use crate::ast::{SourceInfo, Template};
 use crate::combinator::one_or_more;
 use crate::parser::primitives::{hex_digit, literal, try_literal};
-use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, template};
 use crate::reader::Reader;
 
 /// Steps:
@@ -217,7 +217,7 @@ pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
                 reader.cursor().pos,
                 false,
                 ParseErrorKind::Unicode,
-            ))
+            ));
         }
         Some(c) => c,
     };

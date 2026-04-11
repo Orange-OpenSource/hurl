@@ -51,10 +51,10 @@ pub fn libcurl_version_info() -> CurlVersionInfo {
     if let Some(s) = version.libidn_version() {
         libraries.push(format!("libidn2/{s}"));
     }
-    if let Some(s) = version.iconv_version_num() {
-        if s != 0 {
-            libraries.push(format!("iconv/{s}"));
-        }
+    if let Some(s) = version.iconv_version_num()
+        && s != 0
+    {
+        libraries.push(format!("iconv/{s}"));
     }
     if let Some(s) = version.libssh_version() {
         libraries.push(s.to_string());

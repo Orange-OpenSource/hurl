@@ -41,8 +41,8 @@ use hurl::util::path::ContextDir;
 use hurl_core::input::{Input, InputKind};
 use hurl_core::types::{BytesPerSec, Count};
 
-pub use crate::cli::options::context::RunContext;
 use crate::cli::CliError;
+pub use crate::cli::options::context::RunContext;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
 

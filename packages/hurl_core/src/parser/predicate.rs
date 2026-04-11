@@ -340,7 +340,7 @@ fn is_object_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
 mod tests {
     use super::*;
     use crate::ast::{
-        Expr, ExprKind, Float, Number, Placeholder, Template, TemplateElement, Variable, I64,
+        Expr, ExprKind, Float, I64, Number, Placeholder, Template, TemplateElement, Variable,
     };
     use crate::reader::Pos;
     use crate::types::ToSource;

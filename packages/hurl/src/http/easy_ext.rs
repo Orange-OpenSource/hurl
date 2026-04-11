@@ -19,9 +19,9 @@ use std::ffi::{CStr, CString};
 use std::ptr;
 use std::time::Duration;
 
-use curl::easy::Easy;
 use curl::Error;
-use curl_sys::{curl_certinfo, curl_off_t, curl_slist, CURLINFO, CURLOPT_NETRC_FILE};
+use curl::easy::Easy;
+use curl_sys::{CURLINFO, CURLOPT_NETRC_FILE, curl_certinfo, curl_off_t, curl_slist};
 
 /// Some definitions not present in curl-sys
 const CURLINFO_OFF_T: CURLINFO = 0x600000;

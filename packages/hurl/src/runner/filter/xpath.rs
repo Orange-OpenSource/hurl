@@ -75,8 +75,8 @@ mod tests {
     use hurl_core::types::ToSource;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use crate::runner::filter::eval::eval_filter;
 
     /// Helper function to return a new filter given a `expr`
     fn new_xpath_filter(expr: &str) -> Filter {

@@ -22,7 +22,7 @@ use crate::ast::{
 use crate::combinator::{choice, optional, zero_or_more};
 use crate::parser::json::object_value;
 use crate::parser::primitives::{literal, newline, try_literal, zero_or_more_spaces};
-use crate::parser::{template, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, template};
 use crate::reader::Reader;
 use crate::typing::ToSource;
 
@@ -309,7 +309,7 @@ fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
                 start.pos,
                 false,
                 ParseErrorKind::GraphQlVariables,
-            ))
+            ));
         }
     };
     let whitespace = zero_or_more_whitespaces(reader)?;

@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-use super::error::OutputErrorKind;
 use super::OutputError;
+use super::error::OutputErrorKind;
 use crate::pretty;
-use crate::pretty::json::Color;
 use crate::pretty::PrettyMode;
+use crate::pretty::json::Color;
 use crate::runner::{HurlResult, Output};
 use crate::util::term::Stdout;
 use std::cmp::min;
