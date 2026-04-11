@@ -87,6 +87,7 @@ Output options:
       --curl <FILE>            Export each request to a list of curl commands
       --error-format <FORMAT>  Control the format of error messages [default: short] [possible
                                values: short, long]
+      --fail-with-body         Output body response if there are any errors
   -i, --include                Include the HTTP headers in the output
       --json                   Output each Hurl file result to JSON
       --no-color               Do not colorize output

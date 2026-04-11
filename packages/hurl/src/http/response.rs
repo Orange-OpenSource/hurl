@@ -62,6 +62,11 @@ impl Response {
             ip_addr,
         }
     }
+
+    /// Returns `true` if this response body ends with a trailing newline.
+    pub fn has_trailing_newline(&self) -> bool {
+        self.body.ends_with(b"\n")
+    }
 }
 
 /// Represents the HTTP version of a HTTP transaction.
@@ -107,5 +112,42 @@ mod tests {
         };
         assert_eq!(response.headers.values("Content-Length"), vec!["12"]);
         assert!(response.headers.values("Unknown").is_empty());
+    }
+
+    fn default_response(body: Vec<u8>) -> Response {
+        Response {
+            version: HttpVersion::Http10,
+            status: 200,
+            headers: HeaderVec::new(),
+            body,
+            duration: Default::default(),
+            url: "http://localhost".parse().unwrap(),
+            certificate: None,
+            ip_addr: Default::default(),
+        }
+    }
+
+    #[test]
+    fn has_trailing_newline_with_empty_body() {
+        let response = default_response(vec![]);
+        assert!(!response.has_trailing_newline());
+    }
+
+    #[test]
+    fn has_trailing_newline_with_newline() {
+        let response = default_response(b"Hello World!\n".to_vec());
+        assert!(response.has_trailing_newline());
+    }
+
+    #[test]
+    fn has_trailing_newline_without_newline() {
+        let response = default_response(b"Hello World!".to_vec());
+        assert!(!response.has_trailing_newline());
+    }
+
+    #[test]
+    fn has_trailing_newline_with_only_newline() {
+        let response = default_response(b"\n".to_vec());
+        assert!(response.has_trailing_newline());
     }
 }

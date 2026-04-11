@@ -1,4 +1,4 @@
-.TH hurl 1 "29 Apr 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "14 May 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -375,6 +375,12 @@ This is a cli-only option.
 Control the format of error message (short by default or long).  When using long, the response body is logged when there are errors.
 
 Environment variables: HURL_ERROR_FORMAT
+
+This is a cli-only option.
+
+.IP "--fail-with-body "
+
+Output body response on standard output if there are any errors. By default, Hurl outputs the last body response on standard output only when a run is successful.
 
 This is a cli-only option.
 

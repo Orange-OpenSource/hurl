@@ -393,6 +393,12 @@ Environment variables: HURL_ERROR_FORMAT
 
 This is a cli-only option.
 
+#### --fail-with-body {#fail-with-body}
+
+Output body response on standard output if there are any errors. By default, Hurl outputs the last body response on standard output only when a run is successful.
+
+This is a cli-only option.
+
 #### -i, --include {#include}
 
 Include the HTTP headers in the output

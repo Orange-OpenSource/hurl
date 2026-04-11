@@ -359,13 +359,21 @@ fn run_request(
             logger.debug("");
         }
 
-        // We log eventual errors, only if we're not retrying the current entry...
         // The retry does not take into account a possible output Error
         let retry = options.retry.is_some() && !retry_max_reached && has_error;
 
-        // When --output is overridden on a request level, we output the HTTP response only if the
-        // call has succeeded. Output errors are not taken into account for retrying requests.
-        if !has_error && let Some(output) = &options.output {
+        // Response body can be outputted when:
+        // 1. --output is overridden on a request level and there is no error,
+        // 2. --fail-with-body is set, there are errors and we're not retrying.
+        // Note: output write errors are not taken into account for retrying requests.
+        let should_output = if !has_error {
+            options.output.as_ref()
+        } else if options.fail_with_body && !retry {
+            Some(options.output.as_ref().unwrap_or(&Output::Stdout))
+        } else {
+            None
+        };
+        if let Some(output) = should_output {
             write_entry_response(
                 entry,
                 &mut result,
@@ -376,7 +384,17 @@ fn run_request(
                 stdout,
                 logger,
             );
-        } else if has_error {
+        }
+
+        // We log eventual errors. If we're retrying, errors logs are just informative debug logs;
+        // if we're not retrying, errors are logs as failed errors.
+        if has_error {
+            // We ensure that errors messages start on newlines if output is write on stdout.
+            if matches!(should_output, Some(Output::Stdout))
+                && !result.has_response_trailing_newline()
+            {
+                stdout.write_all(b"\n").unwrap();
+            }
             log_errors(&result, content, filename, retry, logger);
         }
 
