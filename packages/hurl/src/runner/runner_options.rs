@@ -39,6 +39,7 @@ pub struct RunnerOptionsBuilder {
     cookie_input_file: Option<String>,
     delay: Duration,
     digest: bool,
+    fail_with_body: bool,
     follow_location: FollowLocation,
     from_entry: Option<usize>,
     headers: HeaderVec,
@@ -90,6 +91,7 @@ impl Default for RunnerOptionsBuilder {
             cookie_input_file: None,
             delay: Duration::from_millis(0),
             digest: false,
+            fail_with_body: false,
             follow_location: FollowLocation::default(),
             from_entry: None,
             headers: HeaderVec::new(),
@@ -230,6 +232,14 @@ impl RunnerOptionsBuilder {
     /// not affect the behavior with multiple input Hurl files.
     pub fn fail_fast(&mut self, fail_fast: bool) -> &mut Self {
         self.continue_on_error = !fail_fast;
+        self
+    }
+
+    /// Output body response on standard output if there are any error.
+    ///
+    /// By default, Hurl outputs the last body response on standard output only when a run is successful.
+    pub fn fail_with_body(&mut self, fail_with_body: bool) -> &mut Self {
+        self.fail_with_body = fail_with_body;
         self
     }
 
@@ -461,6 +471,7 @@ impl RunnerOptionsBuilder {
             continue_on_error: self.continue_on_error,
             cookie_input_file: self.cookie_input_file.clone(),
             digest: self.digest,
+            fail_with_body: self.fail_with_body,
             follow_location: self.follow_location,
             from_entry: self.from_entry,
             headers: self.headers.clone(),
@@ -531,6 +542,8 @@ pub struct RunnerOptions {
     pub(crate) cookie_input_file: Option<String>,
     /// Enables HTTP Digest authentication.
     pub(crate) digest: bool,
+    /// Outputs response body on standard output if there are any run errors.
+    pub(crate) fail_with_body: bool,
     /// Sets follow redirect.
     pub(crate) follow_location: FollowLocation,
     /// Executes Hurl file from from_entry (starting at 1), ignores the beginning of the file.

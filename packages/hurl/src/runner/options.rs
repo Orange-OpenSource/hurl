@@ -44,7 +44,7 @@ pub fn get_entry_options(
 ) -> Result<RunnerOptions, RunnerError> {
     let runner_options = runner_options.clone();
     // When used globally (on the command line), `--output` writes the last successful request
-    // to `output` file. We don't want to output every entry's response, so we initialise
+    // to `output` file. We don't want to output every entry's response, so we initialize
     // output to `None`.
     let mut entry_options = RunnerOptions {
         output: None,

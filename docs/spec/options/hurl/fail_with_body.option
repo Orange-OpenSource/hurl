@@ -1,0 +1,6 @@
+name: fail_with_body
+long: fail-with-body
+help: Output body response if there are any error
+help_heading: Output options
+---
+Output body response on standard output if there are any error. By default, Hurl outputs the last body response on standard output only when a run is successful.

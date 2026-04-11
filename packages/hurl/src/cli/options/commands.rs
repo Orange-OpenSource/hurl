@@ -163,6 +163,14 @@ pub fn error_format() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn fail_with_body() -> clap::Arg {
+    clap::Arg::new("fail_with_body")
+        .long("fail-with-body")
+        .help("Output body response if there are any error")
+        .help_heading("Output options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn file_root() -> clap::Arg {
     clap::Arg::new("file_root")
         .long("file-root")

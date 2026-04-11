@@ -94,6 +94,7 @@ pub fn parse_cli_args(
         .arg(commands::color())
         .arg(commands::curl())
         .arg(commands::error_format())
+        .arg(commands::fail_with_body())
         .arg(commands::include())
         .arg(commands::json())
         .arg(commands::no_color())
@@ -189,6 +190,7 @@ fn parse_arg_matches(
     let delay = delay(arg_matches, default_options.delay)?;
     let digest = digest(arg_matches, default_options.digest);
     let error_format = error_format(arg_matches, default_options.error_format)?;
+    let fail_with_body = fail_with_body(arg_matches, default_options.fail_with_body);
     let file_root = file_root(arg_matches, default_options.file_root);
     let follow_location = follow_location(arg_matches, default_options.follow_location);
     let follow_location_trusted =
@@ -256,6 +258,7 @@ fn parse_arg_matches(
         delay,
         digest,
         error_format,
+        fail_with_body,
         file_root,
         follow_location,
         follow_location_trusted,
@@ -444,6 +447,14 @@ fn error_format(
     match get::<String>(arg_matches, "error_format") {
         Some(value) => ErrorFormat::from_str(&value),
         None => Ok(default_value),
+    }
+}
+
+fn fail_with_body(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "fail_with_body") {
+        true
+    } else {
+        default_value
     }
 }
 

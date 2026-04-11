@@ -29,12 +29,12 @@ use crate::http::{Call, Client, CredentialForwarding, FollowLocation};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions};
 use crate::util::term::{Stderr, Stdout, WriteMode};
 
-use super::entry;
 use super::event::EventListener;
 use super::options;
 use super::result::{EntryResult, HurlResult};
 use super::runner_options::RunnerOptions;
 use super::variable::VariableSet;
+use super::{Output, entry};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -363,9 +363,18 @@ fn run_request(
         // The retry does not take into account a possible output Error
         let retry = options.retry.is_some() && !retry_max_reached && has_error;
 
-        // When --output is overridden on a request level, we output the HTTP response only if the
-        // call has succeeded. Output errors are not taken into account for retrying requests.
-        if !has_error && let Some(output) = &options.output {
+        // Response body can output for a request when:
+        // 1. --output is overridden on a request level and there is no error
+        // 2. --fail-with-body is set and there are errors.
+        // Output write errors are not taken into account for retrying requests.
+        let should_output = if !has_error {
+            options.output.as_ref()
+        } else if options.fail_with_body {
+            Some(options.output.as_ref().unwrap_or(&Output::Stdout))
+        } else {
+            None
+        };
+        if let Some(output) = should_output {
             let source_info = get_output_source_info(entry);
             if let Err(error) =
                 result.write_response(output, &options.context_dir, stdout, source_info)

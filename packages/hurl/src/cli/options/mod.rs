@@ -65,6 +65,7 @@ pub struct CliOptions {
     pub delay: Duration,
     pub digest: bool,
     pub error_format: ErrorFormat,
+    pub fail_with_body: bool,
     pub file_root: Option<String>,
     pub follow_location: bool,
     pub follow_location_trusted: bool,
@@ -261,6 +262,7 @@ impl Default for CliOptions {
             delay: Duration::from_millis(0),
             digest: false,
             error_format: ErrorFormat::Short,
+            fail_with_body: false,
             file_root: None,
             follow_location: false,
             follow_location_trusted: false,
@@ -339,6 +341,7 @@ impl CliOptions {
         let cookie_input_file = self.cookie_input_file.clone();
         let delay = self.delay;
         let digest = self.digest;
+        let fail_with_body = self.fail_with_body;
         let follow_location = self.follow_location;
         let follow_location_trusted = self.follow_location_trusted;
         let follow_location = match (follow_location, follow_location_trusted) {
@@ -413,6 +416,7 @@ impl CliOptions {
             .continue_on_error(continue_on_error)
             .context_dir(&context_dir)
             .cookie_input_file(cookie_input_file)
+            .fail_with_body(fail_with_body)
             .follow_location(follow_location)
             .from_entry(from_entry)
             .headers(headers)
