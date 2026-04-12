@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use base64::engine::general_purpose;</pre>
+                <pre class="has-background-white py-0 px-2">use base64::Engine;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use base64::Engine;</pre>
+                <pre class="has-background-white py-0 px-2">use base64::engine::general_purpose;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use curl::{easy, Error, Version};</pre>
+                <pre class="has-background-white py-0 px-2">use curl::{Error, Version, easy};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -645,7 +645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, LOCATION,</pre>
+                <pre class="has-background-white py-0 px-2">    ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, Header, HeaderVec, LOCATION,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if let Count::Finite(max_redirect) = options.max_redirect {</pre>
+                <pre class="has-background-success-light py-0 px-2">            if let Count::Finite(max_redirect) = options.max_redirect</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1984,12 +1984,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="405">
-                405
+                role="cell" aria-label="390">
+                390
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                if redirect_count &gt; max_redirect {</pre>
+                <pre class="has-background-success-light py-0 px-2">                &amp;&amp; redirect_count &gt; max_redirect</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1999,13 +1999,13 @@
                 <a href="#123">123</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    return Err(HttpError::TooManyRedirect);</pre>
+                <pre class="has-background-white py-0 px-2">            {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2015,13 +2015,13 @@
                 <a href="#124">124</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="42">
+                42
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-success-light py-0 px-2">                return Err(HttpError::TooManyRedirect);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2032,8 +2032,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="660">
-                660
+                role="cell" aria-label="1023">
+                1023
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3456,8 +3456,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="559273">
-                559273
+                role="cell" aria-label="565357">
+                565357
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3504,8 +3504,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3552,8 +3552,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="28914">
-                28914
+                role="cell" aria-label="28932">
+                28932
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3568,8 +3568,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="28914">
-                28914
+                role="cell" aria-label="28932">
+                28932
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3584,8 +3584,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="28914">
-                28914
+                role="cell" aria-label="28932">
+                28932
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3664,8 +3664,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3856,8 +3856,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4256,8 +4256,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="481533">
-                481533
+                role="cell" aria-label="487611">
+                487611
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4272,8 +4272,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="556299">
-                556299
+                role="cell" aria-label="562383">
+                562383
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4464,8 +4464,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="361648">
-                361648
+                role="cell" aria-label="367960">
+                367960
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4480,8 +4480,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="358674">
-                358674
+                role="cell" aria-label="364986">
+                364986
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4496,8 +4496,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="358674">
-                358674
+                role="cell" aria-label="364986">
+                364986
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4512,8 +4512,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="358674">
-                358674
+                role="cell" aria-label="364986">
+                364986
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(max_filesize) = options.max_filesize {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(max_filesize) = options.max_filesize</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4837,7 +4837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if response_body.len() as u64 &gt; max_filesize {</pre>
+                <pre class="has-background-success-light py-0 px-2">            &amp;&amp; response_body.len() as u64 &gt; max_filesize</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4847,13 +4847,13 @@
                 <a href="#301">301</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                return Err(HttpError::AllowedResponseSizeExceeded(max_filesize));</pre>
+                <pre class="has-background-white py-0 px-2">        {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4863,13 +4863,13 @@
                 <a href="#302">302</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(HttpError::AllowedResponseSizeExceeded(max_filesize));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8341,7 +8341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(aws_sigv4) = &amp;options.aws_sigv4 {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(aws_sigv4) = &amp;options.aws_sigv4</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8357,7 +8357,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {</pre>
+                <pre class="has-background-success-light py-0 px-2">            &amp;&amp; let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8367,13 +8367,13 @@
                 <a href="#521">521</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                return match e.code() {</pre>
+                <pre class="has-background-white py-0 px-2">        {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8389,7 +8389,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    curl_sys::CURLE_UNKNOWN_OPTION =&gt; Err(HttpError::LibcurlUnknownOption {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            return match e.code() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8405,7 +8405,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        option: &quot;aws-sigv4&quot;.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                curl_sys::CURLE_UNKNOWN_OPTION =&gt; Err(HttpError::LibcurlUnknownOption {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8421,7 +8421,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        minimum_version: &quot;7.75.0&quot;.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    option: &quot;aws-sigv4&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8437,7 +8437,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    }),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    minimum_version: &quot;7.75.0&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8453,7 +8453,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    _ =&gt; Err(e.into()),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                }),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8463,13 +8463,13 @@
                 <a href="#527">527</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                };</pre>
+                <pre class="has-background-danger-light py-0 px-2">                _ =&gt; Err(e.into()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8485,7 +8485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14400,8 +14400,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="90111">
-                90111
+                role="cell" aria-label="90129">
+                90129
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14416,8 +14416,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="90111">
-                90111
+                role="cell" aria-label="90129">
+                90129
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14432,8 +14432,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="81252">
-                81252
+                role="cell" aria-label="81270">
+                81270
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14448,8 +14448,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="81252">
-                81252
+                role="cell" aria-label="81270">
+                81270
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14464,8 +14464,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="81252">
-                81252
+                role="cell" aria-label="81270">
+                81270
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14832,8 +14832,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14848,8 +14848,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14864,8 +14864,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14880,8 +14880,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14896,8 +14896,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14944,8 +14944,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="916104">
-                916104
+                role="cell" aria-label="916626">
+                916626
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14960,8 +14960,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="907221">
-                907221
+                role="cell" aria-label="907737">
+                907737
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14976,8 +14976,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="46680">
-                46680
+                role="cell" aria-label="46710">
+                46710
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -14992,8 +14992,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="46680">
-                46680
+                role="cell" aria-label="46710">
+                46710
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15024,8 +15024,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="46680">
-                46680
+                role="cell" aria-label="46710">
+                46710
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15040,8 +15040,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="46680">
-                46680
+                role="cell" aria-label="46710">
+                46710
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15056,8 +15056,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="860541">
-                860541
+                role="cell" aria-label="861027">
+                861027
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15072,8 +15072,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="860541">
-                860541
+                role="cell" aria-label="861027">
+                861027
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -15120,8 +15120,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8883">
-                8883
+                role="cell" aria-label="8889">
+                8889
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -20172,7 +20172,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-04-12 11:32</p>
+                    <p class="heading">Date: 2026-04-12 20:06</p>
                 </div>
             
         </footer>
