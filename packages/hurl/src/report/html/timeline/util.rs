@@ -61,17 +61,35 @@ pub fn new_stripes(
 
 /// Returns the SVG success icon identified by `id`.
 pub fn new_success_icon(id: &str) -> Element {
-    new_icon(id, 512.px(), 512.px(), "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z", "#10bb00")
+    new_icon(
+        id,
+        512.px(),
+        512.px(),
+        "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z",
+        "#10bb00",
+    )
 }
 
 /// Returns the SVG failure icon identified by `id`.
 pub fn new_failure_icon(id: &str) -> Element {
-    new_icon(id, 512.px(), 512.px(), "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z", "red")
+    new_icon(
+        id,
+        512.px(),
+        512.px(),
+        "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z",
+        "red",
+    )
 }
 
 /// Returns the SVG retry icon identified by id.
 pub fn new_retry_icon(id: &str) -> Element {
-    new_icon(id, 512.px(), 512.px(), "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z", "gold")
+    new_icon(
+        id,
+        512.px(),
+        512.px(),
+        "M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z",
+        "gold",
+    )
 }
 
 /// Returns a SVG icon identified by `id`, with a `width` pixel by `height` pixel size, `path` and `color`.

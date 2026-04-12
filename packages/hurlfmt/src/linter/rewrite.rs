@@ -18,11 +18,11 @@
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CookiePath, CountOption, Duration, DurationOption, Entry, EntryOption, File, FilenameParam,
-    FilenameValue, FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator,
-    Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder,
-    Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,
-    Response, Section, SectionValue, StatusValue, Template, VariableDefinition, VariableValue,
-    VerbosityOption, VersionValue, I64, U64,
+    FilenameValue, FilterValue, Hex, HurlFile, I64, IntegerValue, JsonValue, KeyValue,
+    LineTerminator, Method, MultilineString, MultipartParam, NaturalOption, Number, OptionKind,
+    Placeholder, Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex,
+    RegexValue, Request, Response, Section, SectionValue, StatusValue, Template, U64,
+    VariableDefinition, VariableValue, VerbosityOption, VersionValue,
 };
 use hurl_core::types::{Count, DurationUnit, ToSource};
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use clap::{value_parser, ArgAction};
+use clap::{ArgAction, value_parser};
 
 pub fn compressed() -> clap::Arg {
     clap::Arg::new("compressed").long("compressed").num_args(0)

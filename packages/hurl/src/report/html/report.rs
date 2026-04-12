@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use crate::report::html::{HTMLResult, Testcase};
 use crate::report::ReportError;
+use crate::report::html::{HTMLResult, Testcase};
 use chrono::{DateTime, Local};
 use regex::Regex;
 use std::io::Write;

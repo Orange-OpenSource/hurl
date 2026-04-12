@@ -20,11 +20,11 @@ use std::str;
 use std::str::FromStr;
 use std::time::Instant;
 
-use base64::engine::general_purpose;
 use base64::Engine;
+use base64::engine::general_purpose;
 use chrono::Utc;
 use curl::easy::{List, NetRc, SslOpt};
-use curl::{easy, Error, Version};
+use curl::{Error, Version, easy};
 use hurl_core::types::Count;
 
 use super::call::Call;
@@ -35,7 +35,7 @@ use super::debug;
 use super::easy_ext;
 use super::error::HttpError;
 use super::header::{
-    Header, HeaderVec, ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, LOCATION,
+    ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, Header, HeaderVec, LOCATION,
     USER_AGENT,
 };
 use super::ip::IpAddr;
@@ -118,10 +118,10 @@ impl Client {
             logger.debug(&format!("=> Redirect to {redirect_url}"));
             logger.debug("");
             redirect_count += 1;
-            if let Count::Finite(max_redirect) = options.max_redirect {
-                if redirect_count > max_redirect {
-                    return Err(HttpError::TooManyRedirect);
-                }
+            if let Count::Finite(max_redirect) = options.max_redirect
+                && redirect_count > max_redirect
+            {
+                return Err(HttpError::TooManyRedirect);
             };
 
             let redirect_method = redirect_method(status, &request_spec.method);
@@ -296,10 +296,10 @@ impl Client {
         // - <https://curl.se/docs/manpage.html#--max-filesize>
         // > Note: before curl 8.4.0, when the file size is not known prior to download, for such files
         // > this option has no effect even if the file transfer ends up being larger than this given limit.
-        if let Some(max_filesize) = options.max_filesize {
-            if response_body.len() as u64 > max_filesize {
-                return Err(HttpError::AllowedResponseSizeExceeded(max_filesize));
-            }
+        if let Some(max_filesize) = options.max_filesize
+            && response_body.len() as u64 > max_filesize
+        {
+            return Err(HttpError::AllowedResponseSizeExceeded(max_filesize));
         }
 
         let status = self.handle.response_code()?;
@@ -516,16 +516,16 @@ impl Client {
             request_spec.implicit_content_type.as_deref(),
             options,
         )?;
-        if let Some(aws_sigv4) = &options.aws_sigv4 {
-            if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
-                return match e.code() {
-                    curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
-                        option: "aws-sigv4".to_string(),
-                        minimum_version: "7.75.0".to_string(),
-                    }),
-                    _ => Err(e.into()),
-                };
-            }
+        if let Some(aws_sigv4) = &options.aws_sigv4
+            && let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str())
+        {
+            return match e.code() {
+                curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
+                    option: "aws-sigv4".to_string(),
+                    minimum_version: "7.75.0".to_string(),
+                }),
+                _ => Err(e.into()),
+            };
         }
         if *method == Method("HEAD".to_string()) {
             self.handle.nobody(true)?;

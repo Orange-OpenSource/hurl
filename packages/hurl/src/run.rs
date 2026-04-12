@@ -28,9 +28,9 @@ use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::types::Count;
 
-use crate::cli::options::CliOptions;
 use crate::cli::CliError;
-use crate::{cli, HurlRun};
+use crate::cli::options::CliOptions;
+use crate::{HurlRun, cli};
 
 /// Runs Hurl `files` sequentially, given a current directory and command-line options (see
 /// [`crate::cli::options::CliOptions`]). This function returns a list of [`HurlRun`] results or

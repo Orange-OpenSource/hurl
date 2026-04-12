@@ -18,6 +18,7 @@
 use std::iter::zip;
 
 use crate::http::Call;
+use crate::report::html::Testcase;
 use crate::report::html::timeline::svg::Attribute::{
     Class, Fill, FontFamily, FontSize, Height, Href, TextDecoration, ViewBox, Width, X, Y,
 };
@@ -26,8 +27,7 @@ use crate::report::html::timeline::unit::{Pixel, Px};
 use crate::report::html::timeline::util::{
     new_failure_icon, new_retry_icon, new_success_icon, trunc_str,
 };
-use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT};
-use crate::report::html::Testcase;
+use crate::report::html::timeline::{CALL_HEIGHT, CallContext, CallContextKind, svg};
 use crate::util::redacted::Redact;
 
 impl Testcase {

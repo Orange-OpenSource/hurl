@@ -18,8 +18,8 @@
 use hurl_core::ast::HurlFile;
 
 use crate::http::Call;
-use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
+use crate::report::html::nav::Tab;
 use crate::runner::EntryResult;
 use crate::util::redacted::Redact;
 

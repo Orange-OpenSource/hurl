@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use super::{expr, ParseResult};
+use super::{ParseResult, expr};
 use crate::ast::Placeholder;
 use crate::parser::primitives::{literal, try_literal, zero_or_more_spaces};
 use crate::reader::Reader;

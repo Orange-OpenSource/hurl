@@ -58,9 +58,9 @@ impl BodyCache {
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::Value;
     use crate::runner::cache::BodyCache;
     use crate::runner::xpath::{Document, Format};
-    use crate::runner::Value;
 
     #[test]
     fn add_and_retry_html() {

@@ -17,7 +17,7 @@
  */
 use std::fmt;
 
-use super::header::{HeaderVec, COOKIE};
+use super::header::{COOKIE, HeaderVec};
 use super::request_cookie::RequestCookie;
 use super::url::Url;
 

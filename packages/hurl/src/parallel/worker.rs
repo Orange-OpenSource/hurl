@@ -73,73 +73,75 @@ impl Worker {
         let rx = Arc::clone(rx);
         let tx = tx.clone();
 
-        let thread = thread::spawn(move || loop {
-            let Ok(job) = rx.lock().unwrap().recv() else {
-                return;
-            };
-            // In parallel execution, standard output and standard error messages are buffered
-            // (in sequential mode, we'll use immediate standard output and error).
-            let mut stdout = Stdout::new(WriteMode::Buffered);
-            let stderr = Stderr::new(WriteMode::Buffered);
-
-            // We also create a common logger for this run (logger verbosity can eventually be
-            // mutated on each entry).
-            let secrets = job.variables.secrets();
-            let mut logger = Logger::new(&job.logger_options, stderr, &secrets);
-
-            // Create a worker progress listener.
-            let progress = WorkerProgress::new(worker_id, &job, &tx);
-
-            let content = job.filename.read_to_string();
-            let content = match content {
-                Ok(c) => c,
-                Err(e) => {
-                    let msg = InputReadErrorMsg::new(worker_id, &job, e);
-                    _ = tx.send(WorkerMessage::InputReadError(msg));
+        let thread = thread::spawn(move || {
+            loop {
+                let Ok(job) = rx.lock().unwrap().recv() else {
                     return;
+                };
+                // In parallel execution, standard output and standard error messages are buffered
+                // (in sequential mode, we'll use immediate standard output and error).
+                let mut stdout = Stdout::new(WriteMode::Buffered);
+                let stderr = Stderr::new(WriteMode::Buffered);
+
+                // We also create a common logger for this run (logger verbosity can eventually be
+                // mutated on each entry).
+                let secrets = job.variables.secrets();
+                let mut logger = Logger::new(&job.logger_options, stderr, &secrets);
+
+                // Create a worker progress listener.
+                let progress = WorkerProgress::new(worker_id, &job, &tx);
+
+                let content = job.filename.read_to_string();
+                let content = match content {
+                    Ok(c) => c,
+                    Err(e) => {
+                        let msg = InputReadErrorMsg::new(worker_id, &job, e);
+                        _ = tx.send(WorkerMessage::InputReadError(msg));
+                        return;
+                    }
+                };
+
+                // Try to parse the content
+                let hurl_file = parser::parse_hurl_file(&content);
+                let hurl_file = match hurl_file {
+                    Ok(h) => h,
+                    Err(error) => {
+                        let filename = job.filename.to_string();
+                        let message = error.render(
+                            &filename,
+                            &content,
+                            None,
+                            OutputFormat::Terminal(logger.color),
+                        );
+                        logger.error_rich(&message);
+                        let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
+                        _ = tx.send(WorkerMessage::ParsingError(msg));
+                        return;
+                    }
+                };
+
+                // Now, we have a syntactically correct HurlFile instance, we can run it.
+                let result = runner::run_entries(
+                    &hurl_file.entries,
+                    &content,
+                    Some(&job.filename),
+                    &job.runner_options,
+                    &job.variables,
+                    &mut stdout,
+                    Some(&progress),
+                    &mut logger,
+                );
+
+                if result.success && result.entries.last().is_none() {
+                    logger.warning(&format!(
+                        "No entry have been executed for file {}",
+                        job.filename
+                    ));
                 }
-            };
-
-            // Try to parse the content
-            let hurl_file = parser::parse_hurl_file(&content);
-            let hurl_file = match hurl_file {
-                Ok(h) => h,
-                Err(error) => {
-                    let filename = job.filename.to_string();
-                    let message = error.render(
-                        &filename,
-                        &content,
-                        None,
-                        OutputFormat::Terminal(logger.color),
-                    );
-                    logger.error_rich(&message);
-                    let msg = ParsingErrorMsg::new(worker_id, &job, &logger.stderr);
-                    _ = tx.send(WorkerMessage::ParsingError(msg));
-                    return;
-                }
-            };
-
-            // Now, we have a syntactically correct HurlFile instance, we can run it.
-            let result = runner::run_entries(
-                &hurl_file.entries,
-                &content,
-                Some(&job.filename),
-                &job.runner_options,
-                &job.variables,
-                &mut stdout,
-                Some(&progress),
-                &mut logger,
-            );
-
-            if result.success && result.entries.last().is_none() {
-                logger.warning(&format!(
-                    "No entry have been executed for file {}",
-                    job.filename
-                ));
+                let job_result = JobResult::new(job, content, result);
+                let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
+                _ = tx.send(WorkerMessage::Completed(msg));
             }
-            let job_result = JobResult::new(job, content, result);
-            let msg = CompletedMsg::new(worker_id, job_result, stdout, logger.stderr);
-            _ = tx.send(WorkerMessage::Completed(msg));
         });
 
         Worker {

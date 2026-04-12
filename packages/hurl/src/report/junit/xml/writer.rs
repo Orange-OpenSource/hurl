@@ -20,11 +20,11 @@ use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::string::FromUtf8Error;
 
+use xml::EventWriter;
 use xml::attribute::Attribute;
 use xml::name::Name;
 use xml::namespace::Namespace;
 use xml::writer::{Error, XmlEvent};
-use xml::EventWriter;
 
 use crate::report::junit::xml::{Element, XmlDocument, XmlNode};
 

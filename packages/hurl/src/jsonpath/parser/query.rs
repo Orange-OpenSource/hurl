@@ -20,7 +20,7 @@ use hurl_core::reader::Reader;
 
 use crate::jsonpath::ast::query::{AbsoluteQuery, Query, RelativeQuery};
 use crate::jsonpath::parser::primitives::{expect_str, match_str};
-use crate::jsonpath::parser::{segments, ParseError, ParseErrorKind, ParseResult};
+use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult, segments};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;

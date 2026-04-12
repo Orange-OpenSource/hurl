@@ -20,7 +20,7 @@ use crate::combinator::choice;
 use crate::parser::json::parse as parse_json;
 use crate::parser::multiline::multiline_string;
 use crate::parser::string::backtick_template;
-use crate::parser::{primitives, xml, ParseResult};
+use crate::parser::{ParseResult, primitives, xml};
 use crate::reader::Reader;
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<Bytes> {

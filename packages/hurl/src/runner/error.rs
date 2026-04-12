@@ -476,9 +476,7 @@ mod tests {
         let error = RunnerError::new(error_source_info, kind, true);
 
         assert_eq!(
-            error
-                .message(&lines)
-                .to_string(Format::Plain),
+            error.message(&lines).to_string(Format::Plain),
             "\n 1 | GET http://unknown\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |"
         );
         assert_eq!(
@@ -553,9 +551,9 @@ xpath "strong(//head/title)" == "Hello"
         let entry_source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 22));
         let error = RunnerError::new(error_source_info, RunnerErrorKind::InvalidXPathEval, true);
         assert_eq!(
-        &error.message(&lines).to_string(Format::Plain),
-        "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ XPath expression is not valid\n   |"
-    );
+            &error.message(&lines).to_string(Format::Plain),
+            "\n 4 | xpath \"strong(//head/title)\" == \"Hello\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ XPath expression is not valid\n   |"
+        );
         assert_eq!(
             error.render(
                 filename,

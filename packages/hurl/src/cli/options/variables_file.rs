@@ -16,7 +16,7 @@
  *
  */
 use crate::cli::options::variables::TypeKind;
-use crate::cli::options::{variables, CliOptionsError};
+use crate::cli::options::{CliOptionsError, variables};
 use hurl::runner::Value;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Lines};

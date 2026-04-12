@@ -365,15 +365,13 @@ fn run_request(
 
         // When --output is overridden on a request level, we output the HTTP response only if the
         // call has succeeded. Output errors are not taken into account for retrying requests.
-        if let Some(output) = &options.output {
-            if !has_error {
-                let source_info = get_output_source_info(entry);
-                if let Err(error) =
-                    result.write_response(output, &options.context_dir, stdout, source_info)
-                {
-                    result.errors.push(error);
-                    has_error = true;
-                }
+        if !has_error && let Some(output) = &options.output {
+            let source_info = get_output_source_info(entry);
+            if let Err(error) =
+                result.write_response(output, &options.context_dir, stdout, source_info)
+            {
+                result.errors.push(error);
+                has_error = true;
             }
         }
 
@@ -491,10 +489,10 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
         non_default_options.push(("max redirect", options.max_redirect.to_string()));
     }
 
-    if options.proxy != default_options.proxy {
-        if let Some(proxy) = &options.proxy {
-            non_default_options.push(("proxy", proxy.to_string()));
-        }
+    if options.proxy != default_options.proxy
+        && let Some(proxy) = &options.proxy
+    {
+        non_default_options.push(("proxy", proxy.to_string()));
     }
 
     if options.retry != default_options.retry {
@@ -505,10 +503,10 @@ fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String
         non_default_options.push(("retry", value));
     }
 
-    if options.unix_socket != default_options.unix_socket {
-        if let Some(unix_socket) = &options.unix_socket {
-            non_default_options.push(("unix socket", unix_socket.to_string()));
-        }
+    if options.unix_socket != default_options.unix_socket
+        && let Some(unix_socket) = &options.unix_socket
+    {
+        non_default_options.push(("unix socket", unix_socket.to_string()));
     }
 
     non_default_options
@@ -562,14 +560,15 @@ fn log_errors(
         return;
     }
 
-    if logger.error_format == ErrorFormat::Long {
-        if let Some(Call { response, .. }) = entry_result.calls.last() {
-            logger.info_curl_cmd(&entry_result.curl_cmd.to_string());
-            logger.info("");
+    if logger.error_format == ErrorFormat::Long
+        && let Some(Call { response, .. }) = entry_result.calls.last()
+    {
+        logger.info_curl_cmd(&entry_result.curl_cmd.to_string());
+        logger.info("");
 
-            response.log_info_all(logger);
-        }
+        response.log_info_all(logger);
     }
+
     entry_result.errors.iter().for_each(|error| {
         let filename = filename.map_or(String::new(), |f| f.to_string());
         let message = error.render(

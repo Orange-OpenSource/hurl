@@ -20,7 +20,7 @@ use std::fmt;
 use crate::types::{Count, DurationUnit, SourceString, ToSource};
 
 use super::primitive::{
-    LineTerminator, Number, Placeholder, SourceInfo, Template, Whitespace, U64,
+    LineTerminator, Number, Placeholder, SourceInfo, Template, U64, Whitespace,
 };
 
 #[derive(Clone, Debug, PartialEq, Eq)]

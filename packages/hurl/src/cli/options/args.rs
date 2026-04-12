@@ -21,9 +21,9 @@ use std::path::{Path, PathBuf};
 use std::str::FromStr;
 use std::time::Duration;
 
-use clap::builder::styling::{AnsiColor, Effects};
-use clap::builder::Styles;
 use clap::ArgMatches;
+use clap::builder::Styles;
+use clap::builder::styling::{AnsiColor, Effects};
 use hurl::pretty::PrettyMode;
 use hurl::runner::Value;
 use hurl_core::input::Input;
@@ -32,8 +32,8 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::RunContext;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
-use super::{commands, duration, get_version, secret, CliOptions};
-use super::{variables, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output};
+use super::{CliOptions, commands, duration, get_version, secret};
+use super::{CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output, variables};
 use super::{OutputType, Verbosity};
 
 /// Parses the command line arguments given a `context` and default options values.
@@ -142,7 +142,7 @@ pub fn parse_cli_args(
             return Err(CliOptionsError::from_clap(
                 error,
                 default_options.color_stdout,
-            ))
+            ));
         }
     };
 
@@ -981,7 +981,7 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
                 Err(_) => {
                     return Err(CliOptionsError::Error(
                         "Failed to read glob pattern".to_string(),
-                    ))
+                    ));
                 }
             };
             let mut files = vec![];
@@ -991,7 +991,7 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<Input>, CliOptionsError> {
                     Err(_) => {
                         return Err(CliOptionsError::Error(
                             "Failed to read glob pattern".to_string(),
-                        ))
+                        ));
                     }
                 }
             }

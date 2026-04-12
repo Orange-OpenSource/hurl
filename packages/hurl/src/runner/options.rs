@@ -519,7 +519,7 @@ fn eval_number(number: &AstNumber) -> Value {
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        Duration, Expr, ExprKind, Placeholder, SourceInfo, Variable, Whitespace, U64,
+        Duration, Expr, ExprKind, Placeholder, SourceInfo, U64, Variable, Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::{DurationUnit, ToSource};

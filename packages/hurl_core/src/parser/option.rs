@@ -17,8 +17,8 @@
  */
 use super::placeholder;
 use crate::ast::{
-    is_variable_reserved, BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption,
-    OptionKind, SourceInfo, VariableDefinition, VariableValue, VerbosityOption,
+    BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption, OptionKind, SourceInfo,
+    VariableDefinition, VariableValue, VerbosityOption, is_variable_reserved,
 };
 use crate::combinator::{choice, non_recover};
 use crate::parser::duration::duration;
@@ -28,7 +28,7 @@ use crate::parser::primitives::{
     zero_or_more_spaces,
 };
 use crate::parser::string::{quoted_template, unquoted_template};
-use crate::parser::{filename, filename_password, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, filename, filename_password};
 use crate::reader::Reader;
 use crate::types::Count;
 
@@ -93,7 +93,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
                 start.pos,
                 false,
                 ParseErrorKind::InvalidOption(option.to_string()),
-            ))
+            ));
         }
     };
 
@@ -492,7 +492,7 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{LineTerminator, Number, Template, TemplateElement, Whitespace, I64};
+    use crate::ast::{I64, LineTerminator, Number, Template, TemplateElement, Whitespace};
     use crate::reader::Pos;
     use crate::types::ToSource;
 

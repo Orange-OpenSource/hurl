@@ -28,7 +28,7 @@ use crate::parser::primitives::{
 };
 use crate::parser::query::query;
 use crate::parser::string::unquoted_template;
-use crate::parser::{filename, key_string, option, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, filename, key_string, option};
 use crate::reader::{Pos, Reader};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
@@ -326,8 +326,8 @@ fn assert(reader: &mut Reader) -> ParseResult<Assert> {
 mod tests {
     use super::*;
     use crate::ast::{
-        KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
-        PredicateValue, Query, QueryValue, Template, TemplateElement, I64,
+        I64, KeyValue, LineTerminator, Number, Predicate, PredicateFunc, PredicateFuncValue,
+        PredicateValue, Query, QueryValue, Template, TemplateElement,
     };
     use crate::reader::CharPos;
     use crate::types::ToSource;
@@ -584,7 +584,9 @@ mod tests {
         assert_eq!(content_type.to_string(), "text/html".to_string());
         assert_eq!(reader.cursor().index, CharPos(22));
 
-        let mut reader = Reader::new("file,{{some_file}}; application/vnd.openxmlformats-officedocument.wordprocessingml.document # comment");
+        let mut reader = Reader::new(
+            "file,{{some_file}}; application/vnd.openxmlformats-officedocument.wordprocessingml.document # comment",
+        );
         let file_value = crate::parser::sections::file_value(&mut reader).unwrap();
         let content_type = file_value.content_type.unwrap();
         assert_eq!(

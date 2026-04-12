@@ -40,14 +40,14 @@ pub fn eval_days_after_now(
 
 #[cfg(test)]
 mod tests {
-    use chrono::offset::Utc;
     use chrono::Duration;
+    use chrono::offset::Utc;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use crate::runner::filter::eval::eval_filter;
 
     #[test]
     fn eval_filter_days_after_before_now() {

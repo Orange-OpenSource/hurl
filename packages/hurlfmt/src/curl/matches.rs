@@ -66,10 +66,10 @@ pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
     if !has_content_type(&headers) {
         if has_arg(arg_matches, "data_raw") {
             headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
-        } else if let Some(data) = get_string(arg_matches, "data") {
-            if !data.starts_with('@') {
-                headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
-            }
+        } else if let Some(data) = get_string(arg_matches, "data")
+            && !data.starts_with('@')
+        {
+            headers.push("Content-Type: application/x-www-form-urlencoded".to_string());
         }
     }
 

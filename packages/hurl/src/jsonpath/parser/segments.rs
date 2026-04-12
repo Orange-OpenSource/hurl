@@ -16,13 +16,13 @@
  *
  */
 
-use super::primitives::match_str;
 use super::ParseResult;
+use super::primitives::match_str;
 use crate::jsonpath::ast::segment::{ChildSegment, DescendantSegment, Segment};
 use crate::jsonpath::ast::selector::{NameSelector, Selector, WildcardSelector};
 use crate::jsonpath::parser::primitives::expect_str;
 use crate::jsonpath::parser::primitives::skip_whitespace;
-use crate::jsonpath::parser::{selectors, ParseError, ParseErrorKind};
+use crate::jsonpath::parser::{ParseError, ParseErrorKind, selectors};
 use hurl_core::reader::Reader;
 
 /// Parse segments

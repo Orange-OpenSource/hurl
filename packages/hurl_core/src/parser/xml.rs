@@ -58,7 +58,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
                 reader.cursor().pos,
                 true,
                 ParseErrorKind::Xml,
-            ))
+            ));
         }
     }
 

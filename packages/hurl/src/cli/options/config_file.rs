@@ -51,25 +51,25 @@ pub fn parse_config_file(
     config_file_path: Option<&Path>,
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
-    if let Some(config_file_path) = config_file_path {
-        if config_file_path.exists() {
-            let content = std::fs::read_to_string(config_file_path).map_err(|e| {
-                CliOptionsError::Error(format!(
-                    "Failed to read config file {}: {}",
-                    config_file_path.display(),
-                    e
-                ))
-            })?;
-            return parse_config(&content, default_options).map_err(|e| {
-                CliOptionsError::Error(format!(
-                    "{}:{}:{}: {}",
-                    config_file_path.display(),
-                    e.pos().line,
-                    e.pos().column,
-                    e.message
-                ))
-            });
-        }
+    if let Some(config_file_path) = config_file_path
+        && config_file_path.exists()
+    {
+        let content = std::fs::read_to_string(config_file_path).map_err(|e| {
+            CliOptionsError::Error(format!(
+                "Failed to read config file {}: {}",
+                config_file_path.display(),
+                e
+            ))
+        })?;
+        return parse_config(&content, default_options).map_err(|e| {
+            CliOptionsError::Error(format!(
+                "{}:{}:{}: {}",
+                config_file_path.display(),
+                e.pos().line,
+                e.pos().column,
+                e.message
+            ))
+        });
     }
     Ok(default_options)
 }

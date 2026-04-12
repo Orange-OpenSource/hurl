@@ -20,7 +20,7 @@ use crate::ast::{
 };
 use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
-use crate::parser::{base64, filename, key_string, ParseError, ParseErrorKind, ParseResult};
+use crate::parser::{ParseError, ParseErrorKind, ParseResult, base64, filename, key_string};
 use crate::reader::Reader;
 use crate::types::{SourceString, ToSource};
 

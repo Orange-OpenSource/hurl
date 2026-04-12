@@ -68,7 +68,7 @@ fn run_format(input_file: &Path) -> Result<(), FormatError> {
             return Err(FormatError::IO {
                 filename: input_file.display().to_string(),
                 message: e.to_string(),
-            })
+            });
         }
         Ok(file) => file,
     };

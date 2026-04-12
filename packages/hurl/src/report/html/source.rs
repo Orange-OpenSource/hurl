@@ -17,8 +17,8 @@
  */
 use hurl_core::ast::{HurlFile, SourceInfo};
 
-use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
+use crate::report::html::nav::Tab;
 use crate::runner::RunnerError;
 
 impl Testcase {

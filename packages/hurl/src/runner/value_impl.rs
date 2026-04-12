@@ -279,22 +279,30 @@ mod tests {
 
     #[test]
     fn test_starts_with() {
-        assert!(Value::String("Hello".to_string())
-            .starts_with(&Value::String("H".to_string()))
-            .unwrap());
-        assert!(!Value::Bytes(vec![0, 1, 2])
-            .starts_with(&Value::Bytes(vec![0, 2]))
-            .unwrap());
+        assert!(
+            Value::String("Hello".to_string())
+                .starts_with(&Value::String("H".to_string()))
+                .unwrap()
+        );
+        assert!(
+            !Value::Bytes(vec![0, 1, 2])
+                .starts_with(&Value::Bytes(vec![0, 2]))
+                .unwrap()
+        );
     }
 
     #[test]
     fn test_ends_with() {
-        assert!(Value::String("Hello".to_string())
-            .ends_with(&Value::String("o".to_string()))
-            .unwrap());
-        assert!(!Value::Bytes(vec![0, 1, 2])
-            .ends_with(&Value::Bytes(vec![0, 2]))
-            .unwrap());
+        assert!(
+            Value::String("Hello".to_string())
+                .ends_with(&Value::String("o".to_string()))
+                .unwrap()
+        );
+        assert!(
+            !Value::Bytes(vec![0, 1, 2])
+                .ends_with(&Value::Bytes(vec![0, 2]))
+                .unwrap()
+        );
     }
 
     #[test]
@@ -303,9 +311,11 @@ mod tests {
         assert!(contains(&haystack, &[1]));
         assert!(contains(&haystack, &[1, 2]));
         assert!(!contains(&haystack, &[1, 3]));
-        assert!(Value::String("abc".to_string())
-            .contains(&Value::String("ab".to_string()))
-            .unwrap());
+        assert!(
+            Value::String("abc".to_string())
+                .contains(&Value::String("ab".to_string()))
+                .unwrap()
+        );
         let values = Value::List(vec![
             Value::Number(Number::Integer(0)),
             Value::Number(Number::Integer(2)),
@@ -348,24 +358,36 @@ mod tests {
     #[test]
     fn test_iso_date() {
         // Some values from <https://datatracker.ietf.org/doc/html/rfc3339>
-        assert!(Value::String("1985-04-12T23:20:50.52Z".to_string())
-            .is_iso_date()
-            .unwrap());
-        assert!(Value::String("1996-12-19T16:39:57-08:00".to_string())
-            .is_iso_date()
-            .unwrap());
-        assert!(Value::String("1990-12-31T23:59:60Z".to_string())
-            .is_iso_date()
-            .unwrap());
-        assert!(Value::String("1990-12-31T15:59:60-08:00".to_string())
-            .is_iso_date()
-            .unwrap());
-        assert!(Value::String("1937-01-01T12:00:27.87+00:20".to_string())
-            .is_iso_date()
-            .unwrap());
-        assert!(!Value::String("1978-01-15".to_string())
-            .is_iso_date()
-            .unwrap());
+        assert!(
+            Value::String("1985-04-12T23:20:50.52Z".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
+        assert!(
+            Value::String("1996-12-19T16:39:57-08:00".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
+        assert!(
+            Value::String("1990-12-31T23:59:60Z".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
+        assert!(
+            Value::String("1990-12-31T15:59:60-08:00".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
+        assert!(
+            Value::String("1937-01-01T12:00:27.87+00:20".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
+        assert!(
+            !Value::String("1978-01-15".to_string())
+                .is_iso_date()
+                .unwrap()
+        );
         assert_eq!(
             Value::Bool(true).is_iso_date().unwrap_err(),
             EvalError::Type

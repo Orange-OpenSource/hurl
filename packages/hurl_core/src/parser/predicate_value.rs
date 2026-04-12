@@ -88,7 +88,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{Float, Number, I64};
+    use crate::ast::{Float, I64, Number};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
     use crate::types::ToSource;

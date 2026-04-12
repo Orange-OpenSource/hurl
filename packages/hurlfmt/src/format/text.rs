@@ -18,8 +18,8 @@
 use hurl_core::ast::visit::Visitor;
 use hurl_core::ast::{
     Comment, CookiePath, FilterValue, HurlFile, JsonValue, Method, MultilineString, Number,
-    Placeholder, PredicateFuncValue, QueryValue, Regex, StatusValue, Template, VersionValue,
-    Whitespace, U64,
+    Placeholder, PredicateFuncValue, QueryValue, Regex, StatusValue, Template, U64, VersionValue,
+    Whitespace,
 };
 use hurl_core::text::{Format, Style, StyledString};
 use hurl_core::types::{DurationUnit, SourceString, ToSource};

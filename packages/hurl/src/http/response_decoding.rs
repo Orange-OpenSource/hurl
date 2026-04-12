@@ -127,7 +127,7 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
         Err(_) => {
             return Err(HttpError::CouldNotUncompressResponse {
                 description: "gzip".to_string(),
-            })
+            });
         }
     };
     let mut buf = Vec::new();
@@ -146,7 +146,7 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
         Err(_) => {
             return Err(HttpError::CouldNotUncompressResponse {
                 description: "zlib".to_string(),
-            })
+            });
         }
     };
     let mut buf = Vec::new();

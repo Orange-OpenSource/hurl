@@ -31,8 +31,8 @@ use super::context::{
 };
 use super::variables::TypeKind;
 use super::{
-    duration, secret, variables, CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve,
-    OutputType, RunContext, Verbosity,
+    CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, RunContext,
+    Verbosity, duration, secret, variables,
 };
 
 fn compressed(context: &RunContext, default_value: bool) -> bool {
@@ -262,11 +262,13 @@ fn pretty(context: &RunContext, default_value: PrettyMode) -> PrettyMode {
 
 fn progress_bar(context: &RunContext, default_value: bool) -> bool {
     // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-    if let Some(true) = context.test_env_var() {
-        if context.is_stderr_term() && !context.is_ci_env_var() {
-            return true;
-        }
+    if let Some(true) = context.test_env_var()
+        && context.is_stderr_term()
+        && !context.is_ci_env_var()
+    {
+        return true;
     }
+
     default_value
 }
 
@@ -471,7 +473,7 @@ fn err_from_cli_err(error: CliOptionsError, env: &'static str) -> CliOptionsErro
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_env_vars, CliOptions, RunContext};
+    use super::{CliOptions, RunContext, parse_env_vars};
     use hurl::runner::{Number, Value};
     use std::collections::HashMap;
 

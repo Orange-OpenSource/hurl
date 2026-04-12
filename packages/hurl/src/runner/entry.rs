@@ -146,26 +146,26 @@ pub fn run(
     let mut cache = BodyCache::new();
     let mut asserts = vec![];
 
-    if !runner_options.no_assert {
-        if let Some(response_spec) = &entry.response {
-            let mut status_asserts =
-                response::eval_version_status_asserts(response_spec, http_response);
-            let errors = asserts_to_errors(&status_asserts);
-            asserts.append(&mut status_asserts);
-            if !errors.is_empty() {
-                logger.debug("");
-                return EntryResult {
-                    entry_index,
-                    source_info,
-                    calls,
-                    captures: vec![],
-                    asserts,
-                    errors,
-                    transfer_duration,
-                    compressed,
-                    curl_cmd,
-                };
-            }
+    if !runner_options.no_assert
+        && let Some(response_spec) = &entry.response
+    {
+        let mut status_asserts =
+            response::eval_version_status_asserts(response_spec, http_response);
+        let errors = asserts_to_errors(&status_asserts);
+        asserts.append(&mut status_asserts);
+        if !errors.is_empty() {
+            logger.debug("");
+            return EntryResult {
+                entry_index,
+                source_info,
+                calls,
+                captures: vec![],
+                asserts,
+                errors,
+                transfer_duration,
+                compressed,
+                curl_cmd,
+            };
         }
     };
 
@@ -199,18 +199,18 @@ pub fn run(
     logger.debug("");
 
     // Compute asserts
-    if !runner_options.no_assert {
-        if let Some(response_spec) = &entry.response {
-            warn_deprecated(response_spec, logger);
-            let mut other_asserts = response::eval_asserts(
-                response_spec,
-                variables,
-                &responses,
-                &mut cache,
-                context_dir,
-            );
-            asserts.append(&mut other_asserts);
-        }
+    if !runner_options.no_assert
+        && let Some(response_spec) = &entry.response
+    {
+        warn_deprecated(response_spec, logger);
+        let mut other_asserts = response::eval_asserts(
+            response_spec,
+            variables,
+            &responses,
+            &mut cache,
+            context_dir,
+        );
+        asserts.append(&mut other_asserts);
     };
 
     let errors = asserts_to_errors(&asserts);

@@ -64,8 +64,8 @@ mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::multiline::eval_multiline;
     use crate::runner::VariableSet;
+    use crate::runner::multiline::eval_multiline;
 
     fn whitespace() -> Whitespace {
         Whitespace {

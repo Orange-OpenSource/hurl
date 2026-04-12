@@ -53,15 +53,15 @@ pub fn eval_date_format(
 
 #[cfg(test)]
 mod tests {
-    use chrono::offset::Utc;
     use chrono::TimeZone;
+    use chrono::offset::Utc;
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
     use crate::runner::VariableSet;
+    use crate::runner::filter::eval::eval_filter;
 
     /// Helper function to return a new filter given a `fmt`
     fn new_date_format_filter(fmt: &str) -> Filter {
