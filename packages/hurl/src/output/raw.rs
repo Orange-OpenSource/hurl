@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-use super::OutputError;
-use super::error::OutputErrorKind;
+use std::cmp::min;
+use std::io;
+use std::io::IsTerminal;
+
 use crate::pretty;
 use crate::pretty::PrettyMode;
 use crate::pretty::json::Color;
 use crate::runner::{HurlResult, Output};
 use crate::util::term::Stdout;
-use std::cmp::min;
-use std::io::IsTerminal;
 
 /// Writes the `hurl_result` last response to the file `filename_out`.
 ///
@@ -39,7 +39,7 @@ pub fn write_last_body(
     filename_out: Option<&Output>,
     stdout: &mut Stdout,
     append: bool,
-) -> Result<(), OutputError> {
+) -> Result<(), io::Error> {
     // Get the last call of the Hurl result.
     let Some(last_entry) = &hurl_result.entries.last() else {
         return Ok(());
@@ -49,7 +49,6 @@ pub fn write_last_body(
     };
 
     let response = &call.response;
-    let source_info = last_entry.source_info;
     let mut output = Vec::new();
 
     // If include options is set, we output the HTTP response headers with status and version
@@ -64,9 +63,8 @@ pub fn write_last_body(
         &match response.uncompress_body() {
             Ok(b) => b,
             Err(e) => {
-                let source_info = last_entry.source_info;
-                let kind = OutputErrorKind::Http(e);
-                return Err(OutputError::new(source_info, kind));
+                let message = format!("response can not be written ({})", e.message());
+                return Err(io::Error::other(message));
             }
         }
     } else {
@@ -107,24 +105,13 @@ pub fn write_last_body(
     // we don't display any warning.
     match filename_out {
         None => {
-            if std::io::stdout().is_terminal() && is_binary(&output) {
-                let kind = OutputErrorKind::Binary;
-                return Err(OutputError::new(source_info, kind));
+            if io::stdout().is_terminal() && is_binary(&output) {
+                let message = "Binary output can mess up your terminal. Use \"--output -\" to tell Hurl to output it to your terminal anyway, or consider \"--output\" to save to a file.";
+                return Err(io::Error::other(message));
             }
-            Output::Stdout.write(&output, stdout, append).map_err(|e| {
-                let kind = OutputErrorKind::Io(e.to_string());
-                OutputError::new(source_info, kind)
-            })?;
+            Output::Stdout.write(&output, stdout, append)?;
         }
-        Some(out) => out.write(&output, stdout, append).map_err(|e| {
-            let filename = if let Output::File(filename) = out {
-                filename.display().to_string()
-            } else {
-                "stdout".to_string()
-            };
-            let kind = OutputErrorKind::Io(format!("{filename} can not be written ({e})"));
-            OutputError::new(source_info, kind)
-        })?,
+        Some(out) => out.write(&output, stdout, append)?,
     }
     Ok(())
 }

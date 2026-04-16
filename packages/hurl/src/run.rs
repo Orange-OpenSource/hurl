@@ -21,10 +21,9 @@ use std::path::Path;
 use hurl::parallel::job::{Job, JobResult};
 use hurl::parallel::runner::ParallelRunner;
 use hurl::pretty::PrettyMode;
-use hurl::runner::{HurlResult, Output, VariableSet};
+use hurl::runner::{HurlResult, VariableSet};
 use hurl::util::term::{Stdout, WriteMode};
 use hurl::{output, parallel, runner};
-use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::types::Count;
 
@@ -132,14 +131,8 @@ fn print_output(
             stdout,
             append,
         );
-        if let Err(e) = result {
-            let message = e.render(
-                &filename.to_string(),
-                content,
-                None,
-                OutputFormat::Terminal(options.color_stderr),
-            );
-            return Err(CliError::OutputWrite(message));
+        if let Err(error) = result {
+            return Err(CliError::OutputWrite(error.to_string()));
         }
     }
     if matches!(options.output_type, cli::OutputType::Json) {
@@ -151,14 +144,8 @@ fn print_output(
             stdout,
             append,
         );
-        if let Err(e) = result {
-            let filename = if let Some(Output::File(filename)) = &options.output {
-                filename.display().to_string()
-            } else {
-                "stdout".to_string()
-            };
-            let message = format!("{filename} can not be written ({e})");
-            return Err(CliError::OutputWrite(message));
+        if let Err(error) = result {
+            return Err(CliError::OutputWrite(error.to_string()));
         }
     }
     Ok(())

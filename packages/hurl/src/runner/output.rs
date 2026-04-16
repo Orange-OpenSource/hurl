@@ -70,8 +70,9 @@ impl Output {
                     .write(true)
                     .append(append)
                     .truncate(!append)
-                    .open(filename)?;
-                file.write_all(bytes)?;
+                    .open(filename)
+                    .map_err(|e| self.new_write_err(e))?;
+                file.write_all(bytes).map_err(|e| self.new_write_err(e))?;
             }
         }
         Ok(())
@@ -130,6 +131,18 @@ impl Output {
                 }
             }
         }
+    }
+}
+
+impl Output {
+    fn new_write_err(&self, err: io::Error) -> io::Error {
+        let filename = if let Output::File(filename) = self {
+            filename.display().to_string()
+        } else {
+            "stdout".to_string()
+        };
+        let message = format!("{filename} can not be written ({err})");
+        io::Error::other(message)
     }
 }
 

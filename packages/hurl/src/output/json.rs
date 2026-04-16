@@ -45,9 +45,6 @@ pub fn write_json(
     let serialized = serde_json::to_string(&json_result)?;
     let bytes = format!("{serialized}\n");
     let bytes = bytes.into_bytes();
-    match filename_out {
-        Some(out) => out.write(&bytes, stdout, append)?,
-        None => Output::Stdout.write(&bytes, stdout, append)?,
-    }
-    Ok(())
+    let out = filename_out.unwrap_or(&Output::Stdout);
+    out.write(&bytes, stdout, append)
 }
