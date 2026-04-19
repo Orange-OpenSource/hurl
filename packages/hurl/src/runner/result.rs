@@ -167,6 +167,7 @@ pub enum AssertResult {
         actual: Result<Value, RunnerError>,
         expected: Result<Value, RunnerError>,
         source_info: SourceInfo,
+        source_line_map: Option<Vec<usize>>,
     },
     /// Explicit assert on HTTP response.
     Explicit {

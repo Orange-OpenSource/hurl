@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{MultilineString, MultilineStringKind};
+use hurl_core::ast::{MultilineString, MultilineStringKind, Template, TemplateElement};
 use hurl_core::types::ToSource;
 use serde_json::json;
 
 use super::error::RunnerError;
 use super::json::eval_json_value;
-use super::template::eval_template;
+use super::template::{eval_template, eval_template_element};
 use super::variable::VariableSet;
 
 /// Renders to string a multiline body, given a set of variables.
@@ -55,17 +55,89 @@ pub fn eval_multiline(
     }
 }
 
+/// Renders to string a multiline body and returns the rendered line-to-source-line mapping.
+///
+/// The returned vector is indexed by rendered 0-based line number and stores the corresponding
+/// 0-based source line offset within the multiline template.
+pub fn eval_multiline_with_source_line_map(
+    multiline: &MultilineString,
+    variables: &VariableSet,
+) -> Result<(String, Vec<usize>), RunnerError> {
+    match &multiline.kind {
+        MultilineStringKind::Text(value)
+        | MultilineStringKind::Json(value)
+        | MultilineStringKind::Xml(value) => {
+            eval_multiline_template_with_source_line_map(value, variables)
+        }
+        MultilineStringKind::Raw(value) => {
+            let rendered = value.to_source().to_string();
+            Ok((rendered.clone(), identity_source_line_map(&rendered)))
+        }
+        MultilineStringKind::GraphQl(graphql) => {
+            let body = eval_multiline(multiline, variables)?;
+            let source_line_map = identity_source_line_map(&graphql.value.to_source().to_string());
+            Ok((body, source_line_map))
+        }
+    }
+}
+
+fn eval_multiline_template_with_source_line_map(
+    template: &Template,
+    variables: &VariableSet,
+) -> Result<(String, Vec<usize>), RunnerError> {
+    let mut rendered = String::new();
+    let mut source_line_map = vec![0];
+    let mut source_line = 0;
+
+    for element in &template.elements {
+        match element {
+            TemplateElement::String { value, .. } => {
+                rendered.push_str(value);
+                for c in value.chars() {
+                    if c == '\n' {
+                        source_line += 1;
+                        source_line_map.push(source_line);
+                    }
+                }
+            }
+            TemplateElement::Placeholder(_) => {
+                let value = eval_template_element(element, variables)?;
+                rendered.push_str(&value);
+                for c in value.chars() {
+                    if c == '\n' {
+                        source_line_map.push(source_line);
+                    }
+                }
+            }
+        }
+    }
+    Ok((rendered, source_line_map))
+}
+
+fn identity_source_line_map(rendered: &str) -> Vec<usize> {
+    let mut source_line_map = vec![0];
+    let mut source_line = 0;
+    for c in rendered.chars() {
+        if c == '\n' {
+            source_line += 1;
+            source_line_map.push(source_line);
+        }
+    }
+    source_line_map
+}
+
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
-        MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
+        Expr, ExprKind, GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
+        MultilineStringKind, Placeholder, SourceInfo, Template, TemplateElement, Variable,
+        Whitespace,
     };
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::VariableSet;
-    use crate::runner::multiline::eval_multiline;
+    use crate::runner::multiline::{eval_multiline, eval_multiline_with_source_line_map};
+    use crate::runner::{Value, VariableSet};
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -190,5 +262,52 @@ mod tests {
 
         let body = eval_multiline(&multiline, &hurl_variables).unwrap();
         assert_eq!(body, r#"{"query":"{\n  human(id: \"1000\") {\n    name\n    height(unit: FOOT)\n  }\n}","variables":{"episode":"JEDI","withFriends":false}}"#.to_string());
+    }
+
+    #[test]
+    fn eval_multiline_with_source_line_map_preserves_newline_expanding_placeholders() {
+        let multiline = MultilineString {
+            space: whitespace(),
+            newline: newline(),
+            kind: MultilineStringKind::Text(Template::new(
+                None,
+                vec![
+                    TemplateElement::String {
+                        value: "line1\nline2".to_string(),
+                        source: "line1\nline2".to_source(),
+                    },
+                    TemplateElement::Placeholder(Placeholder {
+                        space0: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(Pos::new(3, 8), Pos::new(3, 8)),
+                        },
+                        expr: Expr {
+                            source_info: SourceInfo::new(Pos::new(3, 8), Pos::new(3, 15)),
+                            kind: ExprKind::Variable(Variable {
+                                name: "newline".to_string(),
+                                source_info: SourceInfo::new(Pos::new(3, 8), Pos::new(3, 15)),
+                            }),
+                        },
+                        space1: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(Pos::new(3, 15), Pos::new(3, 15)),
+                        },
+                    }),
+                    TemplateElement::String {
+                        value: "line3\nline4\n".to_string(),
+                        source: "line3\nline4\n".to_source(),
+                    },
+                ],
+                SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
+            )),
+        };
+        let mut variables = VariableSet::new();
+        variables.insert("newline".to_string(), Value::String("\n".to_string()));
+
+        let (body, source_line_map) =
+            eval_multiline_with_source_line_map(&multiline, &variables).unwrap();
+
+        assert_eq!(body, "line1\nline2\nline3\nline4\n".to_string());
+        assert_eq!(source_line_map, vec![0, 1, 1, 2, 3]);
     }
 }

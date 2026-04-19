@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::{Base64, Body, Bytes, Hex, Response, SourceInfo, StatusValue};
+use hurl_core::ast::{
+    Base64, Body, Bytes, Hex, MultilineStringKind, Response, SourceInfo, StatusValue,
+};
 
 use crate::http;
 use crate::util::path::ContextDir;
@@ -194,6 +196,7 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
+                source_line_map: None,
             }
         }
         Bytes::Xml(value) => {
@@ -216,6 +219,7 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
+                source_line_map: None,
             }
         }
         Bytes::OnelineString(value) => {
@@ -241,12 +245,26 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: value.source_info,
+                source_line_map: None,
             }
         }
         Bytes::MultilineString(multi) => {
-            let expected = match multiline::eval_multiline(multi, variables) {
-                Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(e),
+            let (expected, source_line_map) = match &multi.kind {
+                MultilineStringKind::Text(_)
+                | MultilineStringKind::Json(_)
+                | MultilineStringKind::Xml(_) => {
+                    match multiline::eval_multiline_with_source_line_map(multi, variables) {
+                        Ok((s, source_line_map)) => (Ok(Value::String(s)), Some(source_line_map)),
+                        Err(e) => (Err(e), None),
+                    }
+                }
+                _ => {
+                    let expected = match multiline::eval_multiline(multi, variables) {
+                        Ok(s) => Ok(Value::String(s)),
+                        Err(e) => Err(e),
+                    };
+                    (expected, None)
+                }
             };
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
@@ -266,6 +284,7 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: multi.value().source_info,
+                source_line_map,
             }
         }
         Bytes::Base64(Base64 {
@@ -296,6 +315,7 @@ fn eval_implicit_body_asserts(
                     start: space0.source_info.end,
                     end: space1.source_info.start,
                 },
+                source_line_map: None,
             }
         }
         Bytes::Hex(Hex {
@@ -326,6 +346,7 @@ fn eval_implicit_body_asserts(
                     start: space0.source_info.end,
                     end: space1.source_info.start,
                 },
+                source_line_map: None,
             }
         }
         Bytes::File { .. } => {
@@ -351,6 +372,7 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: spec_body.space0.source_info,
+                source_line_map: None,
             }
         }
     }

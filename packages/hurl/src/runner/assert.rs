@@ -82,6 +82,7 @@ impl AssertResult {
                 actual,
                 expected,
                 source_info,
+                source_line_map,
             } => match expected {
                 Err(e) => Some(e.clone()),
                 Ok(expected) => match actual {
@@ -92,7 +93,15 @@ impl AssertResult {
                         } else if use_diff(expected, actual) {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
-                            let hunks = diff(&expected, &actual);
+                            let mut hunks = diff(&expected, &actual);
+                            if let Some(source_line_map) = source_line_map {
+                                for hunk in &mut hunks {
+                                    if let Some(source_line) = source_line_map.get(hunk.source_line)
+                                    {
+                                        hunk.source_line = *source_line;
+                                    }
+                                }
+                            }
                             let source_line = hunks
                                 .clone()
                                 .first()
@@ -209,7 +218,9 @@ pub mod tests {
         Filter, FilterValue, I64, LineTerminator, Predicate, PredicateFunc, PredicateFuncValue,
         PredicateValue, SourceInfo, Whitespace,
     };
+    use hurl_core::error::{DisplaySourceError, OutputFormat};
     use hurl_core::reader::Pos;
+    use hurl_core::text::Format;
     use hurl_core::types::ToSource;
 
     use super::super::query;
@@ -295,5 +306,52 @@ pub mod tests {
             &Value::String("a\n".to_string()),
             &Value::String("b".to_string())
         ));
+    }
+
+    #[test]
+    fn test_implicit_body_diff_uses_multiline_source_line_map() {
+        let content = r#"GET http://localhost:8000/test
+HTTP 200
+```
+line1
+line2{{newline}}line3
+line4
+```"#;
+        let lines = content.lines().collect::<Vec<_>>();
+
+        let assert = AssertResult::ImplicitBody {
+            actual: Ok(Value::String("line1\nline2\nline3\nLINE4\n".to_string())),
+            expected: Ok(Value::String("line1\nline2\nline3\nline4\n".to_string())),
+            source_info: SourceInfo::new(Pos::new(4, 1), Pos::new(7, 1)),
+            source_line_map: Some(vec![0, 1, 1, 2, 3]),
+        };
+
+        let error = assert.to_runner_error().unwrap();
+
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(6, 1), Pos::new(6, 1))
+        );
+        assert_eq!(
+            error.message(&lines).to_string(Format::Plain),
+            "\n 6 | line4\n   |   -line4\n   |   +LINE4\n   |"
+        );
+        assert_eq!(
+            error.render(
+                "test.hurl",
+                content,
+                Some(SourceInfo::new(Pos::new(1, 1), Pos::new(7, 3))),
+                OutputFormat::Terminal(false)
+            ),
+            r#"Assert body value
+  --> test.hurl:6:1
+   |
+   | GET http://localhost:8000/test
+   | ...
+ 6 | line4
+   |   -line4
+   |   +LINE4
+   |"#
+        );
     }
 }

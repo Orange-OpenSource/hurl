@@ -34,7 +34,7 @@ pub fn eval_template(template: &Template, variables: &VariableSet) -> Result<Str
     Ok(value)
 }
 
-fn eval_template_element(
+pub(crate) fn eval_template_element(
     template_element: &TemplateElement,
     variables: &VariableSet,
 ) -> Result<String, RunnerError> {
