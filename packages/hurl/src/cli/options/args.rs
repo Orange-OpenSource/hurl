@@ -222,7 +222,14 @@ fn parse_arg_matches(
     let pretty = pretty(arg_matches, default_options.pretty);
     let proxy = proxy(arg_matches, default_options.proxy);
     let output = output(arg_matches, default_options.output);
-    let output_type = output_type(arg_matches, default_options.output_type);
+    let test = test(arg_matches, default_options.test);
+    let output_type = output_type(
+        arg_matches,
+        default_options.output_type,
+        default_options.test,
+        test,
+        output.is_some(),
+    );
     let repeat = repeat(arg_matches, default_options.repeat)?;
     let resolves = resolves(arg_matches, default_options.resolves);
     let retry = retry(arg_matches, default_options.retry)?;
@@ -230,7 +237,6 @@ fn parse_arg_matches(
     let secrets = secret(arg_matches, default_options.secrets)?;
     let ssl_no_revoke = ssl_no_revoke(arg_matches, default_options.ssl_no_revoke);
     let tap_file = tap_file(arg_matches, default_options.tap_file);
-    let test = test(arg_matches, default_options.test);
     let timeout = timeout(arg_matches, default_options.timeout)?;
     let to_entry = to_entry(arg_matches, default_options.to_entry);
     let unix_socket = unix_socket(arg_matches, default_options.unix_socket);
@@ -746,11 +752,23 @@ fn output(arg_matches: &ArgMatches, default_value: Option<Output>) -> Option<Out
         .or(default_value)
 }
 
-fn output_type(arg_matches: &ArgMatches, default_value: OutputType) -> OutputType {
+fn output_type(
+    arg_matches: &ArgMatches,
+    default_value: OutputType,
+    default_test: bool,
+    test: bool,
+    has_output: bool,
+) -> OutputType {
     if has_flag(arg_matches, "json") {
         OutputType::Json
-    } else if has_flag(arg_matches, "no_output") || has_flag(arg_matches, "test") {
+    } else if has_flag(arg_matches, "no_output") {
         OutputType::NoOutput
+    // `--test` disables response-body output by default, but an explicit output file should
+    // still receive the last response body.
+    } else if test && !has_output {
+        OutputType::NoOutput
+    } else if default_test && has_output && matches!(default_value, OutputType::NoOutput) {
+        OutputType::ResponseBody
     } else {
         default_value
     }
@@ -1022,4 +1040,82 @@ fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+#[cfg(test)]
+mod tests {
+    use clap::Command;
+
+    use super::{OutputType, commands, output, output_type, test};
+
+    fn matches(args: &[&str]) -> clap::ArgMatches {
+        Command::new("hurl")
+            .arg(commands::json())
+            .arg(commands::no_output())
+            .arg(commands::output())
+            .arg(commands::test())
+            .get_matches_from(args)
+    }
+
+    #[test]
+    fn test_output_type_test_mode_without_output_disables_response_body() {
+        let matches = matches(&["hurl", "--test"]);
+
+        let output = output(&matches, None);
+        let test = test(&matches, false);
+        let output_type = output_type(
+            &matches,
+            OutputType::ResponseBody,
+            false,
+            test,
+            output.is_some(),
+        );
+
+        assert_eq!(output_type, OutputType::NoOutput);
+    }
+
+    #[test]
+    fn test_output_type_test_mode_with_output_keeps_response_body() {
+        let matches = matches(&["hurl", "--test", "--output", "out.txt"]);
+
+        let output = output(&matches, None);
+        let test = test(&matches, false);
+        let output_type = output_type(
+            &matches,
+            OutputType::ResponseBody,
+            false,
+            test,
+            output.is_some(),
+        );
+
+        assert_eq!(output_type, OutputType::ResponseBody);
+    }
+
+    #[test]
+    fn test_output_type_env_test_with_cli_output_keeps_response_body() {
+        let matches = matches(&["hurl", "--output", "out.txt"]);
+
+        let output = output(&matches, None);
+        let test = test(&matches, true);
+        let output_type = output_type(&matches, OutputType::NoOutput, true, test, output.is_some());
+
+        assert_eq!(output_type, OutputType::ResponseBody);
+    }
+
+    #[test]
+    fn test_output_type_no_output_still_wins_with_output_file() {
+        let matches = matches(&["hurl", "--output", "out.txt"]);
+
+        let output = output(&matches, None);
+        let test = test(&matches, false);
+        let output_type = output_type(
+            &matches,
+            OutputType::NoOutput,
+            false,
+            test,
+            output.is_some(),
+        );
+
+        assert_eq!(output_type, OutputType::NoOutput);
+    }
 }
