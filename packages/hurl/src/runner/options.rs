@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::str::FromStr;
+
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
     OptionKind, Placeholder, Template, VariableDefinition, VariableValue, VerbosityOption,
@@ -479,6 +481,16 @@ fn eval_duration_option(
                     }
                 }
             }
+            Value::String(value) => match duration_from_string(&value, default_unit) {
+                Some(duration) => return Ok(duration),
+                None => {
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
+                        value: format!("string <{value}>"),
+                        expecting: "positive integer".to_string(),
+                    };
+                    return Err(RunnerError::new(expr.source_info, kind, false));
+                }
+            },
             v => {
                 let kind = RunnerErrorKind::ExpressionInvalidType {
                     value: v.repr(),
@@ -489,6 +501,30 @@ fn eval_duration_option(
         },
     };
     Ok(std::time::Duration::from_millis(millis))
+}
+
+fn duration_from_string(value: &str, default_unit: DurationUnit) -> Option<std::time::Duration> {
+    let split_at = value
+        .find(|c: char| !c.is_ascii_digit())
+        .unwrap_or(value.len());
+    if split_at == 0 {
+        return None;
+    }
+
+    let duration = value[..split_at].parse::<u64>().ok()?;
+    let unit = &value[split_at..];
+    let unit = if unit.is_empty() {
+        default_unit
+    } else {
+        DurationUnit::from_str(unit).ok()?
+    };
+    let millis = match unit {
+        DurationUnit::MilliSecond => Some(duration),
+        DurationUnit::Second => duration.checked_mul(1000),
+        DurationUnit::Minute => duration.checked_mul(1000 * 60),
+        DurationUnit::Hour => duration.checked_mul(1000 * 60 * 60),
+    }?;
+    Some(std::time::Duration::from_millis(millis))
 }
 
 /// Evaluates a variable, using a set of `variables`.
@@ -569,6 +605,27 @@ mod tests {
         })
     }
 
+    fn retry_interval_option_template() -> DurationOption {
+        // {{retryInterval}}
+        DurationOption::Placeholder(Placeholder {
+            space0: Whitespace {
+                value: String::new(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+            expr: Expr {
+                kind: ExprKind::Variable(Variable {
+                    name: "retryInterval".to_string(),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                }),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+            space1: Whitespace {
+                value: String::new(),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            },
+        })
+    }
+
     #[test]
     fn test_eval_boolean_option() {
         let mut variables = VariableSet::default();
@@ -630,6 +687,17 @@ mod tests {
             )
             .unwrap(),
             std::time::Duration::from_millis(10)
+        );
+
+        variables.insert("retryInterval".to_string(), Value::String("3s".to_string()));
+        assert_eq!(
+            eval_duration_option(
+                &retry_interval_option_template(),
+                &variables,
+                DurationUnit::MilliSecond
+            )
+            .unwrap(),
+            std::time::Duration::from_secs(3)
         );
     }
 }
