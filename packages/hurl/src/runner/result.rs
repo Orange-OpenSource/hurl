@@ -266,6 +266,14 @@ impl EntryResult {
         })?;
         Ok(())
     }
+
+    /// Returns `true` if the last HTTP response body ends with a trailing newline.
+    pub fn has_response_trailing_newline(&self) -> bool {
+        match self.calls.last() {
+            None => false,
+            Some(call) => call.response.has_trailing_newline(),
+        }
+    }
 }
 
 /// Returns `true` if `bytes` is a binary content, false otherwise.
