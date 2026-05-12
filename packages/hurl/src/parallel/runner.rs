@@ -229,11 +229,7 @@ impl ParallelRunner {
                     // The worker is becoming idle.
                     self.workers[msg.worker_id.0].1 = WorkerState::Idle;
 
-                    // First, we display the job standard error, then the job standard output
-                    // (similar to the sequential runner).
-                    if !msg.stderr.buffer().is_empty() {
-                        stderr.eprint(msg.stderr.buffer());
-                    }
+                    // First, we display the job standard output, then the job standard error.
                     if !msg.stdout.buffer().is_empty() {
                         let ret = stdout.write_all(msg.stdout.buffer());
                         if ret.is_err() {
@@ -241,6 +237,9 @@ impl ParallelRunner {
                                 "Issue writing to stdout".to_string(),
                             ));
                         }
+                    }
+                    if !msg.stderr.buffer().is_empty() {
+                        stderr.eprint(msg.stderr.buffer());
                     }
 
                     // Then, we print job output on standard output (the first response truncates
