@@ -1,0 +1,20 @@
+error: Assert failure
+  --> tests_failed/fail_with_body/fail_with_body.hurl:4:0
+   |
+   | GET http://localhost:8000/fail_with_body
+   | ...
+ 4 | jsonpath "$.fruits" count == 12
+   |   actual:   integer <10>
+   |   expected: integer <12>
+   |
+
+error: Assert failure
+  --> tests_failed/fail_with_body/fail_with_body.hurl:5:0
+   |
+   | GET http://localhost:8000/fail_with_body
+   | ...
+ 5 | jsonpath "$.fruits[0].name" == "Lemon"
+   |   actual:   string <Apple>
+   |   expected: string <Lemon>
+   |
+
