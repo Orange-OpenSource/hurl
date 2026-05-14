@@ -48,6 +48,7 @@ const HURL_PREFIX: &str = "HURL_";
 
 pub const HURL_COLOR: &str = "HURL_COLOR";
 pub const HURL_COMPRESSED: &str = "HURL_COMPRESSED";
+pub const HURL_FAIL_WITH_BODY: &str = "HURL_FAIL_WITH_BODY";
 pub const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 pub const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
 pub const HURL_DELAY: &str = "HURL_DELAY";
@@ -135,6 +136,11 @@ impl RunContext {
         self.get_env_var_bool(HURL_COMPRESSED)
     }
 
+    /// Returns the env var for fail with body.
+    pub fn fail_with_body_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_FAIL_WITH_BODY)
+    }
+
     /// Returns the env var for connect timeout duration.
     pub fn connect_timeout_env_var(&self) -> Option<&str> {
         self.hurl_env_vars
@@ -142,7 +148,7 @@ impl RunContext {
             .map(|v| v.as_str())
     }
 
-    /// Retunrs the env var for continue on error.
+    /// Returns the env var for continue on error.
     pub fn continue_on_error_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_CONTINUE_ON_ERROR)
     }
@@ -513,7 +519,6 @@ mod tests {
             ("BAZ".to_string(), "yyy".to_string()),
             ("HURL_VARIABLE_foo".to_string(), "true".to_string()),
             ("HURL_VARIABLE_id".to_string(), "1234".to_string()),
-            ("BAZ".to_string(), "yyy".to_string()),
             ("HURL_VARIABLE".to_string(), "1234".to_string()),
             ("HURL_VARIABLE_".to_string(), "abcd".to_string()),
             ("HURL_VARIABLE_FOO".to_string(), "def".to_string()),

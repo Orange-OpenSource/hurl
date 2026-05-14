@@ -39,6 +39,10 @@ fn compressed(context: &RunContext, default_value: bool) -> bool {
     context.compressed_env_var().unwrap_or(default_value)
 }
 
+fn fail_with_body(context: &RunContext, default_value: bool) -> bool {
+    context.fail_with_body_env_var().unwrap_or(default_value)
+}
+
 fn color(context: &RunContext, default_value: bool) -> bool {
     if let Some(no_color) = context.no_color_env_var() {
         return !no_color;
@@ -352,6 +356,7 @@ pub fn parse_env_vars(
     let color_stderr = color(context, default_options.color_stderr);
     let compressed = compressed(context, default_options.compressed);
     let connect_timeout = connect_timeout(context, default_options.connect_timeout)?;
+    let fail_with_body = fail_with_body(context, default_options.fail_with_body);
     let continue_on_error = continue_on_error(context, default_options.continue_on_error);
     let delay = delay(context, default_options.delay)?;
     let error_format = error_format(context, default_options.error_format)?;
@@ -390,6 +395,7 @@ pub fn parse_env_vars(
         continue_on_error,
         delay,
         error_format,
+        fail_with_body,
         headers,
         http_version,
         follow_location,
