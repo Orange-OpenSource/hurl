@@ -1,0 +1,20 @@
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_pty/fail_with_body/fail_with_body.hurl:4:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/pty/fail_with_body[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 4 |[0m jsonpath "$.fruits" count == 12
+[1;34m   |[0m[1;31m   actual:   integer <10>[0m
+[1;34m   |[0m[1;31m   expected: integer <12>[0m
+[1;34m   |[0m
+
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m tests_pty/fail_with_body/fail_with_body.hurl:5:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET http://localhost:8000/pty/fail_with_body[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 5 |[0m jsonpath "$.fruits[0].name" == "Lemon"
+[1;34m   |[0m[1;31m   actual:   string <Apple>[0m
+[1;34m   |[0m[1;31m   expected: string <Lemon>[0m
+[1;34m   |[0m
+

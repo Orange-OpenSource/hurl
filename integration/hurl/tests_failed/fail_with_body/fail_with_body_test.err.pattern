@@ -1,0 +1,28 @@
+error: Assert failure
+  --> tests_failed/fail_with_body/fail_with_body.hurl:4:0
+   |
+   | GET http://localhost:8000/fail_with_body
+   | ...
+ 4 | jsonpath "$.fruits" count == 12
+   |   actual:   integer <10>
+   |   expected: integer <12>
+   |
+
+error: Assert failure
+  --> tests_failed/fail_with_body/fail_with_body.hurl:5:0
+   |
+   | GET http://localhost:8000/fail_with_body
+   | ...
+ 5 | jsonpath "$.fruits[0].name" == "Lemon"
+   |   actual:   string <Apple>
+   |   expected: string <Lemon>
+   |
+
+Failure tests_failed/fail_with_body/fail_with_body.hurl (1 request(s) in <<<\d+>>> ms)
+--------------------------------------------------------------------------------
+Executed files:    1
+Executed requests: 1 (<<<\d+\.\d/s>>>)
+Succeeded files:   0 (0.0%)
+Failed files:      1 (100.0%)
+Duration:          <<<\d+ ms \(\d+h:\d+m:\d+s:\d+ms\)>>>
+

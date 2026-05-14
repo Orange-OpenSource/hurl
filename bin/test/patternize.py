@@ -53,6 +53,16 @@ def patternize_err(files: List[Path]) -> None:
         txt = re.sub(
             r'"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}Z"', r'"<<<.*>>>"', txt
         )
+        txt = re.sub(
+            r"\d+ ms \(\d+h:\d+m:\d+s:\d+ms\)",
+            r"<<<\\d +ms \(\\d+h:\\d+m:\\d+s:\\d+ms\)>>>",
+            txt,
+        )
+        txt = re.sub(
+            r"\d+\.\d/s",
+            r"<<<\\d+\\.\\d/s>>>",
+            txt,
+        )
 
         # Timings in sdterr
         txt = re.sub(r"app_connect: \d+", r"app_connect: <<<\\d+>>>", txt)
