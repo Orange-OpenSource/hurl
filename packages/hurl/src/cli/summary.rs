@@ -26,7 +26,12 @@ pub fn summary(runs: &[HurlRun], duration: Duration) -> String {
     let total_files = runs.len();
     let total_requests = requests_count(runs);
     let duration_in_ms = duration.as_millis() as f64;
-    let requests_rate = 1000.0 * (total_requests as f64) / duration_in_ms;
+    // Guard against a zero duration to avoid producing `inf` or `NaN` in the rate.
+    let requests_rate = if duration_in_ms > 0.0 {
+        1000.0 * (total_requests as f64) / duration_in_ms
+    } else {
+        0.0
+    };
 
     let success_files = runs.iter().filter(|r| r.hurl_result.success).count();
     let success_percent = 100.0 * success_files as f32 / total_files as f32;
