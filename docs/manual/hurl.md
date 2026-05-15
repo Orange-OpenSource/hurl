@@ -399,8 +399,6 @@ Output body response on standard output if there are any errors. By default, Hur
 
 Environment variables: HURL_FAIL_WITH_BODY
 
-This is a cli-only option.
-
 #### -i, --include {#include}
 
 Include the HTTP headers in the output
