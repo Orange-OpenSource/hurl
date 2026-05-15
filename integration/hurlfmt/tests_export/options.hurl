@@ -14,8 +14,7 @@ delay: 1s
 delay: 1m
 delay: 1h
 digest: false
-location: false
-location-trusted: false
+fail-with-body: false
 header: key: value
 http1.0: false
 http1.1: false
@@ -25,6 +24,8 @@ insecure: false
 ipv4: false
 ipv6: false
 limit-rate: 1000
+location: false
+location-trusted: false
 max-redirs: 10
 max-time: 100s
 negotiate: false
@@ -69,8 +70,7 @@ connect-to: {{connect-to}}
 connect-timeout: {{connect-timeout}}
 delay: {{delay}}
 digest: {{digest}}
-location: {{location}}
-location-trusted: {{location-trusted}}
+fail-with-body: {{fail-with-body}}
 header: {{header}}
 http1.0: {{http10}}
 http1.1: {{http11}}
@@ -79,6 +79,8 @@ http3: {{http3}}
 insecure: {{insecure}}
 ipv4: {{ipv4}}
 ipv6: {{ipv6}}
+location: {{location}}
+location-trusted: {{location-trusted}}
 limit-rate: {{limit-rate}}
 max-redirs: {{max-redirs}}
 max-time: {{max-time}}

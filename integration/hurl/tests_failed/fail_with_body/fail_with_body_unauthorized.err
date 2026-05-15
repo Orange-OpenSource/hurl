@@ -18,3 +18,12 @@ error: Assert failure
    |   expected: string <Lemon>
    |
 
+error: Unauthorized file access
+  --> tests_failed/fail_with_body/fail_with_body_unauthorized.hurl:3:9
+   |
+   | GET http://localhost:8000/fail_with_body
+   | ...
+ 3 | output: ../out.json
+   |         ^^^^^^^^^^^ unauthorized access to file ../out.json, check --file-root option
+   |
+
