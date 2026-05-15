@@ -166,6 +166,10 @@ pub fn get_entry_options(
                 }
                 entry_options.allow_reuse = false;
             }
+            OptionKind::FailWithBody(value) => {
+                let value = eval_boolean_option(value, variables)?;
+                entry_options.fail_with_body = value;
+            }
             OptionKind::FollowLocation(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 if value {

@@ -369,6 +369,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::ConnectTimeout(value) => visitor.visit_duration_option(value),
         OptionKind::Delay(value) => visitor.visit_duration_option(value),
         OptionKind::Digest(value) => visitor.visit_bool_option(value),
+        OptionKind::FailWithBody(value) => visitor.visit_bool_option(value),
         OptionKind::FollowLocation(value) => visitor.visit_bool_option(value),
         OptionKind::FollowLocationTrusted(value) => visitor.visit_bool_option(value),
         OptionKind::Header(value) => visitor.visit_template(value),

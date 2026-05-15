@@ -470,6 +470,7 @@ impl Lint for OptionKind {
             }
             OptionKind::Delay(value) => lint_duration_option(value, DurationUnit::MilliSecond),
             OptionKind::Digest(value) => value.lint(),
+            OptionKind::FailWithBody(value) => value.lint(),
             OptionKind::Header(value) => value.lint(),
             OptionKind::Http10(value) => value.lint(),
             OptionKind::Http11(value) => value.lint(),
