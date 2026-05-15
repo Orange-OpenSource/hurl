@@ -374,20 +374,14 @@ fn run_request(
             None
         };
         if let Some(output) = should_output {
-            write_entry_response(
-                entry,
-                &mut result,
-                content,
-                filename,
-                output,
-                options,
-                stdout,
-                logger,
-            );
+            write_entry_response(entry, &mut result, output, options, stdout);
         }
 
         // We log eventual errors. If we're retrying, errors logs are just informative debug logs;
         // if we're not retrying, errors are logs as failed errors.
+        // We recompute `has_error` because response output in `write_entry_response` can fail and
+        // add errors (these errors are not taken into account for retry).
+        let has_error = !result.errors.is_empty();
         if has_error {
             // We ensure that errors messages start on newlines if output is write on stdout.
             if matches!(should_output, Some(Output::Stdout))
@@ -442,12 +436,9 @@ fn run_request(
 fn write_entry_response(
     entry: &Entry,
     entry_result: &mut EntryResult,
-    content: &str,
-    input: Option<&Input>,
     output: &Output,
     options: &RunnerOptions,
     stdout: &mut Stdout,
-    logger: &mut Logger,
 ) {
     let context_dir = &options.context_dir;
     let source_info = get_output_source_info(entry);
@@ -456,14 +447,6 @@ fn write_entry_response(
     let output = match output.clone().try_with(context_dir, source_info) {
         Ok(o) => o,
         Err(error) => {
-            let filename = input.map_or(String::new(), |f| f.to_string());
-            let message = error.render(
-                &filename,
-                content,
-                Some(entry_result.source_info),
-                OutputFormat::Terminal(logger.color),
-            );
-            logger.error_rich(&message);
             entry_result.errors.push(error);
             return;
         }
@@ -484,14 +467,6 @@ fn write_entry_response(
         append,
         source_info,
     ) {
-        let filename = input.map_or(String::new(), |f| f.to_string());
-        let message = error.render(
-            &filename,
-            content,
-            Some(entry_result.source_info),
-            OutputFormat::Terminal(logger.color),
-        );
-        logger.error_rich(&message);
         entry_result.errors.push(error);
     }
 }
