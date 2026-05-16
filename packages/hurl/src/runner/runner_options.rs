@@ -46,7 +46,6 @@ pub struct RunnerOptionsBuilder {
     from_entry: Option<usize>,
     headers: HeaderVec,
     http_version: RequestedHttpVersion,
-    no_assert: bool,
     insecure: bool,
     ip_resolve: IpResolve,
     max_filesize: Option<u64>,
@@ -57,6 +56,8 @@ pub struct RunnerOptionsBuilder {
     netrc: bool,
     netrc_file: Option<String>,
     netrc_optional: bool,
+    no_assert: bool,
+    no_headers: Vec<String>,
     no_proxy: Option<String>,
     ntlm: bool,
     output: Option<Output>,
@@ -100,7 +101,6 @@ impl Default for RunnerOptionsBuilder {
             from_entry: None,
             headers: HeaderVec::new(),
             http_version: RequestedHttpVersion::default(),
-            no_assert: false,
             insecure: false,
             ip_resolve: IpResolve::default(),
             max_filesize: None,
@@ -111,7 +111,9 @@ impl Default for RunnerOptionsBuilder {
             netrc: false,
             netrc_file: None,
             netrc_optional: false,
+            no_assert: false,
             no_proxy: None,
+            no_headers: Vec::new(),
             ntlm: false,
             output: None,
             path_as_is: false,
@@ -361,6 +363,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// List of header names to remove from HTTP requests.
+    pub fn no_headers(&mut self, no_headers: Vec<String>) -> &mut Self {
+        self.no_headers = no_headers;
+        self
+    }
+
     /// Sets list of hosts which do not use a proxy.
     pub fn no_proxy(&mut self, no_proxy: Option<String>) -> &mut Self {
         self.no_proxy = no_proxy;
@@ -506,6 +514,7 @@ impl RunnerOptionsBuilder {
             netrc: self.netrc,
             netrc_file: self.netrc_file.clone(),
             netrc_optional: self.netrc_optional,
+            no_headers: self.no_headers.clone(),
             no_proxy: self.no_proxy.clone(),
             ntlm: self.ntlm,
             output: self.output.clone(),
@@ -575,8 +584,6 @@ pub struct RunnerOptions {
     pub(crate) headers: HeaderVec,
     /// Set requested HTTP version (can be different of the effective HTTP version).
     pub(crate) http_version: RequestedHttpVersion,
-    /// Ignores all asserts defined in the Hurl file.
-    pub(crate) no_assert: bool,
     /// Set IP version.
     pub(crate) ip_resolve: IpResolve,
     /// Allows Hurl to perform “insecure” SSL connections and transfers.
@@ -597,6 +604,10 @@ pub struct RunnerOptions {
     pub(crate) netrc_file: Option<String>,
     /// Sets the optional netrc flag.
     pub(crate) netrc_optional: bool,
+    /// Ignores all asserts defined in the Hurl file.
+    pub(crate) no_assert: bool,
+    /// Headers names to remove from the HTTP requests.
+    pub(crate) no_headers: Vec<String>,
     /// Sets list of hosts which do not use a proxy.
     pub(crate) no_proxy: Option<String>,
     /// Enables HTTP NTLM authentication.

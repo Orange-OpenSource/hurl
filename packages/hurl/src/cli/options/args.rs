@@ -80,6 +80,7 @@ pub fn parse_cli_args(
         .arg(commands::max_time())
         .arg(commands::negotiate())
         .arg(commands::no_cookie_store())
+        .arg(commands::no_header())
         .arg(commands::no_proxy())
         .arg(commands::ntlm())
         .arg(commands::path_as_is())
@@ -215,6 +216,7 @@ fn parse_arg_matches(
     let netrc_file = netrc_file(arg_matches, default_options.netrc_file)?;
     let netrc_optional = netrc_optional(arg_matches, default_options.netrc_optional);
     let no_cookie_store = no_cookie_store(arg_matches, default_options.no_cookie_store);
+    let no_headers = no_headers(arg_matches, default_options.no_headers);
     let no_proxy = no_proxy(arg_matches, default_options.no_proxy);
     let ntlm = ntlm(arg_matches, default_options.ntlm);
     let parallel = parallel(arg_matches, default_options.parallel);
@@ -266,7 +268,6 @@ fn parse_arg_matches(
         headers,
         html_dir,
         http_version,
-        no_assert,
         include,
         input_files,
         insecure,
@@ -280,7 +281,9 @@ fn parse_arg_matches(
         netrc,
         netrc_file,
         netrc_optional,
+        no_assert,
         no_cookie_store,
+        no_headers,
         no_proxy,
         ntlm,
         path_as_is,
@@ -486,11 +489,11 @@ fn from_entry(arg_matches: &ArgMatches, default_value: Option<usize>) -> Option<
 }
 
 fn headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
-    let mut all_headers = default_value;
-    if let Some(cli_headers) = get_strings(arg_matches, "header") {
-        all_headers.extend(cli_headers);
+    let mut headers = default_value;
+    if let Some(header) = get_strings(arg_matches, "header") {
+        headers.extend(header);
     }
-    all_headers
+    headers
 }
 
 fn html_dir(
@@ -738,6 +741,15 @@ fn no_cookie_store(arg_matches: &ArgMatches, default_value: bool) -> bool {
         default_value
     }
 }
+
+fn no_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
+    let mut no_headers = default_value;
+    if let Some(no_header) = get_strings(arg_matches, "no_header") {
+        no_headers.extend(no_header);
+    }
+    no_headers
+}
+
 
 fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "no_proxy").or(default_value)

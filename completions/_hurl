@@ -58,6 +58,7 @@ _hurl() {
     '--no-assert[Ignore asserts defined in the Hurl file]' \
     '--no-color[Do not colorize output]' \
     '--no-cookie-store[Do not use cookie store between requests]' \
+    '*--no-header[Remove header(s) sent to server]: :' \
     '--no-output[Suppress output. By default, Hurl outputs the body of the last response]' \
     '--no-pretty[Do not prettify response output]' \
     '--no-proxy[List of hosts which do not use proxy]: :' \

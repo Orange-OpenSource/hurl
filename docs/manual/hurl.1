@@ -1,4 +1,4 @@
-.TH hurl 1 "15 May 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "16 May 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -297,6 +297,12 @@ Tell Hurl to use Negotiate (SPNEGO) authentication.
 Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.
 
 Environment variables: HURL_NO_COOKIE_STORE
+
+This is a cli-only option.
+
+.IP "--no-header <NAME> "
+
+Remove a header from information sent. Can be used several times in a command.
 
 This is a cli-only option.
 

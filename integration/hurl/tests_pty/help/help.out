@@ -61,6 +61,8 @@ HTTP options:
           Tell Hurl to use Negotiate (SPNEGO) authentication
       --no-cookie-store
           Do not use cookie store between requests
+      --no-header <NAME>
+          Remove header(s) sent to server
       --no-proxy <HOST(S)>
           List of hosts which do not use proxy
       --ntlm

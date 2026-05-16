@@ -315,6 +315,12 @@ Environment variables: HURL_NO_COOKIE_STORE
 
 This is a cli-only option.
 
+#### --no-header <NAME> {#no-header}
+
+Remove a header from information sent. Can be used several times in a command.
+
+This is a cli-only option.
+
 #### --no-proxy <HOST(S)> {#no-proxy}
 
 Comma-separated list of hosts which do not use a proxy.

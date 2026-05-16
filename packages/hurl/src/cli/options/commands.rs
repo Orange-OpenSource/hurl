@@ -421,6 +421,16 @@ pub fn no_cookie_store() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn no_header() -> clap::Arg {
+    clap::Arg::new("no_header")
+        .long("no-header")
+        .value_name("NAME")
+        .help("Remove header(s) sent to server")
+        .help_heading("HTTP options")
+        .num_args(1)
+        .action(clap::ArgAction::Append)
+}
+
 pub fn no_output() -> clap::Arg {
     clap::Arg::new("no_output")
         .long("no-output")
