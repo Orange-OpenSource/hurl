@@ -1,0 +1,26 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/no-header
+* foo: FOO
+*
+* Request can be run with the following curl command:
+* curl --header 'foo: FOO' --header 'user-agent:' --header 'Accept:' 'http://localhost:8000/no-header'
+*
+> GET /no-header HTTP/1.1
+> Host: localhost:8000
+> foo: FOO
+>
+* Response: (received 12 bytes in <<<\d+>>> ms)
+*
+< HTTP/1.1 200 OK
+< Content-Length: 12
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*>>>
+< Server: Flask Server
+< Via: waitress
+<
+*
