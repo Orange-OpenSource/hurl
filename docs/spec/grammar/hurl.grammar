@@ -124,6 +124,8 @@ option:
   | connect-to-option
   | connect-timeout-option
   | delay-option
+  | digest-option
+  | fail-with-body-option
   | follow-redirect-option
   | follow-redirect-trusted-option
   | header-option
@@ -137,6 +139,7 @@ option:
   | limit-rate-option
   | max-redirs-option
   | max-time-option
+  | negotiate-option
   | netrc-option
   | netrc-file-option
   | netrc-optional-option
@@ -153,6 +156,7 @@ option:
   | user-option
   | variable-option
   | verbose-option
+  | verbosity-option
   | very-verbose-option
   )
 
@@ -171,6 +175,10 @@ connect-to-option: "connect-to" ":" value-string lt
 connect-timeout-option: "connect-timeout" ":" duration-option lt
 
 delay-option: "delay" ":" duration-option lt
+
+digest-option: "digest" ":" boolean-option lt
+
+fail-with-body-option: "fail-with-body" ":" boolean-option lt
 
 follow-redirect-option: "location" ":" boolean-option lt
 
@@ -197,6 +205,8 @@ limit-rate-option: "limit-rate" ":" integer-option lt
 max-redirs-option: "max-redirs" ":" integer-option lt
 
 max-time-option: "max-time" ":" integer-option lt
+
+negotiate-option: "negotiate" ":" boolean-option lt
 
 netrc-option: "netrc" ":" boolean-option lt
 
@@ -229,6 +239,8 @@ user-option: "user" ":" value-string lt
 variable-option: "variable" ":" variable-definition lt
 
 verbose-option: "verbose" ":" boolean-option lt
+
+verbosity-option: "verbosity" ":" ( "brief" | "verbose" | "debug")
 
 very-verbose-option: "very-verbose" ":" boolean-option lt
 
