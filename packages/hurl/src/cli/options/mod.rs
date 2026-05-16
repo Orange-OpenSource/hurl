@@ -373,7 +373,6 @@ impl CliOptions {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),
         };
-        let no_assert = self.no_assert;
         let insecure = self.insecure;
         let ip_resolve = match self.ip_resolve {
             Some(ip) => ip.into(),
@@ -388,6 +387,8 @@ impl CliOptions {
         let netrc = self.netrc;
         let netrc_file = self.netrc_file.clone();
         let netrc_optional = self.netrc_optional;
+        let no_assert = self.no_assert;
+        let no_headers = self.no_headers.clone();
         let no_proxy = self.no_proxy.clone();
         let output = self.output.clone();
         let path_as_is = self.path_as_is;
@@ -426,7 +427,6 @@ impl CliOptions {
             .from_entry(from_entry)
             .headers(headers)
             .http_version(http_version)
-            .no_assert(no_assert)
             .insecure(insecure)
             .ip_resolve(ip_resolve)
             .max_filesize(max_filesize)
@@ -437,7 +437,9 @@ impl CliOptions {
             .netrc(netrc)
             .netrc_file(netrc_file)
             .netrc_optional(netrc_optional)
+            .no_assert(no_assert)
             .no_proxy(no_proxy)
+            .no_headers(no_headers)
             .ntlm(ntlm)
             .output(output)
             .path_as_is(path_as_is)

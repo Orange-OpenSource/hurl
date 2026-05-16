@@ -268,6 +268,7 @@ impl ClientOptions {
             netrc: runner_options.netrc,
             netrc_file: runner_options.netrc_file.clone(),
             netrc_optional: runner_options.netrc_optional,
+            no_headers: runner_options.no_headers.clone(),
             ntlm: runner_options.ntlm,
             path_as_is: runner_options.path_as_is,
             pinned_pub_key: runner_options.pinned_pub_key.clone(),

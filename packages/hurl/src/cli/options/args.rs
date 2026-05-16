@@ -750,7 +750,6 @@ fn no_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<Strin
     no_headers
 }
 
-
 fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "no_proxy").or(default_value)
 }

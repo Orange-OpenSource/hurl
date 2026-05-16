@@ -571,20 +571,26 @@ impl Client {
         implicit_content_type: Option<&str>,
         options: &ClientOptions,
     ) -> Result<(), HttpError> {
-        let mut list = headers.to_curl_headers()?;
+        let mut headers_to_add = headers.clone();
+        let mut headers_to_remove = options
+            .no_headers
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>();
 
         // If request has no `Content-Type` header, we set it if the content type has been set
         // implicitly on this request.
         if !headers.contains_key(CONTENT_TYPE) {
-            if let Some(s) = implicit_content_type {
-                list.append(&format!("{CONTENT_TYPE}: {s}"))?;
+            if let Some(implicit_content_type) = implicit_content_type {
+                let header = Header::new(CONTENT_TYPE, implicit_content_type);
+                headers_to_add.push(header);
             } else {
                 // We remove default `Content-Type` headers added by curl because we want to
                 // explicitly manage this header.
                 // For instance, with --data option, curl will send a `Content-type: application/x-www-form-urlencoded`
                 // header. From <https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html>, we can delete
                 // the headers added by libcurl by adding a header with no content.
-                list.append(&format!("{CONTENT_TYPE}:"))?;
+                headers_to_remove.push(CONTENT_TYPE);
             }
         }
 
@@ -594,9 +600,8 @@ impl Client {
         // some APIs to reject the request.
         // Therefore, we only remove this header when not in aws_sigv4 mode.
         if !headers.contains_key(EXPECT) && options.aws_sigv4.is_none() {
-            // We remove default Expect headers added by curl because we want to explicitly manage
-            // this header.
-            list.append(&format!("{EXPECT}:"))?;
+            // We remove default Expect headers added by curl because we want to explicitly manage this header.
+            headers_to_remove.push(EXPECT);
         }
 
         if !headers.contains_key(USER_AGENT) {
@@ -607,7 +612,8 @@ impl Client {
                     format!("hurl/{pkg_version}")
                 }
             };
-            list.append(&format!("{USER_AGENT}: {user_agent}"))?;
+            let header = Header::new(USER_AGENT, &user_agent);
+            headers_to_add.push(header);
         }
 
         if let Some(user) = &options.user {
@@ -635,15 +641,26 @@ impl Client {
                 let user = user.as_bytes();
                 let authorization = general_purpose::STANDARD.encode(user);
                 if !headers.contains_key(AUTHORIZATION) {
-                    list.append(&format!("{AUTHORIZATION}: Basic {authorization}"))?;
+                    let header = Header::new(AUTHORIZATION, &format!("Basic {authorization}"));
+                    headers_to_add.push(header);
                 }
             }
         }
         if options.compressed && !headers.contains_key(ACCEPT_ENCODING) {
-            list.append(&format!("{ACCEPT_ENCODING}: gzip, deflate, br"))?;
+            let header = Header::new(ACCEPT_ENCODING, "gzip, deflate, br");
+            headers_to_add.push(header);
         }
 
-        self.handle.http_headers(list)?;
+        // Filter out any header that is also marked for removal: if the user explicitly asked
+        // to drop a header (via `--no-header`), we must not re-add it here.
+        headers_to_add.retain(|h| !headers_to_remove.iter().any(|name| h.name_eq(name)));
+
+        // Configure libcurl with headers to add and headers to remove.
+        let mut headers = headers_to_add.to_curl_headers()?;
+        for header in &headers_to_remove {
+            headers.append(&format!("{header}:"))?;
+        }
+        self.handle.http_headers(headers)?;
         Ok(())
     }
 
