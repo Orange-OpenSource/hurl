@@ -69,7 +69,7 @@ impl CurlCmd {
 
         let mut headers = request_spec.headers.clone();
         headers.extend(&options.headers);
-        // We need to filter added header that have been explicitly removed by user
+        // We need to filter added headers that have been explicitly removed by user
         headers.retain(|h| !options.no_headers.iter().any(|name| h.name_eq(name)));
         let mut params = headers_params(
             &headers,
@@ -150,17 +150,14 @@ fn headers_params(
 }
 
 /// Returns the curl args corresponding to removing some request headers.
-fn no_headers_params(
-    no_headers: &[String],
-) -> Vec<String> {
+fn no_headers_params(no_headers: &[String]) -> Vec<String> {
     let mut args = vec![];
-    no_headers.iter().for_each(|no_header| {
+    no_headers.iter().for_each(|name| {
         args.push("--header".to_string());
-        args.push(format!("'{no_header}:'"));
+        args.push(encode_shell_string(&format!("{name}:")));
     });
     args
 }
-
 
 /// Returns the curl args corresponding to the request body, from a request spec.
 fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<String> {

@@ -606,7 +606,7 @@ pub struct RunnerOptions {
     pub(crate) netrc_optional: bool,
     /// Ignores all asserts defined in the Hurl file.
     pub(crate) no_assert: bool,
-    /// Headers names to remove from the HTTP requests.
+    /// Header names to remove from the HTTP requests.
     pub(crate) no_headers: Vec<String>,
     /// Sets list of hosts which do not use a proxy.
     pub(crate) no_proxy: Option<String>,
