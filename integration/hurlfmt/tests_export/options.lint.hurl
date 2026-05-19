@@ -32,6 +32,7 @@ negotiate: false
 netrc: false
 netrc-file: netrcfile
 netrc-optional: false
+no-header: Accept
 ntlm: false
 output: output.txt
 path-as-is: false
@@ -88,6 +89,7 @@ negotiate: {{negotiate}}
 netrc: {{netrc}}
 netrc-file: {{netrc-file}}
 netrc-optional: {{netrc-optional}}
+no-header: {{no-header}}
 ntlm: {{ntlm}}
 output: {{output}}
 path-as-is: {{path-as-is}}
