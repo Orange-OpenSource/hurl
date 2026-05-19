@@ -166,10 +166,7 @@ impl RunContext {
             .map(|v| v.as_str())
     }
 
-    /// Returns the map of Hurl headers injected by environment variables.
-    ///
-    /// Environment variables are prefixed with `HURL_VARIABLE_` and returned values have their name
-    /// stripped of this prefix.
+    /// Returns the Hurl headers injected by environment variables.
     pub fn header_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_HEADER).map(|v| v.as_str())
     }
@@ -262,11 +259,6 @@ impl RunContext {
         self.hurl_env_vars.get(HURL_USER_AGENT).map(|v| v.as_str())
     }
 
-    /// Returns the env var for suppressing output.
-    pub fn no_output_env_var(&self) -> Option<bool> {
-        self.get_env_var_bool(HURL_NO_OUTPUT)
-    }
-
     /// Returns the env var for ignoring asserts.
     pub fn no_assert_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_NO_ASSERT)
@@ -278,10 +270,13 @@ impl RunContext {
     }
 
     /// Returns the env var for headers to remove from requests.
-    ///
-    /// Header names are separated by `|`.
     pub fn no_header_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_NO_HEADER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for suppressing output.
+    pub fn no_output_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_OUTPUT)
     }
 
     /// Returns the env var for disabling pretty output.

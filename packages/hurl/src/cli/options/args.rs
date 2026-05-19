@@ -743,11 +743,11 @@ fn no_cookie_store(arg_matches: &ArgMatches, default_value: bool) -> bool {
 }
 
 fn no_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
-    let mut no_headers = default_value;
-    if let Some(no_header) = get_strings(arg_matches, "no_header") {
-        no_headers.extend(no_header);
+    let mut all_no_headers = default_value;
+    if let Some(no_headers) = get_strings(arg_matches, "no_header") {
+        all_no_headers.extend(no_headers);
     }
-    no_headers
+    all_no_headers
 }
 
 fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {

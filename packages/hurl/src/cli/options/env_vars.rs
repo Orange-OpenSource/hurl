@@ -247,7 +247,7 @@ fn no_headers(
     if let Some(no_header) = context.no_header_env_var() {
         let no_headers = no_header
             .split("|")
-            .map(|h| h.to_string())
+            .map(|h| h.trim().to_string())
             .collect::<Vec<_>>();
         for h in &no_headers {
             if h.is_empty() {

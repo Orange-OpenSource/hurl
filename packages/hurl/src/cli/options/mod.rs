@@ -388,6 +388,14 @@ impl CliOptions {
         let netrc_file = self.netrc_file.clone();
         let netrc_optional = self.netrc_optional;
         let no_assert = self.no_assert;
+        let mut no_headers = Vec::new();
+        for no_header in self.no_headers.iter() {
+            let no_header = no_header.trim().to_string();
+            if no_header.is_empty() {
+                return Err(CliError::InvalidOption("Missing header name".to_string()));
+            }
+            no_headers.push(no_header);
+        }
         let no_headers = self.no_headers.clone();
         let no_proxy = self.no_proxy.clone();
         let output = self.output.clone();
