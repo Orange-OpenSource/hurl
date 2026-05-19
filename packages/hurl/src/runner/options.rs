@@ -235,6 +235,10 @@ pub fn get_entry_options(
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.netrc_optional = value;
             }
+            OptionKind::NoHeader(value) => {
+                let name = eval_template(value, variables)?;
+                entry_options.no_headers.push(name);
+            }
             OptionKind::Ntlm(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.ntlm = value;

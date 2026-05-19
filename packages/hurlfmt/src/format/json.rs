@@ -338,6 +338,7 @@ impl ToJson for EntryOption {
             OptionKind::NetRc(value) => value.to_json(),
             OptionKind::NetRcFile(filename) => JValue::String(filename.to_string()),
             OptionKind::NetRcOptional(value) => value.to_json(),
+            OptionKind::NoHeader(value) => JValue::String(value.to_string()),
             OptionKind::Ntlm(value) => value.to_json(),
             OptionKind::Output(filename) => JValue::String(filename.to_string()),
             OptionKind::PathAsIs(value) => value.to_json(),

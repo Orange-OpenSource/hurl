@@ -319,8 +319,6 @@ This is a cli-only option.
 
 Remove a header from information sent. Can be used several times in a command.
 
-This is a cli-only option.
-
 #### --no-proxy <HOST(S)> {#no-proxy}
 
 Comma-separated list of hosts which do not use a proxy.

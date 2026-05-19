@@ -73,6 +73,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "netrc" => option_netrc(reader)?,
         "netrc-file" => option_netrc_file(reader)?,
         "netrc-optional" => option_netrc_optional(reader)?,
+        "no-header" => option_no_header(reader)?,
         "ntlm" => option_ntlm(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
@@ -242,6 +243,11 @@ fn option_netrc_file(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_netrc_optional(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::NetRcOptional(value))
+}
+
+fn option_no_header(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::NoHeader(value))
 }
 
 fn option_ntlm(reader: &mut Reader) -> ParseResult<OptionKind> {
