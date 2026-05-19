@@ -27,7 +27,8 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::{
     HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
     HURL_FOLLOW_LOCATION_TRUSTED, HURL_HEADER, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE,
-    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_RETRY, HURL_RETRY_INTERVAL, HURL_VERBOSITY,
+    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_NO_HEADER, HURL_RETRY, HURL_RETRY_INTERVAL,
+    HURL_VERBOSITY,
 };
 use super::variables::TypeKind;
 use super::{
@@ -238,6 +239,30 @@ fn no_cookie_store(context: &RunContext, default_value: bool) -> bool {
     context.no_cookie_store_env_var().unwrap_or(default_value)
 }
 
+fn no_headers(
+    context: &RunContext,
+    default_value: Vec<String>,
+) -> Result<Vec<String>, CliOptionsError> {
+    let mut all_no_headers = default_value;
+    if let Some(no_header) = context.no_header_env_var() {
+        let no_headers = no_header
+            .split("|")
+            .map(|h| h.to_string())
+            .collect::<Vec<_>>();
+        for h in &no_headers {
+            if h.is_empty() {
+                let msg = "Missing header name".to_string();
+                return Err(err_from_cli_err(
+                    CliOptionsError::Error(msg),
+                    HURL_NO_HEADER,
+                ));
+            }
+        }
+        all_no_headers.extend(no_headers);
+    }
+    Ok(all_no_headers)
+}
+
 fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
     match (context.no_output_env_var(), context.test_env_var()) {
         (Some(true), _) => OutputType::NoOutput,
@@ -365,6 +390,7 @@ pub fn parse_env_vars(
     let ip_resolve = ip_resolve(context, default_options.ip_resolve);
     let no_assert = no_assert(context, default_options.no_assert);
     let no_cookie_store = no_cookie_store(context, default_options.no_cookie_store);
+    let no_headers = no_headers(context, default_options.no_headers)?;
     let output_type = output_type(context, default_options.output_type);
     let follow_location = follow_location(context, default_options.follow_location)?;
     let follow_location_trusted =
@@ -408,6 +434,7 @@ pub fn parse_env_vars(
         max_redirect,
         no_assert,
         no_cookie_store,
+        no_headers,
         output_type,
         parallel,
         pretty,

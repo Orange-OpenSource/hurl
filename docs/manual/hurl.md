@@ -319,6 +319,8 @@ This is a cli-only option.
 
 Remove a header from information sent. Can be used several times in a command.
 
+Environment variables: HURL_NO_HEADER='name1|name2' (names are separated by |)
+
 #### --no-proxy <HOST(S)> {#no-proxy}
 
 Comma-separated list of hosts which do not use a proxy.

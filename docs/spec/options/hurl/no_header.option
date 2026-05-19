@@ -4,5 +4,6 @@ value: NAME
 help: Remove header(s) sent to server
 help_heading: HTTP options
 multi: append
+env_var: HURL_NO_HEADER='name1|name2' (names are separated by |)
 ---
 Remove a header from information sent. Can be used several times in a command.
