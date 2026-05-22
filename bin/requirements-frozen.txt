@@ -1,12 +1,12 @@
-ast_serialize==0.3.0
+ast_serialize==0.5.0
 beautifulsoup4==4.14.3
 blinker==1.9.0
-certifi==2026.4.22
+certifi==2026.5.20
 charset-normalizer==3.4.7
-click==8.3.3
+click==8.4.1
 Flask==3.1.3
 icdiff==2.0.10
-idna==3.14
+idna==3.16
 itsdangerous==2.2.0
 Jinja2==3.1.6
 librt==0.11.0
