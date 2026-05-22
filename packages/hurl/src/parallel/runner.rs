@@ -131,7 +131,7 @@ impl ParallelRunner {
         let workers = (0..workers_count)
             .map(|i| {
                 let worker = Worker::new(WorkerId::from(i), &tx_in, &rx_out);
-                let state = WorkerState::Idle;
+                let state: WorkerState = WorkerState::Idle;
                 (worker, state)
             })
             .collect::<Vec<_>>();
@@ -250,7 +250,17 @@ impl ParallelRunner {
                     // Report the completion of this job and update the progress.
                     self.progress.print_completed(&msg.result, &mut stderr);
 
-                    results.push(msg.result);
+                    // release memory before results.push
+                    let mut result = msg.result;
+                    if matches!(self.output_type, OutputType::NoOutput) {
+                        for entry in &mut result.hurl_result.entries {
+                            for call in &mut entry.calls {
+                                call.request.body = Vec::new();  // release memory of request body
+                                call.response.body = Vec::new();  // release memory of response body
+                            }
+                        }
+                    }
+                    results.push(result);
 
                     self.progress.update_progress_bar(
                         &self.workers,
