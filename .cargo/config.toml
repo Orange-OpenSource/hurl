@@ -8,3 +8,8 @@ rustflags = ["-Ctarget-feature=-crt-static"]
 # Should be only activated for Alpine but I don't know how to set it...
 [build]
 rustdocflags = ["-Ctarget-feature=-crt-static"]
+
+# Fix bindgen compatibility with clang 22+ (libxml crate build issue)
+# Prevents __float128 parsing errors in system headers
+[env]
+BINDGEN_EXTRA_CLANG_ARGS = "-target x86_64-unknown-linux-gnu"
