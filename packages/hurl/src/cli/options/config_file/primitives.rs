@@ -72,7 +72,25 @@ pub fn parse_value(reader: &mut Reader) -> Result<String, ConfigFileError> {
         let value = reader.read_while(|c| c != '"');
         if reader.peek() == Some('"') {
             reader.read(); // consume closing quote
-            Ok(value.trim().to_string())
+            // Allow trailing spaces and inline comment, but nothing else on the same line.
+            reader.read_while(|c: char| c == ' ' || c == '\t');
+            if reader.is_eof() {
+                Ok(value.trim().to_string())
+            } else if reader.peek() == Some('#') {
+                reader.read_while(|c: char| c != '\n');
+                if reader.peek() == Some('\n') {
+                    reader.read(); // consume newline
+                }
+                Ok(value.trim().to_string())
+            } else if reader.peek() == Some('\n') {
+                reader.read(); // consume newline
+                Ok(value.trim().to_string())
+            } else {
+                Err(ConfigFileError::new(
+                    reader.cursor().pos,
+                    "characters after the closing quote",
+                ))
+            }
         } else {
             Err(ConfigFileError::new(
                 reader.cursor().pos,
@@ -189,12 +207,12 @@ mod tests {
         // Quoted String
         let mut reader = Reader::new("\"Hello\"\n");
         assert_eq!(parse_value(&mut reader).unwrap(), "Hello");
-        assert_eq!((reader.cursor().index), CharPos(7));
+        assert_eq!((reader.cursor().index), CharPos(8));
 
         // Value containing newline
         let mut reader = Reader::new("\"Hello\nBob!\"\n");
         assert_eq!(parse_value(&mut reader).unwrap(), "Hello\nBob!");
-        assert_eq!((reader.cursor().index), CharPos(12));
+        assert_eq!((reader.cursor().index), CharPos(13));
     }
 
     #[test]
@@ -205,5 +223,25 @@ mod tests {
             ConfigFileError::new(Pos::new(2, 1), "Missing closing quote")
         );
         assert_eq!((reader.cursor().index), CharPos(3));
+    }
+
+    #[test]
+    fn test_parse_quoted_value_with_trailing_whitespace_or_comment() {
+        let mut reader = Reader::new("\"Hello\"   \n");
+        assert_eq!(parse_value(&mut reader).unwrap(), "Hello");
+        assert_eq!((reader.cursor().index), CharPos(11));
+
+        let mut reader = Reader::new("\"Hello\" # this is a comment\n");
+        assert_eq!(parse_value(&mut reader).unwrap(), "Hello");
+        assert_eq!((reader.cursor().index), CharPos(28));
+    }
+
+    #[test]
+    fn test_parse_quoted_value_error_trailing_chars() {
+        let mut reader = Reader::new("\"Hello\" world\n");
+        assert_eq!(
+            parse_value(&mut reader).unwrap_err(),
+            ConfigFileError::new(Pos::new(1, 9), "characters after the closing quote")
+        );
     }
 }

@@ -271,4 +271,11 @@ mod tests {
         assert_eq!(err.pos, Pos::new(1, 14));
         assert_eq!(err.message, "Option --max-redirs requires an integer value");
     }
+
+    #[test]
+    fn test_parse_config_error_trailing_chars_after_closing_quote() {
+        let content = "--user-agent=\"Mozilla/5.0 A\" --verbose\n";
+        let err = parse_config(content, CliOptions::default()).unwrap_err();
+        assert_eq!(err.message, "characters after the closing quote");
+    }
 }
