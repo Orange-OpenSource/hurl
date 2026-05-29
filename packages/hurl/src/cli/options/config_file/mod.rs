@@ -166,6 +166,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.limit_rate = Some(BytesPerSec(limit_rate));
             Ok(())
         }
+        "insecure" => {
+            expect_no_value(reader)?;
+            options.insecure = true;
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -259,6 +264,16 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.limit_rate, Some(BytesPerSec(2_000_000)));
         assert_eq!(reader.cursor().pos, Pos::new(1, 21));
+    }
+
+    #[test]
+    fn test_parse_option_insecure() {
+        let mut reader = Reader::new("--insecure\n");
+        let mut options = CliOptions::default();
+        assert!(!options.insecure);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.insecure);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
