@@ -171,6 +171,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.insecure = true;
             Ok(())
         }
+        "fail-with-body" => {
+            expect_no_value(reader)?;
+            options.fail_with_body = true;
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -273,6 +278,16 @@ mod tests {
         assert!(!options.insecure);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.insecure);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_fail_with_body() {
+        let mut reader = Reader::new("--fail-with-body\n");
+        let mut options = CliOptions::default();
+        assert!(!options.fail_with_body);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.fail_with_body);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
