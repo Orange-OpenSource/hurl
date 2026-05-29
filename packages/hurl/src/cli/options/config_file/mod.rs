@@ -28,7 +28,7 @@ use crate::cli::options::config_file::primitives::{
 use crate::cli::options::duration;
 
 use super::{CliOptions, CliOptionsError, Verbosity};
-use hurl_core::types::Count;
+use hurl_core::types::{BytesPerSec, Count};
 use primitives::skip_whitespace_and_comments;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -156,6 +156,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                 })?;
             Ok(())
         }
+        "limit-rate" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let limit_rate = value.parse::<u64>().map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --limit-rate requires an integer value")
+            })?;
+            options.limit_rate = Some(BytesPerSec(limit_rate));
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -243,6 +253,15 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_option_limit_rate() {
+        let mut reader = Reader::new("--limit-rate=2000000\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.limit_rate, Some(BytesPerSec(2_000_000)));
+        assert_eq!(reader.cursor().pos, Pos::new(1, 21));
+    }
+
+    #[test]
     fn test_parse_option_error() {
         let mut reader = Reader::new("verbose\n");
         let mut options = CliOptions::default();
@@ -297,6 +316,12 @@ mod tests {
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 9));
         assert_eq!(err.message, "Option --delay has an invalid duration");
+
+        let mut reader = Reader::new("--limit-rate=abc\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 14));
+        assert_eq!(err.message, "Option --limit-rate requires an integer value");
     }
 
     #[test]
