@@ -20,10 +20,12 @@ mod primitives;
 use std::path::Path;
 
 use hurl_core::reader::{CharPos, Pos, Reader};
+use hurl_core::types::DurationUnit;
 
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
 };
+use crate::cli::options::duration;
 
 use super::{CliOptions, CliOptionsError, Verbosity};
 use hurl_core::types::Count;
@@ -144,6 +146,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
 
             Ok(())
         }
+        "delay" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            options.delay = duration::duration_from_str(&value, DurationUnit::MilliSecond)
+                .map_err(|_| {
+                    ConfigFileError::new(save.pos, "Option --delay has an invalid duration")
+                })?;
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -222,6 +234,15 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_option_delay() {
+        let mut reader = Reader::new("--delay=1s\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.delay, std::time::Duration::from_secs(1));
+        assert_eq!(reader.cursor().pos, Pos::new(1, 11));
+    }
+
+    #[test]
     fn test_parse_option_error() {
         let mut reader = Reader::new("verbose\n");
         let mut options = CliOptions::default();
@@ -270,6 +291,12 @@ mod tests {
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 14));
         assert_eq!(err.message, "Option --max-redirs requires an integer value");
+
+        let mut reader = Reader::new("--delay=abc\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 9));
+        assert_eq!(err.message, "Option --delay has an invalid duration");
     }
 
     #[test]
