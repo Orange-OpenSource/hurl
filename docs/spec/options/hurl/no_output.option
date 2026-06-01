@@ -4,6 +4,7 @@ help: Suppress output. By default, Hurl outputs the body of the last response
 help_heading: Output options
 conflict: json
 cli_only: true
+config_file: true
 env_var: HURL_NO_OUTPUT
 ---
 Suppress output. By default, Hurl outputs the body of the last response.

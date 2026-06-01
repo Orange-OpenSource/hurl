@@ -27,7 +27,7 @@ use crate::cli::options::config_file::primitives::{
 };
 use crate::cli::options::duration;
 
-use super::{CliOptions, CliOptionsError, Verbosity};
+use super::{CliOptions, CliOptionsError, OutputType, Verbosity};
 use hurl_core::types::{BytesPerSec, Count};
 use primitives::skip_whitespace_and_comments;
 
@@ -176,6 +176,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.fail_with_body = true;
             Ok(())
         }
+        "no-output" => {
+            expect_no_value(reader)?;
+            options.output_type = OutputType::NoOutput;
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -288,6 +293,16 @@ mod tests {
         assert!(!options.fail_with_body);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.fail_with_body);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_no_output() {
+        let mut reader = Reader::new("--no-output\n");
+        let mut options = CliOptions::default();
+        assert_eq!(options.output_type, OutputType::ResponseBody);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.output_type, OutputType::NoOutput);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
