@@ -176,6 +176,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.fail_with_body = true;
             Ok(())
         }
+        "no-assert" => {
+            expect_no_value(reader)?;
+            options.no_assert = true;
+            Ok(())
+        }
         "no-output" => {
             expect_no_value(reader)?;
             options.output_type = OutputType::NoOutput;
@@ -303,6 +308,16 @@ mod tests {
         assert_eq!(options.output_type, OutputType::ResponseBody);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.output_type, OutputType::NoOutput);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_no_assert() {
+        let mut reader = Reader::new("--no-assert\n");
+        let mut options = CliOptions::default();
+        assert!(!options.no_assert);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.no_assert);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
