@@ -171,6 +171,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.insecure = true;
             Ok(())
         }
+        "compressed" => {
+            expect_no_value(reader)?;
+            options.compressed = true;
+            Ok(())
+        }
         "fail-with-body" => {
             expect_no_value(reader)?;
             options.fail_with_body = true;
@@ -288,6 +293,16 @@ mod tests {
         assert!(!options.insecure);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.insecure);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_compressed() {
+        let mut reader = Reader::new("--compressed\n");
+        let mut options = CliOptions::default();
+        assert!(!options.compressed);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.compressed);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
