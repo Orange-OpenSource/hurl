@@ -53,7 +53,8 @@ class Crate:
         self.updated_at = None
         self.latest_version = None
         crate_url = f"https://crates.io/api/v1/crates/{self.name}"
-        crate_object = req.get(url=crate_url)
+        headers = {"User-Agent": "Contact: https://github.com/Orange-OpenSource/hurl"}
+        crate_object = req.get(url=crate_url, headers=headers)
         if crate_object.status_code != 200:
             return False
         crate = crate_object.json()["crate"]
