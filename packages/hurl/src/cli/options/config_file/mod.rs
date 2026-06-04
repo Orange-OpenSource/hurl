@@ -27,7 +27,7 @@ use crate::cli::options::config_file::primitives::{
 };
 use crate::cli::options::duration;
 
-use super::{CliOptions, CliOptionsError, OutputType, Verbosity};
+use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
 use hurl_core::types::{BytesPerSec, Count};
 use primitives::skip_whitespace_and_comments;
 
@@ -171,6 +171,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.insecure = true;
             Ok(())
         }
+        "ipv6" => {
+            expect_no_value(reader)?;
+            options.ip_resolve = Some(IpResolve::IpV6);
+            Ok(())
+        }
         "compressed" => {
             expect_no_value(reader)?;
             options.compressed = true;
@@ -303,6 +308,16 @@ mod tests {
         assert!(!options.compressed);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.compressed);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_ipv6() {
+        let mut reader = Reader::new("--ipv6\n");
+        let mut options = CliOptions::default();
+        assert_eq!(options.ip_resolve, None);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.ip_resolve, Some(IpResolve::IpV6));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
