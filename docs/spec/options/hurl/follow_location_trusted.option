@@ -2,6 +2,7 @@ name: follow_location_trusted
 long: location-trusted
 help: Follow redirects but allows sending the name + password to all hosts that the site may redirect to
 help_heading: HTTP options
+config_file: true
 env_var: HURL_LOCATION_TRUSTED
 ---
 Like [`-L, --location`](#location), but allows sending the name + password to all hosts that the site may redirect to.

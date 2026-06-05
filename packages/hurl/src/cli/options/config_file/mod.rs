@@ -176,6 +176,12 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.follow_location = true;
             Ok(())
         }
+        "location-trusted" => {
+            expect_no_value(reader)?;
+            options.follow_location = true;
+            options.follow_location_trusted = true;
+            Ok(())
+        }
         "ipv6" => {
             expect_no_value(reader)?;
             options.ip_resolve = Some(IpResolve::IpV6);
@@ -313,6 +319,18 @@ mod tests {
         assert!(!options.follow_location);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.follow_location);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_follow_location_trusted() {
+        let mut reader = Reader::new("--location-trusted\n");
+        let mut options = CliOptions::default();
+        assert!(!options.follow_location);
+        assert!(!options.follow_location_trusted);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.follow_location);
+        assert!(options.follow_location_trusted);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
