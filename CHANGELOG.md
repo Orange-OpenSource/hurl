@@ -5,6 +5,7 @@ Thanks to
 
 Enhancements:
 
+* Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
 
 
