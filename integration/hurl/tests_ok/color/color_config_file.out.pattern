@@ -1,0 +1,7 @@
+[1;32mHTTP/1.1 200
+[0m[1;36mContent-Length[0m: 20
+[1;36mContent-Type[0m: text/html; charset=utf-8
+[1;36mDate[0m: <<<.*>>>
+[1;36mServer[0m: Flask Server
+[1;36mVia[0m: waitress
+

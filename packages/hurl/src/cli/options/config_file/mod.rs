@@ -213,6 +213,12 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.user_agent = Some(value);
             Ok(())
         }
+        "color" => {
+            expect_no_value(reader)?;
+            options.color_stdout = true;
+            options.color_stderr = true;
+            Ok(())
+        }
         _ => Err(ConfigFileError::new(
             save.pos,
             &format!("Unknown option <--{}>", option_name),
@@ -300,6 +306,18 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.limit_rate, Some(BytesPerSec(2_000_000)));
         assert_eq!(reader.cursor().pos, Pos::new(1, 21));
+    }
+
+    #[test]
+    fn test_parse_option_color() {
+        let mut reader = Reader::new("--color\n");
+        let mut options = CliOptions::default();
+        assert!(!options.color_stdout);
+        assert!(!options.color_stderr);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.color_stdout);
+        assert!(options.color_stderr);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
