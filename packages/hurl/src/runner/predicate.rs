@@ -65,26 +65,28 @@ pub fn eval_predicate(
         Pos::new(predicate.space0.source_info.start.line, 0),
     );
 
+    // `!=` already negates equality, so combine it with the `not` qualifier (XOR) for the prefix.
+    let negated = predicate.not
+        ^ matches!(
+            predicate.predicate_func.value,
+            PredicateFuncValue::NotEqual { .. }
+        );
+    let not = if negated { "not " } else { "" };
+
     if result.type_mismatch {
-        let not = if predicate.not { "not " } else { "" };
-        let expected = format!("{}{}", not, result.expected);
+        let expected = format!("{not}{}", result.expected);
         let kind = RunnerErrorKind::AssertFailure {
             actual: result.actual,
             expected,
             type_mismatch: true,
         };
         Err(RunnerError::new(source_info, kind, true))
-    } else if predicate.not && result.success {
+    } else if predicate.not == result.success {
+        // Fail when the `not` qualifier and the predicate outcome agree.
+        let expected = format!("{not}{}", result.expected);
         let kind = RunnerErrorKind::AssertFailure {
             actual: result.actual,
-            expected: format!("not {}", result.expected),
-            type_mismatch: false,
-        };
-        Err(RunnerError::new(source_info, kind, true))
-    } else if !predicate.not && !result.success {
-        let kind = RunnerErrorKind::AssertFailure {
-            actual: result.actual,
-            expected: result.expected,
+            expected,
             type_mismatch: false,
         };
         Err(RunnerError::new(source_info, kind, true))
@@ -897,6 +899,92 @@ mod tests {
                 &context_dir
             )
             .is_ok()
+        );
+    }
+
+    #[test]
+    fn test_predicate_not_equal_error_message() {
+        // A failing `!=` assert reports the value that should not have matched (#2841).
+        let variables = VariableSet::new();
+        let current_dir = Path::new("/home");
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir, file_root);
+
+        // predicate: `!= 1`
+        let predicate = Predicate {
+            not: false,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                value: PredicateFuncValue::NotEqual {
+                    space0: whitespace(),
+                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
+                        1,
+                        "1".to_source(),
+                    ))),
+                },
+                source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 13)),
+            },
+        };
+
+        // value: 1 => fails, expected is the negated value
+        let error = eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(1))),
+            &context_dir,
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::AssertFailure {
+                actual: "integer <1>".to_string(),
+                expected: "not integer <1>".to_string(),
+                type_mismatch: false,
+            }
+        );
+
+        // no value => fails, the negated value is still reported
+        let error = eval_predicate(&predicate, &variables, &None, &context_dir).unwrap_err();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::AssertFailure {
+                actual: "none".to_string(),
+                expected: "not integer <1>".to_string(),
+                type_mismatch: false,
+            }
+        );
+
+        // predicate: `not != 1`, the two negations cancel
+        let predicate = Predicate {
+            not: true,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                value: PredicateFuncValue::NotEqual {
+                    space0: whitespace(),
+                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(I64::new(
+                        1,
+                        "1".to_source(),
+                    ))),
+                },
+                source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 13)),
+            },
+        };
+
+        // value: 2 => fails, no `not` prefix
+        let error = eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(2))),
+            &context_dir,
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::AssertFailure {
+                actual: "integer <2>".to_string(),
+                expected: "integer <1>".to_string(),
+                type_mismatch: false,
+            }
         );
     }
 

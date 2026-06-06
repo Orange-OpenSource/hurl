@@ -18,7 +18,7 @@
         },
         {
           "line": 5,
-          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:5:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 5 | header \"content-type\" != \"text/html; charset=utf-8\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <text/html; charset=utf-8>\n   |",
+          "message": "Assert failure\n  --> tests_failed/assert_value_error/assert_value_error.hurl:5:0\n   |\n   | GET http://localhost:8000/error-assert-value\n   | ...\n 5 | header \"content-type\" != \"text/html; charset=utf-8\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: not string <text/html; charset=utf-8>\n   |",
           "success": false
         },
         {
