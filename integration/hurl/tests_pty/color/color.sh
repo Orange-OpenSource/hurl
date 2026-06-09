@@ -4,6 +4,17 @@ set -Eeuo pipefail
 # Default: color
 hurl tests_pty/color/color.hurl
 
+# Disable color with config file
+XDG_CONFIG_HOME=$(dirname "$0")/config_no_color
+export XDG_CONFIG_HOME
+hurl tests_pty/color/color.hurl
+
+# Re-enable color with environment variable
+export HURL_COLOR=1
+hurl tests_pty/color/color.hurl
+unset HURL_COLOR
+unset XDG_CONFIG_HOME
+
 # No color
 export NO_COLOR=1
 hurl tests_pty/color/color.hurl

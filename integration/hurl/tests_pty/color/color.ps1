@@ -4,6 +4,17 @@ $ErrorActionPreference = 'Stop'
 # Default: color
 hurl tests_pty/color/color.hurl
 
+# Disable color with config file
+$env:XDG_CONFIG_HOME = "$PSScriptRoot/config_no_color"
+export XDG_CONFIG_HOME
+hurl tests_pty/color/color.hurl
+
+# Re-enable color with environment variable
+$env:HURL_COLOR = '1'
+hurl tests_pty/color/color.hurl
+$env:HURL_COLOR = $null
+$env:XDG_CONFIG_HOME = $null 
+
 # No color
 $env:NO_COLOR = '1'
 hurl tests_pty/color/color.hurl
