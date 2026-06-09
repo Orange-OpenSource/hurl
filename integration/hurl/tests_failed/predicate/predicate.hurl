@@ -6,6 +6,10 @@ jsonpath "$.count" == 0
 jsonpath "$.message" == 0
 jsonpath "$.empty" == 0
 jsonpath "$.number" == 1.1
+jsonpath "$.count" != 1
+jsonpath "$.count" not == 1
+jsonpath "$.count" not != 0  # double negation equivalent to == 0
+jsonpath "$.count" not != "Hello" # double negation equivalent to == "Hello"
 jsonpath "$.count" startsWith "0"
 jsonpath "$.count" endsWith "0"
 jsonpath "$.count" matches "hi"

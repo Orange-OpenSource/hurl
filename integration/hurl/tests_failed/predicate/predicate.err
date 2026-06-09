@@ -53,10 +53,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
- 9 | jsonpath "$.count" startsWith "0"
+ 9 | jsonpath "$.count" != 1
    |   actual:   integer <1>
-   |   expected: starts with string <0>
-   |   >>> types between actual and expected are not consistent
+   |   expected: not integer <1>
    |
 
 error: Assert failure
@@ -64,10 +63,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-10 | jsonpath "$.count" endsWith "0"
+10 | jsonpath "$.count" not == 1
    |   actual:   integer <1>
-   |   expected: ends with string <0>
-   |   >>> types between actual and expected are not consistent
+   |   expected: not integer <1>
    |
 
 error: Assert failure
@@ -75,10 +73,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-11 | jsonpath "$.count" matches "hi"
+11 | jsonpath "$.count" not != 0  # double negation equivalent to == 0
    |   actual:   integer <1>
-   |   expected: matches regex <hi>
-   |   >>> types between actual and expected are not consistent
+   |   expected: integer <0>
    |
 
 error: Assert failure
@@ -86,10 +83,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-12 | jsonpath "$.count" isEmpty
+12 | jsonpath "$.count" not != "Hello" # double negation equivalent to == "Hello"
    |   actual:   integer <1>
-   |   expected: count equals to 0
-   |   >>> types between actual and expected are not consistent
+   |   expected: string <Hello>
    |
 
 error: Assert failure
@@ -97,9 +93,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-13 | jsonpath "$.count" contains "foo"
+13 | jsonpath "$.count" startsWith "0"
    |   actual:   integer <1>
-   |   expected: contains string <foo>
+   |   expected: starts with string <0>
    |   >>> types between actual and expected are not consistent
    |
 
@@ -108,9 +104,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-14 | jsonpath "$.count" isIsoDate
+14 | jsonpath "$.count" endsWith "0"
    |   actual:   integer <1>
-   |   expected: string
+   |   expected: ends with string <0>
    |   >>> types between actual and expected are not consistent
    |
 
@@ -119,9 +115,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-15 | jsonpath "$.count" isIpv4
+15 | jsonpath "$.count" matches "hi"
    |   actual:   integer <1>
-   |   expected: string
+   |   expected: matches regex <hi>
    |   >>> types between actual and expected are not consistent
    |
 
@@ -130,9 +126,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-16 | jsonpath "$.count" isIpv6
+16 | jsonpath "$.count" isEmpty
    |   actual:   integer <1>
-   |   expected: string
+   |   expected: count equals to 0
    |   >>> types between actual and expected are not consistent
    |
 
@@ -141,9 +137,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-17 | jsonpath "$.count" isUuid
+17 | jsonpath "$.count" contains "foo"
    |   actual:   integer <1>
-   |   expected: string
+   |   expected: contains string <foo>
    |   >>> types between actual and expected are not consistent
    |
 
@@ -152,9 +148,10 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-18 | jsonpath "$.message" startsWith "hi"
-   |   actual:   string <0>
-   |   expected: starts with string <hi>
+18 | jsonpath "$.count" isIsoDate
+   |   actual:   integer <1>
+   |   expected: string
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
@@ -162,9 +159,10 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-19 | jsonpath "$.message" endsWith "hi"
-   |   actual:   string <0>
-   |   expected: ends with string <hi>
+19 | jsonpath "$.count" isIpv4
+   |   actual:   integer <1>
+   |   expected: string
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
@@ -172,9 +170,10 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-20 | jsonpath "$.message" contains "hi"
-   |   actual:   string <0>
-   |   expected: contains string <hi>
+20 | jsonpath "$.count" isIpv6
+   |   actual:   integer <1>
+   |   expected: string
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
@@ -182,18 +181,20 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-21 | jsonpath "$.message" matches "hi"
-   |   actual:   string <0>
-   |   expected: matches regex <hi>
+21 | jsonpath "$.count" isUuid
+   |   actual:   integer <1>
+   |   expected: string
+   |   >>> types between actual and expected are not consistent
    |
 
-error: Invalid regex
-  --> tests_failed/predicate/predicate.hurl:22:22
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:22:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-22 | jsonpath "$.message" matches "hi{"
-   |                      ^^^^^^^^^^^^^ regex expression is not valid
+22 | jsonpath "$.message" startsWith "hi"
+   |   actual:   string <0>
+   |   expected: starts with string <hi>
    |
 
 error: Assert failure
@@ -201,20 +202,19 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-23 | jsonpath "$.message" isEmpty
-   |   actual:   count equals to 1
-   |   expected: count equals to 0
+23 | jsonpath "$.message" endsWith "hi"
+   |   actual:   string <0>
+   |   expected: ends with string <hi>
    |
 
-error: Filter error
-  --> tests_failed/predicate/predicate.hurl:24:22
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:24:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-24 | jsonpath "$.message" count == 1
-   |                      ^^^^^ invalid filter input type
-   |                               actual:   string
-   |                               expected: list, bytes or nodeset
+24 | jsonpath "$.message" contains "hi"
+   |   actual:   string <0>
+   |   expected: contains string <hi>
    |
 
 error: Assert failure
@@ -222,19 +222,18 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-25 | jsonpath "$.message" isIsoDate
-   |   actual:   0
-   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
+25 | jsonpath "$.message" matches "hi"
+   |   actual:   string <0>
+   |   expected: matches regex <hi>
    |
 
-error: Assert failure
-  --> tests_failed/predicate/predicate.hurl:26:0
+error: Invalid regex
+  --> tests_failed/predicate/predicate.hurl:26:22
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-26 | jsonpath "$.message" isIpv4
-   |   actual:   0
-   |   expected: string in IPv4 format
+26 | jsonpath "$.message" matches "hi{"
+   |                      ^^^^^^^^^^^^^ regex expression is not valid
    |
 
 error: Assert failure
@@ -242,19 +241,20 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-27 | jsonpath "$.message" isIpv6
-   |   actual:   0
-   |   expected: string in IPv6 format
+27 | jsonpath "$.message" isEmpty
+   |   actual:   count equals to 1
+   |   expected: count equals to 0
    |
 
-error: Assert failure
-  --> tests_failed/predicate/predicate.hurl:28:0
+error: Filter error
+  --> tests_failed/predicate/predicate.hurl:28:22
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-28 | jsonpath "$.message" isUuid
-   |   actual:   0
-   |   expected: string in UUID format
+28 | jsonpath "$.message" count == 1
+   |                      ^^^^^ invalid filter input type
+   |                               actual:   string
+   |                               expected: list, bytes or nodeset
    |
 
 error: Assert failure
@@ -262,9 +262,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-29 | jsonpath "$.toto" exists
-   |   actual:   none
-   |   expected: something
+29 | jsonpath "$.message" isIsoDate
+   |   actual:   0
+   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
 error: Assert failure
@@ -272,9 +272,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-30 | jsonpath "$.message" not exists
-   |   actual:   string <0>
-   |   expected: not something
+30 | jsonpath "$.message" isIpv4
+   |   actual:   0
+   |   expected: string in IPv4 format
    |
 
 error: Assert failure
@@ -282,9 +282,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-31 | jsonpath "$.list" count == 2
-   |   actual:   integer <3>
-   |   expected: integer <2>
+31 | jsonpath "$.message" isIpv6
+   |   actual:   0
+   |   expected: string in IPv6 format
    |
 
 error: Assert failure
@@ -292,9 +292,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-32 | jsonpath "$.not_exist" == 2
-   |   actual:   none
-   |   expected: integer <2>
+32 | jsonpath "$.message" isUuid
+   |   actual:   0
+   |   expected: string in UUID format
    |
 
 error: Assert failure
@@ -302,9 +302,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-33 | jsonpath "$.not_exist" > 3
+33 | jsonpath "$.toto" exists
    |   actual:   none
-   |   expected: greater than <integer <3>>
+   |   expected: something
    |
 
 error: Assert failure
@@ -312,9 +312,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-34 | jsonpath "$.not_exist" >= 3
-   |   actual:   none
-   |   expected: greater than or equals to <integer <3>>
+34 | jsonpath "$.message" not exists
+   |   actual:   string <0>
+   |   expected: not something
    |
 
 error: Assert failure
@@ -322,9 +322,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-35 | jsonpath "$.not_exist" < 1
-   |   actual:   none
-   |   expected: less than <integer <1>>
+35 | jsonpath "$.list" count == 2
+   |   actual:   integer <3>
+   |   expected: integer <2>
    |
 
 error: Assert failure
@@ -332,18 +332,19 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-36 | jsonpath "$.not_exist" <= 1
+36 | jsonpath "$.not_exist" == 2
    |   actual:   none
-   |   expected: less than or equals to <integer <1>>
+   |   expected: integer <2>
    |
 
-error: Filter error
-  --> tests_failed/predicate/predicate.hurl:37:24
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:37:0
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-37 | jsonpath "$.not_exist" count == 1
-   |                        ^^^^^ missing value to apply filter
+37 | jsonpath "$.not_exist" > 3
+   |   actual:   none
+   |   expected: greater than <integer <3>>
    |
 
 error: Assert failure
@@ -351,9 +352,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-38 | jsonpath "$.not_exist" startsWith "foo"
+38 | jsonpath "$.not_exist" >= 3
    |   actual:   none
-   |   expected: starts with string <foo>
+   |   expected: greater than or equals to <integer <3>>
    |
 
 error: Assert failure
@@ -361,9 +362,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-39 | jsonpath "$.not_exist" startsWith hex,efbbbf;
+39 | jsonpath "$.not_exist" < 1
    |   actual:   none
-   |   expected: starts with 3 bytes
+   |   expected: less than <integer <1>>
    |
 
 error: Assert failure
@@ -371,19 +372,18 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-40 | jsonpath "$.not_exist" endsWith "foo"
+40 | jsonpath "$.not_exist" <= 1
    |   actual:   none
-   |   expected: ends with string <foo>
+   |   expected: less than or equals to <integer <1>>
    |
 
-error: Assert failure
-  --> tests_failed/predicate/predicate.hurl:41:0
+error: Filter error
+  --> tests_failed/predicate/predicate.hurl:41:24
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-41 | jsonpath "$.not_exist" endsWith hex,00;
-   |   actual:   none
-   |   expected: ends with 1 byte
+41 | jsonpath "$.not_exist" count == 1
+   |                        ^^^^^ missing value to apply filter
    |
 
 error: Assert failure
@@ -391,9 +391,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-42 | jsonpath "$.not_exist" contains 1
+42 | jsonpath "$.not_exist" startsWith "foo"
    |   actual:   none
-   |   expected: contains integer <1>
+   |   expected: starts with string <foo>
    |
 
 error: Assert failure
@@ -401,9 +401,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-43 | jsonpath "$.not_exist" matches /foo/
+43 | jsonpath "$.not_exist" startsWith hex,efbbbf;
    |   actual:   none
-   |   expected: matches regex <foo>
+   |   expected: starts with 3 bytes
    |
 
 error: Assert failure
@@ -411,9 +411,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-44 | jsonpath "$.not_exist" isInteger
+44 | jsonpath "$.not_exist" endsWith "foo"
    |   actual:   none
-   |   expected: integer
+   |   expected: ends with string <foo>
    |
 
 error: Assert failure
@@ -421,9 +421,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-45 | jsonpath "$.not_exist" isFloat
+45 | jsonpath "$.not_exist" endsWith hex,00;
    |   actual:   none
-   |   expected: float
+   |   expected: ends with 1 byte
    |
 
 error: Assert failure
@@ -431,9 +431,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-46 | jsonpath "$.not_exist" isBoolean
+46 | jsonpath "$.not_exist" contains 1
    |   actual:   none
-   |   expected: boolean
+   |   expected: contains integer <1>
    |
 
 error: Assert failure
@@ -441,9 +441,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-47 | jsonpath "$.not_exist" isString
+47 | jsonpath "$.not_exist" matches /foo/
    |   actual:   none
-   |   expected: string
+   |   expected: matches regex <foo>
    |
 
 error: Assert failure
@@ -451,9 +451,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-48 | jsonpath "$.not_exist" isCollection
+48 | jsonpath "$.not_exist" isInteger
    |   actual:   none
-   |   expected: collection
+   |   expected: integer
    |
 
 error: Assert failure
@@ -461,9 +461,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-49 | jsonpath "$.not_exist" isList
+49 | jsonpath "$.not_exist" isFloat
    |   actual:   none
-   |   expected: list
+   |   expected: float
    |
 
 error: Assert failure
@@ -471,9 +471,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-50 | jsonpath "$.not_exist" isObject
+50 | jsonpath "$.not_exist" isBoolean
    |   actual:   none
-   |   expected: object
+   |   expected: boolean
    |
 
 error: Assert failure
@@ -481,9 +481,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-51 | jsonpath "$.not_exist" isDate
+51 | jsonpath "$.not_exist" isString
    |   actual:   none
-   |   expected: date
+   |   expected: string
    |
 
 error: Assert failure
@@ -491,9 +491,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-52 | jsonpath "$.not_exist" exists
+52 | jsonpath "$.not_exist" isCollection
    |   actual:   none
-   |   expected: something
+   |   expected: collection
    |
 
 error: Assert failure
@@ -501,9 +501,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-53 | jsonpath "$.not_exist" isEmpty
+53 | jsonpath "$.not_exist" isList
    |   actual:   none
-   |   expected: empty
+   |   expected: list
    |
 
 error: Assert failure
@@ -511,9 +511,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-54 | jsonpath "$.not_exist" isIpv4
+54 | jsonpath "$.not_exist" isObject
    |   actual:   none
-   |   expected: ipv4
+   |   expected: object
    |
 
 error: Assert failure
@@ -521,9 +521,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-55 | jsonpath "$.not_exist" isIpv6
+55 | jsonpath "$.not_exist" isDate
    |   actual:   none
-   |   expected: ipv6
+   |   expected: date
    |
 
 error: Assert failure
@@ -531,9 +531,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-56 | jsonpath "$.not_exist" isUuid
+56 | jsonpath "$.not_exist" exists
    |   actual:   none
-   |   expected: uuid
+   |   expected: something
    |
 
 error: Assert failure
@@ -541,9 +541,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-57 | jsonpath "$.not_a_date" isIsoDate
-   |   actual:   2018
-   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
+57 | jsonpath "$.not_exist" isEmpty
+   |   actual:   none
+   |   expected: empty
    |
 
 error: Assert failure
@@ -551,9 +551,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-58 | jsonpath "$.is_a_date" not isIsoDate
-   |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: not string with format YYYY-MM-DDTHH:mm:ss.sssZ
+58 | jsonpath "$.not_exist" isIpv4
+   |   actual:   none
+   |   expected: ipv4
    |
 
 error: Assert failure
@@ -561,9 +561,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-59 | jsonpath "$.not_a_date" isNumber
-   |   actual:   string <2018>
-   |   expected: number
+59 | jsonpath "$.not_exist" isIpv6
+   |   actual:   none
+   |   expected: ipv6
    |
 
 error: Assert failure
@@ -571,9 +571,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-60 | jsonpath "$.is_a_date" isIpv4
-   |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: string in IPv4 format
+60 | jsonpath "$.not_exist" isUuid
+   |   actual:   none
+   |   expected: uuid
    |
 
 error: Assert failure
@@ -581,9 +581,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-61 | jsonpath "$.is_a_date" isIpv6
-   |   actual:   2018-12-10T13:45:00.000Z
-   |   expected: string in IPv6 format
+61 | jsonpath "$.not_a_date" isIsoDate
+   |   actual:   2018
+   |   expected: string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
 error: Assert failure
@@ -591,9 +591,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-62 | jsonpath "$.ipv4" isIpv6
-   |   actual:   127.0.0.1
-   |   expected: string in IPv6 format
+62 | jsonpath "$.is_a_date" not isIsoDate
+   |   actual:   2018-12-10T13:45:00.000Z
+   |   expected: not string with format YYYY-MM-DDTHH:mm:ss.sssZ
    |
 
 error: Assert failure
@@ -601,9 +601,9 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-63 | jsonpath "$.ipv4" not isIpv4
-   |   actual:   127.0.0.1
-   |   expected: not string in IPv4 format
+63 | jsonpath "$.not_a_date" isNumber
+   |   actual:   string <2018>
+   |   expected: number
    |
 
 error: Assert failure
@@ -611,8 +611,8 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-64 | jsonpath "$.ipv6" isIpv4
-   |   actual:   2001:db8::1
+64 | jsonpath "$.is_a_date" isIpv4
+   |   actual:   2018-12-10T13:45:00.000Z
    |   expected: string in IPv4 format
    |
 
@@ -621,7 +621,47 @@ error: Assert failure
    |
    | GET http://localhost:8000/predicate/error/type
    | ...
-65 | jsonpath "$.ipv6" not isIpv6
+65 | jsonpath "$.is_a_date" isIpv6
+   |   actual:   2018-12-10T13:45:00.000Z
+   |   expected: string in IPv6 format
+   |
+
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:66:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+66 | jsonpath "$.ipv4" isIpv6
+   |   actual:   127.0.0.1
+   |   expected: string in IPv6 format
+   |
+
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:67:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+67 | jsonpath "$.ipv4" not isIpv4
+   |   actual:   127.0.0.1
+   |   expected: not string in IPv4 format
+   |
+
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:68:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+68 | jsonpath "$.ipv6" isIpv4
+   |   actual:   2001:db8::1
+   |   expected: string in IPv4 format
+   |
+
+error: Assert failure
+  --> tests_failed/predicate/predicate.hurl:69:0
+   |
+   | GET http://localhost:8000/predicate/error/type
+   | ...
+69 | jsonpath "$.ipv6" not isIpv6
    |   actual:   2001:db8::1
    |   expected: not string in IPv6 format
    |
