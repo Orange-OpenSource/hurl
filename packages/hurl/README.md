@@ -600,7 +600,7 @@ variables {
 
 GraphQL queries can also use [Hurl templates].
 
-[Doc](https://hurl.dev/docs/request.html#graphql-body)
+[Doc](https://hurl.dev/docs/request.html#graphql-query)
 
 ### Using Dynamic Datas
 
