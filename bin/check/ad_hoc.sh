@@ -1,35 +1,38 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+# functions
+init_color(){
+	color_red=$(echo -e "\033[1;31m")
+	color_green=$(echo -ne "\033[1;32m")
+	color_reset=$(echo -e "\033[0m")
+}
 
-color_red=$(echo -e "\033[1;31m")
-color_green=$(echo -ne "\033[1;32m")
-color_reset=$(echo -e "\033[0m")
-errors_count=0
+check_action_version_comments(){
+	echo "------------------------------------------------------------------------------------------"
+	while read -r action_file action_line action_name action_hash action_version ; do
+	    if [[ ! "$action_version" =~ v.*\. ]] ; then
+		echo "Version is missing as comment (#vx.y.z) for $action_name@$action_hash action at the end of line n°$action_line in ${color_red}$action_file${color_reset}"
+	        errors_count=$((errors_count+1))
+	    else
+	        echo "Version is present as comment (#vx.y.z) for $action_name@$action_hash action at the end of line n°$action_line in ${color_green}$action_file${color_reset}"
+	    fi
+	done < <(grep -Rn 'uses: actions/' .github/workflows/*.yml | tr ':@#' ' ' | tr -s ' ' | sed "s/uses //g" | sed "s/actions\///g")
+}
 
-# Check that action uses version as comment
-echo "------------------------------------------------------------------------------------------"
-while read -r action_file action_line action_name action_hash action_version ; do
-    if [[ ! "$action_version" =~ v.*\. ]] ; then
-	echo "Version is missing as comment (#vx.y.z) for $action_name@$action_hash action at the end of line n°$action_line in ${color_red}$action_file${color_reset}"
-        errors_count=$((errors_count+1))
-    else
-        echo "Version is present as comment (#vx.y.z) for $action_name@$action_hash action at the end of line n°$action_line in ${color_green}$action_file${color_reset}"
-    fi
-done < <(grep -Rn 'uses: actions/' .github/workflows/*.yml | tr ':@#' ' ' | tr -s ' ' | sed "s/uses //g" | sed "s/actions\///g")
+check_rust_copyright_headers(){
+	echo "------------------------------------------------------------------------------------------"
+	while read -r rust_file ; do
+	    if [ "$(grep -c "Copyright (C) 2026 Orange" "$rust_file" || true)" -eq 0 ] ; then
+	        echo "Missing [Copyright (C) 2026 Orange] in ${color_red}${rust_file}${color_reset}"
+	        errors_count=$((errors_count+1))
+	    else
+	        echo "[Copyright (C) 2026 Orange] is present in ${color_green}${rust_file}${color_reset}"
+	    fi
+	done < <(find packages -type f -name "*.rs")
+}
 
-# Check *.rs Orange Copyright
-echo "------------------------------------------------------------------------------------------"
-while read -r rust_file ; do
-    if [ "$(grep -c "Copyright (C) 2026 Orange" "$rust_file" || true)" -eq 0 ] ; then
-        echo "Missing [Copyright (C) 2026 Orange] in ${color_red}${rust_file}${color_reset}"
-        errors_count=$((errors_count+1))
-    else
-        echo "[Copyright (C) 2026 Orange] is present in ${color_green}${rust_file}${color_reset}"
-    fi
-done < <(find packages -type f -name "*.rs")
-
-# Check *sh bash shebang at line 1
+check_shell_shebangs(){
 echo "------------------------------------------------------------------------------------------"
 while read -r script ; do
     if [ "$(head -1 "$script" | grep -c "#!/bin/bash" || true)" -eq 0 ] ; then
@@ -39,101 +42,118 @@ while read -r script ; do
         echo "[#!/bin/bash] shebang is present in ${color_green}${script}${color_reset}"
     fi
 done < <(find . -type f -name "*.sh")
+}
 
-# Check *sh error handling at first uncommented line
-echo "------------------------------------------------------------------------------------------"
-while read -r script ; do
-    if [ "$(grep -Ev "^$|^#" "$script" | head -1 | grep -c "set -Eeuo pipefail" || true)" -eq 0 ] ; then
-        echo "Missing [set -Eeuo pipefail] in ${color_red}${script}${color_reset}"
-        errors_count=$((errors_count+1))
-    else
-        echo "[set -Eeuo pipefail] is present in ${color_green}${script}${color_reset}"
-    fi
-done < <(find . -type f -name "*.sh")
+check_shell_error_handling(){
+	echo "------------------------------------------------------------------------------------------"
+	while read -r script ; do
+	    if [ "$(grep -Ev "^$|^#" "$script" | head -1 | grep -c "set -Eeuo pipefail" || true)" -eq 0 ] ; then
+	        echo "Missing [set -Eeuo pipefail] in ${color_red}${script}${color_reset}"
+	        errors_count=$((errors_count+1))
+	    else
+	        echo "[set -Eeuo pipefail] is present in ${color_green}${script}${color_reset}"
+	    fi
+	done < <(find . -type f -name "*.sh")
+}
 
-# Check bash function names in kebab case instead of camel case
-echo "------------------------------------------------------------------------------------------"
-while read -r script ; do
-    kebab_case_function_list=$( (grep -Ev "^#" "${script}" || true) | (grep -E "^function" "${script}" || true) | cut --delimiter '{' --field 1 | cut --delimiter '(' --field 1 | tr -s ' ' | cut --delimiter ' ' --field 2)
-    if [ -n "${kebab_case_function_list}" ] ; then
-        while read -r function ; do
-            if [[ "${function}" =~ "-" ]] ; then 
-                echo "${color_red}${script}: function ${function}${color_reset} have to be: $(echo "${function}" | tr '-' '_')"
-                errors_count=$((errors_count+1))
-            else
-                echo "${script}: function ${function} ${color_green}well formated${color_reset}"
-            fi
-        done < <(echo "${kebab_case_function_list}")
-    fi
-done < <(find . -type f -name "*.sh")
+check_shell_function_snake_case(){
+	echo "------------------------------------------------------------------------------------------"
+	while read -r script ; do
+	    kebab_case_function_list=$( (grep -Ev "^#" "${script}" || true) | (grep -E "^function" "${script}" || true) | cut --delimiter '{' --field 1 | cut --delimiter '(' --field 1 | tr -s ' ' | cut --delimiter ' ' --field 2)
+	    if [ -n "${kebab_case_function_list}" ] ; then
+	        while read -r function ; do
+	            if [[ "${function}" =~ "-" ]] ; then 
+	                echo "${color_red}${script}: function ${function}${color_reset} have to be: $(echo "${function}" | tr '-' '_')"
+	                errors_count=$((errors_count+1))
+	            else
+	                echo "${script}: function ${function} ${color_green}well formated${color_reset}"
+	            fi
+	        done < <(echo "${kebab_case_function_list}")
+	    fi
+	done < <(find . -type f -name "*.sh")
+}
 
-# Check *PS1 error handling at two first lines
-echo "------------------------------------------------------------------------------------------"
-while read -r script ; do
-    if [ "$(head -1 "$script" | grep -c "Set-StrictMode -Version latest" || true)" -eq 0 ] ; then
-        echo "Missing [Set-StrictMode -Version latest] in first line of ${color_red}${script}${color_reset}"
-        errors_count=$((errors_count+1))
-    else
-        echo "[Set-StrictMode -Version latest] is present in first line of ${color_green}${script}${color_reset}"
-    fi
-    if [ "$(head -2 "$script" | tail -1 | grep -c "\$ErrorActionPreference = 'Stop'" || true)" -eq 0 ] ; then
-        echo "Missing [\$ErrorActionPreference = 'Stop'] in second line of ${color_red}${script}${color_reset}"
-        errors_count=$((errors_count+1))
-    else
-        echo "[\$ErrorActionPreference = 'Stop'] is present in second line of ${color_green}${script}${color_reset}"
-    fi
-done < <(find . -type f -name "*.ps1" | grep -v "./completions/")
+check_powershell_error_handling(){
+	echo "------------------------------------------------------------------------------------------"
+	while read -r script ; do
+	    if [ "$(head -1 "$script" | grep -c "Set-StrictMode -Version latest" || true)" -eq 0 ] ; then
+	        echo "Missing [Set-StrictMode -Version latest] in first line of ${color_red}${script}${color_reset}"
+	        errors_count=$((errors_count+1))
+	    else
+	        echo "[Set-StrictMode -Version latest] is present in first line of ${color_green}${script}${color_reset}"
+	    fi
+	    if [ "$(head -2 "$script" | tail -1 | grep -c "\$ErrorActionPreference = 'Stop'" || true)" -eq 0 ] ; then
+	        echo "Missing [\$ErrorActionPreference = 'Stop'] in second line of ${color_red}${script}${color_reset}"
+	        errors_count=$((errors_count+1))
+	    else
+	        echo "[\$ErrorActionPreference = 'Stop'] is present in second line of ${color_green}${script}${color_reset}"
+	    fi
+	done < <(find . -type f -name "*.ps1" | grep -v "./completions/")
+}
 
-# Check hurl command diffs between sh and ps1 tests files
-echo "------------------------------------------------------------------------------------------"
-tmp_sh="/tmp/sh"
-tmp_ps1="/tmp/ps1"
-tmp_diff="/tmp/diff"
-touch "${tmp_sh}" "${tmp_ps1}" "${tmp_diff}"
-if tput cols >/dev/null 2>&1 ; then
-    nb_cols="$(tput cols)"
-else
-    nb_cols=220
-fi
-function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" || true ;}
-function clean_indent { sed "s/^ *hurl/hurl/g" ;}
-function uncomment { sed "s/^#//g" ;}
-function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
-function clean_completion_function { grep -v _hurl || true ;}
-function clean_non_exec_redirected_command { grep -Ev "=\(.*hurl" || true ;}
-function clean_ps1_var_redirect { sed "s/.*=hurl/hurl/g" ;}
-function clean_c_drive { sed "s/C://g" ;}
-function conv_ps1_antislash_to_sh { sed "s#\`\$#\\\#g" | sed "s#\`\\\#\\\\\\\#g" ;}
-function conv_ps1_null_to_sh { sed "s#\$null#/dev/null#g" | sed "s#--output NUL#--output /dev/null#g" ;}
-while read -r script_sh ; do
-    script_ps1="${script_sh%.sh}.ps1"
-    if [[ -f "${script_ps1}" ]] ; then
-        filter_hurl_and_hurlfmt "${script_sh}" | clean_completion_function | clean_non_exec_redirected_command | clean_sh_var_redirect | clean_indent | uncomment > "${tmp_sh}"
-        filter_hurl_and_hurlfmt "${script_ps1}" | clean_ps1_var_redirect | clean_c_drive | conv_ps1_antislash_to_sh | conv_ps1_null_to_sh | clean_indent | uncomment > "${tmp_ps1}"
-        if ! cmp -s "${tmp_sh}" "${tmp_ps1}" >/dev/null 2>&1 ; then
-            icdiff \
-                --show-all-spaces \
-                --highlight \
-                --strip-trailing-cr \
-                --cols="${nb_cols}" \
-                --label="${script_sh}" \
-                --label="${script_ps1}" \
-                "${tmp_sh}" "${tmp_ps1}" | tee -a "${tmp_diff}"
+check_integration_sh_ps1_consistency(){
+	echo "------------------------------------------------------------------------------------------"
+	tmp_sh="/tmp/sh"
+	tmp_ps1="/tmp/ps1"
+	tmp_diff="/tmp/diff"
+	touch "${tmp_sh}" "${tmp_ps1}" "${tmp_diff}"
+	if tput cols >/dev/null 2>&1 ; then
+	    nb_cols="$(tput cols)"
+	else
+	    nb_cols=220
+	fi
+	function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" || true ;}
+	function clean_indent { sed "s/^ *hurl/hurl/g" ;}
+	function uncomment { sed "s/^#//g" ;}
+	function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
+	function clean_completion_function { grep -v _hurl || true ;}
+	function clean_non_exec_redirected_command { grep -Ev "=\(.*hurl" || true ;}
+	function clean_ps1_var_redirect { sed "s/.*=hurl/hurl/g" ;}
+	function clean_c_drive { sed "s/C://g" ;}
+	function conv_ps1_antislash_to_sh { sed "s#\`\$#\\\#g" | sed "s#\`\\\#\\\\\\\#g" ;}
+	function conv_ps1_null_to_sh { sed "s#\$null#/dev/null#g" | sed "s#--output NUL#--output /dev/null#g" ;}
+	while read -r script_sh ; do
+	    script_ps1="${script_sh%.sh}.ps1"
+	    if [[ -f "${script_ps1}" ]] ; then
+	        filter_hurl_and_hurlfmt "${script_sh}" | clean_completion_function | clean_non_exec_redirected_command | clean_sh_var_redirect | clean_indent | uncomment > "${tmp_sh}"
+	        filter_hurl_and_hurlfmt "${script_ps1}" | clean_ps1_var_redirect | clean_c_drive | conv_ps1_antislash_to_sh | conv_ps1_null_to_sh | clean_indent | uncomment > "${tmp_ps1}"
+	        if ! cmp -s "${tmp_sh}" "${tmp_ps1}" >/dev/null 2>&1 ; then
+	            icdiff \
+	                --show-all-spaces \
+	                --highlight \
+	                --strip-trailing-cr \
+	                --cols="${nb_cols}" \
+	                --label="${script_sh}" \
+	                --label="${script_ps1}" \
+	                "${tmp_sh}" "${tmp_ps1}" | tee -a "${tmp_diff}"
+	            echo
+	            errors_count=$((errors_count+1))
+	        else
+	            echo "${script_sh} has the same hurl commands as ${color_green}${script_ps1}${color_reset}."
+	        fi
+        else
+            if grep -E "^#.*AD_HOC_IGNORE_check_integration_sh_ps1_consistency$" "${script_sh}" >/dev/null 2>&1 ; then
+		        echo "${script_sh} check disabled by comment flag ${color_green}AD_HOC_IGNORE_check_integration_sh_ps1_consistency${color_reset}."
+		else
+  		    echo "${color_red}${script_sh}${color_reset} does not have his ${color_red}${script_ps1}${color_reset} clone."
             echo
             errors_count=$((errors_count+1))
-        else
-            echo "${script_sh} has the same hurl commands as ${color_green}${script_ps1}${color_reset}"
-        fi
-    else
-        echo "${color_red}${script_sh}${color_reset} does not have his ${color_red}${script_ps1}${color_reset} clone."
-        echo
-        errors_count=$((errors_count+1))
+		fi
     fi
-done < <(find ./integration/hurl*/*/ -maxdepth 2 -type f -name "*sh" | grep --invert-match "utils" | sort)
-unset -f filter_hurl_and_hurlfmt clean_indent uncomment clean_sh_var_redirect clean_ps1_var_redirect clean_c_drive conv_ps1_antislash_to_sh conv_ps1_null_to_sh
+	done < <(find ./integration/hurl*/*/ -maxdepth 2 -type f -name "*sh" | grep --invert-match "utils" | sort)
+	unset -f filter_hurl_and_hurlfmt clean_indent uncomment clean_sh_var_redirect clean_ps1_var_redirect clean_c_drive conv_ps1_antislash_to_sh conv_ps1_null_to_sh
+}
 
-# Control errors count
+# main
+init_color
+errors_count=0
+check_action_version_comments
+check_rust_copyright_headers
+check_shell_shebangs
+check_shell_error_handling
+check_shell_function_snake_case
+check_powershell_error_handling
+check_integration_sh_ps1_consistency
 if [ "${errors_count}" -gt 0 ] ; then
     exit 1
 fi
-
