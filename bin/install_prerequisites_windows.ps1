@@ -6,6 +6,7 @@ write-host -foregroundcolor Cyan "----- install system prerequisites -----"
 # update vcpkg install
 $vcpkg_dir=((Get-command vcpkg).Source | Split-Path)
 $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
+& "$vcpkg_dir\bootstrap-vcpkg.bat"
 git -C $vcpkg_dir pull
 
 # install libxml and libcurl
