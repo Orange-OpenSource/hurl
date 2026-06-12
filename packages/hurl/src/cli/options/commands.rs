@@ -536,6 +536,16 @@ pub fn proxy() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn proxy_header() -> clap::Arg {
+    clap::Arg::new("proxy_header")
+        .long("proxy-header")
+        .value_name("HEADER")
+        .help("Extra header to include in the request when sending to a proxy")
+        .help_heading("HTTP options")
+        .num_args(1)
+        .action(clap::ArgAction::Append)
+}
+
 pub fn repeat() -> clap::Arg {
     clap::Arg::new("repeat")
         .long("repeat")

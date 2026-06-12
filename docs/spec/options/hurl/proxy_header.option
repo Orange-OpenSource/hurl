@@ -1,0 +1,9 @@
+name: proxy_header
+long: proxy-header
+value: HEADER
+help: Extra header to include in the request when sending to a proxy
+help_heading: HTTP options
+multi: append
+cli_only: true
+---
+Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.

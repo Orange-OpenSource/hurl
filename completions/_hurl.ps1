@@ -76,6 +76,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--pretty', 'pretty', [CompletionResultType]::ParameterName, 'Prettify JSON response output')
             [CompletionResult]::new('--progress-bar', 'progress-bar', [CompletionResultType]::ParameterName, 'Display a progress bar in test mode')
             [CompletionResult]::new('--proxy', 'proxy', [CompletionResultType]::ParameterName, 'Use proxy on given PROTOCOL/HOST/PORT')
+            [CompletionResult]::new('--proxy-header', 'proxy-header', [CompletionResultType]::ParameterName, 'Extra header to include in the request when sending to a proxy')
             [CompletionResult]::new('--repeat', 'repeat', [CompletionResultType]::ParameterName, 'Repeat the input files sequence NUM times, -1 for infinite loop')
             [CompletionResult]::new('--report-html', 'report-html', [CompletionResultType]::ParameterName, 'Generate HTML report to DIR')
             [CompletionResult]::new('--report-json', 'report-json', [CompletionResultType]::ParameterName, 'Generate JSON report to DIR')

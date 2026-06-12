@@ -86,6 +86,7 @@ pub fn parse_cli_args(
         .arg(commands::path_as_is())
         .arg(commands::pinned_pub_key())
         .arg(commands::proxy())
+        .arg(commands::proxy_header())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
         .arg(commands::unix_socket())
@@ -228,6 +229,7 @@ fn parse_arg_matches(
     let progress_bar = progress_bar(arg_matches, context, default_options.progress_bar);
     let pretty = pretty(arg_matches, default_options.pretty);
     let proxy = proxy(arg_matches, default_options.proxy);
+    let proxy_headers = proxy_headers(arg_matches, default_options.proxy_headers);
     let output = output(arg_matches, default_options.output);
     let output_type = output_type(arg_matches, default_options.output_type);
     let repeat = repeat(arg_matches, default_options.repeat)?;
@@ -296,6 +298,7 @@ fn parse_arg_matches(
         pretty,
         progress_bar,
         proxy,
+        proxy_headers,
         output,
         output_type,
         repeat,
@@ -833,6 +836,14 @@ fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: b
 
 fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "proxy").or(default_value)
+}
+
+fn proxy_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {
+    let mut proxy_headers = default_value;
+    if let Some(proxy_header) = get_strings(arg_matches, "proxy_header") {
+        proxy_headers.extend(proxy_header);
+    }
+    proxy_headers
 }
 
 fn repeat(

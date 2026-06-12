@@ -101,6 +101,7 @@ pub struct CliOptions {
     pub pretty: PrettyMode,
     pub progress_bar: bool,
     pub proxy: Option<String>,
+    pub proxy_headers: Vec<String>,
     pub repeat: Option<Count>,
     pub resolves: Vec<String>,
     pub retry: Option<Count>,
@@ -300,6 +301,7 @@ impl Default for CliOptions {
             pretty: PrettyMode::None,
             progress_bar: false,
             proxy: None,
+            proxy_headers: Vec::new(),
             repeat: None,
             resolves: Vec::new(),
             retry: None,
@@ -406,6 +408,16 @@ impl CliOptions {
         let pinned_pub_key = self.pinned_pub_key.clone();
         let pretty = self.pretty;
         let proxy = self.proxy.clone();
+        let mut proxy_headers = HeaderVec::new();
+        for proxy_header in self.proxy_headers.iter() {
+            match Header::parse(proxy_header) {
+                Some(header) => proxy_headers.push(header),
+                None => {
+                    let msg = format!("Invalid proxy header <{proxy_header}>, missing `:`");
+                    return Err(CliError::InvalidOption(msg));
+                }
+            }
+        }
         let resolves = self.resolves.clone();
         let retry = self.retry;
         let retry_interval = self.retry_interval;
@@ -458,6 +470,7 @@ impl CliOptions {
             .pinned_pub_key(pinned_pub_key)
             .pretty(pretty)
             .proxy(proxy)
+            .proxy_headers(proxy_headers)
             .resolves(&resolves)
             .retry(retry)
             .retry_interval(retry_interval)

@@ -1,4 +1,4 @@
-.TH hurl 1 "19 May 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "12 Jun 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -329,6 +329,12 @@ When negotiating a TLS or SSL connection, the server sends a certificate indicat
 Use the specified proxy.
 
 Environment variables: http_proxy https_proxy all_proxy
+
+.IP "--proxy-header <HEADER> "
+
+Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.
+
+This is a cli-only option.
 
 .IP "--resolve <HOST:PORT:ADDR> "
 

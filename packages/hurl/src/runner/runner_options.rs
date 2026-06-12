@@ -65,6 +65,7 @@ pub struct RunnerOptionsBuilder {
     pretty_mode: PrettyMode,
     pinned_pub_key: Option<String>,
     proxy: Option<String>,
+    proxy_headers: HeaderVec,
     repeat: Option<Count>,
     resolves: Vec<String>,
     retry: Option<Count>,
@@ -121,6 +122,7 @@ impl Default for RunnerOptionsBuilder {
             pinned_pub_key: None,
             pretty_mode: PrettyMode::Automatic,
             proxy: None,
+            proxy_headers: HeaderVec::new(),
             repeat: None,
             resolves: vec![],
             retry: None,
@@ -407,6 +409,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the headers to sent exclusively to the proxy.
+    pub fn proxy_headers(&mut self, proxy_headers: HeaderVec) -> &mut Self {
+        self.proxy_headers = proxy_headers;
+        self
+    }
+
     /// Set the number of repetition for a given entry.
     pub fn repeat(&mut self, repeat: Option<Count>) -> &mut Self {
         self.repeat = repeat;
@@ -531,6 +539,7 @@ impl RunnerOptionsBuilder {
             pinned_pub_key: self.pinned_pub_key.clone(),
             pretty: self.pretty_mode,
             proxy: self.proxy.clone(),
+            proxy_headers: self.proxy_headers.clone(),
             repeat: self.repeat,
             resolves: self.resolves.clone(),
             retry: self.retry,
@@ -631,6 +640,8 @@ pub struct RunnerOptions {
     pub(crate) pretty: PrettyMode,
     /// Sets the specified proxy to be used.
     pub(crate) proxy: Option<String>,
+    /// Sets headers to sent exclusively to proxy.
+    pub(crate) proxy_headers: HeaderVec,
     /// Set the number of repetition for a given entry.
     pub(crate) repeat: Option<Count>,
     /// Provides a custom address for a specific host and port pair.

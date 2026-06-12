@@ -345,6 +345,12 @@ Use the specified proxy.
 
 Environment variables: http_proxy https_proxy all_proxy
 
+#### --proxy-header <HEADER> {#proxy-header}
+
+Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.
+
+This is a cli-only option.
+
 #### --resolve <HOST:PORT:ADDR> {#resolve}
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
