@@ -1,0 +1,11 @@
+name: no_jsonpath_coercion
+long: no-jsonpath-coercion
+help: Disable JSONPath result coercion
+help_heading: Run options
+cli_only: true
+config_file: true
+env_var: HURL_NO_JSONPATH_COERCION
+---
+Disable JSONPath result coercion.
+
+By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.

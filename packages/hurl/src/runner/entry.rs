@@ -146,6 +146,9 @@ pub fn run(
     // 3. finally, run the remaining asserts
     let mut cache = BodyCache::new();
     let mut asserts = vec![];
+    let query_options = QueryOptions {
+        use_jsonpath_coercion: runner_options.use_jsonpath_coercion,
+    };
 
     if !runner_options.no_assert
         && let Some(response_spec) = &entry.response
@@ -178,7 +181,7 @@ pub fn run(
                 &responses,
                 &mut cache,
                 variables,
-                &QueryOptions::default(),
+                &query_options,
             ) {
                 Ok(captures) => captures,
                 Err(e) => {
@@ -216,7 +219,7 @@ pub fn run(
             &responses,
             &mut cache,
             context_dir,
-            &QueryOptions::default(),
+            &query_options,
         );
         asserts.append(&mut other_asserts);
     };

@@ -431,6 +431,14 @@ pub fn no_header() -> clap::Arg {
         .action(clap::ArgAction::Append)
 }
 
+pub fn no_jsonpath_coercion() -> clap::Arg {
+    clap::Arg::new("no_jsonpath_coercion")
+        .long("no-jsonpath-coercion")
+        .help("Disable JSONPath result coercion")
+        .help_heading("Run options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn no_output() -> clap::Arg {
     clap::Arg::new("no_output")
         .long("no-output")

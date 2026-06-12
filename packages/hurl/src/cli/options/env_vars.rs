@@ -263,6 +263,12 @@ fn no_headers(
     Ok(all_no_headers)
 }
 
+fn no_jsonpath_coercion(context: &RunContext, default_value: bool) -> bool {
+    context
+        .no_jsonpath_coercion_env_var()
+        .unwrap_or(default_value)
+}
+
 fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
     match (context.no_output_env_var(), context.test_env_var()) {
         (Some(true), _) => OutputType::NoOutput,
@@ -391,6 +397,7 @@ pub fn parse_env_vars(
     let no_assert = no_assert(context, default_options.no_assert);
     let no_cookie_store = no_cookie_store(context, default_options.no_cookie_store);
     let no_headers = no_headers(context, default_options.no_headers)?;
+    let no_jsonpath_coercion = no_jsonpath_coercion(context, default_options.no_jsonpath_coercion);
     let output_type = output_type(context, default_options.output_type);
     let follow_location = follow_location(context, default_options.follow_location)?;
     let follow_location_trusted =
@@ -422,10 +429,10 @@ pub fn parse_env_vars(
         delay,
         error_format,
         fail_with_body,
+        follow_location_trusted,
+        follow_location,
         headers,
         http_version,
-        follow_location,
-        follow_location_trusted,
         insecure,
         ip_resolve,
         jobs,
@@ -435,6 +442,7 @@ pub fn parse_env_vars(
         no_assert,
         no_cookie_store,
         no_headers,
+        no_jsonpath_coercion,
         output_type,
         parallel,
         pretty,

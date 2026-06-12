@@ -537,6 +537,16 @@ Environment variables: HURL_NO_ASSERT
 
 This is a cli-only option.
 
+#### --no-jsonpath-coercion {#no-jsonpath-coercion}
+
+Disable JSONPath result coercion.
+
+By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.
+
+Environment variables: HURL_NO_JSONPATH_COERCION
+
+This is a cli-only option.
+
 #### --parallel {#parallel}
 
 Run files in parallel.

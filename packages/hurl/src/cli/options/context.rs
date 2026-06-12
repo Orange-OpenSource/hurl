@@ -72,6 +72,7 @@ pub const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
 pub const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
 pub const HURL_NO_COOKIE_STORE: &str = "HURL_NO_COOKIE_STORE";
 pub const HURL_NO_HEADER: &str = "HURL_NO_HEADER";
+pub const HURL_NO_JSONPATH_COERCION: &str = "HURL_NO_JSONPATH_COERCION";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
 pub const HURL_PRETTY: &str = "HURL_PRETTY";
@@ -272,6 +273,11 @@ impl RunContext {
     /// Returns the env var for headers to remove from requests.
     pub fn no_header_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_NO_HEADER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for disabling JSONPath coercion.
+    pub fn no_jsonpath_coercion_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_NO_JSONPATH_COERCION)
     }
 
     /// Returns the env var for suppressing output.

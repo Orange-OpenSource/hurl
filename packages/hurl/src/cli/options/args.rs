@@ -113,6 +113,7 @@ pub fn parse_cli_args(
         .arg(commands::from_entry())
         .arg(commands::jobs())
         .arg(commands::no_assert())
+        .arg(commands::no_jsonpath_coercion())
         .arg(commands::parallel())
         .arg(commands::repeat())
         .arg(commands::retry())
@@ -201,6 +202,8 @@ fn parse_arg_matches(
     let html_dir = html_dir(arg_matches, default_options.html_dir)?;
     let http_version = http_version(arg_matches, default_options.http_version);
     let no_assert = no_assert(arg_matches, default_options.no_assert);
+    let no_jsonpath_coercion =
+        no_jsonpath_coercion(arg_matches, default_options.no_jsonpath_coercion);
     let include = include(arg_matches, default_options.include);
     let input_files = input_files(arg_matches, context)?;
     let insecure = insecure(arg_matches, default_options.insecure);
@@ -282,6 +285,7 @@ fn parse_arg_matches(
         netrc_file,
         netrc_optional,
         no_assert,
+        no_jsonpath_coercion,
         no_cookie_store,
         no_headers,
         no_proxy,
@@ -542,6 +546,14 @@ fn http_version(
 
 fn no_assert(arg_matches: &ArgMatches, default_value: bool) -> bool {
     if has_flag(arg_matches, "no_assert") {
+        true
+    } else {
+        default_value
+    }
+}
+
+fn no_jsonpath_coercion(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "no_jsonpath_coercion") {
         true
     } else {
         default_value

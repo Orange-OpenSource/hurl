@@ -112,6 +112,7 @@ Run options:
       --jobs <NUM>                     Maximum number of parallel jobs, 1 to disable parallel
                                        execution
       --no-assert                      Ignore asserts defined in the Hurl file
+      --no-jsonpath-coercion           Disable JSONPath result coercion
       --parallel                       Run files in parallel (default in test mode)
       --repeat <NUM>                   Repeat the input files sequence NUM times, -1 for infinite
                                        loop

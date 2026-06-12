@@ -75,6 +75,7 @@ pub struct RunnerOptionsBuilder {
     to_entry: Option<usize>,
     unix_socket: Option<String>,
     use_cookie_store: bool,
+    use_jsonpath_coercion: bool,
     user: Option<String>,
     user_agent: Option<String>,
 }
@@ -130,6 +131,7 @@ impl Default for RunnerOptionsBuilder {
             to_entry: None,
             unix_socket: None,
             use_cookie_store: true,
+            use_jsonpath_coercion: true,
             user: None,
             user_agent: None,
         }
@@ -469,6 +471,13 @@ impl RunnerOptionsBuilder {
         self.use_cookie_store = use_cookie_store;
         self
     }
+
+    /// Enables/disables JSONPath coercion behavior for query/filter evaluation.
+    pub fn use_jsonpath_coercion(&mut self, use_jsonpath_coercion: bool) -> &mut Self {
+        self.use_jsonpath_coercion = use_jsonpath_coercion;
+        self
+    }
+
     /// Adds basic Authentication header to each request.
     pub fn user(&mut self, user: Option<String>) -> &mut Self {
         self.user = user;
@@ -532,6 +541,7 @@ impl RunnerOptionsBuilder {
             to_entry: self.to_entry,
             unix_socket: self.unix_socket.clone(),
             use_cookie_store: self.use_cookie_store,
+            use_jsonpath_coercion: self.use_jsonpath_coercion,
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
         }
@@ -641,6 +651,8 @@ pub struct RunnerOptions {
     pub(crate) unix_socket: Option<String>,
     /// Activates the cookie support for a single file.
     pub(crate) use_cookie_store: bool,
+    /// Enables/disables JSONPath coercion behavior.
+    pub(crate) use_jsonpath_coercion: bool,
     /// Adds basic Authentication header to each request.
     pub(crate) user: Option<String>,
     /// Specifies the User-Agent string to send to the HTTP server.

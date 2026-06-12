@@ -74,6 +74,7 @@ pub struct CliOptions {
     pub html_dir: Option<PathBuf>,
     pub http_version: Option<HttpVersion>,
     pub no_assert: bool,
+    pub no_jsonpath_coercion: bool,
     pub include: bool,
     pub input_files: Vec<Input>,
     pub insecure: bool,
@@ -272,6 +273,7 @@ impl Default for CliOptions {
             html_dir: None,
             http_version: None,
             no_assert: false,
+            no_jsonpath_coercion: false,
             include: false,
             input_files: Vec::new(),
             insecure: false,
@@ -388,6 +390,7 @@ impl CliOptions {
         let netrc_file = self.netrc_file.clone();
         let netrc_optional = self.netrc_optional;
         let no_assert = self.no_assert;
+        let use_jsonpath_coercion = !self.no_jsonpath_coercion;
         let mut no_headers = Vec::new();
         for no_header in self.no_headers.iter() {
             let no_header = no_header.trim().to_string();
@@ -446,6 +449,7 @@ impl CliOptions {
             .netrc_file(netrc_file)
             .netrc_optional(netrc_optional)
             .no_assert(no_assert)
+            .use_jsonpath_coercion(use_jsonpath_coercion)
             .no_proxy(no_proxy)
             .no_headers(no_headers)
             .ntlm(ntlm)
