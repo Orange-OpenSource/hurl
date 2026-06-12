@@ -28,6 +28,7 @@ pub fn eval_jsonpath(
     variables: &VariableSet,
     source_info: SourceInfo,
     assert: bool,
+    use_coercion: bool,
 ) -> Result<Option<Value>, RunnerError> {
     let json = match value {
         Value::String(text) => match serde_json::from_str(text) {
@@ -61,7 +62,7 @@ pub fn eval_jsonpath(
             return Err(RunnerError::new(source_info, kind, assert));
         }
     };
-    eval_jsonpath_json(&json, expr, variables)
+    eval_jsonpath_json(&json, expr, variables, use_coercion)
 }
 
 impl Value {
@@ -109,6 +110,7 @@ pub fn eval_jsonpath_json(
     json: &serde_json::Value,
     expr: &Template,
     variables: &VariableSet,
+    use_coercion: bool,
 ) -> Result<Option<Value>, RunnerError> {
     let expr_str = eval_template(expr, variables)?;
     let expr_source_info = expr.source_info;
@@ -121,15 +123,18 @@ pub fn eval_jsonpath_json(
     };
 
     let results = jsonpath_query.eval(json);
-    match results.len() {
-        0 => Ok(None),
-        1 => Ok(Some(Value::from_json(&results[0]))),
-        _ => Ok(Some(Value::from_json(&serde_json::Value::Array(results)))),
+    if use_coercion && results.is_empty() {
+        Ok(None)
+    } else if use_coercion && results.len() == 1 {
+        Ok(Some(Value::from_json(&results[0])))
+    } else {
+        Ok(Some(Value::from_json(&serde_json::Value::Array(results))))
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::runner::filter::FilterOptions;
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Value, VariableSet};
     use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
@@ -162,11 +167,27 @@ mod tests {
                 &filter,
                 &Value::String(r#"{"message":"Hello"}"#.to_string()),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
             Value::String("Hello".to_string())
+        );
+        // Do not use coercion
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String(r#"{"message":"Hello"}"#.to_string()),
+                &variables,
+                false,
+                &FilterOptions {
+                    use_jsonpath_coercion: false,
+                }
+            )
+            .unwrap()
+            .unwrap(),
+            Value::List(vec![Value::String("Hello".to_string())])
         );
     }
 

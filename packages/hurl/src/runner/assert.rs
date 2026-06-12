@@ -24,9 +24,9 @@ use crate::util::path::ContextDir;
 use super::cache::BodyCache;
 use super::diff::diff;
 use super::error::{RunnerError, RunnerErrorKind};
-use super::filter::eval_filters;
+use super::filter::{FilterOptions, eval_filters};
 use super::predicate::eval_predicate;
-use super::query::eval_query;
+use super::query::{QueryOptions, eval_query};
 use super::result::AssertResult;
 use super::value::Value;
 use super::variable::VariableSet;
@@ -154,8 +154,9 @@ pub fn eval_explicit_assert(
     http_responses: &[&http::Response],
     cache: &mut BodyCache,
     context_dir: &ContextDir,
+    options: &QueryOptions,
 ) -> AssertResult {
-    let query_result = eval_query(&assert.query, variables, http_responses, cache);
+    let query_result = eval_query(&assert.query, variables, http_responses, cache, options);
 
     let actual = if assert.filters.is_empty() {
         query_result
@@ -173,7 +174,10 @@ pub fn eval_explicit_assert(
             }),
             Some(value) => {
                 let filters = assert.filters.iter().map(|(_, f)| f).collect::<Vec<_>>();
-                match eval_filters(&filters, &value, variables, true) {
+                let options = FilterOptions {
+                    use_jsonpath_coercion: options.use_jsonpath_coercion,
+                };
+                match eval_filters(&filters, &value, variables, true, &options) {
                     Ok(value) => Ok(value),
                     Err(e) => Err(e),
                 }
@@ -274,7 +278,10 @@ pub mod tests {
                 &variables,
                 &[&xml_three_users_http_response()],
                 &mut cache,
-                &context_dir
+                &context_dir,
+                &QueryOptions {
+                    use_jsonpath_coercion: true,
+                },
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(3)))),

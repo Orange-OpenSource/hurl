@@ -49,7 +49,7 @@ mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Value, VariableSet};
 
     #[test]
@@ -65,6 +65,7 @@ mod tests {
                 &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
                 &variables,
                 false,
+                &FilterOptions::default(),
             )
             .unwrap()
             .unwrap(),

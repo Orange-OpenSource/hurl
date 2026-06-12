@@ -80,7 +80,7 @@ mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{RunnerErrorKind, Value, VariableSet};
 
     #[test]
@@ -115,6 +115,7 @@ mod tests {
             &Value::String("2020-08-27 09:07:46 +02:00".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Date(datetime_utc));
     }
@@ -151,6 +152,7 @@ mod tests {
             &Value::String("2020-08-27 09:07:46".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Date(datetime_utc));
     }
@@ -187,6 +189,7 @@ mod tests {
             &Value::String("2020-08-27".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Date(datetime_utc));
     }
@@ -218,6 +221,7 @@ mod tests {
             &Value::String("2020-08-27".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,
@@ -255,6 +259,7 @@ mod tests {
             &Value::Bytes([0xc4, 0xe3, 0xba].to_vec()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,

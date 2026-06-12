@@ -46,7 +46,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     #[test]
     fn eval_filter_count() {
@@ -66,15 +66,22 @@ mod tests {
                 ]),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
             Value::Number(Number::Integer(3))
         );
 
-        let error = eval_filter(&filter, &Value::Bool(true), &variables, false)
-            .err()
-            .unwrap();
+        let error = eval_filter(
+            &filter,
+            &Value::Bool(true),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             error.source_info,
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))

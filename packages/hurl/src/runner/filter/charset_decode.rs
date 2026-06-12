@@ -62,7 +62,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     /// Helper function to return a new filter given an `encoding`
     fn new_decode_filter(encoding: &str) -> Filter {
@@ -94,12 +94,24 @@ mod tests {
         let bytes = vec![
             0xe4, 0xbd, 0xa0, 0xe5, 0xa5, 0xbd, 0xe4, 0xb8, 0x96, 0xe7, 0x95, 0x8c,
         ];
-        let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(bytes),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(ret.unwrap().unwrap(), Value::String("你好世界".to_string()));
 
         let filter = new_decode_filter("gb2312");
         let bytes = vec![0xc4, 0xe3, 0xba, 0xc3, 0xca, 0xc0, 0xbd, 0xe7];
-        let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(bytes),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(ret.unwrap().unwrap(), Value::String("你好世界".to_string()));
     }
 
@@ -110,7 +122,13 @@ mod tests {
         let filter = new_decode_filter("xxx");
         let bytes = vec![];
 
-        let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(bytes),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,
@@ -124,7 +142,13 @@ mod tests {
 
         let filter = new_decode_filter("gb2312");
         let bytes = vec![0xc4, 0x00];
-        let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(bytes),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(
             ret.unwrap_err().kind,
             RunnerErrorKind::FilterDecode("gb2312".to_string()),
@@ -141,6 +165,7 @@ mod tests {
             &Value::String("café".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,

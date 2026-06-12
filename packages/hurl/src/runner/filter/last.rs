@@ -49,7 +49,7 @@ mod tests {
     use hurl_core::reader::Pos;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Number, VariableSet};
 
     fn new_last_filter() -> Filter {
@@ -74,6 +74,7 @@ mod tests {
             ]),
             &variables,
             false,
+            &FilterOptions::default(),
         );
 
         assert_eq!(ret.unwrap().unwrap(), Value::Number(Number::Integer(5)));
@@ -85,7 +86,13 @@ mod tests {
 
         let filter = new_last_filter();
 
-        let ret = eval_filter(&filter, &Value::List(vec![]), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::List(vec![]),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,
@@ -99,7 +106,13 @@ mod tests {
 
         let filter = new_last_filter();
 
-        let ret = eval_filter(&filter, &Value::Bool(true), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bool(true),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,

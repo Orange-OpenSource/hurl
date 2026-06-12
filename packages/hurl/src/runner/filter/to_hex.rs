@@ -44,7 +44,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     #[test]
     fn eval_filter_to_hex_ok() {
@@ -55,7 +55,13 @@ mod tests {
         };
         let bytes = vec![0x3c, 0x3c, 0x3f, 0x3f, 0x3f, 0x3e, 0x3e];
 
-        let ret = eval_filter(&filter, &Value::Bytes(bytes), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(bytes),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(
             ret.unwrap().unwrap(),
             Value::String("3c3c3f3f3f3e3e".to_string())
@@ -75,6 +81,7 @@ mod tests {
             &Value::String("你好世界".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,

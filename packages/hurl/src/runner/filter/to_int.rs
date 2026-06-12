@@ -47,10 +47,11 @@ pub fn eval_to_int(
 
 #[cfg(test)]
 mod tests {
+
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Number, RunnerErrorKind, Value, VariableSet};
 
     #[test]
@@ -65,7 +66,8 @@ mod tests {
                 &filter,
                 &Value::String("123".to_string()),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -76,7 +78,8 @@ mod tests {
                 &filter,
                 &Value::Number(Number::Integer(123)),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -87,7 +90,8 @@ mod tests {
                 &filter,
                 &Value::Number(Number::Float(1.6)),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -107,6 +111,7 @@ mod tests {
             &Value::String("123x".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         )
         .err()
         .unwrap();
@@ -114,9 +119,15 @@ mod tests {
             err.kind,
             RunnerErrorKind::FilterInvalidInputValue("string <123x>".to_string())
         );
-        let err = eval_filter(&filter, &Value::Bool(true), &variables, false)
-            .err()
-            .unwrap();
+        let err = eval_filter(
+            &filter,
+            &Value::Bool(true),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             err.kind,
             RunnerErrorKind::FilterInvalidInputType {

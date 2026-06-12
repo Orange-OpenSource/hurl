@@ -50,7 +50,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     #[test]
     fn eval_filter_days_after_before_now() {
@@ -66,6 +66,7 @@ mod tests {
                 &Value::Date(now),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -82,6 +83,7 @@ mod tests {
                 &Value::Date(now_plus_30hours),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -96,6 +98,7 @@ mod tests {
                 &Value::Date(now_plus_30hours),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),

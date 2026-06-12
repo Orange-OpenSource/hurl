@@ -81,7 +81,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     /// Helper function to return a new filter given a `expr`
     fn new_xpath_filter(expr: &str) -> Filter {
@@ -111,7 +111,13 @@ mod tests {
 
         let html = "<html><body>你好世界</body></html>";
         let filter = new_xpath_filter("string(//body/text())");
-        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(html.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(ret.unwrap().unwrap(), Value::String("你好世界".to_string()));
     }
@@ -122,7 +128,13 @@ mod tests {
 
         let html = "<html><body>你好世界</body></html>";
         let filter = new_xpath_filter("str(//body/text())");
-        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(html.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(ret.unwrap_err().kind, RunnerErrorKind::InvalidXPathEval);
     }
@@ -133,7 +145,13 @@ mod tests {
 
         let html = "";
         let filter = new_xpath_filter("string(//body/text())");
-        let ret = eval_filter(&filter, &Value::String(html.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(html.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,
@@ -151,6 +169,7 @@ mod tests {
             &Value::Bytes(vec![0xc4, 0xe3, 0xba, 0xc3, 0xca, 0xc0, 0xbd, 0xe7]),
             &variables,
             false,
+            &FilterOptions::default(),
         );
 
         assert_eq!(

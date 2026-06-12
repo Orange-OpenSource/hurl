@@ -46,7 +46,7 @@ pub mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Value, VariableSet};
 
     #[test]
@@ -72,7 +72,8 @@ pub mod tests {
                     &filter,
                     &Value::String(input.to_string()),
                     &variables,
-                    false
+                    false,
+                    &FilterOptions::default()
                 )
                 .unwrap()
                 .unwrap(),

@@ -27,6 +27,7 @@ use super::capture;
 use super::error::{RunnerError, RunnerErrorKind};
 use super::json;
 use super::multiline;
+use super::query::QueryOptions;
 use super::result::{AssertResult, CaptureResult};
 use super::template;
 use super::value::Value;
@@ -71,6 +72,7 @@ pub fn eval_asserts(
     http_responses: &[&http::Response],
     cache: &mut BodyCache,
     context_dir: &ContextDir,
+    options: &QueryOptions,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
     let last_response = http_responses.last().unwrap();
@@ -156,8 +158,14 @@ pub fn eval_asserts(
 
     // Then, checks all the explicit asserts.
     for assert in response.asserts() {
-        let assert_result =
-            assert::eval_explicit_assert(assert, variables, http_responses, cache, context_dir);
+        let assert_result = assert::eval_explicit_assert(
+            assert,
+            variables,
+            http_responses,
+            cache,
+            context_dir,
+            options,
+        );
         asserts.push(assert_result);
     }
     asserts
@@ -362,10 +370,12 @@ pub fn eval_captures(
     http_responses: &[&http::Response],
     cache: &mut BodyCache,
     variables: &mut VariableSet,
+    options: &QueryOptions,
 ) -> Result<Vec<CaptureResult>, RunnerError> {
     let mut captures = vec![];
     for capture in response.captures() {
-        let capture_result = capture::eval_capture(capture, variables, http_responses, cache)?;
+        let capture_result =
+            capture::eval_capture(capture, variables, http_responses, cache, options)?;
         // Update variables now so the captures set is ready in case
         // the next captures reference this new variable.
         let name = capture_result.name.clone();
@@ -461,6 +471,7 @@ mod tests {
                 &[&http::xml_two_users_http_response()],
                 &mut cache,
                 &context_dir,
+                &QueryOptions::default(),
             ),
             vec![AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(2)))),
@@ -508,6 +519,7 @@ mod tests {
                 &[&http::xml_two_users_http_response()],
                 &mut cache,
                 &mut variables,
+                &QueryOptions::default(),
             )
             .unwrap(),
             vec![CaptureResult {

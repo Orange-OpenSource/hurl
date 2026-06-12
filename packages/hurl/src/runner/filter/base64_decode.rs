@@ -53,7 +53,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     #[test]
     fn eval_filter_base64_decode_ok() {
@@ -69,6 +69,7 @@ mod tests {
             &Value::String("PDw/Pz8+Pg==".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(ret.unwrap().unwrap(), Value::Bytes(bytes));
     }
@@ -86,6 +87,7 @@ mod tests {
             &Value::String("!@#".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,
@@ -106,6 +108,7 @@ mod tests {
             &Value::Bytes([0xc4, 0xe3, 0xba].to_vec()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,

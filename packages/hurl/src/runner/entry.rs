@@ -27,6 +27,7 @@ use crate::util::term::WriteMode;
 
 use super::cache::BodyCache;
 use super::error::{RunnerError, RunnerErrorKind};
+use super::query::QueryOptions;
 use super::request;
 use super::response;
 use super::result::{AssertResult, CaptureResult, EntryResult};
@@ -172,7 +173,13 @@ pub fn run(
     let captures = match &entry.response {
         None => vec![],
         Some(response_spec) => {
-            match response::eval_captures(response_spec, &responses, &mut cache, variables) {
+            match response::eval_captures(
+                response_spec,
+                &responses,
+                &mut cache,
+                variables,
+                &QueryOptions::default(),
+            ) {
                 Ok(captures) => captures,
                 Err(e) => {
                     return EntryResult {
@@ -209,6 +216,7 @@ pub fn run(
             &responses,
             &mut cache,
             context_dir,
+            &QueryOptions::default(),
         );
         asserts.append(&mut other_asserts);
     };

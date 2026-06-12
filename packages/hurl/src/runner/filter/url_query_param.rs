@@ -68,7 +68,7 @@ mod tests {
     use hurl_core::types::ToSource;
 
     use super::*;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Value, VariableSet};
 
     // Helper function to return a new filter given a `param`
@@ -101,7 +101,13 @@ mod tests {
 
         let url = "http://localhost:8000/api/v1/doc?text=你好世界";
 
-        let ret = eval_filter(&filter, &Value::String(url.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(url.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(ret.unwrap().unwrap(), Value::String("你好世界".to_string()));
     }
@@ -114,7 +120,13 @@ mod tests {
 
         let url = "http://localhost:8000/api/v1/doc?text=你好世界";
 
-        let ret = eval_filter(&filter, &Value::String(url.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(url.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(ret.unwrap(), None);
     }
@@ -127,7 +139,13 @@ mod tests {
 
         let url = vec![0xc4, 0xe3, 0xba, 0xc3, 0xca, 0xc0, 0xbd, 0xe7];
 
-        let ret = eval_filter(&filter, &Value::Bytes(url), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Bytes(url),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,
@@ -145,7 +163,13 @@ mod tests {
 
         let url = "localhost:8000/api/v1/doc?text=你好世界";
 
-        let ret = eval_filter(&filter, &Value::String(url.to_string()), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::String(url.to_string()),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
 
         assert_eq!(
             ret.unwrap_err().kind,

@@ -85,7 +85,7 @@ mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::filter::nth::try_nth;
     use crate::runner::{Number, RunnerError, RunnerErrorKind, Value, VariableSet};
 
@@ -113,7 +113,8 @@ mod tests {
                     Value::Number(Number::Integer(3))
                 ]),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -127,7 +128,8 @@ mod tests {
                     Value::Number(Number::Integer(1))
                 ]),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .err()
             .unwrap(),
@@ -163,7 +165,8 @@ mod tests {
                     Value::Number(Number::Integer(3))
                 ]),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -174,7 +177,8 @@ mod tests {
                 &filter,
                 &Value::List(vec![Value::Number(Number::Integer(0))]),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .err()
             .unwrap(),

@@ -56,7 +56,7 @@ mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{RunnerErrorKind, Value, VariableSet};
 
     #[test]
@@ -87,15 +87,22 @@ mod tests {
                 &Value::String("Hello Bob!".to_string()),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
             Value::String("Bob".to_string())
         );
 
-        let error = eval_filter(&filter, &Value::Bool(true), &variables, false)
-            .err()
-            .unwrap();
+        let error = eval_filter(
+            &filter,
+            &Value::Bool(true),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             error.source_info,
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20))
@@ -135,6 +142,7 @@ mod tests {
             &Value::String("Hello Bob!".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         )
         .err()
         .unwrap();

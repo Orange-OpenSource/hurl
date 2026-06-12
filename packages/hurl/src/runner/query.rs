@@ -37,12 +37,26 @@ use super::xpath::{Document, Format};
 
 pub type QueryResult = Result<Option<Value>, RunnerError>;
 
+/// Options controlling query evaluation behavior.
+pub struct QueryOptions {
+    pub use_jsonpath_coercion: bool,
+}
+
+impl Default for QueryOptions {
+    fn default() -> Self {
+        QueryOptions {
+            use_jsonpath_coercion: true,
+        }
+    }
+}
+
 /// Evaluates this `query` and returns a [`QueryResult`], using a list of HTTP `responses` and `variables`.
 pub fn eval_query(
     query: &Query,
     variables: &VariableSet,
     responses: &[&Response],
     cache: &mut BodyCache,
+    options: &QueryOptions,
 ) -> QueryResult {
     let last_response = responses.last().unwrap();
     match &query.value {
@@ -58,9 +72,14 @@ pub fn eval_query(
         QueryValue::Xpath { expr, .. } => {
             eval_query_xpath(last_response, cache, expr, variables, query.source_info)
         }
-        QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(last_response, cache, expr, variables, query.source_info)
-        }
+        QueryValue::Jsonpath { expr, .. } => eval_query_jsonpath(
+            last_response,
+            cache,
+            expr,
+            variables,
+            query.source_info,
+            options.use_jsonpath_coercion,
+        ),
         QueryValue::Regex { value, .. } => {
             eval_query_regex(last_response, value, variables, query.source_info)
         }
@@ -221,12 +240,13 @@ fn eval_query_jsonpath(
     expr: &Template,
     variables: &VariableSet,
     query_source_info: SourceInfo,
+    use_coercion: bool,
 ) -> QueryResult {
     let json = match cache.json() {
         Some(j) => j,
         None => parse_cache_json(response, cache, query_source_info)?,
     };
-    filter::eval_jsonpath_json(json, expr, variables)
+    filter::eval_jsonpath_json(json, expr, variables, use_coercion)
 }
 
 /// Parse this HTTP `response` body to JSON, and store the document to the response `cache`.
@@ -756,6 +776,7 @@ pub mod tests {
                 &variables,
                 &[&http::hello_http_response()],
                 &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -794,7 +815,8 @@ pub mod tests {
                 &query_header,
                 &variables,
                 &[&http::hello_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap(),
             None
@@ -829,7 +851,8 @@ pub mod tests {
                 &query_header,
                 &variables,
                 &[&http::hello_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -875,9 +898,15 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &responses, &mut cache)
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &query,
+                &variables,
+                &responses,
+                &mut cache,
+                &QueryOptions::default()
+            )
+            .unwrap()
+            .unwrap(),
             Value::String("DQAAAKEaem_vYg".to_string())
         );
 
@@ -904,9 +933,15 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &responses, &mut cache)
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &query,
+                &variables,
+                &responses,
+                &mut cache,
+                &QueryOptions::default()
+            )
+            .unwrap()
+            .unwrap(),
             Value::String("/accounts".to_string())
         );
 
@@ -933,9 +968,15 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &responses, &mut cache)
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &query,
+                &variables,
+                &responses,
+                &mut cache,
+                &QueryOptions::default()
+            )
+            .unwrap()
+            .unwrap(),
             Value::Unit
         );
 
@@ -962,7 +1003,14 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &responses, &mut cache).unwrap(),
+            eval_query(
+                &query,
+                &variables,
+                &responses,
+                &mut cache,
+                &QueryOptions::default()
+            )
+            .unwrap(),
             None
         );
     }
@@ -1117,6 +1165,7 @@ pub mod tests {
                 &variables,
                 &[&http::hello_http_response()],
                 &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1130,6 +1179,7 @@ pub mod tests {
             &variables,
             &[&http::bytes_http_response()],
             &mut cache,
+            &QueryOptions::default(),
         )
         .err()
         .unwrap();
@@ -1154,9 +1204,15 @@ pub mod tests {
             body: vec![200],
             ..default_response()
         };
-        let error = eval_query(&xpath_users(), &variables, &[&http_response], &mut cache)
-            .err()
-            .unwrap();
+        let error = eval_query(
+            &xpath_users(),
+            &variables,
+            &[&http_response],
+            &mut cache,
+            &QueryOptions::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -1194,6 +1250,7 @@ pub mod tests {
             &variables,
             &[&http::xml_two_users_http_response()],
             &mut cache,
+            &QueryOptions::default(),
         )
         .unwrap_err();
         assert_eq!(error.kind, RunnerErrorKind::InvalidXPathEval);
@@ -1211,6 +1268,7 @@ pub mod tests {
                 &variables,
                 &[&http::xml_two_users_http_response()],
                 &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1222,6 +1280,7 @@ pub mod tests {
                 &variables,
                 &[&http::xml_two_users_http_response()],
                 &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1263,6 +1322,7 @@ pub mod tests {
                 &variables,
                 &[&http::html_http_response()],
                 &mut cache,
+                &QueryOptions::default(),
             )
             .unwrap()
             .unwrap(),
@@ -1299,6 +1359,7 @@ pub mod tests {
             &variables,
             &[&http::json_http_response()],
             &mut cache,
+            &QueryOptions::default(),
         )
         .unwrap_err();
         assert_eq!(
@@ -1329,6 +1390,7 @@ pub mod tests {
             &variables,
             &[&http_response],
             &mut cache,
+            &QueryOptions::default(),
         )
         .err()
         .unwrap();
@@ -1350,7 +1412,8 @@ pub mod tests {
                 &jsonpath_success(),
                 &variables,
                 &[&http_response],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap(),
             None
@@ -1367,7 +1430,8 @@ pub mod tests {
                 &jsonpath_success(),
                 &variables,
                 &[&http::json_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1378,7 +1442,8 @@ pub mod tests {
                 &jsonpath_errors(),
                 &variables,
                 &[&http::json_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1405,7 +1470,8 @@ pub mod tests {
                 &regex_name(),
                 &variables,
                 &[&http::hello_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -1417,6 +1483,7 @@ pub mod tests {
             &variables,
             &[&http::hello_http_response()],
             &mut cache,
+            &QueryOptions::default(),
         )
         .err()
         .unwrap();
@@ -1441,6 +1508,7 @@ pub mod tests {
                 &variables,
                 &[&http::hello_http_response()],
                 &mut cache,
+                &QueryOptions::default(),
             )
             .unwrap()
             .unwrap(),
@@ -1462,6 +1530,7 @@ pub mod tests {
                 &variables,
                 &[&http::hello_http_response()],
                 &mut cache,
+                &QueryOptions::default(),
             )
             .unwrap()
             .unwrap(),
@@ -1493,6 +1562,7 @@ pub mod tests {
                     ..default_response()
                 }],
                 &mut cache,
+                &QueryOptions::default(),
             )
             .unwrap()
             .unwrap(),

@@ -44,7 +44,7 @@ mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Number, RunnerErrorKind, Value, VariableSet};
 
     #[test]
@@ -59,7 +59,8 @@ mod tests {
                 &filter,
                 &Value::Number(Number::Integer(100)),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),
@@ -74,9 +75,15 @@ mod tests {
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToString,
         };
-        let err = eval_filter(&filter, &Value::List(vec![]), &variables, false)
-            .err()
-            .unwrap();
+        let err = eval_filter(
+            &filter,
+            &Value::List(vec![]),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             err.kind,
             RunnerErrorKind::FilterInvalidInputValue(

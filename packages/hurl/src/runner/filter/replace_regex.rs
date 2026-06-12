@@ -55,7 +55,7 @@ mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
     use crate::runner::{Value, VariableSet};
 
     #[test]
@@ -96,7 +96,8 @@ mod tests {
                 &filter,
                 &Value::String("1 2\t3  4".to_string()),
                 &variables,
-                false
+                false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),

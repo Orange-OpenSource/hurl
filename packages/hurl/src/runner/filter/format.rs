@@ -64,7 +64,7 @@ mod tests {
 
     use super::*;
     use crate::runner::VariableSet;
-    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::filter::eval::{FilterOptions, eval_filter};
 
     /// Helper function to return a new filter given a `fmt`
     fn new_date_format_filter(fmt: &str) -> Filter {
@@ -94,7 +94,13 @@ mod tests {
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
         let filter = new_date_format_filter("%m/%d/%Y");
-        let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Date(date),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(
             ret.unwrap().unwrap(),
             Value::String("01/01/2025".to_string())
@@ -111,6 +117,7 @@ mod tests {
             &Value::String("01/01/2025".to_string()),
             &variables,
             false,
+            &FilterOptions::default(),
         );
         assert_eq!(
             ret.unwrap_err().kind,
@@ -127,7 +134,13 @@ mod tests {
 
         let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
         let filter = new_date_format_filter("%%%");
-        let ret = eval_filter(&filter, &Value::Date(date), &variables, false);
+        let ret = eval_filter(
+            &filter,
+            &Value::Date(date),
+            &variables,
+            false,
+            &FilterOptions::default(),
+        );
         assert_eq!(
             ret.unwrap_err().kind,
             RunnerErrorKind::FilterInvalidFormatSpecifier("%%%".to_string())

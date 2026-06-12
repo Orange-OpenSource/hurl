@@ -50,6 +50,19 @@ use crate::runner::filter::utf8_encode::eval_utf8_encode;
 use crate::runner::filter::xpath::eval_xpath;
 use crate::runner::{RunnerError, RunnerErrorKind, Value, VariableSet};
 
+/// Options controlling filter evaluation behavior.
+pub struct FilterOptions {
+    pub use_jsonpath_coercion: bool,
+}
+
+impl Default for FilterOptions {
+    fn default() -> Self {
+        FilterOptions {
+            use_jsonpath_coercion: true,
+        }
+    }
+}
+
 /// Apply successive `filter` to an input `value`.
 /// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
@@ -57,11 +70,12 @@ pub fn eval_filters(
     value: &Value,
     variables: &VariableSet,
     in_assert: bool,
+    options: &FilterOptions,
 ) -> Result<Option<Value>, RunnerError> {
     let mut value = Some(value.clone());
     for filter in filters {
         value = if let Some(value) = value {
-            eval_filter(filter, &value, variables, in_assert)?
+            eval_filter(filter, &value, variables, in_assert, options)?
         } else {
             return Err(RunnerError::new(
                 filter.source_info,
@@ -79,6 +93,7 @@ pub fn eval_filter(
     value: &Value,
     variables: &VariableSet,
     in_assert: bool,
+    options: &FilterOptions,
 ) -> Result<Option<Value>, RunnerError> {
     let source_info = filter.source_info;
     match &filter.value {
@@ -108,9 +123,14 @@ pub fn eval_filter(
         }
         FilterValue::HtmlEscape => eval_html_escape(value, source_info, in_assert),
         FilterValue::HtmlUnescape => eval_html_unescape(value, source_info, in_assert),
-        FilterValue::JsonPath { expr, .. } => {
-            eval_jsonpath(value, expr, variables, source_info, in_assert)
-        }
+        FilterValue::JsonPath { expr, .. } => eval_jsonpath(
+            value,
+            expr,
+            variables,
+            source_info,
+            in_assert,
+            options.use_jsonpath_coercion,
+        ),
         FilterValue::Last => eval_last(value, source_info, in_assert),
         FilterValue::Location => eval_location(value, source_info, in_assert),
         FilterValue::Regex {
@@ -158,6 +178,7 @@ mod tests {
     use hurl_core::ast::{Filter, FilterValue, SourceInfo};
     use hurl_core::reader::Pos;
 
+    use crate::runner::filter::FilterOptions;
     use crate::runner::filter::eval::eval_filters;
     use crate::runner::{Number, Value, VariableSet};
 
@@ -178,6 +199,7 @@ mod tests {
                 ]),
                 &variables,
                 false,
+                &FilterOptions::default()
             )
             .unwrap()
             .unwrap(),

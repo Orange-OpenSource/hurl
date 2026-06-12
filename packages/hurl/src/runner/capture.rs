@@ -21,8 +21,8 @@ use crate::http;
 
 use super::cache::BodyCache;
 use super::error::{RunnerError, RunnerErrorKind};
-use super::filter::eval_filters;
-use super::query::eval_query;
+use super::filter::{FilterOptions, eval_filters};
+use super::query::{QueryOptions, eval_query};
 use super::result::CaptureResult;
 use super::template::eval_template;
 use super::variable::VariableSet;
@@ -37,13 +37,22 @@ pub fn eval_capture(
     variables: &VariableSet,
     http_responses: &[&http::Response],
     cache: &mut BodyCache,
+    options: &QueryOptions,
 ) -> Result<CaptureResult, RunnerError> {
     let name = eval_template(&capture.name, variables)?;
-    let value = eval_query(&capture.query, variables, http_responses, cache)?;
+    let value = eval_query(&capture.query, variables, http_responses, cache, options)?;
     let value = match value {
         Some(value) => {
             let filters = capture.filters.iter().map(|(_, f)| f).collect::<Vec<_>>();
-            match eval_filters(&filters, &value, variables, false)? {
+            match eval_filters(
+                &filters,
+                &value,
+                variables,
+                false,
+                &FilterOptions {
+                    use_jsonpath_coercion: options.use_jsonpath_coercion,
+                },
+            )? {
                 None => {
                     // If we have an error, we can be sure that there is at least one filter.
                     // We don't know which filter in the filter chain firstly returns no value
@@ -191,6 +200,7 @@ pub mod tests {
             &variables,
             &[&http::xml_three_users_http_response()],
             &mut cache,
+            &QueryOptions::default(),
         )
         .err()
         .unwrap();
@@ -256,6 +266,7 @@ pub mod tests {
                 &variables,
                 &[&http::xml_three_users_http_response()],
                 &mut cache,
+                &QueryOptions::default()
             )
             .unwrap(),
             CaptureResult {
@@ -269,7 +280,8 @@ pub mod tests {
                 &duration_capture(),
                 &variables,
                 &[&http::json_http_response()],
-                &mut cache
+                &mut cache,
+                &QueryOptions::default()
             )
             .unwrap(),
             CaptureResult {
