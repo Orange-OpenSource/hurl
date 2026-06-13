@@ -115,7 +115,7 @@ fn headers_params(
     let mut args = vec![];
 
     for header in headers.iter() {
-        args.append(&mut header.curl_args());
+        args.append(&mut header.curl_args("--header"));
     }
 
     let has_explicit_content_type = headers.contains_key(CONTENT_TYPE);
@@ -344,11 +344,11 @@ impl Method {
 }
 
 impl Header {
-    fn curl_args(&self) -> Vec<String> {
+    fn curl_args(&self, option: &'static str) -> Vec<String> {
         let name = &self.name;
         let value = &self.value;
         vec![
-            "--header".to_string(),
+            option.to_string(),
             if self.value.is_empty() {
                 encode_shell_string(&format!("{name};"))
             } else {
@@ -406,73 +406,73 @@ impl Body {
 impl ClientOptions {
     /// Returns the list of options for the curl command line equivalent to this [`ClientOptions`].
     fn curl_args(&self) -> Vec<String> {
-        let mut arguments = vec![];
+        let mut args = vec![];
 
         if let Some(ref aws_sigv4) = self.aws_sigv4 {
-            arguments.push("--aws-sigv4".to_string());
-            arguments.push(aws_sigv4.clone());
+            args.push("--aws-sigv4".to_string());
+            args.push(aws_sigv4.clone());
         }
         if let Some(ref cacert_file) = self.cacert_file {
-            arguments.push("--cacert".to_string());
-            arguments.push(cacert_file.clone());
+            args.push("--cacert".to_string());
+            args.push(cacert_file.clone());
         }
         if let Some(ref client_cert_file) = self.client_cert_file {
-            arguments.push("--cert".to_string());
-            arguments.push(client_cert_file.clone());
+            args.push("--cert".to_string());
+            args.push(client_cert_file.clone());
         }
         if let Some(ref client_key_file) = self.client_key_file {
-            arguments.push("--key".to_string());
-            arguments.push(client_key_file.clone());
+            args.push("--key".to_string());
+            args.push(client_key_file.clone());
         }
         if self.compressed {
-            arguments.push("--compressed".to_string());
+            args.push("--compressed".to_string());
         }
         if self.connect_timeout != ClientOptions::default().connect_timeout {
-            arguments.push("--connect-timeout".to_string());
-            arguments.push(self.connect_timeout.as_secs().to_string());
+            args.push("--connect-timeout".to_string());
+            args.push(self.connect_timeout.as_secs().to_string());
         }
         for connect in self.connects_to.iter() {
-            arguments.push("--connect-to".to_string());
-            arguments.push(connect.clone());
+            args.push("--connect-to".to_string());
+            args.push(connect.clone());
         }
         if let Some(ref cookie_file) = self.cookie_input_file {
-            arguments.push("--cookie".to_string());
-            arguments.push(cookie_file.clone());
+            args.push("--cookie".to_string());
+            args.push(cookie_file.clone());
         }
         if self.digest {
-            arguments.push("--digest".to_string());
+            args.push("--digest".to_string());
         }
         match self.http_version {
             RequestedHttpVersion::Default => {}
-            RequestedHttpVersion::Http10 => arguments.push("--http1.0".to_string()),
-            RequestedHttpVersion::Http11 => arguments.push("--http1.1".to_string()),
-            RequestedHttpVersion::Http2 => arguments.push("--http2".to_string()),
-            RequestedHttpVersion::Http3 => arguments.push("--http3".to_string()),
+            RequestedHttpVersion::Http10 => args.push("--http1.0".to_string()),
+            RequestedHttpVersion::Http11 => args.push("--http1.1".to_string()),
+            RequestedHttpVersion::Http2 => args.push("--http2".to_string()),
+            RequestedHttpVersion::Http3 => args.push("--http3".to_string()),
         }
         if self.insecure {
-            arguments.push("--insecure".to_string());
+            args.push("--insecure".to_string());
         }
         match self.ip_resolve {
             IpResolve::Default => {}
-            IpResolve::IpV4 => arguments.push("--ipv4".to_string()),
-            IpResolve::IpV6 => arguments.push("--ipv6".to_string()),
+            IpResolve::IpV4 => args.push("--ipv4".to_string()),
+            IpResolve::IpV6 => args.push("--ipv6".to_string()),
         }
         match self.follow_location {
             FollowLocation::Follow(CredentialForwarding::OnlyInitialHost) => {
-                arguments.push("--location".to_string());
+                args.push("--location".to_string());
             }
             FollowLocation::Follow(CredentialForwarding::AllHosts) => {
-                arguments.push("--location-trusted".to_string());
+                args.push("--location-trusted".to_string());
             }
             FollowLocation::No => {}
         }
         if let Some(max_filesize) = self.max_filesize {
-            arguments.push("--max-filesize".to_string());
-            arguments.push(max_filesize.to_string());
+            args.push("--max-filesize".to_string());
+            args.push(max_filesize.to_string());
         }
         if let Some(max_speed) = self.max_recv_speed {
-            arguments.push("--limit-rate".to_string());
-            arguments.push(max_speed.to_string());
+            args.push("--limit-rate".to_string());
+            args.push(max_speed.to_string());
         }
         // We don't implement --limit-rate for self.max_send_speed as curl limit-rate seems
         // to limit both upload and download speed. There is no distinct option..
@@ -481,60 +481,63 @@ impl ClientOptions {
                 Count::Finite(n) => n as i32,
                 Count::Infinite => -1,
             };
-            arguments.push("--max-redirs".to_string());
-            arguments.push(max_redirect.to_string());
+            args.push("--max-redirs".to_string());
+            args.push(max_redirect.to_string());
         }
         if self.timeout != ClientOptions::default().timeout {
-            arguments.push("--max-time".to_string());
-            arguments.push(self.timeout.as_secs().to_string());
+            args.push("--max-time".to_string());
+            args.push(self.timeout.as_secs().to_string());
         }
         if self.negotiate {
-            arguments.push("--negotiate".to_string());
+            args.push("--negotiate".to_string());
         }
         if let Some(filename) = &self.netrc_file {
-            arguments.push("--netrc-file".to_string());
-            arguments.push(format!("'{filename}'"));
+            args.push("--netrc-file".to_string());
+            args.push(format!("'{filename}'"));
         }
         if self.netrc_optional {
-            arguments.push("--netrc-optional".to_string());
+            args.push("--netrc-optional".to_string());
         }
         if self.netrc {
-            arguments.push("--netrc".to_string());
+            args.push("--netrc".to_string());
         }
         if self.ntlm {
-            arguments.push("--ntlm".to_string());
+            args.push("--ntlm".to_string());
         }
         if self.path_as_is {
-            arguments.push("--path-as-is".to_string());
+            args.push("--path-as-is".to_string());
         }
         if let Some(ref pinned_pub_key) = self.pinned_pub_key {
-            arguments.push("--pinnedpubkey".to_string());
-            arguments.push(pinned_pub_key.clone());
+            args.push("--pinnedpubkey".to_string());
+            args.push(pinned_pub_key.clone());
         }
         if let Some(ref proxy) = self.proxy {
-            arguments.push("--proxy".to_string());
-            arguments.push(format!("'{proxy}'"));
+            args.push("--proxy".to_string());
+            args.push(format!("'{proxy}'"));
+        }
+        for header in self.proxy_headers.iter() {
+            args.append(&mut header.curl_args("--proxy-header"));
         }
         for resolve in self.resolves.iter() {
-            arguments.push("--resolve".to_string());
-            arguments.push(resolve.clone());
+            args.push("--resolve".to_string());
+            args.push(resolve.clone());
         }
         if self.ssl_no_revoke {
-            arguments.push("--ssl-no-revoke".to_string());
+            args.push("--ssl-no-revoke".to_string());
         }
         if let Some(ref unix_socket) = self.unix_socket {
-            arguments.push("--unix-socket".to_string());
-            arguments.push(format!("'{unix_socket}'"));
+            args.push("--unix-socket".to_string());
+            args.push(format!("'{unix_socket}'"));
         }
         if let Some(ref user) = self.user {
-            arguments.push("--user".to_string());
-            arguments.push(format!("'{user}'"));
+            args.push("--user".to_string());
+            args.push(format!("'{user}'"));
         }
         if let Some(ref user_agent) = self.user_agent {
-            arguments.push("--user-agent".to_string());
-            arguments.push(format!("'{user_agent}'"));
+            args.push("--user-agent".to_string());
+            args.push(format!("'{user_agent}'"));
         }
-        arguments
+        args
     }
 }
 
@@ -690,6 +693,10 @@ mod tests {
         headers.push(Header::new("Test-Header-1", "content-1"));
         headers.push(Header::new("Test-Header-2", "content-2"));
         headers.push(Header::new("Test-Header-Empty", ""));
+
+        let mut proxy_headers = HeaderVec::new();
+        proxy_headers.push(Header::new("X-Foo", "foo"));
+
         let options = ClientOptions {
             allow_reuse: true,
             aws_sigv4: None,
@@ -719,6 +726,7 @@ mod tests {
             path_as_is: true,
             pinned_pub_key: None,
             proxy: Some("localhost:3128".to_string()),
+            proxy_headers,
             no_proxy: None,
             resolves: vec![
                 "foo.com:80:192.168.0.1".to_string(),
@@ -757,6 +765,7 @@ mod tests {
         --ntlm \
         --path-as-is \
         --proxy 'localhost:3128' \
+        --proxy-header 'X-Foo: foo' \
         --resolve foo.com:80:192.168.0.1 \
         --resolve bar.com:443:127.0.0.1 \
         --unix-socket '/var/run/example.sock' \
@@ -1013,13 +1022,13 @@ mod tests {
     #[test]
     fn header_curl_args() {
         assert_eq!(
-            Header::new("Host", "example.com").curl_args(),
+            Header::new("Host", "example.com").curl_args("--header"),
             vec!["--header".to_string(), "'Host: example.com'".to_string()]
         );
         assert_eq!(
-            Header::new("If-Match", "\"e0023aa4e\"").curl_args(),
+            Header::new("If-Match", "\"e0023aa4e\"").curl_args("--proxy-header"),
             vec![
-                "--header".to_string(),
+                "--proxy-header".to_string(),
                 "'If-Match: \"e0023aa4e\"'".to_string()
             ]
         );

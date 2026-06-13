@@ -284,6 +284,7 @@ impl ClientOptions {
             path_as_is: runner_options.path_as_is,
             pinned_pub_key: runner_options.pinned_pub_key.clone(),
             proxy: runner_options.proxy.clone(),
+            proxy_headers: runner_options.proxy_headers.clone(),
             no_proxy: runner_options.no_proxy.clone(),
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),

@@ -1,0 +1,20 @@
+> CONNECT 127.0.0.1:8002 HTTP/1.1
+> Host: 127.0.0.1:8002
+> Proxy-Connection: Keep-Alive
+> X-TO-PROXY: to-proxy
+>
+< HTTP/1.1 200 Connection established
+<
+> GET /hello HTTP/1.1
+> Host: 127.0.0.1:8002
+> Accept: */*
+> X-TO-SERVER: to-server
+> User-Agent: hurl/<<<.*>>>
+>
+< HTTP/1.1 200 OK
+< Server: Werkzeug/<<<.*?>>> Python/<<<.*>>>
+< Date: <<<.*>>>
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Connection: close
+<

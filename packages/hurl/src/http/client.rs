@@ -517,6 +517,8 @@ impl Client {
             request_spec.implicit_content_type.as_deref(),
             options,
         )?;
+        self.set_proxy_headers(&options.proxy_headers)?;
+
         if let Some(aws_sigv4) = &options.aws_sigv4
             && let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str())
         {
@@ -662,6 +664,13 @@ impl Client {
             headers.append(&format!("{header}:"))?;
         }
         self.handle.http_headers(headers)?;
+        Ok(())
+    }
+
+    /// Set headers to be sent exclusively to proxy.
+    fn set_proxy_headers(&mut self, proxy_headers: &HeaderVec) -> Result<(), HttpError> {
+        let headers = proxy_headers.to_curl_headers()?;
+        self.handle.proxy_headers(headers)?;
         Ok(())
     }
 
