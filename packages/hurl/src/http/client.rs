@@ -211,26 +211,30 @@ impl Client {
         {
             let mut transfer = self.handle.transfer();
 
-            transfer.debug_function(|info_type, data| match info_type {
-                // Return all request headers (not one by one)
-                easy::InfoType::HeaderOut => {
-                    let lines = split_lines(data);
-                    // Extracts request headers from libcurl debug info.
-                    // First line is method/path/version line, last line is empty
-                    for line in &lines[1..lines.len() - 1] {
-                        if let Some(header) = Header::parse(line) {
-                            request_headers.push(header);
-                        }
-                    }
+            // We use libcurl `CURLOPT_DEBUGFUNCTION to save the requests headers, the response headers
+            // the request body and the debug logs issued by libcurl
+            // See <https://curl.se/libcurl/c/CURLOPT_DEBUGFUNCTION.html>
 
-                    // Logs method, version and request headers now.
-                    if verbose {
+            transfer.debug_function(|info_type, data| match info_type {
+                // We use `CURLINFO_HEADER_OUT` to record/print HTTP request headers.
+                easy::InfoType::HeaderOut => {
+                    // Extracts request headers from libcurl debug info.
+                    let lines = split_lines(data);
+
+                    // We reinitialize the recorded request headers; a better solution would be
+                    // to identity when we have a method line (like `GET /hello HTTP/1.1`) vs a
+                    // header and reset the request headers only in the former case.
+                    request_headers.clear();
+
+                    if !lines.is_empty() {
                         logger.debug_method_version_out(&lines[0]);
-                        let headers = request_headers
-                            .iter()
-                            .map(|h| (h.name.as_str(), h.value.as_str()))
-                            .collect::<Vec<_>>();
-                        logger.debug_headers_out(&headers);
+                        for line in &lines[1..lines.len() - 1] {
+                            if let Some(header) = Header::parse(line) {
+                                logger.debug_header_out(&header.name, &header.value);
+                                request_headers.push(header);
+                            }
+                        }
+                        logger.debug_header_out_end();
                     }
 
                     // If we don't send any data, we log an empty body here instead of relying on
@@ -241,7 +245,7 @@ impl Client {
                         debug::log_body(&[], &request_headers, true, logger);
                     }
                 }
-                // We use this callback to get the real body bytes sent by libcurl and logs request
+                // We use `CURLINFO_DATA_OUT` to get the real body bytes sent by libcurl and logs request
                 // body chunks.
                 easy::InfoType::DataOut => {
                     if very_verbose {
@@ -251,7 +255,7 @@ impl Client {
                     // Constructs request body from libcurl debug info.
                     request_body.extend(data);
                 }
-                // Curl debug logs
+                // `CURLINFO_TEXT` gives us curl debug logs.
                 easy::InfoType::Text => {
                     let len = data.len();
                     if very_verbose && len > 0 {

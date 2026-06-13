@@ -104,7 +104,7 @@ check_integration_sh_ps1_consistency(){
 	fi
 	function filter_hurl_and_hurlfmt { grep -E "hurl | hurl|hurlfmt | hurlfmt" "$1" || true ;}
 	function clean_indent { sed "s/^ *hurl/hurl/g" ;}
-	function uncomment { sed "s/^#//g" ;}
+	function uncomment { sed -E "s/^# ?//g" ;}
 	function clean_sh_var_redirect { sed "s/.*=.*(hurl/hurl/g" | sed "s/)$//g" ;}
 	function clean_completion_function { grep -v _hurl || true ;}
 	function clean_non_exec_redirected_command { grep -Ev "=\(.*hurl" || true ;}

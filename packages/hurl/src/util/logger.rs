@@ -238,22 +238,26 @@ impl Logger {
         self.eprintln("<");
     }
 
-    /// Prints a HTTP request header to this logger [`Stderr`] instance, in verbose and very verbose mode.
+    /// Prints an HTTP request `header` to this logger [`Stderr`] instance, in verbose and very verbose mode.
     ///
     /// Request HTTP headers start with `>`.
-    pub fn debug_headers_out(&mut self, headers: &[(&str, &str)]) {
+    pub fn debug_header_out(&mut self, name: &str, value: &str) {
         if self.verbosity.is_none() {
             return;
         }
         let fmt = self.format();
 
-        for (name, value) in headers {
-            let mut s = StyledString::new();
-            s.push("> ");
-            s.push_with(name, Style::new().cyan().bold());
-            s.push(": ");
-            s.push(value);
-            self.eprintln(&s.to_string(fmt));
+        let mut s = StyledString::new();
+        s.push("> ");
+        s.push_with(name, Style::new().cyan().bold());
+        s.push(": ");
+        s.push(value);
+        self.eprintln(&s.to_string(fmt));
+    }
+
+    pub fn debug_header_out_end(&mut self) {
+        if self.verbosity.is_none() {
+            return;
         }
         self.eprintln(">");
     }

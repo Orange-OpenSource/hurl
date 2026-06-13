@@ -136,6 +136,11 @@ impl HeaderVec {
             .map(|h| h.value.as_str())
             .collect::<Vec<_>>()
     }
+
+    /// Clears the headers list, removing all values.
+    pub fn clear(&mut self) {
+        self.headers.clear();
+    }
 }
 
 impl<'a> IntoIterator for &'a HeaderVec {
