@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Host",
+    "value": "127.0.0.1:8002"
+  },
+  {
+    "name": "Proxy-Connection",
+    "value": "Keep-Alive"
+  },
+  {
+    "name": "Host",
+    "value": "127.0.0.1:8002"
+  },
+  {
+    "name": "Accept",
+    "value": "*/*"
+  },
+  {
+    "name": "User-Agent",
+    "value": "hurl/<<<.*?>>>"
+  }
+]
