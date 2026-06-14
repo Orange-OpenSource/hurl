@@ -195,8 +195,8 @@ impl Client {
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers = HeaderVec::new();
+        let mut response_headers = HeaderVec::new();
         let mut status_lines = None;
-        let mut response_headers = vec![];
         let has_body_data = !request_spec.body.bytes().is_empty()
             || !request_spec.form.is_empty()
             || !request_spec.multipart.is_empty();
@@ -219,7 +219,7 @@ impl Client {
                 // We use `CURLINFO_HEADER_OUT` to record/print HTTP request headers.
                 easy::InfoType::HeaderOut => {
                     // Extracts request headers from libcurl debug info.
-                    let lines = split_lines(data);
+                    let lines = decode_lines(data);
 
                     // We reinitialize the recorded request headers; a better solution would be
                     // to identity when we have a method line (like `GET /hello HTTP/1.1`) vs a
@@ -245,6 +245,22 @@ impl Client {
                         debug::log_body(&[], &request_headers, true, logger);
                     }
                 }
+                easy::InfoType::HeaderIn => {
+                    // Extracts request headers from libcurl debug info.
+                    let lines = decode_lines(data);
+
+                    for line in lines {
+                        if line.starts_with("HTTP/") {
+                            // A new status line indicates start of a new HTTP response.
+                            response_headers.clear();
+                            status_lines = Some(line);
+                        } else {
+                            if let Some(header) = Header::parse(&line) {
+                                response_headers.push(header);
+                            }
+                        }
+                    }
+                }
                 // We use `CURLINFO_DATA_OUT` to get the real body bytes sent by libcurl and logs request
                 // body chunks.
                 easy::InfoType::DataOut => {
@@ -267,17 +283,6 @@ impl Client {
                 }
                 _ => {}
             })?;
-            transfer.header_function(|h| {
-                if let Some(s) = decode_header(h) {
-                    if s.starts_with("HTTP/") {
-                        status_lines = Some(s);
-                    } else {
-                        response_headers.push(s);
-                    }
-                }
-                true
-            })?;
-
             transfer.write_function(|data| {
                 response_body.extend(data);
                 Ok(data.len())
@@ -311,7 +316,6 @@ impl Client {
             Some(status_line) => self.parse_response_version(status_line)?,
             None => return Err(HttpError::CouldNotParseResponse),
         };
-        let headers = self.parse_response_headers(&response_headers);
         let length = response_body.len();
 
         let certificate = self.cert_info(logger)?;
@@ -330,7 +334,7 @@ impl Client {
         let response = Response::new(
             version,
             status,
-            headers,
+            response_headers,
             response_body,
             duration,
             url,
@@ -760,17 +764,6 @@ impl Client {
         }
     }
 
-    /// Parse headers from libcurl responses.
-    fn parse_response_headers(&mut self, lines: &[String]) -> HeaderVec {
-        let mut headers = HeaderVec::new();
-        for line in lines {
-            if let Some(header) = Header::parse(line) {
-                headers.push(header);
-            }
-        }
-        headers
-    }
-
     /// Get the IP address of the last connection from libcurl
     fn primary_ip(&mut self) -> Result<IpAddr, HttpError> {
         match self.handle.primary_ip()? {
@@ -942,8 +935,10 @@ impl HeaderVec {
     }
 }
 
-/// Splits an array of bytes into HTTP lines (\r\n separator).
-fn split_lines(data: &[u8]) -> Vec<String> {
+/// Decodes optionally HTTP lines as text with UTF-8 or ISO-8859-1 encoding.
+///
+/// The HTTP lines comes from libcurl as an array of bytes (\r\n separator).
+fn decode_lines(data: &[u8]) -> Vec<String> {
     let mut lines = vec![];
     let mut start = 0;
     let mut i = 0;
@@ -951,9 +946,34 @@ fn split_lines(data: &[u8]) -> Vec<String> {
         return lines;
     }
     while i < (data.len() - 1) {
-        if data[i] == 13 && data[i + 1] == 10 {
-            if let Ok(s) = str::from_utf8(&data[start..i]) {
-                lines.push(s.to_string());
+        if data[i] == b'\r' && data[i + 1] == b'\n' {
+            match str::from_utf8(&data[start..i]) {
+                Ok(s) => {
+                    let line = s.to_string();
+                    lines.push(line);
+                }
+                Err(_) => {
+                    // See the [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/#note-latin1-ascii).
+                    //
+                    // > The windows-1252 encoding has various labels, such as "latin1", "iso-8859-1", and "ascii",
+                    // > which have historically been confusing for developers. On the web, and in any software
+                    // > that seeks to be web-compatible by implementing this standard, these are synonyms: "latin1"
+                    // > and "ascii" are just labels for windows-1252, and any software following this standard will,
+                    // > for example, decode 0x80 as U+20AC (€) when asked for the "Latin1" or "ASCII" decoding of that byte.
+                    // So: in the web platform world, ISO-8859-1 is just an alias for Windows-1252.
+                    //
+                    // In the [encoding_rs crate doc](https://docs.rs/encoding_rs/latest/encoding_rs/#iso-8859-1)
+                    //
+                    // > ISO-8859-1 does not exist as a distinct encoding from windows-1252 in the Encoding Standard.
+                    // > Therefore, an encoding that maps the unsigned byte value to the same Unicode scalar value is
+                    // > not available via Encoding in this crate.
+                    if let Some(s) = encoding_rs::WINDOWS_1252
+                        .decode_without_bom_handling_and_without_replacement(data)
+                    {
+                        let line = s.to_string();
+                        lines.push(line);
+                    }
+                }
             }
             start = i + 2;
             i += 2;
@@ -962,32 +982,6 @@ fn split_lines(data: &[u8]) -> Vec<String> {
         }
     }
     lines
-}
-
-/// Decodes optionally header value as text with UTF-8 or ISO-8859-1 encoding.
-fn decode_header(data: &[u8]) -> Option<String> {
-    match str::from_utf8(data) {
-        Ok(s) => Some(s.to_string()),
-        Err(_) => {
-            // See the [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/#note-latin1-ascii).
-            //
-            // > The windows-1252 encoding has various labels, such as "latin1", "iso-8859-1", and "ascii",
-            // > which have historically been confusing for developers. On the web, and in any software
-            // > that seeks to be web-compatible by implementing this standard, these are synonyms: "latin1"
-            // > and "ascii" are just labels for windows-1252, and any software following this standard will,
-            // > for example, decode 0x80 as U+20AC (€) when asked for the "Latin1" or "ASCII" decoding of that byte.
-            // So: in the web platform world, ISO-8859-1 is just an alias for Windows-1252.
-            //
-            // In the [encoding_rs crate doc](https://docs.rs/encoding_rs/latest/encoding_rs/#iso-8859-1)
-            //
-            // > ISO-8859-1 does not exist as a distinct encoding from windows-1252 in the Encoding Standard.
-            // > Therefore, an encoding that maps the unsigned byte value to the same Unicode scalar value is
-            // > not available via Encoding in this crate.
-            encoding_rs::WINDOWS_1252
-                .decode_without_bom_handling_and_without_replacement(data)
-                .map(|s| s.to_string())
-        }
-    }
 }
 
 /// Converts a list of [`String`] to a libcurl's list of strings.
@@ -1092,7 +1086,7 @@ mod tests {
     #[test]
     fn test_split_lines_header() {
         let data = b"GET /hello HTTP/1.1\r\nHost: localhost:8000\r\n\r\n";
-        let lines = split_lines(data);
+        let lines = decode_lines(data);
         assert_eq!(lines.len(), 3);
         assert_eq!(lines.first().unwrap().as_str(), "GET /hello HTTP/1.1");
         assert_eq!(lines.get(1).unwrap().as_str(), "Host: localhost:8000");
