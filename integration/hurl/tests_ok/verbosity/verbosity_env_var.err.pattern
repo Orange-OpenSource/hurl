@@ -16,7 +16,7 @@
 > X-Foo: 12345678
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -25,6 +25,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
 * Captures:
 * date: <<<.*?>>>
 *
@@ -44,7 +45,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 153 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 405 METHOD NOT ALLOWED
 < Allow: <<<.*>>>
@@ -54,6 +55,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 153 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -73,7 +75,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 2
 >
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -82,6 +84,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 1
@@ -112,7 +115,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -121,6 +124,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Lorem ipsum dolor sit amet...
 *
@@ -159,7 +164,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 153 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 405 METHOD NOT ALLOWED
 < Allow: <<<.*>>>
@@ -169,6 +174,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 153 bytes in <<<\d+>>> ms
+*
 * Response body:
 * <!doctype html>
 * <html lang=en>
@@ -212,7 +219,7 @@
 * {}
 ** upload completely sent off: 2 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -221,6 +228,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Lorem ipsum dolor sit amet...
 *
@@ -292,7 +301,7 @@
 > X-Foo: 12345678
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -301,6 +310,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
 * Captures:
 * date: <<<.*?>>>
 *
@@ -320,7 +330,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 153 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 405 METHOD NOT ALLOWED
 < Allow: <<<.*>>>
@@ -330,6 +340,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 153 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -349,7 +360,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 2
 >
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -358,4 +369,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
 *

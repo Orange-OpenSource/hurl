@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 1
@@ -23,6 +23,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 1 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -47,7 +48,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 1
@@ -56,6 +57,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 1 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -76,7 +78,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 1
@@ -85,6 +87,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 1 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -102,7 +105,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 1 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 1
@@ -111,4 +114,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 1 bytes in <<<\d+>>> ms
 *

@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*>>>
 >
-* Response: (received 74 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Connection: close
@@ -24,4 +24,5 @@
 < Transfer-Encoding: chunked
 < Via: waitress
 <
+* Received 74 bytes in <<<\d+>>> ms
 *

@@ -14,7 +14,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 12 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
 < [1;36mContent-Length[0m: 12
@@ -25,6 +25,7 @@
 < [1;36mServer[0m: Flask Server
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 12 bytes in <<<\d+>>> ms
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33mparam1[0m: value1
 [1;34m*[0m
@@ -44,7 +45,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 166 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
 < [1;36mContent-Length[0m: 166
@@ -53,6 +54,7 @@
 < [1;36mServer[0m: Flask Server
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 166 bytes in <<<\d+>>> ms
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33ma_node_set[0m: Nodeset(size=2)
 [1;34m*[0m
@@ -72,7 +74,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 0 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
 < [1;36mContent-Length[0m: 0
@@ -82,6 +84,7 @@
 < [1;36mSet-Cookie[0m: foo=value1; Domain=localhost; Expires=<<<.*?>>>; Max-Age=2592000; HttpOnly; Path=/bar
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 0 bytes in <<<\d+>>> ms
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33ma_cookie_value_attr[0m: value1
 [1;34m*[0m
@@ -102,7 +105,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 205 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
 < [1;36mContent-Length[0m: 205
@@ -111,6 +114,7 @@
 < [1;36mServer[0m: Flask Server
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 205 bytes in <<<\d+>>> ms
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33man_object[0m: Object()
 [1;34m*[0m [1;33ma_list[0m: [1,2,3]
@@ -145,7 +149,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 257 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 302 FOUND[0m
 < [1;36mContent-Length[0m: 257
@@ -155,6 +159,7 @@
 < [1;36mServer[0m: Flask Server
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 257 bytes in <<<\d+>>> ms
 [1;34m*[0m
 [1;34m*[0m => Redirect to http://localhost:8000/captures-json
 [1;34m*[0m
@@ -163,7 +168,7 @@
 > [1;36mAccept[0m: */*
 > [1;36mUser-Agent[0m: hurl/<<<.*?>>>
 >
-[1;34m*[0m [1mResponse: (received 205 bytes in <<<\d+>>> ms)[0m
+[1;34m*[0m [1mResponse:[0m
 [1;34m*[0m
 < [1;32mHTTP/1.1 200 OK[0m
 < [1;36mContent-Length[0m: 205
@@ -172,6 +177,7 @@
 < [1;36mServer[0m: Flask Server
 < [1;36mVia[0m: waitress
 <
+[1;34m*[0m Received 205 bytes in <<<\d+>>> ms
 [1;34m*[0m [1mCaptures:[0m
 [1;34m*[0m [1;33man_object[0m: Object()
 [1;34m*[0m [1;33ma_list[0m: [1,2,3]

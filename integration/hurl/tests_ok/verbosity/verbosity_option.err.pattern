@@ -36,7 +36,7 @@
 > User-Agent: hurl/<<<.*?>>>
 > Content-Length: 14
 >
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -45,6 +45,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -76,7 +77,7 @@
 * {"foo": "bar"}
 ** upload completely sent off: 14 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 29 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 29
@@ -85,6 +86,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 29 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Lorem ipsum dolor sit amet...
 *

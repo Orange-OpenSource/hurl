@@ -22,7 +22,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 33
@@ -31,6 +31,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 33 bytes in <<<\d+>>> ms
 *
 * Variables:
 *     name: Bob
@@ -55,7 +56,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 33
@@ -64,6 +65,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 33 bytes in <<<\d+>>> ms
 *
 * Variables:
 *     name: Bob
@@ -88,7 +90,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 33
@@ -97,6 +99,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 33 bytes in <<<\d+>>> ms
 *
 * Variables:
 *     name: Bob
@@ -121,7 +124,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 33 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 33
@@ -130,4 +133,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 33 bytes in <<<\d+>>> ms
 *

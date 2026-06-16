@@ -16,7 +16,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -25,6 +25,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Assert status code
 *   --> tests_failed/retry/retry.hurl:2:6
@@ -51,7 +52,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -60,6 +61,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Assert status code
 *   --> tests_failed/retry/retry.hurl:2:6
@@ -86,7 +88,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -95,6 +97,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Assert status code
 *   --> tests_failed/retry/retry.hurl:2:6
@@ -121,7 +124,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -130,6 +133,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Assert status code
 *   --> tests_failed/retry/retry.hurl:2:6
@@ -156,7 +160,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -165,6 +169,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Assert status code
 *   --> tests_failed/retry/retry.hurl:2:6
@@ -191,7 +196,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -200,6 +205,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * Retry max count reached, no more retry
 *

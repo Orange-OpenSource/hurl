@@ -221,21 +221,32 @@ impl Logger {
     /// Prints a HTTP response header to this logger [`Stderr`] instance, in verbose and very verbose mode.
     ///
     /// Response HTTP headers start with `<`.
-    pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {
+    pub fn debug_header_in(&mut self, name: &str, value: &str) {
         if self.verbosity.is_none() {
             return;
         }
         let fmt = self.format();
 
-        for (name, value) in headers {
-            let mut s = StyledString::new();
-            s.push("< ");
-            s.push_with(name, Style::new().cyan().bold());
-            s.push(": ");
-            s.push(value);
-            self.eprintln(&s.to_string(fmt));
+        let mut s = StyledString::new();
+        s.push("< ");
+        s.push_with(name, Style::new().cyan().bold());
+        s.push(": ");
+        s.push(value);
+        self.eprintln(&s.to_string(fmt));
+    }
+
+    pub fn debug_header_in_end(&mut self) {
+        if self.verbosity.is_none() {
+            return;
         }
         self.eprintln("<");
+    }
+
+    #[deprecated(since = "8.1.0", note = "please use single `debug_header_in` instead")]
+    pub fn debug_headers_in(&mut self, headers: &[(&str, &str)]) {
+        for (name, value) in headers {
+            self.debug_header_in(name, value);
+        }
     }
 
     /// Prints an HTTP request `header` to this logger [`Stderr`] instance, in verbose and very verbose mode.
@@ -253,6 +264,13 @@ impl Logger {
         s.push(": ");
         s.push(value);
         self.eprintln(&s.to_string(fmt));
+    }
+
+    #[deprecated(since = "8.1.0", note = "please use single `debug_header_in` instead")]
+    pub fn debug_headers_out(&mut self, headers: &[(&str, &str)]) {
+        for (name, value) in headers {
+            self.debug_header_out(name, value);
+        }
     }
 
     pub fn debug_header_out_end(&mut self) {

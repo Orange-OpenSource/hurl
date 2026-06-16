@@ -228,13 +228,14 @@ impl Client {
 
                     if !lines.is_empty() {
                         logger.debug_method_version_out(&lines[0]);
-                        for line in &lines[1..lines.len() - 1] {
-                            if let Some(header) = Header::parse(line) {
+                        for line in &lines[1..lines.len()] {
+                            if line.is_empty() {
+                                logger.debug_header_out_end();
+                            } else if let Some(header) = Header::parse(line) {
                                 logger.debug_header_out(&header.name, &header.value);
                                 request_headers.push(header);
                             }
                         }
-                        logger.debug_header_out_end();
                     }
 
                     // If we don't send any data, we log an empty body here instead of relying on
@@ -249,13 +250,20 @@ impl Client {
                     // Extracts request headers from libcurl debug info.
                     let lines = decode_lines(data);
 
-                    for line in lines {
+                    for line in &lines {
                         if line.starts_with("HTTP/") {
                             // A new status line indicates start of a new HTTP response.
                             response_headers.clear();
-                            status_lines = Some(line);
+                            let line = line.trim();
+                            logger.debug_important("Response:");
+                            logger.debug("");
+                            logger.debug_status_version_in(line);
+                            status_lines = Some(line.to_string());
                         } else {
-                            if let Some(header) = Header::parse(&line) {
+                            if line.is_empty() {
+                                logger.debug_header_in_end();
+                            } else if let Some(header) = Header::parse(line) {
+                                logger.debug_header_in(&header.name, &header.value);
                                 response_headers.push(header);
                             }
                         }
@@ -348,25 +356,10 @@ impl Client {
             //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
             //  ok with Rust >= 1.67.0.
             let duration = duration.as_millis() as u64;
-            logger.debug_important(&format!(
-                "Response: (received {length} bytes in {duration} ms)"
-            ));
-            logger.debug("");
-
-            // FIXME: Explain why there may be multiple status line
-            status_lines
-                .iter()
-                .filter(|s| s.starts_with("HTTP/"))
-                .for_each(|s| logger.debug_status_version_in(s.trim()));
-
-            let headers = response
-                .headers
-                .iter()
-                .map(|h| (h.name.as_str(), h.value.as_str()))
-                .collect::<Vec<_>>();
-            logger.debug_headers_in(&headers);
+            logger.debug(&format!("Received {length} bytes in {duration} ms"));
 
             if very_verbose {
+                logger.debug("");
                 logger.debug_important("Response body:");
                 response.log_body(true, logger);
                 logger.debug("");

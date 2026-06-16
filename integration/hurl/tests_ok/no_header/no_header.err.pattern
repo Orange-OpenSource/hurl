@@ -14,7 +14,7 @@
 > Host: localhost:8000
 > foo: FOO
 >
-* Response: (received 12 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 12
@@ -23,4 +23,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 12 bytes in <<<\d+>>> ms
 *

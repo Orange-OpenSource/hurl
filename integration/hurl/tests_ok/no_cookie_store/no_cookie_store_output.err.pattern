@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -24,6 +24,7 @@
 < Set-Cookie: foo=1234; Expires=<<<.*?>>>; Path=/no_cookie/check
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -41,7 +42,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -50,6 +51,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -70,7 +72,7 @@
 > Cookie: color=blue
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -79,5 +81,6 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
 *
 * Writing cookies to build/no_cookie_store_output.txt

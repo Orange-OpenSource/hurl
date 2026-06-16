@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 201 CREATED
 < Content-Length: 60
@@ -23,6 +23,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 60 bytes in <<<\d+>>> ms
 * Captures:
 * job_id: <<<.*?>>>
 *
@@ -46,7 +47,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 60
@@ -55,6 +56,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 60 bytes in <<<\d+>>> ms
 *
 * Assert failure
 *   --> tests_ok/retry/retry_option.hurl:17:0
@@ -83,7 +85,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 60
@@ -92,6 +94,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 60 bytes in <<<\d+>>> ms
 *
 * Assert failure
 *   --> tests_ok/retry/retry_option.hurl:17:0
@@ -120,7 +123,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 60
@@ -129,6 +132,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 60 bytes in <<<\d+>>> ms
 *
 * Assert failure
 *   --> tests_ok/retry/retry_option.hurl:17:0
@@ -157,7 +161,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 60 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 60
@@ -166,6 +170,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 60 bytes in <<<\d+>>> ms
 *
 * Assert failure
 *   --> tests_ok/retry/retry_option.hurl:17:0
@@ -194,7 +199,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 62 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 62
@@ -203,6 +208,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 62 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -220,7 +226,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -229,6 +235,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -246,7 +253,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 42 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 42
@@ -255,4 +262,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 42 bytes in <<<\d+>>> ms
 *

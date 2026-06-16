@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 28 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 28
@@ -23,6 +23,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 28 bytes in <<<\d+>>> ms
 *
 error: Assert body value
   --> tests_failed/html_report_injection/html_report_injection.hurl:4:1

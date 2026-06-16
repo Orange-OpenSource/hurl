@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*>>>
 >
-* Response: (received <<<\d+>>> bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 5
@@ -23,4 +23,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received <<<\d+>>> bytes in <<<\d+>>> ms
 *

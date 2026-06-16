@@ -27,7 +27,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 205 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
 < Content-Length: 205
@@ -37,6 +37,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 205 bytes in <<<\d+>>> ms
+*
 * Response body:
 * <html>
 * <head>
@@ -74,7 +76,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 11 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 11
@@ -83,6 +85,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 11 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Redirected.
 *
@@ -119,7 +123,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 205 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 301 MOVED PERMANENTLY
 < Content-Length: 205
@@ -129,6 +133,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 205 bytes in <<<\d+>>> ms
+*
 * Response body:
 * <html>
 * <head>
@@ -166,7 +172,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 11 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 11
@@ -175,6 +181,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 11 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Redirected.
 *
@@ -211,7 +219,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 4 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 4
@@ -220,6 +228,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 4 bytes in <<<\d+>>> ms
+*
 * Response body:
 * café
 *
@@ -263,7 +273,7 @@
 * }
 ** upload completely sent off: 37 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 17 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Encoding: br
@@ -273,6 +283,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 17 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Hello World!
 *
@@ -309,7 +321,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 25992 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 25992
@@ -318,6 +330,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 25992 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
 *
@@ -358,7 +372,7 @@
 * Bytes <<<<.*?>>><<<.*?>>>...>
 ** upload completely sent off: 26584 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -367,6 +381,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
+*
 * Response body:
 *
 *
@@ -407,7 +423,7 @@
 * Bytes <<<<.*?>>><<<.*?>>>...>
 ** upload completely sent off: 26584 bytes
 ** Connection #0 to host localhost left intact
-* Response: (received 0 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 0
@@ -416,6 +432,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 0 bytes in <<<\d+>>> ms
+*
 * Response body:
 *
 *
@@ -454,7 +472,7 @@
 *
 ** Request completely sent off
 ** Connection #0 to host localhost left intact
-* Response: (received 4 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 4
@@ -463,6 +481,8 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 4 bytes in <<<\d+>>> ms
+*
 * Response body:
 * Done
 *

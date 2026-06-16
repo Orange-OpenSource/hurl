@@ -14,7 +14,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 12
@@ -23,6 +23,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 12 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -40,7 +41,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -49,6 +50,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -66,7 +68,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 207 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 404 NOT FOUND
 < Content-Length: 207
@@ -75,6 +77,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 207 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -92,7 +95,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 12
@@ -101,6 +104,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 12 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -118,7 +122,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 12
@@ -127,6 +131,7 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 12 bytes in <<<\d+>>> ms
 *
 * ------------------------------------------------------------------------------
 * Executing entry 6
@@ -144,7 +149,7 @@
 > Accept: */*
 > User-Agent: hurl/<<<.*?>>>
 >
-* Response: (received 12 bytes in <<<\d+>>> ms)
+* Response:
 *
 < HTTP/1.1 200 OK
 < Content-Length: 12
@@ -153,4 +158,5 @@
 < Server: Flask Server
 < Via: waitress
 <
+* Received 12 bytes in <<<\d+>>> ms
 *
