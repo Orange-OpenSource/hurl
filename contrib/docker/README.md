@@ -19,7 +19,7 @@ docker buildx inspect --bootstrap
 docker buildx ls
 ```
 
-## Connect to github container registry
+## Connect to GitHub container registry
 
 ```
 read -s -p "Hurl-bot github token: " hurl_bot_token
@@ -123,13 +123,13 @@ echo -e "GET https://hurl.dev\n\nHTTP 200" > /tmp/test.hurl
 docker run --rm -v /tmp/test.hurl:/tmp/test.hurl local/hurl --test --color --very-verbose /tmp/test.hurl
 ```
 
-## Connect to github container registry
+## Connect to GitHub container registry
 
 ```
 echo <hurl-bot github token> | docker login ghcr.io --username hurl-bot --password-stdin
 ```
 
-## Push to github registry
+## Push to GitHub registry
 
 ```
 docker push ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}"
