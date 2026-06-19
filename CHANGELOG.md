@@ -2,11 +2,19 @@
 ========================================================================================================================
 
 Thanks to
+[@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
+[@eyupcanakman](https://github.com/eyupcanakman),
 
 Enhancements:
 
 * Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
+
+
+Bugs Fixed:
+
+* Fix misleading error message for not-equal predicate [#2841](https://github.com/Orange-OpenSource/hurl/issues/2841)
+* Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
