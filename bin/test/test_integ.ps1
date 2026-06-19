@@ -1,6 +1,11 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
+write-host -foregroundcolor Cyan "----- adhoc tests -----"
+
+Write-Output 'GET https://google.com' | hurl --very-verbose --http2
+Write-Output 'HEAD https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js' | hurl --very-verbose
+
 write-host -foregroundcolor Cyan "----- integration tests -----"
 
 $actual_dir=(Get-Location).Path
