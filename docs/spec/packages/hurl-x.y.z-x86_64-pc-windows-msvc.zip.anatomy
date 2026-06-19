@@ -16,4 +16,4 @@ attr     user_group  type  file
 -rw----  defN        file  libxml2.dll
 -rw----  defN        file  nghttp2.dll
 -rw----  defN        file  version.txt
--rw----  defN        file  zlib1.dll
+-rw----  defN        file  z.dll
