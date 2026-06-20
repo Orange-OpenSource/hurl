@@ -609,11 +609,6 @@ jobs:
     - name: Install Rust
       run: |
         .\bin\install_rust.ps1
-    - name: Manage vcpkg cache
-      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae #v5.0.5
-      with:
-        path: C:\vcpkg
-        key: ${{ runner.os }}-release-windows-x64
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Install Python 3.11
