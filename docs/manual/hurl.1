@@ -1,4 +1,4 @@
-.TH hurl 1 "12 Jun 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "20 Jun 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -525,6 +525,16 @@ This is a cli-only option.
 Ignore all asserts defined in the Hurl file.
 
 Environment variables: HURL_NO_ASSERT
+
+This is a cli-only option.
+
+.IP "--no-jsonpath-coercion "
+
+Disable JSONPath result coercion.
+
+By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.
+
+Environment variables: HURL_NO_JSONPATH_COERCION
 
 This is a cli-only option.
 
