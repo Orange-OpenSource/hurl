@@ -4,11 +4,20 @@
 Thanks to
 [@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
 [@eyupcanakman](https://github.com/eyupcanakman),
+[@fubar-coder](https://github.com/fubar-coder),
+
+Thanks to
+[@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
+[@eyupcanakman](https://github.com/eyupcanakman),
+[@fubar-coder](https://github.com/fubar-coder),
+[@ptwales](https://github.com/ptwales),
 
 Enhancements:
 
 * Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
+* Add no jsonpath coercion option  [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
+* Add --proxy-header option to send header exclusively to a proxy [#3944](https://github.com/Orange-OpenSource/hurl/issues/3944)
 
 
 Bugs Fixed:
