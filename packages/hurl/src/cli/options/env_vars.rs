@@ -27,8 +27,8 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::{
     HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
     HURL_FOLLOW_LOCATION_TRUSTED, HURL_HEADER, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE,
-    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_NO_HEADER, HURL_RETRY, HURL_RETRY_INTERVAL,
-    HURL_VERBOSITY,
+    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_NO_HEADER, HURL_PROXY_HEADER, HURL_RETRY,
+    HURL_RETRY_INTERVAL, HURL_VERBOSITY,
 };
 use super::variables::TypeKind;
 use super::{
@@ -124,7 +124,7 @@ fn headers(
         let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
         for h in &headers {
             if !h.contains(':') {
-                let msg = format!("Invalid header <{h}> missing `:`");
+                let msg = format!("Invalid header <{h}>, missing `:`");
                 return Err(err_from_cli_err(CliOptionsError::Error(msg), HURL_HEADER));
             }
         }
@@ -261,6 +261,30 @@ fn no_headers(
         all_no_headers.extend(no_headers);
     }
     Ok(all_no_headers)
+}
+
+fn proxy_headers(
+    context: &RunContext,
+    default_value: Vec<String>,
+) -> Result<Vec<String>, CliOptionsError> {
+    let mut all_proxy_headers = default_value;
+    if let Some(proxy_header) = context.proxy_header_env_var() {
+        let proxy_headers = proxy_header
+            .split("|")
+            .map(|h| h.to_string())
+            .collect::<Vec<_>>();
+        for h in &proxy_headers {
+            if !h.contains(':') {
+                let msg = format!("Invalid proxy header <{h}>, missing `:`");
+                return Err(err_from_cli_err(
+                    CliOptionsError::Error(msg),
+                    HURL_PROXY_HEADER,
+                ));
+            }
+        }
+        all_proxy_headers.extend(proxy_headers);
+    }
+    Ok(all_proxy_headers)
 }
 
 fn no_jsonpath_coercion(context: &RunContext, default_value: bool) -> bool {
@@ -410,6 +434,7 @@ pub fn parse_env_vars(
     let parallel = parallel(context, default_options.parallel);
     let pretty = pretty(context, default_options.pretty);
     let progress_bar = progress_bar(context, default_options.progress_bar);
+    let proxy_headers = proxy_headers(context, default_options.proxy_headers)?;
     let retry = retry(context, default_options.retry)?;
     let retry_interval = retry_interval(context, default_options.retry_interval)?;
     let secrets = secrets(context, default_options.secrets)?;
@@ -447,6 +472,7 @@ pub fn parse_env_vars(
         parallel,
         pretty,
         progress_bar,
+        proxy_headers,
         retry,
         retry_interval,
         secrets,

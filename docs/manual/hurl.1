@@ -1,4 +1,4 @@
-.TH hurl 1 "20 Jun 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "21 Jun 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -333,6 +333,8 @@ Environment variables: http_proxy https_proxy all_proxy
 .IP "--proxy-header <HEADER> "
 
 Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.
+
+Environment variables: HURL_PROXY_HEADER='name1:value1|name2:value2' (headers are separated by |)
 
 This is a cli-only option.
 

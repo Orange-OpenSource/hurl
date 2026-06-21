@@ -349,6 +349,8 @@ Environment variables: http_proxy https_proxy all_proxy
 
 Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.
 
+Environment variables: HURL_PROXY_HEADER='name1:value1|name2:value2' (headers are separated by |)
+
 This is a cli-only option.
 
 #### --resolve <HOST:PORT:ADDR> {#resolve}
