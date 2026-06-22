@@ -467,19 +467,34 @@ fn variable_name(reader: &mut Reader) -> ParseResult<String> {
     Ok(name)
 }
 
+// `null`, a boolean or a number is only a variable value when the literal spans the whole
+// value. When more characters follow (as in `11aa` or `true_is_true`), the literal is just
+// the start of an unquoted string, so return a recoverable error to fall back to it.
+fn literal_value<T>(reader: &mut Reader, value: T) -> ParseResult<T> {
+    match reader.peek() {
+        None | Some(' ' | '\t' | '\r' | '\n' | '#') => Ok(value),
+        Some(_) => {
+            let kind = ParseErrorKind::Expecting {
+                value: "variable value".to_string(),
+            };
+            Err(ParseError::new(reader.cursor().pos, true, kind))
+        }
+    }
+}
+
 fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
     choice(
         &[
             |p1| match null(p1) {
-                Ok(()) => Ok(VariableValue::Null),
+                Ok(()) => literal_value(p1, VariableValue::Null),
                 Err(e) => Err(e),
             },
             |p1| match boolean(p1) {
-                Ok(value) => Ok(VariableValue::Bool(value)),
+                Ok(value) => literal_value(p1, VariableValue::Bool(value)),
                 Err(e) => Err(e),
             },
             |p1| match number(p1) {
-                Ok(value) => Ok(VariableValue::Number(value)),
+                Ok(value) => literal_value(p1, VariableValue::Number(value)),
                 Err(e) => Err(e),
             },
             |p1| match quoted_template(p1) {
@@ -764,6 +779,61 @@ mod tests {
                     source: "123".to_source(),
                 }],
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+            ))
+        );
+    }
+
+    #[test]
+    fn test_variable_value_string_with_literal_prefix() {
+        let mut reader = Reader::new("11aa");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "11aa".to_string(),
+                    source: "11aa".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+            ))
+        );
+
+        let mut reader = Reader::new("0.5x");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "0.5x".to_string(),
+                    source: "0.5x".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+            ))
+        );
+
+        let mut reader = Reader::new("true_is_true");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "true_is_true".to_string(),
+                    source: "true_is_true".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
+            ))
+        );
+
+        let mut reader = Reader::new("nullable");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template::new(
+                None,
+                vec![TemplateElement::String {
+                    value: "nullable".to_string(),
+                    source: "nullable".to_source(),
+                }],
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             ))
         );
     }
