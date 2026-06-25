@@ -7,8 +7,7 @@ write-host -foregroundcolor Cyan "----- install system prerequisites -----"
 $vcpkg_dir=((Get-command vcpkg).Source | Split-Path)
 $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
 & "$vcpkg_dir\bootstrap-vcpkg.bat"
-# Downgrade to 8.19.0 => https://github.com/Orange-OpenSource/hurl/issues/5105
-git -C $vcpkg_dir checkout 4f326c4072038c8624c36a8ba5ed23f616adda53
+git -C $vcpkg_dir pull
 
 # install libxml and libcurl
 vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows
