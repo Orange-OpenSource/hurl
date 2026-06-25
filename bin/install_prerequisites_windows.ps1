@@ -10,7 +10,7 @@ $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
 git -C $vcpkg_dir pull
 
 # install libxml and libcurl
-vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows
+vcpkg install --recurse curl[core,http2,non-http]:x64-windows
 vcpkg install --recurse libxml2[core,iconv]:x64-windows
 
 vcpkg update
