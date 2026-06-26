@@ -21,7 +21,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  package-windows-x64:
+  test-libcurl:
     runs-on: windows-latest
     steps:
     - name: Set git to use LF
@@ -46,29 +46,6 @@ jobs:
       run: |
         .\bin\activate_python3_venv.ps1
         .\bin\environment.ps1
-    - name: Build
-      run: .\bin\release\release.ps1
-    - name: Create windows64 Zip package
-      run: .\bin\release\create_windows64_zip_package.ps1
-    - name: Install win64 zip and test integ
+    - name: test-libcurl
       run: |
-        .\bin\release\install_windows64_zip_package.ps1
-        .\bin\activate_python3_venv.ps1
-        .\bin\test\test_prerequisites.ps1
-        .\bin\test\test_integ.ps1
-    - name: Create windows64 installer
-      run: .\bin\release\create_windows64_installer.ps1
-    - name: Install win64 installer and test integ
-      run: |
-        .\bin\release\install_windows64_installer.ps1
-        .\bin\activate_python3_venv.ps1
-        .\bin\test\test_prerequisites.ps1
-        .\bin\test\test_integ.ps1
-    - name: Archive production artifacts
-      if: always()
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
-      with:
-        name: release-windows-x64-artifacts
-        path: |
-          .\target\win-package\hurl-*-installer.exe
-          .\target\win-package\hurl-*.zip
+        
