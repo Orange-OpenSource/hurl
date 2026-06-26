@@ -9,6 +9,21 @@ int main(int argc, char *argv[])
   CURLcode ret;
   CURL *hnd;
 
+  /* === print curl --version equivalent === */
+  const curl_version_info_data *vinfo = curl_version_info(CURLVERSION_NOW);
+
+  printf("curl version: %s\n", vinfo->version);
+  printf("SSL backend: %s\n", vinfo->ssl_version ? vinfo->ssl_version : "none");
+  printf("libz: %s\n", vinfo->libz_version ? vinfo->libz_version : "none");
+  printf("Protocols: ");
+
+  for (int i = 0; vinfo->protocols && vinfo->protocols[i]; i++) {
+    printf("%s ", vinfo->protocols[i]);
+  }
+  printf("\n\n");
+
+  /* === functional code === */
+  
   hnd = curl_easy_init();
   curl_easy_setopt(hnd, CURLOPT_BUFFERSIZE, 102400L);
   curl_easy_setopt(hnd, CURLOPT_URL, "https://google.com");
