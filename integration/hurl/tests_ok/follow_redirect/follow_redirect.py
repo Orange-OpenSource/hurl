@@ -80,15 +80,18 @@ def follow_redirect_basic_auth():
 
 @app.route("/followed-redirect-basic-auth")
 def followed_redirect_basic_auth():
-    # Cookies follows redirection (contrary to 'Set-Cookie' header that may be filtered)
-    assert request.cookies["fruit"] == "lemon"
-    # When host changes, authorization should be filtered
-    if request.headers["Host"] == "localhost:8000":
-        assert "Authorization" in request.headers
-        return "Followed redirect with Authorization header!"
-    else:
+    # When host changes, authorization request headers (like `Authorization` and `Cookie`)
+    # should be filtered. In the corresponding hurl test, we initiate request from `localhost` to `localhost`
+    # (no host change) or from `localhost` to `127.0.0.1` (host change)
+    host_has_changed = request.headers["Host"] != "localhost:8000"
+    if host_has_changed:
         assert "Authorization" not in request.headers
-        return "Followed redirect without Authorization header!"
+        assert "Cookie" not in request.headers
+        return "Followed redirect without Authorization nor Cookie header!"
+    else:
+        assert "Authorization" in request.headers
+        assert request.cookies["fruit"] == "lemon"
+        return "Followed redirect with Authorization and Cookie header!"
 
 
 @app.route("/follow-redirect-basic-auth-trusted")

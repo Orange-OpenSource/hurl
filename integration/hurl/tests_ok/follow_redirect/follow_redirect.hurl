@@ -47,7 +47,20 @@ url == "http://localhost:8000/follow-redirect/bar"
 `Followed relative redirect!`
 
 
-# Do not forward `Authorization` header to a different host
+# Do not forward `Authorization` and `Cookie` header to a different host
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
+Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+Cookie: fruit=lemon
+HTTP 200
+[Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+header "Location" not exists
+`Followed redirect without Authorization nor Cookie header!`
+
+
+# Another way to write the previous entry using a `[Cookies]` section instead of a `Cookie` header.
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Cookies]
@@ -58,11 +71,24 @@ redirects count == 1
 redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect without Authorization header!`
+`Followed redirect without Authorization nor Cookie header!`
 
 
 # Same has previous but the host doesn't change during redirection.
-# Back checks will insure that `Authorization` is forwarded.
+# Back checks will insure that `Authorization` and `Cookie` header are forwarded.
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
+Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+Cookie: fruit=lemon
+HTTP 200
+[Asserts]
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
+header "Location" not exists
+`Followed redirect with Authorization and Cookie header!`
+
+
+# Another way to write the previous entry using a `[Cookies]` section instead of a `Cookie` header.
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Cookies]
@@ -73,7 +99,7 @@ redirects count == 1
 redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
 url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect with Authorization header!`
+`Followed redirect with Authorization and Cookie header!`
 
 
 # Another kinds of user authentication with `--user` in `[Options]` section:
@@ -88,7 +114,7 @@ redirects count == 1
 redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect without Authorization header!`
+`Followed redirect without Authorization nor Cookie header!`
 
 
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
@@ -102,7 +128,7 @@ redirects count == 1
 redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
 url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect with Authorization header!`
+`Followed redirect with Authorization and Cookie header!`
 
 
 # Another kinds of user authentication with `[BasicAuth]` section:
@@ -117,7 +143,7 @@ redirects count == 1
 redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect without Authorization header!`
+`Followed redirect without Authorization nor Cookie header!`
 
 
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
@@ -131,7 +157,7 @@ redirects count == 1
 redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
 url == "http://localhost:8000/followed-redirect-basic-auth"
 header "Location" not exists
-`Followed redirect with Authorization header!`
+`Followed redirect with Authorization and Cookie header!`
 
 
 # With a 308 redirection, the method remains POST. In this case, the request body is

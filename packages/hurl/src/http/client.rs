@@ -126,8 +126,9 @@ impl Client {
 
             let redirect_method = redirect_method(status, &request_spec.method);
             let mut headers = request_spec.headers;
+            let mut cookies = request_spec.cookies;
 
-            // When following redirection, we filter `Authorization` and `Set-Cookie` headers if the
+            // When following redirection, we filter `Authorization` and `Cookie` headers if the
             // hostname changes unless the user explicitly trusts the redirected host with `--location-trusted`.
             // <https://curl.se/libcurl/c/CURLOPT_FOLLOWLOCATION.html>:
             //
@@ -141,6 +142,7 @@ impl Client {
             ) {
                 headers.retain(|h| !h.name_eq(AUTHORIZATION));
                 headers.retain(|h| !h.name_eq(COOKIE));
+                cookies.clear();
                 options.user = None;
             }
 
@@ -168,7 +170,7 @@ impl Client {
                 querystring: vec![],
                 form,
                 multipart,
-                cookies: request_spec.cookies,
+                cookies,
                 body,
                 implicit_content_type,
             };
