@@ -50,6 +50,6 @@ jobs:
       run: |
         git clone --depth 1 https://github.com/curl/curl.git
         cd curl
-        cp -frp ../main.c .
-        gcc -o main -lcurl main.c
+        Copy-Item -Path ../main.c -Destination . -Recurse -Force -PassThru
+        & gcc -o main -lcurl main.c
         & ./main
