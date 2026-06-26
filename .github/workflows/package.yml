@@ -48,4 +48,8 @@ jobs:
         .\bin\environment.ps1
     - name: test-libcurl
       run: |
-        
+        #git clone --depth 1 https://github.com/curl/curl.git
+        #cd curl
+        #cp -frp ../main.c .
+        gcc -o main -lcurl main.c
+        & ./main
