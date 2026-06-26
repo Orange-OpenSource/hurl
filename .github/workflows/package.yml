@@ -33,15 +33,8 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ inputs.branch }}
-    - name: Install Rust
-      run: |
-        .\bin\install_rust.ps1
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
-    - name: Install Python 3.11
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 #v6.2.0
-      with:
-        python-version: '3.11'
     - name: Environment
       run: |
         .\bin\activate_python3_venv.ps1
