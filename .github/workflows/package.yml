@@ -52,5 +52,5 @@ jobs:
         cd curl-8-21
         Copy-Item -Path ../main.c -Destination . -Recurse -Force -PassThru
         ls -l include/curl/curl.h
-        & gcc -o main -lcurl main.c
+        & gcc -I. -o main -lcurl main.c
         & ./main
