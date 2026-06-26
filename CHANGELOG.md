@@ -5,25 +5,22 @@ Thanks to
 [@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
 [@eyupcanakman](https://github.com/eyupcanakman),
 [@fubar-coder](https://github.com/fubar-coder),
-
-Thanks to
-[@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
-[@eyupcanakman](https://github.com/eyupcanakman),
-[@fubar-coder](https://github.com/fubar-coder),
 [@ptwales](https://github.com/ptwales),
 
 Enhancements:
 
 * Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
-* Add no jsonpath coercion option  [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
+* Add no jsonpath coercion option [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
 * Add --proxy-header option to send header exclusively to a proxy [#3944](https://github.com/Orange-OpenSource/hurl/issues/3944)
 
 
 Bugs Fixed:
 
 * Fix misleading error message for not-equal predicate [#2841](https://github.com/Orange-OpenSource/hurl/issues/2841)
+* Fix variable option values starting with a number or boolean [#5028](https://github.com/Orange-OpenSource/hurl/issues/5028)
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
+* Fix stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
