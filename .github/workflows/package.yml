@@ -48,8 +48,9 @@ jobs:
         .\bin\environment.ps1
     - name: test-libcurl
       run: |
-        git clone --depth 1 https://github.com/curl/curl.git
-        cd curl
+        git clone --depth 1 https://github.com/curl/curl.git --branch curl-8_21_0 curl-8-21
+        cd curl-8-21
         Copy-Item -Path ../main.c -Destination . -Recurse -Force -PassThru
+        ls -l include/curl/curl.h
         & gcc -o main -lcurl main.c
         & ./main
