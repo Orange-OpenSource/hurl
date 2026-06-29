@@ -44,6 +44,6 @@ jobs:
         git clone --depth 1 https://github.com/curl/curl.git --branch curl-8_21_0 curl-8-21
         cd curl-8-21
         Copy-Item -Path ../main.c -Destination . -Recurse -Force -PassThru
-        call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x64
-        cl main.c /I "%VCPKG_ROOT%\installed\x64-windows\include" /link /LIBPATH:"%VCPKG_ROOT%\installed\x64-windows\lib" libcurl.lib
-        main.exe
+        & "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x64
+        & cl main.c /I "%VCPKG_ROOT%\installed\x64-windows\include" /link /LIBPATH:"%VCPKG_ROOT%\installed\x64-windows\lib" libcurl.lib
+        & main.exe
