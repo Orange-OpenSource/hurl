@@ -20,6 +20,10 @@ Bugs Fixed:
 * Fix misleading error message for not-equal predicate [#2841](https://github.com/Orange-OpenSource/hurl/issues/2841)
 * Fix variable option values starting with a number or boolean [#5028](https://github.com/Orange-OpenSource/hurl/issues/5028)
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
+
+
+Security Issues Fixed:
+
 * Fix stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
 
 
