@@ -183,6 +183,7 @@ pub enum HttpVersion {
     V10,
     V11,
     V2,
+    V2PriorKnowledge,
     V3,
 }
 
@@ -192,6 +193,7 @@ impl From<HttpVersion> for RequestedHttpVersion {
             HttpVersion::V10 => RequestedHttpVersion::Http10,
             HttpVersion::V11 => RequestedHttpVersion::Http11,
             HttpVersion::V2 => RequestedHttpVersion::Http2,
+            HttpVersion::V2PriorKnowledge => RequestedHttpVersion::Http2PriorKnowledge,
             HttpVersion::V3 => RequestedHttpVersion::Http3,
         }
     }

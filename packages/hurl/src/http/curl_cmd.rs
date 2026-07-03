@@ -447,6 +447,9 @@ impl ClientOptions {
             RequestedHttpVersion::Http10 => args.push("--http1.0".to_string()),
             RequestedHttpVersion::Http11 => args.push("--http1.1".to_string()),
             RequestedHttpVersion::Http2 => args.push("--http2".to_string()),
+            RequestedHttpVersion::Http2PriorKnowledge => {
+                args.push("--http2-prior-knowledge".to_string());
+            }
             RequestedHttpVersion::Http3 => args.push("--http3".to_string()),
         }
         if self.insecure {

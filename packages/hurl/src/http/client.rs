@@ -1050,6 +1050,7 @@ impl From<RequestedHttpVersion> for easy::HttpVersion {
             RequestedHttpVersion::Http10 => easy::HttpVersion::V10,
             RequestedHttpVersion::Http11 => easy::HttpVersion::V11,
             RequestedHttpVersion::Http2 => easy::HttpVersion::V2,
+            RequestedHttpVersion::Http2PriorKnowledge => easy::HttpVersion::V2PriorKnowledge,
             RequestedHttpVersion::Http3 => easy::HttpVersion::V3,
         }
     }

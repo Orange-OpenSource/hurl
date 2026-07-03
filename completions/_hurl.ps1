@@ -45,6 +45,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--http1.0', 'http1.0', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 1.0')
             [CompletionResult]::new('--http1.1', 'http1.1', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 1.1')
             [CompletionResult]::new('--http2', 'http2', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 2')
+            [CompletionResult]::new('--http2-prior-knowledge', 'http2-prior-knowledge', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 2 without HTTP/1.1 Upgrade')
             [CompletionResult]::new('--http3', 'http3', [CompletionResultType]::ParameterName, 'Tell Hurl to use HTTP version 3')
             [CompletionResult]::new('--include', 'include', [CompletionResultType]::ParameterName, 'Include the HTTP headers in the output')
             [CompletionResult]::new('--insecure', 'insecure', [CompletionResultType]::ParameterName, 'Allow insecure SSL connections')

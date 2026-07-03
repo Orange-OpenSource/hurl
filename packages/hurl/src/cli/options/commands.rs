@@ -253,6 +253,14 @@ pub fn http2() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn http2_prior_knowledge() -> clap::Arg {
+    clap::Arg::new("http2_prior_knowledge")
+        .long("http2-prior-knowledge")
+        .help("Tell Hurl to use HTTP version 2 without HTTP/1.1 Upgrade")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn http3() -> clap::Arg {
     clap::Arg::new("http3")
         .long("http3")

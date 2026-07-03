@@ -40,12 +40,21 @@ pub struct Request {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
 pub enum RequestedHttpVersion {
-    /// The effective HTTP version will be chosen by libcurl
+    /// We don't care what HTTP version to use, the effective HTTP version will be choose
+    /// the best possible for us by libcurl.
     #[default]
     Default,
+    /// Request using HTTP/1.0 in the request
     Http10,
+    /// Request using HTTP/1.1 in the request
     Http11,
+    /// Request using HTTP/2 in the request (with HTTP/1.1 upgrade phase)
     Http2,
+    /// Request using HTTP/2 without HTTP/1.1 upgrade
+    Http2PriorKnowledge,
+    /// Setting this value will make libcurl attempt to use HTTP/3 directly to
+    /// server given in the URL but fallback to earlier HTTP versions if the HTTP/3
+    /// connection establishment fails.
     Http3,
 }
 
@@ -56,6 +65,7 @@ impl fmt::Display for RequestedHttpVersion {
             RequestedHttpVersion::Http10 => "HTTP/1.0",
             RequestedHttpVersion::Http11 => "HTTP/1.1",
             RequestedHttpVersion::Http2 => "HTTP/2",
+            RequestedHttpVersion::Http2PriorKnowledge => "HTTP/2 (prior knowledge)",
             RequestedHttpVersion::Http3 => "HTTP/3",
         };
         write!(f, "{value}")

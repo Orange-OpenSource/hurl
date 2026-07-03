@@ -32,6 +32,8 @@ HTTP options:
           Tell Hurl to use HTTP version 1.1
       --http2
           Tell Hurl to use HTTP version 2
+      --http2-prior-knowledge
+          Tell Hurl to use HTTP version 2 without HTTP/1.1 Upgrade
       --http3
           Tell Hurl to use HTTP version 3
   -k, --insecure

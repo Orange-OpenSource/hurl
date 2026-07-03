@@ -66,6 +66,7 @@ pub fn parse_cli_args(
         .arg(commands::http10())
         .arg(commands::http11())
         .arg(commands::http2())
+        .arg(commands::http2_prior_knowledge())
         .arg(commands::http3())
         .arg(commands::input_files())
         .arg(commands::insecure())
@@ -538,6 +539,8 @@ fn http_version(
         Some(HttpVersion::V3)
     } else if has_flag(arg_matches, "http2") {
         Some(HttpVersion::V2)
+    } else if has_flag(arg_matches, "http2_prior_knowledge") {
+        Some(HttpVersion::V2PriorKnowledge)
     } else if has_flag(arg_matches, "http11") {
         Some(HttpVersion::V11)
     } else if has_flag(arg_matches, "http10") {
