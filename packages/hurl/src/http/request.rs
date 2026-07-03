@@ -40,8 +40,7 @@ pub struct Request {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
 pub enum RequestedHttpVersion {
-    /// We don't care what HTTP version to use, the effective HTTP version will be choose
-    /// the best possible for us by libcurl.
+    /// We don't care what HTTP version to use; libcurl will choose the best possible one for us.
     #[default]
     Default,
     /// Request using HTTP/1.0 in the request

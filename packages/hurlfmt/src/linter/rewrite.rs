@@ -475,6 +475,7 @@ impl Lint for OptionKind {
             OptionKind::Http10(value) => value.lint(),
             OptionKind::Http11(value) => value.lint(),
             OptionKind::Http2(value) => value.lint(),
+            OptionKind::Http2PriorKnowledge(value) => value.lint(),
             OptionKind::Http3(value) => value.lint(),
             OptionKind::Insecure(value) => value.lint(),
             OptionKind::IpV4(value) => value.lint(),

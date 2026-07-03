@@ -59,6 +59,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "header" => option_header(reader)?,
         "http1.0" => option_http_10(reader)?,
         "http1.1" => option_http_11(reader)?,
+        "http2-prior-knowledge" => option_http_2_prior_knowledge(reader)?,
         "http2" => option_http_2(reader)?,
         "http3" => option_http_3(reader)?,
         "ipv4" => option_ipv4(reader)?,
@@ -183,6 +184,11 @@ fn option_http_11(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_http_2(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = non_recover(boolean_option, reader)?;
     Ok(OptionKind::Http2(value))
+}
+
+fn option_http_2_prior_knowledge(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = non_recover(boolean_option, reader)?;
+    Ok(OptionKind::Http2PriorKnowledge(value))
 }
 
 fn option_http_3(reader: &mut Reader) -> ParseResult<OptionKind> {

@@ -24,6 +24,13 @@ http2: true
 HTTP/2 *
 
 
+# --http2-prior-knowledge has no effect on an HTTP/2 server
+HEAD https://google.com
+[Options]
+http2-prior-knowledge: true
+HTTP/2 *
+
+
 HEAD https://google.com
 [Options]
 http2: true
@@ -45,6 +52,12 @@ http2: false
 HTTP *
 [Asserts]
 version == "1.1"
+
+
+HEAD https://google.com
+[Options]
+http2-prior-knowledge: false
+HTTP/1.1 *
 
 
 # Default requests are OK

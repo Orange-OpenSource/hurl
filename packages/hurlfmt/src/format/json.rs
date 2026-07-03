@@ -327,6 +327,7 @@ impl ToJson for EntryOption {
             OptionKind::Http10(value) => value.to_json(),
             OptionKind::Http11(value) => value.to_json(),
             OptionKind::Http2(value) => value.to_json(),
+            OptionKind::Http2PriorKnowledge(value) => value.to_json(),
             OptionKind::Http3(value) => value.to_json(),
             OptionKind::Insecure(value) => value.to_json(),
             OptionKind::IpV4(value) => value.to_json(),

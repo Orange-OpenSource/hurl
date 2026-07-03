@@ -537,10 +537,10 @@ fn http_version(
 ) -> Option<HttpVersion> {
     if has_flag(arg_matches, "http3") {
         Some(HttpVersion::V3)
-    } else if has_flag(arg_matches, "http2") {
-        Some(HttpVersion::V2)
     } else if has_flag(arg_matches, "http2_prior_knowledge") {
         Some(HttpVersion::V2PriorKnowledge)
+    } else if has_flag(arg_matches, "http2") {
+        Some(HttpVersion::V2)
     } else if has_flag(arg_matches, "http11") {
         Some(HttpVersion::V11)
     } else if has_flag(arg_matches, "http10") {

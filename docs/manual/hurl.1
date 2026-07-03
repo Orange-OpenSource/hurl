@@ -218,8 +218,6 @@ Environment variables: HURL_HTTP2
 
 Tells Hurl to issue a non-TLS HTTP request using HTTP/2 directly without HTTP/1.1 Upgrade. It requires prior knowledge that the server supports HTTP/2 straight away. HTTPS requests still do HTTP/2 the standard way with negotiated protocol versions in the TLS handshake.
 
-This is a cli-only option.
-
 .IP "--http3 "
 
 Tells Hurl to try HTTP version 3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.

@@ -376,6 +376,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::Http10(value) => visitor.visit_bool_option(value),
         OptionKind::Http11(value) => visitor.visit_bool_option(value),
         OptionKind::Http2(value) => visitor.visit_bool_option(value),
+        OptionKind::Http2PriorKnowledge(value) => visitor.visit_bool_option(value),
         OptionKind::Http3(value) => visitor.visit_bool_option(value),
         OptionKind::Insecure(value) => visitor.visit_bool_option(value),
         OptionKind::IpV4(value) => visitor.visit_bool_option(value),

@@ -25,3 +25,4 @@ wildcard-imports = "deny"
 # Patch cargo-semver
 [workspace.metadata.cargo-semver-checks.lints]
 enum_variant_added = { level = "allow" }
+enum_no_repr_variant_discriminant_changed = { level = "allow" }

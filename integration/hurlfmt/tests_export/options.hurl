@@ -19,6 +19,7 @@ header: key: value
 http1.0: false
 http1.1: false
 http2: false
+http2-prior-knowledge: false
 http3: false
 insecure: false
 ipv4: false

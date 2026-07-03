@@ -157,6 +157,15 @@ pub fn get_entry_options(
                 }
                 entry_options.allow_reuse = false;
             }
+            OptionKind::Http2PriorKnowledge(value) => {
+                let value = eval_boolean_option(value, variables)?;
+                if value {
+                    entry_options.http_version = RequestedHttpVersion::Http2PriorKnowledge;
+                } else {
+                    entry_options.http_version = RequestedHttpVersion::Http11;
+                }
+                entry_options.allow_reuse = false;
+            }
             OptionKind::Http3(value) => {
                 let value = eval_boolean_option(value, variables)?;
                 if value {

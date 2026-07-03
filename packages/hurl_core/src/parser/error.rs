@@ -168,6 +168,7 @@ impl DisplaySourceError for ParseError {
                     "http1.0",
                     "http1.1",
                     "http2",
+                    "http2-prior-knowledge",
                     "http3",
                     "insecure",
                     "ipv4",

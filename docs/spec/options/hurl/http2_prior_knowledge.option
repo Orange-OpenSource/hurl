@@ -2,6 +2,5 @@ name: http2_prior_knowledge
 long: http2-prior-knowledge
 help: Tell Hurl to use HTTP version 2 without HTTP/1.1 Upgrade
 help_heading: HTTP options
-cli_only: true
 ---
 Tells Hurl to issue a non-TLS HTTP request using HTTP/2 directly without HTTP/1.1 Upgrade. It requires prior knowledge that the server supports HTTP/2 straight away. HTTPS requests still do HTTP/2 the standard way with negotiated protocol versions in the TLS handshake.
