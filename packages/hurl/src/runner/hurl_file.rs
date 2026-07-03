@@ -53,9 +53,8 @@ use super::{Output, entry};
 /// use std::collections::HashMap;
 /// use hurl::http::{CredentialForwarding, FollowLocation};
 /// use hurl::runner;
-/// use hurl::runner::{Value, RunnerOptionsBuilder, VariableSet};
+/// use hurl::runner::{Input, Value, RunnerOptionsBuilder, VariableSet};
 /// use hurl::util::logger::{LoggerOptionsBuilder, Verbosity};
-/// use hurl_core::input::Input;
 ///
 /// // A simple Hurl sample
 /// let content = r#"

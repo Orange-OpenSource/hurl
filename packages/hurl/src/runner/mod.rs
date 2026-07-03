@@ -22,6 +22,8 @@ pub use self::error::{RunnerError, RunnerErrorKind};
 #[doc(hidden)]
 pub use self::event::EventListener;
 pub use self::http_response::HttpResponse;
+// Re-exported so clients of the `hurl` crate can build the `Input` required by [`run`] without
+// having to also depend on the `hurl_core` crate.
 pub use self::hurl_file::run;
 #[doc(hidden)]
 pub use self::hurl_file::run_entries;
@@ -31,6 +33,7 @@ pub use self::result::{AssertResult, CaptureResult, EntryResult, HurlResult};
 pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::{EvalError, Value};
 pub use self::variable::{Variable, VariableSet, Visibility};
+pub use hurl_core::input::{Input, InputKind};
 
 mod assert;
 mod body;
