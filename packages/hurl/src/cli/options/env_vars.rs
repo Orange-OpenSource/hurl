@@ -140,6 +140,12 @@ fn http_version(context: &RunContext, default_value: Option<HttpVersion>) -> Opt
         } else {
             Some(HttpVersion::V2)
         }
+    } else if let Some(http2_prior_knowledge) = context.http2_prior_knowledge_env_var() {
+        if http2_prior_knowledge {
+            Some(HttpVersion::V2PriorKnowledge)
+        } else {
+            Some(HttpVersion::V11)
+        }
     } else if let Some(http2) = context.http2_env_var() {
         if http2 {
             Some(HttpVersion::V2)

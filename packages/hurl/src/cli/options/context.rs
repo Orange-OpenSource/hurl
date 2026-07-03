@@ -63,6 +63,7 @@ pub const HURL_HEADER: &str = "HURL_HEADER";
 pub const HURL_HTTP10: &str = "HURL_HTTP10";
 pub const HURL_HTTP11: &str = "HURL_HTTP11";
 pub const HURL_HTTP2: &str = "HURL_HTTP2";
+pub const HURL_HTTP2_PRIOR_KNOWLEDGE: &str = "HURL_HTTP2_PRIOR_KNOWLEDGE";
 pub const HURL_HTTP3: &str = "HURL_HTTP3";
 pub const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
 pub const HURL_MAX_FILESIZE: &str = "HURL_MAX_FILESIZE";
@@ -186,6 +187,11 @@ impl RunContext {
     /// Returns the env var for using HTTP/2.
     pub fn http2_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_HTTP2)
+    }
+
+    /// Returns the env var for using HTTP/2 with prior knowledge.
+    pub fn http2_prior_knowledge_env_var(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_HTTP2_PRIOR_KNOWLEDGE)
     }
 
     /// Returns the env var for using HTTP/3.
