@@ -24,6 +24,9 @@ use std::fmt::Formatter;
 use std::num::NonZero;
 use std::ops::AddAssign;
 use std::str::FromStr;
+use std::time::Duration;
+
+use regex::Regex;
 
 /// Represents a count operation, either finite or infinite.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -88,6 +91,36 @@ impl FromStr for DurationUnit {
             "h" => Ok(DurationUnit::Hour),
             x => Err(format!("Invalid duration unit {x}")),
         }
+    }
+}
+
+/// Parses a string with or without time unit into a [`Duration`].
+///
+/// When there is no time unit in the user string, the duration is parsed with a default time unit.
+pub fn duration_from_str(value: &str, default_unit: DurationUnit) -> Result<Duration, String> {
+    let re = Regex::new(r"^(\d+)([a-zA-Z]*)$").unwrap();
+    let Some(caps) = re.captures(value) else {
+        return Err("Invalid duration".to_string());
+    };
+    let source = caps.get(1).unwrap().as_str().to_string();
+    let duration = source
+        .parse::<u64>()
+        .map_err(|_| "Duration value too large".to_string())?;
+    let unit = caps.get(2).unwrap().as_str();
+    let unit = if unit.is_empty() {
+        default_unit
+    } else {
+        DurationUnit::from_str(unit)?
+    };
+    let millis = match unit {
+        DurationUnit::MilliSecond => Some(duration),
+        DurationUnit::Second => duration.checked_mul(1000),
+        DurationUnit::Minute => duration.checked_mul(1000 * 60),
+        DurationUnit::Hour => duration.checked_mul(1000 * 60 * 60),
+    };
+    match millis {
+        Some(millis) => Ok(Duration::from_millis(millis)),
+        None => Err("Duration value too large".to_string()),
     }
 }
 

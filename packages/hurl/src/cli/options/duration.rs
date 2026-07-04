@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-use std::str::FromStr;
 use std::time::Duration;
 
-use hurl_core::types::DurationUnit;
-use regex::Regex;
+use hurl_core::types::{self, DurationUnit};
 
 use super::CliOptionsError;
 
@@ -33,34 +31,7 @@ pub fn duration_from_str(
     value: &str,
     default_unit: DurationUnit,
 ) -> Result<Duration, CliOptionsError> {
-    let re = Regex::new(r"^(\d+)([a-zA-Z]*)$").unwrap();
-    let Some(caps) = re.captures(value) else {
-        let error = CliOptionsError::Error("Invalid duration".to_string());
-        return Err(error);
-    };
-    let source = caps.get(1).unwrap().as_str().to_string();
-    let duration = source
-        .parse::<u64>()
-        .map_err(|_| CliOptionsError::Error("Duration value too large".to_string()))?;
-    let unit = caps.get(2).unwrap().as_str();
-    let unit = if unit.is_empty() {
-        default_unit
-    } else {
-        DurationUnit::from_str(unit).map_err(CliOptionsError::Error)?
-    };
-    let millis = match unit {
-        DurationUnit::MilliSecond => Some(duration),
-        DurationUnit::Second => duration.checked_mul(1000),
-        DurationUnit::Minute => duration.checked_mul(1000 * 60),
-        DurationUnit::Hour => duration.checked_mul(1000 * 60 * 60),
-    };
-    match millis {
-        Some(millis) => Ok(Duration::from_millis(millis)),
-        None => {
-            let error = CliOptionsError::Error("Duration value too large".to_string());
-            Err(error)
-        }
-    }
+    types::duration_from_str(value, default_unit).map_err(CliOptionsError::Error)
 }
 
 #[cfg(test)]
@@ -84,6 +55,14 @@ mod tests {
         assert_eq!(
             duration_from_str("10mm", DurationUnit::MilliSecond).unwrap_err(),
             CliOptionsError::Error("Invalid duration unit mm".to_string())
+        );
+        assert_eq!(
+            duration_from_str("18446744073709551616", DurationUnit::MilliSecond).unwrap_err(),
+            CliOptionsError::Error("Duration value too large".to_string())
+        );
+        assert_eq!(
+            duration_from_str("18446744073709551615s", DurationUnit::MilliSecond).unwrap_err(),
+            CliOptionsError::Error("Duration value too large".to_string())
         );
     }
 

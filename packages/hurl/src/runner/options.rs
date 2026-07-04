@@ -19,7 +19,7 @@ use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
     OptionKind, Placeholder, Template, VariableDefinition, VariableValue, VerbosityOption,
 };
-use hurl_core::types::{BytesPerSec, Count, DurationUnit};
+use hurl_core::types::{BytesPerSec, Count, DurationUnit, duration_from_str};
 
 use crate::http::{CredentialForwarding, FollowLocation, Header, IpResolve, RequestedHttpVersion};
 use crate::pretty::PrettyMode;
@@ -472,6 +472,8 @@ fn eval_duration_option(
     variables: &VariableSet,
     default_unit: DurationUnit,
 ) -> Result<std::time::Duration, RunnerError> {
+    const EXPECTING_DURATION: &str = "non-negative integer or duration string";
+
     let millis = match duration_value {
         DurationOption::Literal(literal) => {
             let unit = literal.unit.unwrap_or(default_unit);
@@ -489,7 +491,7 @@ fn eval_duration_option(
                 if value < 0 {
                     let kind = RunnerErrorKind::ExpressionInvalidType {
                         value: format!("integer <{value}>"),
-                        expecting: "positive integer".to_string(),
+                        expecting: EXPECTING_DURATION.to_string(),
                     };
                     return Err(RunnerError::new(expr.source_info, kind, false));
                 } else {
@@ -501,10 +503,19 @@ fn eval_duration_option(
                     }
                 }
             }
+            Value::String(value) => {
+                return duration_from_str(&value, default_unit).map_err(|_| {
+                    let kind = RunnerErrorKind::ExpressionInvalidType {
+                        value: format!("string <{value}>"),
+                        expecting: EXPECTING_DURATION.to_string(),
+                    };
+                    RunnerError::new(expr.source_info, kind, false)
+                });
+            }
             v => {
                 let kind = RunnerErrorKind::ExpressionInvalidType {
                     value: v.repr(),
-                    expecting: "positive integer".to_string(),
+                    expecting: EXPECTING_DURATION.to_string(),
                 };
                 return Err(RunnerError::new(expr.source_info, kind, false));
             }
@@ -652,6 +663,95 @@ mod tests {
             )
             .unwrap(),
             std::time::Duration::from_millis(10)
+        );
+
+        variables.insert("retry".to_string(), Value::String("3s".to_string()));
+        assert_eq!(
+            eval_duration_option(
+                &retry_option_template(),
+                &variables,
+                DurationUnit::MilliSecond
+            )
+            .unwrap(),
+            std::time::Duration::from_secs(3)
+        );
+
+        variables.insert("retry".to_string(), Value::String("10".to_string()));
+        assert_eq!(
+            eval_duration_option(
+                &retry_option_template(),
+                &variables,
+                DurationUnit::MilliSecond
+            )
+            .unwrap(),
+            std::time::Duration::from_millis(10)
+        );
+
+        variables.insert("retry".to_string(), Value::String("".to_string()));
+        let error = eval_duration_option(
+            &retry_option_template(),
+            &variables,
+            DurationUnit::MilliSecond,
+        )
+        .err()
+        .unwrap();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::ExpressionInvalidType {
+                value: "string <>".to_string(),
+                expecting: "non-negative integer or duration string".to_string()
+            }
+        );
+
+        variables.insert("retry".to_string(), Value::String("10x".to_string()));
+        let error = eval_duration_option(
+            &retry_option_template(),
+            &variables,
+            DurationUnit::MilliSecond,
+        )
+        .err()
+        .unwrap();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::ExpressionInvalidType {
+                value: "string <10x>".to_string(),
+                expecting: "non-negative integer or duration string".to_string()
+            }
+        );
+
+        variables.insert(
+            "retry".to_string(),
+            Value::String("18446744073709551616".to_string()),
+        );
+        let error = eval_duration_option(
+            &retry_option_template(),
+            &variables,
+            DurationUnit::MilliSecond,
+        )
+        .err()
+        .unwrap();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::ExpressionInvalidType {
+                value: "string <18446744073709551616>".to_string(),
+                expecting: "non-negative integer or duration string".to_string()
+            }
+        );
+
+        variables.insert("retry".to_string(), Value::Number(Number::Integer(-1)));
+        let error = eval_duration_option(
+            &retry_option_template(),
+            &variables,
+            DurationUnit::MilliSecond,
+        )
+        .err()
+        .unwrap();
+        assert_eq!(
+            error.kind,
+            RunnerErrorKind::ExpressionInvalidType {
+                value: "integer <-1>".to_string(),
+                expecting: "non-negative integer or duration string".to_string()
+            }
         );
     }
 }
