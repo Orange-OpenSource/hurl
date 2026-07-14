@@ -639,8 +639,6 @@ Each variable is defined as name=value exactly as with [`--variable`](#variable)
 
 Note that defining a variable twice produces an error.
 
-This is a cli-only option.
-
 ### Report options
 
 #### --report-html <DIR> {#report-html}

@@ -155,6 +155,7 @@ option:
   | unix-socket-option
   | user-option
   | variable-option
+  | variables-file-option
   | verbose-option
   | verbosity-option
   | very-verbose-option
@@ -237,6 +238,8 @@ unix-socket-option: "unix-socket" ":" value-string lt
 user-option: "user" ":" value-string lt
 
 variable-option: "variable" ":" variable-definition lt
+
+variables-file-option: "variables-file" ":" filename lt
 
 verbose-option: "verbose" ":" boolean-option lt
 

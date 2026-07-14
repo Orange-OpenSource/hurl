@@ -67,4 +67,5 @@ mod template;
 mod value;
 mod value_impl;
 mod variable;
+mod variables_file;
 mod xpath;

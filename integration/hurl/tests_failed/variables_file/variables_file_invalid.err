@@ -1,0 +1,18 @@
+error: Invalid option value
+  --> tests_failed/variables_file/variables_file_invalid.hurl:3:17
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | variables-file: tests_failed/variables_file/variables_file_invalid.env
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid variables-file option value <this_line_has_no_equals>: Missing value for variable this_line_has_no_equals!
+   |
+
+error: Undefined variable
+  --> tests_failed/variables_file/variables_file_invalid.hurl:8:15
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 8 | variable: b={{a}}
+   |               ^ you must set the variable a
+   |
+

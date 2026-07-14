@@ -197,6 +197,7 @@ impl DisplaySourceError for ParseError {
                     "unix-socket",
                     "user",
                     "variable",
+                    "variables-file",
                     "verbose",
                     "verbosity",
                     "very-verbose",

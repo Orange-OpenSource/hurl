@@ -506,6 +506,7 @@ impl Lint for OptionKind {
             OptionKind::UnixSocket(value) => value.lint(),
             OptionKind::User(value) => value.lint(),
             OptionKind::Variable(value) => value.lint(),
+            OptionKind::VariablesFile(value) => value.lint(),
             OptionKind::Verbose(value) => value.lint(),
             OptionKind::Verbosity(value) => value.lint(),
             OptionKind::VeryVerbose(value) => value.lint(),

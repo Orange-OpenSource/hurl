@@ -58,6 +58,7 @@ variable: count=2
 variable: score=7.7
 variable: name=Bob
 variable: name=Bob
+variables-file: variables.env
 verbose: false
 verbosity: brief    # templating verbosity not supported
 very-verbose: false
@@ -105,6 +106,7 @@ skip: {{skip}}
 unix-socket: {{socket-file}}
 user: {{user}}
 #variable: {{variable}}     NOT SUPPORTED YET
+variables-file: {{variables-file}}
 verbose: {{verbose}}
 verbosity: brief    # templating verbosity not supported
 very-verbose: {{very-verbose}}

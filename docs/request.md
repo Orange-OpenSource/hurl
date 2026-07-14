@@ -229,12 +229,14 @@ user: bob:secret           # use basic authentication
 proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
 variable: country=Italy    # define variable country
 variable: planet=Earth     # define variable planet
+variables-file: vars.env   # define variables from a properties file
 verbose: true              # allow verbose output
 very-verbose: true         # allow more verbose output    
 ```
 
-> Variable defined in an `[Options]` section are defined also for the next entries. This is
-> the exception, all other options are defined only for the current request.
+> Variables defined in an `[Options]` section, including values loaded from `variables-file`, are
+> defined also for the next entries. This is the exception, all other options are defined only for
+> the current request.
 
 ### Query parameters
 

@@ -356,6 +356,7 @@ impl ToJson for EntryOption {
             OptionKind::Variable(value) => {
                 JValue::String(format!("{}={}", value.name, value.value.to_source()))
             }
+            OptionKind::VariablesFile(filename) => JValue::String(filename.to_string()),
             OptionKind::Verbose(value) => value.to_json(),
             OptionKind::Verbosity(value) => JValue::String(value.to_string()),
             OptionKind::VeryVerbose(value) => value.to_json(),

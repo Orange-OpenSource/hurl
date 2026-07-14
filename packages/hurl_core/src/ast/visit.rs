@@ -403,6 +403,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::UnixSocket(value) => visitor.visit_filename(value),
         OptionKind::User(value) => visitor.visit_template(value),
         OptionKind::Variable(value) => visitor.visit_variable_def(value),
+        OptionKind::VariablesFile(filename) => visitor.visit_filename(filename),
         OptionKind::Verbose(value) => visitor.visit_bool_option(value),
         OptionKind::Verbosity(value) => visitor.visit_verbosity_option(value),
         OptionKind::VeryVerbose(value) => visitor.visit_bool_option(value),

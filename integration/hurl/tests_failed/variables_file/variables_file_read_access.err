@@ -1,0 +1,9 @@
+error: File read access
+  --> tests_failed/variables_file/variables_file_read_access.hurl:3:17
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | variables-file: does_not_exist.env
+   |                 ^^^^^^^^^^^^^^^^^^ file does_not_exist.env can not be read
+   |
+

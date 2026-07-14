@@ -89,6 +89,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "unix-socket" => option_unix_socket(reader)?,
         "user" => option_user(reader)?,
         "variable" => option_variable(reader)?,
+        "variables-file" => option_variables_file(reader)?,
         "verbose" => option_verbose(reader)?,
         "verbosity" => option_verbosity(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
@@ -325,6 +326,11 @@ fn option_unix_socket(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = variable_definition(reader)?;
     Ok(OptionKind::Variable(value))
+}
+
+fn option_variables_file(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::VariablesFile(value))
 }
 
 fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
@@ -689,6 +695,97 @@ mod tests {
                             end: Pos {
                                 line: 1,
                                 column: 27,
+                            },
+                        },
+                    },
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn test_option_variables_file() {
+        let mut reader = Reader::new("variables-file: vars.env");
+        let option = parse(&mut reader).unwrap();
+        assert_eq!(
+            option,
+            EntryOption {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 1 },
+                        end: Pos { line: 1, column: 1 },
+                    },
+                },
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo {
+                        start: Pos {
+                            line: 1,
+                            column: 15,
+                        },
+                        end: Pos {
+                            line: 1,
+                            column: 15,
+                        },
+                    },
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos {
+                            line: 1,
+                            column: 16,
+                        },
+                        end: Pos {
+                            line: 1,
+                            column: 17,
+                        },
+                    },
+                },
+                kind: OptionKind::VariablesFile(Template::new(
+                    None,
+                    vec![TemplateElement::String {
+                        value: "vars.env".to_string(),
+                        source: "vars.env".to_source()
+                    }],
+                    SourceInfo {
+                        start: Pos {
+                            line: 1,
+                            column: 17,
+                        },
+                        end: Pos {
+                            line: 1,
+                            column: 25,
+                        },
+                    }
+                )),
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 25,
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 25,
+                            },
+                        },
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 25,
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 25,
                             },
                         },
                     },

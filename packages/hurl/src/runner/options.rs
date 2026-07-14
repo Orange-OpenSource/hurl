@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
+
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
     OptionKind, Placeholder, Template, VariableDefinition, VariableValue, VerbosityOption,
@@ -33,6 +35,7 @@ use super::runner_options::RunnerOptions;
 use super::template::eval_template;
 use super::value::Value;
 use super::variable::VariableSet;
+use super::variables_file::VariablesFile;
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
 /// and a default `runner_options`.
@@ -308,6 +311,17 @@ pub fn get_entry_options(
             OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                 let value = eval_variable_value(value, variables)?;
                 variables.insert(name.clone(), value);
+            }
+            OptionKind::VariablesFile(filename) => {
+                let file = eval_template(filename, variables)?;
+                let path = PathBuf::from(file);
+                let variables_file = VariablesFile::open(&path, filename.source_info)?;
+                // We read the whole file before inserting any variable so a parse error on a
+                // later line does not leave earlier variables in the set shared with next entries.
+                let vars = variables_file.collect::<Result<Vec<_>, _>>()?;
+                for (name, value) in vars {
+                    variables.insert(name, value);
+                }
             }
             // verbose and very-verbose option have been previously processed as they
             // can impact the logging. We compute here their values to check the potential
