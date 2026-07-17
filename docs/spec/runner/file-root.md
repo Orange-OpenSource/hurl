@@ -159,7 +159,7 @@ We want to ensure a smooth upgrade to `--allow-read`/`--allow-write`:
   `--allow-read ./data` together with `./data/../../etc/passwd` (or a symlink inside `./data`) would get around it. This
   is the same kind of bug that plagued `--file-root`, so canonicalizing both the allowed paths and the accessed path is a
   hard requirement.
-- 
+
 
 
 
