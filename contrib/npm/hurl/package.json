@@ -1,6 +1,6 @@
 {
   "name": "@orangeopensource/hurl",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "hurlBinaryVersion": "8.0.1",
   "description": "Run and Test HTTP Requests with plain text and curl",
   "author": "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "extract-zip": "2.0.1",
-    "tar": "7.5.16"
+    "tar": "7.5.20"
   },
   "devDependencies": {},
   "keywords": [
