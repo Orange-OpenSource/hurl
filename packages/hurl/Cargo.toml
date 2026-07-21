@@ -22,7 +22,7 @@ static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 base64 = "0.22.1"
 brotli = "8.0.4"
 chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
-clap = { version = "4.6.2", features = ["string", "wrap_help"] }
+clap = { version = "4.6.3", features = ["string", "wrap_help"] }
 curl = "0.4.50"
 curl-sys = "0.4.90"
 encoding_rs = "0.8.35"
@@ -33,8 +33,8 @@ libxml = "0.3.16"
 md5 = "0.8.1"
 percent-encoding = "2.3.2"
 regex = "1.13.1"
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = { version = "1.0.150", features = ["arbitrary_precision"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.151", features = ["arbitrary_precision"] }
 sha2 = "0.11.0"
 url = "2.5.8"
 xml = "1.3.0"
@@ -47,7 +47,7 @@ terminal_size = "0.4.4"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.2.67"
+cc = "1.3.0"
 
 [lints]
 workspace = true
