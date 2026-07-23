@@ -41,8 +41,14 @@ Apart for these issues, we're looking forward to contributors for:
 - Commit messages are simple phrases, don't use [Semantic Commit Messages] nor [Conventional Commits]
   - ❌ `fix: missing space in variable option HTML export`
   - ✅ `Fix missing space in variable option HTML export`
-- All tests must be green before merge. Our CI/CD will run [a test suite] to insure everything is OK.
+- All tests must be green before merge. Our CI/CD will run [a test suite] to ensure everything is OK.
 - Hurl Git history is linear, so we may rebase your PR on your fork before final merge.
+
+## AI Tool Use Policy
+
+Contributors can use whatever tools they would like to craft their contributions, but all interactions (PR descriptions,
+comments, issues, responding to reviews, etc...) must be written by a human. PRs, issues and other communications that 
+don't respect this may be ignored.
 
 ## Build and Test
 
