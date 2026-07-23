@@ -192,9 +192,11 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
     // > (HTTP) This posts data exactly as specified with no extra processing whatsoever.
     //
     // In summary: if the payload is a file (@foo.bin), we must use --data-binary option in
-    // order to curl to not process the data sent.
-    let param = match request_spec.body {
+    // order to curl to not process the data sent. For text bodies starting with @, use
+    // --data-raw to avoid making curl interpret the body as a filename.
+    let param = match &request_spec.body {
         Body::File(_, _) => "--data-binary",
+        Body::Text(s) if s.starts_with('@') => "--data-raw",
         _ => "--data",
     };
     args.push(param.to_string());
@@ -1012,6 +1014,36 @@ mod tests {
             "curl \
             --header 'Content-Type:' \
             --data-binary '@foo.bin' \
+            'http://localhost:8000/hello'"
+        );
+    }
+
+    #[test]
+    fn post_text_body_starting_with_at() {
+        let request = RequestSpec {
+            method: Method("POST".to_string()),
+            url: Url::from_str("http://localhost:8000/hello").unwrap(),
+            body: Body::Text("@filename\n".to_string()),
+            ..Default::default()
+        };
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+        let output = None;
+
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
+        assert_eq!(
+            cmd.to_string(),
+            "curl \
+            --header 'Content-Type:' \
+            --data-raw $'@filename\\n' \
             'http://localhost:8000/hello'"
         );
     }
