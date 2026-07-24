@@ -75,6 +75,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "netrc-file" => option_netrc_file(reader)?,
         "netrc-optional" => option_netrc_optional(reader)?,
         "no-header" => option_no_header(reader)?,
+        "no-jsonpath-coercion" => option_no_jsonpath_coercion(reader)?,
         "ntlm" => option_ntlm(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
@@ -254,6 +255,11 @@ fn option_netrc_optional(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_no_header(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = unquoted_template(reader)?;
     Ok(OptionKind::NoHeader(value))
+}
+
+fn option_no_jsonpath_coercion(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = non_recover(boolean_option, reader)?;
+    Ok(OptionKind::NoJsonpathCoercion(value))
 }
 
 fn option_ntlm(reader: &mut Reader) -> ParseResult<OptionKind> {
@@ -603,6 +609,16 @@ mod tests {
         let mut reader = Reader::new("insecure: error");
         let error = parse(&mut reader).err().unwrap();
         assert!(!error.recoverable);
+    }
+
+    #[test]
+    fn test_option_no_jsonpath_coercion() {
+        let mut reader = Reader::new("no-jsonpath-coercion: true");
+        let option = parse(&mut reader).unwrap();
+        assert_eq!(
+            option.kind,
+            OptionKind::NoJsonpathCoercion(BooleanOption::Literal(true))
+        );
     }
 
     #[test]

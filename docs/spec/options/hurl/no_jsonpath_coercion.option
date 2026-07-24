@@ -2,7 +2,6 @@ name: no_jsonpath_coercion
 long: no-jsonpath-coercion
 help: Disable JSONPath result coercion
 help_heading: Run options
-cli_only: true
 config_file: true
 env_var: HURL_NO_JSONPATH_COERCION
 ---

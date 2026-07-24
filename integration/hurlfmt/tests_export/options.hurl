@@ -34,6 +34,7 @@ netrc: false
 netrc-file: netrcfile
 netrc-optional: false
 no-header: Accept
+no-jsonpath-coercion: false
 ntlm: false
 output: output.txt
 path-as-is: false

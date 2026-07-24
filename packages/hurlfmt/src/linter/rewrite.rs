@@ -490,6 +490,7 @@ impl Lint for OptionKind {
             OptionKind::NetRcFile(value) => value.lint(),
             OptionKind::NetRcOptional(value) => value.lint(),
             OptionKind::NoHeader(value) => value.lint(),
+            OptionKind::NoJsonpathCoercion(value) => value.lint(),
             OptionKind::Ntlm(value) => value.lint(),
             OptionKind::Output(value) => value.lint(),
             OptionKind::PathAsIs(value) => value.lint(),

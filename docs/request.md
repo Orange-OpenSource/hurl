@@ -218,6 +218,7 @@ location: true             # follow redirection for this request
 max-redirs: 10             # maximum number of redirections
 max-time: 30s              # maximum time for a request/response
 no-header: Accept          # header name to remove from the request
+no-jsonpath-coercion: true # disable JSONPath result coercion for this request
 output: out.html           # dump the response to this file
 path-as-is: true           # do not handle sequences of /../ or /./ in URL path
 retry: 10                  # number of retry if HTTP/asserts errors

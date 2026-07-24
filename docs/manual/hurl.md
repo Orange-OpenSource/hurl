@@ -559,8 +559,6 @@ By default, when JSONPath coercion is enabled, empty JSONPath results are return
 
 Environment variables: HURL_NO_JSONPATH_COERCION
 
-This is a cli-only option.
-
 #### --parallel {#parallel}
 
 Run files in parallel.
