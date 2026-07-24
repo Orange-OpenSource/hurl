@@ -2,18 +2,20 @@
 ========================================================================================================================
 
 Thanks to
-[@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
+[@BillyLiou](https://github.com/BillyLiou),
 [@eyupcanakman](https://github.com/eyupcanakman),
+[@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
 [@fubar-coder](https://github.com/fubar-coder),
 [@ptwales](https://github.com/ptwales),
 
 Enhancements:
 
+* Add --variables-file per request option [#2021](https://github.com/Orange-OpenSource/hurl/issues/2021)
 * Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
 * Add no jsonpath coercion option [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
 * Add --proxy-header option to send header exclusively to a proxy [#3944](https://github.com/Orange-OpenSource/hurl/issues/3944)
-* Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade. [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
+* Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
 
 
