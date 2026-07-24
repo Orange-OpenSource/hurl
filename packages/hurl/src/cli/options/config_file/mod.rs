@@ -22,6 +22,7 @@ use std::path::Path;
 use hurl_core::reader::{CharPos, Pos, Reader};
 use hurl_core::types::DurationUnit;
 
+use crate::cli::options::HttpVersion;
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
 };
@@ -109,7 +110,8 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         ));
     }
 
-    let option_name = reader.read_while(|c: char| c.is_alphanumeric() || c == '-' || c == '_');
+    let option_name =
+        reader.read_while(|c: char| c.is_alphanumeric() || c == '-' || c == '_' || c == '.');
     match option_name.as_str() {
         "verbose" => {
             expect_no_value(reader)?;
@@ -169,6 +171,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "insecure" => {
             expect_no_value(reader)?;
             options.insecure = true;
+            Ok(())
+        }
+        "http1.1" => {
+            expect_no_value(reader)?;
+            options.http_version = Some(HttpVersion::V11);
             Ok(())
         }
         "location" => {
@@ -374,6 +381,16 @@ mod tests {
         assert!(!options.insecure);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.insecure);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_http11() {
+        let mut reader = Reader::new("--http1.1\n");
+        let mut options = CliOptions::default();
+        assert!(options.http_version.is_none());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.http_version, Some(HttpVersion::V11));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
