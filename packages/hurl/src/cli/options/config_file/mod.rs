@@ -212,6 +212,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.output_type = OutputType::NoOutput;
             Ok(())
         }
+        "user" => {
+            parse_value_separator(reader)?;
+            let value = parse_value(reader)?;
+
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --user requires a value",
+                ));
+            }
+            options.user = Some(value);
+            Ok(())
+        }
         "user-agent" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -299,6 +312,15 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.user_agent.unwrap(), "Mozilla/5.0 A".to_string());
         assert_eq!(reader.cursor().pos, Pos::new(1, 29));
+    }
+
+    #[test]
+    fn test_parse_option_user() {
+        let mut reader = Reader::new("--user=bob@email.com:secret\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.user, Some("bob@email.com:secret".to_string()));
+        assert_eq!(reader.cursor().pos, Pos::new(1, 28));
     }
 
     #[test]
