@@ -41,10 +41,9 @@ impl AbsoluteSingularQuery {
     pub fn eval(&self, value: &serde_json::Value) -> Option<serde_json::Value> {
         let mut result = value.clone();
         for segment in self.segments() {
-            if let Some(value) = segment.eval(&result) {
+            {
+                let value = segment.eval(&result)?;
                 result = value;
-            } else {
-                return None;
             }
         }
         Some(result.clone())
@@ -55,10 +54,9 @@ impl RelativeSingularQuery {
     pub fn eval(&self, value: &serde_json::Value) -> Option<serde_json::Value> {
         let mut result = value.clone();
         for segment in self.segments() {
-            if let Some(value) = segment.eval(&result) {
+            {
+                let value = segment.eval(&result)?;
                 result = value;
-            } else {
-                return None;
             }
         }
         Some(result.clone())

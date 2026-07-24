@@ -140,9 +140,9 @@ pub fn eval_json_template(
     {
         let mut value = String::new();
         for elem in elements {
-            match eval_json_template_element(elem, variables) {
-                Ok(v) => value.push_str(v.as_str()),
-                Err(e) => return Err(e),
+            {
+                let v = eval_json_template_element(elem, variables)?;
+                value.push_str(v.as_str());
             }
         }
         Ok(value)

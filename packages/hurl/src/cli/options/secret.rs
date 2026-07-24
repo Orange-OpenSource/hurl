@@ -31,7 +31,7 @@ pub fn add_secret(
     if secrets.contains_key(&name) {
         return Err(CliOptionsError::Error(format!(
             "secret '{}' can't be reassigned",
-            &name
+            name
         )));
     }
     let Value::String(value) = value else {

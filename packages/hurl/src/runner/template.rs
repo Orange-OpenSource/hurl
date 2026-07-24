@@ -26,9 +26,9 @@ pub fn eval_template(template: &Template, variables: &VariableSet) -> Result<Str
     let Template { elements, .. } = template;
     let mut value = String::new();
     for elem in elements {
-        match eval_template_element(elem, variables) {
-            Ok(v) => value.push_str(v.as_str()),
-            Err(e) => return Err(e),
+        {
+            let v = eval_template_element(elem, variables)?;
+            value.push_str(v.as_str());
         }
     }
     Ok(value)
