@@ -2,6 +2,7 @@ name: http2
 long: http2
 help: Tell Hurl to use HTTP version 2
 help_heading: HTTP options
+config_file: true
 env_var: HURL_HTTP2
 ---
 Tells Hurl to use HTTP version 2.

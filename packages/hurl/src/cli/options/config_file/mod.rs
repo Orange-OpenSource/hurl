@@ -183,6 +183,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.http_version = Some(HttpVersion::V11);
             Ok(())
         }
+        "http2" => {
+            expect_no_value(reader)?;
+            options.http_version = Some(HttpVersion::V2);
+            Ok(())
+        }
         "location" => {
             expect_no_value(reader)?;
             options.follow_location = true;
@@ -406,6 +411,16 @@ mod tests {
         assert!(options.http_version.is_none());
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.http_version, Some(HttpVersion::V10));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_http2() {
+        let mut reader = Reader::new("--http2\n");
+        let mut options = CliOptions::default();
+        assert!(options.http_version.is_none());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.http_version, Some(HttpVersion::V2));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
