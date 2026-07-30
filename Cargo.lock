@@ -228,9 +228,9 @@ dependencies = [
 
 [[package]]
 name = "clang-sys"
-version = "1.8.1"
+version = "1.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b023947811758c97c59bf9d1c188fd619ad4718dcaa767947df1cadb14f39f4"
+checksum = "157a8ba7b480713b56f4c09fd13fc3e0a22a5dfab8097ba61cbc5feef950788a"
 dependencies = [
  "glob",
  "libc",
@@ -741,9 +741,9 @@ dependencies = [
 
 [[package]]
 name = "libxml"
-version = "0.3.16"
+version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f4c29df0f5adba0b89d6a54d45234ac6a7ddb6d513dacf46e4c52001cab39bb"
+checksum = "fabc72be60898b6f4606672361ffd530498b3c17c957f782346e36fae899d974"
 dependencies = [
  "bindgen",
  "libc",
