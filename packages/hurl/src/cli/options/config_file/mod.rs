@@ -257,6 +257,31 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.pretty = PrettyMode::Force;
             Ok(())
         }
+        "retry" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let retry = value.parse::<i32>().map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --retry requires an integer value")
+            })?;
+            options.retry = Some(Count::try_from(retry).map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --retry requires an integer value >= 1")
+            })?);
+            Ok(())
+        }
+        "retry-interval" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            options.retry_interval = duration::duration_from_str(&value, DurationUnit::MilliSecond)
+                .map_err(|_| {
+                    ConfigFileError::new(
+                        save.pos,
+                        "Option --retry-interval has an invalid duration",
+                    )
+                })?;
+            Ok(())
+        }
         "user" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -565,6 +590,32 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_option_retry() {
+        let mut reader = Reader::new("--retry=10\n");
+        let mut options = CliOptions::default();
+        assert!(options.retry.is_none());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.retry, Some(Count::try_from(10).unwrap()));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_retry_interval() {
+        let mut reader = Reader::new("--retry-interval=100ms\n");
+        let mut options = CliOptions::default();
+        assert_eq!(
+            options.retry_interval,
+            std::time::Duration::from_millis(1000)
+        );
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(
+            options.retry_interval,
+            std::time::Duration::from_millis(100)
+        );
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
     fn test_parse_option_pretty() {
         let mut reader = Reader::new("--pretty\n");
         let mut options = CliOptions::default();
@@ -635,6 +686,27 @@ mod tests {
         let err = parse_option(&mut reader, &mut options).unwrap_err();
         assert_eq!(err.pos, Pos::new(1, 14));
         assert_eq!(err.message, "Option --limit-rate requires an integer value");
+
+        let mut reader = Reader::new("--retry=abc\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 9));
+        assert_eq!(err.message, "Option --retry requires an integer value");
+
+        let mut reader = Reader::new("--retry=-2\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 9));
+        assert_eq!(err.message, "Option --retry requires an integer value >= 1");
+
+        let mut reader = Reader::new("--retry-interval=abc\n");
+        let mut options = CliOptions::default();
+        let err = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(err.pos, Pos::new(1, 18));
+        assert_eq!(
+            err.message,
+            "Option --retry-interval has an invalid duration"
+        );
     }
 
     #[test]

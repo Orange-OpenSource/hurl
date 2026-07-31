@@ -1,0 +1,2 @@
+--retry 10
+--retry-interval 100ms
