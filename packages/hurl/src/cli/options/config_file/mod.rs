@@ -19,14 +19,14 @@ mod primitives;
 
 use std::path::Path;
 
-use hurl_core::reader::{CharPos, Pos, Reader};
-use hurl_core::types::DurationUnit;
-
 use crate::cli::options::HttpVersion;
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
 };
 use crate::cli::options::duration;
+use hurl::pretty::PrettyMode;
+use hurl_core::reader::{CharPos, Pos, Reader};
+use hurl_core::types::DurationUnit;
 
 use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
 use hurl_core::types::{BytesPerSec, Count};
@@ -250,6 +250,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "no-output" => {
             expect_no_value(reader)?;
             options.output_type = OutputType::NoOutput;
+            Ok(())
+        }
+        "pretty" => {
+            expect_no_value(reader)?;
+            options.pretty = PrettyMode::Force;
             Ok(())
         }
         "user" => {
@@ -556,6 +561,16 @@ mod tests {
         assert!(!options.no_jsonpath_coercion);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.no_jsonpath_coercion);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_pretty() {
+        let mut reader = Reader::new("--pretty\n");
+        let mut options = CliOptions::default();
+        assert_eq!(options.pretty, PrettyMode::None);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.pretty, PrettyMode::Force);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
