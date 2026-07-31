@@ -229,6 +229,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.no_cookie_store = true;
             Ok(())
         }
+        "no-header" => {
+            parse_value_separator(reader)?;
+            let value = parse_value(reader)?;
+
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --no-header requires a value",
+                ));
+            }
+            options.no_headers.push(value);
+            Ok(())
+        }
         "no-jsonpath-coercion" => {
             expect_no_value(reader)?;
             options.no_jsonpath_coercion = true;
@@ -523,6 +536,16 @@ mod tests {
         assert!(!options.no_cookie_store);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.no_cookie_store);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_no_header() {
+        let mut reader = Reader::new("--no-header=user-agent\n");
+        let mut options = CliOptions::default();
+        assert!(options.no_headers.is_empty());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.no_headers, vec!["user-agent"]);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
