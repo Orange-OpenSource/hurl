@@ -99,6 +99,9 @@ pub fn parse_value(reader: &mut Reader) -> Result<String, ConfigFileError> {
         }
     } else {
         let s = reader.read_while(|c| c != '\n').trim().to_string();
+        if reader.peek() == Some('\n') {
+            reader.read(); // consume newline
+        }
         Ok(s)
     }
 }
@@ -197,12 +200,12 @@ mod tests {
         // You can have an empty value
         let mut reader = Reader::new("\n");
         assert_eq!(parse_value(&mut reader).unwrap(), "");
-        assert_eq!((reader.cursor().index), CharPos(0));
+        assert_eq!((reader.cursor().index), CharPos(1));
 
         // Unquoted String
         let mut reader = Reader::new("1\n");
         assert_eq!(parse_value(&mut reader).unwrap(), "1");
-        assert_eq!((reader.cursor().index), CharPos(1));
+        assert_eq!((reader.cursor().index), CharPos(2));
 
         // Quoted String
         let mut reader = Reader::new("\"Hello\"\n");

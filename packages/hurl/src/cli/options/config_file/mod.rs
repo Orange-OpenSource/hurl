@@ -330,19 +330,19 @@ mod tests {
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.headers, vec!["header1:value1"]);
-        assert_eq!(reader.cursor().pos, Pos::new(1, 24));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
 
         let mut reader = Reader::new("--header header2:value2\n--verbose\n");
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.headers, vec!["header2:value2"]);
-        assert_eq!(reader.cursor().pos, Pos::new(1, 24));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
 
         let mut reader = Reader::new("--header --test:1\n");
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.headers, vec!["--test:1"]);
-        assert_eq!(reader.cursor().pos, Pos::new(1, 18));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
@@ -360,7 +360,7 @@ mod tests {
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.user, Some("bob@email.com:secret".to_string()));
-        assert_eq!(reader.cursor().pos, Pos::new(1, 28));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
@@ -369,7 +369,7 @@ mod tests {
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.delay, std::time::Duration::from_secs(1));
-        assert_eq!(reader.cursor().pos, Pos::new(1, 11));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
@@ -378,7 +378,7 @@ mod tests {
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.limit_rate, Some(BytesPerSec(2_000_000)));
-        assert_eq!(reader.cursor().pos, Pos::new(1, 21));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
     #[test]
