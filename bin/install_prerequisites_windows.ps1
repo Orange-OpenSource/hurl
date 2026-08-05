@@ -18,9 +18,6 @@ $process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @(
     'TARGETDIR=C:\'
 ) -Wait -PassThru
 if ($process.ExitCode) { Throw "Squid installation fails with exit code $($process.ExitCode)" }
-Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
-if ($LASTEXITCODE) { Throw }
-
 echo "==== create log dir integration\build"
 New-Item -ItemType Directory -Path integration\build -Force
 echo "==== Squid service status"
