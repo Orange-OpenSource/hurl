@@ -19,7 +19,7 @@ name = "hurl"
 static-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
-base64 = "0.23.0"
+base64 = "0.23.1"
 brotli = "8.0.4"
 chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
 clap = { version = "4.6.5", features = ["string", "wrap_help"] }
@@ -40,7 +40,7 @@ url = "2.5.8"
 xml = "1.3.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.24.0", features = ["v4" , "fast-rng"] }
-similar = "3.1.1"
+similar = "3.1.2"
 terminal_size = "0.4.4"
 
 [target.'cfg(windows)'.build-dependencies]
