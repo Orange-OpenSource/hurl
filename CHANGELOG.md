@@ -24,6 +24,7 @@ Bugs Fixed:
 * Fix misleading error message for not-equal predicate [#2841](https://github.com/Orange-OpenSource/hurl/issues/2841)
 * Fix variable option values starting with a number or boolean [#5028](https://github.com/Orange-OpenSource/hurl/issues/5028)
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
+* Fix debug curl command when request binary body contains NUL (\x00) char [#5141](https://github.com/Orange-OpenSource/hurl/issues/5141)
 
 
 Security Issues Fixed:
