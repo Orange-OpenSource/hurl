@@ -9,23 +9,34 @@ if ($LASTEXITCODE) { Throw }
 
 # install proxy
 echo "==== install Squid"
-# Fix broken Chocolatey Squid package 4.14 because http://packages.diladele.com/squid/4.14/squid.msi moved to https://www.diladele.com/pkg/squid/4.14/squid.msi
-Invoke-WebRequest https://community.chocolatey.org/api/v2/package/squid -OutFile squid.nupkg
-Rename-Item squid.nupkg choco-squid.zip
-Expand-Archive choco-squid.zip choco-squid
-Select-String -Path .\choco-squid\tools\chocolateyinstall.ps1 -Pattern "diladele"
-$file = '.\choco-squid\tools\chocolateyinstall.ps1'
-$content = Get-Content $file -Raw
-$content = $content.Replace(
-    'http://packages.diladele.com/squid/4.14/squid.msi',
-    'https://www.diladele.com/pkg/squid/4.14/squid.msi'
-)
-Set-Content -Path $file -Value $content -Encoding UTF8
-cd .\choco-squid
-choco pack
-cd ..
-choco install --debug --confirm squid --source=".\choco-squid" --install-arguments="'TARGETDIR=C:\'"
-if ($LASTEXITCODE) { Throw }
+$squidMsi = Join-Path $env:TEMP 'squid.msi'
+$squidLog = Join-Path $env:TEMP 'squid-install.log'
+Invoke-WebRequest 'https://www.diladele.com/pkg/squid/4.14/squid.msi' -OutFile $squidMsi
+
+# Keep the historical install location expected by the Windows test scripts.
+$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @(
+    '/i', $squidMsi,
+    '/qn',
+    '/norestart',
+    'TARGETDIR=C:\',
+    '/L*V', $squidLog
+) -Wait -PassThru
+if ($process.ExitCode) { Throw "Squid MSI installation failed with exit code $($process.ExitCode). See $squidLog" }
+
+$squidService = Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue
+if ($null -ne $squidService) {
+    if ($squidService.Status -ne 'Stopped') {
+        Stop-Service -Name 'squidsrv' -Force -ErrorAction SilentlyContinue
+    }
+    sc.exe config squidsrv start= demand | Out-Null
+}
+
+Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
+
+if (!(Test-Path -LiteralPath 'C:\Squid\bin\squid.exe')) {
+    Throw 'Squid executable not found at C:\Squid\bin\squid.exe after MSI installation'
+}
+
 echo "==== create log dir integration\build"
 New-Item -ItemType Directory -Path integration\build -Force
 echo "==== Squid service status"
@@ -35,10 +46,12 @@ Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\bu
 echo "==== Squid version"
 C:\Squid\bin\squid --version | tee -Append -filepath integration\build\proxy.log
 echo "==== stop Squid service and kill child process"
-taskkill /f /fi "SERVICES eq squidsrv" 2>&1 | tee -Append -filepath integration\build\proxy.log
-if ($LASTEXITCODE) { Throw }
-taskkill /f /IM squid.exe 2>&1 | tee -Append -filepath integration\build\proxy.log
-if ($LASTEXITCODE) { Throw }
+Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue | ForEach-Object {
+    if ($_.Status -ne 'Stopped') {
+        Stop-Service -Name $_.Name -Force -ErrorAction SilentlyContinue
+    }
+}
+Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
 echo "==== Squid service status"
 sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
 echo "==== Squid process status"

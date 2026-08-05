@@ -40,6 +40,12 @@ sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8003) {write-host -foregroundcolor Green "server-ssl-client-authent up"} else {write-host -foregroundcolor Red "server-ssl-client-authent is down" ; cat build\server-ssl-client-authent.log ; exit 1}
 
 Get-ChildItem -Force C:\Squid\bin
+Get-Service -Name squidsrv -ErrorAction SilentlyContinue | ForEach-Object {
+  if ($_.Status -ne 'Stopped') {
+    Stop-Service -Name $_.Name -Force -ErrorAction SilentlyContinue
+  }
+}
+Get-Process -Name squid -ErrorAction SilentlyContinue | Stop-Process -Force
 write-output "cache deny all" "cache_log /dev/null" "access_log /dev/null" "http_access allow all" "http_port 0.0.0.0:3128" "request_header_add From-Proxy Hello" "reply_header_add From-Proxy Hello" > squid.conf
 C:\Squid\bin\squid -d 2 -N -f squid.conf 2>&1 | tee -Append -filepath build\proxy.log &
 if ($LASTEXITCODE) { Throw }
@@ -47,4 +53,3 @@ sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:3128) {write-host -foregroundcolor Green "proxy is up"} else {write-host -foregroundcolor Red "proxy is down" ; cat build\proxy.log ; exit 1}
 
 cd $actual_dir
-
