@@ -36,11 +36,18 @@ use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub struct CurlCmd {
     /// The args of this command.
     args: Vec<String>,
+    /// An optional command feeding the request body to curl's stdin
+    /// (used when the body contains a NUL byte, which can not be
+    /// embedded in a shell string).
+    stdin: Option<String>,
 }
 
 impl fmt::Display for CurlCmd {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.args.join(" "))
+        match &self.stdin {
+            Some(stdin) => write!(f, "{} | {}", stdin, self.args.join(" ")),
+            None => write!(f, "{}", self.args.join(" ")),
+        }
     }
 }
 
@@ -48,6 +55,7 @@ impl Default for CurlCmd {
     fn default() -> Self {
         CurlCmd {
             args: vec!["curl".to_string()],
+            stdin: None,
         }
     }
 }
@@ -81,7 +89,7 @@ impl CurlCmd {
         let mut params = no_headers_params(&options.no_headers);
         args.append(&mut params);
 
-        let mut params = body_params(request_spec, context_dir);
+        let (mut params, stdin) = body_params(request_spec, context_dir);
         args.append(&mut params);
 
         let mut params = cookies_params(request_spec, cookie_store);
@@ -93,7 +101,7 @@ impl CurlCmd {
         let mut params = url_param(request_spec);
         args.append(&mut params);
 
-        CurlCmd { args }
+        CurlCmd { args, stdin }
     }
 }
 
@@ -160,7 +168,10 @@ fn no_headers_params(no_headers: &[String]) -> Vec<String> {
 }
 
 /// Returns the curl args corresponding to the request body, from a request spec.
-fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<String> {
+fn body_params(
+    request_spec: &RequestSpec,
+    context_dir: &ContextDir,
+) -> (Vec<String>, Option<String>) {
     let mut args = vec![];
 
     for param in request_spec.form.iter() {
@@ -173,7 +184,19 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
     }
 
     if request_spec.body.bytes().is_empty() {
-        return args;
+        return (args, None);
+    }
+
+    // A body containing a NUL byte can not be passed as a shell string
+    // argument ($'...' can not hold NUL): in this case, and only in this
+    // case, we pipe the body to curl's stdin instead
+    // (https://github.com/Orange-OpenSource/hurl/issues/5141).
+    if !matches!(request_spec.body, Body::File(_, _)) && request_spec.body.bytes().contains(&0) {
+        args.push("--data-binary".to_string());
+        args.push("@-".to_string());
+        let bytes = request_spec.body.bytes();
+        let stdin = format!("printf '{}'", encode_bytes(&bytes));
+        return (args, Some(stdin));
     }
 
     // See <https://curl.se/docs/manpage.html#-d> and <https://curl.se/docs/manpage.html#--data-binary>:
@@ -200,7 +223,7 @@ fn body_params(request_spec: &RequestSpec, context_dir: &ContextDir) -> Vec<Stri
     args.push(param.to_string());
     args.push(request_spec.body.curl_arg(context_dir));
 
-    args
+    (args, None)
 }
 
 /// Returns the curl args corresponding to a list of cookies.
@@ -1013,6 +1036,74 @@ mod tests {
             --header 'Content-Type:' \
             --data-binary '@foo.bin' \
             'http://localhost:8000/hello'"
+        );
+    }
+
+    #[test]
+    fn post_binary_body_with_null_bytes() {
+        // https://github.com/Orange-OpenSource/hurl/issues/5141
+        // A body containing a NUL byte can not be embedded in a shell string:
+        // the curl command must read the body from stdin instead.
+        let mut request = RequestSpec {
+            method: Method("POST".to_string()),
+            url: Url::from_str("http://localhost:8000/post-bytes-null").unwrap(),
+            body: Body::Binary(vec![0, 1, 2, 3]),
+            ..Default::default()
+        };
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Content-Type", "application/octet-stream"));
+        request.headers = headers;
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+        let output = None;
+
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
+        assert_eq!(
+            cmd.to_string(),
+            "printf '\\x00\\x01\\x02\\x03' | \
+            curl \
+            --header 'Content-Type: application/octet-stream' \
+            --data-binary @- \
+            'http://localhost:8000/post-bytes-null'"
+        );
+    }
+
+    #[test]
+    fn post_binary_body_without_null_bytes() {
+        // Control: without a NUL byte, the rendering is unchanged.
+        let request = RequestSpec {
+            method: Method("POST".to_string()),
+            url: Url::from_str("http://localhost:8000/post-bytes").unwrap(),
+            body: Body::Binary(vec![1, 2, 3]),
+            ..Default::default()
+        };
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+        let output = None;
+
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
+        assert_eq!(
+            cmd.to_string(),
+            "curl \
+            --header 'Content-Type: application/octet-stream' \
+            --data $'\\x01\\x02\\x03' \
+            'http://localhost:8000/post-bytes'"
         );
     }
 
