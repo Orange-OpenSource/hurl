@@ -1,0 +1,1 @@
+printf '\x00\x01\x02\x03' | curl --header 'Content-Type: application/octet-stream' --data-binary @- 'http://localhost:8000/post-bytes-null'
