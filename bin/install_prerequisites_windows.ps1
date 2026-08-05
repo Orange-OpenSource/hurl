@@ -9,33 +9,17 @@ if ($LASTEXITCODE) { Throw }
 
 # install proxy
 echo "==== install Squid"
-$squidMsi = Join-Path $env:TEMP 'squid.msi'
-$squidLog = Join-Path $env:TEMP 'squid-install.log'
-Invoke-WebRequest 'https://www.diladele.com/pkg/squid/4.14/squid.msi' -OutFile $squidMsi
-
-# Keep the historical install location expected by the Windows test scripts.
+$squid_msi = Join-Path $env:TEMP 'squid.msi'
+Invoke-WebRequest 'https://www.diladele.com/pkg/squid/4.14/squid.msi' -OutFile $squid_msi
 $process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @(
-    '/i', $squidMsi,
+    '/i', $squid_msi,
     '/qn',
     '/norestart',
-    'TARGETDIR=C:\',
-    '/L*V', $squidLog
+    'TARGETDIR=C:\'
 ) -Wait -PassThru
-if ($process.ExitCode) { Throw "Squid MSI installation failed with exit code $($process.ExitCode). See $squidLog" }
-
-$squidService = Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue
-if ($null -ne $squidService) {
-    if ($squidService.Status -ne 'Stopped') {
-        Stop-Service -Name 'squidsrv' -Force -ErrorAction SilentlyContinue
-    }
-    sc.exe config squidsrv start= demand | Out-Null
-}
-
+if ($process.ExitCode) { Throw "Squid installation fails with exit code $($process.ExitCode)" }
 Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
-
-if (!(Test-Path -LiteralPath 'C:\Squid\bin\squid.exe')) {
-    Throw 'Squid executable not found at C:\Squid\bin\squid.exe after MSI installation'
-}
+if ($LASTEXITCODE) { Throw }
 
 echo "==== create log dir integration\build"
 New-Item -ItemType Directory -Path integration\build -Force
