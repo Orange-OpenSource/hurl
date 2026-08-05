@@ -9,23 +9,15 @@ if ($LASTEXITCODE) { Throw }
 
 # install proxy
 echo "==== install Squid"
-# Fix broken Chocolatey Squid package 4.14 because http://packages.diladele.com/squid/4.14/squid.msi moved to https://www.diladele.com/pkg/squid/4.14/squid.msi
-Invoke-WebRequest https://community.chocolatey.org/api/v2/package/squid -OutFile squid.nupkg
-Rename-Item squid.nupkg choco-squid.zip
-Expand-Archive choco-squid.zip choco-squid
-Select-String -Path .\choco-squid\tools\chocolateyinstall.ps1 -Pattern "diladele"
-$file = '.\choco-squid\tools\chocolateyinstall.ps1'
-$content = Get-Content $file -Raw
-$content = $content.Replace(
-    'http://packages.diladele.com/squid/4.14/squid.msi',
-    'https://www.diladele.com/pkg/squid/4.14/squid.msi'
-)
-Set-Content -Path $file -Value $content -Encoding UTF8
-cd .\choco-squid
-choco pack
-cd ..
-choco install --debug --confirm squid --source=".\choco-squid" --install-arguments="'TARGETDIR=C:\'"
-if ($LASTEXITCODE) { Throw }
+$squid_msi = Join-Path $env:TEMP 'squid.msi'
+Invoke-WebRequest 'https://www.diladele.com/pkg/squid/4.14/squid.msi' -OutFile $squid_msi
+$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @(
+    '/i', $squid_msi,
+    '/qn',
+    '/norestart',
+    'TARGETDIR=C:\'
+) -Wait -PassThru
+if ($process.ExitCode) { Throw "Squid installation fails with exit code $($process.ExitCode)" }
 echo "==== create log dir integration\build"
 New-Item -ItemType Directory -Path integration\build -Force
 echo "==== Squid service status"
@@ -35,14 +27,12 @@ Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\bu
 echo "==== Squid version"
 C:\Squid\bin\squid --version | tee -Append -filepath integration\build\proxy.log
 echo "==== stop Squid service and kill child process"
-taskkill /f /fi "SERVICES eq squidsrv" 2>&1 | tee -Append -filepath integration\build\proxy.log
-if ($LASTEXITCODE) { Throw }
-taskkill /f /IM squid.exe 2>&1 | tee -Append -filepath integration\build\proxy.log
-if ($LASTEXITCODE) { Throw }
-echo "==== Squid service status"
-sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
-echo "==== Squid process status"
-Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
+Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue | ForEach-Object {
+    if ($_.Status -ne 'Stopped') {
+        Stop-Service -Name $_.Name -Force -ErrorAction SilentlyContinue
+    }
+}
+Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
 
 # install jq
 echo "==== install jq"
