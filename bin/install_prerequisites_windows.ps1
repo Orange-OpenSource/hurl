@@ -36,10 +36,6 @@ Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue | ForEach-Object {
     }
 }
 Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
-echo "==== Squid service status"
-sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
-echo "==== Squid process status"
-Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
 
 # install jq
 echo "==== install jq"
