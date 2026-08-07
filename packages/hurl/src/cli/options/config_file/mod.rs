@@ -206,6 +206,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.jobs = Some(jobs);
             Ok(())
         }
+        "max-filesize" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let max_filesize = value.parse::<u64>().map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --max-filesize requires an integer value")
+            })?;
+            options.max_filesize = Some(max_filesize);
+            Ok(())
+        }
         "limit-rate" => {
             parse_value_separator(reader)?;
             save = reader.cursor();
@@ -544,6 +554,29 @@ mod tests {
             ConfigFileError::new(
                 Pos::new(1, 8),
                 "Option --jobs requires an integer value >= 1"
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_option_max_filesize() {
+        let mut reader = Reader::new("--max-filesize=255\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.max_filesize, Some(255));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_max_filesize_with_invalid_value() {
+        let mut reader = Reader::new("--max-filesize=abc\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(
+                Pos::new(1, 16),
+                "Option --max-filesize requires an integer value"
             )
         );
     }
