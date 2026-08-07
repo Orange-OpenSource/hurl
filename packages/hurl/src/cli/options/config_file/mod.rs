@@ -123,6 +123,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.verbosity = Some(Verbosity::Debug);
             Ok(())
         }
+        "verbosity" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let verbosity = value.parse::<Verbosity>().map_err(|_| {
+                ConfigFileError::new(
+                    save.pos,
+                    "Option --verbosity requires one of the following values: brief, verbose, debug",
+                )
+            })?;
+            options.verbosity = Some(verbosity);
+            Ok(())
+        }
         "header" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -359,6 +372,30 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.verbosity, Some(Verbosity::Debug));
         assert_eq!(reader.cursor().pos, Pos::new(4, 1));
+    }
+
+    #[test]
+    fn test_parse_option_verbosity_with_value() {
+        let mut reader = Reader::new("\n\n--verbosity=brief\n");
+        let mut options = CliOptions::default();
+        assert_eq!(reader.cursor().pos, Pos::new(1, 1));
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.verbosity, Some(Verbosity::Brief));
+        assert_eq!(reader.cursor().pos, Pos::new(4, 1));
+    }
+
+    #[test]
+    fn test_parse_option_verbosity_with_invalid_value() {
+        let mut reader = Reader::new("--verbosity=invalid\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(
+                Pos::new(1, 13),
+                "Option --verbosity requires one of the following values: brief, verbose, debug"
+            )
+        );
     }
 
     #[test]
