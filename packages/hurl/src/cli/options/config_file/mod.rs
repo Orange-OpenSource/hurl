@@ -118,6 +118,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.verbosity = Some(Verbosity::Verbose);
             Ok(())
         }
+        "very-verbose" => {
+            expect_no_value(reader)?;
+            options.verbosity = Some(Verbosity::Debug);
+            Ok(())
+        }
         "header" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
@@ -343,6 +348,16 @@ mod tests {
         assert_eq!(reader.cursor().pos, Pos::new(1, 1));
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.verbosity, Some(Verbosity::Verbose));
+        assert_eq!(reader.cursor().pos, Pos::new(4, 1));
+    }
+
+    #[test]
+    fn test_parse_option_very_verbose_flag() {
+        let mut reader = Reader::new("\n\n--very-verbose\n");
+        let mut options = CliOptions::default();
+        assert_eq!(reader.cursor().pos, Pos::new(1, 1));
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.verbosity, Some(Verbosity::Debug));
         assert_eq!(reader.cursor().pos, Pos::new(4, 1));
     }
 
