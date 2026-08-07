@@ -250,6 +250,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.fail_with_body = true;
             Ok(())
         }
+        "continue-on-error" => {
+            expect_no_value(reader)?;
+            options.continue_on_error = true;
+            Ok(())
+        }
         "no-assert" => {
             expect_no_value(reader)?;
             options.no_assert = true;
@@ -521,6 +526,16 @@ mod tests {
         assert!(!options.insecure);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.insecure);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_continue_on_error() {
+        let mut reader = Reader::new("--continue-on-error\n");
+        let mut options = CliOptions::default();
+        assert!(!options.continue_on_error);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.continue_on_error);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
