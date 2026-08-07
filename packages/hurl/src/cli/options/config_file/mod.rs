@@ -176,6 +176,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                 })?;
             Ok(())
         }
+        "connect-timeout" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            options.connect_timeout = duration::duration_from_str(&value, DurationUnit::Second)
+                .map_err(|_| {
+                    ConfigFileError::new(
+                        save.pos,
+                        "Option --connect-timeout has an invalid duration",
+                    )
+                })?;
+            Ok(())
+        }
         "limit-rate" => {
             parse_value_separator(reader)?;
             save = reader.cursor();
@@ -451,6 +464,18 @@ mod tests {
         let mut options = CliOptions::default();
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.delay, std::time::Duration::from_secs(1));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_connect_timeout() {
+        let mut reader = Reader::new("--connect-timeout=500ms\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(
+            options.connect_timeout,
+            std::time::Duration::from_millis(500)
+        );
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
