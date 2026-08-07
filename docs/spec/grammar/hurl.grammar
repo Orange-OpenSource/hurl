@@ -560,12 +560,36 @@ function:
     env-function
   | now-function
   | uuid-function
+  | random-bool-function
+  | random-email-function
+  | random-first-name-function
+  | random-full-name-function
+  | random-int-function
+  | random-last-name-function
+  | random-string-function
+  | random-word-function
 
 env-function: "getEnv"
 
 now-function: "newDate"
 
 uuid-function: "newUuid"
+
+random-bool-function: "randomBool"
+
+random-email-function: "randomEmail"
+
+random-first-name-function: "randomFirstName"
+
+random-full-name-function: "randomFullName"
+
+random-int-function: "randomInt" sp integer sp integer
+
+random-last-name-function: "randomLastName"
+
+random-string-function: "randomString" sp integer
+
+random-word-function: "randomWord"
 
 
 

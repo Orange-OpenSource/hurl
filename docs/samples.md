@@ -324,7 +324,7 @@ GraphQL queries can also use [Hurl templates].
 
 ### Using Dynamic Datas
 
-[Functions] like `newUuid` and `newDate` can be used in templates to create dynamic datas:
+[Functions] like `newUuid`, `newDate` or `randomFirstName` can be used in templates to create dynamic datas:
 
 
 A file that creates a dynamic email (i.e `0531f78f-7f87-44be-a7f2-969a1c4e6d97@test.com`):
@@ -344,6 +344,19 @@ GET https://example.org/api/foo
 [Query]
 date: {{newDate}}
 HTTP 200
+```
+
+A file that creates a random user. Functions parameters are separated with a whitespace, like filters parameters:
+
+```hurl
+POST https://example.org/api/users
+{
+  "first_name": "{{randomFirstName}}",
+  "last_name": "{{randomLastName}}",
+  "email": "{{randomEmail}}",
+  "age": {{randomInt 18 99}},
+  "token": "{{randomString 32}}"
+}
 ```
 
 [Doc](/docs/templates.md#functions)
