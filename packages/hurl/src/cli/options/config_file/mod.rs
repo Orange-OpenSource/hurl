@@ -190,6 +190,22 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
                 })?;
             Ok(())
         }
+        "jobs" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let jobs = value.parse::<usize>().map_err(|_| {
+                ConfigFileError::new(save.pos, "Option --jobs requires an integer value")
+            })?;
+            if jobs < 1 {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --jobs requires an integer value >= 1",
+                ));
+            }
+            options.jobs = Some(jobs);
+            Ok(())
+        }
         "limit-rate" => {
             parse_value_separator(reader)?;
             save = reader.cursor();
@@ -496,6 +512,40 @@ mod tests {
             std::time::Duration::from_millis(500)
         );
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_jobs() {
+        let mut reader = Reader::new("--jobs=4\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.jobs, Some(4));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_jobs_with_invalid_value() {
+        let mut reader = Reader::new("--jobs=abc\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(Pos::new(1, 8), "Option --jobs requires an integer value")
+        );
+    }
+
+    #[test]
+    fn test_parse_option_jobs_with_too_small_value() {
+        let mut reader = Reader::new("--jobs=0\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(
+                Pos::new(1, 8),
+                "Option --jobs requires an integer value >= 1"
+            )
+        );
     }
 
     #[test]
