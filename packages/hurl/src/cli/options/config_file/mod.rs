@@ -19,6 +19,7 @@ mod primitives;
 
 use std::path::Path;
 
+use crate::cli::options::ErrorFormat;
 use crate::cli::options::HttpVersion;
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
@@ -253,6 +254,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "continue-on-error" => {
             expect_no_value(reader)?;
             options.continue_on_error = true;
+            Ok(())
+        }
+        "error-format" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let error_format = value.parse::<ErrorFormat>().map_err(|_| {
+                ConfigFileError::new(
+                    save.pos,
+                    "Option --error-format requires one of the following values: short, long",
+                )
+            })?;
+            options.error_format = error_format;
             Ok(())
         }
         "no-assert" => {
@@ -537,6 +551,30 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert!(options.continue_on_error);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_error_format() {
+        let mut reader = Reader::new("--error-format=long\n");
+        let mut options = CliOptions::default();
+        assert_eq!(options.error_format, ErrorFormat::Short);
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.error_format, ErrorFormat::Long);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_error_format_invalid_value() {
+        let mut reader = Reader::new("--error-format=foo\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(
+                Pos::new(1, 16),
+                "Option --error-format requires one of the following values: short, long"
+            )
+        );
     }
 
     #[test]
