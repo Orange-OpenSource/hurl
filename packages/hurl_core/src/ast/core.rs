@@ -263,7 +263,20 @@ pub struct Body {
 /// Check that variable name is not reserved
 /// (would conflicts with an existing function)
 pub fn is_variable_reserved(name: &str) -> bool {
-    ["getEnv", "newDate", "newUuid"].contains(&name)
+    [
+        "getEnv",
+        "newDate",
+        "newUuid",
+        "randomBool",
+        "randomEmail",
+        "randomFirstName",
+        "randomFullName",
+        "randomInt",
+        "randomLastName",
+        "randomString",
+        "randomWord",
+    ]
+    .contains(&name)
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -41,10 +41,20 @@ jsonpath "$.errors[{{index}}].id" == "error"
 
 Besides variables, functions can be used to generate dynamic values. Current functions are:
 
-| Function  | Description                                                  |
-|-----------|--------------------------------------------------------------|
-| `newUuid` | Generates an [UUID v4 random string]                         |
-| `newDate` | Generates an [RFC 3339] UTC date string, at the current time |
+| Function                | Description                                                       |
+|-------------------------|-------------------------------------------------------------------|
+| `newUuid`               | Generates an [UUID v4 random string]                              |
+| `newDate`               | Generates an [RFC 3339] UTC date string, at the current time      |
+| `randomBool`            | Generates a random boolean                                        |
+| `randomEmail`           | Generates a random email address                                  |
+| `randomFirstName`       | Generates a random first name                                     |
+| `randomFullName`        | Generates a random full name                                      |
+| `randomInt <min> <max>` | Generates a random integer between `min` and `max`, both included |
+| `randomLastName`        | Generates a random last name                                      |
+| `randomString <count>`  | Generates a random alphanumeric string of `count` characters      |
+| `randomWord`            | Generates a random word                                           |
+
+Like filters, functions parameters are not enclosed in parentheses and are separated with a whitespace.
 
 In the following example, we use `newDate` to generate a dynamic query parameter:
 
@@ -76,6 +86,35 @@ When run, the request body will be:
   "email": "0531f78f-7f87-44be-a7f2-969a1c4e6d97@test.com"
 }
 ```
+
+The `random...` functions generate realistic test data. In this third example, we create a user with a random
+name, email and age:
+
+```hurl
+POST https://example.org/api/users
+{
+  "first_name": "{{randomFirstName}}",
+  "last_name": "{{randomLastName}}",
+  "email": "{{randomEmail}}",
+  "age": {{randomInt 18 99}},
+  "token": "{{randomString 32}}"
+}
+```
+
+When run, the request body will be:
+
+```
+{
+  "first_name": "Vernice",
+  "last_name": "Watsica",
+  "email": "kaley.bins@example.com",
+  "age": 42,
+  "token": "kZ3xQpL8mNvT2wYc7RbA5sHdEjFgU9iO"
+}
+```
+
+Note that `randomInt` returns a number and `randomBool` a boolean: used alone in a JSON body, they don't need to be
+quoted.
 
 
 ## Types

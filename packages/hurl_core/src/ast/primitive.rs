@@ -542,17 +542,88 @@ impl fmt::Display for Variable {
     }
 }
 
+/// Parameters of the `randomInt` function.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RandomIntArgs {
+    pub space0: Whitespace,
+    pub min: I64,
+    pub space1: Whitespace,
+    pub max: I64,
+}
+
+/// Parameters of the `randomString` function.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RandomStringArgs {
+    pub space0: Whitespace,
+    pub count: U64,
+}
+
+/// A generator function, used inside a placeholder.
+///
+/// Parameters are separated by whitespaces, following the Hurl style for filters:
+/// `{{randomInt 1 100}}`. Whitespaces are kept in the AST so that a parsed file can be
+/// rendered back to its exact source.
+///
+/// Parameters are boxed to keep this enum small: [`Function`] ends up in [`Placeholder`], which is
+/// itself a variant of several enums that would otherwise trip `clippy::large_enum_variant`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Function {
     NewDate,
     NewUuid,
+    RandomBool,
+    RandomEmail,
+    RandomFirstName,
+    RandomFullName,
+    RandomInt(Box<RandomIntArgs>),
+    RandomLastName,
+    RandomString(Box<RandomStringArgs>),
+    RandomWord,
+}
+
+impl Function {
+    /// Returns the identifier of this function, without any parameter.
+    pub fn identifier(&self) -> &'static str {
+        match self {
+            Function::NewDate => "newDate",
+            Function::NewUuid => "newUuid",
+            Function::RandomBool => "randomBool",
+            Function::RandomEmail => "randomEmail",
+            Function::RandomFirstName => "randomFirstName",
+            Function::RandomFullName => "randomFullName",
+            Function::RandomInt(_) => "randomInt",
+            Function::RandomLastName => "randomLastName",
+            Function::RandomString(_) => "randomString",
+            Function::RandomWord => "randomWord",
+        }
+    }
 }
 
 impl fmt::Display for Function {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.identifier())?;
         match self {
-            Function::NewDate => write!(f, "newDate"),
-            Function::NewUuid => write!(f, "newUuid"),
+            Function::RandomInt(args) => write!(
+                f,
+                "{}{}{}{}",
+                args.space0.as_str(),
+                args.min.to_source(),
+                args.space1.as_str(),
+                args.max.to_source()
+            ),
+            Function::RandomString(args) => {
+                write!(f, "{}{}", args.space0.as_str(), args.count.to_source())
+            }
+            // Listed explicitly rather than with a catch-all: this `Display` is what
+            // `ToSource for Expr` uses, so a new function with parameters must not silently
+            // render without them.
+            Function::NewDate
+            | Function::NewUuid
+            | Function::RandomBool
+            | Function::RandomEmail
+            | Function::RandomFirstName
+            | Function::RandomFullName
+            | Function::RandomLastName
+            | Function::RandomWord => Ok(()),
         }
     }
 }

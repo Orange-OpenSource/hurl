@@ -1,0 +1,7 @@
+error: Parsing literal
+  --> tests_error_parser/function_random_int_invalid_range.hurl:3:24
+   |
+ 3 | value: {{randomInt 100 1}}
+   |                        ^ expecting 'an integer greater than or equal to 100'
+   |
+
