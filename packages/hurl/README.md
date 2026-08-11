@@ -300,12 +300,12 @@ $ hurl --test sample.hurl
 A particular response can be saved with [`[Options] section`](https://hurl.dev/docs/request.html#options):
 
 ```hurl
-GET https://example.ord/cats/123
+GET https://example.org/cats/123
 [Options]
 output: cat123.txt    # use - to output to stdout
 HTTP 200
 
-GET https://example.ord/dogs/567
+GET https://example.org/dogs/567
 HTTP 200
 ```
 
