@@ -139,6 +139,8 @@ bytes base64UrlSafeEncode == "PDw_Pz8-Pg"
 
 ### charsetDecode
 
+*Formerly known as `decode`, which is deprecated and will be removed in a future major version.*
+
 Decodes bytes to string using a charset encoding. Encoding labels are defined in [Encoding Standard].
 
 ```hurl
