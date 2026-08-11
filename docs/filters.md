@@ -468,7 +468,7 @@ Evaluates a [XPath] expression.
 GET https://example.org/hello_gb2312
 HTTP 200
 [Asserts]
-bytes decode "gb2312" xpath "string(//body)" == "你好世界"
+bytes charsetDecode "gb2312" xpath "string(//body)" == "你好世界"
 ```
 
 [Captures]: /docs/capturing-response.md

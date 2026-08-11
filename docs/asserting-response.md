@@ -631,7 +631,7 @@ HTTP 200
 [Asserts]
 header "Content-Type" == "text/html"
 bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB2312
-bytes decode "gb2312" contains "你好世界"
+bytes charsetDecode "gb2312" contains "你好世界"
 ```
 
 Body asserts are automatically decompressed based on the value of `Content-Encoding` response header. So,

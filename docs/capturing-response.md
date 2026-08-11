@@ -171,7 +171,7 @@ bytes.
 GET https://example.org/cn
 HTTP 200
 [Captures]
-my_body: bytes decode "gb2312"
+my_body: bytes charsetDecode "gb2312"
 ```
 
 `body` capture works _after_ content encoding decompression (so the captured value is not affected by `Content-Encoding` response header).
@@ -239,7 +239,7 @@ XPath expression can also be evaluated against part of the body with a [`xpath` 
 GET https://example.org/home_cn
 HTTP 200
 [Captures]
-pet-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
+pet-id: bytes charsetDecode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 ```
 
 ### JSONPath capture
