@@ -171,9 +171,13 @@ $ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev clang-dev
 
 ### Build on macOS
 
+Hurl depends on libssl, libcurl and libxml2 native libraries. On a fresh macOS,
+OpenSSL is not where `openssl-sys` looks for it, and `cargo build` stops with
+"Could not find directory of OpenSSL installation".
+
 ```shell
 $ xcode-select --install
-$ brew install pkg-config
+$ brew install pkg-config openssl
 ```
 
 Hurl is written in [Rust]. You should [install] the latest stable release.
