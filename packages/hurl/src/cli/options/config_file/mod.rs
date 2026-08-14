@@ -338,6 +338,11 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.output_type = OutputType::NoOutput;
             Ok(())
         }
+        "no-pretty" => {
+            expect_no_value(reader)?;
+            options.pretty = PrettyMode::None;
+            Ok(())
+        }
         "pretty" => {
             expect_no_value(reader)?;
             options.pretty = PrettyMode::Force;
@@ -819,6 +824,15 @@ mod tests {
         assert!(options.no_headers.is_empty());
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.no_headers, vec!["user-agent"]);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_no_pretty() {
+        let mut reader = Reader::new("--no-pretty\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.pretty, PrettyMode::None);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
