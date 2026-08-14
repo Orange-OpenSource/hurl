@@ -328,6 +328,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.no_headers.push(value);
             Ok(())
         }
+        "no-proxy" => {
+            parse_value_separator(reader)?;
+            let value = parse_value(reader)?;
+
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --no-proxy requires a value",
+                ));
+            }
+            options.no_proxy = Some(value);
+            Ok(())
+        }
         "no-jsonpath-coercion" => {
             expect_no_value(reader)?;
             options.no_jsonpath_coercion = true;
@@ -824,6 +837,16 @@ mod tests {
         assert!(options.no_headers.is_empty());
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.no_headers, vec!["user-agent"]);
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_no_proxy() {
+        let mut reader = Reader::new("--no-proxy=127.0.0.1\n");
+        let mut options = CliOptions::default();
+        assert!(options.no_proxy.is_none());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.no_proxy, Some("127.0.0.1".to_string()));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
