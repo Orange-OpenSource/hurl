@@ -226,6 +226,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.limit_rate = Some(BytesPerSec(limit_rate));
             Ok(())
         }
+        "max-time" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            options.timeout =
+                duration::duration_from_str(&value, DurationUnit::Second).map_err(|_| {
+                    ConfigFileError::new(save.pos, "Option --max-time has an invalid duration")
+                })?;
+            Ok(())
+        }
         "insecure" => {
             expect_no_value(reader)?;
             options.insecure = true;
@@ -588,6 +598,26 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.limit_rate, Some(BytesPerSec(2_000_000)));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_max_time() {
+        let mut reader = Reader::new("--max-time=30s\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.timeout, std::time::Duration::from_secs(30));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_max_time_with_invalid_value() {
+        let mut reader = Reader::new("--max-time=abc\n");
+        let mut options = CliOptions::default();
+        let error = parse_option(&mut reader, &mut options).unwrap_err();
+        assert_eq!(
+            error,
+            ConfigFileError::new(Pos::new(1, 12), "Option --max-time has an invalid duration")
+        );
     }
 
     #[test]
