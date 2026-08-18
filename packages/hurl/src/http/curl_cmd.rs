@@ -766,6 +766,7 @@ mod tests {
             user_agent: Some("my-useragent".to_string()),
             verbosity: None,
             discard_body: false,
+            truncate_body: None,
         };
 
         let cmd = CurlCmd::new(&request, &cookie_store, &context_dir, None, &options);

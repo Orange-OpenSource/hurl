@@ -110,6 +110,7 @@ pub fn parse_cli_args(
         .arg(commands::very_verbose())
         .arg(commands::verbosity())
         .arg(commands::discard_body())
+        .arg(commands::truncate_body())
         // Run options
         .arg(commands::continue_on_error())
         .arg(commands::delay())
@@ -250,6 +251,7 @@ fn parse_arg_matches(
     let user_agent = user_agent(arg_matches, default_options.user_agent);
     let variables = variables(arg_matches, default_options.variables)?;
     let verbosity = verbosity(arg_matches, default_options.verbosity);
+    let truncate_body = truncate_body(arg_matches, default_options.truncate_body);
 
     Ok(CliOptions {
         aws_sigv4,
@@ -321,6 +323,7 @@ fn parse_arg_matches(
         variables,
         verbosity,
         jobs,
+        truncate_body,
     })
 }
 
@@ -850,6 +853,10 @@ fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: b
 
 fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "proxy").or(default_value)
+}
+
+fn truncate_body(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<u64> {
+    get::<u64>(arg_matches, "truncate_body").or(default_value)
 }
 
 fn proxy_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {

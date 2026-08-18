@@ -79,7 +79,7 @@ pub struct RunnerOptionsBuilder {
     user: Option<String>,
     user_agent: Option<String>,
     discard_body: bool,
-    truncate_body: Option<u64>
+    truncate_body: Option<u64>,
 }
 
 impl Default for RunnerOptionsBuilder {
@@ -138,7 +138,7 @@ impl Default for RunnerOptionsBuilder {
             user: None,
             user_agent: None,
             discard_body: false,
-            truncate_body: None
+            truncate_body: None,
         }
     }
 }
@@ -567,7 +567,7 @@ impl RunnerOptionsBuilder {
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
             discard_body: self.discard_body,
-            truncate_body: self.truncate_body
+            truncate_body: self.truncate_body,
         }
     }
 }
@@ -685,7 +685,8 @@ pub struct RunnerOptions {
     pub(crate) user_agent: Option<String>,
     /// Specifies whether to discard the response body.
     pub(crate) discard_body: bool,
-    pub(crate) truncate_body: Option<u64>
+    /// Specifies the maximum number of bytes to truncate the response body.
+    pub(crate) truncate_body: Option<u64>,
 }
 
 impl Default for RunnerOptions {
