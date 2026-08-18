@@ -87,6 +87,10 @@ HTTP options:
           Add basic Authentication header to each request
   -A, --user-agent <NAME>
           Specify the User-Agent string to send to the HTTP server
+      --discard-body
+          Discard the response body
+      --truncate-body <SIZE>
+          Truncate the response body
 
 Output options:
       --color                  Colorize output
