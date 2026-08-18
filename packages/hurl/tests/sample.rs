@@ -122,6 +122,7 @@ fn simple_sample() {
         .unix_socket(None)
         .user(None)
         .user_agent(None)
+        .discard_body(false)
         .build();
 
     let logger_opts = LoggerOptionsBuilder::new()

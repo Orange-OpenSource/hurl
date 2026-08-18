@@ -1,0 +1,27 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/discard-body
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/discard-body'
+*
+> GET /discard-body HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/8.1.0
+>
+* Response:
+*
+< HTTP/1.1 200 OK
+< Content-Length: 12
+< Content-Type: text/html; charset=utf-8
+< Date: <<<.*?>>>
+< Server: Flask Server
+< Via: waitress
+<
+* Received 0 bytes in <<<\d+>>> ms
+*

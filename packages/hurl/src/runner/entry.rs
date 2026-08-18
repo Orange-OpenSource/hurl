@@ -299,6 +299,8 @@ impl ClientOptions {
                 Verbosity::Verbose => http::Verbosity::Verbose,
                 Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
             }),
+            discard_body: runner_options.discard_body,
+            truncate_body: runner_options.truncate_body
         }
     }
 }

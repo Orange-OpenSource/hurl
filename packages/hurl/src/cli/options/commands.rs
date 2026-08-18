@@ -583,6 +583,14 @@ pub fn report_json() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn discard_body() -> clap::Arg {
+    clap::Arg::new("discard_body")
+        .long("discard-body")
+        .help("Discard the response body")
+        .help_heading("HTTP options")
+        .action(clap::ArgAction::SetTrue)
+}
+
 pub fn report_junit() -> clap::Arg {
     clap::Arg::new("report_junit")
         .long("report-junit")

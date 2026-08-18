@@ -293,10 +293,13 @@ impl Client {
                 }
                 _ => {}
             })?;
-            transfer.write_function(|data| {
-                response_body.extend(data);
-                Ok(data.len())
-            })?;
+
+            if !options.discard_body {
+                transfer.write_function(|data| {
+                    response_body.extend(data);
+                    Ok(data.len())
+                })?;
+            }
 
             if let Err(e) = transfer.perform() {
                 let code = e.code() as i32; // due to windows build

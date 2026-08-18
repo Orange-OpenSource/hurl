@@ -92,6 +92,7 @@ pub struct CliOptions {
     pub no_cookie_store: bool,
     pub no_headers: Vec<String>,
     pub no_proxy: Option<String>,
+    pub discard_body: bool,
     pub ntlm: bool,
     pub output: Option<Output>,
     pub output_type: OutputType,
@@ -294,6 +295,7 @@ impl Default for CliOptions {
             no_cookie_store: false,
             no_headers: Vec::new(),
             no_proxy: None,
+            discard_body: false,
             ntlm: false,
             output: None,
             output_type: OutputType::ResponseBody,
@@ -432,6 +434,7 @@ impl CliOptions {
         let use_cookie_store = !self.no_cookie_store;
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
+        let discard_body = self.discard_body;
 
         Ok(RunnerOptionsBuilder::new()
             .aws_sigv4(aws_sigv4)
@@ -466,6 +469,7 @@ impl CliOptions {
             .use_jsonpath_coercion(use_jsonpath_coercion)
             .no_proxy(no_proxy)
             .no_headers(no_headers)
+            .discard_body(discard_body)
             .ntlm(ntlm)
             .output(output)
             .path_as_is(path_as_is)

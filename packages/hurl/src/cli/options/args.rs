@@ -109,6 +109,7 @@ pub fn parse_cli_args(
         .arg(commands::verbose())
         .arg(commands::very_verbose())
         .arg(commands::verbosity())
+        .arg(commands::discard_body())
         // Run options
         .arg(commands::continue_on_error())
         .arg(commands::delay())
@@ -223,6 +224,7 @@ fn parse_arg_matches(
     let no_cookie_store = no_cookie_store(arg_matches, default_options.no_cookie_store);
     let no_headers = no_headers(arg_matches, default_options.no_headers);
     let no_proxy = no_proxy(arg_matches, default_options.no_proxy);
+    let discard_body = discard_body(arg_matches, default_options.discard_body);
     let ntlm = ntlm(arg_matches, default_options.ntlm);
     let parallel = parallel(arg_matches, default_options.parallel);
     let path_as_is = path_as_is(arg_matches, default_options.path_as_is);
@@ -292,6 +294,7 @@ fn parse_arg_matches(
         no_cookie_store,
         no_headers,
         no_proxy,
+        discard_body,
         ntlm,
         path_as_is,
         pinned_pub_key,
@@ -770,6 +773,14 @@ fn no_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<Strin
 
 fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "no_proxy").or(default_value)
+}
+
+fn discard_body(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "discard_body") {
+        true
+    } else {
+        default_value
+    }
 }
 
 fn ntlm(arg_matches: &ArgMatches, default_value: bool) -> bool {
