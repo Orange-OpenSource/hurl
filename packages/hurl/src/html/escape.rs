@@ -32,20 +32,27 @@ where
 
 /// Replaces special characters "&", "<" and ">" to HTML-safe sequences.
 ///
-/// Both double quote (") and single quote (') characters are also
-/// translated.
-pub fn html_escape(text: &str) -> String {
-    let mut output = String::new();
-    for c in text.chars() {
-        match c {
-            '&' => output.push_str("&amp;"),
-            '<' => output.push_str("&lt;"),
-            '>' => output.push_str("&gt;"),
-            '"' => output.push_str("&quot;"),
-            '\'' => output.push_str("&#x27;"),
-            _ => output.push(c),
-        }
+/// Both double quote (") and single quote (') characters are also translated.
+fn html_escape(text: &str) -> String {
+    let mut output = String::with_capacity(text.len());
+    // Every character that must be escaped is ASCII so if we match it, we know we are in a char
+    // boundary and never inside a multi-byte UTF-8. We can copy safely slices instead of copying
+    // chars to chars.
+    let mut last = 0;
+    for (i, b) in text.bytes().enumerate() {
+        let escaped = match b {
+            b'&' => "&amp;",
+            b'<' => "&lt;",
+            b'>' => "&gt;",
+            b'"' => "&quot;",
+            b'\'' => "&#x27;",
+            _ => continue,
+        };
+        output.push_str(&text[last..i]);
+        output.push_str(escaped);
+        last = i + 1;
     }
+    output.push_str(&text[last..]);
     output
 }
 
