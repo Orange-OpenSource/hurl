@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 write-host -foregroundcolor Cyan "----- install system prerequisites -----"
 
 # install python 3.11
-choco install --confirm python311
+choco install --confirm --no-progress python311
 if ($LASTEXITCODE) { Throw }
 
 # install proxy
@@ -36,23 +36,23 @@ Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
 
 # install jq
 echo "==== install jq"
-choco install --confirm jq
+choco install --confirm --no-progress jq
 if ($LASTEXITCODE) { Throw }
 
 # update vcpkg install
 $vcpkg_dir=((Get-command vcpkg).Source | Split-Path)
 $lib_dir="$vcpkg_dir\installed\x64-windows\bin"
+git -C $vcpkg_dir pull
 & "$vcpkg_dir\bootstrap-vcpkg.bat"
+vcpkg upgrade --no-dry-run
+if ($LASTEXITCODE) { Throw }
 # Downgrade to 8.19.0 => https://github.com/Orange-OpenSource/hurl/issues/5105
-git -C $vcpkg_dir checkout 4f326c4072038c8624c36a8ba5ed23f616adda53
+git -C "$vcpkg_dir" restore --source=4f326c4072038c8624c36a8ba5ed23f616adda53 --worktree ports/curl
+git -C "$vcpkg_dir" restore --source=4f326c4072038c8624c36a8ba5ed23f616adda53 --worktree ports/zlib
 
 # install libxml and libcurl
 vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows
 vcpkg install --recurse libxml2[core,iconv]:x64-windows
 
-vcpkg update
-if ($LASTEXITCODE) { Throw }
-vcpkg upgrade --no-dry-run
-if ($LASTEXITCODE) { Throw }
 vcpkg integrate install
 if ($LASTEXITCODE) { Throw }
