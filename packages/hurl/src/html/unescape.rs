@@ -21,6 +21,20 @@ use regex::{Captures, Regex};
 
 use crate::html::entities::HTML5_ENTITIES_REF;
 
+/// A trait for transforming HTML entities to their UTF-8 values.
+pub trait HtmlUnescape {
+    fn html_unescape(&self) -> String;
+}
+
+impl<T> HtmlUnescape for T
+where
+    T: AsRef<str> + ToString,
+{
+    fn html_unescape(&self) -> String {
+        html_unescape(self.as_ref())
+    }
+}
+
 // Ref https://html.spec.whatwg.org/#decimal-character-reference-start-state
 
 static INVALID_CHAR: [(u32, &str); 34] = [
@@ -99,7 +113,7 @@ static CHAR_REF: LazyLock<Regex> = LazyLock::new(|| {
 /// <https://github.com/python/cpython/blob/main/Lib/html/__init__.py>
 ///
 /// See MDN decoder tool: <https://mothereff.in/html-entities>
-pub fn html_unescape(text: &str) -> String {
+fn html_unescape(text: &str) -> String {
     if text.chars().any(|c| c == '&') {
         CHAR_REF
             .replace_all(text, |caps: &Captures| {

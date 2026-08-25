@@ -16,6 +16,20 @@
  *
  */
 
+/// A trait for transforming a characters sequence to HTML-safe sequence.
+pub trait HtmlEscape {
+    fn html_escape(&self) -> String;
+}
+
+impl<T> HtmlEscape for T
+where
+    T: AsRef<str> + ToString,
+{
+    fn html_escape(&self) -> String {
+        html_escape(self.as_ref())
+    }
+}
+
 /// Replaces special characters "&", "<" and ">" to HTML-safe sequences.
 ///
 /// Both double quote (") and single quote (') characters are also
@@ -37,7 +51,7 @@ pub fn html_escape(text: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::html_escape;
+    use super::{HtmlEscape, html_escape};
 
     #[test]
     fn eval_html_escape() {
@@ -49,9 +63,17 @@ mod tests {
                 "string with double quote: \"baz\"",
                 "string with double quote: &quot;baz&quot;",
             ),
+            (
+                "string with single quote: 'baz'",
+                "string with single quote: &#x27;baz&#x27;",
+            ),
+            ("", ""),
+            ("&&", "&amp;&amp;"),
+            ("caf\u{e9} <\u{1f600}>", "caf\u{e9} &lt;\u{1f600}&gt;"),
         ];
         for (input, output) in tests.iter() {
             assert_eq!(html_escape(input), output.to_string());
+            assert_eq!(input.html_escape(), output.to_string());
         }
     }
 }

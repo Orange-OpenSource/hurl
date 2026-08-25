@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::SourceInfo;
 
-use crate::html;
+use crate::html::HtmlUnescape;
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 /// Converts all named and numeric character references (e.g. &gt;, &#62;, &#x3e;) in `value` to the
@@ -29,7 +29,7 @@ pub fn eval_html_unescape(
 ) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
-            let decoded = html::html_unescape(value);
+            let decoded = value.html_unescape();
             Ok(Some(Value::String(decoded)))
         }
         v => {

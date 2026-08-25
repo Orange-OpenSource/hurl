@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::SourceInfo;
 
-use crate::html;
+use crate::html::HtmlEscape;
 use crate::runner::{RunnerError, RunnerErrorKind, Value};
 
 /// Converts the characters `&`, `<` and `>` in `value` to HTML-safe sequence.
@@ -28,7 +28,7 @@ pub fn eval_html_escape(
 ) -> Result<Option<Value>, RunnerError> {
     match value {
         Value::String(value) => {
-            let encoded = html::html_escape(value);
+            let encoded = value.html_escape();
             Ok(Some(Value::String(encoded)))
         }
         v => {

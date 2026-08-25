@@ -18,6 +18,7 @@
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::{DisplaySourceError, OutputFormat};
 
+use crate::html::HtmlEscape;
 use crate::report::html::Testcase;
 use crate::runner::RunnerError;
 use crate::util::redacted::Redact;
@@ -99,20 +100,13 @@ fn error_to_html(
         Some(entry_src_info),
         OutputFormat::Terminal(false),
     );
-    let message = message.redact(secrets);
-    let message = html_escape(&message);
-    // We override the first part of the error string to add an anchor to
-    // the error context.
+    let message = message.redact(secrets).html_escape();
+    // We override the first part of the error string to add an anchor to the error context.
     let old = format!("{filename}:{line}:{column}");
     let href = source_filename;
     let new = format!("<a href=\"{href}#l{line}\">{filename}:{line}:{column}</a>");
     let message = message.replace(&old, &new);
     format!("<pre><code>{message}</code></pre>")
-}
-
-/// Escapes '<' and '>' from `text`.
-fn html_escape(text: &str) -> String {
-    text.replace('<', "&lt;").replace('>', "&gt;")
 }
 
 #[cfg(test)]
@@ -158,7 +152,7 @@ mod tests {
    | GET http://localhost:8000/inline-script
    | ...
  4 | `Hello World`
-   |   actual:   &lt;script&gt;alert('Hi')&lt;/script&gt;
+   |   actual:   &lt;script&gt;alert(&#x27;Hi&#x27;)&lt;/script&gt;
    |   expected: Hello world
    |</code></pre>"##
         );
