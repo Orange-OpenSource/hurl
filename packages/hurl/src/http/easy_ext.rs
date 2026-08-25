@@ -62,20 +62,20 @@ pub fn cert_info(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         let rc =
             curl_sys::curl_easy_getinfo(easy.raw(), curl_sys::CURLINFO_CERTINFO, &mut certinfo);
         cvt(easy, rc)?;
-        if certinfo.is_null() {
+        let Some(certinfo) = certinfo.as_ref() else {
+            return Ok(None);
+        };
+        if certinfo.num_of_certs <= 0 || certinfo.certinfo.is_null() {
             return Ok(None);
         }
-        let count = (*certinfo).num_of_certs;
-        if count <= 0 {
-            return Ok(None);
-        }
-        let slist = *((*certinfo).certinfo.offset(0));
+        let slist = *certinfo.certinfo;
         let data = to_list(slist);
         let value = extract_pem_from_certinfo(&data);
 
         Ok(Some(CertInfo { data, value }))
     }
 }
+
 /// Extracts PEM certificate value from certificate info data.
 fn extract_pem_from_certinfo(data: &[String]) -> Option<Pem> {
     for line in data {
@@ -86,6 +86,7 @@ fn extract_pem_from_certinfo(data: &[String]) -> Option<Pem> {
     }
     None
 }
+
 /// Returns the connection identifier use by this libcurl handle.
 pub fn conn_id(easy: &Easy) -> Result<i64, Error> {
     unsafe {
