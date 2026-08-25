@@ -77,7 +77,7 @@ impl Testcase {
         format!(
             include_str!("../resources/timeline.html"),
             calls = calls_svg,
-            filename = self.filename,
+            filename = self.safe_filename(),
             nav = nav,
             nav_css = nav_css,
             timeline_css = timeline_css,

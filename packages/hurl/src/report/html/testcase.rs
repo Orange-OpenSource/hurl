@@ -18,6 +18,7 @@
 use std::fs;
 use std::path::Path;
 
+use crate::html::HtmlEscape;
 use crate::report::ReportError;
 use crate::runner::{EntryResult, HurlResult, RunnerError};
 use hurl_core::ast::SourceInfo;
@@ -99,6 +100,11 @@ impl Testcase {
         })?;
 
         Ok(())
+    }
+
+    /// Returns this testcase's Hurl file name, HTML escaped so it can be embedded in a report.
+    pub fn safe_filename(&self) -> String {
+        self.filename.html_escape()
     }
 
     pub fn source_filename(&self) -> String {

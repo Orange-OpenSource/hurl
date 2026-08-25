@@ -17,6 +17,7 @@
  */
 use hurl_core::ast::HurlFile;
 
+use crate::html::HtmlEscape;
 use crate::http::Call;
 use crate::report::html::Testcase;
 use crate::report::html::nav::Tab;
@@ -52,7 +53,7 @@ impl Testcase {
                     c,
                     entry_index + 1,
                     call_index + 1,
-                    &self.filename,
+                    &self.safe_filename(),
                     &source,
                     line,
                     secrets,
@@ -65,7 +66,7 @@ impl Testcase {
 
         format!(
             include_str!("resources/run.html"),
-            filename = self.filename,
+            filename = self.safe_filename(),
             nav = nav,
             nav_css = nav_css,
             run = run,
@@ -79,7 +80,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
-    let cmd = entry.curl_cmd.to_string().redact(secrets);
+    let cmd = entry.curl_cmd.to_string().redact(secrets).html_escape();
     let table = new_table("Debug", &[("Command", &cmd)]);
     text.push_str(&table);
 
@@ -87,7 +88,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
         let mut values = entry
             .captures
             .iter()
-            .map(|c| (&c.name, c.value.to_string().redact(secrets)))
+            .map(|c| (&c.name, c.value.to_string().redact(secrets).html_escape()))
             .collect::<Vec<(&String, String)>>();
         values.sort_by_key(|a| a.0.to_lowercase());
         let table = new_table("Captures", &values);
@@ -114,7 +115,7 @@ fn get_call_html(
     // General
     let status = call.response.status.to_string();
     let version = call.response.version.to_string();
-    let url = &call.request.url.to_string().redact(secrets);
+    let url = &call.request.url.to_string().redact(secrets).html_escape();
     let url = format!("<a href=\"{url}\">{url}</a>");
     let source = format!("<a href=\"{source}#l{line}\">{filename}:{line}</a>");
     let start_date = call.timings.begin_call.to_rfc2822();
@@ -134,24 +135,24 @@ fn get_call_html(
         let mut values = vec![];
 
         if let Some(subject) = certificate.subject() {
-            values.push(("Subject", subject.as_str()));
+            values.push(("Subject", subject.html_escape()));
         }
         if let Some(issuer) = certificate.issuer() {
-            values.push(("Issuer", issuer.as_str()));
+            values.push(("Issuer", issuer.html_escape()));
         }
         let start_date = certificate.start_date().map(|d| d.to_string());
-        if let Some(start_date) = start_date.as_ref() {
-            values.push(("Start Date", start_date.as_str()));
+        if let Some(start_date) = start_date {
+            values.push(("Start Date", start_date));
         }
         let expire_date = certificate.expire_date().map(|d| d.to_string());
-        if let Some(expire_date) = expire_date.as_ref() {
-            values.push(("Expire Date", expire_date.as_str()));
+        if let Some(expire_date) = expire_date {
+            values.push(("Expire Date", expire_date));
         }
         if let Some(serial_number) = certificate.serial_number() {
-            values.push(("Serial Number", serial_number.as_str()));
+            values.push(("Serial Number", serial_number.html_escape()));
         }
         if let Some(subject_alt_name) = certificate.subject_alt_name() {
-            values.push(("Subject Alt Name", subject_alt_name.as_str()));
+            values.push(("Subject Alt Name", subject_alt_name.html_escape()));
         }
         let pem_display;
         if let Some(pem) = certificate.value() {
@@ -161,7 +162,7 @@ fn get_call_html(
             } else {
                 pem_display = pem.to_string();
             }
-            values.push(("Value", &pem_display));
+            values.push(("Value", pem_display));
         }
         let table = new_table("Certificate", &values);
         text.push_str(&table);
@@ -171,8 +172,8 @@ fn get_call_html(
         .request
         .headers
         .iter()
-        .map(|h| (h.name.as_str(), h.value.redact(secrets)))
-        .collect::<Vec<(&str, String)>>();
+        .map(|h| (h.name.html_escape(), h.value.redact(secrets).html_escape()))
+        .collect::<Vec<(String, String)>>();
     values.sort_by_key(|a| a.0.to_lowercase());
     let table = new_table("Request Headers", &values);
     text.push_str(&table);
@@ -181,8 +182,8 @@ fn get_call_html(
         .response
         .headers
         .iter()
-        .map(|h| (h.name.as_str(), h.value.redact(secrets)))
-        .collect::<Vec<(&str, String)>>();
+        .map(|h| (h.name.html_escape(), h.value.redact(secrets).html_escape()))
+        .collect::<Vec<(String, String)>>();
     values.sort_by_key(|a| a.0.to_lowercase());
     let table = new_table("Response Headers", &values);
     text.push_str(&table);

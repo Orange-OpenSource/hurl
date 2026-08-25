@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::html::{HtmlEscape, HtmlUnescape};
 use crate::report::ReportError;
 use crate::report::html::{HTMLResult, Testcase};
 use chrono::{DateTime, Local};
@@ -95,6 +96,7 @@ static TEST_REF: LazyLock<Regex> = LazyLock::new(|| {
     )
     .unwrap()
 });
+
 /// Parses the HTML report `html` and returns a list of [`HTMLResult`].
 fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     // TODO: if the existing HTML report is not valid, we consider that there is no
@@ -103,7 +105,10 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     TEST_REF
         .captures_iter(html)
         .map(|cap| {
-            let filename = cap["filename"].to_string();
+            // Filenames are HTML escaped when the report is written, so we must unescape them
+            // to get back the original filename.
+            let filename = &cap["filename"];
+            let filename = filename.html_unescape();
             let id = cap["id"].to_string();
             let time_in_ms = cap["time_in_ms"].to_string().parse().unwrap();
             let success = &cap["status"] == "success";
@@ -132,11 +137,11 @@ fn create_html_table_row(result: &HTMLResult) -> String {
     };
     let duration_in_ms = result.time_in_ms;
     let duration_in_s = result.time_in_ms as f64 / 1000.0;
-    let filename = &result.filename;
-    let displayed_filename = if filename == "-" {
+    let filename = result.filename.html_escape();
+    let displayed_filename = if result.filename == "-" {
         "(standard input)"
     } else {
-        filename
+        filename.as_str()
     };
     let id = &result.id;
     let timestamp = result.timestamp;
@@ -245,5 +250,40 @@ mod tests {
                 },
             ]
         );
+    }
+
+    /// Filenames with chars that must be escaped
+    #[test]
+    fn test_filename_survives_report_merge() {
+        let filenames = [
+            r#"tests/a&b.hurl"#,
+            r#"tests/c<d>.hurl"#,
+            r#"tests/x" onmouseover="alert(1).hurl"#,
+            r#"tests/caf&eacute;.hurl"#,
+            "tests/café.hurl",
+            "-",
+        ];
+        for filename in filenames {
+            let mut result = HTMLResult {
+                filename: filename.to_string(),
+                id: "08aad14a-8d10-4ecc-892e-a72703c5b494".to_string(),
+                time_in_ms: 100,
+                success: true,
+                timestamp: 1696473444,
+            };
+            // Merging a report re-writes rows parsed from the previous run, so several cycles must
+            // be idempotent.
+            for _ in 0..3 {
+                let row = create_html_table_row(&result);
+                assert!(
+                    !row.contains(r#" onmouseover=""#),
+                    "filename escaped its attribute: {row}"
+                );
+                let parsed = parse_html_report(&row);
+                assert_eq!(parsed.len(), 1, "row not parsable for {filename}");
+                assert_eq!(parsed[0].filename, filename);
+                result = parsed[0].clone();
+            }
+        }
     }
 }

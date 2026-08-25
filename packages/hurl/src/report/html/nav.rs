@@ -46,7 +46,7 @@ impl Testcase {
             duration = self.time_in_ms,
             errors = errors,
             errors_count = errors_count,
-            filename = self.filename,
+            filename = self.safe_filename(),
             href_run = self.run_filename(),
             href_source = self.source_filename(),
             href_timeline = self.timeline_filename(),
@@ -102,6 +102,7 @@ fn error_to_html(
     );
     let message = message.redact(secrets).html_escape();
     // We override the first part of the error string to add an anchor to the error context.
+    let filename = filename.html_escape();
     let old = format!("{filename}:{line}:{column}");
     let href = source_filename;
     let new = format!("<a href=\"{href}#l{line}\">{filename}:{line}:{column}</a>");

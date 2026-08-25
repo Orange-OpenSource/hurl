@@ -32,7 +32,7 @@ impl Testcase {
         let hurl_css = hurl_core::format::hurl_css();
         format!(
             include_str!("resources/source.html"),
-            filename = self.filename,
+            filename = self.safe_filename(),
             hurl_css = hurl_css,
             lines_div = lines_div,
             nav = nav,

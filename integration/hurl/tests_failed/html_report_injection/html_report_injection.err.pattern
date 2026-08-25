@@ -34,4 +34,4 @@ error: Assert body value
    | ^^^^^^^^^^^^^ actual value is <<script>alert('Hi')</script>>
    |
 
-* Writing HTML report to build/injection/report
+* Writing HTML report to build/tests_failed_injection/report
