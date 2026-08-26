@@ -7,6 +7,8 @@ Thanks to
 [@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
 [@fubar-coder](https://github.com/fubar-coder),
 [@ptwales](https://github.com/ptwales),
+[@jgarte](https://github.com/jgarte),
+[@qrn12580](https://github.com/qrn12580),
 
 Enhancements:
 
@@ -24,12 +26,13 @@ Bugs Fixed:
 * Fix misleading error message for not-equal predicate [#2841](https://github.com/Orange-OpenSource/hurl/issues/2841)
 * Fix variable option values starting with a number or boolean [#5028](https://github.com/Orange-OpenSource/hurl/issues/5028)
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
-* Fix debug curl command when request binary body contains NUL (\x00) char [#5141](https://github.com/Orange-OpenSource/hurl/issues/5141)
+* Fix Hurl debug curl command when request binary body contains NUL char [#5141](https://github.com/Orange-OpenSource/hurl/issues/5141)
 
 
 Security Issues Fixed:
 
-* Fix stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
+* Fix CVE-2026-63481 stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
+* Fix escaping headers values in HTML report [#5228](https://github.com/Orange-OpenSource/hurl/issues/5228)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
