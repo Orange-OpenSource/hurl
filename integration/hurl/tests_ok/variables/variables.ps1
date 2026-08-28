@@ -1,6 +1,8 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
+$env:XDG_CONFIG_HOME = "$PSScriptRoot/config"
+
 hurl --variables-file tests_ok/variables/variables0.env `
      --variables-file tests_ok/variables/variables1.env `
      --variable female=true `

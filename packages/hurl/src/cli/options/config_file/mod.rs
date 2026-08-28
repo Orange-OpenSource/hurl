@@ -151,6 +151,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
 
             Ok(())
         }
+        "variable" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let (name, value) =
+                super::variables::parse(&value, super::variables::TypeKind::Inferred)
+                    .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
+            options.variables.insert(name, value);
+            Ok(())
+        }
         "max-redirs" => {
             parse_value_separator(reader)?;
             save = reader.cursor();
@@ -442,6 +452,7 @@ mod tests {
 
     use super::*;
     use crate::cli::options::Verbosity;
+    use hurl::runner::Value;
     use hurl_core::reader::Pos;
 
     #[test]
@@ -524,6 +535,17 @@ mod tests {
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.headers, vec!["--test:1"]);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_variable() {
+        let mut reader = Reader::new("--variable=hobby=tennis\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(
+            options.variables.get("hobby"),
+            Some(&Value::String("tennis".to_string()))
+        );
     }
 
     #[test]

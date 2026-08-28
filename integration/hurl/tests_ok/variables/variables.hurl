@@ -9,6 +9,7 @@ Name: {{name}}
 Age: {{age}}
 Height: {{height}}
 Female: {{female}}
+Hobby: {{hobby}}
 Id: {{my-id}}
 A-Null: {{a_null}}
 Country: {{country}}
@@ -23,6 +24,7 @@ variable: planet=The Earth
   "age": {{age}},
   "height": {{height}},
   "female": {{female}},
+  "hobby": "{{hobby}}",
   "id": "{{my-id}}",
   "a_null": {{a_null}},
   "country": "{{country}}",
@@ -34,6 +36,7 @@ HTTP 200
 [Asserts]
 variable "name" == "Jennifer"
 variable "female" == true
+variable "hobby" == "tennis"
 variable "age" == 30
 variable "height" == 1.70
 variable "a_null" == null

@@ -10,6 +10,7 @@ def variables():
     assert request.headers["Name"] == "Jennifer"
     assert request.headers["Age"] == "30"
     assert request.headers["Female"] == "true"
+    assert request.headers["Hobby"] == "tennis"
     assert request.headers["Id"] == "123"
     assert request.headers["Height"] == "1.7"
     assert request.headers["A-null"] == "null"
@@ -23,6 +24,7 @@ def variables():
     assert data["name"] == "Jennifer"
     assert data["age"] == 30
     assert data["female"] is True
+    assert data["hobby"] == "tennis"
     assert data["id"] == "123"
     assert data["height"] == 1.7
     assert data["a_null"] is None
