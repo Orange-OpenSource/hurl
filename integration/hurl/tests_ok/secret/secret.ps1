@@ -5,10 +5,12 @@ if (Test-Path -Path build/secret) {
     Remove-Item -Recurse build/secret
 }
 
+# Set secret c from the config file
+$env:XDG_CONFIG_HOME = "$PSScriptRoot/config"
+
 hurl --very-verbose `
     --secret a=secret1 `
     --secret b=secret2 `
-    --secret c=12345678 `
     --curl build/secret/curl.txt `
     --cookie-jar build/secret-cookies.txt `
     --report-html build/secret/report-html `

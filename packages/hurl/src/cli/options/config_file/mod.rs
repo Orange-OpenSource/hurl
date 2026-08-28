@@ -30,9 +30,11 @@ use hurl_core::reader::{CharPos, Pos, Reader};
 use hurl_core::types::DurationUnit;
 
 use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
+use crate::cli::options::secret;
+use crate::cli::options::variables;
+use crate::cli::options::variables::TypeKind;
 use hurl_core::types::{BytesPerSec, Count};
 use primitives::skip_whitespace_and_comments;
-
 #[derive(Debug, PartialEq, Eq)]
 struct ConfigFileError {
     pos: Pos,
@@ -155,10 +157,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             parse_value_separator(reader)?;
             save = reader.cursor();
             let value = parse_value(reader)?;
-            let (name, value) =
-                super::variables::parse(&value, super::variables::TypeKind::Inferred)
-                    .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
+            let (name, value) = variables::parse(&value, TypeKind::Inferred)
+                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
             options.variables.insert(name, value);
+            Ok(())
+        }
+        "secret" => {
+            parse_value_separator(reader)?;
+            save = reader.cursor();
+            let value = parse_value(reader)?;
+            let (name, value) = variables::parse(&value, TypeKind::String)
+                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
+            secret::add_secret(&mut options.secrets, name, value)
+                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
             Ok(())
         }
         "max-redirs" => {
@@ -546,6 +557,14 @@ mod tests {
             options.variables.get("hobby"),
             Some(&Value::String("tennis".to_string()))
         );
+    }
+
+    #[test]
+    fn test_parse_option_secret() {
+        let mut reader = Reader::new("--secret=password=secret\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.secrets.get("password"), Some(&"secret".to_string()));
     }
 
     #[test]

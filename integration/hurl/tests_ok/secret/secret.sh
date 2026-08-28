@@ -3,10 +3,13 @@ set -Eeuo pipefail
 
 rm -rf build/secret
 
+# Set secret c from the config file
+XDG_CONFIG_HOME=$(dirname "$0")/config
+export XDG_CONFIG_HOME
+
 hurl --very-verbose \
     --secret a=secret1 \
     --secret b=secret2 \
-    --secret c=12345678 \
     --curl build/secret/curl.txt \
     --cookie-jar build/secret-cookies.txt \
     --report-html build/secret/report-html \
