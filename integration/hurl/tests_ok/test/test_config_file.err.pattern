@@ -1,0 +1,25 @@
+error: Assert body value
+  --> tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.2.hurl:8:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 8 | `Goodbye World!`
+   | ^^^^^^^^^^^^^^^^ actual value is <Hello World!><<<.*?>>>
+   |
+
+error: Assert body value
+  --> tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.4.hurl:3:1
+   |
+   | GET http://localhost:8000/hello
+   | ...
+ 3 | `Hello\tWorld!`
+   | ^^^^^^^^^^^^^^^ actual value is <Hello World!>
+   |
+
+--------------------------------------------------------------------------------
+Executed files:    4
+Executed requests: 5 (<<<.*?>>>/s)
+Succeeded files:   2 (50.0%)
+Failed files:      2 (50.0%)
+Duration:          <<<\d+>>> ms (<<<\d+>>>h:<<<\d+>>>m:<<<\d+>>>s:<<<\d+>>>ms)
+

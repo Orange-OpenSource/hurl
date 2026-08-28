@@ -126,6 +126,14 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.verbosity = Some(Verbosity::Debug);
             Ok(())
         }
+        "test" => {
+            expect_no_value(reader)?;
+            options.test = true;
+
+            // TODO: Set progress bar
+            // Distinguish an implicit progress bar from one explicitly enabled by --progress-bar
+            Ok(())
+        }
         "verbosity" => {
             parse_value_separator(reader)?;
             save = reader.cursor();
@@ -557,6 +565,14 @@ mod tests {
             options.variables.get("hobby"),
             Some(&Value::String("tennis".to_string()))
         );
+    }
+
+    #[test]
+    fn test_parse_option_test() {
+        let mut reader = Reader::new("--test\n");
+        let mut options = CliOptions::default();
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert!(options.test);
     }
 
     #[test]
