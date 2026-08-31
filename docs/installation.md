@@ -51,6 +51,12 @@ $ pacman -Sy hurl
 
 [NixOS / Nix package] is available on stable channel.
 
+#### Guix
+
+```shell
+$ guix install hurl
+```
+
 ### macOS
 
 Precompiled binaries for Intel and ARM CPUs are available at [Hurl latest GitHub release].

@@ -254,6 +254,7 @@ HTTP 200
             * [Alpine](#alpine)
             * [Arch Linux / Manjaro](#arch-linux--manjaro)
             * [NixOS / Nix](#nixos--nix)
+            * [Guix](#guix)
         * [macOS](#macos)
             * [Homebrew](#homebrew)
             * [MacPorts](#macports)
@@ -1527,7 +1528,7 @@ to configure Hurl, there are three sources from the lowest priority (most easily
 | <a href="#from-entry" id="from-entry"><code>--from-entry &lt;ENTRY_NUMBER&gt;</code></a>             | Execute Hurl file from ENTRY_NUMBER (starting at 1).<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                                             |
 | <a href="#jobs" id="jobs"><code>--jobs &lt;NUM&gt;</code></a>                                        | Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs. Set to 1 to disable parallel execution of files.<br><br>See also [`--parallel`](#parallel).<br><br>Environment variables: HURL_JOBS<br><br>This is a cli-only option.<br>                                                                                                                                                                                   |
 | <a href="#no-assert" id="no-assert"><code>--no-assert</code></a>                                     | Ignore all asserts defined in the Hurl file.<br><br>Environment variables: HURL_NO_ASSERT<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                        |
-| <a href="#no-jsonpath-coercion" id="no-jsonpath-coercion"><code>--no-jsonpath-coercion</code></a>    | Disable JSONPath result coercion.<br><br>By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.<br><br>Environment variables: HURL_NO_JSONPATH_COERCION<br><br>This is a cli-only option.<br>                                                                                                                    |
+| <a href="#no-jsonpath-coercion" id="no-jsonpath-coercion"><code>--no-jsonpath-coercion</code></a>    | Disable JSONPath result coercion.<br><br>By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.<br><br>Environment variables: HURL_NO_JSONPATH_COERCION<br>                                                                                                                                                      |
 | <a href="#parallel" id="parallel"><code>--parallel</code></a>                                        | Run files in parallel.<br><br>Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#test) mode.<br><br>See also [`--jobs`](#jobs).<br><br>This is a cli-only option.<br>                                                                                                                                                                           |
 | <a href="#repeat" id="repeat"><code>--repeat &lt;NUM&gt;</code></a>                                  | Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two<br>times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.<br>                                                                                                                                                                                                                                                                                               |
 | <a href="#retry" id="retry"><code>--retry &lt;NUM&gt;</code></a>                                     | Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).<br><br>Environment variables: HURL_RETRY<br>                                                                                                                                                                                                                                                                                            |
@@ -1731,25 +1732,25 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 #### Debian based distributions
 
 ```shell
-$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
+$ apt install build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
 ```
 
 #### Fedora based distributions
 
 ```shell
-$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
+$ dnf install pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Red Hat based distributions
 
 ```shell
-$ yum install -y pkg-config gcc openssl-devel libxml2-devel clang-devel
+$ yum install pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 #### Arch based distributions
 
 ```shell
-$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2 clang
+$ pacman -S pkgconf gcc glibc openssl libxml2 clang
 ```
 
 #### Alpine based distributions
@@ -1762,7 +1763,7 @@ $ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev clang-dev
 
 ```shell
 $ xcode-select --install
-$ brew install pkg-config
+$ brew install pkg-config openssl
 ```
 
 Hurl is written in [Rust]. You should [install] the latest stable release.
