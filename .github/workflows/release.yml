@@ -295,7 +295,7 @@ jobs:
       - clean-release
       - update-release-branch
     name: package-release
-    uses: ./.github/workflows/package.yml
+    uses: $/.github/workflows/package.yml
     with:
       branch: ${{ needs.set-context.outputs.release_branch }}
 
