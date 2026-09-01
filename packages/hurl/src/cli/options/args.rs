@@ -32,7 +32,7 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::RunContext;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
-use super::{CliOptions, commands, duration, get_version, secret};
+use super::{BoolOpt, CliOptions, commands, duration, get_version, secret};
 use super::{CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output, variables};
 use super::{OutputType, Verbosity};
 
@@ -227,7 +227,7 @@ fn parse_arg_matches(
     let parallel = parallel(arg_matches, default_options.parallel);
     let path_as_is = path_as_is(arg_matches, default_options.path_as_is);
     let pinned_pub_key = pinned_pub_key(arg_matches, default_options.pinned_pub_key);
-    let progress_bar = progress_bar(arg_matches, context, default_options.progress_bar);
+    let progress_bar = progress_bar(arg_matches, default_options.progress_bar);
     let pretty = pretty(arg_matches, default_options.pretty);
     let proxy = proxy(arg_matches, default_options.proxy);
     let proxy_headers = proxy_headers(arg_matches, default_options.proxy_headers);
@@ -826,13 +826,9 @@ fn pretty(arg_matches: &ArgMatches, default_value: PrettyMode) -> PrettyMode {
     default_value
 }
 
-fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: bool) -> bool {
+fn progress_bar(arg_matches: &ArgMatches, default_value: BoolOpt) -> BoolOpt {
     if has_flag(arg_matches, "progress_bar") {
-        return true;
-    }
-    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-    if has_flag(arg_matches, "test") && context.is_stderr_term() && !context.is_ci_env_var() {
-        return true;
+        return BoolOpt::Set(true);
     }
     default_value
 }

@@ -46,6 +46,37 @@ pub use crate::cli::options::context::RunContext;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
 
+/// Controls a boolean option that can either be explicitly configured or
+/// determined automatically.
+///
+/// [`BoolMode::Set`] represents an explicit boolean value, while
+/// [`BoolMode::Auto`] delegates the decision to the caller.
+///
+/// # Examples
+///
+/// ```rust
+/// let color = BoolMode::Auto;
+/// let progress = BoolMode::Set(false);
+/// ```
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
+pub enum BoolOpt {
+    /// This option has been set explicitely (by user, or by the running context)
+    Set(bool),
+    /// This option has not been set yet and will be valued latter
+    #[default]
+    Auto,
+}
+
+impl BoolOpt {
+    /// Returns the value if it has been set explicitly, panics otherwise.
+    pub fn get(&self) -> bool {
+        match self {
+            BoolOpt::Set(val) => *val,
+            BoolOpt::Auto => panic!("no value set"),
+        }
+    }
+}
+
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -99,7 +130,7 @@ pub struct CliOptions {
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
     pub pretty: PrettyMode,
-    pub progress_bar: bool,
+    pub progress_bar: BoolOpt,
     pub proxy: Option<String>,
     pub proxy_headers: Vec<String>,
     pub repeat: Option<Count>,
@@ -117,6 +148,19 @@ pub struct CliOptions {
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbosity: Option<Verbosity>,
+}
+
+impl CliOptions {
+    /// Evaluates all the options that has been not explicitly set, and makes the options coherent.
+    pub fn finalize(&self, context: &RunContext) -> Self {
+        let mut options = self.clone();
+        if matches!(options.progress_bar, BoolOpt::Auto) {
+            // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
+            let interactive = options.test && context.is_stderr_term() && !context.is_ci_env_var();
+            options.progress_bar = BoolOpt::Set(interactive);
+        }
+        options
+    }
 }
 
 /// Log verbosity level
@@ -235,6 +279,7 @@ pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
     let options = env_vars::parse_env_vars(context, options)?;
     let options = args::parse_cli_args(context, options)?;
+    let options = options.finalize(context);
     Ok(options)
 }
 
@@ -301,7 +346,7 @@ impl Default for CliOptions {
             path_as_is: false,
             pinned_pub_key: None,
             pretty: PrettyMode::None,
-            progress_bar: false,
+            progress_bar: BoolOpt::Auto,
             proxy: None,
             proxy_headers: Vec::new(),
             repeat: None,

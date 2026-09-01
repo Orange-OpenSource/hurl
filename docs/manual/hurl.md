@@ -472,6 +472,8 @@ This is a cli-only option.
 
 Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
 
+Environment variables: HURL_PROGRESS_BAR
+
 This is a cli-only option.
 
 #### -v, --verbose {#verbose}

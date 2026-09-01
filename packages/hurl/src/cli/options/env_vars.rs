@@ -32,8 +32,8 @@ use super::context::{
 };
 use super::variables::TypeKind;
 use super::{
-    CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, RunContext,
-    Verbosity, duration, secret, variables,
+    BoolOpt, CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType,
+    RunContext, Verbosity, duration, secret, variables,
 };
 
 fn compressed(context: &RunContext, default_value: bool) -> bool {
@@ -325,16 +325,12 @@ fn pretty(context: &RunContext, default_value: PrettyMode) -> PrettyMode {
     default_value
 }
 
-fn progress_bar(context: &RunContext, default_value: bool) -> bool {
-    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-    if let Some(true) = context.test_env_var()
-        && context.is_stderr_term()
-        && !context.is_ci_env_var()
-    {
-        return true;
+fn progress_bar(context: &RunContext, default_value: BoolOpt) -> BoolOpt {
+    if let Some(true) = context.progress_bar() {
+        BoolOpt::Set(true)
+    } else {
+        default_value
     }
-
-    default_value
 }
 
 fn retry(

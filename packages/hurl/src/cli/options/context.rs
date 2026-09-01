@@ -77,6 +77,7 @@ pub const HURL_NO_JSONPATH_COERCION: &str = "HURL_NO_JSONPATH_COERCION";
 pub const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 pub const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
 pub const HURL_PRETTY: &str = "HURL_PRETTY";
+pub const HURL_PROGRESS_BAR: &str = "HURL_PROGRESS_BAR";
 pub const HURL_PROXY_HEADER: &str = "HURL_PROXY_HEADER";
 pub const HURL_RETRY: &str = "HURL_RETRY";
 pub const HURL_RETRY_INTERVAL: &str = "HURL_RETRY_INTERVAL";
@@ -213,6 +214,7 @@ impl RunContext {
     pub fn insecure_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_INSECURE)
     }
+
     /// Returns the env var for IPv4 resolution.
     pub fn ipv4_env_var(&self) -> Option<bool> {
         self.get_env_var_bool(HURL_IPV4)
@@ -255,6 +257,11 @@ impl RunContext {
     /// Returns the env var for max time duration.
     pub fn max_time_env_var(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for max time duration.
+    pub fn progress_bar(&self) -> Option<bool> {
+        self.get_env_var_bool(HURL_PROGRESS_BAR)
     }
 
     /// Returns the env var for the user authentication.

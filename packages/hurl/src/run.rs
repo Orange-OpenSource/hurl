@@ -210,7 +210,7 @@ pub fn run_par(
         output_type,
         options.repeat.unwrap_or(Count::Finite(1)),
         options.test,
-        options.progress_bar,
+        options.progress_bar.get(),
         options.color_stderr,
         max_width,
     );
