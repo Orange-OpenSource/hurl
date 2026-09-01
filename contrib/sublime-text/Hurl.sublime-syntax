@@ -1,0 +1,310 @@
+%YAML 1.2
+---
+# Sublime Text syntax file
+# Language: Hurl (https://hurl.dev)
+# Also used by bat (https://github.com/sharkdp/bat) and other syntect-based tools.
+name: Hurl
+file_extensions:
+  - hurl
+scope: source.hurl
+
+variables:
+  # An unquoted uppercase HTTP method token (grammar: method = [A-Z]+).
+  method: '[A-Z]+'
+  # Characters allowed in a header / parameter / capture key (key-string-text).
+  key_char: '[A-Za-z0-9_.\-\[\]@$]'
+
+contexts:
+  main:
+    - include: comments
+    - include: response-line
+    - include: request-line
+    - include: sections
+    - include: templates
+    - include: multiline-strings
+    - include: oneline-strings
+    - include: quoted-strings
+    - include: encoded-values
+    - include: json-body
+    - include: xml-body
+    - include: keys
+    - include: operators
+    - include: keywords
+    - include: literals
+
+  # ----------------------------------------------------------------------------
+  # Comments
+  # ----------------------------------------------------------------------------
+  comments:
+    - match: '#'
+      scope: punctuation.definition.comment.hurl
+      push:
+        - meta_scope: comment.line.number-sign.hurl
+        - match: '$'
+          pop: true
+
+  # ----------------------------------------------------------------------------
+  # Request line:  METHOD url
+  # ----------------------------------------------------------------------------
+  request-line:
+    - match: '^\s*({{method}})(?=\s)(?![A-Za-z0-9])'
+      captures:
+        1: keyword.control.method.hurl
+      push: url
+
+  url:
+    - meta_content_scope: markup.underline.link.hurl
+    - include: templates
+    - match: '\\#'
+      scope: constant.character.escape.hurl
+    - match: '(?=\s*#)'
+      pop: true
+    - match: '$'
+      pop: true
+
+  # ----------------------------------------------------------------------------
+  # Response line:  HTTP <status>
+  # ----------------------------------------------------------------------------
+  response-line:
+    - match: '^\s*(HTTP(?:/(?:1\.0|1\.1|2|3|\*))?)\b'
+      captures:
+        1: keyword.control.version.hurl
+      push:
+        - match: '\b([0-9]+|\*)\b'
+          scope: constant.numeric.status.hurl
+          pop: true
+        - match: '$'
+          pop: true
+
+  # ----------------------------------------------------------------------------
+  # Section headers
+  # ----------------------------------------------------------------------------
+  sections:
+    - match: '^\s*(\[)(QueryStringParams|Query|FormParams|Form|MultipartFormData|Multipart|Cookies|Captures|Asserts|Options|BasicAuth)(\])'
+      captures:
+        1: punctuation.definition.section.begin.hurl
+        2: keyword.control.section.hurl
+        3: punctuation.definition.section.end.hurl
+
+  # ----------------------------------------------------------------------------
+  # Header / parameter / capture / option keys:  name:
+  # ----------------------------------------------------------------------------
+  keys:
+    - match: '^\s*({{key_char}}+)(\s*)(:)'
+      captures:
+        1: entity.name.tag.hurl
+        3: punctuation.separator.key-value.hurl
+
+  # ----------------------------------------------------------------------------
+  # Templates / placeholders:  {{ expr }}
+  # ----------------------------------------------------------------------------
+  templates:
+    - match: '{{'
+      scope: punctuation.definition.template.begin.hurl
+      push:
+        - meta_scope: meta.template.hurl
+        - meta_content_scope: variable.other.template.hurl
+        - match: '}}'
+          scope: punctuation.definition.template.end.hurl
+          pop: true
+        - match: '\b(getEnv|newDate|newUuid)\b'
+          scope: support.function.builtin.hurl
+        - include: filter-keywords
+        - include: quoted-strings
+
+  # ----------------------------------------------------------------------------
+  # Strings
+  # ----------------------------------------------------------------------------
+  quoted-strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.hurl
+      push:
+        - meta_scope: string.quoted.double.hurl
+        - match: '\\(["\\/bfnrt]|u\{[0-9A-Fa-f]+\})'
+          scope: constant.character.escape.hurl
+        - include: templates
+        - match: '"'
+          scope: punctuation.definition.string.end.hurl
+          pop: true
+
+  oneline-strings:
+    - match: '`'
+      scope: punctuation.definition.string.begin.hurl
+      push:
+        - meta_scope: string.quoted.other.backtick.hurl
+        - match: '\\(`|#|\\|[bfnrt]|u\{[0-9A-Fa-f]+\})'
+          scope: constant.character.escape.hurl
+        - include: templates
+        - match: '`'
+          scope: punctuation.definition.string.end.hurl
+          pop: true
+
+  multiline-strings:
+    - match: '(```)([a-zA-Z0-9]+)?'
+      captures:
+        1: punctuation.definition.string.begin.hurl
+        2: storage.type.multiline.hurl
+      push:
+        - meta_scope: string.quoted.multiline.hurl
+        - match: '\\(`|\\|[bfnrt]|u\{[0-9A-Fa-f]+\})'
+          scope: constant.character.escape.hurl
+        - include: templates
+        - match: '```'
+          scope: punctuation.definition.string.end.hurl
+          pop: true
+
+  # ----------------------------------------------------------------------------
+  # Inline encoded bodies / values:  base64,...;  hex,...;  file,...;
+  # ----------------------------------------------------------------------------
+  encoded-values:
+    - match: '\b(base64|hex|file)(,)'
+      captures:
+        1: support.function.encoding.hurl
+        2: punctuation.separator.hurl
+      push:
+        - meta_content_scope: string.unquoted.encoded.hurl
+        - include: templates
+        - match: ';'
+          scope: punctuation.terminator.hurl
+          pop: true
+        - match: '$'
+          pop: true
+
+  # ----------------------------------------------------------------------------
+  # JSON body
+  # ----------------------------------------------------------------------------
+  json-body:
+    - match: '(?=^\s*[{\[])'
+      push: json-value
+
+  json-value:
+    - include: templates
+    - match: '\{'
+      scope: punctuation.section.mapping.begin.json.hurl
+      push: json-object
+    - match: '\['
+      scope: punctuation.section.sequence.begin.json.hurl
+      push: json-array
+    - match: '"'
+      scope: punctuation.definition.string.begin.json.hurl
+      push: json-string
+    - match: '\b(true|false)\b'
+      scope: constant.language.json.hurl
+    - match: '\bnull\b'
+      scope: constant.language.null.json.hurl
+    - match: '-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][-+]?\d+)?'
+      scope: constant.numeric.json.hurl
+    - match: '(?=\S)'
+      pop: true
+
+  json-object:
+    - meta_scope: meta.mapping.json.hurl
+    - match: '\}'
+      scope: punctuation.section.mapping.end.json.hurl
+      pop: true
+    - include: templates
+    - match: '"'
+      scope: punctuation.definition.string.begin.json.hurl
+      push:
+        - meta_scope: string.quoted.double.json.hurl support.type.property-name.json.hurl
+        - match: '\\(["\\/bfnrt]|u[0-9A-Fa-f]{4})'
+          scope: constant.character.escape.json.hurl
+        - include: templates
+        - match: '"'
+          scope: punctuation.definition.string.end.json.hurl
+          pop: true
+    - match: ':'
+      scope: punctuation.separator.key-value.json.hurl
+      push:
+        - match: '(?=,|\})'
+          pop: true
+        - include: json-value
+    - match: ','
+      scope: punctuation.separator.json.hurl
+
+  json-array:
+    - meta_scope: meta.sequence.json.hurl
+    - match: '\]'
+      scope: punctuation.section.sequence.end.json.hurl
+      pop: true
+    - match: ','
+      scope: punctuation.separator.json.hurl
+    - include: json-value
+
+  json-string:
+    - meta_scope: string.quoted.double.json.hurl
+    - match: '\\(["\\/bfnrt]|u[0-9A-Fa-f]{4})'
+      scope: constant.character.escape.json.hurl
+    - include: templates
+    - match: '"'
+      scope: punctuation.definition.string.end.json.hurl
+      pop: true
+
+  # ----------------------------------------------------------------------------
+  # XML body (light touch)
+  # ----------------------------------------------------------------------------
+  xml-body:
+    - match: '(?=^\s*<\??[a-zA-Z!/])'
+      push:
+        - meta_scope: meta.body.xml.hurl
+        - match: '<!--'
+          scope: punctuation.definition.comment.xml.hurl
+          push:
+            - meta_scope: comment.block.xml.hurl
+            - match: '-->'
+              pop: true
+        - match: '(</?)([\w:.\-]+)'
+          captures:
+            1: punctuation.definition.tag.begin.xml.hurl
+            2: entity.name.tag.xml.hurl
+        - match: '/?>'
+          scope: punctuation.definition.tag.end.xml.hurl
+        - include: quoted-strings
+        - include: templates
+        - match: '^(?=\s*$)'
+          pop: true
+
+  # ----------------------------------------------------------------------------
+  # Operators (predicate comparisons)
+  # ----------------------------------------------------------------------------
+  operators:
+    - match: '(==|!=|>=|<=|>|<)'
+      scope: keyword.operator.comparison.hurl
+
+  # ----------------------------------------------------------------------------
+  # Keyword groups
+  # ----------------------------------------------------------------------------
+  keywords:
+    - include: query-keywords
+    - include: predicate-keywords
+    - include: filter-keywords
+    - include: certificate-fields
+
+  query-keywords:
+    - match: '\b(status|version|url|ip|header|certificate|cookie|body|xpath|jsonpath|regex|variable|duration|bytes|sha256|md5|redirects)\b'
+      scope: support.function.query.hurl
+
+  predicate-keywords:
+    - match: '\bnot\b'
+      scope: keyword.operator.logical.hurl
+    - match: '\b(startsWith|endsWith|matches|contains|includes|exists|isBoolean|isCollection|isDate|isEmpty|isFloat|isInteger|isNumber|isIpv4|isIpv6|isIsoDate|isList|isObject|isString|isUuid)\b'
+      scope: support.function.predicate.hurl
+
+  filter-keywords:
+    - match: '\b(base64Decode|base64Encode|base64UrlSafeDecode|base64UrlSafeEncode|charsetDecode|count|daysAfterNow|daysBeforeNow|first|dateFormat|htmlEscape|htmlUnescape|jsonpath|last|location|nth|regex|replaceRegex|replace|split|toDate|toFloat|toHex|toInt|toString|urlDecode|urlEncode|urlQueryParam|utf8Decode|utf8Encode|xpath)\b'
+      scope: support.function.filter.hurl
+
+  certificate-fields:
+    - match: '\b(Subject|Issuer|Start-Date|Expire-Date|Serial-Number)\b'
+      scope: constant.other.certificate-field.hurl
+
+  # ----------------------------------------------------------------------------
+  # Literals (booleans, null, numbers)
+  # ----------------------------------------------------------------------------
+  literals:
+    - match: '\b(true|false)\b'
+      scope: constant.language.boolean.hurl
+    - match: '\bnull\b'
+      scope: constant.language.null.hurl
+    - match: '\b-?\d+(\.\d+)?\b'
+      scope: constant.numeric.hurl
