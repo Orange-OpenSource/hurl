@@ -65,10 +65,14 @@ pub fn cert_info(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         let Some(certinfo) = certinfo.as_ref() else {
             return Ok(None);
         };
-        if certinfo.num_of_certs <= 0 || certinfo.certinfo.is_null() {
+        if certinfo.num_of_certs <= 0 {
             return Ok(None);
         }
-        let slist = *certinfo.certinfo;
+        // `certinfo.certinfo` is a list of `num_of_certs` certificates, we read the first one,
+        // `as_ref` returning `None` when the array is null.
+        let Some(&slist) = certinfo.certinfo.as_ref() else {
+            return Ok(None);
+        };
         let data = to_list(slist);
         let value = extract_pem_from_certinfo(&data);
 
@@ -221,15 +225,12 @@ pub fn netrc_file(easy: &mut Easy, filename: &str) -> Result<(), Error> {
 fn to_list(slist: *mut curl_slist) -> Vec<String> {
     let mut data = vec![];
     let mut cur = slist;
-    loop {
-        if cur.is_null() {
-            break;
-        }
-        unsafe {
-            let ret = CStr::from_ptr((*cur).data).to_bytes();
+    unsafe {
+        while let Some(node) = cur.as_ref() {
+            let ret = CStr::from_ptr(node.data).to_bytes();
             let value = String::from_utf8_lossy(ret);
             data.push(value.to_string());
-            cur = (*cur).next;
+            cur = node.next;
         }
     }
     data
