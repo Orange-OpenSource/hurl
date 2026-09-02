@@ -43,6 +43,7 @@ use hurl_core::types::{BytesPerSec, Count};
 
 use crate::cli::CliError;
 pub use crate::cli::options::context::RunContext;
+pub use crate::cli::options::env_vars::EnvVars;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
 
@@ -152,11 +153,11 @@ pub struct CliOptions {
 
 impl CliOptions {
     /// Evaluates all the options that has been not explicitly set, and makes the options coherent.
-    pub fn finalize(&self, context: &RunContext) -> Self {
+    pub fn finalize(&self, context: &RunContext, env_vars: &EnvVars) -> Self {
         let mut options = self.clone();
         if matches!(options.progress_bar, BoolOpt::Auto) {
             // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-            let interactive = options.test && context.is_stderr_term() && !context.is_ci_env_var();
+            let interactive = options.test && context.is_stderr_term() && !env_vars.is_ci();
             options.progress_bar = BoolOpt::Set(interactive);
         }
         options
@@ -272,14 +273,14 @@ fn get_version() -> String {
 }
 
 /// Parse the Hurl CLI options and returns a [`CliOptions`] result, given a run `context`
-/// (environment variables).
-pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
+/// and environment variables.
+pub fn parse(context: &RunContext, env_vars: &EnvVars) -> Result<CliOptions, CliOptionsError> {
     let options = CliOptions::default();
     let options = context::init_options(context, options);
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
-    let options = env_vars::parse_env_vars(context, options)?;
+    let options = env_vars::parse_env_vars(env_vars, options)?;
     let options = args::parse_cli_args(context, options)?;
-    let options = options.finalize(context);
+    let options = options.finalize(context, env_vars);
     Ok(options)
 }
 

@@ -33,7 +33,7 @@ use hurl::util::redacted::Redact;
 use hurl_core::input::Input;
 use hurl_core::text;
 
-use crate::cli::options::{CliOptions, CliOptionsError, RunContext, Verbosity};
+use crate::cli::options::{CliOptions, CliOptionsError, EnvVars, RunContext, Verbosity};
 use crate::cli::{BaseLogger, CliError};
 
 const EXIT_OK: u8 = 0;
@@ -62,12 +62,13 @@ fn main() -> ExitCode {
     // environment variables.
     // TODO: add `env::current_dir` to the run context
     let env_vars = env::vars().collect();
+    let env_vars = EnvVars::new(env_vars);
     let stdin_term = io::stdin().is_terminal();
     let stdout_term = io::stdout().is_terminal();
     let stderr_term = io::stderr().is_terminal();
-    let ctx = RunContext::new(env_vars, stdin_term, stdout_term, stderr_term);
+    let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
-    let opts = match cli::options::parse(&ctx) {
+    let opts = match cli::options::parse(&ctx, &env_vars) {
         Ok(v) => v,
         Err(e) => match e {
             CliOptionsError::DisplayHelp(e) | CliOptionsError::DisplayVersion(e) => {
