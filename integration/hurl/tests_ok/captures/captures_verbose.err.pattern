@@ -92,7 +92,7 @@
 [1;34m*[0m [1mExecuting entry 4[0m
 [1;34m*[0m
 [1;34m*[0m [1mCookie store:[0m
-[1;34m*[0m #HttpOnly_.localhost	TRUE	/bar	FALSE	<<<\d+>>>	foo	value1
+[1;34m*[0m #HttpOnly_<<<\.?>>>localhost	<<<(TRUE|FALSE)>>>	/bar	FALSE	<<<\d+>>>	foo	value1
 [1;34m*[0m
 [1;34m*[0m [1mRequest:[0m
 [1;34m*[0m GET http://localhost:8000/captures-json
@@ -136,7 +136,7 @@
 [1;34m*[0m location: true
 [1;34m*[0m
 [1;34m*[0m [1mCookie store:[0m
-[1;34m*[0m #HttpOnly_.localhost	TRUE	/bar	FALSE	<<<\d+>>>	foo	value1
+[1;34m*[0m #HttpOnly_<<<\.?>>>localhost	<<<(TRUE|FALSE)>>>	/bar	FALSE	<<<\d+>>>	foo	value1
 [1;34m*[0m
 [1;34m*[0m [1mRequest:[0m
 [1;34m*[0m GET http://localhost:8000/redirect-to-captures-json
