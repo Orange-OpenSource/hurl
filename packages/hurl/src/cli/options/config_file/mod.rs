@@ -370,6 +370,19 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.no_proxy = Some(value);
             Ok(())
         }
+        "proxy" => {
+            parse_value_separator(reader)?;
+            let value = parse_value(reader)?;
+
+            if value.is_empty() {
+                return Err(ConfigFileError::new(
+                    save.pos,
+                    "Option --proxy requires a value",
+                ));
+            }
+            options.proxy = Some(value);
+            Ok(())
+        }
         "proxy-header" => {
             parse_value_separator(reader)?;
             let value = parse_value(reader)?;
