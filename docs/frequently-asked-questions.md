@@ -228,7 +228,7 @@ $ hurlfmt test.hurl --out json | jq
 
 ### Can I do calculation within a Hurl file?
 
-Currently, the templating is very simple, only accessing variables.
+Currently, templating supports variables and functions such as `newDate` and `newUuid`.
 Calculations can be done beforehand, before running the Hurl File.
 
 For example, with date calculations, variables `now` and `tomorrow` can be used as param or expected value.
