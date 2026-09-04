@@ -105,10 +105,10 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         return Ok(());
     }
 
-    let mut save = reader.cursor();
+    let option_pos = reader.cursor().pos;
     if reader.read_n(CharPos(2)) != "--" {
         return Err(ConfigFileError::new(
-            save.pos,
+            option_pos,
             "Expecting an option starting with --",
         ));
     }
@@ -116,367 +116,553 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
     let option_name =
         reader.read_while(|c: char| c.is_alphanumeric() || c == '-' || c == '_' || c == '.');
     match option_name.as_str() {
-        "verbose" => {
-            expect_no_value(reader)?;
-            options.verbosity = Some(Verbosity::Verbose);
-            Ok(())
-        }
-        "very-verbose" => {
-            expect_no_value(reader)?;
-            options.verbosity = Some(Verbosity::Debug);
-            Ok(())
-        }
-        "test" => {
-            expect_no_value(reader)?;
-            options.test = true;
-
-            // TODO: Set progress bar
-            // Distinguish an implicit progress bar from one explicitly enabled by --progress-bar
-            Ok(())
-        }
-        "verbosity" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let verbosity = value.parse::<Verbosity>().map_err(|_| {
-                ConfigFileError::new(
-                    save.pos,
-                    "Option --verbosity requires one of the following values: brief, verbose, debug",
-                )
-            })?;
-            options.verbosity = Some(verbosity);
-            Ok(())
-        }
-        "header" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --header requires a value",
-                ));
-            }
-            options.headers.push(value);
-
-            Ok(())
-        }
-        "variable" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let (name, value) = variables::parse(&value, TypeKind::Inferred)
-                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
-            options.variables.insert(name, value);
-            Ok(())
-        }
-        "secret" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let (name, value) = variables::parse(&value, TypeKind::String)
-                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
-            secret::add_secret(&mut options.secrets, name, value)
-                .map_err(|e| ConfigFileError::new(save.pos, &e.to_string()))?;
-            Ok(())
-        }
-        "max-redirs" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let max_redirs = value.parse::<i32>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --max-redirs requires an integer value")
-            })?;
-            options.max_redirect = Count::try_from(max_redirs).map_err(|_| {
-                ConfigFileError::new(
-                    save.pos,
-                    "Option --max-redirs requires an integer value >= -1",
-                )
-            })?;
-
-            Ok(())
-        }
-        "delay" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            options.delay = duration::duration_from_str(&value, DurationUnit::MilliSecond)
-                .map_err(|_| {
-                    ConfigFileError::new(save.pos, "Option --delay has an invalid duration")
-                })?;
-            Ok(())
-        }
-        "connect-timeout" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            options.connect_timeout = duration::duration_from_str(&value, DurationUnit::Second)
-                .map_err(|_| {
-                    ConfigFileError::new(
-                        save.pos,
-                        "Option --connect-timeout has an invalid duration",
-                    )
-                })?;
-            Ok(())
-        }
-        "jobs" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let jobs = value.parse::<usize>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --jobs requires an integer value")
-            })?;
-            if jobs < 1 {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --jobs requires an integer value >= 1",
-                ));
-            }
-            options.jobs = Some(jobs);
-            Ok(())
-        }
-        "max-filesize" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let max_filesize = value.parse::<u64>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --max-filesize requires an integer value")
-            })?;
-            options.max_filesize = Some(max_filesize);
-            Ok(())
-        }
-        "limit-rate" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let limit_rate = value.parse::<u64>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --limit-rate requires an integer value")
-            })?;
-            options.limit_rate = Some(BytesPerSec(limit_rate));
-            Ok(())
-        }
-        "max-time" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            options.timeout =
-                duration::duration_from_str(&value, DurationUnit::Second).map_err(|_| {
-                    ConfigFileError::new(save.pos, "Option --max-time has an invalid duration")
-                })?;
-            Ok(())
-        }
-        "insecure" => {
-            expect_no_value(reader)?;
-            options.insecure = true;
-            Ok(())
-        }
-        "http1.0" => {
-            expect_no_value(reader)?;
-            options.http_version = Some(HttpVersion::V10);
-            Ok(())
-        }
-        "http1.1" => {
-            expect_no_value(reader)?;
-            options.http_version = Some(HttpVersion::V11);
-            Ok(())
-        }
-        "http2" => {
-            expect_no_value(reader)?;
-            options.http_version = Some(HttpVersion::V2);
-            Ok(())
-        }
-        "http3" => {
-            expect_no_value(reader)?;
-            options.http_version = Some(HttpVersion::V3);
-            Ok(())
-        }
-        "location" => {
-            expect_no_value(reader)?;
-            options.follow_location = true;
-            Ok(())
-        }
-        "location-trusted" => {
-            expect_no_value(reader)?;
-            options.follow_location = true;
-            options.follow_location_trusted = true;
-            Ok(())
-        }
-        "ipv6" => {
-            expect_no_value(reader)?;
-            options.ip_resolve = Some(IpResolve::IpV6);
-            Ok(())
-        }
-        "compressed" => {
-            expect_no_value(reader)?;
-            options.compressed = true;
-            Ok(())
-        }
-        "fail-with-body" => {
-            expect_no_value(reader)?;
-            options.fail_with_body = true;
-            Ok(())
-        }
-        "continue-on-error" => {
-            expect_no_value(reader)?;
-            options.continue_on_error = true;
-            Ok(())
-        }
-        "error-format" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let error_format = value.parse::<ErrorFormat>().map_err(|_| {
-                ConfigFileError::new(
-                    save.pos,
-                    "Option --error-format requires one of the following values: short, long",
-                )
-            })?;
-            options.error_format = error_format;
-            Ok(())
-        }
-        "no-assert" => {
-            expect_no_value(reader)?;
-            options.no_assert = true;
-            Ok(())
-        }
-        "no-cookie-store" => {
-            expect_no_value(reader)?;
-            options.no_cookie_store = true;
-            Ok(())
-        }
-        "no-header" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --no-header requires a value",
-                ));
-            }
-            options.no_headers.push(value);
-            Ok(())
-        }
-        "no-proxy" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --no-proxy requires a value",
-                ));
-            }
-            options.no_proxy = Some(value);
-            Ok(())
-        }
-        "proxy" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --proxy requires a value",
-                ));
-            }
-            options.proxy = Some(value);
-            Ok(())
-        }
-        "proxy-header" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --proxy-header requires a value",
-                ));
-            }
-            options.proxy_headers.push(value);
-            Ok(())
-        }
-        "no-jsonpath-coercion" => {
-            expect_no_value(reader)?;
-            options.no_jsonpath_coercion = true;
-            Ok(())
-        }
-        "no-output" => {
-            expect_no_value(reader)?;
-            options.output_type = OutputType::NoOutput;
-            Ok(())
-        }
-        "no-pretty" => {
-            expect_no_value(reader)?;
-            options.pretty = PrettyMode::None;
-            Ok(())
-        }
-        "pretty" => {
-            expect_no_value(reader)?;
-            options.pretty = PrettyMode::Force;
-            Ok(())
-        }
-        "retry" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            let retry = value.parse::<i32>().map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --retry requires an integer value")
-            })?;
-            options.retry = Some(Count::try_from(retry).map_err(|_| {
-                ConfigFileError::new(save.pos, "Option --retry requires an integer value >= 1")
-            })?);
-            Ok(())
-        }
-        "retry-interval" => {
-            parse_value_separator(reader)?;
-            save = reader.cursor();
-            let value = parse_value(reader)?;
-            options.retry_interval = duration::duration_from_str(&value, DurationUnit::MilliSecond)
-                .map_err(|_| {
-                    ConfigFileError::new(
-                        save.pos,
-                        "Option --retry-interval has an invalid duration",
-                    )
-                })?;
-            Ok(())
-        }
-        "user" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-
-            if value.is_empty() {
-                return Err(ConfigFileError::new(
-                    save.pos,
-                    "Option --user requires a value",
-                ));
-            }
-            options.user = Some(value);
-            Ok(())
-        }
-        "user-agent" => {
-            parse_value_separator(reader)?;
-            let value = parse_value(reader)?;
-            options.user_agent = Some(value);
-            Ok(())
-        }
-        "color" => {
-            expect_no_value(reader)?;
-            options.color_stdout = true;
-            options.color_stderr = true;
-            Ok(())
-        }
-        "no-color" => {
-            expect_no_value(reader)?;
-            options.color_stdout = false;
-            options.color_stderr = false;
-            Ok(())
-        }
+        "color" => parse_option_color(reader, options),
+        "compressed" => parse_option_compressed(reader, options),
+        "connect-timeout" => parse_option_connect_timeout(reader, options),
+        "continue-on-error" => parse_option_continue_on_error(reader, options),
+        "delay" => parse_option_delay(reader, options),
+        "error-format" => parse_option_error_format(reader, options),
+        "fail-with-body" => parse_option_fail_with_body(reader, options),
+        "header" => parse_option_header(reader, options, option_pos),
+        "http1.0" => parse_option_http1_0(reader, options),
+        "http1.1" => parse_option_http1_1(reader, options),
+        "http2" => parse_option_http2(reader, options),
+        "http3" => parse_option_http3(reader, options),
+        "insecure" => parse_option_insecure(reader, options),
+        "ipv6" => parse_option_ipv6(reader, options),
+        "jobs" => parse_option_jobs(reader, options),
+        "limit-rate" => parse_option_limit_rate(reader, options),
+        "location" => parse_option_location(reader, options),
+        "location-trusted" => parse_option_location_trusted(reader, options),
+        "max-filesize" => parse_option_max_filesize(reader, options),
+        "max-redirs" => parse_option_max_redirs(reader, options),
+        "max-time" => parse_option_max_time(reader, options),
+        "no-assert" => parse_option_no_assert(reader, options),
+        "no-color" => parse_option_no_color(reader, options),
+        "no-cookie-store" => parse_option_no_cookie_store(reader, options),
+        "no-header" => parse_option_no_header(reader, options, option_pos),
+        "no-jsonpath-coercion" => parse_option_no_jsonpath_coercion(reader, options),
+        "no-output" => parse_option_no_output(reader, options),
+        "no-pretty" => parse_option_no_pretty(reader, options),
+        "no-proxy" => parse_option_no_proxy(reader, options, option_pos),
+        "pretty" => parse_option_pretty(reader, options),
+        "proxy" => parse_option_proxy(reader, options, option_pos),
+        "proxy-header" => parse_option_proxy_header(reader, options, option_pos),
+        "retry" => parse_option_retry(reader, options),
+        "retry-interval" => parse_option_retry_interval(reader, options),
+        "secret" => parse_option_secret(reader, options),
+        "test" => parse_option_test(reader, options),
+        "user" => parse_option_user(reader, options, option_pos),
+        "user-agent" => parse_option_user_agent(reader, options),
+        "variable" => parse_option_variable(reader, options),
+        "verbose" => parse_option_verbose(reader, options),
+        "very-verbose" => parse_option_very_verbose(reader, options),
+        "verbosity" => parse_option_verbosity(reader, options),
         _ => Err(ConfigFileError::new(
-            save.pos,
+            option_pos,
             &format!("Unknown option <--{}>", option_name),
         )),
     }
+}
+
+fn parse_option_color(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.color_stdout = true;
+    options.color_stderr = true;
+    Ok(())
+}
+
+fn parse_option_compressed(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.compressed = true;
+    Ok(())
+}
+
+fn parse_option_connect_timeout(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.connect_timeout =
+        duration::duration_from_str(&value, DurationUnit::Second).map_err(|_| {
+            ConfigFileError::new(
+                value_pos,
+                "Option --connect-timeout has an invalid duration",
+            )
+        })?;
+    Ok(())
+}
+
+fn parse_option_continue_on_error(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.continue_on_error = true;
+    Ok(())
+}
+
+fn parse_option_delay(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.delay = duration::duration_from_str(&value, DurationUnit::MilliSecond)
+        .map_err(|_| ConfigFileError::new(value_pos, "Option --delay has an invalid duration"))?;
+    Ok(())
+}
+
+fn parse_option_error_format(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.error_format = value.parse::<ErrorFormat>().map_err(|_| {
+        ConfigFileError::new(
+            value_pos,
+            "Option --error-format requires one of the following values: short, long",
+        )
+    })?;
+    Ok(())
+}
+
+fn parse_option_fail_with_body(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.fail_with_body = true;
+    Ok(())
+}
+
+fn parse_option_header(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --header requires a value",
+        ));
+    }
+    options.headers.push(value);
+    Ok(())
+}
+
+fn parse_option_http1_0(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.http_version = Some(HttpVersion::V10);
+    Ok(())
+}
+
+fn parse_option_http1_1(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.http_version = Some(HttpVersion::V11);
+    Ok(())
+}
+
+fn parse_option_http2(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.http_version = Some(HttpVersion::V2);
+    Ok(())
+}
+
+fn parse_option_http3(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.http_version = Some(HttpVersion::V3);
+    Ok(())
+}
+
+fn parse_option_insecure(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.insecure = true;
+    Ok(())
+}
+
+fn parse_option_ipv6(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.ip_resolve = Some(IpResolve::IpV6);
+    Ok(())
+}
+
+fn parse_option_jobs(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let jobs = value
+        .parse::<usize>()
+        .map_err(|_| ConfigFileError::new(value_pos, "Option --jobs requires an integer value"))?;
+    if jobs < 1 {
+        return Err(ConfigFileError::new(
+            value_pos,
+            "Option --jobs requires an integer value >= 1",
+        ));
+    }
+    options.jobs = Some(jobs);
+    Ok(())
+}
+
+fn parse_option_limit_rate(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let limit_rate = value.parse::<u64>().map_err(|_| {
+        ConfigFileError::new(value_pos, "Option --limit-rate requires an integer value")
+    })?;
+    options.limit_rate = Some(BytesPerSec(limit_rate));
+    Ok(())
+}
+
+fn parse_option_location(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.follow_location = true;
+    Ok(())
+}
+
+fn parse_option_location_trusted(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.follow_location = true;
+    options.follow_location_trusted = true;
+    Ok(())
+}
+
+fn parse_option_max_filesize(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.max_filesize = Some(value.parse::<u64>().map_err(|_| {
+        ConfigFileError::new(value_pos, "Option --max-filesize requires an integer value")
+    })?);
+    Ok(())
+}
+
+fn parse_option_max_redirs(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let max_redirs = value.parse::<i32>().map_err(|_| {
+        ConfigFileError::new(value_pos, "Option --max-redirs requires an integer value")
+    })?;
+    options.max_redirect = Count::try_from(max_redirs).map_err(|_| {
+        ConfigFileError::new(
+            value_pos,
+            "Option --max-redirs requires an integer value >= -1",
+        )
+    })?;
+    Ok(())
+}
+
+fn parse_option_max_time(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.timeout = duration::duration_from_str(&value, DurationUnit::Second).map_err(|_| {
+        ConfigFileError::new(value_pos, "Option --max-time has an invalid duration")
+    })?;
+    Ok(())
+}
+
+fn parse_option_no_assert(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.no_assert = true;
+    Ok(())
+}
+
+fn parse_option_no_color(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.color_stdout = false;
+    options.color_stderr = false;
+    Ok(())
+}
+
+fn parse_option_no_cookie_store(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.no_cookie_store = true;
+    Ok(())
+}
+
+fn parse_option_no_header(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --no-header requires a value",
+        ));
+    }
+    options.no_headers.push(value);
+    Ok(())
+}
+
+fn parse_option_no_jsonpath_coercion(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.no_jsonpath_coercion = true;
+    Ok(())
+}
+
+fn parse_option_no_output(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.output_type = OutputType::NoOutput;
+    Ok(())
+}
+
+fn parse_option_no_pretty(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.pretty = PrettyMode::None;
+    Ok(())
+}
+
+fn parse_option_no_proxy(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --no-proxy requires a value",
+        ));
+    }
+    options.no_proxy = Some(value);
+    Ok(())
+}
+
+fn parse_option_pretty(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.pretty = PrettyMode::Force;
+    Ok(())
+}
+
+fn parse_option_proxy(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --proxy requires a value",
+        ));
+    }
+    options.proxy = Some(value);
+    Ok(())
+}
+
+fn parse_option_proxy_header(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --proxy-header requires a value",
+        ));
+    }
+    options.proxy_headers.push(value);
+    Ok(())
+}
+
+fn parse_option_retry(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let retry = value
+        .parse::<i32>()
+        .map_err(|_| ConfigFileError::new(value_pos, "Option --retry requires an integer value"))?;
+    options.retry = Some(Count::try_from(retry).map_err(|_| {
+        ConfigFileError::new(value_pos, "Option --retry requires an integer value >= 1")
+    })?);
+    Ok(())
+}
+
+fn parse_option_retry_interval(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.retry_interval = duration::duration_from_str(&value, DurationUnit::MilliSecond)
+        .map_err(|_| {
+            ConfigFileError::new(value_pos, "Option --retry-interval has an invalid duration")
+        })?;
+    Ok(())
+}
+
+fn parse_option_secret(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let (name, value) = variables::parse(&value, TypeKind::String)
+        .map_err(|e| ConfigFileError::new(value_pos, &e.to_string()))?;
+    secret::add_secret(&mut options.secrets, name, value)
+        .map_err(|e| ConfigFileError::new(value_pos, &e.to_string()))?;
+    Ok(())
+}
+
+fn parse_option_test(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.test = true;
+    Ok(())
+}
+
+fn parse_option_user(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+    option_pos: Pos,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value = parse_value(reader)?;
+    if value.is_empty() {
+        return Err(ConfigFileError::new(
+            option_pos,
+            "Option --user requires a value",
+        ));
+    }
+    options.user = Some(value);
+    Ok(())
+}
+
+fn parse_option_user_agent(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    options.user_agent = Some(parse_value(reader)?);
+    Ok(())
+}
+
+fn parse_option_variable(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let (name, value) = variables::parse(&value, TypeKind::Inferred)
+        .map_err(|e| ConfigFileError::new(value_pos, &e.to_string()))?;
+    options.variables.insert(name, value);
+    Ok(())
+}
+
+fn parse_option_verbose(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.verbosity = Some(Verbosity::Verbose);
+    Ok(())
+}
+
+fn parse_option_very_verbose(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.verbosity = Some(Verbosity::Debug);
+    Ok(())
+}
+
+fn parse_option_verbosity(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    options.verbosity = Some(value.parse::<Verbosity>().map_err(|_| {
+        ConfigFileError::new(
+            value_pos,
+            "Option --verbosity requires one of the following values: brief, verbose, debug",
+        )
+    })?);
+    Ok(())
 }
 
 #[cfg(test)]
@@ -930,6 +1116,16 @@ mod tests {
         assert!(options.no_proxy.is_none());
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.no_proxy, Some("127.0.0.1".to_string()));
+        assert_eq!(reader.cursor().pos, Pos::new(2, 1));
+    }
+
+    #[test]
+    fn test_parse_option_proxy() {
+        let mut reader = Reader::new("--proxy=127.0.0.1:3128\n");
+        let mut options = CliOptions::default();
+        assert!(options.proxy.is_none());
+        assert!(parse_option(&mut reader, &mut options).is_ok());
+        assert_eq!(options.proxy, Some("127.0.0.1:3128".to_string()));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
