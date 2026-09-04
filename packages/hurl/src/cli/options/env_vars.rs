@@ -49,8 +49,8 @@ const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
 const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
 const HURL_DELAY: &str = "HURL_DELAY";
 const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
-const HURL_FOLLOW_LOCATION: &str = "HURL_LOCATION";
-const HURL_FOLLOW_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
+const HURL_LOCATION: &str = "HURL_LOCATION";
+const HURL_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
 const HURL_INSECURE: &str = "HURL_INSECURE";
 const HURL_IPV4: &str = "HURL_IPV4";
 const HURL_IPV6: &str = "HURL_IPV6";
@@ -177,12 +177,12 @@ impl EnvVars {
 
     /// Returns the env var for following redirects.
     pub fn follow_location(&self) -> Option<bool> {
-        self.get_bool(HURL_FOLLOW_LOCATION)
+        self.get_bool(HURL_LOCATION)
     }
 
     /// Returns the env var for following redirects with trusted location.
     pub fn follow_location_trusted(&self) -> Option<bool> {
-        self.get_bool(HURL_FOLLOW_LOCATION_TRUSTED)
+        self.get_bool(HURL_LOCATION_TRUSTED)
     }
 
     /// Returns the env var for allowing insecure transfers.
@@ -370,7 +370,7 @@ impl EnvVars {
         self.get_bool(HURL_VERY_VERBOSE)
     }
 
-    pub fn get_bool(&self, name: &'static str) -> Option<bool> {
+    fn get_bool(&self, name: &'static str) -> Option<bool> {
         self.hurl_env_vars
             .get(name)
             .map(|s| s.as_str())
@@ -445,7 +445,7 @@ fn follow_location(env_vars: &EnvVars, default_value: bool) -> Result<bool, CliO
         (Some(false), Some(true)) => {
             let error = format!(
                 "Invalid environment variables configuration {} {}",
-                HURL_FOLLOW_LOCATION, HURL_FOLLOW_LOCATION_TRUSTED
+                HURL_LOCATION, HURL_LOCATION_TRUSTED
             );
             return Err(CliOptionsError::Error(error));
         }
@@ -856,7 +856,6 @@ fn variables(
 /// Secrets can be set with `HURL_SECRET_foo`.
 fn secrets(
     env_vars: &EnvVars,
-
     default_secrets: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut secrets = default_secrets;

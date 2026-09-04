@@ -47,33 +47,22 @@ pub use crate::cli::options::env_vars::EnvVars;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
 
-/// Controls a boolean option that can either be explicitly configured or
-/// determined automatically.
-///
-/// [`BoolMode::Set`] represents an explicit boolean value, while
-/// [`BoolMode::Auto`] delegates the decision to the caller.
-///
-/// # Examples
-///
-/// ```rust
-/// let color = BoolMode::Auto;
-/// let progress = BoolMode::Set(false);
-/// ```
+/// Controls a boolean option that can either be explicitly configured or determined automatically.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
 pub enum BoolOpt {
-    /// This option has been set explicitely (by user, or by the running context)
+    /// This option has been set explicitly (by user, or by the running context)
     Set(bool),
-    /// This option has not been set yet and will be valued latter
+    /// This option has not been set yet and will be valued later
     #[default]
     Auto,
 }
 
 impl BoolOpt {
-    /// Returns the value if it has been set explicitly, panics otherwise.
-    pub fn get(&self) -> bool {
+    /// Returns the value if it has been set explicitly, or a default value.
+    pub fn unwrap_or(&self, default: bool) -> bool {
         match self {
             BoolOpt::Set(val) => *val,
-            BoolOpt::Auto => panic!("no value set"),
+            BoolOpt::Auto => default,
         }
     }
 }
@@ -153,14 +142,13 @@ pub struct CliOptions {
 
 impl CliOptions {
     /// Evaluates all the options that has been not explicitly set, and makes the options coherent.
-    pub fn finalize(&self, context: &RunContext, env_vars: &EnvVars) -> Self {
-        let mut options = self.clone();
-        if matches!(options.progress_bar, BoolOpt::Auto) {
+    pub fn finalize(mut self, context: &RunContext, env_vars: &EnvVars) -> Self {
+        if matches!(self.progress_bar, BoolOpt::Auto) {
             // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-            let interactive = options.test && context.is_stderr_term() && !env_vars.is_ci();
-            options.progress_bar = BoolOpt::Set(interactive);
+            let interactive = self.test && context.is_stderr_term() && !env_vars.is_ci();
+            self.progress_bar = BoolOpt::Set(interactive);
         }
-        options
+        self
     }
 }
 
