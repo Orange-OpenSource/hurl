@@ -270,6 +270,16 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
             options.insecure = true;
             Ok(())
         }
+        "discard_body" => {
+            expect_no_value(reader)?;
+            options.discard_body = false;
+            Ok(())
+        }
+        "truncate_body" => {
+            expect_no_value(reader)?;
+            options.truncate_body = None;
+            Ok(())
+        }
         "http1.0" => {
             expect_no_value(reader)?;
             options.http_version = Some(HttpVersion::V10);
@@ -481,7 +491,6 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use crate::cli::options::Verbosity;
     use hurl::runner::Value;

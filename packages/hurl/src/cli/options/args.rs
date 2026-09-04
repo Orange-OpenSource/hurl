@@ -109,6 +109,8 @@ pub fn parse_cli_args(
         .arg(commands::verbose())
         .arg(commands::very_verbose())
         .arg(commands::verbosity())
+        .arg(commands::discard_body())
+        .arg(commands::truncate_body())
         // Run options
         .arg(commands::continue_on_error())
         .arg(commands::delay())
@@ -223,6 +225,7 @@ fn parse_arg_matches(
     let no_cookie_store = no_cookie_store(arg_matches, default_options.no_cookie_store);
     let no_headers = no_headers(arg_matches, default_options.no_headers);
     let no_proxy = no_proxy(arg_matches, default_options.no_proxy);
+    let discard_body = discard_body(arg_matches, default_options.discard_body);
     let ntlm = ntlm(arg_matches, default_options.ntlm);
     let parallel = parallel(arg_matches, default_options.parallel);
     let path_as_is = path_as_is(arg_matches, default_options.path_as_is);
@@ -248,6 +251,7 @@ fn parse_arg_matches(
     let user_agent = user_agent(arg_matches, default_options.user_agent);
     let variables = variables(arg_matches, default_options.variables)?;
     let verbosity = verbosity(arg_matches, default_options.verbosity);
+    let truncate_body = truncate_body(arg_matches, default_options.truncate_body);
 
     Ok(CliOptions {
         aws_sigv4,
@@ -292,6 +296,7 @@ fn parse_arg_matches(
         no_cookie_store,
         no_headers,
         no_proxy,
+        discard_body,
         ntlm,
         path_as_is,
         pinned_pub_key,
@@ -318,6 +323,7 @@ fn parse_arg_matches(
         variables,
         verbosity,
         jobs,
+        truncate_body,
     })
 }
 
@@ -772,6 +778,14 @@ fn no_proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<S
     get::<String>(arg_matches, "no_proxy").or(default_value)
 }
 
+fn discard_body(arg_matches: &ArgMatches, default_value: bool) -> bool {
+    if has_flag(arg_matches, "discard_body") {
+        true
+    } else {
+        default_value
+    }
+}
+
 fn ntlm(arg_matches: &ArgMatches, default_value: bool) -> bool {
     if has_flag(arg_matches, "ntlm") {
         true
@@ -839,6 +853,10 @@ fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: b
 
 fn proxy(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
     get::<String>(arg_matches, "proxy").or(default_value)
+}
+
+fn truncate_body(arg_matches: &ArgMatches, default_value: Option<u64>) -> Option<u64> {
+    get::<u64>(arg_matches, "truncate_body").or(default_value)
 }
 
 fn proxy_headers(arg_matches: &ArgMatches, default_value: Vec<String>) -> Vec<String> {

@@ -92,6 +92,7 @@ pub struct CliOptions {
     pub no_cookie_store: bool,
     pub no_headers: Vec<String>,
     pub no_proxy: Option<String>,
+    pub discard_body: bool,
     pub ntlm: bool,
     pub output: Option<Output>,
     pub output_type: OutputType,
@@ -117,6 +118,7 @@ pub struct CliOptions {
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbosity: Option<Verbosity>,
+    pub truncate_body: Option<u64>,
 }
 
 /// Log verbosity level
@@ -294,6 +296,7 @@ impl Default for CliOptions {
             no_cookie_store: false,
             no_headers: Vec::new(),
             no_proxy: None,
+            discard_body: false,
             ntlm: false,
             output: None,
             output_type: OutputType::ResponseBody,
@@ -319,6 +322,7 @@ impl Default for CliOptions {
             user_agent: None,
             variables: HashMap::new(),
             verbosity: None,
+            truncate_body: None,
         }
     }
 }
@@ -432,6 +436,8 @@ impl CliOptions {
         let use_cookie_store = !self.no_cookie_store;
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
+        let discard_body = self.discard_body;
+        let truncate_body = self.truncate_body;
 
         Ok(RunnerOptionsBuilder::new()
             .aws_sigv4(aws_sigv4)
@@ -466,6 +472,7 @@ impl CliOptions {
             .use_jsonpath_coercion(use_jsonpath_coercion)
             .no_proxy(no_proxy)
             .no_headers(no_headers)
+            .discard_body(discard_body)
             .ntlm(ntlm)
             .output(output)
             .path_as_is(path_as_is)
@@ -483,6 +490,7 @@ impl CliOptions {
             .use_cookie_store(use_cookie_store)
             .user(user)
             .user_agent(user_agent)
+            .truncate_body(truncate_body)
             .build())
     }
 

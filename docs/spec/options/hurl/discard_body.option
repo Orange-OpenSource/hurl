@@ -1,0 +1,12 @@
+name: discard_body
+long: discard-body
+help: Discard response body
+help_heading: HTTP options
+config_file: true
+env_var: HURL_DISCARD_BODY
+---
+Discard response body.
+
+If there are no asserts and reports relying on the response body, this option can free the memory consumed by the response body earlier.
+
+Without this option, Hurl keeps the response body in memory until the program ends. This can consume a large amount of memory if the payload is large, particularly when using parallel or repeated execution modes.

@@ -293,10 +293,26 @@ impl Client {
                 }
                 _ => {}
             })?;
-            transfer.write_function(|data| {
-                response_body.extend(data);
-                Ok(data.len())
-            })?;
+
+            if !options.discard_body {
+                transfer.write_function(|data| {
+                    if let Some(limit) = options.truncate_body {
+                        let limit = limit as usize;
+                        let current_len = response_body.len();
+
+                        if current_len < limit {
+                            let remaining = limit - current_len;
+                            let bytes_to_take = data.len().min(remaining);
+
+                            response_body.extend_from_slice(&data[..bytes_to_take]);
+                        }
+                    } else {
+                        response_body.extend(data);
+                    }
+
+                    Ok(data.len())
+                })?;
+            }
 
             if let Err(e) = transfer.perform() {
                 let code = e.code() as i32; // due to windows build

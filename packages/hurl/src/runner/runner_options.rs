@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-use std::time::Duration;
-
 use hurl_core::types::{BytesPerSec, Count};
+use std::time::Duration;
 
 use crate::http::{FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion};
 use crate::pretty::PrettyMode;
@@ -79,6 +78,8 @@ pub struct RunnerOptionsBuilder {
     use_jsonpath_coercion: bool,
     user: Option<String>,
     user_agent: Option<String>,
+    discard_body: bool,
+    truncate_body: Option<u64>,
 }
 
 impl Default for RunnerOptionsBuilder {
@@ -136,6 +137,8 @@ impl Default for RunnerOptionsBuilder {
             use_jsonpath_coercion: true,
             user: None,
             user_agent: None,
+            discard_body: false,
+            truncate_body: None,
         }
     }
 }
@@ -337,6 +340,11 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    pub fn truncate_body(&mut self, truncate_body: Option<u64>) -> &mut Self {
+        self.truncate_body = truncate_body;
+        self
+    }
+
     /// Enables HTTP Digest authentication.
     pub fn digest(&mut self, digest: bool) -> &mut Self {
         self.digest = digest;
@@ -370,6 +378,11 @@ impl RunnerOptionsBuilder {
     /// List of header names to remove from HTTP requests.
     pub fn no_headers(&mut self, no_headers: Vec<String>) -> &mut Self {
         self.no_headers = no_headers;
+        self
+    }
+
+    pub fn discard_body(&mut self, discard_body: bool) -> &mut Self {
+        self.discard_body = discard_body;
         self
     }
 
@@ -553,6 +566,8 @@ impl RunnerOptionsBuilder {
             use_jsonpath_coercion: self.use_jsonpath_coercion,
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
+            discard_body: self.discard_body,
+            truncate_body: self.truncate_body,
         }
     }
 }
@@ -668,6 +683,10 @@ pub struct RunnerOptions {
     pub(crate) user: Option<String>,
     /// Specifies the User-Agent string to send to the HTTP server.
     pub(crate) user_agent: Option<String>,
+    /// Specifies whether to discard the response body.
+    pub(crate) discard_body: bool,
+    /// Specifies the maximum number of bytes to truncate the response body.
+    pub(crate) truncate_body: Option<u64>,
 }
 
 impl Default for RunnerOptions {

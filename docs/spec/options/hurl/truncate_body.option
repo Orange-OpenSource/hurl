@@ -1,0 +1,8 @@
+name: truncate_body
+long: truncate-body
+help: Truncate response body
+help_heading: HTTP options
+config_file: true
+env_var: HURL_TRUNCATE_BODY
+---
+Truncate the response body.

@@ -66,6 +66,8 @@ pub struct ClientOptions {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub verbosity: Option<Verbosity>,
+    pub discard_body: bool,
+    pub truncate_body: Option<u64>,
 }
 
 // FIXME/ we could implement copy here
@@ -117,6 +119,8 @@ impl Default for ClientOptions {
             user: None,
             user_agent: None,
             verbosity: None,
+            discard_body: false,
+            truncate_body: None,
         }
     }
 }
