@@ -796,9 +796,9 @@ fn output_type(arg_matches: &ArgMatches, default_value: OutputType) -> OutputTyp
     }
 }
 
-fn parallel(arg_matches: &ArgMatches, default_value: bool) -> bool {
-    if has_flag(arg_matches, "parallel") || has_flag(arg_matches, "test") {
-        true
+fn parallel(arg_matches: &ArgMatches, default_value: BoolOpt) -> BoolOpt {
+    if has_flag(arg_matches, "parallel") {
+        BoolOpt::Set(true)
     } else {
         default_value
     }

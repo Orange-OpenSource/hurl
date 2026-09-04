@@ -116,7 +116,7 @@ pub struct CliOptions {
     pub ntlm: bool,
     pub output: Option<Output>,
     pub output_type: OutputType,
-    pub parallel: bool,
+    pub parallel: BoolOpt,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
     pub pretty: PrettyMode,
@@ -147,6 +147,9 @@ impl CliOptions {
             // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
             let interactive = self.test && context.is_stderr_term() && !env_vars.is_ci();
             self.progress_bar = BoolOpt::Set(interactive);
+        }
+        if matches!(self.parallel, BoolOpt::Auto) {
+            self.parallel = BoolOpt::Set(self.test);
         }
         self
     }
@@ -331,7 +334,7 @@ impl Default for CliOptions {
             ntlm: false,
             output: None,
             output_type: OutputType::ResponseBody,
-            parallel: false,
+            parallel: BoolOpt::Auto,
             path_as_is: false,
             pinned_pub_key: None,
             pretty: PrettyMode::None,

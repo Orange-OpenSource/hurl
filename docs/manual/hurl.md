@@ -569,6 +569,8 @@ Each Hurl file is executed in its own worker thread, without sharing anything wi
 
 See also [`--jobs`](#jobs).
 
+Environment variables: HURL_PARALLEL
+
 This is a cli-only option.
 
 #### --repeat <NUM> {#repeat}

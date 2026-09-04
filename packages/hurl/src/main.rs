@@ -97,7 +97,7 @@ fn main() -> ExitCode {
     let current_dir = current_dir.as_path();
     let start = Instant::now();
 
-    let runs = if opts.parallel {
+    let runs = if opts.parallel.unwrap_or(false) {
         let available = match thread::available_parallelism() {
             Ok(a) => a,
             Err(err) => {

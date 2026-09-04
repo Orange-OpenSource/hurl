@@ -72,6 +72,7 @@ const HURL_NO_HEADER: &str = "HURL_NO_HEADER";
 const HURL_NO_JSONPATH_COERCION: &str = "HURL_NO_JSONPATH_COERCION";
 const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
 const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
+const HURL_PARALLEL: &str = "HURL_PARALLEL";
 const HURL_PRETTY: &str = "HURL_PRETTY";
 const HURL_PROGRESS_BAR: &str = "HURL_PROGRESS_BAR";
 const HURL_PROXY_HEADER: &str = "HURL_PROXY_HEADER";
@@ -232,6 +233,11 @@ impl EnvVars {
     /// Returns the env var for max time duration.
     pub fn max_time(&self) -> Option<&str> {
         self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for parallel mode.
+    pub fn parallel(&self) -> Option<bool> {
+        self.get_bool(HURL_PARALLEL)
     }
 
     /// Returns the env var for max time duration.
@@ -643,16 +649,18 @@ fn no_jsonpath_coercion(env_vars: &EnvVars, default_value: bool) -> bool {
 }
 
 fn output_type(env_vars: &EnvVars, default_value: OutputType) -> OutputType {
-    match (env_vars.no_output(), env_vars.test()) {
-        (Some(true), _) => OutputType::NoOutput,
-        (_, Some(true)) => OutputType::NoOutput,
-        _ => default_value,
+    if let Some(true) = env_vars.no_output() {
+        OutputType::NoOutput
+    } else if let Some(true) = env_vars.test() {
+        OutputType::NoOutput
+    } else {
+        default_value
     }
 }
 
-fn parallel(env_vars: &EnvVars, default_value: bool) -> bool {
-    if let Some(true) = env_vars.test() {
-        true
+fn parallel(env_vars: &EnvVars, default_value: BoolOpt) -> BoolOpt {
+    if let Some(true) = env_vars.parallel() {
+        BoolOpt::Set(true)
     } else {
         default_value
     }
