@@ -24,53 +24,406 @@ use hurl::pretty::PrettyMode;
 use hurl::runner::Value;
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
-use super::context::{
-    HURL_CONNECT_TIMEOUT, HURL_DELAY, HURL_ERROR_FORMAT, HURL_FOLLOW_LOCATION,
-    HURL_FOLLOW_LOCATION_TRUSTED, HURL_HEADER, HURL_JOBS, HURL_LIMIT_RATE, HURL_MAX_FILESIZE,
-    HURL_MAX_REDIRS, HURL_MAX_TIME, HURL_NO_HEADER, HURL_PROXY_HEADER, HURL_RETRY,
-    HURL_RETRY_INTERVAL, HURL_VERBOSITY,
-};
 use super::variables::TypeKind;
 use super::{
-    CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, RunContext,
-    Verbosity, duration, secret, variables,
+    CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, Verbosity,
+    duration, secret, variables,
 };
 
-fn compressed(context: &RunContext, default_value: bool) -> bool {
-    context.compressed_env_var().unwrap_or(default_value)
+/// Contains all env vars at the start of the execution of the program.
+pub struct EnvVars {
+    /// All the environment variables.
+    all_env_vars: HashMap<String, String>,
+
+    /// The environment variables that have `HURL_` prefix (and that could be used by Hurl)
+    hurl_env_vars: HashMap<String, String>,
 }
 
-fn fail_with_body(context: &RunContext, default_value: bool) -> bool {
-    context.fail_with_body_env_var().unwrap_or(default_value)
+/// All the supported env vars.
+const HURL_PREFIX: &str = "HURL_";
+
+const HURL_COLOR: &str = "HURL_COLOR";
+const HURL_COMPRESSED: &str = "HURL_COMPRESSED";
+const HURL_FAIL_WITH_BODY: &str = "HURL_FAIL_WITH_BODY";
+const HURL_CONNECT_TIMEOUT: &str = "HURL_CONNECT_TIMEOUT";
+const HURL_CONTINUE_ON_ERROR: &str = "HURL_CONTINUE_ON_ERROR";
+const HURL_DELAY: &str = "HURL_DELAY";
+const HURL_ERROR_FORMAT: &str = "HURL_ERROR_FORMAT";
+const HURL_LOCATION: &str = "HURL_LOCATION";
+const HURL_LOCATION_TRUSTED: &str = "HURL_LOCATION_TRUSTED";
+const HURL_INSECURE: &str = "HURL_INSECURE";
+const HURL_IPV4: &str = "HURL_IPV4";
+const HURL_IPV6: &str = "HURL_IPV6";
+const HURL_JOBS: &str = "HURL_JOBS";
+const HURL_HEADER: &str = "HURL_HEADER";
+const HURL_HTTP10: &str = "HURL_HTTP10";
+const HURL_HTTP11: &str = "HURL_HTTP11";
+const HURL_HTTP2: &str = "HURL_HTTP2";
+const HURL_HTTP2_PRIOR_KNOWLEDGE: &str = "HURL_HTTP2_PRIOR_KNOWLEDGE";
+const HURL_HTTP3: &str = "HURL_HTTP3";
+const HURL_LIMIT_RATE: &str = "HURL_LIMIT_RATE";
+const HURL_MAX_FILESIZE: &str = "HURL_MAX_FILESIZE";
+const HURL_MAX_REDIRS: &str = "HURL_MAX_REDIRS";
+const HURL_MAX_TIME: &str = "HURL_MAX_TIME";
+const HURL_NO_ASSERT: &str = "HURL_NO_ASSERT";
+const HURL_NO_COLOR: &str = "HURL_NO_COLOR";
+const HURL_NO_COOKIE_STORE: &str = "HURL_NO_COOKIE_STORE";
+const HURL_NO_HEADER: &str = "HURL_NO_HEADER";
+const HURL_NO_JSONPATH_COERCION: &str = "HURL_NO_JSONPATH_COERCION";
+const HURL_NO_OUTPUT: &str = "HURL_NO_OUTPUT";
+const HURL_NO_PRETTY: &str = "HURL_NO_PRETTY";
+const HURL_PARALLEL: &str = "HURL_PARALLEL";
+const HURL_PRETTY: &str = "HURL_PRETTY";
+const HURL_PROGRESS_BAR: &str = "HURL_PROGRESS_BAR";
+const HURL_PROXY_HEADER: &str = "HURL_PROXY_HEADER";
+const HURL_RETRY: &str = "HURL_RETRY";
+const HURL_RETRY_INTERVAL: &str = "HURL_RETRY_INTERVAL";
+const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
+const HURL_TEST: &str = "HURL_TEST";
+const HURL_USER: &str = "HURL_USER";
+const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
+const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
+const HURL_VERBOSE: &str = "HURL_VERBOSE";
+const HURL_VERBOSITY: &str = "HURL_VERBOSITY";
+const HURL_VERY_VERBOSE: &str = "HURL_VERY_VERBOSE";
+const XDG_CONFIG_HOME: &str = "XDG_CONFIG_HOME";
+const HOME: &str = "HOME";
+
+impl EnvVars {
+    /// Captures all the environment vars, they will be seen as non-mutable for the execution.
+    pub fn new(env_vars: HashMap<String, String>) -> Self {
+        let hurl_env_vars = env_vars
+            .iter()
+            .filter(|(k, _v)| k.starts_with(HURL_PREFIX))
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect::<HashMap<_, _>>();
+
+        EnvVars {
+            all_env_vars: env_vars,
+            hurl_env_vars,
+        }
+    }
+
+    pub fn home(&self) -> Option<&str> {
+        self.all_env_vars.get(HOME).map(|v| v.as_str())
+    }
+
+    pub fn xdg_config_home(&self) -> Option<&str> {
+        self.all_env_vars.get(XDG_CONFIG_HOME).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for compressed response.
+    pub fn compressed(&self) -> Option<bool> {
+        self.get_bool(HURL_COMPRESSED)
+    }
+
+    /// Returns the env var for fail with body.
+    pub fn fail_with_body(&self) -> Option<bool> {
+        self.get_bool(HURL_FAIL_WITH_BODY)
+    }
+
+    /// Returns the env var for connect timeout duration.
+    pub fn connect_timeout(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_CONNECT_TIMEOUT)
+            .map(|v| v.as_str())
+    }
+
+    /// Returns the env var for continue on error.
+    pub fn continue_on_error(&self) -> Option<bool> {
+        self.get_bool(HURL_CONTINUE_ON_ERROR)
+    }
+
+    /// Returns the env var for delay duration.
+    pub fn delay(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_DELAY).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for error format.
+    pub fn error_format(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_ERROR_FORMAT)
+            .map(|v| v.as_str())
+    }
+
+    /// Returns the Hurl headers injected by environment variables.
+    pub fn headers(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_HEADER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for using HTTP/1.0.
+    pub fn http10(&self) -> Option<bool> {
+        self.get_bool(HURL_HTTP10)
+    }
+
+    /// Returns the env var for using HTTP/1.1.
+    pub fn http11(&self) -> Option<bool> {
+        self.get_bool(HURL_HTTP11)
+    }
+
+    /// Returns the env var for using HTTP/2.
+    pub fn http2(&self) -> Option<bool> {
+        self.get_bool(HURL_HTTP2)
+    }
+
+    /// Returns the env var for using HTTP/2 with prior knowledge.
+    pub fn http2_prior_knowledge(&self) -> Option<bool> {
+        self.get_bool(HURL_HTTP2_PRIOR_KNOWLEDGE)
+    }
+
+    /// Returns the env var for using HTTP/3.
+    pub fn http3(&self) -> Option<bool> {
+        self.get_bool(HURL_HTTP3)
+    }
+
+    /// Returns the env var for following redirects.
+    pub fn follow_location(&self) -> Option<bool> {
+        self.get_bool(HURL_LOCATION)
+    }
+
+    /// Returns the env var for following redirects with trusted location.
+    pub fn follow_location_trusted(&self) -> Option<bool> {
+        self.get_bool(HURL_LOCATION_TRUSTED)
+    }
+
+    /// Returns the env var for allowing insecure transfers.
+    pub fn insecure(&self) -> Option<bool> {
+        self.get_bool(HURL_INSECURE)
+    }
+
+    /// Returns the env var for IPv4 resolution.
+    pub fn ipv4(&self) -> Option<bool> {
+        self.get_bool(HURL_IPV4)
+    }
+
+    /// Returns the env var for IPv6 resolution.
+    pub fn ipv6(&self) -> Option<bool> {
+        self.get_bool(HURL_IPV6)
+    }
+
+    /// Returns `true` if the context is run from a CI context (like GitHub Actions, GitLab CI/CD etc...)
+    /// `false` otherwise.
+    pub fn is_ci(&self) -> bool {
+        // Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
+        self.all_env_vars.contains_key("CI") || self.all_env_vars.contains_key("TF_BUILD")
+    }
+
+    /// Returns the env var for maximum number of parallel jobs.
+    pub fn jobs(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_JOBS).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for transfer rate limit rating.
+    pub fn limit_rate(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_LIMIT_RATE).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for maximum file size to download.
+    pub fn max_filesize(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_MAX_FILESIZE)
+            .map(|v| v.as_str())
+    }
+
+    /// Returns the env var for maximum number of redirects.
+    pub fn max_redirs(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_MAX_REDIRS).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for max time duration.
+    pub fn max_time(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_MAX_TIME).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for parallel mode.
+    pub fn parallel(&self) -> Option<bool> {
+        self.get_bool(HURL_PARALLEL)
+    }
+
+    /// Returns the env var for max time duration.
+    pub fn progress_bar(&self) -> Option<bool> {
+        self.get_bool(HURL_PROGRESS_BAR)
+    }
+
+    /// Returns the env var for the user authentication.
+    pub fn user(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_USER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for the User-Agent string.
+    pub fn user_agent(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_USER_AGENT).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for ignoring asserts.
+    pub fn no_assert(&self) -> Option<bool> {
+        self.get_bool(HURL_NO_ASSERT)
+    }
+
+    /// Returns the env var for disabling cookie store.
+    pub fn no_cookie_store(&self) -> Option<bool> {
+        self.get_bool(HURL_NO_COOKIE_STORE)
+    }
+
+    /// Returns the env var for headers to remove from requests.
+    pub fn no_header(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_NO_HEADER).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for disabling JSONPath coercion.
+    pub fn no_jsonpath_coercion(&self) -> Option<bool> {
+        self.get_bool(HURL_NO_JSONPATH_COERCION)
+    }
+
+    /// Returns the env var for suppressing output.
+    pub fn no_output(&self) -> Option<bool> {
+        self.get_bool(HURL_NO_OUTPUT)
+    }
+
+    /// Returns the env var for disabling pretty output.
+    pub fn no_pretty(&self) -> Option<bool> {
+        self.get_bool(HURL_NO_PRETTY)
+    }
+
+    /// Returns the env var for enabling pretty output.
+    pub fn pretty(&self) -> Option<bool> {
+        self.get_bool(HURL_PRETTY)
+    }
+
+    /// Returns the Hurl proxy headers injected by environment variables.
+    pub fn proxy_headers(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_PROXY_HEADER)
+            .map(|v| v.as_str())
+    }
+
+    /// Returns the env var for retry count.
+    pub fn retry(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_RETRY).map(|v| v.as_str())
+    }
+
+    /// Returns the env var for retry interval duration.
+    pub fn retry_interval(&self) -> Option<&str> {
+        self.hurl_env_vars
+            .get(HURL_RETRY_INTERVAL)
+            .map(|v| v.as_str())
+    }
+
+    /// Returns the map of Hurl secrets injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_SECRET_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn secrets(&self) -> HashMap<&str, &str> {
+        self.hurl_env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(HURL_SECRET_PREFIX)
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
+    }
+
+    /// Returns `Some(true)` if color is set through env, `Some(false)` if color is disable through env,
+    /// `None` otherwise.
+    pub fn color(&self) -> Option<bool> {
+        self.get_bool(HURL_COLOR)
+    }
+
+    /// Returns `Some(true)` if no color is set through env, `Some(false)` if no color is disable through env,
+    /// `None` otherwise.
+    pub fn no_color(&self) -> Option<bool> {
+        if let Some(v) = self.all_env_vars.get("NO_COLOR") {
+            // According to the NO_COLOR spec, any presence of the variable should disable color, but to
+            // maintain backward compatibility with code < 7.1.0, we check that the NO_COLOR env is at
+            // least not empty.
+            if !v.is_empty() { Some(true) } else { None }
+        } else {
+            self.get_bool(HURL_NO_COLOR)
+        }
+    }
+
+    /// Returns `Some(true)` if test mode is set through env, `Some(false)` if test mode is disable through env,
+    /// `None` otherwise.
+    pub fn test(&self) -> Option<bool> {
+        self.get_bool(HURL_TEST)
+    }
+
+    /// Returns the map of Hurl variables injected by environment variables.
+    ///
+    /// Environment variables are prefixed with `HURL_VARIABLE_` and returned values have their name
+    /// stripped of this prefix.
+    pub fn variables(&self) -> HashMap<&str, &str> {
+        self.hurl_env_vars
+            .iter()
+            .filter_map(|(name, value)| {
+                name.strip_prefix(HURL_VARIABLE_PREFIX)
+                    .filter(|n| !n.is_empty())
+                    .map(|stripped| (stripped, value.as_str()))
+            })
+            .collect()
+    }
+
+    pub fn verbose(&self) -> Option<bool> {
+        self.get_bool(HURL_VERBOSE)
+    }
+
+    pub fn verbosity(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_VERBOSITY).map(|v| v.as_str())
+    }
+
+    pub fn very_verbose(&self) -> Option<bool> {
+        self.get_bool(HURL_VERY_VERBOSE)
+    }
+
+    fn get_bool(&self, name: &'static str) -> Option<bool> {
+        self.hurl_env_vars
+            .get(name)
+            .map(|s| s.as_str())
+            .map(|v| v.to_ascii_lowercase())
+            .and_then(|v| match v.as_str() {
+                "1" | "true" => Some(true),
+                "0" | "false" => Some(false),
+                _ => None,
+            })
+    }
 }
 
-fn color(context: &RunContext, default_value: bool) -> bool {
-    if let Some(no_color) = context.no_color_env_var() {
+fn compressed(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.compressed().unwrap_or(default_value)
+}
+
+fn fail_with_body(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.fail_with_body().unwrap_or(default_value)
+}
+
+fn color(env_vars: &EnvVars, default_value: bool) -> bool {
+    if let Some(no_color) = env_vars.no_color() {
         return !no_color;
     }
-    if let Some(color) = context.color_env_var() {
+    if let Some(color) = env_vars.color() {
         return color;
     }
     default_value
 }
 
 fn connect_timeout(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Duration,
 ) -> Result<Duration, CliOptionsError> {
-    match context.connect_timeout_env_var() {
+    match env_vars.connect_timeout() {
         Some(timeout) => duration::duration_from_str(timeout, DurationUnit::Second)
             .map_err(|e| err_from_cli_err(e, HURL_CONNECT_TIMEOUT)),
         None => Ok(default_value),
     }
 }
 
-fn continue_on_error(context: &RunContext, default_value: bool) -> bool {
-    context.continue_on_error_env_var().unwrap_or(default_value)
+fn continue_on_error(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.continue_on_error().unwrap_or(default_value)
 }
 
-fn delay(context: &RunContext, default_value: Duration) -> Result<Duration, CliOptionsError> {
-    match context.delay_env_var() {
+fn delay(env_vars: &EnvVars, default_value: Duration) -> Result<Duration, CliOptionsError> {
+    match env_vars.delay() {
         Some(delay) => duration::duration_from_str(delay, DurationUnit::MilliSecond)
             .map_err(|e| err_from_cli_err(e, HURL_DELAY)),
         None => Ok(default_value),
@@ -78,10 +431,10 @@ fn delay(context: &RunContext, default_value: Duration) -> Result<Duration, CliO
 }
 
 fn error_format(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: ErrorFormat,
 ) -> Result<ErrorFormat, CliOptionsError> {
-    match context.error_format_env_var() {
+    match env_vars.error_format() {
         Some(error_format) => {
             ErrorFormat::from_str(error_format).map_err(|e| err_from_cli_err(e, HURL_ERROR_FORMAT))
         }
@@ -89,16 +442,16 @@ fn error_format(
     }
 }
 
-fn follow_location(context: &RunContext, default_value: bool) -> Result<bool, CliOptionsError> {
+fn follow_location(env_vars: &EnvVars, default_value: bool) -> Result<bool, CliOptionsError> {
     let value = match (
-        context.follow_location_env_var(),
-        context.follow_location_trusted_env_var(),
+        env_vars.follow_location(),
+        env_vars.follow_location_trusted(),
     ) {
         (Some(true), _) => true,
         (Some(false), Some(true)) => {
             let error = format!(
                 "Invalid environment variables configuration {} {}",
-                HURL_FOLLOW_LOCATION, HURL_FOLLOW_LOCATION_TRUSTED
+                HURL_LOCATION, HURL_LOCATION_TRUSTED
             );
             return Err(CliOptionsError::Error(error));
         }
@@ -109,19 +462,17 @@ fn follow_location(context: &RunContext, default_value: bool) -> Result<bool, Cl
     Ok(value)
 }
 
-fn follow_location_trusted(context: &RunContext, default_value: bool) -> bool {
-    context
-        .follow_location_trusted_env_var()
-        .unwrap_or(default_value)
+fn follow_location_trusted(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.follow_location_trusted().unwrap_or(default_value)
 }
 
-fn headers(
-    context: &RunContext,
-    default_value: Vec<String>,
-) -> Result<Vec<String>, CliOptionsError> {
+fn headers(env_vars: &EnvVars, default_value: Vec<String>) -> Result<Vec<String>, CliOptionsError> {
     let mut all_headers = default_value;
-    if let Some(header) = context.header_env_var() {
-        let headers = header.split("|").map(|h| h.to_string()).collect::<Vec<_>>();
+    if let Some(headers) = env_vars.headers() {
+        let headers = headers
+            .split("|")
+            .map(|h| h.to_string())
+            .collect::<Vec<_>>();
         for h in &headers {
             if !h.contains(':') {
                 let msg = format!("Invalid header <{h}>, missing `:`");
@@ -133,50 +484,50 @@ fn headers(
     Ok(all_headers)
 }
 
-fn http_version(context: &RunContext, default_value: Option<HttpVersion>) -> Option<HttpVersion> {
-    if let Some(http3) = context.http3_env_var() {
+fn http_version(env_vars: &EnvVars, default_value: Option<HttpVersion>) -> Option<HttpVersion> {
+    if let Some(http3) = env_vars.http3() {
         if http3 {
             Some(HttpVersion::V3)
         } else {
             Some(HttpVersion::V2)
         }
-    } else if let Some(http2_prior_knowledge) = context.http2_prior_knowledge_env_var() {
+    } else if let Some(http2_prior_knowledge) = env_vars.http2_prior_knowledge() {
         if http2_prior_knowledge {
             Some(HttpVersion::V2PriorKnowledge)
         } else {
             Some(HttpVersion::V11)
         }
-    } else if let Some(http2) = context.http2_env_var() {
+    } else if let Some(http2) = env_vars.http2() {
         if http2 {
             Some(HttpVersion::V2)
         } else {
             Some(HttpVersion::V11)
         }
-    } else if let Some(http11) = context.http11_env_var() {
+    } else if let Some(http11) = env_vars.http11() {
         if http11 {
             Some(HttpVersion::V11)
         } else {
             Some(HttpVersion::V10)
         }
-    } else if let Some(true) = context.http10_env_var() {
+    } else if let Some(true) = env_vars.http10() {
         Some(HttpVersion::V10)
     } else {
         default_value
     }
 }
 
-fn insecure(context: &RunContext, default_value: bool) -> bool {
-    context.insecure_env_var().unwrap_or(default_value)
+fn insecure(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.insecure().unwrap_or(default_value)
 }
 
-fn ip_resolve(context: &RunContext, default_value: Option<IpResolve>) -> Option<IpResolve> {
-    if let Some(ipv6) = context.ipv6_env_var() {
+fn ip_resolve(env_vars: &EnvVars, default_value: Option<IpResolve>) -> Option<IpResolve> {
+    if let Some(ipv6) = env_vars.ipv6() {
         if ipv6 {
             Some(IpResolve::IpV6)
         } else {
             Some(IpResolve::IpV4)
         }
-    } else if let Some(ipv4) = context.ipv4_env_var() {
+    } else if let Some(ipv4) = env_vars.ipv4() {
         if ipv4 {
             Some(IpResolve::IpV4)
         } else {
@@ -188,10 +539,10 @@ fn ip_resolve(context: &RunContext, default_value: Option<IpResolve>) -> Option<
 }
 
 fn jobs(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Option<usize>,
 ) -> Result<Option<usize>, CliOptionsError> {
-    match context.jobs_env_var() {
+    match env_vars.jobs() {
         Some(jobs) => jobs
             .parse::<usize>()
             .map(Some)
@@ -201,10 +552,10 @@ fn jobs(
 }
 
 fn limit_rate(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Option<BytesPerSec>,
 ) -> Result<Option<BytesPerSec>, CliOptionsError> {
-    match context.limit_rate_env_var() {
+    match env_vars.limit_rate() {
         Some(limit_rate) => limit_rate
             .parse::<u64>()
             .map(BytesPerSec)
@@ -215,10 +566,10 @@ fn limit_rate(
 }
 
 fn max_filesize(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Option<u64>,
 ) -> Result<Option<u64>, CliOptionsError> {
-    match context.max_filesize_env_var() {
+    match env_vars.max_filesize() {
         Some(max_filesize) => max_filesize
             .parse::<u64>()
             .map(Some)
@@ -227,8 +578,8 @@ fn max_filesize(
     }
 }
 
-fn max_redirect(context: &RunContext, default_value: Count) -> Result<Count, CliOptionsError> {
-    match context.max_redirs_env_var() {
+fn max_redirect(env_vars: &EnvVars, default_value: Count) -> Result<Count, CliOptionsError> {
+    match env_vars.max_redirs() {
         Some(max_redirs) => max_redirs
             .parse::<i32>()
             .map_err(|e| err_from(e, HURL_MAX_REDIRS))
@@ -237,20 +588,20 @@ fn max_redirect(context: &RunContext, default_value: Count) -> Result<Count, Cli
     }
 }
 
-fn no_assert(context: &RunContext, default_value: bool) -> bool {
-    context.no_assert_env_var().unwrap_or(default_value)
+fn no_assert(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.no_assert().unwrap_or(default_value)
 }
 
-fn no_cookie_store(context: &RunContext, default_value: bool) -> bool {
-    context.no_cookie_store_env_var().unwrap_or(default_value)
+fn no_cookie_store(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.no_cookie_store().unwrap_or(default_value)
 }
 
 fn no_headers(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Vec<String>,
 ) -> Result<Vec<String>, CliOptionsError> {
     let mut all_no_headers = default_value;
-    if let Some(no_header) = context.no_header_env_var() {
+    if let Some(no_header) = env_vars.no_header() {
         let no_headers = no_header
             .split("|")
             .map(|h| h.trim().to_string())
@@ -270,12 +621,12 @@ fn no_headers(
 }
 
 fn proxy_headers(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Vec<String>,
 ) -> Result<Vec<String>, CliOptionsError> {
     let mut all_proxy_headers = default_value;
-    if let Some(proxy_header) = context.proxy_header_env_var() {
-        let proxy_headers = proxy_header
+    if let Some(proxy_headers) = env_vars.proxy_headers() {
+        let proxy_headers = proxy_headers
             .split("|")
             .map(|h| h.to_string())
             .collect::<Vec<_>>();
@@ -293,55 +644,66 @@ fn proxy_headers(
     Ok(all_proxy_headers)
 }
 
-fn no_jsonpath_coercion(context: &RunContext, default_value: bool) -> bool {
-    context
-        .no_jsonpath_coercion_env_var()
-        .unwrap_or(default_value)
+fn no_jsonpath_coercion(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.no_jsonpath_coercion().unwrap_or(default_value)
 }
 
-fn output_type(context: &RunContext, default_value: OutputType) -> OutputType {
-    match (context.no_output_env_var(), context.test_env_var()) {
-        (Some(true), _) => OutputType::NoOutput,
-        (_, Some(true)) => OutputType::NoOutput,
-        _ => default_value,
+fn output_type(env_vars: &EnvVars, default_value: OutputType) -> OutputType {
+    if let Some(true) = env_vars.no_output() {
+        OutputType::NoOutput
+    } else if let Some(true) = env_vars.test() {
+        OutputType::NoOutput
+    } else {
+        default_value
     }
 }
 
-fn parallel(context: &RunContext, default_value: bool) -> bool {
-    if let Some(true) = context.test_env_var() {
+fn parallel(env_vars: &EnvVars, default_value: bool) -> bool {
+    if let Some(true) = env_vars.parallel() {
+        true
+    } else if let Some(true) = env_vars.test() {
         true
     } else {
         default_value
     }
 }
 
-fn pretty(context: &RunContext, default_value: PrettyMode) -> PrettyMode {
-    if let Some(true) = context.pretty_env_var() {
-        return PrettyMode::Force;
+fn pretty(env_vars: &EnvVars, default_value: PrettyMode) -> PrettyMode {
+    if let Some(true) = env_vars.pretty() {
+        PrettyMode::Force
+    } else if let Some(true) = env_vars.no_pretty() {
+        PrettyMode::None
+    } else {
+        default_value
     }
-    if let Some(true) = context.no_pretty_env_var() {
-        return PrettyMode::None;
-    }
-    default_value
 }
 
-fn progress_bar(context: &RunContext, default_value: bool) -> bool {
-    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-    if let Some(true) = context.test_env_var()
-        && context.is_stderr_term()
-        && !context.is_ci_env_var()
-    {
-        return true;
+fn progress_bar(
+    env_vars: &EnvVars,
+    is_stderr_term: bool,
+    is_ci: bool,
+    default_value: bool,
+) -> bool {
+    if let Some(true) = env_vars.progress_bar() {
+        true
     }
-
-    default_value
+    // The progress bar is automatically displayed for test mode when we are in an interactive context
+    // (stderr is a TTY and not running in CI).
+    else if let Some(true) = env_vars.test()
+        && is_stderr_term
+        && !is_ci
+    {
+        true
+    } else {
+        default_value
+    }
 }
 
 fn retry(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Option<Count>,
 ) -> Result<Option<Count>, CliOptionsError> {
-    match context.retry_env_var() {
+    match env_vars.retry() {
         Some(retry) => retry
             .parse::<i32>()
             .map_err(|e| err_from(e, HURL_RETRY))
@@ -352,10 +714,10 @@ fn retry(
 }
 
 fn retry_interval(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Duration,
 ) -> Result<Duration, CliOptionsError> {
-    match context.retry_interval_env_var() {
+    match env_vars.retry_interval() {
         Some(retry_interval) => {
             duration::duration_from_str(retry_interval, DurationUnit::MilliSecond)
                 .map_err(|e| err_from_cli_err(e, HURL_RETRY_INTERVAL))
@@ -364,41 +726,38 @@ fn retry_interval(
     }
 }
 
-fn test(context: &RunContext, default_value: bool) -> bool {
-    context.test_env_var().unwrap_or(default_value)
+fn test(env_vars: &EnvVars, default_value: bool) -> bool {
+    env_vars.test().unwrap_or(default_value)
 }
 
-fn timeout(context: &RunContext, default_value: Duration) -> Result<Duration, CliOptionsError> {
-    match context.max_time_env_var() {
+fn timeout(env_vars: &EnvVars, default_value: Duration) -> Result<Duration, CliOptionsError> {
+    match env_vars.max_time() {
         Some(max_time) => duration::duration_from_str(max_time, DurationUnit::Second)
             .map_err(|e| err_from_cli_err(e, HURL_MAX_TIME)),
         None => Ok(default_value),
     }
 }
 
-fn user(context: &RunContext, default_value: Option<String>) -> Option<String> {
-    context
-        .user_env_var()
-        .map(|s| s.to_string())
-        .or(default_value)
+fn user(env_vars: &EnvVars, default_value: Option<String>) -> Option<String> {
+    env_vars.user().map(|s| s.to_string()).or(default_value)
 }
 
-fn user_agent(context: &RunContext, default_value: Option<String>) -> Option<String> {
-    context
-        .user_agent_env_var()
+fn user_agent(env_vars: &EnvVars, default_value: Option<String>) -> Option<String> {
+    env_vars
+        .user_agent()
         .map(|s| s.to_string())
         .or(default_value)
 }
 
 fn verbosity(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_value: Option<Verbosity>,
 ) -> Result<Option<Verbosity>, CliOptionsError> {
-    let verbosity = if let Some(true) = context.verbose_env_var() {
+    let verbosity = if let Some(true) = env_vars.verbose() {
         Some(Verbosity::Verbose)
-    } else if let Some(true) = context.very_verbose_env_var() {
+    } else if let Some(true) = env_vars.very_verbose() {
         Some(Verbosity::Debug)
-    } else if let Some(verbosity) = context.verbosity_env_var() {
+    } else if let Some(verbosity) = env_vars.verbosity() {
         let verbosity =
             Verbosity::from_str(verbosity).map_err(|e| err_from_cli_err(e, HURL_VERBOSITY))?;
         Some(verbosity)
@@ -410,46 +769,53 @@ fn verbosity(
 
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
-    context: &RunContext,
+    env_vars: &EnvVars,
+    is_stderr_term: bool,
+    is_ci: bool,
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
-    let color_stdout = color(context, default_options.color_stdout);
-    let color_stderr = color(context, default_options.color_stderr);
-    let compressed = compressed(context, default_options.compressed);
-    let connect_timeout = connect_timeout(context, default_options.connect_timeout)?;
-    let fail_with_body = fail_with_body(context, default_options.fail_with_body);
-    let continue_on_error = continue_on_error(context, default_options.continue_on_error);
-    let delay = delay(context, default_options.delay)?;
-    let error_format = error_format(context, default_options.error_format)?;
-    let headers = headers(context, default_options.headers)?;
-    let http_version = http_version(context, default_options.http_version);
-    let ip_resolve = ip_resolve(context, default_options.ip_resolve);
-    let no_assert = no_assert(context, default_options.no_assert);
-    let no_cookie_store = no_cookie_store(context, default_options.no_cookie_store);
-    let no_headers = no_headers(context, default_options.no_headers)?;
-    let no_jsonpath_coercion = no_jsonpath_coercion(context, default_options.no_jsonpath_coercion);
-    let output_type = output_type(context, default_options.output_type);
-    let follow_location = follow_location(context, default_options.follow_location)?;
+    let color_stdout = color(env_vars, default_options.color_stdout);
+    let color_stderr = color(env_vars, default_options.color_stderr);
+    let compressed = compressed(env_vars, default_options.compressed);
+    let connect_timeout = connect_timeout(env_vars, default_options.connect_timeout)?;
+    let fail_with_body = fail_with_body(env_vars, default_options.fail_with_body);
+    let continue_on_error = continue_on_error(env_vars, default_options.continue_on_error);
+    let delay = delay(env_vars, default_options.delay)?;
+    let error_format = error_format(env_vars, default_options.error_format)?;
+    let headers = headers(env_vars, default_options.headers)?;
+    let http_version = http_version(env_vars, default_options.http_version);
+    let ip_resolve = ip_resolve(env_vars, default_options.ip_resolve);
+    let no_assert = no_assert(env_vars, default_options.no_assert);
+    let no_cookie_store = no_cookie_store(env_vars, default_options.no_cookie_store);
+    let no_headers = no_headers(env_vars, default_options.no_headers)?;
+    let no_jsonpath_coercion = no_jsonpath_coercion(env_vars, default_options.no_jsonpath_coercion);
+    let output_type = output_type(env_vars, default_options.output_type);
+    let follow_location = follow_location(env_vars, default_options.follow_location)?;
     let follow_location_trusted =
-        follow_location_trusted(context, default_options.follow_location_trusted);
-    let insecure = insecure(context, default_options.insecure);
-    let jobs = jobs(context, default_options.jobs)?;
-    let limit_rate = limit_rate(context, default_options.limit_rate)?;
-    let max_filesize = max_filesize(context, default_options.max_filesize)?;
-    let max_redirect = max_redirect(context, default_options.max_redirect)?;
-    let parallel = parallel(context, default_options.parallel);
-    let pretty = pretty(context, default_options.pretty);
-    let progress_bar = progress_bar(context, default_options.progress_bar);
-    let proxy_headers = proxy_headers(context, default_options.proxy_headers)?;
-    let retry = retry(context, default_options.retry)?;
-    let retry_interval = retry_interval(context, default_options.retry_interval)?;
-    let secrets = secrets(context, default_options.secrets)?;
-    let timeout = timeout(context, default_options.timeout)?;
-    let user = user(context, default_options.user);
-    let user_agent = user_agent(context, default_options.user_agent);
-    let variables = variables(context, default_options.variables)?;
-    let verbosity = verbosity(context, default_options.verbosity)?;
-    let test = test(context, default_options.test);
+        follow_location_trusted(env_vars, default_options.follow_location_trusted);
+    let insecure = insecure(env_vars, default_options.insecure);
+    let jobs = jobs(env_vars, default_options.jobs)?;
+    let limit_rate = limit_rate(env_vars, default_options.limit_rate)?;
+    let max_filesize = max_filesize(env_vars, default_options.max_filesize)?;
+    let max_redirect = max_redirect(env_vars, default_options.max_redirect)?;
+    let parallel = parallel(env_vars, default_options.parallel);
+    let pretty = pretty(env_vars, default_options.pretty);
+    let progress_bar = progress_bar(
+        env_vars,
+        is_stderr_term,
+        is_ci,
+        default_options.progress_bar,
+    );
+    let proxy_headers = proxy_headers(env_vars, default_options.proxy_headers)?;
+    let retry = retry(env_vars, default_options.retry)?;
+    let retry_interval = retry_interval(env_vars, default_options.retry_interval)?;
+    let secrets = secrets(env_vars, default_options.secrets)?;
+    let timeout = timeout(env_vars, default_options.timeout)?;
+    let user = user(env_vars, default_options.user);
+    let user_agent = user_agent(env_vars, default_options.user_agent);
+    let variables = variables(env_vars, default_options.variables)?;
+    let verbosity = verbosity(env_vars, default_options.verbosity)?;
+    let test = test(env_vars, default_options.test);
 
     Ok(CliOptions {
         color_stdout,
@@ -497,7 +863,7 @@ pub fn parse_env_vars(
 ///
 /// Variables can be set with `HURL_VARIABLE_foo`.
 fn variables(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_variables: HashMap<String, Value>,
 ) -> Result<HashMap<String, Value>, CliOptionsError> {
     let mut variables = default_variables;
@@ -506,7 +872,7 @@ fn variables(
     let type_kind = TypeKind::Inferred;
 
     // Insert environment variables `HURL_VARIABLE_foo`
-    for (env_name, env_value) in context.var_env_vars() {
+    for (env_name, env_value) in env_vars.variables() {
         let value = variables::parse_value(env_value, type_kind)?;
         variables.insert(env_name.to_string(), value);
     }
@@ -519,7 +885,7 @@ fn variables(
 ///
 /// Secrets can be set with `HURL_SECRET_foo`.
 fn secrets(
-    context: &RunContext,
+    env_vars: &EnvVars,
     default_secrets: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, CliOptionsError> {
     let mut secrets = default_secrets;
@@ -528,7 +894,7 @@ fn secrets(
     let type_kind = TypeKind::String;
 
     // Insert environment secrets `HURL_SECRET_foo`
-    for (env_name, env_value) in context.secret_env_vars() {
+    for (env_name, env_value) in env_vars.secrets() {
         let value = variables::parse_value(env_value, type_kind)?;
         secret::add_secret(&mut secrets, env_name.to_string(), value)?;
     }
@@ -555,16 +921,111 @@ fn err_from_cli_err(error: CliOptionsError, env: &'static str) -> CliOptionsErro
 
 #[cfg(test)]
 mod tests {
-    use super::{CliOptions, RunContext, parse_env_vars};
+    use super::{CliOptions, EnvVars, parse_env_vars};
     use hurl::runner::{Number, Value};
     use std::collections::HashMap;
 
     #[test]
-    fn test_options_variables_override_by_env_vars() {
-        let stdin_term = true;
-        let stdout_term = true;
-        let stderr_term = true;
+    fn env_vars_has_no_env_var_color() {
+        let env_vars = HashMap::from([("A".to_string(), "B".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
+        assert!(env_vars.color().is_none());
+    }
 
+    #[test]
+    fn env_vars_has_color() {
+        let data = [
+            ("HURL_COLOR", "0", Some(false)),
+            ("HURL_COLOR", "1", Some(true)),
+            ("HURL_COLOR", "true", Some(true)),
+            ("HURL_COLOR", "TRUE", Some(true)),
+            ("HURL_COLOR", "false", Some(false)),
+            ("HURL_COLOR", "FALSE", Some(false)),
+        ];
+
+        for (name, value, expected) in data {
+            let env_vars = HashMap::from([(name.to_string(), value.to_string())]);
+            let env_vars = EnvVars::new(env_vars);
+            assert_eq!(
+                env_vars.color(),
+                expected,
+                "test env var {}={}",
+                name,
+                value
+            );
+        }
+    }
+
+    #[test]
+    fn env_vars_has_no_color() {
+        let data = [
+            ("NO_COLOR", "0", Some(true)),
+            ("NO_COLOR", "1", Some(true)),
+            ("NO_COLOR", "true", Some(true)),
+            ("NO_COLOR", "TRUE", Some(true)),
+            ("NO_COLOR", "false", Some(true)),
+            ("NO_COLOR", "FALSE", Some(true)),
+            ("HURL_NO_COLOR", "0", Some(false)),
+            ("HURL_NO_COLOR", "1", Some(true)),
+            ("HURL_NO_COLOR", "true", Some(true)),
+            ("HURL_NO_COLOR", "TRUE", Some(true)),
+            ("HURL_NO_COLOR", "false", Some(false)),
+            ("HURL_NO_COLOR", "FALSE", Some(false)),
+        ];
+
+        for (name, value, expected) in data {
+            let env_vars = HashMap::from([(name.to_string(), value.to_string())]);
+            let env_vars = EnvVars::new(env_vars);
+            assert_eq!(
+                env_vars.no_color(),
+                expected,
+                "test env var {}={}",
+                name,
+                value
+            );
+        }
+    }
+
+    #[test]
+    fn empty_variables_secrets_from_env() {
+        let env_vars = HashMap::from([
+            ("FOO".to_string(), "xxx".to_string()),
+            ("BAR".to_string(), "yyy".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+        ]);
+
+        let env_vars = EnvVars::new(env_vars);
+
+        assert!(env_vars.variables().is_empty());
+        assert!(env_vars.secrets().is_empty());
+    }
+
+    #[test]
+    fn variables_from_env() {
+        let env_vars = HashMap::from([
+            ("FOO".to_string(), "xxx".to_string()),
+            ("BAR".to_string(), "yyy".to_string()),
+            ("BAZ".to_string(), "yyy".to_string()),
+            ("HURL_VARIABLE_foo".to_string(), "true".to_string()),
+            ("HURL_VARIABLE_id".to_string(), "1234".to_string()),
+            ("HURL_VARIABLE".to_string(), "1234".to_string()),
+            ("HURL_VARIABLE_".to_string(), "abcd".to_string()),
+            ("HURL_VARIABLE_FOO".to_string(), "def".to_string()),
+            ("HURL_COLOR".to_string(), "1".to_string()),
+            ("HURL_NO_COLOR".to_string(), "1".to_string()),
+        ]);
+
+        let env_vars = EnvVars::new(env_vars);
+
+        assert_eq!(env_vars.variables().len(), 3);
+        assert_eq!(env_vars.variables()["foo"], "true");
+        assert_eq!(env_vars.variables()["id"], "1234");
+        assert_eq!(env_vars.variables()["FOO"], "def");
+        assert!(env_vars.secrets().is_empty());
+    }
+
+    #[test]
+    fn test_options_variables_override_by_env_vars() {
         // Default configuration of Hurl run.
         let mut options = CliOptions::default();
         let mut variables = HashMap::new();
@@ -580,9 +1041,11 @@ mod tests {
             ("HURL_baz".to_string(), "abcd".to_string()),
             ("NOT_A_VARIABLE".to_string(), "bar".to_string()),
         ]);
-        let ctx = RunContext::new(env_vars_override, stdin_term, stdout_term, stderr_term);
+        let env_vars = EnvVars::new(env_vars_override);
 
-        let updated_options = parse_env_vars(&ctx, options).unwrap();
+        let is_ci = false;
+        let is_stderr_term = true;
+        let updated_options = parse_env_vars(&env_vars, is_stderr_term, is_ci, options).unwrap();
         assert_eq!(updated_options.variables.len(), 3);
         assert_eq!(
             updated_options.variables["foo"],
@@ -600,10 +1063,6 @@ mod tests {
 
     #[test]
     fn test_options_secrets_override_by_env_vars() {
-        let stdin_term = true;
-        let stdout_term = true;
-        let stderr_term = true;
-
         // Default configuration of Hurl run.
         let mut options = CliOptions::default();
         let mut secrets = HashMap::new();
@@ -617,9 +1076,11 @@ mod tests {
             ("HURL_VARIABLE_bar".to_string(), "BAR".to_string()),
             ("HURL_SECRET_secret3".to_string(), "SECRET3".to_string()),
         ]);
-        let ctx = RunContext::new(env_vars_override, stdin_term, stdout_term, stderr_term);
+        let env_vars = EnvVars::new(env_vars_override);
 
-        let updated_options = parse_env_vars(&ctx, options).unwrap();
+        let is_ci = false;
+        let is_stderr_term = true;
+        let updated_options = parse_env_vars(&env_vars, is_stderr_term, is_ci, options).unwrap();
         assert_eq!(updated_options.variables.len(), 1);
         assert_eq!(
             updated_options.variables["bar"],

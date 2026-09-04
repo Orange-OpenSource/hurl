@@ -831,7 +831,7 @@ fn progress_bar(arg_matches: &ArgMatches, context: &RunContext, default_value: b
         return true;
     }
     // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
-    if has_flag(arg_matches, "test") && context.is_stderr_term() && !context.is_ci_env_var() {
+    if has_flag(arg_matches, "test") && context.is_stderr_term() && !context.is_ci() {
         return true;
     }
     default_value
