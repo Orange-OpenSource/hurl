@@ -472,6 +472,8 @@ This is a cli-only option.
 
 Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
 
+Environment variables: HURL_PROGRESS_BAR
+
 This is a cli-only option.
 
 #### -v, --verbose {#verbose}
@@ -566,6 +568,8 @@ Run files in parallel.
 Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#test) mode.
 
 See also [`--jobs`](#jobs).
+
+Environment variables: HURL_PARALLEL
 
 This is a cli-only option.
 

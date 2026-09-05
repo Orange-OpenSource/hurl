@@ -43,8 +43,29 @@ use hurl_core::types::{BytesPerSec, Count};
 
 use crate::cli::CliError;
 pub use crate::cli::options::context::RunContext;
+pub use crate::cli::options::env_vars::EnvVars;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 pub use error::CliOptionsError;
+
+/// Controls a boolean option that can either be explicitly configured or determined automatically.
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
+pub enum BoolOpt {
+    /// This option has been set explicitly (by user, or by the running context)
+    Set(bool),
+    /// This option has not been set yet and will be valued later
+    #[default]
+    Auto,
+}
+
+impl BoolOpt {
+    /// Returns the value if it has been set explicitly, or a default value.
+    pub fn unwrap_or(&self, default: bool) -> bool {
+        match self {
+            BoolOpt::Set(val) => *val,
+            BoolOpt::Auto => default,
+        }
+    }
+}
 
 /// Represents the list of all options that can be used in Hurl command line.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -95,11 +116,11 @@ pub struct CliOptions {
     pub ntlm: bool,
     pub output: Option<Output>,
     pub output_type: OutputType,
-    pub parallel: bool,
+    pub parallel: BoolOpt,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
     pub pretty: PrettyMode,
-    pub progress_bar: bool,
+    pub progress_bar: BoolOpt,
     pub proxy: Option<String>,
     pub proxy_headers: Vec<String>,
     pub repeat: Option<Count>,
@@ -117,6 +138,21 @@ pub struct CliOptions {
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbosity: Option<Verbosity>,
+}
+
+impl CliOptions {
+    /// Evaluates all the options that has been not explicitly set, and makes the options coherent.
+    pub fn finalize(mut self, context: &RunContext, env_vars: &EnvVars) -> Self {
+        if matches!(self.progress_bar, BoolOpt::Auto) {
+            // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
+            let interactive = self.test && context.is_stderr_term() && !env_vars.is_ci();
+            self.progress_bar = BoolOpt::Set(interactive);
+        }
+        if matches!(self.parallel, BoolOpt::Auto) {
+            self.parallel = BoolOpt::Set(self.test);
+        }
+        self
+    }
 }
 
 /// Log verbosity level
@@ -228,13 +264,14 @@ fn get_version() -> String {
 }
 
 /// Parse the Hurl CLI options and returns a [`CliOptions`] result, given a run `context`
-/// (environment variables).
-pub fn parse(context: &RunContext) -> Result<CliOptions, CliOptionsError> {
+/// and environment variables.
+pub fn parse(context: &RunContext, env_vars: &EnvVars) -> Result<CliOptions, CliOptionsError> {
     let options = CliOptions::default();
     let options = context::init_options(context, options);
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
-    let options = env_vars::parse_env_vars(context, options)?;
+    let options = env_vars::parse_env_vars(env_vars, options)?;
     let options = args::parse_cli_args(context, options)?;
+    let options = options.finalize(context, env_vars);
     Ok(options)
 }
 
@@ -297,11 +334,11 @@ impl Default for CliOptions {
             ntlm: false,
             output: None,
             output_type: OutputType::ResponseBody,
-            parallel: false,
+            parallel: BoolOpt::Auto,
             path_as_is: false,
             pinned_pub_key: None,
             pretty: PrettyMode::None,
-            progress_bar: false,
+            progress_bar: BoolOpt::Auto,
             proxy: None,
             proxy_headers: Vec::new(),
             repeat: None,

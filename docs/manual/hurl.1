@@ -1,4 +1,4 @@
-.TH hurl 1 "31 Aug 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "04 Sep 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -457,6 +457,8 @@ This is a cli-only option.
 
 Display a progress bar in test mode. The progress bar is displayed only in interactive TTYs. This option forces the progress bar to be displayed even in non-interactive TTYs.
 
+Environment variables: HURL_PROGRESS_BAR
+
 This is a cli-only option.
 
 .IP "-v, --verbose "
@@ -551,6 +553,8 @@ Run files in parallel.
 Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in \fI--test\fP mode.
 
 See also \fI--jobs\fP.
+
+Environment variables: HURL_PARALLEL
 
 This is a cli-only option.
 
