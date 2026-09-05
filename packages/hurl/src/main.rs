@@ -57,10 +57,10 @@ struct HurlRun {
 fn main() -> ExitCode {
     text::init_crate_colored();
 
-    // Construct the run context environment, this should be the sole place where we read
-    // environment variables. The run context will be injected in functions that need to access
-    // environment variables.
+    // Construct the run context environment, the environment variables. This should be the sole
+    // place where we read environment variables.
     // TODO: add `env::current_dir` to the run context
+    let args = env::args_os();
     let env_vars = env::vars().collect();
     let env_vars = EnvVars::new(env_vars);
     let stdin_term = io::stdin().is_terminal();
@@ -68,7 +68,7 @@ fn main() -> ExitCode {
     let stderr_term = io::stderr().is_terminal();
     let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
-    let opts = match cli::options::parse(&ctx, &env_vars) {
+    let opts = match cli::options::parse(args, &ctx, &env_vars) {
         Ok(v) => v,
         Err(e) => match e {
             CliOptionsError::DisplayHelp(e) | CliOptionsError::DisplayVersion(e) => {

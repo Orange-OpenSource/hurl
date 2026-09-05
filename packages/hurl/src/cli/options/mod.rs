@@ -27,6 +27,7 @@ mod variables;
 mod variables_file;
 
 use std::collections::HashMap;
+use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 use std::time::Duration;
@@ -228,15 +229,22 @@ fn get_version() -> String {
     )
 }
 
-/// Parse the Hurl CLI options and returns a [`CliOptions`] result, given a run `context`
-/// and environment variables.
-pub fn parse(context: &RunContext, env_vars: &EnvVars) -> Result<CliOptions, CliOptionsError> {
+/// Parse the Hurl CLI options and returns a [`CliOptions`] result, given list of command line arguments,
+/// a run `context` and environment variables.
+pub fn parse<I>(
+    args: I,
+    context: &RunContext,
+    env_vars: &EnvVars,
+) -> Result<CliOptions, CliOptionsError>
+where
+    I: IntoIterator<Item = OsString>,
+{
     let options = CliOptions::default();
     let options = context::init_options(context, options);
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
-    let options = args::parse_cli_args(context, options)?;
     let options =
         env_vars::parse_env_vars(env_vars, context.is_stderr_term(), context.is_ci(), options)?;
+    let options = args::parse_cli_args(args, context, options)?;
     Ok(options)
 }
 
@@ -500,5 +508,80 @@ impl CliOptions {
             .error_format(self.error_format.into())
             .verbosity(verbosity)
             .build()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::cli::options::{EnvVars, RunContext};
+    use crate::cli::{OutputType, options};
+    use std::collections::HashMap;
+    use std::ffi::OsString;
+    use std::path::PathBuf;
+    use std::{env, fs};
+
+    fn args_from(args: &[&str]) -> Vec<OsString> {
+        args.iter().map(OsString::from).collect::<Vec<_>>()
+    }
+
+    /// Creates an empty Hurl file named `name` in the temp dir and returns its path.
+    fn temp_hurl_file(name: &str) -> PathBuf {
+        let path = env::temp_dir().join(name);
+        fs::write(&path, "GET http://localhost\n").unwrap();
+        path
+    }
+
+    #[test]
+    fn location_trusted_arg_overrides_location_env_var() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let env_vars = HashMap::from([("HURL_LOCATION".to_string(), "false".to_string())]);
+        let file = temp_hurl_file("foo.hurl");
+        let file = file.to_string_lossy().to_string();
+        let args = ["hurl", "--location-trusted", &file];
+
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.follow_location);
+        assert!(opts.follow_location_trusted);
+    }
+
+    #[test]
+    fn test_env_var_imply_progress_parallel_no_output() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = temp_hurl_file("foo.hurl");
+        let file = file.to_string_lossy().to_string();
+
+        // Assert default
+        let env_vars = HashMap::new();
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(!opts.test);
+        assert!(!opts.progress_bar);
+        assert!(!opts.parallel);
+        assert_eq!(opts.output_type, OutputType::ResponseBody);
+
+        // Test with HURL_TEST true
+        let env_vars = HashMap::from([("HURL_TEST".to_string(), "true".to_string())]);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.test);
+        assert!(opts.progress_bar);
+        assert!(opts.parallel);
+        assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 }

@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
@@ -39,10 +40,14 @@ use super::{OutputType, Verbosity};
 /// Parses the command line arguments given a `context` and default options values.
 ///
 /// Returns a new [`CliOptions`].
-pub fn parse_cli_args(
+pub fn parse_cli_args<I>(
+    args: I,
     context: &RunContext,
     default_options: CliOptions,
-) -> Result<CliOptions, CliOptionsError> {
+) -> Result<CliOptions, CliOptionsError>
+where
+    I: IntoIterator<Item = OsString>,
+{
     let styles = Styles::styled()
         .header(AnsiColor::Green.on_default() | Effects::BOLD)
         .usage(AnsiColor::Green.on_default() | Effects::BOLD)
@@ -140,7 +145,7 @@ pub fn parse_cli_args(
         .arg(commands::netrc_file())
         .arg(commands::netrc_optional());
 
-    let arg_matches = command.try_get_matches_from_mut(std::env::args_os());
+    let arg_matches = command.try_get_matches_from_mut(args);
     let arg_matches = match arg_matches {
         Ok(args) => args,
         Err(error) => {
