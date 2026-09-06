@@ -19,12 +19,12 @@ mod primitives;
 
 use std::path::Path;
 
-use crate::cli::options::ErrorFormat;
 use crate::cli::options::HttpVersion;
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
 };
 use crate::cli::options::duration;
+use crate::cli::options::{BoolOpt, ErrorFormat};
 use hurl::pretty::PrettyMode;
 use hurl_core::reader::{CharPos, Pos, Reader};
 use hurl_core::types::DurationUnit;
@@ -145,6 +145,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "no-output" => parse_option_no_output(reader, options),
         "no-pretty" => parse_option_no_pretty(reader, options),
         "no-proxy" => parse_option_no_proxy(reader, options, option_pos),
+        "no-progress-bar" => parse_option_no_progress_bar(reader, options),
         "pretty" => parse_option_pretty(reader, options),
         "proxy" => parse_option_proxy(reader, options, option_pos),
         "proxy-header" => parse_option_proxy_header(reader, options, option_pos),
@@ -505,6 +506,15 @@ fn parse_option_pretty(
 ) -> Result<(), ConfigFileError> {
     expect_no_value(reader)?;
     options.pretty = PrettyMode::Force;
+    Ok(())
+}
+
+fn parse_option_no_progress_bar(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    expect_no_value(reader)?;
+    options.progress_bar = BoolOpt::Set(true);
     Ok(())
 }
 

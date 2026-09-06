@@ -26,8 +26,8 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
 use super::variables::TypeKind;
 use super::{
-    CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType, Verbosity,
-    duration, secret, variables,
+    BoolOpt, CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType,
+    Verbosity, duration, secret, variables,
 };
 
 /// Contains all env vars at the start of the execution of the program.
@@ -678,22 +678,9 @@ fn pretty(env_vars: &EnvVars, default_value: PrettyMode) -> PrettyMode {
     }
 }
 
-fn progress_bar(
-    env_vars: &EnvVars,
-    is_stderr_term: bool,
-    is_ci: bool,
-    default_value: bool,
-) -> bool {
-    if let Some(true) = env_vars.progress_bar() {
-        true
-    }
-    // The progress bar is automatically displayed for test mode when we are in an interactive context
-    // (stderr is a TTY and not running in CI).
-    else if let Some(true) = env_vars.test()
-        && is_stderr_term
-        && !is_ci
-    {
-        true
+fn progress_bar(env_vars: &EnvVars, default_value: BoolOpt) -> BoolOpt {
+    if let Some(value) = env_vars.progress_bar() {
+        BoolOpt::Set(value)
     } else {
         default_value
     }
@@ -770,8 +757,6 @@ fn verbosity(
 /// Parses Hurl configuration defined in environment variables.
 pub fn parse_env_vars(
     env_vars: &EnvVars,
-    is_stderr_term: bool,
-    is_ci: bool,
     default_options: CliOptions,
 ) -> Result<CliOptions, CliOptionsError> {
     let color_stdout = color(env_vars, default_options.color_stdout);
@@ -800,12 +785,7 @@ pub fn parse_env_vars(
     let max_redirect = max_redirect(env_vars, default_options.max_redirect)?;
     let parallel = parallel(env_vars, default_options.parallel);
     let pretty = pretty(env_vars, default_options.pretty);
-    let progress_bar = progress_bar(
-        env_vars,
-        is_stderr_term,
-        is_ci,
-        default_options.progress_bar,
-    );
+    let progress_bar = progress_bar(env_vars, default_options.progress_bar);
     let proxy_headers = proxy_headers(env_vars, default_options.proxy_headers)?;
     let retry = retry(env_vars, default_options.retry)?;
     let retry_interval = retry_interval(env_vars, default_options.retry_interval)?;
@@ -1042,10 +1022,7 @@ mod tests {
             ("NOT_A_VARIABLE".to_string(), "bar".to_string()),
         ]);
         let env_vars = EnvVars::new(env_vars_override);
-
-        let is_ci = false;
-        let is_stderr_term = true;
-        let updated_options = parse_env_vars(&env_vars, is_stderr_term, is_ci, options).unwrap();
+        let updated_options = parse_env_vars(&env_vars, options).unwrap();
         assert_eq!(updated_options.variables.len(), 3);
         assert_eq!(
             updated_options.variables["foo"],
@@ -1077,10 +1054,7 @@ mod tests {
             ("HURL_SECRET_secret3".to_string(), "SECRET3".to_string()),
         ]);
         let env_vars = EnvVars::new(env_vars_override);
-
-        let is_ci = false;
-        let is_stderr_term = true;
-        let updated_options = parse_env_vars(&env_vars, is_stderr_term, is_ci, options).unwrap();
+        let updated_options = parse_env_vars(&env_vars, options).unwrap();
         assert_eq!(updated_options.variables.len(), 1);
         assert_eq!(
             updated_options.variables["bar"],
