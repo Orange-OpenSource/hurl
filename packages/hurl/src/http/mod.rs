@@ -31,7 +31,7 @@ pub use self::header::{
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub(crate) use self::param::Param;
 pub use self::request::{
-    CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion,
+    CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion, TlsVersion,
 };
 pub(crate) use self::request_cookie::RequestCookie;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};

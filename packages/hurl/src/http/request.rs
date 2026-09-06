@@ -16,6 +16,7 @@
  *
  */
 use std::fmt;
+use std::str::FromStr;
 
 use super::header::{COOKIE, HeaderVec};
 use super::request_cookie::RequestCookie;
@@ -55,6 +56,40 @@ pub enum RequestedHttpVersion {
     /// server given in the URL but fallback to earlier HTTP versions if the HTTP/3
     /// connection establishment fails.
     Http3,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum TlsVersion {
+    Tls10,
+    Tls11,
+    Tls12,
+    Tls13,
+}
+
+impl FromStr for TlsVersion {
+    type Err = ();
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "1.0" => Ok(TlsVersion::Tls10),
+            "1.1" => Ok(TlsVersion::Tls11),
+            "1.2" => Ok(TlsVersion::Tls12),
+            "1.3" => Ok(TlsVersion::Tls13),
+            _ => Err(()),
+        }
+    }
+}
+
+impl fmt::Display for TlsVersion {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let value = match self {
+            TlsVersion::Tls10 => "1.0",
+            TlsVersion::Tls11 => "1.1",
+            TlsVersion::Tls12 => "1.2",
+            TlsVersion::Tls13 => "1.3",
+        };
+        write!(f, "{value}")
+    }
 }
 
 impl fmt::Display for RequestedHttpVersion {
@@ -223,5 +258,15 @@ mod tests {
                 value: "value1".to_string(),
             },
         );
+    }
+
+    #[test]
+    fn test_tls_version() {
+        assert_eq!("1.0".parse(), Ok(TlsVersion::Tls10));
+        assert_eq!("1.1".parse(), Ok(TlsVersion::Tls11));
+        assert_eq!("1.2".parse(), Ok(TlsVersion::Tls12));
+        assert_eq!("1.3".parse(), Ok(TlsVersion::Tls13));
+        assert!("1.4".parse::<TlsVersion>().is_err());
+        assert_eq!(TlsVersion::Tls12.to_string(), "1.2");
     }
 }
