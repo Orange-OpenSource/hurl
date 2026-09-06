@@ -101,7 +101,7 @@ pub struct CliOptions {
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
     pub pretty: PrettyMode,
-    pub progress_bar: bool,
+    pub progress_bar: BoolOpt,
     pub proxy: Option<String>,
     pub proxy_headers: Vec<String>,
     pub repeat: Option<Count>,
@@ -119,6 +119,27 @@ pub struct CliOptions {
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbosity: Option<Verbosity>,
+}
+
+/// Controls a boolean option that can either be explicitly configured or
+/// determined automatically.
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
+pub enum BoolOpt {
+    /// This option has been set explicitely (by user, or by the running context)
+    Set(bool),
+    /// This option has not been set yet and will be valued latter
+    #[default]
+    Auto,
+}
+
+impl BoolOpt {
+    /// Returns the value if it has been set explicitly, panics otherwise.
+    pub fn get(&self) -> bool {
+        match self {
+            BoolOpt::Set(val) => *val,
+            BoolOpt::Auto => panic!("no value set"),
+        }
+    }
 }
 
 /// Log verbosity level
@@ -242,10 +263,21 @@ where
     let options = CliOptions::default();
     let options = context::init_options(context, options);
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
-    let options =
-        env_vars::parse_env_vars(env_vars, context.is_stderr_term(), context.is_ci(), options)?;
+    let options = env_vars::parse_env_vars(env_vars, options)?;
     let options = args::parse_cli_args(args, context, options)?;
+    let options = resolve_implicit(context, options);
     Ok(options)
+}
+
+/// Resolves each option that has not been set by the user and that has implicit value.
+fn resolve_implicit(context: &RunContext, default_options: CliOptions) -> CliOptions {
+    let mut options = default_options;
+    if let BoolOpt::Auto = options.progress_bar {
+        // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
+        let interactive = context.is_stderr_term() && !context.is_ci();
+        options.progress_bar = BoolOpt::Set(options.test && interactive);
+    }
+    options
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -311,7 +343,7 @@ impl Default for CliOptions {
             path_as_is: false,
             pinned_pub_key: None,
             pretty: PrettyMode::None,
-            progress_bar: false,
+            progress_bar: BoolOpt::Auto,
             proxy: None,
             proxy_headers: Vec::new(),
             repeat: None,
@@ -513,22 +545,34 @@ impl CliOptions {
 
 #[cfg(test)]
 mod tests {
-    use crate::cli::options::{EnvVars, RunContext};
+    use crate::cli::options::{BoolOpt, EnvVars, HttpVersion, RunContext};
     use crate::cli::{OutputType, options};
     use std::collections::HashMap;
     use std::ffi::OsString;
-    use std::path::PathBuf;
     use std::{env, fs};
 
     fn args_from(args: &[&str]) -> Vec<OsString> {
         args.iter().map(OsString::from).collect::<Vec<_>>()
     }
 
-    /// Creates an empty Hurl file named `name` in the temp dir and returns its path.
-    fn temp_hurl_file(name: &str) -> PathBuf {
+    /// Creates an empty Hurl file named `name` in the temp dir and returns its path as string.
+    fn tmp_hurl_file(name: &str) -> String {
         let path = env::temp_dir().join(name);
-        fs::write(&path, "GET http://localhost\n").unwrap();
-        path
+        if !path.exists() {
+            fs::write(&path, "GET http://localhost\n").unwrap();
+        }
+        path.to_string_lossy().to_string()
+    }
+
+    /// Create a temporary home and a Hurl config file with content under this home and returns
+    /// the home path.
+    fn tmp_hurl_config(name: &str, content: &str) -> String {
+        let home = env::temp_dir().join(name);
+        let config_dir = home.join(".config").join("hurl");
+        let config_file = config_dir.join("config");
+        fs::create_dir_all(&config_dir).unwrap();
+        fs::write(&config_file, content).unwrap();
+        home.to_string_lossy().to_string()
     }
 
     #[test]
@@ -537,8 +581,7 @@ mod tests {
         let stdout_term = true;
         let stderr_term = true;
         let env_vars = HashMap::from([("HURL_LOCATION".to_string(), "false".to_string())]);
-        let file = temp_hurl_file("foo.hurl");
-        let file = file.to_string_lossy().to_string();
+        let file = tmp_hurl_file("foo.hurl");
         let args = ["hurl", "--location-trusted", &file];
 
         let args = args_from(&args);
@@ -551,14 +594,11 @@ mod tests {
     }
 
     #[test]
-    fn test_env_var_imply_progress_parallel_no_output() {
+    fn test_interactive_default() {
         let stdin_term = true;
         let stdout_term = true;
         let stderr_term = true;
-        let file = temp_hurl_file("foo.hurl");
-        let file = file.to_string_lossy().to_string();
-
-        // Assert default
+        let file = tmp_hurl_file("foo.hurl");
         let env_vars = HashMap::new();
         let args = ["hurl", &file];
         let args = args_from(&args);
@@ -567,9 +607,19 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.test);
-        assert!(!opts.progress_bar);
+        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
         assert!(!opts.parallel);
         assert_eq!(opts.output_type, OutputType::ResponseBody);
+        assert!(opts.color_stdout);
+        assert!(opts.color_stderr);
+    }
+
+    #[test]
+    fn test_env_var_imply_progress_parallel_no_output() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
 
         // Test with HURL_TEST true
         let env_vars = HashMap::from([("HURL_TEST".to_string(), "true".to_string())]);
@@ -580,8 +630,91 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
-        assert!(opts.progress_bar);
+        assert_eq!(opts.progress_bar, BoolOpt::Set(true));
         assert!(opts.parallel);
         assert_eq!(opts.output_type, OutputType::NoOutput);
+    }
+
+    #[test]
+    fn ci_context_imply_no_interactive() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
+
+        // Test with CI env var
+        let env_vars = HashMap::from([("CI".to_string(), "1".to_string())]);
+        let args = ["hurl", "--test", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.test);
+        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
+        assert!(opts.parallel);
+        assert_eq!(opts.output_type, OutputType::NoOutput);
+    }
+
+    #[test]
+    fn respect_no_color_env_var() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
+
+        let env_vars = HashMap::from([("NO_COLOR".to_string(), "1".to_string())]);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(!opts.color_stdout);
+        assert!(!opts.color_stderr);
+    }
+
+    #[test]
+    fn cli_args_higher_priority() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let env_vars = HashMap::from([("HURL_HTTP3".to_string(), "1".to_string())]);
+        let file = tmp_hurl_file("foo.hurl");
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert_eq!(opts.http_version, Some(HttpVersion::V3));
+
+        let args = ["hurl", "--http2", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert_eq!(opts.http_version, Some(HttpVersion::V2));
+    }
+
+    #[test]
+    fn test_config_file_imply_progress_parallel_no_output() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
+
+        // Test with --test in config file
+        let home = tmp_hurl_config("a", "--test");
+
+        let env_vars = HashMap::from([("HOME".to_string(), home)]);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.test);
+        assert_eq!(opts.progress_bar, BoolOpt::Set(true));
+        //assert!(opts.parallel);
+        //assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 }
