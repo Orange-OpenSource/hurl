@@ -671,8 +671,12 @@ fn parallel(env_vars: &EnvVars, default_value: bool) -> bool {
 fn pretty(env_vars: &EnvVars, default_value: PrettyMode) -> PrettyMode {
     if let Some(true) = env_vars.pretty() {
         PrettyMode::Force
+    } else if let Some(false) = env_vars.pretty() {
+        PrettyMode::None
     } else if let Some(true) = env_vars.no_pretty() {
         PrettyMode::None
+    } else if let Some(false) = env_vars.no_pretty() {
+        PrettyMode::Force
     } else {
         default_value
     }

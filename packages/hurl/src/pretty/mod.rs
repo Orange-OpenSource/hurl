@@ -22,8 +22,8 @@ pub use json::format;
 pub enum PrettyMode {
     /// Prettify based on response content type
     Automatic,
-    /// Force by user, try to prettify even if there is no `Content-Type` reponse header.
+    /// Force by user, try to prettify even if there is no `Content-Type` response header.
     Force,
-    /// No prettiyfing.
+    /// No prettifying.
     None,
 }

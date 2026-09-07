@@ -17,8 +17,6 @@
  */
 use std::path::{Path, PathBuf};
 
-use hurl::pretty::PrettyMode;
-
 use super::CliOptions;
 use super::env_vars::EnvVars;
 
@@ -106,10 +104,5 @@ pub fn init_options(context: &RunContext, default_options: CliOptions) -> CliOpt
     let mut options = default_options;
     options.color_stdout = context.is_stdout_term();
     options.color_stderr = context.is_stderr_term();
-    options.pretty = if context.is_stdout_term() {
-        PrettyMode::Automatic
-    } else {
-        PrettyMode::None
-    };
     options
 }

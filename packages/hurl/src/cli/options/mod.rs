@@ -272,10 +272,17 @@ where
 /// Resolves each option that has not been set by the user and that has implicit value.
 fn resolve_implicit(context: &RunContext, default_options: CliOptions) -> CliOptions {
     let mut options = default_options;
+
+    // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
     if let BoolOpt::Auto = options.progress_bar {
-        // The progress bar is automatically displayed for test mode when stderr is a TTY and not running in CI.
         let interactive = context.is_stderr_term() && !context.is_ci();
         options.progress_bar = BoolOpt::Set(options.test && interactive);
+    }
+    // If stdout is not a terminal, disable prettifying
+    if let PrettyMode::Automatic = options.pretty
+        && !context.is_stdout_term()
+    {
+        options.pretty = PrettyMode::None;
     }
     options
 }
@@ -342,7 +349,7 @@ impl Default for CliOptions {
             parallel: false,
             path_as_is: false,
             pinned_pub_key: None,
-            pretty: PrettyMode::None,
+            pretty: PrettyMode::Automatic,
             progress_bar: BoolOpt::Auto,
             proxy: None,
             proxy_headers: Vec::new(),
@@ -547,6 +554,7 @@ impl CliOptions {
 mod tests {
     use crate::cli::options::{BoolOpt, EnvVars, HttpVersion, RunContext};
     use crate::cli::{OutputType, options};
+    use hurl::pretty::PrettyMode;
     use std::collections::HashMap;
     use std::ffi::OsString;
     use std::{env, fs};
@@ -612,6 +620,29 @@ mod tests {
         assert_eq!(opts.output_type, OutputType::ResponseBody);
         assert!(opts.color_stdout);
         assert!(opts.color_stderr);
+        assert_eq!(opts.pretty, PrettyMode::Automatic);
+    }
+
+    #[test]
+    fn test_no_interactive_default() {
+        let stdin_term = false;
+        let stdout_term = false;
+        let stderr_term = false;
+        let file = tmp_hurl_file("foo.hurl");
+        let env_vars = HashMap::new();
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(!opts.test);
+        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
+        assert!(!opts.parallel);
+        assert_eq!(opts.output_type, OutputType::ResponseBody);
+        assert!(!opts.color_stdout);
+        assert!(!opts.color_stderr);
+        assert_eq!(opts.pretty, PrettyMode::None);
     }
 
     #[test]
@@ -703,7 +734,7 @@ mod tests {
         let file = tmp_hurl_file("foo.hurl");
 
         // Test with --test in config file
-        let home = tmp_hurl_config("a", "--test");
+        let home = tmp_hurl_config("home_for_a", "--test");
 
         let env_vars = HashMap::from([("HOME".to_string(), home)]);
         let args = ["hurl", &file];

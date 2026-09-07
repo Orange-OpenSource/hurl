@@ -1198,7 +1198,7 @@ mod tests {
     fn test_parse_option_pretty() {
         let mut reader = Reader::new("--pretty\n");
         let mut options = CliOptions::default();
-        assert_eq!(options.pretty, PrettyMode::None);
+        assert_eq!(options.pretty, PrettyMode::Automatic);
         assert!(parse_option(&mut reader, &mut options).is_ok());
         assert_eq!(options.pretty, PrettyMode::Force);
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
