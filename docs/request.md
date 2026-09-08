@@ -673,6 +673,11 @@ POST https://example.org/helloworld
 `Hello world!`
 ~~~
 
+Oneline string bodies support escape sequences. For example, `\n` represents a newline, whereas
+`\\n` represents a backslash followed by `n`.
+
+For precise byte control of a request body, use a [file body].
+
 #### Base64 body
 
 Base64 body is used to set binary data as the request body.
@@ -729,6 +734,7 @@ File are relative to the input Hurl file, and cannot contain implicit parent dir
 [HTML form]: https://developer.mozilla.org/en-US/docs/Learn/Forms
 [multiline string body]: #multiline-string-body
 [oneline string body]: #oneline-string-body
+[file body]: #file-body
 [body section]: #body
 [multipart/form-data on MDN]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
 [`--file-root` option]: /docs/manual.md#file-root
