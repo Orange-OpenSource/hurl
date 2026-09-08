@@ -658,11 +658,9 @@ fn output_type(env_vars: &EnvVars, default_value: OutputType) -> OutputType {
     }
 }
 
-fn parallel(env_vars: &EnvVars, default_value: bool) -> bool {
-    if let Some(true) = env_vars.parallel() {
-        true
-    } else if let Some(true) = env_vars.test() {
-        true
+fn parallel(env_vars: &EnvVars, default_value: BoolOpt) -> BoolOpt {
+    if let Some(value) = env_vars.parallel() {
+        BoolOpt::Set(value)
     } else {
         default_value
     }

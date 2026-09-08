@@ -97,7 +97,7 @@ pub struct CliOptions {
     pub ntlm: bool,
     pub output: Option<Output>,
     pub output_type: OutputType,
-    pub parallel: bool,
+    pub parallel: BoolOpt,
     pub path_as_is: bool,
     pub pinned_pub_key: Option<String>,
     pub pretty: PrettyMode,
@@ -285,13 +285,17 @@ fn resolve_implicit(context: &RunContext, default_options: CliOptions) -> CliOpt
         let interactive = context.is_stderr_term() && !context.is_ci();
         options.progress_bar = BoolOpt::Set(options.test && interactive);
     }
+    // Parallel is on for test mode
+    if let BoolOpt::Auto = options.parallel {
+        options.parallel = BoolOpt::Set(options.test);
+    }
     // If stdout is not a terminal, disable prettifying
     if let PrettyMode::Automatic = options.pretty
         && !context.is_stdout_term()
     {
         options.pretty = PrettyMode::None;
     }
-    // Color depends on terminal
+    // Color depends on standard streams being terminal or not
     if let BoolOpt::Auto = options.color_stdout {
         options.color_stdout = BoolOpt::Set(context.is_stdout_term());
     }
@@ -361,7 +365,7 @@ impl Default for CliOptions {
             ntlm: false,
             output: None,
             output_type: OutputType::ResponseBody,
-            parallel: false,
+            parallel: BoolOpt::Auto,
             path_as_is: false,
             pinned_pub_key: None,
             pretty: PrettyMode::Automatic,
@@ -631,7 +635,7 @@ mod tests {
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.test);
         assert_eq!(opts.progress_bar, BoolOpt::Set(false));
-        assert!(!opts.parallel);
+        assert!(!opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::ResponseBody);
         assert!(opts.color_stdout.get());
         assert!(opts.color_stderr.get());
@@ -653,7 +657,7 @@ mod tests {
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.test);
         assert_eq!(opts.progress_bar, BoolOpt::Set(false));
-        assert!(!opts.parallel);
+        assert!(!opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::ResponseBody);
         assert!(!opts.color_stdout.get());
         assert!(!opts.color_stderr.get());
@@ -677,7 +681,7 @@ mod tests {
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
         assert_eq!(opts.progress_bar, BoolOpt::Set(true));
-        assert!(opts.parallel);
+        assert!(opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 
@@ -698,7 +702,7 @@ mod tests {
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
         assert_eq!(opts.progress_bar, BoolOpt::Set(false));
-        assert!(opts.parallel);
+        assert!(opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 

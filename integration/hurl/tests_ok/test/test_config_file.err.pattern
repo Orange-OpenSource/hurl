@@ -1,3 +1,4 @@
+Success tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.1.hurl (1 request(s) in <<<.*>>> ms)
 error: Assert body value
   --> tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.2.hurl:8:1
    |
@@ -7,6 +8,8 @@ error: Assert body value
    | ^^^^^^^^^^^^^^^^ actual value is <Hello World!><<<.*?>>>
    |
 
+Failure tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.2.hurl (2 request(s) in <<<.*>>> ms)
+Success tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.3.hurl (1 request(s) in <<<.*>>> ms)
 error: Assert body value
   --> tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.4.hurl:3:1
    |
@@ -16,6 +19,7 @@ error: Assert body value
    | ^^^^^^^^^^^^^^^ actual value is <Hello World!>
    |
 
+Failure tests_ok<<<(\\|\/)>>>test<<<(\\|\/)>>>test.4.hurl (1 request(s) in <<<.*>>> ms)
 --------------------------------------------------------------------------------
 Executed files:    4
 Executed requests: 5 (<<<.*?>>>/s)
