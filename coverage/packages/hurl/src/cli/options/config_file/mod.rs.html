@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    options.color_stdout = true;</pre>
+                <pre class="has-background-success-light py-0 px-2">    options.color_stdout = BoolOpt::Set(true);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2837,7 +2837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    options.color_stderr = true;</pre>
+                <pre class="has-background-success-light py-0 px-2">    options.color_stderr = BoolOpt::Set(true);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6885,7 +6885,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    options.color_stdout = false;</pre>
+                <pre class="has-background-success-light py-0 px-2">    options.color_stdout = BoolOpt::Set(false);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6901,7 +6901,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    options.color_stderr = false;</pre>
+                <pre class="has-background-success-light py-0 px-2">    options.color_stderr = BoolOpt::Set(false);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11077,7 +11077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stdout);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stdout, BoolOpt::Auto);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11093,7 +11093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stderr);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stderr, BoolOpt::Auto);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14821,7 +14821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stdout);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stdout, BoolOpt::Auto);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14837,7 +14837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stderr);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stderr, BoolOpt::Auto);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14869,7 +14869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(options.color_stdout);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(options.color_stdout.get());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14885,7 +14885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(options.color_stderr);</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(options.color_stderr.get());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15013,7 +15013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            color_stdout: true,</pre>
+                <pre class="has-background-white py-0 px-2">            color_stdout: BoolOpt::Set(true),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15029,7 +15029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            color_stderr: true,</pre>
+                <pre class="has-background-white py-0 px-2">            color_stderr: BoolOpt::Set(true),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15093,7 +15093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stdout);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stdout, BoolOpt::Set(false));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15109,7 +15109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!options.color_stderr);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(options.color_stderr, BoolOpt::Set(false));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -20796,7 +20796,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-09-08 05:13</p>
+                    <p class="heading">Date: 2026-09-08 12:36</p>
                 </div>
             
         </footer>
