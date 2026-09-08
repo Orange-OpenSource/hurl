@@ -589,11 +589,11 @@ mod tests {
         let stdout_term = true;
         let stderr_term = true;
         let env_vars = HashMap::from([("HURL_LOCATION".to_string(), "false".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
         let file = tmp_hurl_file("foo.hurl");
         let args = ["hurl", "--location-trusted", &file];
 
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -608,9 +608,9 @@ mod tests {
         let stderr_term = true;
         let file = tmp_hurl_file("foo.hurl");
         let env_vars = HashMap::new();
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -630,9 +630,9 @@ mod tests {
         let stderr_term = false;
         let file = tmp_hurl_file("foo.hurl");
         let env_vars = HashMap::new();
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -654,9 +654,9 @@ mod tests {
 
         // Test with HURL_TEST true
         let env_vars = HashMap::from([("HURL_TEST".to_string(), "true".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -675,9 +675,9 @@ mod tests {
 
         // Test with CI env var
         let env_vars = HashMap::from([("CI".to_string(), "1".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", "--test", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -695,9 +695,9 @@ mod tests {
         let file = tmp_hurl_file("foo.hurl");
 
         let env_vars = HashMap::from([("NO_COLOR".to_string(), "1".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -706,13 +706,13 @@ mod tests {
     }
 
     #[test]
-    fn cli_args_higher_priority() {
+    fn cli_args_higher_priority_on_http_version() {
         let stdin_term = true;
         let stdout_term = true;
         let stderr_term = true;
         let env_vars = HashMap::from([("HURL_HTTP3".to_string(), "1".to_string())]);
-        let file = tmp_hurl_file("foo.hurl");
         let env_vars = EnvVars::new(env_vars);
+        let file = tmp_hurl_file("foo.hurl");
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let args = ["hurl", &file];
@@ -737,9 +737,9 @@ mod tests {
         let home = tmp_hurl_config("home_for_a", "--test");
 
         let env_vars = HashMap::from([("HOME".to_string(), home)]);
+        let env_vars = EnvVars::new(env_vars);
         let args = ["hurl", &file];
         let args = args_from(&args);
-        let env_vars = EnvVars::new(env_vars);
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
@@ -747,5 +747,62 @@ mod tests {
         assert_eq!(opts.progress_bar, BoolOpt::Set(true));
         //assert!(opts.parallel);
         //assert_eq!(opts.output_type, OutputType::NoOutput);
+    }
+
+    #[test]
+    fn priority_order_is_from_config_to_env_vars_to_cli_args() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+
+        // Default value in interactive env
+        let env_vars = HashMap::new();
+        let env_vars = EnvVars::new(env_vars);
+        let file = tmp_hurl_file("foo.hurl");
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.color_stdout);
+        assert!(opts.color_stderr);
+
+        // Add --no-color in config file
+        let home = tmp_hurl_config("home_for_b", "--no-color");
+        let env_vars = HashMap::from([("HOME".to_string(), home)]);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(!opts.color_stdout);
+        assert!(!opts.color_stderr);
+
+        // Add HURL_COLOR=1 in env vars
+        let home = tmp_hurl_config("home_for_b", "--no-color");
+        let env_vars = HashMap::from([
+            ("HOME".to_string(), home),
+            ("HURL_COLOR".to_string(), "1".to_string()),
+        ]);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(opts.color_stdout);
+        assert!(opts.color_stderr);
+
+        // Finally, test with --no-color in cli
+        let home = tmp_hurl_config("home_for_b", "--no-color");
+        let env_vars = HashMap::from([
+            ("HOME".to_string(), home),
+            ("HURL_COLOR".to_string(), "1".to_string()),
+        ]);
+        let env_vars = EnvVars::new(env_vars);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+        let args = ["hurl", "--no-color", &file];
+        let args = args_from(&args);
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert!(!opts.color_stdout);
+        assert!(!opts.color_stderr);
     }
 }
