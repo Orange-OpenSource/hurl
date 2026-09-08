@@ -397,14 +397,14 @@ fn fail_with_body(env_vars: &EnvVars, default_value: bool) -> bool {
     env_vars.fail_with_body().unwrap_or(default_value)
 }
 
-fn color(env_vars: &EnvVars, default_value: bool) -> bool {
+fn color(env_vars: &EnvVars, default_value: BoolOpt) -> BoolOpt {
     if let Some(no_color) = env_vars.no_color() {
-        return !no_color;
+        BoolOpt::Set(!no_color)
+    } else if let Some(color) = env_vars.color() {
+        BoolOpt::Set(color)
+    } else {
+        default_value
     }
-    if let Some(color) = env_vars.color() {
-        return color;
-    }
-    default_value
 }
 
 fn connect_timeout(

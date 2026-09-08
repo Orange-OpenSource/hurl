@@ -126,7 +126,7 @@ fn print_output(
         let result = output::write_last_body(
             hurl_result,
             options.include,
-            options.color_stdout,
+            options.color_stdout.get(),
             options.pretty,
             options.output.as_ref(),
             stdout,
@@ -137,7 +137,7 @@ fn print_output(
                 &filename.to_string(),
                 content,
                 None,
-                OutputFormat::Terminal(options.color_stderr),
+                OutputFormat::Terminal(options.color_stderr.get()),
             );
             return Err(CliError::OutputWrite(message));
         }
@@ -184,10 +184,11 @@ pub fn run_par(
     options.secrets.iter().for_each(|(name, value)| {
         variables.insert_secret(name.clone(), value.clone());
     });
-    let output_type =
-        options
-            .output_type
-            .to_output_type(options.include, options.color_stdout, options.pretty);
+    let output_type = options.output_type.to_output_type(
+        options.include,
+        options.color_stdout.get(),
+        options.pretty,
+    );
     let max_width = terminal_size::terminal_size().map(|(w, _)| w.0 as usize);
     let jobs = files
         .iter()
@@ -211,7 +212,7 @@ pub fn run_par(
         options.repeat.unwrap_or(Count::Finite(1)),
         options.test,
         options.progress_bar.get(),
-        options.color_stderr,
+        options.color_stderr.get(),
         max_width,
     );
     let results = runner.run(&jobs)?;

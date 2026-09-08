@@ -171,8 +171,8 @@ fn parse_option_color(
     options: &mut CliOptions,
 ) -> Result<(), ConfigFileError> {
     expect_no_value(reader)?;
-    options.color_stdout = true;
-    options.color_stderr = true;
+    options.color_stdout = BoolOpt::Set(true);
+    options.color_stderr = BoolOpt::Set(true);
     Ok(())
 }
 
@@ -425,8 +425,8 @@ fn parse_option_no_color(
     options: &mut CliOptions,
 ) -> Result<(), ConfigFileError> {
     expect_no_value(reader)?;
-    options.color_stdout = false;
-    options.color_stderr = false;
+    options.color_stdout = BoolOpt::Set(false);
+    options.color_stderr = BoolOpt::Set(false);
     Ok(())
 }
 
@@ -687,8 +687,8 @@ mod tests {
     fn test_parse_config() {
         let content = "# ignore\n\n--verbose\n";
         let options = parse_config(content, CliOptions::default()).unwrap();
-        assert!(!options.color_stdout);
-        assert!(!options.color_stderr);
+        assert_eq!(options.color_stdout, BoolOpt::Auto);
+        assert_eq!(options.color_stderr, BoolOpt::Auto);
         assert_eq!(options.verbosity, Some(Verbosity::Verbose));
     }
 
@@ -921,11 +921,11 @@ mod tests {
     fn test_parse_option_color() {
         let mut reader = Reader::new("--color\n");
         let mut options = CliOptions::default();
-        assert!(!options.color_stdout);
-        assert!(!options.color_stderr);
+        assert_eq!(options.color_stdout, BoolOpt::Auto);
+        assert_eq!(options.color_stderr, BoolOpt::Auto);
         assert!(parse_option(&mut reader, &mut options).is_ok());
-        assert!(options.color_stdout);
-        assert!(options.color_stderr);
+        assert!(options.color_stdout.get());
+        assert!(options.color_stderr.get());
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 
@@ -933,13 +933,13 @@ mod tests {
     fn test_parse_option_no_color() {
         let mut reader = Reader::new("--no-color\n");
         let mut options = CliOptions {
-            color_stdout: true,
-            color_stderr: true,
+            color_stdout: BoolOpt::Set(true),
+            color_stderr: BoolOpt::Set(true),
             ..CliOptions::default()
         };
         assert!(parse_option(&mut reader, &mut options).is_ok());
-        assert!(!options.color_stdout);
-        assert!(!options.color_stderr);
+        assert_eq!(options.color_stdout, BoolOpt::Set(false));
+        assert_eq!(options.color_stderr, BoolOpt::Set(false));
         assert_eq!(reader.cursor().pos, Pos::new(2, 1));
     }
 

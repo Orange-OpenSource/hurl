@@ -17,7 +17,6 @@
  */
 use std::path::{Path, PathBuf};
 
-use super::CliOptions;
 use super::env_vars::EnvVars;
 
 /// Represents the context in which is executed Hurl: the env variables, whether standard
@@ -94,15 +93,4 @@ fn get_config_dir(env_vars: &EnvVars) -> Option<PathBuf> {
             .home()
             .map(|home_dir| Path::new(home_dir).join(".config").to_path_buf())
     }
-}
-
-/// Take a [`CliOptions`] and apply modification from runtime context.
-///
-/// This method configures the options with values that are inferred from the runtime context
-/// such as: do we use color or not etc...
-pub fn init_options(context: &RunContext, default_options: CliOptions) -> CliOptions {
-    let mut options = default_options;
-    options.color_stdout = context.is_stdout_term();
-    options.color_stderr = context.is_stderr_term();
-    options
 }

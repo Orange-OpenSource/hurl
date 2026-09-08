@@ -55,8 +55,8 @@ pub struct CliOptions {
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
-    pub color_stdout: bool,
-    pub color_stderr: bool,
+    pub color_stdout: BoolOpt,
+    pub color_stderr: BoolOpt,
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
@@ -138,6 +138,14 @@ impl BoolOpt {
         match self {
             BoolOpt::Set(val) => *val,
             BoolOpt::Auto => panic!("no value set"),
+        }
+    }
+
+    /// Returns the value if it has been set explicitly, or a default one.
+    pub fn unwrap_or(&self, default: bool) -> bool {
+        match self {
+            BoolOpt::Set(val) => *val,
+            BoolOpt::Auto => default,
         }
     }
 }
@@ -261,7 +269,6 @@ where
     I: IntoIterator<Item = OsString>,
 {
     let options = CliOptions::default();
-    let options = context::init_options(context, options);
     let options = config_file::parse_config_file(context.config_file_path(), options)?;
     let options = env_vars::parse_env_vars(env_vars, options)?;
     let options = args::parse_cli_args(args, context, options)?;
@@ -284,6 +291,14 @@ fn resolve_implicit(context: &RunContext, default_options: CliOptions) -> CliOpt
     {
         options.pretty = PrettyMode::None;
     }
+    // Color depends on terminal
+    if let BoolOpt::Auto = options.color_stdout {
+        options.color_stdout = BoolOpt::Set(context.is_stdout_term());
+    }
+    if let BoolOpt::Auto = options.color_stderr {
+        options.color_stderr = BoolOpt::Set(context.is_stderr_term());
+    }
+
     options
 }
 
@@ -304,8 +319,8 @@ impl Default for CliOptions {
             cacert_file: None,
             client_cert_file: None,
             client_key_file: None,
-            color_stdout: false,
-            color_stderr: false,
+            color_stdout: BoolOpt::Auto,
+            color_stderr: BoolOpt::Auto,
             compressed: false,
             connect_timeout: Duration::from_secs(300),
             connects_to: Vec::new(),
@@ -489,7 +504,7 @@ impl CliOptions {
             .client_key_file(client_key_file)
             .delay(delay)
             .digest(digest)
-            .color_stdout(color_stdout)
+            .color_stdout(color_stdout.get())
             .compressed(compressed)
             .connect_timeout(connect_timeout)
             .connects_to(&connects_to)
@@ -543,7 +558,7 @@ impl CliOptions {
             Verbosity::Debug => logger::Verbosity::VeryVerbose,
         });
         LoggerOptionsBuilder::new()
-            .color(self.color_stderr)
+            .color(self.color_stderr.get())
             .error_format(self.error_format.into())
             .verbosity(verbosity)
             .build()
@@ -618,8 +633,8 @@ mod tests {
         assert_eq!(opts.progress_bar, BoolOpt::Set(false));
         assert!(!opts.parallel);
         assert_eq!(opts.output_type, OutputType::ResponseBody);
-        assert!(opts.color_stdout);
-        assert!(opts.color_stderr);
+        assert!(opts.color_stdout.get());
+        assert!(opts.color_stderr.get());
         assert_eq!(opts.pretty, PrettyMode::Automatic);
     }
 
@@ -640,8 +655,8 @@ mod tests {
         assert_eq!(opts.progress_bar, BoolOpt::Set(false));
         assert!(!opts.parallel);
         assert_eq!(opts.output_type, OutputType::ResponseBody);
-        assert!(!opts.color_stdout);
-        assert!(!opts.color_stderr);
+        assert!(!opts.color_stdout.get());
+        assert!(!opts.color_stderr.get());
         assert_eq!(opts.pretty, PrettyMode::None);
     }
 
@@ -701,8 +716,8 @@ mod tests {
         let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
-        assert!(!opts.color_stdout);
-        assert!(!opts.color_stderr);
+        assert!(!opts.color_stdout.get());
+        assert!(!opts.color_stderr.get());
     }
 
     #[test]
@@ -763,8 +778,8 @@ mod tests {
         let args = ["hurl", &file];
         let args = args_from(&args);
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
-        assert!(opts.color_stdout);
-        assert!(opts.color_stderr);
+        assert!(opts.color_stdout.get());
+        assert!(opts.color_stderr.get());
 
         // Add --no-color in config file
         let home = tmp_hurl_config("home_for_b", "--no-color");
@@ -774,8 +789,8 @@ mod tests {
         let args = ["hurl", &file];
         let args = args_from(&args);
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
-        assert!(!opts.color_stdout);
-        assert!(!opts.color_stderr);
+        assert!(!opts.color_stdout.get());
+        assert!(!opts.color_stderr.get());
 
         // Add HURL_COLOR=1 in env vars
         let home = tmp_hurl_config("home_for_b", "--no-color");
@@ -788,8 +803,8 @@ mod tests {
         let args = ["hurl", &file];
         let args = args_from(&args);
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
-        assert!(opts.color_stdout);
-        assert!(opts.color_stderr);
+        assert!(opts.color_stdout.get());
+        assert!(opts.color_stderr.get());
 
         // Finally, test with --no-color in cli
         let home = tmp_hurl_config("home_for_b", "--no-color");
@@ -802,7 +817,7 @@ mod tests {
         let args = ["hurl", "--no-color", &file];
         let args = args_from(&args);
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
-        assert!(!opts.color_stdout);
-        assert!(!opts.color_stderr);
+        assert!(!opts.color_stdout.get());
+        assert!(!opts.color_stderr.get());
     }
 }

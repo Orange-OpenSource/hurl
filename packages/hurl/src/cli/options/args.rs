@@ -149,17 +149,20 @@ where
     let arg_matches = match arg_matches {
         Ok(args) => args,
         Err(error) => {
-            return Err(CliOptionsError::from_clap(
-                error,
-                default_options.color_stdout,
-            ));
+            let color_stdout = default_options
+                .color_stdout
+                .unwrap_or(context.is_stdout_term());
+            return Err(CliOptionsError::from_clap(error, color_stdout));
         }
     };
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
     if !has_input_files(&arg_matches, context) {
-        let help = if default_options.color_stdout {
+        let color_stdout = default_options
+            .color_stdout
+            .unwrap_or(context.is_stdout_term());
+        let help = if color_stdout {
             command.render_help().ansi().to_string()
         } else {
             command.render_help().to_string()
@@ -385,14 +388,14 @@ fn client_key_file(
 }
 
 /// Returns true if Hurl output uses ANSI code and false otherwise.
-fn color(arg_matches: &ArgMatches, default_value: bool) -> bool {
+fn color(arg_matches: &ArgMatches, default_value: BoolOpt) -> BoolOpt {
     if has_flag(arg_matches, "no_color") {
-        return false;
+        BoolOpt::Set(false)
+    } else if has_flag(arg_matches, "color") {
+        BoolOpt::Set(true)
+    } else {
+        default_value
     }
-    if has_flag(arg_matches, "color") {
-        return true;
-    }
-    default_value
 }
 
 fn compressed(arg_matches: &ArgMatches, default_value: bool) -> bool {
