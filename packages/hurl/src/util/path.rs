@@ -66,9 +66,10 @@ impl ContextDir {
 }
 
 /// Return true if `path` is a descendant path of `ancestor`, false otherwise.
+/// Both paths are resolved before test, so symlinks can't be used to escape `ancestor`.
 fn is_descendant(path: &Path, ancestor: &Path) -> bool {
-    let path = normalize_path(path);
-    let ancestor = normalize_path(ancestor);
+    let path = resolve_path(path);
+    let ancestor = resolve_path(ancestor);
     for a in path.ancestors() {
         if ancestor == a {
             return true;
@@ -77,9 +78,36 @@ fn is_descendant(path: &Path, ancestor: &Path) -> bool {
     false
 }
 
+/// Returns the absolute form of this `path`, with symlinks resolved.
+///
+/// Contrary to the method [`std::fs::canonicalize`] on [`Path`], this function doesn't require
+/// `path` to exist: the longest prefix of `path` that exists is canonicalized, then the remaining
+/// components are appended to it, lexically normalized (they can't be resolved as they don't exist
+/// on the filesystem). This is needed to check files that are not created yet, like `output` files.
+fn resolve_path(path: &Path) -> PathBuf {
+    let components = path.components().collect::<Vec<_>>();
+    for i in (0..=components.len()).rev() {
+        let prefix = components[..i].iter().collect::<PathBuf>();
+        let Ok(mut resolved) = prefix.canonicalize() else {
+            continue;
+        };
+        for component in &components[i..] {
+            match component {
+                Component::CurDir => {}
+                Component::ParentDir => {
+                    resolved.pop();
+                }
+                _ => resolved.push(component),
+            }
+        }
+        return resolved;
+    }
+    normalize_path(path)
+}
+
 /// Returns the absolute form of this `path` with all intermediate components normalized.
 /// Contrary to the methods [`std::fs::canonicalize`] on [`Path`], this function doesn't require
-/// the final path to exist.
+/// the final `path` to exist.
 ///
 /// Borrowed from https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/paths.rs
 fn normalize_path(path: &Path) -> PathBuf {
@@ -124,18 +152,18 @@ mod tests {
     #[test]
     fn check_filename_allowed_access_without_user_file_root() {
         // ```
-        // $ cd /tmp
+        // $ cd /dir
         // $ hurl test.hurl
         // ```
-        let current_dir = Path::new("/tmp");
+        let current_dir = Path::new("/dir");
         let file_root = Path::new("");
         let ctx = ContextDir::new(current_dir, file_root);
         assert!(ctx.is_access_allowed(Path::new("foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("/tmp/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("/dir/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("a/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("a/b/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("../tmp/a/b/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("../../../tmp/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("../dir/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("../../../dir/a/b/foo.bin")));
 
         assert!(!ctx.is_access_allowed(Path::new("/file/foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../foo.bin")));
@@ -146,10 +174,10 @@ mod tests {
     #[test]
     fn check_filename_allowed_access_with_explicit_absolute_user_file_root() {
         // ```
-        // $ cd /tmp
+        // $ cd /dir
         // $ hurl --file-root /file test.hurl
         // ```
-        let current_dir = Path::new("/tmp");
+        let current_dir = Path::new("/dir");
         let file_root = Path::new("/file");
         let ctx = ContextDir::new(current_dir, file_root);
         assert!(ctx.is_access_allowed(Path::new("foo.bin"))); // absolute path is /file/foo.bin
@@ -158,13 +186,13 @@ mod tests {
         assert!(ctx.is_access_allowed(Path::new("a/b/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("../../file/foo.bin")));
 
-        assert!(!ctx.is_access_allowed(Path::new("/tmp/foo.bin")));
-        assert!(!ctx.is_access_allowed(Path::new("../tmp/a/b/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("/dir/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("../dir/a/b/foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../../foo.bin")));
-        assert!(!ctx.is_access_allowed(Path::new("../../../tmp/a/b/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("../../../dir/a/b/foo.bin")));
 
-        let current_dir = Path::new("/tmp");
+        let current_dir = Path::new("/dir");
         let file_root = Path::new("../file");
         let ctx = ContextDir::new(current_dir, file_root);
         assert!(ctx.is_access_allowed(Path::new("foo.bin")));
@@ -173,46 +201,46 @@ mod tests {
         assert!(ctx.is_access_allowed(Path::new("a/b/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("../../file/foo.bin")));
 
-        assert!(!ctx.is_access_allowed(Path::new("/tmp/foo.bin")));
-        assert!(!ctx.is_access_allowed(Path::new("../tmp/a/b/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("/dir/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("../dir/a/b/foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../../foo.bin")));
-        assert!(!ctx.is_access_allowed(Path::new("../../../tmp/a/b/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("../../../dir/a/b/foo.bin")));
     }
 
     #[test]
     fn check_filename_allowed_access_with_implicit_relative_user_file_root() {
         // ```
-        // $ cd /tmp
+        // $ cd /dir
         // $ hurl a/b/test.hurl
         // ```
-        let current_dir = Path::new("/tmp");
+        let current_dir = Path::new("/dir");
         let file_root = Path::new("a/b");
         let ctx = ContextDir::new(current_dir, file_root);
         assert!(ctx.is_access_allowed(Path::new("foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("c/foo.bin"))); // absolute path is /tmp/a/b/c/foo.bin
-        assert!(ctx.is_access_allowed(Path::new("/tmp/a/b/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("/tmp/a/b/c/d/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("../../../tmp/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("c/foo.bin"))); // absolute path is /dir/a/b/c/foo.bin
+        assert!(ctx.is_access_allowed(Path::new("/dir/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("/dir/a/b/c/d/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("../../../dir/a/b/foo.bin")));
 
-        assert!(!ctx.is_access_allowed(Path::new("/tmp/foo.bin")));
+        assert!(!ctx.is_access_allowed(Path::new("/dir/foo.bin")));
     }
 
     #[test]
     fn check_filename_allowed_access_with_explicit_relative_user_file_root() {
         // ```
-        // $ cd /tmp
-        // $ hurl --file-root ../tmp test.hurl
+        // $ cd /dir
+        // $ hurl --file-root ../dir test.hurl
         // ```
-        let current_dir = Path::new("/tmp");
-        let file_root = Path::new("../tmp");
+        let current_dir = Path::new("/dir");
+        let file_root = Path::new("../dir");
         let ctx = ContextDir::new(current_dir, file_root);
         assert!(ctx.is_access_allowed(Path::new("foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("/tmp/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("/dir/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("a/foo.bin")));
         assert!(ctx.is_access_allowed(Path::new("a/b/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("../tmp/a/b/foo.bin")));
-        assert!(ctx.is_access_allowed(Path::new("../../../tmp/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("../dir/a/b/foo.bin")));
+        assert!(ctx.is_access_allowed(Path::new("../../../dir/a/b/foo.bin")));
 
         assert!(!ctx.is_access_allowed(Path::new("/file/foo.bin")));
         assert!(!ctx.is_access_allowed(Path::new("../foo.bin")));
@@ -222,12 +250,12 @@ mod tests {
 
     #[test]
     fn is_descendant_true() {
-        let child = Path::new("/tmp/foo/bar.txt");
-        let parent = Path::new("/tmp");
+        let child = Path::new("/dir/foo/bar.txt");
+        let parent = Path::new("/dir");
         assert!(is_descendant(child, parent));
 
-        let child = Path::new("/tmp/foo/../bar.txt");
-        let parent = Path::new("/tmp");
+        let child = Path::new("/dir/foo/../bar.txt");
+        let parent = Path::new("/dir");
         assert!(is_descendant(child, parent));
 
         let child = Path::new("bar.txt");
@@ -237,8 +265,8 @@ mod tests {
 
     #[test]
     fn is_descendant_false() {
-        let child = Path::new("/tmp/foo/../../bar.txt");
-        let parent = Path::new("/tmp");
+        let child = Path::new("/dir/foo/../../bar.txt");
+        let parent = Path::new("/dir");
         assert!(!is_descendant(child, parent));
 
         let child = Path::new("/a/bar.txt");

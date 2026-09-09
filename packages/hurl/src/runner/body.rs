@@ -120,7 +120,7 @@ mod tests {
         });
 
         let variables = VariableSet::new();
-        let current_dir = Path::new("/home");
+        let current_dir = Path::new("/my_home");
         let file_root = Path::new("");
         let context_dir = ContextDir::new(current_dir, file_root);
         assert_eq!(
@@ -152,7 +152,7 @@ mod tests {
 
         let variables = VariableSet::new();
 
-        let current_dir = Path::new("/home");
+        let current_dir = Path::new("/my_home");
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir, file_root);
         let error = eval_bytes(&bytes, &variables, &context_dir).err().unwrap();

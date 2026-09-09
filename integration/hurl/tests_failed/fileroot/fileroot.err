@@ -1,0 +1,26 @@
+error: Unauthorized file access
+  --> tests_failed/fileroot/fileroot.hurl:3:9
+   |
+   | GET http://localhost:8000/fileroot-ko
+   | ...
+ 3 | output: authorized.bin
+   |         ^^^^^^^^^^^^^^ unauthorized access to file authorized.bin, check --file-root option
+   |
+
+error: Unauthorized file access
+  --> tests_failed/fileroot/fileroot.hurl:8:6
+   |
+   | POST http://localhost:8000/fileroot-ko
+ 8 | file,authorized.bin;
+   |      ^^^^^^^^^^^^^^ unauthorized access to file authorized.bin, check --file-root option
+   |
+
+error: Unauthorized file access
+  --> tests_failed/fileroot/fileroot.hurl:14:9
+   |
+   | GET http://localhost:8000/fileroot-ko
+   | ...
+14 | output: authorized_dir/output.bin
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^ unauthorized access to file authorized_dir/output.bin, check --file-root option
+   |
+
