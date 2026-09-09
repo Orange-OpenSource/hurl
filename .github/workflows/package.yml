@@ -24,6 +24,17 @@ jobs:
   package-generic-linux-x64:
     runs-on: ubuntu-22.04
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -72,6 +83,17 @@ jobs:
     container:
       image: ubuntu:22.04
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -117,6 +139,17 @@ jobs:
     container:
       image: debian
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -170,6 +203,17 @@ jobs:
     container:
       image: archlinux
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -217,6 +261,17 @@ jobs:
     container:
       image: fedora
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -261,6 +316,17 @@ jobs:
   test-dockerfile-x64:
     runs-on: ubuntu-latest
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -302,26 +368,16 @@ jobs:
             local/hurl:amd64 \
             -c '
               set -e
-    
               apk add sudo bash curl python3 py3-pip
-    
-    
               bash bin/install_prerequisites_alpine.sh
-    
-    
               bash bin/activate_python3_venv.sh
               export PATH=/tmp/hurl-python3-venv/bin:$PATH
               which python3
               python3 --version
               pip --version
               bash bin/test/test_prerequisites.sh
-    
-    
               bash bin/environment.sh
-    
-    
               bash bin/test/test_integ.sh
-    
             '
     - name: Find artifacts
       run: |
@@ -338,6 +394,17 @@ jobs:
   package-generic-linux-aarch64:
     runs-on: ubuntu-22.04-arm
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -391,6 +458,17 @@ jobs:
   package-deb-x64:
     runs-on: ubuntu-22.04
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -444,6 +522,17 @@ jobs:
   package-deb-aarch64:
     runs-on: ubuntu-22.04-arm
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -498,6 +587,17 @@ jobs:
     timeout-minutes: 60
     runs-on: macos-15-intel
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -548,6 +648,17 @@ jobs:
     timeout-minutes: 60
     runs-on: macos-15
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
@@ -597,6 +708,17 @@ jobs:
   package-windows-x64:
     runs-on: windows-latest
     steps:
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
     - name: Set git to use LF
       run: |
         git config --global core.autocrlf false
@@ -657,37 +779,48 @@ jobs:
     name: package-anatomy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
-        with:
-          persist-credentials: false
-          ref: ${{ inputs.branch }}
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
-        with:
-          path: artifacts
-      - name: Prerequisites
-        run: sudo apt-get install -y -qq --silent icdiff >/dev/null
-      - name: Package generic linux x64 anatomy
-        if: success() || failure() 
-        run: bin/release/package-anatomy.sh artifacts/release-generic-linux-x64-artifacts/hurl-*-x86_64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
-      - name: Package generic linux aarch64 anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-generic-linux-aarch64-artifacts/hurl-*-aarch64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
-      - name: Package deb x64 anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-deb-x64-artifacts/hurl_*_amd64.deb --compare-with-dir docs/spec/packages
-      - name: Package deb aarch64 anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-deb-aarch64-artifacts/hurl_*_arm64.deb --compare-with-dir docs/spec/packages
-      - name: Package macos x64 anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-macos-x64-artifacts/hurl-*-x86_64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
-      - name: Package macos aarch64 anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-macos-aarch64-artifacts/hurl-*-aarch64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
-      - name: Package windows x64 installer anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc-installer.exe --compare-with-dir docs/spec/packages
-      - name: Package windows x64 zip anatomy
-        if: success() || failure()
-        run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc.zip --compare-with-dir docs/spec/packages
+    - name: Validate branch input for workflow_call
+      if: ${{ github.event_name == 'workflow_call' }}
+      env:
+       BRANCH: ${{ inputs.branch }}
+      run: |
+        if [[ "${BRANCH}" =~ ^(master|release/) ]] ; then
+          echo "  - ✅ The branch triggering this workflow_call is ${BRANCH}."
+        else
+          echo "  - ❌ The branch triggering this workflow_call is ${BRANCH} instead of master or release/."
+          exit 1
+        fi
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.branch }}
+    - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
+      with:
+        path: artifacts
+    - name: Prerequisites
+      run: sudo apt-get install -y -qq --silent icdiff >/dev/null
+    - name: Package generic linux x64 anatomy
+      if: success() || failure() 
+      run: bin/release/package-anatomy.sh artifacts/release-generic-linux-x64-artifacts/hurl-*-x86_64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
+    - name: Package generic linux aarch64 anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-generic-linux-aarch64-artifacts/hurl-*-aarch64-unknown-linux-gnu.tar.gz --compare-with-dir docs/spec/packages
+    - name: Package deb x64 anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-deb-x64-artifacts/hurl_*_amd64.deb --compare-with-dir docs/spec/packages
+    - name: Package deb aarch64 anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-deb-aarch64-artifacts/hurl_*_arm64.deb --compare-with-dir docs/spec/packages
+    - name: Package macos x64 anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-macos-x64-artifacts/hurl-*-x86_64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
+    - name: Package macos aarch64 anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-macos-aarch64-artifacts/hurl-*-aarch64-apple-darwin.tar.gz --compare-with-dir docs/spec/packages
+    - name: Package windows x64 installer anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc-installer.exe --compare-with-dir docs/spec/packages
+    - name: Package windows x64 zip anatomy
+      if: success() || failure()
+      run: bin/release/package-anatomy.sh artifacts/release-windows-x64-artifacts/hurl-*-x86_64-pc-windows-msvc.zip --compare-with-dir docs/spec/packages
