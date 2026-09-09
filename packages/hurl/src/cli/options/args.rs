@@ -797,7 +797,7 @@ fn output(arg_matches: &ArgMatches, default_value: Option<Output>) -> Option<Out
 fn output_type(arg_matches: &ArgMatches, default_value: OutputType) -> OutputType {
     if has_flag(arg_matches, "json") {
         OutputType::Json
-    } else if has_flag(arg_matches, "no_output") || has_flag(arg_matches, "test") {
+    } else if has_flag(arg_matches, "no_output") {
         OutputType::NoOutput
     } else {
         default_value

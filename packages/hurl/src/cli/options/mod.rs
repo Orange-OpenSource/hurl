@@ -289,6 +289,13 @@ fn resolve_implicit(context: &RunContext, default_options: CliOptions) -> CliOpt
     if let BoolOpt::Auto = options.parallel {
         options.parallel = BoolOpt::Set(options.test);
     }
+    // No output for test mode
+    if let OutputType::ResponseBody = options.output_type
+        && options.test
+    {
+        options.output_type = OutputType::NoOutput;
+    }
+
     // If stdout is not a terminal, disable prettifying
     if let PrettyMode::Automatic = options.pretty
         && !context.is_stdout_term()
@@ -765,7 +772,7 @@ mod tests {
         assert!(opts.test);
         assert!(opts.progress_bar.get());
         assert!(opts.parallel.get());
-        //assert_eq!(opts.output_type, OutputType::NoOutput);
+        assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 
     #[test]

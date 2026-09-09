@@ -651,8 +651,6 @@ fn no_jsonpath_coercion(env_vars: &EnvVars, default_value: bool) -> bool {
 fn output_type(env_vars: &EnvVars, default_value: OutputType) -> OutputType {
     if let Some(true) = env_vars.no_output() {
         OutputType::NoOutput
-    } else if let Some(true) = env_vars.test() {
-        OutputType::NoOutput
     } else {
         default_value
     }
