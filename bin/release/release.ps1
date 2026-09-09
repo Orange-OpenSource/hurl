@@ -23,7 +23,7 @@ $release_dir="$project_root_path\target\release"
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
 Copy-Item -Path $lib_dir\libcurl.dll -Destination $package_dir
-Copy-Item -Path $lib_dir\zlib1.dll -Destination $package_dir
+Copy-Item -Path $lib_dir\z.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\nghttp2.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\libxml2.dll -Destination $package_dir
 Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir

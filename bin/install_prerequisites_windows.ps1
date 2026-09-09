@@ -46,9 +46,6 @@ git -C $vcpkg_dir pull
 & "$vcpkg_dir\bootstrap-vcpkg.bat"
 vcpkg upgrade --no-dry-run
 if ($LASTEXITCODE) { Throw }
-# Downgrade to 8.19.0 => https://github.com/Orange-OpenSource/hurl/issues/5105
-git -C "$vcpkg_dir" restore --source=4f326c4072038c8624c36a8ba5ed23f616adda53 --worktree ports/curl
-git -C "$vcpkg_dir" restore --source=4f326c4072038c8624c36a8ba5ed23f616adda53 --worktree ports/zlib
 
 # install libxml and libcurl
 vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows

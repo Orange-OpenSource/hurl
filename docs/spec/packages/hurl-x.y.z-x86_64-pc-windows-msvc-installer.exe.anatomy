@@ -22,4 +22,4 @@ attr     user_group  type  file
 -------  ---         file  libxml2.dll
 -------  ---         file  nghttp2.dll
 -------  ---         file  version.txt
--------  ---         file  zlib1.dll
+-------  ---         file  z.dll
