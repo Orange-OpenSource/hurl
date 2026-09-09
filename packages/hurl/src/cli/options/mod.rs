@@ -571,7 +571,7 @@ impl CliOptions {
 
 #[cfg(test)]
 mod tests {
-    use crate::cli::options::{BoolOpt, EnvVars, HttpVersion, RunContext};
+    use crate::cli::options::{EnvVars, HttpVersion, RunContext};
     use crate::cli::{OutputType, options};
     use hurl::pretty::PrettyMode;
     use std::collections::HashMap;
@@ -634,7 +634,7 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.test);
-        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
+        assert!(!opts.progress_bar.get());
         assert!(!opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::ResponseBody);
         assert!(opts.color_stdout.get());
@@ -656,7 +656,7 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.test);
-        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
+        assert!(!opts.progress_bar.get());
         assert!(!opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::ResponseBody);
         assert!(!opts.color_stdout.get());
@@ -680,7 +680,7 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
-        assert_eq!(opts.progress_bar, BoolOpt::Set(true));
+        assert!(opts.progress_bar.get());
         assert!(opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::NoOutput);
     }
@@ -701,7 +701,7 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
-        assert_eq!(opts.progress_bar, BoolOpt::Set(false));
+        assert!(!opts.progress_bar.get());
         assert!(opts.parallel.get());
         assert_eq!(opts.output_type, OutputType::NoOutput);
     }
@@ -763,8 +763,8 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(opts.test);
-        assert_eq!(opts.progress_bar, BoolOpt::Set(true));
-        //assert!(opts.parallel);
+        assert!(opts.progress_bar.get());
+        assert!(opts.parallel.get());
         //assert_eq!(opts.output_type, OutputType::NoOutput);
     }
 
