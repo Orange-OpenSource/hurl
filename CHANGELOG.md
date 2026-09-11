@@ -33,6 +33,7 @@ Security Issues Fixed:
 
 * Fix CVE-2026-63481 stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
 * Fix escaping headers values in HTML report [#5228](https://github.com/Orange-OpenSource/hurl/issues/5228)
+* Fix symlinks escaping file root [#5289](https://github.com/Orange-OpenSource/hurl/issues/5289)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
