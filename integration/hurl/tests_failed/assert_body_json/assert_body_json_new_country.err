@@ -1,0 +1,10 @@
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_new_country.hurl:5:0
+   |
+   | GET http://localhost:8000/assert-body-json/new_country
+   | ...
+ 5 | jsonpath "$.country" not exists
+   |   actual:   string <spain>
+   |   expected: not something
+   |
+

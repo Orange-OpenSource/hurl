@@ -1,0 +1,10 @@
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_age_modified.hurl:5:0
+   |
+   | GET http://localhost:8000/assert-body-json/age_modified
+   | ...
+ 5 | jsonpath "$.age" == 22
+   |   actual:   integer <20>
+   |   expected: integer <22>
+   |
+
