@@ -105,7 +105,7 @@ We will use this expected JSON below:
     21      "first_name": "John",
     22      "last_name": "Smith",
     23      "is_alive": true,
-    24      "age": 27,
+    24      "age": 22,
     25      "address": {
     26        "street_address": "21 2nd Street",
     27        "city": "New York",
@@ -132,25 +132,47 @@ We will use this expected JSON below:
 
 ### case 1 - age modified
  
+    24 |   "age": 22,
+       |          ^^ actual:   int <20>
+       |             expected: int <22>
 
-    24 | jsonpath "$.age"
+
+Explicit jsonpath assert error
+
+     5 | jsonpath "$.age" == 22
        |   actual:   int <20>
        |   expected: int <22>
 
 
 ### case 2 - is_alive field deleted
 
-    23 | jsonpath "$.is_alive"
-       |   actual:   not something
-       |   expected: true
+    23 |   "is_alive": true,
+       |    ^^^^^^^^  Missing property: $.is_alive
+       
+
+Explicit jsonpath assert error
+
+     5 | jsonpath "$.is_alive" == true
+       |   actual:   null
+       | expected: boolean <true>
+
 
 ### case 3 - new country field added
 
-    47 | jsonpath "$.country"
-       |   actual:   spain
-       |   expected: not something
+    47 |  }
+       |  ^ Unexpected property: $.country
+
 
 The line number matches the line for which it could be added in the source Hurl file.
+
+Explicit jsonpath assert error
+
+      5 | jsonpath "$.country" not exists
+        |   actual:   string <spain>
+        |   expected: not something
+        |
+
+
 
 
 ### case 4 - first phone number modified
