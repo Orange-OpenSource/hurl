@@ -65,38 +65,8 @@ Hurl file
 
 
 
-## Using Hurl jsonpath error semantic
 
-"Standard" Hurl jsonpath errors can be generated when the actual JSON is differnt from the received one.
-
-For example
-
-      --> test.hurl:4:0
-      |
-      | GET http://localhost:8000/modify
-      | ...
-    4 | jsonpath "$.age"
-      |   actual:   int <20>
-      |   expected: int <22>
-      |
-
-For arrays, when they differs in size, we will only display the errors on the count of elements.
-
-      error: Assert JSON Body
-        --> test.hurl:41:0
-        |
-        | GET http://localhost:8000/add_json
-        | ...
-     31 | jsonpath "$.phone_numbers" count == 2
-        |   actual:   integer <3>
-        |   expected: integer <2>
-
-
-Using our message `expected: not something` on a specific array element when a item has been added or deleted was not easy to understand.
-
-
-
-## Example
+## Example Data
 
 We will use this expected JSON below:
 
@@ -130,11 +100,28 @@ We will use this expected JSON below:
     46      "spouse": null
     47    }
 
-### case 1 - age modified
+
+## Possible Cases
+
+
+### case 1 - int value mismatch
  
+Expected value
+   
+   24    "age": 22
+
+
+Actual Value
+
+        "age": 20
+
+
+Explicit jsonpath assert error
+
     24 |   "age": 22,
-       |          ^^ actual:   int <20>
-       |             expected: int <22>
+       |          ^^ value mismatch at $.age
+       |   actual:   int <20>
+       |   expected: int <22>
 
 
 Explicit jsonpath assert error
@@ -144,23 +131,26 @@ Explicit jsonpath assert error
        |   expected: int <22>
 
 
-### case 2 - is_alive field deleted
+### case 2 - missing expected key
+
 
     23 |   "is_alive": true,
-       |    ^^^^^^^^  Missing property: $.is_alive
+       |    ^^^^^^^^  Missing expected key $.is_alive 
        
 
 Explicit jsonpath assert error
 
      5 | jsonpath "$.is_alive" == true
-       |   actual:   null
+       |   actual: none
        | expected: boolean <true>
 
 
-### case 3 - new country field added
+### case 3 - unexpected actual key
 
+    20 |  {
+       |  ...
     47 |  }
-       |  ^ Unexpected property: $.country
+       |  ^ Unexpected actual key <country> at $.country
 
 
 The line number matches the line for which it could be added in the source Hurl file.
@@ -173,34 +163,187 @@ Explicit jsonpath assert error
         |
 
 
+### case 4 - mismatch value in array of strings
+
+Expected array
+
+    41      "children": [
+    42        "Catherine",
+    43        "Thomas",
+    44        "Trevor"
+    45      ]
+
+Actual array
+           "children": [
+              "Thomas",
+              "Trevor"
+           ]
+
+Explicit jsonpath assert error
+
+    42 |        "Catherine",  
+       |        ^^^^^^^^^^^ value mismatch at $.children[0]
+       |  actual:   string <Thomas>
+       |  expected: string <Catherine>
 
 
-### case 4 - first phone number modified
+
+Explicit jsonpath assert error
+
+      5 | jsonpath "$.children[0]" == "Catherine"
+        |   actual:   string <Thomas>
+        |   expected: string <Catherine>
+        |
+
+
+
+
+### case 5 - mismatch value in array of objects
+
+
+Expected array
+
+    31      "phone_numbers": [
+    32        {
+    33          "type": "home",
+    34          "number": : "212 555-1234"      
+    35        },
+    36        {
+    37          "type": "office",
+    38          "number": "646 555-4567"
+    39        }
+    40      ],
+
+Actual array
+
+            "phone_numbers": [
+              {
+                "type": "home",
+                "number": : "210 555-1234"      
+              },
+              {
+                "type": "office",
+                "number": "646 555-4567"
+              }
+            ],
+
+Explicit jsonpath assert error
+
+
+    34 |        "number": : "212 555-1234"   
+       |                    ^^^^^^^^^^^^^^ value mismatch at $.phone_numbers[0].number
+       |  actual:   string <210 555-1234>
+       |  expected: string <212 555-1234>
+
+
+Explicit jsonpath assert error
+
+      5 | jsonpath "$.phone_numbers[0].number" == "212 555-1234"
+        |   actual:   string <210 555-1234>
+        |   expected: string <212 555-1234>
+        |
+
+
+
+### case 6 - missing expected array element
+
+Expected array
+
+    41      "children": [
+    42        "Catherine",
+    43        "Thomas",
+    44        "Trevor"
+    45      ]
+
+Actual array
+           "children": [
+              "Catherine",
+              "Thomas",
+           ]
+
+Assert JSON Body Error
+
+    44  |    "Trevor" 
+        |    ^^^^^^^^ Missing expected array element at $.children[2] 
+        |  actual: nothing
+        |  expected string <Trevor>
+
+
+Explicit jsonpath assert error
+
+      5 | jsonpath "$.children[2]" == "Trevor"
+        |   actual:   nothing
+        |   expected: string <Trevor>
+        |
+
+
+
+### case 7 - unexpected array element
+
+Expected array
+
+    41      "children": [
+    42        "Catherine",
+    43        "Thomas",
+    44        "Trevor"
+    45      ]
+
+Actual array
+           "children": [
+              "Catherine",
+              "Thomas",
+              "Trevor",
+              "Bob"
+           ]
+
+
+Assert JSON Body Error
+
+    45 |   ]
+       |   ^ unexpected actual array element at $.children[3]
+       |  actual:  string <Bob>   
+       |  expected: nothing
+
+
+Explicit jsonpath assert error
+
+      5 | jsonpath "$.children[3]" not exist
+        |   actual:   string <Bob>
+        |   expected: nothing
+        |
+
+
+### case 8 - type mismatch 
+
  
-    34 | jsonpath "$.phone_numbers[0].number" == "212 555-1234"
-       |   actual:   string <210 555-1234>
-       |   expected: string <212 555-1234>
+Expected value
+   
+   24    "age": 22
 
 
-### case 5 - deleting a phone number
+Actual Value
 
-     31 | jsonpath "$.phone_numbers" count == 2
-        |   actual:   integer <2>
-        |   expected: integer <3>
-
-The line number match the start of the array in the source Hurl file.
+        "age": "22"
 
 
-### case 6 - adding a phone number
+Explicit jsonpath assert error
 
-        | 
-     31 | jsonpath "$.phone_numbers" count == 2
-        |   actual:   integer <3>
-        |   expected: integer <2>
+    24 |   "age": 22,
+       |          ^^ value mismatch at $.age
+       |   actual:   string <22>
+       |   expected: int <22>
 
 
+Explicit jsonpath assert errors
 
-The line number matches the start of the array in the source Hurl file.
+     5 | jsonpath "$.age" isNumber
+       |   actual:   string <22>
+       |   expected: number
+
+     6 | jsonpath "$.age" == 22
+       |   actual:   string <22>
+       |   expected: int <22>
+
 
 
 ## Additional

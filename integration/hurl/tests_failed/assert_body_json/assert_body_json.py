@@ -31,16 +31,16 @@ def assert_body_json():
     )
 
 
-@app.route("/assert-body-json/age_modified")
-def assert_body_json_age_modified():
+@app.route("/assert-body-json/value_mismatch_age")
+def assert_body_json_value_mismatch_age():
     return Response(
         json.dumps({**DATA, "age": 20}),
         mimetype="application/json",
     )
 
 
-@app.route("/assert-body-json/is_alive_deleted")
-def assert_body_json_is_alive_deleted():
+@app.route("/assert-body-json/missing_key_is_alive")
+def assert_body_json_missing_key_is_alive():
     data = {**DATA}
     del data["is_alive"]
     return Response(
@@ -49,9 +49,53 @@ def assert_body_json_is_alive_deleted():
     )
 
 
-@app.route("/assert-body-json/new_country")
-def assert_body_json_new_country():
+@app.route("/assert-body-json/unexpected_key_country")
+def assert_body_json_unexpected_key_country():
     return Response(
         json.dumps({**DATA, "country": "spain"}),
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-body-json/array_value_mismatch_phone_number")
+def assert_body_json_array_value_mismatch_phone_number():
+    phone_numbers = [
+        {**DATA["phone_numbers"][0], "number": "210 555-1234"},
+        DATA["phone_numbers"][1],
+    ]
+    return Response(
+        json.dumps({**DATA, "phone_numbers": phone_numbers}),
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-body-json/missing_array_element_children")
+def assert_body_json_missing_array_element_children():
+    return Response(
+        json.dumps({**DATA, "children": DATA["children"][:2]}),
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-body-json/unexpected_array_element_children")
+def assert_body_json_unexpected_array_element_children():
+    return Response(
+        json.dumps({**DATA, "children": [*DATA["children"], "Bob"]}),
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-body-json/type_mismatch_age")
+def assert_body_json_type_mismatch_age():
+    return Response(
+        json.dumps({**DATA, "age": "22"}),
+        mimetype="application/json",
+    )
+
+
+@app.route("/assert-body-json/array_value_mismatch_children")
+def assert_body_json_array_value_mismatch_children():
+    return Response(
+        json.dumps({**DATA, "children": DATA["children"][1:]}),
         mimetype="application/json",
     )

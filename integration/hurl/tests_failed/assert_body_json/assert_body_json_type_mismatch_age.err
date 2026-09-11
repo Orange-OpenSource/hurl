@@ -1,0 +1,20 @@
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_type_mismatch_age.hurl:5:0
+   |
+   | GET http://localhost:8000/assert-body-json/type_mismatch_age
+   | ...
+ 5 | jsonpath "$.age" isNumber
+   |   actual:   string <22>
+   |   expected: number
+   |
+
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_type_mismatch_age.hurl:6:0
+   |
+   | GET http://localhost:8000/assert-body-json/type_mismatch_age
+   | ...
+ 6 | jsonpath "$.age" == 22
+   |   actual:   string <22>
+   |   expected: integer <22>
+   |
+

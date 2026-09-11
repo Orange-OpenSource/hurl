@@ -1,0 +1,10 @@
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_array_value_mismatch_phone_number.hurl:5:0
+   |
+   | GET http://localhost:8000/assert-body-json/array_value_mismatch_phone_number
+   | ...
+ 5 | jsonpath "$.phone_numbers[0].number" == "212 555-1234"
+   |   actual:   string <210 555-1234>
+   |   expected: string <212 555-1234>
+   |
+

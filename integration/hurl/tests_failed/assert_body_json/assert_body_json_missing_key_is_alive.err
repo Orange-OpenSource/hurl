@@ -1,0 +1,10 @@
+error: Assert failure
+  --> tests_failed/assert_body_json/assert_body_json_missing_key_is_alive.hurl:5:0
+   |
+   | GET http://localhost:8000/assert-body-json/missing_key_is_alive
+   | ...
+ 5 | jsonpath "$.is_alive" == true
+   |   actual:   none
+   |   expected: boolean <true>
+   |
+

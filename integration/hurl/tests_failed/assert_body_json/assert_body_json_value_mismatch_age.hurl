@@ -1,11 +1,12 @@
 # Age modified
-GET http://localhost:8000/assert-body-json/age_modified
+GET http://localhost:8000/assert-body-json/value_mismatch_age
 HTTP 200
 [Asserts]
 jsonpath "$.age" == 22
 
 # Semantic assert body JSON not implemented yet
 # {
+#   "id"" : {}"
 #   "first_name": "John",
 #   "last_name": "Smith",
 #   "is_alive": true,

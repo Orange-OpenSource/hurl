@@ -1,5 +1,5 @@
 # New country field added
-GET http://localhost:8000/assert-body-json/new_country
+GET http://localhost:8000/assert-body-json/unexpected_key_country
 HTTP 200
 [Asserts]
 jsonpath "$.country" not exists
