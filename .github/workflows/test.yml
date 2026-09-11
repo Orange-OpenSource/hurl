@@ -444,6 +444,7 @@ jobs:
     - name: Setup wsl Ubuntu
       uses: Vampire/setup-wsl@d1da7f2c0322a5ee4f24975344f67fc0f5baf364 #v7.0.0
       with:
+        use-cache: false
         distribution: Ubuntu-22.04
         wsl-version: 2
         wsl-conf: |
