@@ -19,22 +19,24 @@ mod primitives;
 
 use std::path::Path;
 
+use hurl::pretty::PrettyMode;
+use hurl_core::reader::{CharPos, Pos, Reader};
+use hurl_core::types::DurationUnit;
+use hurl_core::types::{BytesPerSec, Count};
+
 use crate::cli::options::HttpVersion;
 use crate::cli::options::config_file::primitives::{
     expect_no_value, parse_value, parse_value_separator,
 };
 use crate::cli::options::duration;
-use crate::cli::options::{BoolOpt, ErrorFormat};
-use hurl::pretty::PrettyMode;
-use hurl_core::reader::{CharPos, Pos, Reader};
-use hurl_core::types::DurationUnit;
-
-use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
 use crate::cli::options::secret;
 use crate::cli::options::variables;
 use crate::cli::options::variables::TypeKind;
-use hurl_core::types::{BytesPerSec, Count};
+use crate::cli::options::{BoolOpt, ErrorFormat};
+
+use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
 use primitives::skip_whitespace_and_comments;
+
 #[derive(Debug, PartialEq, Eq)]
 struct ConfigFileError {
     pos: Pos,
