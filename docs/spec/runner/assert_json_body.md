@@ -108,12 +108,12 @@ We will use this expected JSON below:
  
 Expected value
    
-   24    "age": 22
+    24    "age": 22
 
 
 Actual Value
 
-        "age": 20
+    "age": 20
 
 
 Explicit jsonpath assert error
@@ -135,8 +135,12 @@ Explicit jsonpath assert error
 
 
     23 |   "is_alive": true,
-       |    ^^^^^^^^  Missing expected key $.is_alive 
+       |    ^^^^^^^^ missing expected key <is_alive> at $.is_alive 
        
+> We output the name of the key rendered because the source code can be templatized:
+> 
+>     23 |   "{{some_key}}": true,
+>        |    ^^^^^^^^ missing expected key <is_alive> at $.is_alive
 
 Explicit jsonpath assert error
 
@@ -150,7 +154,7 @@ Explicit jsonpath assert error
     20 |  {
        |  ...
     47 |  }
-       |  ^ Unexpected actual key <country> at $.country
+       |  ^ unexpected actual key <country> at $.country
 
 
 The line number matches the line for which it could be added in the source Hurl file.
@@ -174,7 +178,8 @@ Expected array
     45      ]
 
 Actual array
-           "children": [
+
+        "children": [
               "Thomas",
               "Trevor"
            ]
@@ -194,8 +199,6 @@ Explicit jsonpath assert error
         |   actual:   string <Thomas>
         |   expected: string <Catherine>
         |
-
-
 
 
 ### case 5 - mismatch value in array of objects
@@ -264,9 +267,9 @@ Actual array
 Assert JSON Body Error
 
     44  |    "Trevor" 
-        |    ^^^^^^^^ Missing expected array element at $.children[2] 
-        |  actual: nothing
-        |  expected string <Trevor>
+        |    ^^^^^^^^ missing expected array element at $.children[2] 
+        |  actual:   nothing
+        |  expected: string <Trevor>
 
 
 Explicit jsonpath assert error
@@ -289,6 +292,7 @@ Expected array
     45      ]
 
 Actual array
+
            "children": [
               "Catherine",
               "Thomas",
@@ -296,12 +300,11 @@ Actual array
               "Bob"
            ]
 
-
 Assert JSON Body Error
 
     45 |   ]
        |   ^ unexpected actual array element at $.children[3]
-       |  actual:  string <Bob>   
+       |  actual:   string <Bob>   
        |  expected: nothing
 
 
@@ -318,7 +321,7 @@ Explicit jsonpath assert error
  
 Expected value
    
-   24    "age": 22
+    24    "age": 22
 
 
 Actual Value
