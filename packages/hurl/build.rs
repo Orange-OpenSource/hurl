@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use std::path::Path;
 
 use cc::Build;
@@ -24,9 +23,15 @@ use winres::WindowsResource;
 
 #[cfg(windows)]
 fn set_icon() {
+    let icon = "../../bin/windows/logo.ico";
+    if !Path::new(icon).exists() {
+        return;
+    }
     let mut res = WindowsResource::new();
-    res.set_icon("../../bin/windows/logo.ico");
-    res.compile().unwrap();
+    res.set_icon(icon);
+    if let Err(e) = res.compile() {
+        println!("cargo:warning=failed to compile Windows resource: {e}");
+    }
 }
 
 #[cfg(unix)]
