@@ -8,6 +8,9 @@ Thanks to
 [@fubar-coder](https://github.com/fubar-coder),
 [@ptwales](https://github.com/ptwales),
 [@jgarte](https://github.com/jgarte),
+[@brenordv](https://github.com/brenordv),
+[@linkdd](https://github.com/linkdd),
+[@jkellz-dev](https://github.com/jkellz-dev),
 [@qrn12580](https://github.com/qrn12580),
 
 Enhancements:
@@ -19,6 +22,7 @@ Enhancements:
 * Add --proxy-header option to send header exclusively to a proxy [#3944](https://github.com/Orange-OpenSource/hurl/issues/3944)
 * Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
+* Add Sublime Text syntax highlighting [#5298](https://github.com/Orange-OpenSource/hurl/issues/5298)
 
 
 Bugs Fixed:
@@ -27,6 +31,7 @@ Bugs Fixed:
 * Fix variable option values starting with a number or boolean [#5028](https://github.com/Orange-OpenSource/hurl/issues/5028)
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
 * Fix Hurl debug curl command when request binary body contains NUL char [#5141](https://github.com/Orange-OpenSource/hurl/issues/5141)
+* Don't fail build on Windows if file icon is not reachable [#5207](https://github.com/Orange-OpenSource/hurl/issues/5207)
 
 
 Security Issues Fixed:
