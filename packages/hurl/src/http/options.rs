@@ -20,7 +20,7 @@ use std::time::Duration;
 use hurl_core::types::{BytesPerSec, Count};
 
 use super::header::HeaderVec;
-use super::request::{FollowLocation, IpResolve, RequestedHttpVersion};
+use super::request::{FollowLocation, IpResolve, RequestedHttpVersion, TlsVersion};
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
@@ -61,6 +61,7 @@ pub struct ClientOptions {
     pub resolves: Vec<String>,
     pub ssl_no_revoke: bool,
     pub timeout: Duration,
+    pub tls_max: Option<TlsVersion>,
     pub unix_socket: Option<String>,
     pub use_cookie_store: bool,
     pub user: Option<String>,
@@ -112,6 +113,7 @@ impl Default for ClientOptions {
             resolves: Vec::new(),
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
+            tls_max: None,
             unix_socket: None,
             use_cookie_store: true,
             user: None,

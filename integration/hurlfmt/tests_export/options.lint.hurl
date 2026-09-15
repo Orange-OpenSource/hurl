@@ -50,6 +50,7 @@ retry-interval: 1000ms
 retry-interval: 1000ms
 retry-interval: 1s
 skip: false
+tls-max: 1.2
 unix-socket: build/unix_socket.sock
 user: bob:secret
 variable: user=null
@@ -103,6 +104,7 @@ resolve: {{resolve}}
 retry: {{retry}}
 retry-interval: {{retry-interval}}
 skip: {{skip}}
+tls-max: {{tls-max}}
 unix-socket: {{socket-file}}
 user: {{user}}
 #variable: {{variable}}     NOT SUPPORTED YET
