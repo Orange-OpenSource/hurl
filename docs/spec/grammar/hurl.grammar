@@ -691,7 +691,7 @@ exponent: ("e" | "E") ("+"|"-")? digit+
 
 sp: [ \t]
 
-lt: sp* comment? [\n]?
+lt: sp* comment? ("\n" | "\r\n")?
 
 comment: "#" ~[\n]*
 
