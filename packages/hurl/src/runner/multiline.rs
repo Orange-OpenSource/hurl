@@ -58,7 +58,7 @@ pub fn eval_multiline(
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString,
+        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, JsonValueKind, MultilineString,
         MultilineStringKind, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use hurl_core::reader::Pos;
@@ -83,6 +83,10 @@ mod tests {
 
     fn empty_source_info() -> SourceInfo {
         SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+    }
+
+    fn json_value(kind: JsonValueKind) -> JsonValue {
+        JsonValue::new(empty_source_info(), kind)
     }
 
     #[test]
@@ -128,7 +132,7 @@ mod tests {
         let hurl_variables = VariableSet::new();
         let graphql_variables = GraphQlVariables {
             space: whitespace(),
-            value: JsonValue::Object {
+            value: json_value(JsonValueKind::Object {
                 space0: String::new(),
                 elements: vec![
                     JsonObjectElement {
@@ -143,14 +147,14 @@ mod tests {
                         ),
                         space1: String::new(),
                         space2: String::new(),
-                        value: JsonValue::String(Template::new(
+                        value: json_value(JsonValueKind::String(Template::new(
                             Some('"'),
                             vec![TemplateElement::String {
                                 value: "JEDI".to_string(),
                                 source: "JEDI".to_source(),
                             }],
                             empty_source_info(),
-                        )),
+                        ))),
                         space3: String::new(),
                     },
                     JsonObjectElement {
@@ -165,11 +169,11 @@ mod tests {
                         ),
                         space1: String::new(),
                         space2: String::new(),
-                        value: JsonValue::Boolean(false),
+                        value: json_value(JsonValueKind::Boolean(false)),
                         space3: String::new(),
                     },
                 ],
-            },
+            }),
             whitespace: whitespace(),
         };
         let multiline = MultilineString {

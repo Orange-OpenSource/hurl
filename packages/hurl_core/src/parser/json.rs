@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
+use crate::ast::{
+    JsonListElement, JsonObjectElement, JsonValue, JsonValueKind, SourceInfo, Template,
+};
 use crate::combinator::{ParseError as ParseErrorTrait, choice, non_recover};
 use crate::reader::{Pos, Reader};
 
@@ -33,12 +35,21 @@ pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
 
 /// Parse a JSON value from the reader, considering the current nesting depth.
 fn parse_at_depth(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+    let start = reader.cursor().pos;
+    let kind = parse_kind_at_depth(reader, depth)?;
+    Ok(JsonValue::new(
+        SourceInfo::new(start, reader.cursor().pos),
+        kind,
+    ))
+}
+
+fn parse_kind_at_depth(reader: &mut Reader, depth: usize) -> ParseResult<JsonValueKind> {
     let parsers = [
-        null_value,
-        boolean_value,
-        string_value,
-        number_value,
-        expression_value,
+        null_value_kind,
+        boolean_value_kind,
+        string_value_kind,
+        number_value_kind,
+        expression_value_kind,
     ];
     let start = reader.cursor();
     match choice(&parsers, reader) {
@@ -47,11 +58,11 @@ fn parse_at_depth(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
     }
 
     let start = reader.cursor();
-    match list_value(reader, depth) {
+    match list_value_kind(reader, depth) {
         Err(error) if error.recoverable => reader.seek(start),
         result => return result,
     }
-    object_value(reader, depth)
+    object_value_kind(reader, depth)
 }
 
 /// Helper for parse, but already knowing that we are inside a JSON body.
@@ -80,18 +91,36 @@ fn parse_in_json(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
 }
 
 pub fn null_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+    let start = reader.cursor().pos;
+    let kind = null_value_kind(reader)?;
+    Ok(JsonValue::new(
+        SourceInfo::new(start, reader.cursor().pos),
+        kind,
+    ))
+}
+
+fn null_value_kind(reader: &mut Reader) -> ParseResult<JsonValueKind> {
     try_literal("null", reader)?;
-    Ok(JsonValue::Null)
+    Ok(JsonValueKind::Null)
 }
 
 pub fn boolean_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let value = boolean(reader)?;
-    Ok(JsonValue::Boolean(value))
+    let start = reader.cursor().pos;
+    let kind = boolean_value_kind(reader)?;
+    Ok(JsonValue::new(
+        SourceInfo::new(start, reader.cursor().pos),
+        kind,
+    ))
 }
 
-fn string_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+fn boolean_value_kind(reader: &mut Reader) -> ParseResult<JsonValueKind> {
+    let value = boolean(reader)?;
+    Ok(JsonValueKind::Boolean(value))
+}
+
+fn string_value_kind(reader: &mut Reader) -> ParseResult<JsonValueKind> {
     let template = string_template(reader)?;
-    Ok(JsonValue::String(template))
+    Ok(JsonValueKind::String(template))
 }
 
 fn string_template(reader: &mut Reader) -> ParseResult<Template> {
@@ -224,6 +253,15 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
 }
 
 pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+    let start = reader.cursor().pos;
+    let kind = number_value_kind(reader)?;
+    Ok(JsonValue::new(
+        SourceInfo::new(start, reader.cursor().pos),
+        kind,
+    ))
+}
+
+fn number_value_kind(reader: &mut Reader) -> ParseResult<JsonValueKind> {
     let sign = match try_literal("-", reader) {
         Err(_) => String::new(),
         Ok(_) => "-".to_string(),
@@ -231,7 +269,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let int = integer(reader)?;
     let frac = fraction(reader)?;
     let exp = exponent(reader)?;
-    Ok(JsonValue::Number(format!("{sign}{int}{frac}{exp}")))
+    Ok(JsonValueKind::Number(format!("{sign}{int}{frac}{exp}")))
 }
 
 fn integer(reader: &mut Reader) -> ParseResult<String> {
@@ -286,12 +324,12 @@ fn exponent(reader: &mut Reader) -> ParseResult<String> {
     }
 }
 
-fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+fn expression_value_kind(reader: &mut Reader) -> ParseResult<JsonValueKind> {
     let exp = placeholder::parse(reader)?;
-    Ok(JsonValue::Placeholder(exp))
+    Ok(JsonValueKind::Placeholder(exp))
 }
 
-fn list_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+fn list_value_kind(reader: &mut Reader, depth: usize) -> ParseResult<JsonValueKind> {
     let start = reader.cursor();
     try_literal("[", reader)?;
     if depth >= MAX_NESTING_DEPTH {
@@ -333,7 +371,7 @@ fn list_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
     }
     literal("]", reader)?;
 
-    Ok(JsonValue::List { space0, elements })
+    Ok(JsonValueKind::List { space0, elements })
 }
 
 fn list_element(reader: &mut Reader, depth: usize) -> ParseResult<JsonListElement> {
@@ -348,6 +386,15 @@ fn list_element(reader: &mut Reader, depth: usize) -> ParseResult<JsonListElemen
 }
 
 pub fn object_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+    let start = reader.cursor().pos;
+    let kind = object_value_kind(reader, depth)?;
+    Ok(JsonValue::new(
+        SourceInfo::new(start, reader.cursor().pos),
+        kind,
+    ))
+}
+
+fn object_value_kind(reader: &mut Reader, depth: usize) -> ParseResult<JsonValueKind> {
     let start = reader.cursor();
     try_literal("{", reader)?;
     if depth >= MAX_NESTING_DEPTH {
@@ -390,7 +437,7 @@ pub fn object_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue>
 
     literal("}", reader)?;
 
-    Ok(JsonValue::Object { space0, elements })
+    Ok(JsonValueKind::Object { space0, elements })
 }
 
 fn key(reader: &mut Reader) -> ParseResult<Template> {
@@ -471,27 +518,77 @@ mod tests {
                 opening.repeat(MAX_NESTING_DEPTH),
                 closing.repeat(MAX_NESTING_DEPTH)
             );
-            assert!(parse_at_depth(&mut Reader::new(&valid), 0).is_ok());
+            let value = parse(&mut Reader::new(&valid)).unwrap();
+            assert_eq!(value.to_source().as_str(), valid);
+            assert_eq!(
+                value.source_info(),
+                &SourceInfo::new(Pos::new(1, 1), Pos::new(1, valid.len() + 1))
+            );
+            if opening == "{\"a\":" {
+                assert_eq!(object_value(&mut Reader::new(&valid), 0).unwrap(), value);
+            }
 
             let too_deep = format!(
                 "{}null{}",
                 opening.repeat(MAX_NESTING_DEPTH + 1),
                 closing.repeat(MAX_NESTING_DEPTH + 1)
             );
-            let error = parse_at_depth(&mut Reader::new(&too_deep), 0).unwrap_err();
+            let error = parse(&mut Reader::new(&too_deep)).unwrap_err();
             assert_eq!(
                 error.kind,
                 ParseErrorKind::Json(JsonErrorVariant::MaxDepthExceeded {
                     max_depth: MAX_NESTING_DEPTH
                 })
             );
+            assert!(!error.recoverable);
+            assert_eq!(
+                error.pos,
+                Pos::new(1, opening.len() * MAX_NESTING_DEPTH + 1)
+            );
+            if opening == "{\"a\":" {
+                assert_eq!(
+                    object_value(&mut Reader::new(&too_deep), 0).unwrap_err(),
+                    error
+                );
+            }
         }
+    }
+
+    #[test]
+    fn test_mixed_max_nesting_depth() {
+        let valid = format!(
+            "{}null{}",
+            "[{\"a\":".repeat(MAX_NESTING_DEPTH / 2),
+            "}]".repeat(MAX_NESTING_DEPTH / 2)
+        );
+        let value = parse(&mut Reader::new(&valid)).unwrap();
+        assert_eq!(value.to_source().as_str(), valid);
+        assert_eq!(
+            value.source_info(),
+            &SourceInfo::new(Pos::new(1, 1), Pos::new(1, valid.len() + 1))
+        );
+
+        let too_deep = format!("[{valid}]");
+        let error = parse(&mut Reader::new(&too_deep)).unwrap_err();
+        assert_eq!(
+            error.kind,
+            ParseErrorKind::Json(JsonErrorVariant::MaxDepthExceeded {
+                max_depth: MAX_NESTING_DEPTH
+            })
+        );
+        assert!(!error.recoverable);
     }
 
     #[test]
     fn test_null_value() {
         let mut reader = Reader::new("null");
-        assert_eq!(null_value(&mut reader).unwrap(), JsonValue::Null);
+        assert_eq!(
+            null_value(&mut reader).unwrap(),
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+                JsonValueKind::Null,
+            )
+        );
         assert_eq!(reader.cursor().index, CharPos(4));
 
         let mut reader = Reader::new("true");
@@ -539,8 +636,8 @@ mod tests {
     fn test_boolean_value() {
         let mut reader = Reader::new("true");
         assert_eq!(
-            boolean_value(&mut reader).unwrap(),
-            JsonValue::Boolean(true)
+            boolean_value(&mut reader).unwrap().kind(),
+            &JsonValueKind::Boolean(true)
         );
         assert_eq!(reader.cursor().index, CharPos(4));
 
@@ -558,45 +655,48 @@ mod tests {
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
-        JsonValue::String(Template::new(
-            Some('"'),
-            vec![
-                TemplateElement::String {
-                    value: "Hello ".to_string(),
-                    source: "Hello\\u0020".to_source(),
-                },
-                TemplateElement::Placeholder(Placeholder {
-                    space0: Whitespace {
-                        value: String::new(),
-                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
+        JsonValue::new(
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 23)),
+            JsonValueKind::String(Template::new(
+                Some('"'),
+                vec![
+                    TemplateElement::String {
+                        value: "Hello ".to_string(),
+                        source: "Hello\\u0020".to_source(),
                     },
-                    expr: Expr {
-                        kind: ExprKind::Variable(Variable {
-                            name: "name".to_string(),
+                    TemplateElement::Placeholder(Placeholder {
+                        space0: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
+                        },
+                        expr: Expr {
+                            kind: ExprKind::Variable(Variable {
+                                name: "name".to_string(),
+                                source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                            }),
                             source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
-                        }),
-                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
+                        },
+                        space1: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
+                        },
+                    }),
+                    TemplateElement::String {
+                        value: "!".to_string(),
+                        source: "!".to_source(),
                     },
-                    space1: Whitespace {
-                        value: String::new(),
-                        source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
-                    },
-                }),
-                TemplateElement::String {
-                    value: "!".to_string(),
-                    source: "!".to_source(),
-                },
-            ],
-            SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
-        ))
+                ],
+                SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
+            )),
+        )
     }
 
     #[test]
     fn test_string_value() {
         let mut reader = Reader::new("\"\"");
         assert_eq!(
-            string_value(&mut reader).unwrap(),
-            JsonValue::String(Template::new(
+            string_value_kind(&mut reader).unwrap(),
+            JsonValueKind::String(Template::new(
                 Some('"'),
                 vec![],
                 SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
@@ -605,13 +705,16 @@ mod tests {
         assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("\"Hello\\u0020{{name}}!\"");
-        assert_eq!(string_value(&mut reader).unwrap(), json_hello_world_value());
+        assert_eq!(
+            string_value_kind(&mut reader).unwrap(),
+            json_hello_world_value().kind().clone()
+        );
         assert_eq!(reader.cursor().index, CharPos(22));
 
         let mut reader = Reader::new("\"{}\"");
         assert_eq!(
-            string_value(&mut reader).unwrap(),
-            JsonValue::String(Template::new(
+            string_value_kind(&mut reader).unwrap(),
+            JsonValueKind::String(Template::new(
                 Some('"'),
                 vec![TemplateElement::String {
                     value: "{}".to_string(),
@@ -626,7 +729,7 @@ mod tests {
     #[test]
     fn test_string_value_error() {
         let mut reader = Reader::new("1");
-        let error = string_value(&mut reader).err().unwrap();
+        let error = string_value_kind(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -637,7 +740,7 @@ mod tests {
         assert!(error.recoverable);
 
         let mut reader = Reader::new("\"1");
-        let error = string_value(&mut reader).err().unwrap();
+        let error = string_value_kind(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
             error.kind,
@@ -648,7 +751,7 @@ mod tests {
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("\"{{x\"");
-        let error = string_value(&mut reader).err().unwrap();
+        let error = string_value_kind(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
             error.kind,
@@ -785,49 +888,70 @@ mod tests {
         let mut reader = Reader::new("100");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("100".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
+                JsonValueKind::Number("100".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("1.333");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("1.333".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
+                JsonValueKind::Number("1.333".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("-1");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("-1".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
+                JsonValueKind::Number("-1".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("00");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("0".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
+                JsonValueKind::Number("0".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(1));
 
         let mut reader = Reader::new("1e0");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("1e0".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
+                JsonValueKind::Number("1e0".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("1e005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("1e005".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
+                JsonValueKind::Number("1e005".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("1e-005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
-            JsonValue::Number("1e-005".to_string())
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
+                JsonValueKind::Number("1e-005".to_string()),
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(6));
     }
@@ -861,8 +985,8 @@ mod tests {
     fn test_expression_value() {
         let mut reader = Reader::new("{{n}}");
         assert_eq!(
-            expression_value(&mut reader).unwrap(),
-            JsonValue::Placeholder(Placeholder {
+            expression_value_kind(&mut reader).unwrap(),
+            JsonValueKind::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3))
@@ -887,8 +1011,8 @@ mod tests {
     fn test_list_value() {
         let mut reader = Reader::new("[]");
         assert_eq!(
-            list_value(&mut reader, 0).unwrap(),
-            JsonValue::List {
+            list_value_kind(&mut reader, 0).unwrap(),
+            JsonValueKind::List {
                 space0: String::new(),
                 elements: vec![]
             }
@@ -897,8 +1021,8 @@ mod tests {
 
         let mut reader = Reader::new("[ ]");
         assert_eq!(
-            list_value(&mut reader, 0).unwrap(),
-            JsonValue::List {
+            list_value_kind(&mut reader, 0).unwrap(),
+            JsonValueKind::List {
                 space0: " ".to_string(),
                 elements: vec![]
             }
@@ -907,18 +1031,24 @@ mod tests {
 
         let mut reader = Reader::new("[true, false]");
         assert_eq!(
-            list_value(&mut reader, 0).unwrap(),
-            JsonValue::List {
+            list_value_kind(&mut reader, 0).unwrap(),
+            JsonValueKind::List {
                 space0: String::new(),
                 elements: vec![
                     JsonListElement {
                         space0: String::new(),
-                        value: JsonValue::Boolean(true),
+                        value: JsonValue::new(
+                            SourceInfo::new(Pos::new(1, 2), Pos::new(1, 6)),
+                            JsonValueKind::Boolean(true),
+                        ),
                         space1: String::new(),
                     },
                     JsonListElement {
                         space0: String::from(" "),
-                        value: JsonValue::Boolean(false),
+                        value: JsonValue::new(
+                            SourceInfo::new(Pos::new(1, 8), Pos::new(1, 13)),
+                            JsonValueKind::Boolean(false),
+                        ),
                         space1: String::new(),
                     }
                 ],
@@ -930,7 +1060,7 @@ mod tests {
     #[test]
     fn test_list_error() {
         let mut reader = Reader::new("true");
-        let error = list_value(&mut reader, 0).err().unwrap();
+        let error = list_value_kind(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -941,7 +1071,7 @@ mod tests {
         assert!(error.recoverable);
 
         let mut reader = Reader::new("[1, 2,]");
-        let error = list_value(&mut reader, 0).err().unwrap();
+        let error = list_value_kind(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
             error.kind,
@@ -957,7 +1087,10 @@ mod tests {
             list_element(&mut reader, 1).unwrap(),
             JsonListElement {
                 space0: String::new(),
-                value: JsonValue::Boolean(true),
+                value: JsonValue::new(
+                    SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
+                    JsonValueKind::Boolean(true),
+                ),
                 space1: String::new(),
             }
         );
@@ -969,44 +1102,56 @@ mod tests {
         let mut reader = Reader::new("{}");
         assert_eq!(
             object_value(&mut reader, 0).unwrap(),
-            JsonValue::Object {
-                space0: String::new(),
-                elements: vec![]
-            }
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
+                JsonValueKind::Object {
+                    space0: String::new(),
+                    elements: vec![]
+                },
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(2));
 
         let mut reader = Reader::new("{ }");
         assert_eq!(
             object_value(&mut reader, 0).unwrap(),
-            JsonValue::Object {
-                space0: " ".to_string(),
-                elements: vec![]
-            }
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
+                JsonValueKind::Object {
+                    space0: " ".to_string(),
+                    elements: vec![]
+                },
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(3));
 
         let mut reader = Reader::new("{\n  \"a\": true\n}");
         assert_eq!(
             object_value(&mut reader, 0).unwrap(),
-            JsonValue::Object {
-                space0: "\n  ".to_string(),
-                elements: vec![JsonObjectElement {
-                    space0: String::new(),
-                    name: Template::new(
-                        Some('"'),
-                        vec![TemplateElement::String {
-                            value: "a".to_string(),
-                            source: "a".to_source()
-                        }],
-                        SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
-                    ),
-                    space1: String::new(),
-                    space2: " ".to_string(),
-                    value: JsonValue::Boolean(true),
-                    space3: "\n".to_string(),
-                }],
-            }
+            JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(3, 2)),
+                JsonValueKind::Object {
+                    space0: "\n  ".to_string(),
+                    elements: vec![JsonObjectElement {
+                        space0: String::new(),
+                        name: Template::new(
+                            Some('"'),
+                            vec![TemplateElement::String {
+                                value: "a".to_string(),
+                                source: "a".to_source()
+                            }],
+                            SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
+                        ),
+                        space1: String::new(),
+                        space2: " ".to_string(),
+                        value: JsonValue::new(
+                            SourceInfo::new(Pos::new(2, 8), Pos::new(2, 12)),
+                            JsonValueKind::Boolean(true),
+                        ),
+                        space3: "\n".to_string(),
+                    }],
+                },
+            )
         );
         assert_eq!(reader.cursor().index, CharPos(15));
 
@@ -1051,7 +1196,10 @@ mod tests {
                 ),
                 space1: String::new(),
                 space2: " ".to_string(),
-                value: JsonValue::Boolean(true),
+                value: JsonValue::new(
+                    SourceInfo::new(Pos::new(1, 6), Pos::new(1, 10)),
+                    JsonValueKind::Boolean(true),
+                ),
                 space3: String::new(),
             }
         );

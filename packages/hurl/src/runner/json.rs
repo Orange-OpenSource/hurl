@@ -16,7 +16,8 @@
  *
  */
 use hurl_core::ast::{
-    JsonListElement, JsonObjectElement, JsonValue, Placeholder, Template, TemplateElement,
+    JsonListElement, JsonObjectElement, JsonValue, JsonValueKind, Placeholder, Template,
+    TemplateElement,
 };
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number};
 use hurl_core::reader::Reader;
@@ -34,15 +35,15 @@ pub fn eval_json_value(
     variables: &VariableSet,
     keep_whitespace: bool,
 ) -> Result<String, RunnerError> {
-    match json_value {
-        JsonValue::Null => Ok("null".to_string()),
-        JsonValue::Number(s) => Ok(s.clone()),
-        JsonValue::String(template) => {
+    match &json_value.kind() {
+        JsonValueKind::Null => Ok("null".to_string()),
+        JsonValueKind::Number(s) => Ok(s.clone()),
+        JsonValueKind::String(template) => {
             let s = eval_json_template(template, variables)?;
             Ok(format!("\"{s}\""))
         }
-        JsonValue::Boolean(v) => Ok(v.to_string()),
-        JsonValue::List { space0, elements } => {
+        JsonValueKind::Boolean(v) => Ok(v.to_string()),
+        JsonValueKind::List { space0, elements } => {
             let mut elems_string = vec![];
             for element in elements {
                 let s = eval_json_list_element(element, variables, keep_whitespace)?;
@@ -54,7 +55,7 @@ pub fn eval_json_value(
                 Ok(format!("[{}]", elems_string.join(",")))
             }
         }
-        JsonValue::Object { space0, elements } => {
+        JsonValueKind::Object { space0, elements } => {
             let mut elems_string = vec![];
             for element in elements {
                 let s = eval_json_object_element(element, variables, keep_whitespace)?;
@@ -66,7 +67,7 @@ pub fn eval_json_value(
                 Ok(format!("{{{}}}", elems_string.join(",")))
             }
         }
-        JsonValue::Placeholder(Placeholder { expr, .. }) => {
+        JsonValueKind::Placeholder(Placeholder { expr, .. }) => {
             let s = expr::render(expr, variables)?;
 
             // The String can only be null, a bool, a number
@@ -186,10 +187,17 @@ mod tests {
     use super::super::error::RunnerErrorKind;
     use super::*;
     use crate::runner::Value;
+    fn empty_source_info() -> SourceInfo {
+        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
+    }
+
+    fn json_value(kind: JsonValueKind) -> JsonValue {
+        JsonValue::new(empty_source_info(), kind)
+    }
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
-        JsonValue::String(Template::new(
+        json_value(JsonValueKind::String(Template::new(
             Some('"'),
             vec![
                 TemplateElement::String {
@@ -219,11 +227,11 @@ mod tests {
                 },
             ],
             SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
-        ))
+        )))
     }
 
     pub fn json_person_value() -> JsonValue {
-        JsonValue::Object {
+        json_value(JsonValueKind::Object {
             space0: "\n    ".to_string(),
             elements: vec![JsonObjectElement {
                 space0: String::new(),
@@ -237,17 +245,17 @@ mod tests {
                 ),
                 space1: String::new(),
                 space2: " ".to_string(),
-                value: JsonValue::String(Template::new(
+                value: json_value(JsonValueKind::String(Template::new(
                     None,
                     vec![TemplateElement::String {
                         value: "John".to_string(),
                         source: "John".to_source(),
                     }],
                     SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
-                )),
+                ))),
                 space3: "\n".to_string(),
             }],
-        }
+        })
     }
 
     #[test]
@@ -255,15 +263,20 @@ mod tests {
         let mut variables = VariableSet::new();
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
-            eval_json_value(&JsonValue::Null, &variables, true).unwrap(),
+            eval_json_value(&json_value(JsonValueKind::Null), &variables, true).unwrap(),
             "null".to_string()
         );
         assert_eq!(
-            eval_json_value(&JsonValue::Number("3.14".to_string()), &variables, true).unwrap(),
+            eval_json_value(
+                &json_value(JsonValueKind::Number("3.14".to_string())),
+                &variables,
+                true,
+            )
+            .unwrap(),
             "3.14".to_string()
         );
         assert_eq!(
-            eval_json_value(&JsonValue::Boolean(false), &variables, true).unwrap(),
+            eval_json_value(&json_value(JsonValueKind::Boolean(false)), &variables, true).unwrap(),
             "false".to_string()
         );
         assert_eq!(
@@ -296,10 +309,10 @@ mod tests {
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
             eval_json_value(
-                &JsonValue::List {
+                &json_value(JsonValueKind::List {
                     space0: String::new(),
                     elements: vec![],
-                },
+                }),
                 &variables,
                 true,
             )
@@ -309,26 +322,26 @@ mod tests {
 
         assert_eq!(
             eval_json_value(
-                &JsonValue::List {
+                &json_value(JsonValueKind::List {
                     space0: String::new(),
                     elements: vec![
                         JsonListElement {
                             space0: String::new(),
-                            value: JsonValue::Number("1".to_string()),
+                            value: json_value(JsonValueKind::Number("1".to_string())),
                             space1: String::new(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
-                            value: JsonValue::Number("-2".to_string()),
+                            value: json_value(JsonValueKind::Number("-2".to_string())),
                             space1: String::new(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
-                            value: JsonValue::Number("3.0".to_string()),
+                            value: json_value(JsonValueKind::Number("3.0".to_string())),
                             space1: String::new(),
                         },
                     ],
-                },
+                }),
                 &variables,
                 true
             )
@@ -346,12 +359,12 @@ mod tests {
         );
         assert_eq!(
             eval_json_value(
-                &JsonValue::List {
+                &json_value(JsonValueKind::List {
                     space0: String::new(),
                     elements: vec![
                         JsonListElement {
                             space0: String::new(),
-                            value: JsonValue::String(template),
+                            value: json_value(JsonValueKind::String(template)),
                             space1: String::new(),
                         },
                         JsonListElement {
@@ -360,7 +373,7 @@ mod tests {
                             space1: String::new(),
                         },
                     ],
-                },
+                }),
                 &variables,
                 true
             )
@@ -374,10 +387,10 @@ mod tests {
         let variables = VariableSet::new();
         assert_eq!(
             eval_json_value(
-                &JsonValue::Object {
+                &json_value(JsonValueKind::Object {
                     space0: String::new(),
                     elements: vec![],
-                },
+                }),
                 &variables,
                 true
             )
@@ -398,14 +411,14 @@ mod tests {
         let variables = VariableSet::new();
         assert_eq!(
             eval_json_value(
-                &JsonValue::String(Template::new(
+                &json_value(JsonValueKind::String(Template::new(
                     None,
                     vec![TemplateElement::String {
                         value: "\n".to_string(),
                         source: "\\n".to_source(),
                     }],
                     SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1))
-                )),
+                ))),
                 &variables,
                 true
             )

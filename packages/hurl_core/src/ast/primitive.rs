@@ -560,8 +560,12 @@ impl fmt::Display for Function {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::json::{JsonListElement, JsonObjectElement, JsonValue};
+    use crate::ast::json::{JsonListElement, JsonObjectElement, JsonValue, JsonValueKind};
     use crate::types::ToSource;
+
+    fn json_value(kind: JsonValueKind) -> JsonValue {
+        JsonValue::new(SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)), kind)
+    }
 
     #[test]
     fn test_float() {
@@ -686,7 +690,7 @@ mod tests {
     fn test_template_to_source() {
         assert_eq!(
             "{{x}}",
-            JsonValue::Placeholder(Placeholder {
+            json_value(JsonValueKind::Placeholder(Placeholder {
                 space0: Whitespace {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
@@ -702,71 +706,81 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
-            })
+            }))
             .to_source()
             .as_str()
         );
-        assert_eq!("1", JsonValue::Number("1".to_string()).to_source().as_str());
+        assert_eq!(
+            "1",
+            json_value(JsonValueKind::Number("1".to_string()))
+                .to_source()
+                .as_str()
+        );
         assert_eq!(
             "\"hello\"",
-            JsonValue::String(Template::new(
+            json_value(JsonValueKind::String(Template::new(
                 Some('"'),
                 vec![TemplateElement::String {
                     value: "hello".to_string(),
                     source: "hello".to_source(),
                 }],
                 SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
-            ))
+            )))
             .to_source()
             .as_str()
         );
-        assert_eq!("true", JsonValue::Boolean(true).to_source().as_str());
+        assert_eq!(
+            "true",
+            json_value(JsonValueKind::Boolean(true))
+                .to_source()
+                .as_str()
+        );
         assert_eq!(
             "[]",
-            JsonValue::List {
+            json_value(JsonValueKind::List {
                 space0: String::new(),
                 elements: vec![],
-            }
+            })
             .to_source()
             .as_str()
         );
         assert_eq!(
             "[1, 2, 3]",
-            JsonValue::List {
+            json_value(JsonValueKind::List {
                 space0: String::new(),
                 elements: vec![
                     JsonListElement {
                         space0: String::new(),
-                        value: JsonValue::Number("1".to_string()),
+                        value: json_value(JsonValueKind::Number("1".to_string())),
                         space1: String::new(),
                     },
                     JsonListElement {
                         space0: " ".to_string(),
-                        value: JsonValue::Number("2".to_string()),
+                        value: json_value(JsonValueKind::Number("2".to_string())),
                         space1: String::new(),
                     },
                     JsonListElement {
                         space0: " ".to_string(),
-                        value: JsonValue::Number("3".to_string()),
+                        value: json_value(JsonValueKind::Number("3".to_string())),
                         space1: String::new(),
                     }
                 ],
-            }
+            })
             .to_source()
             .as_str()
         );
         assert_eq!(
             "{}",
-            JsonValue::Object {
+            json_value(JsonValueKind::Object {
                 space0: String::new(),
                 elements: vec![],
-            }
+            })
             .to_source()
             .as_str()
         );
         assert_eq!(
             "{ \"id\": 123 }",
-            JsonValue::Object {
+            json_value(JsonValueKind::Object {
                 space0: String::new(),
                 elements: vec![JsonObjectElement {
                     space0: " ".to_string(),
@@ -780,14 +794,14 @@ mod tests {
                     ),
                     space1: String::new(),
                     space2: " ".to_string(),
-                    value: JsonValue::Number("123".to_string()),
+                    value: json_value(JsonValueKind::Number("123".to_string())),
                     space3: " ".to_string(),
                 }],
-            }
+            })
             .to_source()
             .as_str()
         );
-        assert_eq!("null", JsonValue::Null.to_source().as_str());
+        assert_eq!("null", json_value(JsonValueKind::Null).to_source().as_str());
 
         assert_eq!(
             "{{name}}",
