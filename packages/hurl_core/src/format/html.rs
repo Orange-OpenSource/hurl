@@ -353,12 +353,16 @@ impl Visitor for HtmlFormatter {
 mod tests {
     use crate::ast::visit::Visitor;
     use crate::ast::{
-        JsonObjectElement, JsonValue, MultilineString, MultilineStringKind, SourceInfo, Template,
-        TemplateElement, Whitespace,
+        JsonObjectElement, JsonValue, JsonValueKind, MultilineString, MultilineStringKind,
+        SourceInfo, Template, TemplateElement, Whitespace,
     };
     use crate::format::html::HtmlFormatter;
     use crate::reader::Pos;
     use crate::types::ToSource;
+
+    fn json_value(kind: JsonValueKind) -> JsonValue {
+        JsonValue::new(SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)), kind)
+    }
 
     #[test]
     fn test_multiline_string() {
@@ -401,7 +405,7 @@ mod tests {
 
     #[test]
     fn test_json() {
-        let value = JsonValue::Object {
+        let value = json_value(JsonValueKind::Object {
             space0: String::new(),
             elements: vec![JsonObjectElement {
                 space0: "\n   ".to_string(),
@@ -415,10 +419,10 @@ mod tests {
                 ),
                 space1: String::new(),
                 space2: " ".to_string(),
-                value: JsonValue::Number("1".to_string()),
+                value: json_value(JsonValueKind::Number("1".to_string())),
                 space3: "\n".to_string(),
             }],
-        };
+        });
         let mut fmt = HtmlFormatter::new();
         fmt.visit_json_body(&value);
         assert_eq!(fmt.buffer, "<span class=\"json\">{\n   \"id\": 1\n}</span>");
@@ -426,14 +430,14 @@ mod tests {
 
     #[test]
     fn test_json_encoded_newline() {
-        let value = JsonValue::String(Template::new(
+        let value = json_value(JsonValueKind::String(Template::new(
             Some('"'),
             vec![TemplateElement::String {
                 value: "\n".to_string(),
                 source: "\\n".to_source(),
             }],
             SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        ));
+        )));
         let mut fmt = HtmlFormatter::new();
         fmt.visit_json_body(&value);
         assert_eq!(fmt.buffer, "<span class=\"json\">\"\\n\"</span>");
