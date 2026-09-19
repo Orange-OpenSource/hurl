@@ -17,7 +17,7 @@
  */
 use crate::types::{SourceString, ToSource};
 
-use super::primitive::{Placeholder, Template};
+use super::primitive::{Placeholder, SourceInfo, Template};
 
 /// This the AST for the JSON used within Hurl (for instance in [implicit JSON body request](https://hurl.dev/docs/request.html#json-body)).
 ///
@@ -34,7 +34,27 @@ use super::primitive::{Placeholder, Template};
 ///
 /// It is a superset of the standard JSON spec. Strings have been replaced by Hurl [`Placeholder`].
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum JsonValue {
+pub struct JsonValue {
+    source_info: SourceInfo,
+    kind: JsonValueKind,
+}
+
+impl JsonValue {
+    pub fn new(source_info: SourceInfo, kind: JsonValueKind) -> Self {
+        Self { source_info, kind }
+    }
+
+    pub fn source_info(&self) -> &SourceInfo {
+        &self.source_info
+    }
+
+    pub fn kind(&self) -> &JsonValueKind {
+        &self.kind
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum JsonValueKind {
     Placeholder(Placeholder),
     Number(String),
     String(Template),
@@ -52,32 +72,32 @@ pub enum JsonValue {
 
 impl ToSource for JsonValue {
     fn to_source(&self) -> SourceString {
-        match self {
-            JsonValue::Placeholder(expr) => format!("{{{{{expr}}}}}").to_source(),
-            JsonValue::Number(s) => s.to_source(),
-            JsonValue::String(template) => template.to_source(),
-            JsonValue::Boolean(value) => {
+        match &self.kind {
+            JsonValueKind::Placeholder(expr) => format!("{{{{{expr}}}}}").to_source(),
+            JsonValueKind::Number(s) => s.to_source(),
+            JsonValueKind::String(template) => template.to_source(),
+            JsonValueKind::Boolean(value) => {
                 if *value {
                     "true".to_source()
                 } else {
                     "false".to_source()
                 }
             }
-            JsonValue::List { space0, elements } => {
+            JsonValueKind::List { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.to_source())
                     .collect::<Vec<SourceString>>();
                 format!("[{}{}]", space0, elements.join(",")).to_source()
             }
-            JsonValue::Object { space0, elements } => {
+            JsonValueKind::Object { space0, elements } => {
                 let elements = elements
                     .iter()
                     .map(|e| e.to_source())
                     .collect::<Vec<SourceString>>();
                 format!("{{{}{}}}", space0, elements.join(",")).to_source()
             }
-            JsonValue::Null => "null".to_source(),
+            JsonValueKind::Null => "null".to_source(),
         }
     }
 }

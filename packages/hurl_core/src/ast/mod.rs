@@ -17,7 +17,7 @@
  */
 //! Exposes Hurl AST nodes (see [Hurl grammar](https://hurl.dev/docs/grammar.html)).
 pub use self::core::*;
-pub use self::json::{JsonListElement, JsonObjectElement, JsonValue};
+pub use self::json::{JsonListElement, JsonObjectElement, JsonValue, JsonValueKind};
 pub use self::option::*;
 pub use self::primitive::*;
 pub use self::section::*;
