@@ -514,6 +514,10 @@ impl ClientOptions {
             args.push("--max-time".to_string());
             args.push(self.timeout.as_secs().to_string());
         }
+        if let Some(tls_max) = self.tls_max {
+            args.push("--tls-max".to_string());
+            args.push(tls_max.to_string());
+        }
         if self.negotiate {
             args.push("--negotiate".to_string());
         }
@@ -618,7 +622,7 @@ mod tests {
     use hurl_core::types::BytesPerSec;
 
     use super::*;
-    use crate::http::{HeaderVec, Url};
+    use crate::http::{HeaderVec, TlsVersion, Url};
 
     #[test]
     fn hello_request_with_default_options() {
@@ -760,6 +764,7 @@ mod tests {
             ],
             ssl_no_revoke: false,
             timeout: Duration::from_secs(10),
+            tls_max: Some(TlsVersion::Tls12),
             unix_socket: Some("/var/run/example.sock".to_string()),
             use_cookie_store: true,
             user: Some("user:password".to_string()),
@@ -785,6 +790,7 @@ mod tests {
         --limit-rate 8000 \
         --max-redirs 10 \
         --max-time 10 \
+        --tls-max 1.2 \
         --negotiate \
         --netrc-file '/var/run/netrc' \
         --netrc-optional \

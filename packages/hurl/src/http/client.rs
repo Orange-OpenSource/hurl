@@ -23,7 +23,7 @@ use std::time::Instant;
 use base64::Engine;
 use base64::engine::general_purpose;
 use chrono::Utc;
-use curl::easy::{List, NetRc, SslOpt};
+use curl::easy::{List, NetRc, SslOpt, SslVersion};
 use curl::{Error, Version, easy};
 use hurl_core::types::Count;
 
@@ -414,6 +414,10 @@ impl Client {
         self.handle.fresh_connect(!options.allow_reuse)?;
         self.handle.forbid_reuse(!options.allow_reuse)?;
         self.handle.http_version(options.http_version.into())?;
+        if let Some(tls_max) = options.tls_max {
+            self.handle
+                .ssl_min_max_version(SslVersion::Default, tls_max.into())?;
+        }
 
         self.handle.ip_resolve(options.ip_resolve.into())?;
 
@@ -1052,6 +1056,17 @@ impl From<RequestedHttpVersion> for easy::HttpVersion {
             RequestedHttpVersion::Http2 => easy::HttpVersion::V2,
             RequestedHttpVersion::Http2PriorKnowledge => easy::HttpVersion::V2PriorKnowledge,
             RequestedHttpVersion::Http3 => easy::HttpVersion::V3,
+        }
+    }
+}
+
+impl From<super::request::TlsVersion> for SslVersion {
+    fn from(value: super::request::TlsVersion) -> Self {
+        match value {
+            super::request::TlsVersion::Tls10 => SslVersion::Tlsv10,
+            super::request::TlsVersion::Tls11 => SslVersion::Tlsv11,
+            super::request::TlsVersion::Tls12 => SslVersion::Tlsv12,
+            super::request::TlsVersion::Tls13 => SslVersion::Tlsv13,
         }
     }
 }
