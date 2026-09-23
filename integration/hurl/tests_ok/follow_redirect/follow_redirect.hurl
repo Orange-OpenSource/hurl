@@ -74,6 +74,20 @@ header "Location" not exists
 `Followed redirect without Authorization nor Cookie header!`
 
 
+# Yet another way to express headers with `[Options]` section.
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=true
+[Options]
+header: Authorization:Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+header: Cookie:fruit=lemon
+HTTP 200
+[Asserts]
+redirects count == 1
+redirects nth 0 location == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+url == "http://127.0.0.1:8000/followed-redirect-basic-auth"
+header "Location" not exists
+`Followed redirect without Authorization nor Cookie header!`
+
+
 # Same has previous but the host doesn't change during redirection.
 # Back checks will insure that `Authorization` and `Cookie` header are forwarded.
 GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
@@ -93,6 +107,20 @@ GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Cookies]
 fruit: lemon
+HTTP 200
+[Asserts]
+redirects count == 1
+redirects nth 0 location == "http://localhost:8000/followed-redirect-basic-auth"
+url == "http://localhost:8000/followed-redirect-basic-auth"
+header "Location" not exists
+`Followed redirect with Authorization and Cookie header!`
+
+
+# Yet another way to express headers with `[Options]` section.
+GET http://localhost:8000/follow-redirect-basic-auth?change_host=false
+[Options]
+header: Authorization:Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+header: Cookie:fruit=lemon
 HTTP 200
 [Asserts]
 redirects count == 1

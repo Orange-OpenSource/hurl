@@ -1,0 +1,1 @@
+curl --header 'Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=' --header 'Cookie: fruit=lemon' --location 'http://localhost:8000/follow-redirect-leak/host-a-step-1'

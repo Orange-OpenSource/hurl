@@ -141,6 +141,12 @@ impl HeaderVec {
     pub fn clear(&mut self) {
         self.headers.clear();
     }
+
+    /// Remove the "credentials" headers list from headers.
+    pub fn remove_credentials(&mut self) {
+        self.retain(|h| !h.name_eq(AUTHORIZATION));
+        self.retain(|h| !h.name_eq(COOKIE));
+    }
 }
 
 impl<'a> IntoIterator for &'a HeaderVec {

@@ -35,8 +35,7 @@ use super::debug;
 use super::easy_ext;
 use super::error::HttpError;
 use super::header::{
-    ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, COOKIE, EXPECT, Header, HeaderVec, LOCATION,
-    USER_AGENT,
+    ACCEPT_ENCODING, AUTHORIZATION, CONTENT_TYPE, EXPECT, Header, HeaderVec, LOCATION, USER_AGENT,
 };
 use super::ip::IpAddr;
 use super::options::{ClientOptions, Verbosity};
@@ -95,6 +94,16 @@ impl Client {
         let mut request_spec = request_spec.clone();
         let mut options = options.clone();
 
+        // We keep a pristine copy of the original request's credentials-related headers/cookies
+        // and of the original options' headers/user. On each redirect hop, credentials are
+        // stripped or restored based on a comparison between `original_url` and the redirect
+        // target, so a chain like host A -> host B -> host A forwards credentials again once
+        // back on the original host, mirroring libcurl's behaviour.
+        let original_headers = request_spec.headers.clone();
+        let original_cookies = request_spec.cookies.clone();
+        let original_options_headers = options.headers.clone();
+        let original_options_user = options.user.clone();
+
         // Unfortunately, follow-location feature from libcurl can not be used as libcurl returns a
         // single list of headers for the 2 responses and Hurl needs to keep every header of every
         // response.
@@ -125,8 +134,6 @@ impl Client {
             };
 
             let redirect_method = redirect_method(status, &request_spec.method);
-            let mut headers = request_spec.headers;
-            let mut cookies = request_spec.cookies;
 
             // When following redirection, we filter `Authorization` and `Cookie` headers if the
             // hostname changes unless the user explicitly trusts the redirected host with `--location-trusted`.
@@ -135,14 +142,22 @@ impl Client {
             // > By default, libcurl only sends Authentication: or explicitly set Cookie: headers
             // > to the initial host given in the original URL, to avoid leaking username + password
             // > to other sites.
+            //
+            // We always recompute headers, cookies, user (everything that can have credentials)
+            // from original request rather than from the previous redirection step. A redirect chain
+            // A -> B -> A will forward credentials on the final step.
+            let mut headers = original_headers.clone();
+            let mut cookies = original_cookies.clone();
+            options.headers = original_options_headers.clone();
+            options.user = original_options_user.clone();
             if should_strip_credentials_on_redirect(
                 original_url,
                 &redirect_url,
                 options.follow_location,
             ) {
-                headers.retain(|h| !h.name_eq(AUTHORIZATION));
-                headers.retain(|h| !h.name_eq(COOKIE));
+                headers.remove_credentials();
                 cookies.clear();
+                options.headers.remove_credentials();
                 options.user = None;
             }
 
