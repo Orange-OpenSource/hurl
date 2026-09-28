@@ -300,6 +300,21 @@ pub fn get_entry_options(
                 let value = eval_boolean_option(value, variables)?;
                 entry_options.skip = value;
             }
+            OptionKind::TlsMax(value) => {
+                let source_info = value.source_info;
+                let value = eval_template(value, variables)?;
+                entry_options.tls_max = Some(value.parse().map_err(|_| {
+                    RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::InvalidOptionValue {
+                            name: "tls-max".to_string(),
+                            value: value.clone(),
+                            message: "expected 1.0, 1.1, 1.2 or 1.3".to_string(),
+                        },
+                        false,
+                    )
+                })?);
+            }
             OptionKind::UnixSocket(value) => {
                 let value = eval_template(value, variables)?;
                 entry_options.unix_socket = Some(value);

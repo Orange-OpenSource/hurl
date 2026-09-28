@@ -503,6 +503,7 @@ impl Lint for OptionKind {
                 lint_duration_option(value, DurationUnit::MilliSecond)
             }
             OptionKind::Skip(value) => value.lint(),
+            OptionKind::TlsMax(value) => value.lint(),
             OptionKind::UnixSocket(value) => value.lint(),
             OptionKind::User(value) => value.lint(),
             OptionKind::Variable(value) => value.lint(),
